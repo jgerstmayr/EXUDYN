@@ -16,6 +16,9 @@
 #pragma warning(disable:4018) //conversion warning
 #pragma warning(disable:4834) //conversion warning
 
+
+//#define USETRACER_IN_EXUDYN //additional flag, to deactivate tracer and add some speedup
+
 namespace ngstd
 {
   TaskManager * task_manager = nullptr;
@@ -190,8 +193,10 @@ namespace ngstd
   void TaskManager :: CreateJob (const function<void(TaskInfo&)> & afunc,
                                  int antasks)
   {
+#ifdef USETRACER_IN_EXUDYN
     trace->StartJob(jobnr, afunc.target_type());
-    /*
+#endif
+	/*
     for (int j = 0; j < num_nodes; j++)
       {
         while (nodedata[j]->participate > 0);
@@ -236,8 +241,11 @@ namespace ngstd
 
     int thds = GetNumThreads();
 
-    // int tasks_per_node = thds / num_nodes;
-    int mynode = num_nodes * thd/thds;
+	//JG: why these two lines?:
+    //int tasks_per_node = thds / num_nodes;
+    //int mynode = num_nodes * thd/thds;
+	
+	int mynode = 0;
 
     IntRange mytasks = Range(int(ntasks)).Split (mynode, num_nodes);
       
@@ -264,7 +272,9 @@ namespace ngstd
             ti.ntasks = ntasks;
 
               {
+#ifdef USETRACER_IN_EXUDYN
 		RegionTracer t(ti.thread_nr, jobnr, RegionTracer::ID_JOB, ti.task_nr);
+#endif
                 (*func)(ti); 
                 mynode_data.completed_tasks++;
               }
@@ -311,7 +321,9 @@ namespace ngstd
     if (ex)
       throw Exception (*ex);
 
-    trace->StopJob();
+#ifdef USETRACER_IN_EXUDYN
+	trace->StopJob();
+#endif
     for (auto ap : sync)
       ap->load(); // memory_order_acquire);
   }
@@ -457,7 +469,9 @@ namespace ngstd
                 ti.ntasks = ntasks;
                 
                   {
-		    RegionTracer t(ti.thread_nr, jobnr, RegionTracer::ID_JOB, ti.task_nr);
+#ifdef USETRACER_IN_EXUDYN
+					RegionTracer t(ti.thread_nr, jobnr, RegionTracer::ID_JOB, ti.task_nr);
+#endif
                     (*func)(ti);
                     mynode_data.completed_tasks++;
                   }

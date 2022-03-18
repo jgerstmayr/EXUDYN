@@ -47,14 +47,268 @@ namespace py = pybind11;
 //test functions, will be eliminated from time to time
 #include "Main/OutputVariable.h"
 
+#include "Linalg/BasicLinalg.h"
+#include <initializer_list>
+#include <vector>
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//for Eigen tests:
+//#include "../Eigen/Sparse"
+//#include "../Eigen/Dense"
+//#include "../Eigen/Eigen"
+//#include "../Eigen/src/Eigenvalues/ComplexEigenSolver.h"
+//#include "ngs-core-master/ngs_core.hpp"
+
+//#include "Utilities/Parallel.h" //include after 
+
 void PyTest()
 {
-	//contact testing
+	if (1)
+	{
+		Vector4D c({ 3., 7.5, 2., 0.3 });
+		auto xList = { -4., -3., -2., -1., -0.5, 0., 0.5, 1., 2., 3., 4. };
+
+		for (Real x : xList)
+		{
+			pout << "x=" << x
+				<< ", P(x) =" << EXUmath::EvaluatePolynomial(c, x)
+				<< ", P'(x)=" << EXUmath::EvaluatePolynomial_x(c, x) << "\n";
+		}
+	}
+	////contact testing
+	//if (1)
+	//{
+	//	//using namespace Eigen;
+	//	STDstring endl = "\n";
+	//	SlimVector<7> p;
+	//	//p.SetVector({ 0.1, -0.1, 0.01, -0.01, 0.9225, -0.36, -0.1025 });
+	//	p.SetVector({5.1200000000000045, -8.0, 6.489999999999995, -1.2500000000000004, -0.057500000000000134, -0.15, -0.04250000000000009});
+	//	pout << p << "\n";
+
+	//	if (0)
+	//	{
+	//		Eigen::MatrixXcf A = Eigen::MatrixXcf::Random(4, 4);
+	//		pout << "Here is a random 4x4 matrix, A:" << endl << A << endl << endl;
+
+	//		Eigen::ComplexEigenSolver<Eigen::MatrixXcf> ces;
+	//		ces.compute(A);
+	//		pout << "The eigenvalues of A are:" << endl << ces.eigenvalues() << endl;
+	//		pout << "The matrix of eigenvectors, V, is:" << endl << ces.eigenvectors() << endl << endl;
+
+	//		std::complex<float> lambda = ces.eigenvalues()[0];
+	//		pout << "Consider the first eigenvalue, lambda = " << lambda << endl;
+	//		Eigen::VectorXcf v = ces.eigenvectors().col(0);
+	//		pout << "If v is the corresponding eigenvector, then lambda * v = " << endl << lambda * v << endl;
+	//		pout << "... and A * v = " << endl << A * v << endl << endl;
+	//	}
+	//	if (1)
+	//	{
+	//		Real c0 = p[6];
+	//		Real c1 = p[5];
+	//		Real c2 = p[4];
+	//		Real c3 = p[3];
+	//		Real c4 = p[2];
+	//		Real c5 = p[1];
+	//		Real c6 = p[0];
+	//		typedef Eigen::Matrix<Eigen::dcomplex, 6, 6> EigMatrix66c;
+	//		typedef std::complex<Real> RealC;
+	//		EigMatrix66c A;
+	//		A.setZero();
+	//		A(0, 5) = RealC(-c0 / c6, 0);
+	//		A(1, 5) = RealC(-c1 / c6, 0);
+	//		A(2, 5) = RealC(-c2 / c6, 0);
+	//		A(3, 5) = RealC(-c3 / c6, 0);
+	//		A(4, 5) = RealC(-c4 / c6, 0);
+	//		A(5, 5) = RealC(-c5 / c6, 0);
+	//		A(1, 0) = RealC(1., 0.);
+	//		A(2, 1) = RealC(1., 0.);
+	//		A(3, 2) = RealC(1., 0.);
+	//		A(4, 3) = RealC(1., 0.);
+	//		A(5, 4) = RealC(1., 0.);
+	//		//A = [[0, 0, 0, 0, 0, -c0 / c6], 
+	//		//	[1, 0, 0, 0, 0, -c1 / c6], 
+	//		//	[0, 1, 0, 0, 0, -c2 / c6], 
+	//		//	[0, 0, 1, 0, 0, -c3 / c6], 
+	//		//	[0, 0, 0, 1, 0, -c4 / c6], 
+	//		//	[0, 0, 0, 0, 1, -c5 / c6]]
+	//		Real t = -EXUstd::GetTimeInSeconds();
+	//		Index n = 1000000;
+	//		Eigen::ComplexEigenSolver<EigMatrix66c> ces;
+	//		ces.compute(A, false); //27microsecs !
+	//		//for (Index i = 0; i < n; i++)
+	//		//{
+	//		//	ces.compute(A); //27microsecs on surface!
+	//		//}
+	//		ngstd::TaskManager::SetNumThreads(1);
+	//		//i9:
+	//		//1 thread:   21micros
+	//		//12 threads: 2micros
+	//		//14 threads: 1.85micros
+	//		//26 threads: 1.62micros
+	//		//surface:
+	//		//1 thread : 20.7micros (computeEigenvectors=true)
+	//		//1 thread : 16.6micros (computeEigenvectors=false)
+	//		//8 threads: 4.69micros (computeEigenvectors=true)
+	//		//8 threads: 3.79micros (computeEigenvectors=false)
+	//		Index taskmanagerNumthreads = ngstd::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
+	//		NGSsizeType nItems = (NGSsizeType)n;
+	//		ngstd::ParallelFor(nItems, [&A, &nItems](NGSsizeType j)
+	//		{
+	//			Eigen::ComplexEigenSolver<EigMatrix66c> ces;
+	//			ces.compute(A, false); //27microsecs !
+	//		}, 8*20);
+	//		t += EXUstd::GetTimeInSeconds();
+	//		ngstd::ExitTaskManager(taskmanagerNumthreads);
+	//		pout << "Eigenvalues needed " << t / (Real)n * 1e6 << " microsecs\n\n";
+	//		pout << "The eigenvalues of A are:" << endl << ces.eigenvalues() << endl;
+
+	//	}
+	//}
+	//add testing here
+	/*
 	if (0)
 	{
+		pout << "test vectorized Vector add\n";
+		Index n = 20;
+		Vector v1(n);
+		Vector v2(n);
+		Vector result(n);
+		LinkedDataVector r(result, 0, std::min(20,n));
+		for (Index i = 0; i < n; i++)
+		{
+			v1[i] = i * 1;
+			v2[i] = i * 2;
+		}
 
-	}
-	//add testing here
+		Index runs = 500000000;
+		//AVX vs. single threaded:
+		//speedup for n=502: 3.1  (varies !)
+		//speedup for n=1002: 3.5 (varies !)
+		//speedup for n=5002: 1.7
+		//speedup for n=10002: 1.33
+		//speedup for n=20002: ~0.9 (no speedup!)
+		//speedup for n=40002: ~0.9 (no speedup!)
+		//++++++++++++++++++++++++++++++++++++
+		//SurfacePro (4 core), 4 threads:
+		//16*1e8:      AVX=0.2, MT=136.3, MTAVX=149.3, serial=1.35
+		//1002*1e7:    AVX=0.95, MT=11.57, MTAVX=10.62, serial=8.3
+		//2002*5e6:    AVX=2.66, MT=7.53, MTAVX=7.12, serial=8.3
+		//4002*25e5:   AVX=2.19, MT=5.40, MTAVX=4.50, serial=8.25
+		//10002*1e6:   AVX=2.40, MT=3.84, MTAVX=2.88, serial=8.3
+		//20002*5e5:   AVX=4.33, MT=3.38, MTAVX=2.61, serial=8.28
+
+		//50002*2e5:   AVX=4.07, MT=3.08, MTAVX=2.54, serial=8.23
+		//200002*5e4:  AVX=4.88, MT=3.02, MTAVX=2.46, serial=16.9
+		//1000002*1e4: AVX=15.01 MT=13.13, MTAVX=13.51, serial=17.27
+		//SurfacePro (4 core), 8 threads:
+		//100002*1e5:  AVX=4.13, MT=2.06, MTAVX=1.65, serial=8.23
+		//200002*5e4:  AVX=4.46, MT=4.21, MTAVX=3.15, serial=16.92
+		Index nThreads = 4;
+		ngstd::TaskManager::SetNumThreads(nThreads);
+
+		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		Real time = -EXUstd::GetTimeInSeconds();
+		for (Index k = 0; k < runs; k++)
+		{
+			for (Index i = 0; i < n; i++)
+			{
+				result.GetUnsafe(i) = v1.GetUnsafe(i) + v2.GetUnsafe(i);
+			}
+		}
+		time += EXUstd::GetTimeInSeconds();
+		pout << "time   =" << time << "\n";
+		pout << "checksum   =" << (Index)result.Sum() << ", result=" << r << "\n";
+
+		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		Real timeAVX = -EXUstd::GetTimeInSeconds();
+		for (Index k = 0; k < runs; k++)
+		{
+			constexpr Index loopUnrollExpN = 4; //unrolling size = 2^loopUnrollExpN
+			Index nShift = n >> loopUnrollExpN;
+			PReal* v1p = (PReal*)v1.GetDataPointer();
+			PReal* v2p = (PReal*)v2.GetDataPointer();
+			PReal* resultp = (PReal*)result.GetDataPointer();
+			for (Index i = 0; i < (4*nShift); i+=4)
+			{
+				//resultp[i] = v1p[i] + v2p[i];
+				//resultp[i+1] = v1p[i+1] + v2p[i+1];
+				//optimize for latency; using 4 PReal speeds up only slightly
+				PReal a = v1p[i] + v2p[i];
+				PReal b = v1p[i + 1] + v2p[i + 1];
+				resultp[i] = a;
+				PReal c = v1p[i + 2] + v2p[i + 2];
+				resultp[i + 1] = b;
+				PReal d = v1p[i + 3] + v2p[i + 3];
+				resultp[i + 2] = c;
+				resultp[i + 3] = d;
+			}
+			for (Index i = nShift << loopUnrollExpN; i < n; i++)
+			{
+				result.GetUnsafe(i) = v1.GetUnsafe(i) + v2.GetUnsafe(i);
+			}
+		}
+		timeAVX += EXUstd::GetTimeInSeconds();
+		pout << "timeAVX=" << timeAVX << "\n";
+		pout << "checksumAVX=" << (Index)result.Sum() << ", resultAVX=" << r << "\n";
+		
+		Index taskmanagerNumthreads = ngstd::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
+
+		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		Real timeMT = -EXUstd::GetTimeInSeconds();
+		for (Index k = 0; k < runs; k++)
+		{
+			//for (Index i = 0; i < n; i++)
+			ngstd::ParallelFor((NGSsizeType)n, [&result, &v1, &v2](NGSsizeType i)
+			{
+				result.GetUnsafe((Index)i) = v1.GetUnsafe((Index)i) + v2.GetUnsafe((Index)i);
+			}, nThreads);
+		}
+
+		timeMT += EXUstd::GetTimeInSeconds();
+		pout << "timeMT=" << timeMT << "\n";
+		pout << "checksumMT=" << (Index)result.Sum() << ", resultMT=" << r << "\n";
+
+		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		Real timeMTAVX = -EXUstd::GetTimeInSeconds();
+		for (Index k = 0; k < runs; k++)
+		{
+			constexpr Index loopUnrollExpN = 4; //unrolling size = 2^loopUnrollExpN
+			Index nShift = n >> loopUnrollExpN;
+			PReal* v1p = (PReal*)v1.GetDataPointer();
+			PReal* v2p = (PReal*)v2.GetDataPointer();
+			PReal* resultp = (PReal*)result.GetDataPointer();
+
+			//for (Index i = 0; i < (4 * nShift); i += 4)
+			ngstd::ParallelFor((NGSsizeType)(nShift), [&resultp, &v1p, &v2p](NGSsizeType j)
+			{
+				Index i = (Index)j * 4; //*4
+				//resultp[i] = v1p[i] + v2p[i];
+				//resultp[i+1] = v1p[i+1] + v2p[i+1];
+				//optimize for latency; using 4 PReal speeds up only slightly
+				PReal a = v1p[i] + v2p[i];
+				PReal b = v1p[i + 1] + v2p[i + 1];
+				resultp[i] = a;
+				PReal c = v1p[i + 2] + v2p[i + 2];
+				resultp[i + 1] = b;
+				PReal d = v1p[i + 3] + v2p[i + 3];
+				resultp[i + 2] = c;
+				resultp[i + 3] = d;
+			}, nThreads);
+			for (Index i = nShift << loopUnrollExpN; i < n; i++)
+			{
+				result.GetUnsafe(i) = v1.GetUnsafe(i) + v2.GetUnsafe(i);
+			}
+
+		}
+		timeMTAVX += EXUstd::GetTimeInSeconds();
+		pout << "timeMTAVX=" << timeMTAVX << "\n";
+		pout << "checksumMTAVX=" << (Index)result.Sum() << ", resultMTAVX=" << r << "\n";
+
+		ngstd::ExitTaskManager(taskmanagerNumthreads);
+
+	}*/
+	
 	if (0)
 	{
 		Vector v1({ 1.,2.,3. });

@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 802, 
-Number of resolved issues = 706 (42 in current minor version), 
-Exudyn version = 1.1.42, 
-last change =  2021-11-23
+Number of issues = 996, 
+Number of resolved issues = 842 (0 in current minor version), 
+Exudyn version = 1.2.0, 
+last change =  2022-03-18
 
 
 <table style = "width:100%">
@@ -39,31 +39,15 @@ last change =  2021-11-23
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>0801</td>
-    <td>Box3D               </td>
+    <td>0990</td>
+    <td>MarkerNodeCoordinate</td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> check Ubuntu20 warnings; replace Vector3D pmin with Real pmin[3] to avoid warnings and gain speedup</td>
-    <td>CHANGE</td>
-    <td></td>
-    <td>2021-11-23</td>
-    <td>2022-01-22</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0800</td>
-    <td>GeneralContact ANCFCable</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add ANCFCable2D to GeneralContact, enabling contact with planar spheres (cylinders)</td>
+    <td> add option includeReferenceValue=False to include reference value in coordinate</td>
     <td>EXTENSION</td>
     <td></td>
-    <td>2021-11-19</td>
-    <td>2022-01-18</td>
+    <td>2022-03-16</td>
+    <td>2022-05-15</td>
     <td></td>
     <td></td>
     <td></td>
@@ -71,15 +55,15 @@ last change =  2021-11-23
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>0799</td>
-    <td>GeneralContact description</td>
+    <td>0988</td>
+    <td>ComputeConstraintJacobianDerivative</td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> add general section in theDoc for description of GeneralContact</td>
-    <td>DOCU</td>
+    <td> make sparse version similar to numerically differentiated single objects in JacobianODE2RHS</td>
+    <td>EXTENSION</td>
     <td></td>
-    <td>2021-11-19</td>
-    <td>2022-01-18</td>
+    <td>2022-03-15</td>
+    <td>2022-05-14</td>
     <td></td>
     <td></td>
     <td></td>
@@ -87,15 +71,15 @@ last change =  2021-11-23
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>0793</td>
-    <td>performance section </td>
+    <td>0987</td>
+    <td>ALEANCFCable2D      </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> add performance and speedup section to theDoc, explaining most useful settings like modifiedNewton, EigenSparse, writeToFile, step size, numberOfThreads, constant mass matrix, etc.</td>
+    <td> add description - specifically regarding OutputVariables, special terms not available in ANCFCable2D (and add reference to ASME CND paper)</td>
     <td>DOCU</td>
     <td></td>
-    <td>2021-11-02</td>
-    <td>2022-01-01</td>
+    <td>2022-03-15</td>
+    <td>2022-05-14</td>
     <td></td>
     <td></td>
     <td></td>
@@ -103,6 +87,1030 @@ last change =  2021-11-23
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
+    <td>0986</td>
+    <td>ANCFCable2D         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> extend/finalize description - specifically for integration points and OutputVariable functions</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-03-15</td>
+    <td>2022-05-14</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0984</td>
+    <td>OutputVariableConnector</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check all penalty-based connectors if OutputVariable for forces is only computed if activeConnector=True</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-03-14</td>
+    <td>2022-05-13</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0973</td>
+    <td>ContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> adapt old tests and create new beltdrive test</td>
+    <td>TESTING</td>
+    <td></td>
+    <td>2022-03-09</td>
+    <td>2022-05-08</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0972</td>
+    <td>ContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add / extend description</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-03-09</td>
+    <td>2022-05-08</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0971</td>
+    <td>Renderer            </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add mechanisms to catch exceptions inside renderer thread; try detaching renderer thread</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-06</td>
+    <td>2022-05-05</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0968</td>
+    <td>MarkerBodyCable2DShape</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add offset from beam axis, to compute position, velocity and jacobians at contact surface</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-03</td>
+    <td>2022-05-02</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0957</td>
+    <td>JointRevolute2D     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add OutputVariables in C++ and in DOCU; check other objects with missing OutputVariables</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-28</td>
+    <td>2022-04-29</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0954</td>
+    <td>ObjectContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> Add exception in PreAssembleChecks if marker is not a MarkerBody, as implementation only works for MarkerBody but not for MarkerNode</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-27</td>
+    <td>2022-04-28</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0948</td>
+    <td>update mecanumWheelRollingDiscTest</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> update w.r.t. Trajectory class and TorsionalSpringDamper</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-02-21</td>
+    <td>2022-04-22</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0937</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add option to draw contact forces</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-10</td>
+    <td>2022-04-11</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0936</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add interface function to get contact forces</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-10</td>
+    <td>2022-04-11</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0935</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add interface function to get contact pairs</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-10</td>
+    <td>2022-04-11</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0927</td>
+    <td>GeneralContact ANCF </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> test if 3 maxTangentialVelocities in 3-point Lobatto integration lead to better Newton performance</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-04</td>
+    <td>2022-04-05</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0926</td>
+    <td>RollingDiscPenalty  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> rollingFrictionViscous only works for rolls with axis parallel to z-Plane; add MISSING formulas to Docu and adapt formulation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-03</td>
+    <td>2022-04-04</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0925</td>
+    <td>ReevingSystemLinear </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> create reeving system along points defined by markers, using springs and one total length; extend MarkerDataStructure to cope with >2 markers</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-03</td>
+    <td>2022-04-04</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0917</td>
+    <td>mbs.ComputeObjectLHSJacobian</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add computation functions for object; using system function; needing option for analytic/numeric computation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0916</td>
+    <td>mbs.ComputeObjectAccessFunction</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add computation functions for access functions, e.g., TranlationalVelocity_qt, AngVel_qt, ...</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0915</td>
+    <td>mbs.ComputeObject...</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add mbs.ComputeObjectMassMatrix(...)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0914</td>
+    <td>mbs.ComputeNode...  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add computation functions for nodes, e.g., position or rotation jacobian; coordinates are already available in GetNodeOutput(...)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0913</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add efficient C++ functionality for operating on 6D vectors and matrices for kinematics/dynamics</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0912</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add second CCactiveSetError mode, which computes error for given active set ==> error for PostNewton computed (error in assumed conditions forces)</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0911</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> implement contact laws</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0910</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> implement recommended step size (with error bound and separate min stepsize to avoid too small steps</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0909</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add functionality to store/restore contact state for start of time step</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0908</td>
+    <td>MarkerData          </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add configuration to markerdata computation; allows configuration in sensors and startOfStep configuration in Contact</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0907</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add implicit Trig-Sphere contact</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0905</td>
+    <td>Add description of Pybind11 interaction</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add some description of C++-Python interaction and entry points into C++</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-02-01</td>
+    <td>2022-04-02</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0904</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> PostNewton (sphere-sphere, ancf-circle): add if clause to switch off contact in case of negative contact force</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-31</td>
+    <td>2022-04-01</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0892</td>
+    <td>AccessFunctionType  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add AccessFunctionType::TranslationalVelocity_q and AccessFunctionType::AngularVelocity_q needed for analytical jacobians</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-26</td>
+    <td>2022-03-27</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0888</td>
+    <td>add information on error handling</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> explain System errors, Python errors and Warnings; explain exception handling and add example</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-01-25</td>
+    <td>2022-03-26</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0886</td>
+    <td>Exceptions          </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> test py::raise_from for Python-induced exceptions (in renderPythonInterface) or for SystemErrors; check whether execeptions are originating from C or Python, see pybind11 Exceptions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-25</td>
+    <td>2022-03-26</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0873</td>
+    <td>GenericJoint        </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> improve computation of jacobian, using crossproduct</td>
+    <td>PERFORMANCE</td>
+    <td></td>
+    <td>2022-01-18</td>
+    <td>2022-03-19</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>0871</td>
+    <td>restart method      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add option solutionSettings.writeRestartFile to restart from separate restart file; solutionSettings.restartFileName defines folder and fileName; solutionSettings.restartWritePeriod defines time in seconds, how often it is written; also writes backup file</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-18</td>
+    <td>2022-03-19</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0867</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> change deltaV terms in ANCFCable and TrigSphere contact to fit signs used in docu</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-01-17</td>
+    <td>2022-03-18</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0865</td>
+    <td>multithreaded solver</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> test TaskManager::SuspendWorkers() for non-parallel parts (e.g. linear solver); possibly measure time spent for these parts, which should be larger than 2 ms to make sense; add option parallel.stopThreadsInSerialSections=False</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-15</td>
+    <td>2022-03-16</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0863</td>
+    <td>RaspberryPi         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check compilation on Raspi, make adaptation of ngsolve includes to run</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-14</td>
+    <td>2022-03-15</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0862</td>
+    <td>Vector alignment    </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add 32 or 64 byte memory + length alignment to allocation of vectors in order to be able to always use AVX and/or loop unrolling for copying or manipulating vectors; use _mm_malloc / _mm_free and separate flags to turn on/off memory and length alignment, memory alignment turned off in case that AVX is not available</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-13</td>
+    <td>2022-03-14</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0861</td>
+    <td>SparseVectorParallel</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> create SparseVector with: mainSparseVector + ArrayIndex2 with per-thread max index and current index; SparseTriplets exceeding the index go into ResizableArray<SparseVector*> threadSparseVector; Function to finally fill all triplets into main vector</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-13</td>
+    <td>2022-03-14</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0860</td>
+    <td>SparseVectorDomain  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> ?NEEDED (see 0862): create templated SparseVector with IndexValue+domain, having C-array of ResizableArray<IndexValue>, used for multithreaded creation of sparse vectors, associated indices for lateron fill into system vectors</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-13</td>
+    <td>2022-03-14</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0859</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> split searchtree into regions, proportional to number of threads (FinalizeContact); use 2 splits in x, 2 splits in y, etc. until uneven number left; add class Box3Dindexed:Box3D, which adds index for region in searchtree; add access in GeneralContact for adding bounding box, creating the index; index is -1, if overlapping, filled in serially</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-13</td>
+    <td>2022-03-14</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0858</td>
+    <td>ParallelFor         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> use ParallelFor with costs argument in GeneralContact and CSystem, to optimize usage</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-13</td>
+    <td>2022-03-14</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0855</td>
+    <td>Assemble() docu     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add information on general approach of adding objects and mbs.Assemble() procedure in Overview on Exudyn; add figure Add Nodes/Objects->Assemble->Solve</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-01-09</td>
+    <td>2022-03-10</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0853</td>
+    <td>ComputeObjectJacobian...</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add mbs computation functions for jacobians, for ODE1, ODE2 and AE</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-08</td>
+    <td>2022-03-09</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0852</td>
+    <td>ComputeObjectAlgebraicEquations</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add mbs computation functions for constraints</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-08</td>
+    <td>2022-03-09</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0851</td>
+    <td>ComputeObjectODE2LHS</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add computation functions for bodies and connectors; for connectors, markerData is computed automatically</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-08</td>
+    <td>2022-03-09</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0850</td>
+    <td>GetNodeODE1Index, GetNodeAEIndex</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add missing access functions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-08</td>
+    <td>2022-03-09</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0848</td>
+    <td>add demos to github </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add demo videos to github or to youtube</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-12-26</td>
+    <td>2022-02-24</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0847</td>
+    <td>GeneralContact searchtree</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add options to recompute searchtree size if particles are moving out of region; add option to flush all dynamical arrays (searchtree, allActiveContacts, etc.) after certain time</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-23</td>
+    <td>2022-02-21</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0845</td>
+    <td>Jacobian documentation</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add documentation to object and connector jacobians</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-12-23</td>
+    <td>2022-02-21</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0844</td>
+    <td>connector jacobian RigidBodySpringDamper</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add analytic jacobian for RigidBodySpringDamper connector</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-23</td>
+    <td>2022-02-21</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0843</td>
+    <td>connector jacobian springDamper</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add analytic jacobian for SpringDamper connector</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-23</td>
+    <td>2022-02-21</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0841</td>
+    <td>GeneralContact regularized friction</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> extend regularized friction (Haff-Werner) to integrated form using either Cundall-Stack friction or breaking tangential springs</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-19</td>
+    <td>2022-02-17</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0840</td>
+    <td>explicit solvers velocity verlet</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add velocity verlet integration scheme in particular for particle and contact simulation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-19</td>
+    <td>2022-02-17</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0839</td>
+    <td>multithreaded jacobian</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add functionality for multithreaded jacobian and mass matrix</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-19</td>
+    <td>2022-02-17</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0838</td>
+    <td>GeneralContact jacobian</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add jacobian and PostNewton for cable-sphere (circle) contact</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-19</td>
+    <td>2022-02-17</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0837</td>
+    <td>GeneralContact jacobian</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add jacobian and PostNewton for Triangle-Sphere contact</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-19</td>
+    <td>2022-02-17</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0836</td>
+    <td>GeneralContact add cone</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> for 3D cables add cone (including cylinder) to contact with 3D cables</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-19</td>
+    <td>2022-02-17</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0835</td>
+    <td>GeneralContact add dissipative laws</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add common dissipative (coeff of restitution, etc. laws to contact</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-19</td>
+    <td>2022-02-17</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0834</td>
+    <td>GeneralContact add contact laws</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add Hertzian contact laws to contacts, using separate enum for contact laws and additional parameter</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-19</td>
+    <td>2022-02-17</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0833</td>
+    <td>GeneralContact rolling pivoting</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add rolling and pivoting (drilling, boring) friction to spheres and triangles</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-17</td>
+    <td>2022-02-15</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0830</td>
+    <td>PostNewton          </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> PostNewton missing in explicit solvers; add warning or add after single steps (but exclude in contact computation!)</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-12-15</td>
+    <td>2022-02-13</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0829</td>
+    <td>velocityOffset      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add velocity offset to all spring dampers in order to replace many user functions with preStepUserFunctions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-15</td>
+    <td>2022-02-13</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0828</td>
+    <td>MT integration2     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add multithreading to mass matrix and jacobian; add multithreaded adding of vector with special templated functions to allow special (templated) solver functions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-09</td>
+    <td>2022-02-07</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
+    <td>0821</td>
+    <td>include numpy-stl   </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> include library to import stl files; add Warning to GraphicsDataFromSTLfileTxt for large file sizes and check if is ascii; in binary case, try switching to numpy-stl; add example to load binary files; add example to convert stl ascii to binary files</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-06</td>
+    <td>2022-02-04</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFAAAA">
     <td>0792</td>
     <td>test Pardiso integration</td>
     <td>JG</td>
@@ -118,7 +1126,7 @@ last change =  2021-11-23
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0791</td>
     <td>test Eigen SimplicialLDLT</td>
     <td>JG</td>
@@ -134,7 +1142,7 @@ last change =  2021-11-23
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0783</td>
     <td>SetObjectParameter  </td>
     <td>JG</td>
@@ -150,7 +1158,7 @@ last change =  2021-11-23
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0782</td>
     <td>MatrixContainer     </td>
     <td>JG</td>
@@ -166,23 +1174,7 @@ last change =  2021-11-23
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0779</td>
-    <td>sensor recorder     </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add utilities function for recording signals internally in mbs; avoids writing to sensor files, which helps reducing overhead in ParameterVariation and GeneticOptimization</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-10-17</td>
-    <td>2021-12-16</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0777</td>
     <td>GenericODE2         </td>
     <td>JG</td>
@@ -192,22 +1184,6 @@ last change =  2021-11-23
     <td></td>
     <td>2021-10-09</td>
     <td>2021-12-08</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>0770</td>
-    <td>Marker jacobian derivative2</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add jacobian derivative to most important connector markers</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-09-28</td>
-    <td>2021-11-27</td>
     <td></td>
     <td></td>
     <td></td>
@@ -252,22 +1228,6 @@ last change =  2021-11-23
     <td>JG</td>
     <td>RAISED  </td>
     <td> add possibility to eliminate coordinate constraints, possibly to use SVD/ null space matrix for projection</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-09-03</td>
-    <td>2021-11-02</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0745</td>
-    <td>SensitivityAnalysis()</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add functionality to processing, evaluating the sensitivities of certain sensor values w.r.t. parameters; same interface as ParameterVariation</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2021-09-03</td>
@@ -475,7 +1435,7 @@ last change =  2021-11-23
     <td>CSystem             </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> check JacobianAE: jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE2\_t ... if \_t is correctly used</td>
+    <td> check JacobianAE: jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE2_t ... if _t is correctly used</td>
     <td>CHECK</td>
     <td></td>
     <td>2021-06-28</td>
@@ -608,22 +1568,6 @@ last change =  2021-11-23
     <td></td>
     <td>2021-04-15</td>
     <td>2021-06-14</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0618</td>
-    <td>robotics submodule  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Create robotics.special and robotics.mecanum or robotics.ros submodules with subdirectories</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-03-23</td>
-    <td>2021-05-22</td>
     <td></td>
     <td></td>
     <td></td>
@@ -924,22 +1868,6 @@ last change =  2021-11-23
     <td>JG</td>
     <td>RAISED  </td>
     <td> test AVX in vector.cpp and dense solver</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-09-16</td>
-    <td>2020-11-15</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0450</td>
-    <td>MT integration      </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> fully integrate multithreading into system.cpp, vector.cpp and dense solver</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2020-09-16</td>
@@ -1575,6 +2503,2086 @@ last change =  2021-11-23
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0995</td>
+    <td>add to pypi index   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add exudyn to pypi index; allows to use "pip install exudyn"</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-18</td>
+    <td>2022-05-17</td>
+    <td>2022-03-18 10:44</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0994</td>
+    <td>ObjectContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> forces on circle added up twice, because weighting factor not considered</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-03-18</td>
+    <td>2022-05-17</td>
+    <td>2022-03-18 08:30</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>tested force on circle with static computation in belt drive</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0993</td>
+    <td>ObjectConnectorDistance</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> activeConnector=False produces wrong jacobian</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-03-17</td>
+    <td>2022-05-16</td>
+    <td>2022-03-17 17:52</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0992</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add PlotSensorDefaults function which allows to set default values for all subsequent PlotSensor calls</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-17</td>
+    <td>2022-05-16</td>
+    <td>2022-03-17 17:28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>use e.g. PlotSensorDefaults().fontSize=16 to change fontSize for all subsequent calls</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0991</td>
+    <td>velocityOffset      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add velocity offset for SpringDamper and TorsionalSpringDamper, allowing simple controllers using offset and velocityOffset in preStepUser functions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-16</td>
+    <td>2022-05-15</td>
+    <td>2022-03-16 23:51</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0989</td>
+    <td>convergence problems</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add specific section in theDoc - Exudyn Basics related to ways for resolving convergence problems</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-03-16</td>
+    <td>2022-05-15</td>
+    <td>2022-03-16 18:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0985</td>
+    <td>startOfStepState    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> initialize startOfStepState together with currentState in InitializeSolverInitialConditions(...) in order to be valid when sensors are written in initialization</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-14</td>
+    <td>2022-05-13</td>
+    <td>2022-03-14 13:07</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0983</td>
+    <td>plot                </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function to create plot-ready data from mbs.GetObjectOutputBody for a list of consecutive beams, e.g., axial force, displacement or curvature along axial reference coordinate</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-11</td>
+    <td>2022-05-10</td>
+    <td>2022-03-14 20:41</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added function DataArrayFromSensorList which allows to create data from a list of sensors</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0982</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to plot 2D arrays</td>
+    <td>EXTENTSION</td>
+    <td></td>
+    <td>2022-03-11</td>
+    <td>2022-05-10</td>
+    <td>2022-03-14 16:24</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>numpy arrays are used instead of sensorNumbers; these arrays must have the same format as data stored in sensor files; this data format does not create any labels</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0981</td>
+    <td>ObjectContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add OutputVariable functions for Coordinates (gap, slip), Coordinates_t (gap_t, slip_t), and contact and friction forces per segment (ForceLocal)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-11</td>
+    <td>2022-05-10</td>
+    <td>2022-03-14 12:58</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0980</td>
+    <td>renderer precision  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add options for general precision in renderer: general.rendererPrecision as well as precision for colorbars in contour: contour.colorBarPrecision</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-11</td>
+    <td>2022-05-10</td>
+    <td>2022-03-11 14:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0979</td>
+    <td>VisualizationSettings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> VisualizationSettings.showContactForcesValues is added to show numerical values for contact forces</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-11</td>
+    <td>2022-05-10</td>
+    <td>2022-03-11 10:19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0978</td>
+    <td>ObjectANCFCable2D   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add improved axial strain computation for reduced order integration</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-10</td>
+    <td>2022-05-09</td>
+    <td>2022-03-10 20:36</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>works for axial strain and axial force if reducedAxialInterploation=True</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0977</td>
+    <td>ObjectANCFCable2D   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add new mode useReducedOrderIntegration=2 with good performance/accuracy and exceptional representation of axial strains</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-10</td>
+    <td>2022-05-09</td>
+    <td>2022-03-10 20:08</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0976</td>
+    <td>ContactCircleCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add visualization flag showContactCircle; uses circleTiling*4 for tiling (from VisualizationSettings.general)!</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-10</td>
+    <td>2022-05-09</td>
+    <td>2022-03-10 14:15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0975</td>
+    <td>VisualizationSettings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> added showContactForces and contactForcesFactor in contact; this flag is currently only available in ContactCircleCable2D</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-10</td>
+    <td>2022-05-09</td>
+    <td>2022-03-10 13:52</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0974</td>
+    <td>VisualizationSettings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> moved contactPointsDefaultSize from connectors to contact; connectors.contactPointsDefaultSize is inactive from now!</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-03-10</td>
+    <td>2022-05-09</td>
+    <td>2022-03-10 13:50</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0970</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> PlotSensor allows to set fileCommentChar and fileDelimiterChar</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-04</td>
+    <td>2022-05-03</td>
+    <td>2022-03-04 13:27</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0969</td>
+    <td>exudyn.plot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> added method to convert output files from other codes; in particular plot.FileStripSpaces(...) can be used to strip leading / trailing spaces and remove double spaces</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-04</td>
+    <td>2022-05-03</td>
+    <td>2022-03-04 13:27</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0967</td>
+    <td>ANCFCable2D         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add OutputVariables RotationMatrix, Rotation, AngularVelocity(Local) and AngularAcceleration</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-03</td>
+    <td>2022-05-02</td>
+    <td>2022-03-15 20:01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>Acceleration, AngularVelocity and AngularAcceleration currently only implemented for ANCFCable2D but not for ALEANCFCable2D</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0966</td>
+    <td>ANCFCable2D         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add missing terms for OutputVariables and AccessFunctions to allow constraints that are at local position y!=0</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-03</td>
+    <td>2022-05-02</td>
+    <td>2022-03-15 19:54</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0965</td>
+    <td>ANCFCable2D         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option for strainIsRelativeToReference, which if set to 1. accounts for the reference geometry as the stress-free configuration; also works for ALE Cable2D</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-03</td>
+    <td>2022-05-02</td>
+    <td>2022-03-03 08:13</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0964</td>
+    <td>CreateReevingCurve  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> corrected sign of returned curvatures, now can be directly used for beam elements</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-03-02</td>
+    <td>2022-05-01</td>
+    <td>2022-03-02 17:20</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0963</td>
+    <td>CreateReevingCurve  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> removeFirstLine=True not working: wrong case i==0 needs to be changed to i==1</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-03-02</td>
+    <td>2022-05-01</td>
+    <td>2022-03-02 15:25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0962</td>
+    <td>CreateReevingCurve  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> adjust number of nodes in case of closed Curve (numberOfANCFnodes=20 gives 20 elements in this case)</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-03-02</td>
+    <td>2022-05-01</td>
+    <td>2022-03-02 15:25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0961</td>
+    <td>stepInformation     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> changed flags in timeIntegration and staticSolver stepInformation: value of 1024 now causes output at every step; all values > 16 have been divided by two; 255=detailed overall output, 2047=detailed output every step; see SimulationSettings in theDoc</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-03-02</td>
+    <td>2022-05-01</td>
+    <td>2022-03-02 10:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0960</td>
+    <td>ObjectContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> move to ObjectContactFrictionCircleCable2DOld and improve new version</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-03-02</td>
+    <td>2022-05-01</td>
+    <td>2022-03-02 09:50</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0959</td>
+    <td>coordinatesSolution </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change ending of coordinates solution files from .txt to .sol in case of binary files</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-03-02</td>
+    <td>2022-05-01</td>
+    <td>2022-03-02 10:14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0958</td>
+    <td>LoadForceVector     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add note to description in forces that user function values are available in sensors, but they are not updated during drawing</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-02-28</td>
+    <td>2022-04-29</td>
+    <td>2022-03-01 19:40</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0956</td>
+    <td>ProfileLinearAccelerationsList</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add linear acceleration profile to robotics.motion, currently only allowing to create profile directly from accelerations</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-28</td>
+    <td>2022-04-29</td>
+    <td>2022-02-28 19:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0955</td>
+    <td>robotics.motion     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change PTPprofile to BasicProfile</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-02-28</td>
+    <td>2022-04-29</td>
+    <td>2022-02-28 09:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0953</td>
+    <td>ContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add improved (static) friction model</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-25</td>
+    <td>2022-04-26</td>
+    <td>2022-03-09 21:42</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>also added improved PostNewton switching strategies and changed initial values for NodeGenericData</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0952</td>
+    <td>rolling joints      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> ConnectorRollingDiscPenalty and JointRollingDisc now add a OutputVariable RotationMatrix, containing the J1 to global transformation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-25</td>
+    <td>2022-04-26</td>
+    <td>2022-03-01 19:35</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0951</td>
+    <td>Friction            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> test LuGre friction model as ODE1 model versus position/history based model</td>
+    <td>TEST</td>
+    <td></td>
+    <td>2022-02-24</td>
+    <td>2022-04-25</td>
+    <td>2022-03-01 19:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added lugreFrictionODE1.py as a demo showing the LuGre model based on a ODE1 user function</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0950</td>
+    <td>JointRollingDisc    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> OutputVariable VelocityLocal is returned in global coordinates; description in theDoc is wrong; will be changed to outputVariable Velocity; local velocity will represent the slippage in special local joint J1 coordinates; see theDoc for updated functionality and outputs</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-02-22</td>
+    <td>2022-04-23</td>
+    <td>2022-02-25 14:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0949</td>
+    <td>ConnectorRollingDiscPenalty</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> OutputVariable VelocityLocal local is returned in global coordinates; description in theDoc is wrong; will be changed to outputVariable Velocity; see theDoc for updated functionality and outputs</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-02-22</td>
+    <td>2022-04-23</td>
+    <td>2022-02-25 14:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0947</td>
+    <td>TestModels          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change most test models to use Sensors storeInternal mode; this avoids creating many files during TestSuite runs</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-02-20</td>
+    <td>2022-04-21</td>
+    <td>2022-02-20 20:40</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0946</td>
+    <td>sensors storeInternal</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> adapt most TestModels to store sensordata internally</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-20</td>
+    <td>2022-04-21</td>
+    <td>2022-02-21 00:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0945</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend option for offsets, allowing sensor data to use as offset (e.g., loaded from file or from internal sensor data)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-19</td>
+    <td>2022-04-20</td>
+    <td>2022-02-19 16:45</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>see plotSensorExamples for some particular usage</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0944</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add argument labels, which can be string (for one sensor) or list of strings (according to number of sensors resp. components) representing the labels used in legend; if not provided, automatically generated legend is used </td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-19</td>
+    <td>2022-04-20</td>
+    <td>2022-02-19 15:47</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0943</td>
+    <td>mbs.GetSensorStoredData()</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add MainSystem functionality to retrieve internally stored data in sensor; used, e.g., for PlotSensor to plot data without storing in files</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-18</td>
+    <td>2022-04-19</td>
+    <td>2022-02-19 00:10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0942</td>
+    <td>sensorsAppendToFile </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> appendToFile is used instead of sensorsAppendToFile for switching between append and replace operations for files</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-02-18</td>
+    <td>2022-04-19</td>
+    <td>2022-02-18 20:54</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0941</td>
+    <td>MotionInterpolator  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> mark as deprecated; instead, created motion submodule in robotics with class Trajectory; uses classes ProfileConstantAcceleration and ProfilePTP to construct piecewise profiles for trajectory; precomputes acceleration profiles in first step and thus is several factors faster in Python implementation; Trajectory converts to dict and can be printed in order to obtain key values of computed trajectories</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-15</td>
+    <td>2022-04-16</td>
+    <td>2022-02-18 16:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0940</td>
+    <td>MotionInterpolator  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to add trajectories defined by duration as well as by maxVelocity and maxAcceleration using synchronous PTP trajectory generation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-15</td>
+    <td>2022-04-16</td>
+    <td>2022-02-15 12:38</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0939</td>
+    <td>NodeRigidBody2D     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> does not correctly measure rotations (returns x-coordinate instead of angle)</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-02-15</td>
+    <td>2022-04-16</td>
+    <td>2022-02-15 09:58</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0938</td>
+    <td>ANCFCable2D         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add drawing function for forces in normal direction with factor</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-10</td>
+    <td>2022-04-11</td>
+    <td>2022-03-15 20:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0934</td>
+    <td>exudyn.signal       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> conflicts with Python 3.8.8 and Python 3.9.7 (and possibly other) with internal Python signal package; change exudyn.signal to exudyn.signalProcessing</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-02-10</td>
+    <td>2022-04-11</td>
+    <td>2022-02-10 09:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0933</td>
+    <td>RigidBody           </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add accelerationLocal and angularAccelerationLocal output</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-07</td>
+    <td>2022-04-08</td>
+    <td>2022-03-15 20:14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added to ObjectRigidBody and ObjectRigidBody2D</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0932</td>
+    <td>ANCFCable2D         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add velocityLocal + accelerationLocal output in axial/normal direction</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-07</td>
+    <td>2022-04-08</td>
+    <td>2022-03-06 18:24</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>only velocityLocal added</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0931</td>
+    <td>ANCFCable2D         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add acceleration as output variable</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-07</td>
+    <td>2022-04-08</td>
+    <td>2022-03-06 18:24</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>only added for ANCF, but not for ALEANCF due to coupling terms with vALE</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0930</td>
+    <td>LoadSolutionFile    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend function to check if binary file; if yes, switches to binary mode</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-07</td>
+    <td>2022-04-08</td>
+    <td>2022-02-09 08:44</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0929</td>
+    <td>coordinatesSolution, sensors</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add version to coordinatesSolutionFile and sensor output files; should not affect current parsing of output files</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-02-07</td>
+    <td>2022-04-08</td>
+    <td>2022-02-07 00:02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0928</td>
+    <td>CPP UNIT TESTS      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fail because of change of ConstSizeVector to use move assignment and move constructor</td>
+    <td>TESTING</td>
+    <td></td>
+    <td>2022-02-06</td>
+    <td>2022-04-07</td>
+    <td>2022-02-06 00:04</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>adapted test to avoid move assignment</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0924</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> WARNING message raised in ANCF contact</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-02-03</td>
+    <td>2022-04-04</td>
+    <td>2022-02-03 12:01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0923</td>
+    <td>CreateReevingCurve  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function CreateReevingCurve(...) in exudyn.beams to create reeving system along circles, allows to create curve and nodes for ANCFCable2D elements created with PointsAndSlopes2ANCFCable2D(...); see Examples/reevingSystem.py</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td>2022-02-03 12:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0922</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to add linewidth, markersize, markerStyles=["o",...], markerSizes=[], lineStyles=["-",...], colors=[..], markerDensity=...; lineWidths=[] allowing to plot a reduced number of markers on top of a line</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td>2022-02-19 22:41</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added many options for line and marker styles, check: colors, lineStyles, lineWidths, markerStyles, markerSizes, markerDensity</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0921</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to add subplots</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td>2022-02-19 22:45</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>allows to create subplots, adjusting also the plot size using sizeInches; for examples see Examples/plotSensorExamples.py</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0920</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add x-range and y-range for zoom</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td>2022-02-19 16:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added rangeX and rangeY options to specify range</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0919</td>
+    <td>Minimize            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add optimization with same interface as GenticOptimization but based on scipy.minimize</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td>2022-02-04 15:45</td>
+    <td>Stefan Holzinger</td>
+    <td></td>
+    <td></td>
+    <td>added Minimize to processing; usage is nearly same as GeneticOptimization(...); example under Examples/minimizeExample.py</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0918</td>
+    <td>Sensors store values internally</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to store sensor values internally; using ResizableMatrix internally; rows added and matrix is automatically resized</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td>2022-02-19 00:13</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>storeInternal boost the speed of writing sensor values, however, most of time is spent on computing sensor values, which typically about 2 seconds for 1e6 time steps per sensor; file write adds usually 3 seconds extra on that bill</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0906</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option componentsX to add x-components for figures, e.g., to plot y over x position, instead over time</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-01</td>
+    <td>2022-04-02</td>
+    <td>2022-02-01 18:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0903</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> autocomputed searchTree gives very large values and visualization not working</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-01-31</td>
+    <td>2022-04-01</td>
+    <td>2022-01-31 21:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>ANCFCable2D bounding box computation had 1 wrong else case</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0902</td>
+    <td>GenerateStraightLineANCFCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> cableNodePositionList does not returns 3D vectors for nodes except first node</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-01-31</td>
+    <td>2022-04-01</td>
+    <td>2022-01-31 14:19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0901</td>
+    <td>SimulationSettings  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> improve type completion by adding py::init<...> functions for all subclasses</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-31</td>
+    <td>2022-04-01</td>
+    <td>2022-02-18 20:30</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>not solvable in this simple way as type completion is not improved when adding this information</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0900</td>
+    <td>GenerateStraightLineANCFCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> arguments vALE and ConstrainAleCoordinate are not implemented and need to be removed</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-01-30</td>
+    <td>2022-03-31</td>
+    <td>2022-01-30 23:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0899</td>
+    <td>GenerateCircularArcANCFCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function to create beams along circular arc</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-30</td>
+    <td>2022-03-31</td>
+    <td>2022-01-31 14:20</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0898</td>
+    <td>GenerateStraightLineANCFCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to use existing nodes in generation of beams</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-30</td>
+    <td>2022-03-31</td>
+    <td>2022-01-31 10:11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0897</td>
+    <td>add Python utility beams</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add exudyn.beams utility module, containing helper functions for creating beams, etc.; move existing functions to this module</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-30</td>
+    <td>2022-03-31</td>
+    <td>2022-01-31 10:11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0896</td>
+    <td>theDoc objects      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> sort objects into bodies, basic connectors, constraints and joints</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-01-30</td>
+    <td>2022-03-31</td>
+    <td>2022-01-30 23:12</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0895</td>
+    <td>ConnectorGravity    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add connector representing gravitational forces between heavy masses (planet, satellite, etc.)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-30</td>
+    <td>2022-03-31</td>
+    <td>2022-01-30 19:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0894</td>
+    <td>colors              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> added several colors in graphicsDataUtilities, added color4black, extended color4list to 16 colors</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-30</td>
+    <td>2022-03-31</td>
+    <td>2022-01-30 18:10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0893</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> changed flag introSpheresContact to sphereSphereContact; added flag for special mode to recycle last Post Newton step friction force</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-01-28</td>
+    <td>2022-03-29</td>
+    <td>2022-01-28 18:55</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0891</td>
+    <td>adapt to Python3.9  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> make wheels and installers for Python3.9, running on Anaconda3-2021-11 Windows-x86_64</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-25</td>
+    <td>2022-03-26</td>
+    <td>2022-01-25 23:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0890</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add possibility to use filenames instead of sensor numbers, automatically loading these files</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-25</td>
+    <td>2022-03-26</td>
+    <td>2022-01-25 18:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0889</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add test for PlotSensor, returning 1 if all plotting runs without crashing</td>
+    <td>TESTING</td>
+    <td></td>
+    <td>2022-01-25</td>
+    <td>2022-03-26</td>
+    <td>2022-01-25 19:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0887</td>
+    <td>iPython output stops</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> after a solver error, output of iPython stops</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-01-25</td>
+    <td>2022-03-26</td>
+    <td>2022-01-25 14:25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>changed to correct catching/throwing of Python and C++ exception types; outpur continues after solver error</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0885</td>
+    <td>GetInterpolatedSignalValue</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add check in case that time values are distributed non-uniform; add tolerance as option</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-25</td>
+    <td>2022-03-26</td>
+    <td>2022-01-25 12:10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0884</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add optional title to plot</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-25</td>
+    <td>2022-03-26</td>
+    <td>2022-01-25 11:52</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0883</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> if sensorNumbers is scalar, components is a list, sensorNumbers is automatically adjusted; accepts now e.g. PlotSensor(mbs, 0, components=[0,1,2])</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-25</td>
+    <td>2022-03-26</td>
+    <td>2022-01-25 11:36</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0882</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to use X, Y and Z components instead of 0, 1, 2 for Position, Displacement etc.; this option is enabled by default and changes the appearance -> set False, to preserve the old mode; component now also shown if only one curve plotted</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-01-25</td>
+    <td>2022-03-26</td>
+    <td>2022-01-25 11:19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0881</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to apply factors and offsets to plotted signals; add option to add labels which appears at legend</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-25</td>
+    <td>2022-03-26</td>
+    <td>2022-01-25 11:36</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0880</td>
+    <td>User function for ConnectorCoordinateVector</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add user function for constraint and for jacobian; test with double pendulum made of masses</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-24</td>
+    <td>2022-03-25</td>
+    <td>2022-03-17 18:14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0879</td>
+    <td>LoadSolutionFile    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> changed safeMode to loading sinle lines, which saves memory enormously, and added new options for loading huge files</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-24</td>
+    <td>2022-03-25</td>
+    <td>2022-01-24 14:53</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0878</td>
+    <td>sort settings options</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> sort settings representation in Python by sorting dictionaries prior to writing inteface files; keep current sorting (grouping) in latex documentation</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-01-24</td>
+    <td>2022-03-25</td>
+    <td>2022-02-06 21:57</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>type completion may change sorting afterwards</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0877</td>
+    <td>AddSensorRecorder   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fails for scalar Sensors OutputVariableTypes (e.g. when measuring Rotation of TorsionalSpringDamper)</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-01-21</td>
+    <td>2022-03-22</td>
+    <td>2022-01-21 09:17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added special scalar case</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0876</td>
+    <td>flush files         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to flush solution and sensor files immediately after writing, simplifying the readout process; add option for large scale simulations, which are always flushed - helping for continuation of computations on supercomputers</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-20</td>
+    <td>2022-03-21</td>
+    <td>2022-01-20 14:01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0875</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fixed fontSize option and add options for minor/major ticks and SAVE figure to PlotSensor(...) using fileName=...</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-19</td>
+    <td>2022-03-20</td>
+    <td>2022-01-19 11:08</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0874</td>
+    <td>improved Newton restart</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> added an additional Newton iteration after restarting modified Newton or when switching to full Newton; this reduces effects in generalized alpha and may improve behaviour with severe nonlinearities</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-01-18</td>
+    <td>2022-03-19</td>
+    <td>2022-01-18 13:44</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0872</td>
+    <td>preStepPyExecute    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove preStepPyExecute from docu, time integration / static solver interface and from CSolverBase</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-01-18</td>
+    <td>2022-03-19</td>
+    <td>2022-01-18 16:57</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0870</td>
+    <td>binary output       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to create binary solution files</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-18</td>
+    <td>2022-03-19</td>
+    <td>2022-02-09 08:45</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>notes: use outputPrecision to switch between float and double - see there; speeds up file writing considerably and reduces file sizes; Integrated into LoadSolutionFile</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0869</td>
+    <td>adaptiveStepRecoveryIterations</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to static and dynamic solvers to adjust max. Newton+disc. iterations prior to increase of step size; changed (previous internal) default value from 5 to 7</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-01-17</td>
+    <td>2022-03-18</td>
+    <td>2022-01-17 19:54</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0868</td>
+    <td>solverSettings.stepInformation</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change modes to add up binary flags; ADD several new options to show Newton iterations, jacobians, discontinuous iterations, per step or period; also add option to show output at every step</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-17</td>
+    <td>2022-03-18</td>
+    <td>2022-01-17 12:11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0866</td>
+    <td>numberOfThreads     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> move simulationSettings.numberOfThreads into new section parallel in simulationSettings; remove comment [not implemented]</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-15</td>
+    <td>2022-03-16</td>
+    <td>2022-01-18 17:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0864</td>
+    <td>automatic example referencing</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fix searching for examples, e.g., NodePoint as NodePoint( in order no to find NodePoint2D examples</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-01-14</td>
+    <td>2022-03-15</td>
+    <td>2022-01-31 23:01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0857</td>
+    <td>GetInterpolatedSignalValue</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> new function to interpolate a numeric signal with time/data vectors at a certain time point</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-11</td>
+    <td>2022-03-12</td>
+    <td>2022-01-11 15:41</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0856</td>
+    <td>IndexFromValue      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> function got faster mode in case of constant sampling rate</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-11</td>
+    <td>2022-03-12</td>
+    <td>2022-01-11 14:39</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0854</td>
+    <td>Add LTG description </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add section on local-to-global mapping of coordinates \refSection{sec:systemData:LTG}</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-01-08</td>
+    <td>2022-03-09</td>
+    <td>2022-01-08 12:09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0849</td>
+    <td>publications directory</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> create separate directory Examples/publications/ for publication data, Python files of numerical examples, etc.</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-01-06</td>
+    <td>2022-03-07</td>
+    <td>2022-01-06 16:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0846</td>
+    <td>analytic jacobians  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add analytic jacobians general functionality, realized for CartesianSpringDamper and CoordinateSpringDamper; deactivate with newton.numericalDifferentiation.forODE2connectors = False</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-23</td>
+    <td>2022-02-21</td>
+    <td>2021-12-23 11:07</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0842</td>
+    <td>implement AccessFunctionType::JacobianTtimesVector_q</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> implement function needed for MarkerBody for objects ANCFCable, ObjectFFRF and ObjectFFRFreducedOrder; currently raising exception if used in this setup!</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-22</td>
+    <td>2022-02-20</td>
+    <td>2021-12-22 21:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0832</td>
+    <td>explicit integrator </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add flag timeintegration.explicitIntegration.computeEndOfStepAccelerations to compute end-of-step accelerations; this computation doubles the effort of explicit one-step-methods, particularly relevant in particles or contact simulations</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-17</td>
+    <td>2022-02-15</td>
+    <td>2021-12-17 12:38</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0831</td>
+    <td>Explicit solvers    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove second ComputeODE2Acceleration() call and copy solutionODE2_tt from beginning of time step rk.stageDerivODE2_t[0], same for ODE1 variables; add flag but change that by default as it speeds up 2x; could also use information from previous step ...?</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-12-15</td>
+    <td>2022-02-13</td>
+    <td>2021-12-20 13:09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0827</td>
+    <td>GraphicsData cube   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> cubes has wrong numbering of nodes</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-12-07</td>
+    <td>2022-02-05</td>
+    <td>2021-12-07 17:14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>FIXED numbering in order to allow for correct normals needed in contact computation</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0826</td>
+    <td>GraphicsData normals</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add normals to some GraphicsData  cube objects</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-07</td>
+    <td>2022-02-05</td>
+    <td>2021-12-07 16:27</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0825</td>
+    <td>GraphicsData add defaults</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add some default values, especially to (center)point of GraphicsDataSphere, GraphicsDataCylinder, GraphicsDataOrthoCube, etc. in order to reduce interface sizes for objects added in the centerpoint [0,0,0]; thus some defaults were also necessary for radius or sizes!</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-07</td>
+    <td>2022-02-05</td>
+    <td>2021-12-07 14:41</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0824</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> added serval NEW options, including: newFigure, colorCodeOffset, figureName and closeAll; NOTE that now PlotSensor by default opens a new figure!</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-12-07</td>
+    <td>2022-02-05</td>
+    <td>2021-12-07 12:11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0823</td>
+    <td>add trig-sphere friction tests</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add simple test cases to check friction implementation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-06</td>
+    <td>2022-02-04</td>
+    <td>2021-12-09 08:28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0822</td>
+    <td>shrink mesh         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add method to shrink meshes using max distance to surface with normals; used for contact trig-sphere implementation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-06</td>
+    <td>2022-02-04</td>
+    <td>2021-12-09 08:28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>currently slows down for larger meshes due to elimination of duplicate points!</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0820</td>
+    <td>RigidBody visualization</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> normals in rigid body visualization transformed wrongly</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-12-05</td>
+    <td>2022-02-03</td>
+    <td>2021-12-05 17:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>before, rotating bodies may have shown shading, now resolved</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0819</td>
+    <td>ObjectRigidBody     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> correct HasConstantMassMatrix for Lie group nodes and COM=0</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-12-05</td>
+    <td>2022-02-03</td>
+    <td>2021-12-05 11:19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0818</td>
+    <td>MergeGraphicsDataTriangleList</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> now works if either both lists contain normals or both do not</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-03</td>
+    <td>2022-02-01</td>
+    <td>2021-12-03 20:15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0817</td>
+    <td>NodePointGround     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add Node::Orientation to NodeType, such that it can also be used as a rigidBody node</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-03</td>
+    <td>2022-02-01</td>
+    <td>2021-12-03 14:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0816</td>
+    <td>GraphicsData convert</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function GraphicsData2TrigsAndPoints(...) to convert graphicsData into triangles and points</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-02</td>
+    <td>2022-01-31</td>
+    <td>2021-12-05 15:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0815</td>
+    <td>tCPU showing wrong time</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> minor bug; time shown is since starting of iPython</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-12-02</td>
+    <td>2022-01-31</td>
+    <td>2021-12-02 17:48</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0814</td>
+    <td>robotics.future, robotics.utilities, robotics.mobile</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add special submodules for robotics functions; future contains currently developed submodules that will be available in future at a different location in robotics</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-02</td>
+    <td>2022-01-31</td>
+    <td>2021-12-05 15:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0813</td>
+    <td>exudyn.robotics.special</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend and move roboticsSpecial to robotics.special; add special robotics functionality likde manipulability</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-12-02</td>
+    <td>2022-01-31</td>
+    <td>2021-12-02 11:03</td>
+    <td>Martin Sereinig</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0812</td>
+    <td>Suppress warnings   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add flag to globally suppress warnings</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-01</td>
+    <td>2022-01-30</td>
+    <td>2021-12-01 08:50</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>use exudyn.SuppressWarnings(True) to turn off warnings</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0811</td>
+    <td>add default constructors</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add rule of five default constructors to SlimVector, SlimArray, ConstSizeVector and ConstSizeMatrix; remove mutable from data</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-11-28</td>
+    <td>2022-01-27</td>
+    <td>2021-11-28 21:56</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0810</td>
+    <td>GeneralContact visualization</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add visualization for searchtree (box) and bounding boxes</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-26</td>
+    <td>2022-01-25</td>
+    <td>2021-11-26 23:20</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>use SC.visualizationSettings.contact to adjust the various options to visualize the contact search tree</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0809</td>
+    <td>ParameterVariation  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Added a additional argument parameterFunctionData={} to function ParameterVariation(). The argument parameterFunctionData can be used to make global data available inside the parameterFunction.</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-26</td>
+    <td>2022-01-25</td>
+    <td>2021-11-26 12:57</td>
+    <td>Stefan Holzinger</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0808</td>
+    <td>Performance test for GeneralContact</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> added test with sphere contact</td>
+    <td>TESTINT</td>
+    <td></td>
+    <td>2021-11-26</td>
+    <td>2022-01-25</td>
+    <td>2021-11-26 10:49</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0807</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> added new functions to initialize searchTree, searchTreeBox and frictionPairings which were previously in FinalizeContact(...)</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-11-25</td>
+    <td>2022-01-24</td>
+    <td>2021-11-25 22:16</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0806</td>
+    <td>removed FinalizeContact</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> removed this function, which is now automatically called in mbs.Assemble()</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-11-25</td>
+    <td>2022-01-24</td>
+    <td>2021-11-25 22:15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0805</td>
+    <td>AssembleSystemInitialize</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add additional function inside mbs.Assemble() to initialize GeneralContact</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-25</td>
+    <td>2022-01-24</td>
+    <td>2021-11-25 22:14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0804</td>
+    <td>GeneralContact TriangleMesh</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add rigid-body-marker based triangle mesh to GeneralContact</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-25</td>
+    <td>2022-01-24</td>
+    <td>2021-12-04 10:08</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0803</td>
+    <td>PostNewton          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Check discontinuous iterations in combination with adaptive step (immediately reduces step size even if ignoreMaxSteps=True)</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2021-11-25</td>
+    <td>2022-01-24</td>
+    <td>2022-02-02 08:20</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>did not further show up; possibly due to non-convergence</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0802</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add TestModel for Sphere-Sphere GeneralContact</td>
+    <td>TESTING</td>
+    <td></td>
+    <td>2021-11-25</td>
+    <td>2022-01-24</td>
+    <td>2021-11-25 22:58</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0801</td>
+    <td>Box3D               </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check Ubuntu20 warnings; replace Vector3D pmin with Real pmin[3] to avoid warnings and gain speedup</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-11-23</td>
+    <td>2022-01-22</td>
+    <td>2021-11-25 11:08</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0800</td>
+    <td>GeneralContact ANCFCable</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add ANCFCable2D to GeneralContact, enabling contact with planar spheres (cylinders)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-19</td>
+    <td>2022-01-18</td>
+    <td>2022-01-18 18:54</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0799</td>
+    <td>GeneralContact description</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add general section in theDoc for description of GeneralContact</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-11-19</td>
+    <td>2022-01-18</td>
+    <td>2021-12-09 12:36</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0798</td>
     <td>Implicit GeneralContact</td>
     <td>JG</td>
@@ -1649,6 +4657,22 @@ last change =  2021-11-23
     <td>2021-11-04</td>
     <td>2022-01-03</td>
     <td>2021-11-13 23:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0793</td>
+    <td>performance section </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add performance and speedup section to theDoc, explaining most useful settings like modifiedNewton, EigenSparse, writeToFile, step size, numberOfThreads, constant mass matrix, etc.</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2021-11-02</td>
+    <td>2022-01-01</td>
+    <td>2021-12-09 12:36</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -1799,6 +4823,22 @@ last change =  2021-11-23
     <td>if a simulation with renderer is quit (also ESCAPE button), then a further call to solver will be ignored until the simulation is reset, or SetRenderEngineStopFlag(False)</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0779</td>
+    <td>sensor recorder     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add utilities function for recording signals internally in mbs; avoids writing to sensor files, which helps reducing overhead in ParameterVariation and GeneticOptimization</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-10-17</td>
+    <td>2021-12-16</td>
+    <td>2021-11-25 11:10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>available in Python utilities function AddSensorRecorder(...)</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0778</td>
     <td>GenericODE2 FEM     </td>
     <td>JG</td>
@@ -1909,6 +4949,22 @@ last change =  2021-11-23
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0770</td>
+    <td>Marker jacobian derivative2</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add jacobian derivative to most important connector markers</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-28</td>
+    <td>2021-11-27</td>
+    <td>2021-12-22 21:21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>implemented for markers except MarkerSuperElement; only MarkerPosition and MarkerRigidBody affected mostly; first tests show that jacobianDerivative agrees with numerical differentiation, BUT even increases iteration numbers</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0769</td>
@@ -2245,6 +5301,22 @@ last change =  2021-11-23
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0745</td>
+    <td>SensitivityAnalysis()</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add functionality to processing, evaluating the sensitivities of certain sensor values w.r.t. parameters; same interface as ParameterVariation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-09-03</td>
+    <td>2021-11-02</td>
+    <td>2022-02-14 09:50</td>
+    <td>Manzl Peter</td>
+    <td></td>
+    <td></td>
+    <td>see processing.ComputeSensitivities(...)</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0742</td>
@@ -3921,6 +6993,22 @@ last change =  2021-11-23
     <td>2021-03-30</td>
     <td>2021-05-29</td>
     <td>2021-04-07 13:47</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0618</td>
+    <td>robotics submodule  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Create robotics.special and robotics.mecanum or robotics.ros submodules with subdirectories</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-03-23</td>
+    <td>2021-05-22</td>
+    <td>2021-12-02 11:02</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -6293,6 +9381,22 @@ last change =  2021-11-23
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0450</td>
+    <td>MT integration      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fully integrate multithreading into system.cpp, vector.cpp and dense solver</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-09-16</td>
+    <td>2020-11-15</td>
+    <td>2021-12-09 18:17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>integrated into system, missing mass matrix and jacobian</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0449</td>

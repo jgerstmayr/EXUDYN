@@ -9,15 +9,985 @@ For major changes, also see \refSection{sec:changes}. For details, see the \text
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.1.42, 
-  \item last change =  2021-11-23, 
-  \item Number of issues = 802, 
-  \item Number of resolved issues = 706 (42 in current version), 
+  \item Exudyn version = 1.2.0, 
+  \item last change =  2022-03-18, 
+  \item Number of issues = 996, 
+  \item Number of resolved issues = 842 (0 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.2.0}:  resolved Issue 0995: {\bf add to pypi index}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add exudyn to pypi index; allows to use "pip install exudyn"}
+    \item   date resolved: {\bf 2022-03-18 10:44},
+date raised: 2022-03-18 
+  \ei
+  \item {\bf Version 1.1.177}: {\bf \color{warningRed}  resolved BUG 0994}: {\bf ObjectContactFrictionCircleCable2D}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: forces on circle added up twice, because weighting factor not considered}
+    \item {\bf notes: tested force on circle with static computation in belt drive}
+    \item   date resolved: {\bf 2022-03-18 08:30},
+date raised: 2022-03-18 
+  \ei
+  \item {\bf Version 1.1.176}:  resolved Issue 0880: {\bf User function for ConnectorCoordinateVector}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add user function for constraint and for jacobian; test with double pendulum made of masses}
+    \item   date resolved: {\bf 2022-03-17 18:14},
+date raised: 2022-01-24 
+  \ei
+  \item {\bf Version 1.1.175}: {\bf \color{warningRed}  resolved BUG 0993}: {\bf ObjectConnectorDistance}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: activeConnector=False produces wrong jacobian}
+    \item   date resolved: {\bf 2022-03-17 17:52},
+date raised: 2022-03-17 
+  \ei
+  \item {\bf Version 1.1.174}:  resolved Issue 0992: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add PlotSensorDefaults function which allows to set default values for all subsequent PlotSensor calls}
+    \item {\bf notes: use e.g. PlotSensorDefaults().fontSize=16 to change fontSize for all subsequent calls}
+    \item   date resolved: {\bf 2022-03-17 17:28},
+date raised: 2022-03-17 
+  \ei
+  \item {\bf Version 1.1.173}:  resolved Issue 0991: {\bf velocityOffset}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add velocity offset for SpringDamper and TorsionalSpringDamper, allowing simple controllers using offset and velocityOffset in preStepUser functions}
+    \item   date resolved: {\bf 2022-03-16 23:51},
+date raised: 2022-03-16 
+  \ei
+  \item {\bf Version 1.1.172}:  resolved Issue 0989: {\bf convergence problems}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add specific section in theDoc - Exudyn Basics related to ways for resolving convergence problems}
+    \item   date resolved: {\bf 2022-03-16 18:59},
+date raised: 2022-03-16 
+  \ei
+  \item {\bf Version 1.1.171}:  resolved Issue 0938: {\bf ANCFCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add drawing function for forces in normal direction with factor}
+    \item   date resolved: {\bf 2022-03-15 20:33},
+date raised: 2022-02-10 
+  \ei
+  \item {\bf Version 1.1.170}:  resolved Issue 0933: {\bf RigidBody}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add accelerationLocal and angularAccelerationLocal output}
+    \item {\bf notes: added to ObjectRigidBody and ObjectRigidBody2D}
+    \item   date resolved: {\bf 2022-03-15 20:14},
+date raised: 2022-02-07 
+  \ei
+  \item {\bf Version 1.1.169}:  resolved Issue 0967: {\bf ANCFCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add OutputVariables RotationMatrix, Rotation, AngularVelocity(Local) and AngularAcceleration}
+    \item {\bf notes: Acceleration, AngularVelocity and AngularAcceleration currently only implemented for ANCFCable2D but not for ALEANCFCable2D}
+    \item   date resolved: {\bf 2022-03-15 20:01},
+date raised: 2022-03-03 
+  \ei
+  \item {\bf Version 1.1.168}:  resolved Issue 0966: {\bf ANCFCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add missing terms for OutputVariables and AccessFunctions to allow constraints that are at local position y!=0}
+    \item   date resolved: {\bf 2022-03-15 19:54},
+date raised: 2022-03-03 
+  \ei
+  \item {\bf Version 1.1.167}:  resolved Issue 0983: {\bf plot}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add function to create plot-ready data from mbs.GetObjectOutputBody for a list of consecutive beams, e.g., axial force, displacement or curvature along axial reference coordinate}
+    \item {\bf notes: added function DataArrayFromSensorList which allows to create data from a list of sensors}
+    \item   date resolved: {\bf 2022-03-14 20:41},
+date raised: 2022-03-11 
+  \ei
+  \item {\bf Version 1.1.166}:  resolved Issue 0982: {\bf PlotSensor}
+(extentsion)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to plot 2D arrays}
+    \item {\bf notes: numpy arrays are used instead of sensorNumbers; these arrays must have the same format as data stored in sensor files; this data format does not create any labels}
+    \item   date resolved: {\bf 2022-03-14 16:24},
+date raised: 2022-03-11 
+  \ei
+  \item {\bf Version 1.1.165}:  resolved Issue 0985: {\bf startOfStepState}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: initialize startOfStepState together with currentState in InitializeSolverInitialConditions(...) in order to be valid when sensors are written in initialization}
+    \item   date resolved: {\bf 2022-03-14 13:07},
+date raised: 2022-03-14 
+  \ei
+  \item {\bf Version 1.1.164}:  resolved Issue 0981: {\bf ObjectContactFrictionCircleCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add OutputVariable functions for Coordinates (gap, slip), Coordinates\_t (gap\_t, slip\_t), and contact and friction forces per segment (ForceLocal)}
+    \item   date resolved: {\bf 2022-03-14 12:58},
+date raised: 2022-03-11 
+  \ei
+  \item {\bf Version 1.1.163}:  resolved Issue 0980: {\bf renderer precision}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add options for general precision in renderer: general.rendererPrecision as well as precision for colorbars in contour: contour.colorBarPrecision}
+    \item   date resolved: {\bf 2022-03-11 14:05},
+date raised: 2022-03-11 
+  \ei
+  \item {\bf Version 1.1.162}:  resolved Issue 0979: {\bf VisualizationSettings}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: VisualizationSettings.showContactForcesValues is added to show numerical values for contact forces}
+    \item   date resolved: {\bf 2022-03-11 10:19},
+date raised: 2022-03-11 
+  \ei
+  \item {\bf Version 1.1.161}:  resolved Issue 0978: {\bf ObjectANCFCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add improved axial strain computation for reduced order integration}
+    \item {\bf notes: works for axial strain and axial force if reducedAxialInterploation=True}
+    \item   date resolved: {\bf 2022-03-10 20:36},
+date raised: 2022-03-10 
+  \ei
+  \item {\bf Version 1.1.160}:  resolved Issue 0977: {\bf ObjectANCFCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add new mode useReducedOrderIntegration=2 with good performance/accuracy and exceptional representation of axial strains}
+    \item   date resolved: {\bf 2022-03-10 20:08},
+date raised: 2022-03-10 
+  \ei
+  \item {\bf Version 1.1.159}:  resolved Issue 0976: {\bf ContactCircleCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add visualization flag showContactCircle; uses circleTiling*4 for tiling (from VisualizationSettings.general)!}
+    \item   date resolved: {\bf 2022-03-10 14:15},
+date raised: 2022-03-10 
+  \ei
+  \item {\bf Version 1.1.158}:  resolved Issue 0975: {\bf VisualizationSettings}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: added showContactForces and contactForcesFactor in contact; this flag is currently only available in ContactCircleCable2D}
+    \item   date resolved: {\bf 2022-03-10 13:52},
+date raised: 2022-03-10 
+  \ei
+  \item {\bf Version 1.1.157}:  resolved Issue 0974: {\bf VisualizationSettings}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: moved contactPointsDefaultSize from connectors to contact; connectors.contactPointsDefaultSize is inactive from now!}
+    \item   date resolved: {\bf 2022-03-10 13:50},
+date raised: 2022-03-10 
+  \ei
+  \item {\bf Version 1.1.156}:  resolved Issue 0953: {\bf ContactFrictionCircleCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add improved (static) friction model}
+    \item {\bf notes: also added improved PostNewton switching strategies and changed initial values for NodeGenericData}
+    \item   date resolved: {\bf 2022-03-09 21:42},
+date raised: 2022-02-25 
+  \ei
+  \item {\bf Version 1.1.155}:  resolved Issue 0932: {\bf ANCFCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add velocityLocal + accelerationLocal output in axial/normal direction}
+    \item {\bf notes: only velocityLocal added}
+    \item   date resolved: {\bf 2022-03-06 18:24},
+date raised: 2022-02-07 
+  \ei
+  \item {\bf Version 1.1.154}:  resolved Issue 0931: {\bf ANCFCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add acceleration as output variable}
+    \item {\bf notes: only added for ANCF, but not for ALEANCF due to coupling terms with vALE}
+    \item   date resolved: {\bf 2022-03-06 18:24},
+date raised: 2022-02-07 
+  \ei
+  \item {\bf Version 1.1.153}:  resolved Issue 0970: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: PlotSensor allows to set fileCommentChar and fileDelimiterChar}
+    \item   date resolved: {\bf 2022-03-04 13:27},
+date raised: 2022-03-04 
+  \ei
+  \item {\bf Version 1.1.152}:  resolved Issue 0969: {\bf exudyn.plot}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: added method to convert output files from other codes; in particular plot.FileStripSpaces(...) can be used to strip leading / trailing spaces and remove double spaces}
+    \item   date resolved: {\bf 2022-03-04 13:27},
+date raised: 2022-03-04 
+  \ei
+  \item {\bf Version 1.1.151}:  resolved Issue 0965: {\bf ANCFCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option for strainIsRelativeToReference, which if set to 1. accounts for the reference geometry as the stress-free configuration; also works for ALE Cable2D}
+    \item   date resolved: {\bf 2022-03-03 08:13},
+date raised: 2022-03-03 
+  \ei
+  \item {\bf Version 1.1.150}:  resolved Issue 0964: {\bf CreateReevingCurve}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: corrected sign of returned curvatures, now can be directly used for beam elements}
+    \item   date resolved: {\bf 2022-03-02 17:20},
+date raised: 2022-03-02 
+  \ei
+  \item {\bf Version 1.1.149}: {\bf \color{warningRed}  resolved BUG 0963}: {\bf CreateReevingCurve}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: removeFirstLine=True not working: wrong case i==0 needs to be changed to i==1}
+    \item   date resolved: {\bf 2022-03-02 15:25},
+date raised: 2022-03-02 
+  \ei
+  \item {\bf Version 1.1.148}:  resolved Issue 0962: {\bf CreateReevingCurve}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: adjust number of nodes in case of closed Curve (numberOfANCFnodes=20 gives 20 elements in this case)}
+    \item   date resolved: {\bf 2022-03-02 15:25},
+date raised: 2022-03-02 
+  \ei
+  \item {\bf Version 1.1.147}:  resolved Issue 0961: {\bf stepInformation}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: changed flags in timeIntegration and staticSolver stepInformation: value of 1024 now causes output at every step; all values > 16 have been divided by two; 255=detailed overall output, 2047=detailed output every step; see SimulationSettings in theDoc}
+    \item   date resolved: {\bf 2022-03-02 10:33},
+date raised: 2022-03-02 
+  \ei
+  \item {\bf Version 1.1.146}:  resolved Issue 0959: {\bf coordinatesSolution}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: change ending of coordinates solution files from .txt to .sol in case of binary files}
+    \item   date resolved: {\bf 2022-03-02 10:14},
+date raised: 2022-03-02 
+  \ei
+  \item {\bf Version 1.1.145}:  resolved Issue 0960: {\bf ObjectContactFrictionCircleCable2D}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: move to ObjectContactFrictionCircleCable2DOld and improve new version}
+    \item   date resolved: {\bf 2022-03-02 09:50},
+date raised: 2022-03-02 
+  \ei
+  \item {\bf Version 1.1.144}:  resolved Issue 0958: {\bf LoadForceVector}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add note to description in forces that user function values are available in sensors, but they are not updated during drawing}
+    \item   date resolved: {\bf 2022-03-01 19:40},
+date raised: 2022-02-28 
+  \ei
+  \item {\bf Version 1.1.143}:  resolved Issue 0952: {\bf rolling joints}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: ConnectorRollingDiscPenalty and JointRollingDisc now add a OutputVariable RotationMatrix, containing the J1 to global transformation}
+    \item   date resolved: {\bf 2022-03-01 19:35},
+date raised: 2022-02-25 
+  \ei
+  \item {\bf Version 1.1.142}:  resolved Issue 0951: {\bf Friction}
+(test)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: test LuGre friction model as ODE1 model versus position/history based model}
+    \item {\bf notes: added lugreFrictionODE1.py as a demo showing the LuGre model based on a ODE1 user function}
+    \item   date resolved: {\bf 2022-03-01 19:34},
+date raised: 2022-02-24 
+  \ei
+  \item {\bf Version 1.1.141}:  resolved Issue 0956: {\bf ProfileLinearAccelerationsList}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add linear acceleration profile to robotics.motion, currently only allowing to create profile directly from accelerations}
+    \item   date resolved: {\bf 2022-02-28 19:05},
+date raised: 2022-02-28 
+  \ei
+  \item {\bf Version 1.1.140}:  resolved Issue 0955: {\bf robotics.motion}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: change PTPprofile to BasicProfile}
+    \item   date resolved: {\bf 2022-02-28 09:59},
+date raised: 2022-02-28 
+  \ei
+  \item {\bf Version 1.1.139}: {\bf \color{warningRed}  resolved BUG 0950}: {\bf JointRollingDisc}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: OutputVariable VelocityLocal is returned in global coordinates; description in theDoc is wrong; will be changed to outputVariable Velocity; local velocity will represent the slippage in special local joint J1 coordinates; see theDoc for updated functionality and outputs}
+    \item   date resolved: {\bf 2022-02-25 14:32},
+date raised: 2022-02-22 
+  \ei
+  \item {\bf Version 1.1.138}: {\bf \color{warningRed}  resolved BUG 0949}: {\bf ConnectorRollingDiscPenalty}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: OutputVariable VelocityLocal local is returned in global coordinates; description in theDoc is wrong; will be changed to outputVariable Velocity; see theDoc for updated functionality and outputs}
+    \item   date resolved: {\bf 2022-02-25 14:32},
+date raised: 2022-02-22 
+  \ei
+  \item {\bf Version 1.1.137}:  resolved Issue 0946: {\bf sensors storeInternal}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: adapt most TestModels to store sensordata internally}
+    \item   date resolved: {\bf 2022-02-21 00:43},
+date raised: 2022-02-20 
+  \ei
+  \item {\bf Version 1.1.136}:  resolved Issue 0947: {\bf TestModels}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: change most test models to use Sensors storeInternal mode; this avoids creating many files during TestSuite runs}
+    \item   date resolved: {\bf 2022-02-20 20:40},
+date raised: 2022-02-20 
+  \ei
+  \item {\bf Version 1.1.135}:  resolved Issue 0921: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to add subplots}
+    \item {\bf notes: allows to create subplots, adjusting also the plot size using sizeInches; for examples see Examples/plotSensorExamples.py}
+    \item   date resolved: {\bf 2022-02-19 22:45},
+date raised: 2022-02-02 
+  \ei
+  \item {\bf Version 1.1.134}:  resolved Issue 0922: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to add linewidth, markersize, markerStyles=["o",...], markerSizes=[], lineStyles=["-",...], colors=[..], markerDensity=...; lineWidths=[] allowing to plot a reduced number of markers on top of a line}
+    \item {\bf notes: added many options for line and marker styles, check: colors, lineStyles, lineWidths, markerStyles, markerSizes, markerDensity}
+    \item   date resolved: {\bf 2022-02-19 22:41},
+date raised: 2022-02-02 
+  \ei
+  \item {\bf Version 1.1.133}:  resolved Issue 0920: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add x-range and y-range for zoom}
+    \item {\bf notes: added rangeX and rangeY options to specify range}
+    \item   date resolved: {\bf 2022-02-19 16:59},
+date raised: 2022-02-02 
+  \ei
+  \item {\bf Version 1.1.132}:  resolved Issue 0945: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extend option for offsets, allowing sensor data to use as offset (e.g., loaded from file or from internal sensor data)}
+    \item {\bf notes: see plotSensorExamples for some particular usage}
+    \item   date resolved: {\bf 2022-02-19 16:45},
+date raised: 2022-02-19 
+  \ei
+  \item {\bf Version 1.1.131}:  resolved Issue 0944: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add argument labels, which can be string (for one sensor) or list of strings (according to number of sensors resp. components) representing the labels used in legend; if not provided, automatically generated legend is used }
+    \item   date resolved: {\bf 2022-02-19 15:47},
+date raised: 2022-02-19 
+  \ei
+  \item {\bf Version 1.1.130}:  resolved Issue 0918: {\bf Sensors store values internally}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to store sensor values internally; using ResizableMatrix internally; rows added and matrix is automatically resized}
+    \item {\bf notes: storeInternal boost the speed of writing sensor values, however, most of time is spent on computing sensor values, which typically about 2 seconds for 1e6 time steps per sensor; file write adds usually 3 seconds extra on that bill}
+    \item   date resolved: {\bf 2022-02-19 00:13},
+date raised: 2022-02-02 
+  \ei
+  \item {\bf Version 1.1.129}:  resolved Issue 0943: {\bf mbs.GetSensorStoredData()}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add MainSystem functionality to retrieve internally stored data in sensor; used, e.g., for PlotSensor to plot data without storing in files}
+    \item   date resolved: {\bf 2022-02-19 00:10},
+date raised: 2022-02-18 
+  \ei
+  \item {\bf Version 1.1.128}: {\bf \color{warningRed}  resolved BUG 0942}: {\bf sensorsAppendToFile}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: appendToFile is used instead of sensorsAppendToFile for switching between append and replace operations for files}
+    \item   date resolved: {\bf 2022-02-18 20:54},
+date raised: 2022-02-18 
+  \ei
+  \item {\bf Version 1.1.127}:  resolved Issue 0901: {\bf SimulationSettings}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: improve type completion by adding py::init<...> functions for all subclasses}
+    \item {\bf notes: not solvable in this simple way as type completion is not improved when adding this information}
+    \item   date resolved: {\bf 2022-02-18 20:30},
+date raised: 2022-01-31 
+  \ei
+  \item {\bf Version 1.1.126}:  resolved Issue 0941: {\bf MotionInterpolator}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: mark as deprecated; instead, created motion submodule in robotics with class Trajectory; uses classes ProfileConstantAcceleration and ProfilePTP to construct piecewise profiles for trajectory; precomputes acceleration profiles in first step and thus is several factors faster in Python implementation; Trajectory converts to dict and can be printed in order to obtain key values of computed trajectories}
+    \item   date resolved: {\bf 2022-02-18 16:31},
+date raised: 2022-02-15 
+  \ei
+  \item {\bf Version 1.1.125}:  resolved Issue 0940: {\bf MotionInterpolator}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to add trajectories defined by duration as well as by maxVelocity and maxAcceleration using synchronous PTP trajectory generation}
+    \item   date resolved: {\bf 2022-02-15 12:38},
+date raised: 2022-02-15 
+  \ei
+  \item {\bf Version 1.1.124}: {\bf \color{warningRed}  resolved BUG 0939}: {\bf NodeRigidBody2D}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: does not correctly measure rotations (returns x-coordinate instead of angle)}
+    \item   date resolved: {\bf 2022-02-15 09:58},
+date raised: 2022-02-15 
+  \ei
+  \item {\bf Version 1.1.123}:  resolved Issue 0745: {\bf SensitivityAnalysis()}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add functionality to processing, evaluating the sensitivities of certain sensor values w.r.t. parameters; same interface as ParameterVariation}
+    \item {\bf notes: see processing.ComputeSensitivities(...)}
+    \item   date resolved: {\bf 2022-02-14 09:50},
+date raised: 2021-09-03 (resolved by: Manzl Peter)
+  \ei
+  \item {\bf Version 1.1.122}: {\bf \color{warningRed}  resolved BUG 0934}: {\bf exudyn.signal}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: conflicts with Python 3.8.8 and Python 3.9.7 (and possibly other) with internal Python signal package; change exudyn.signal to exudyn.signalProcessing}
+    \item   date resolved: {\bf 2022-02-10 09:23},
+date raised: 2022-02-10 
+  \ei
+  \item {\bf Version 1.1.121}:  resolved Issue 0870: {\bf binary output}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to create binary solution files}
+    \item {\bf notes: notes: use outputPrecision to switch between float and double - see there; speeds up file writing considerably and reduces file sizes; Integrated into LoadSolutionFile}
+    \item   date resolved: {\bf 2022-02-09 08:45},
+date raised: 2022-01-18 
+  \ei
+  \item {\bf Version 1.1.120}:  resolved Issue 0930: {\bf LoadSolutionFile}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extend function to check if binary file; if yes, switches to binary mode}
+    \item   date resolved: {\bf 2022-02-09 08:44},
+date raised: 2022-02-07 
+  \ei
+  \item {\bf Version 1.1.119}:  resolved Issue 0929: {\bf coordinatesSolution, sensors}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add version to coordinatesSolutionFile and sensor output files; should not affect current parsing of output files}
+    \item   date resolved: {\bf 2022-02-07 00:02},
+date raised: 2022-02-07 
+  \ei
+  \item {\bf Version 1.1.118}:  resolved Issue 0878: {\bf sort settings options}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: sort settings representation in Python by sorting dictionaries prior to writing inteface files; keep current sorting (grouping) in latex documentation}
+    \item {\bf notes: type completion may change sorting afterwards}
+    \item   date resolved: {\bf 2022-02-06 21:57},
+date raised: 2022-01-24 
+  \ei
+  \item {\bf Version 1.1.117}:  resolved Issue 0928: {\bf CPP UNIT TESTS}
+(testing)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: fail because of change of ConstSizeVector to use move assignment and move constructor}
+    \item {\bf notes: adapted test to avoid move assignment}
+    \item   date resolved: {\bf 2022-02-06 00:04},
+date raised: 2022-02-06 
+  \ei
+  \item {\bf Version 1.1.116}:  resolved Issue 0919: {\bf Minimize}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add optimization with same interface as GenticOptimization but based on scipy.minimize}
+    \item {\bf notes: added Minimize to processing; usage is nearly same as GeneticOptimization(...); example under Examples/minimizeExample.py}
+    \item   date resolved: {\bf 2022-02-04 15:45},
+date raised: 2022-02-02 (resolved by: Stefan Holzinger)
+  \ei
+  \item {\bf Version 1.1.115}: {\bf \color{warningRed}  resolved BUG 0924}: {\bf GeneralContact}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: WARNING message raised in ANCF contact}
+    \item   date resolved: {\bf 2022-02-03 12:01},
+date raised: 2022-02-03 
+  \ei
+  \item {\bf Version 1.1.114}:  resolved Issue 0923: {\bf CreateReevingCurve}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add function CreateReevingCurve(...) in exudyn.beams to create reeving system along circles, allows to create curve and nodes for ANCFCable2D elements created with PointsAndSlopes2ANCFCable2D(...); see Examples/reevingSystem.py}
+    \item   date resolved: {\bf 2022-02-03 12:00},
+date raised: 2022-02-02 
+  \ei
+  \item {\bf Version 1.1.113}:  resolved Issue 0803: {\bf PostNewton}
+(check)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: Check discontinuous iterations in combination with adaptive step (immediately reduces step size even if ignoreMaxSteps=True)}
+    \item {\bf notes: did not further show up; possibly due to non-convergence}
+    \item   date resolved: {\bf 2022-02-02 08:20},
+date raised: 2021-11-25 
+  \ei
+  \item {\bf Version 1.1.112}:  resolved Issue 0906: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option componentsX to add x-components for figures, e.g., to plot y over x position, instead over time}
+    \item   date resolved: {\bf 2022-02-01 18:34},
+date raised: 2022-02-01 
+  \ei
+  \item {\bf Version 1.1.111}:  resolved Issue 0864: {\bf automatic example referencing}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: fix searching for examples, e.g., NodePoint as NodePoint( in order no to find NodePoint2D examples}
+    \item   date resolved: {\bf 2022-01-31 23:01},
+date raised: 2022-01-14 
+  \ei
+  \item {\bf Version 1.1.110}: {\bf \color{warningRed}  resolved BUG 0903}: {\bf GeneralContact}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: autocomputed searchTree gives very large values and visualization not working}
+    \item {\bf notes: ANCFCable2D bounding box computation had 1 wrong else case}
+    \item   date resolved: {\bf 2022-01-31 21:34},
+date raised: 2022-01-31 
+  \ei
+  \item {\bf Version 1.1.109}:  resolved Issue 0899: {\bf GenerateCircularArcANCFCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add function to create beams along circular arc}
+    \item   date resolved: {\bf 2022-01-31 14:20},
+date raised: 2022-01-30 
+  \ei
+  \item {\bf Version 1.1.108}: {\bf \color{warningRed}  resolved BUG 0902}: {\bf GenerateStraightLineANCFCable2D}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: cableNodePositionList does not returns 3D vectors for nodes except first node}
+    \item   date resolved: {\bf 2022-01-31 14:19},
+date raised: 2022-01-31 
+  \ei
+  \item {\bf Version 1.1.107}:  resolved Issue 0898: {\bf GenerateStraightLineANCFCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to use existing nodes in generation of beams}
+    \item   date resolved: {\bf 2022-01-31 10:11},
+date raised: 2022-01-30 
+  \ei
+  \item {\bf Version 1.1.106}:  resolved Issue 0897: {\bf add Python utility beams}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add exudyn.beams utility module, containing helper functions for creating beams, etc.; move existing functions to this module}
+    \item   date resolved: {\bf 2022-01-31 10:11},
+date raised: 2022-01-30 
+  \ei
+  \item {\bf Version 1.1.105}: {\bf \color{warningRed}  resolved BUG 0900}: {\bf GenerateStraightLineANCFCable2D}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: arguments vALE and ConstrainAleCoordinate are not implemented and need to be removed}
+    \item   date resolved: {\bf 2022-01-30 23:32},
+date raised: 2022-01-30 
+  \ei
+  \item {\bf Version 1.1.104}:  resolved Issue 0896: {\bf theDoc objects}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: sort objects into bodies, basic connectors, constraints and joints}
+    \item   date resolved: {\bf 2022-01-30 23:12},
+date raised: 2022-01-30 
+  \ei
+  \item {\bf Version 1.1.103}:  resolved Issue 0895: {\bf ConnectorGravity}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add connector representing gravitational forces between heavy masses (planet, satellite, etc.)}
+    \item   date resolved: {\bf 2022-01-30 19:05},
+date raised: 2022-01-30 
+  \ei
+  \item {\bf Version 1.1.102}:  resolved Issue 0894: {\bf colors}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: added several colors in graphicsDataUtilities, added color4black, extended color4list to 16 colors}
+    \item   date resolved: {\bf 2022-01-30 18:10},
+date raised: 2022-01-30 
+  \ei
+  \item {\bf Version 1.1.101}:  resolved Issue 0893: {\bf GeneralContact}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: changed flag introSpheresContact to sphereSphereContact; added flag for special mode to recycle last Post Newton step friction force}
+    \item   date resolved: {\bf 2022-01-28 18:55},
+date raised: 2022-01-28 
+  \ei
+  \item {\bf Version 1.1.100}:  resolved Issue 0891: {\bf adapt to Python3.9}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: make wheels and installers for Python3.9, running on Anaconda3-2021-11 Windows-x86\_64}
+    \item   date resolved: {\bf 2022-01-25 23:31},
+date raised: 2022-01-25 
+  \ei
+  \item {\bf Version 1.1.99}:  resolved Issue 0889: {\bf PlotSensor}
+(testing)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add test for PlotSensor, returning 1 if all plotting runs without crashing}
+    \item   date resolved: {\bf 2022-01-25 19:03},
+date raised: 2022-01-25 
+  \ei
+  \item {\bf Version 1.1.98}:  resolved Issue 0890: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add possibility to use filenames instead of sensor numbers, automatically loading these files}
+    \item   date resolved: {\bf 2022-01-25 18:00},
+date raised: 2022-01-25 
+  \ei
+  \item {\bf Version 1.1.97}: {\bf \color{warningRed}  resolved BUG 0887}: {\bf iPython output stops}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: after a solver error, output of iPython stops}
+    \item {\bf notes: changed to correct catching/throwing of Python and C++ exception types; outpur continues after solver error}
+    \item   date resolved: {\bf 2022-01-25 14:25},
+date raised: 2022-01-25 
+  \ei
+  \item {\bf Version 1.1.96}:  resolved Issue 0885: {\bf GetInterpolatedSignalValue}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add check in case that time values are distributed non-uniform; add tolerance as option}
+    \item   date resolved: {\bf 2022-01-25 12:10},
+date raised: 2022-01-25 
+  \ei
+  \item {\bf Version 1.1.95}:  resolved Issue 0884: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add optional title to plot}
+    \item   date resolved: {\bf 2022-01-25 11:52},
+date raised: 2022-01-25 
+  \ei
+  \item {\bf Version 1.1.94}:  resolved Issue 0883: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: if sensorNumbers is scalar, components is a list, sensorNumbers is automatically adjusted; accepts now e.g. PlotSensor(mbs, 0, components=[0,1,2])}
+    \item   date resolved: {\bf 2022-01-25 11:36},
+date raised: 2022-01-25 
+  \ei
+  \item {\bf Version 1.1.93}:  resolved Issue 0881: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to apply factors and offsets to plotted signals; add option to add labels which appears at legend}
+    \item   date resolved: {\bf 2022-01-25 11:36},
+date raised: 2022-01-25 
+  \ei
+  \item {\bf Version 1.1.92}:  resolved Issue 0882: {\bf PlotSensor}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to use X, Y and Z components instead of 0, 1, 2 for Position, Displacement etc.; this option is enabled by default and changes the appearance -> set False, to preserve the old mode; component now also shown if only one curve plotted}
+    \item   date resolved: {\bf 2022-01-25 11:19},
+date raised: 2022-01-25 
+  \ei
+  \item {\bf Version 1.1.91}:  resolved Issue 0879: {\bf LoadSolutionFile}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: changed safeMode to loading sinle lines, which saves memory enormously, and added new options for loading huge files}
+    \item   date resolved: {\bf 2022-01-24 14:53},
+date raised: 2022-01-24 
+  \ei
+  \item {\bf Version 1.1.90}: {\bf \color{warningRed}  resolved BUG 0877}: {\bf AddSensorRecorder}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: fails for scalar Sensors OutputVariableTypes (e.g. when measuring Rotation of TorsionalSpringDamper)}
+    \item {\bf notes: added special scalar case}
+    \item   date resolved: {\bf 2022-01-21 09:17},
+date raised: 2022-01-21 
+  \ei
+  \item {\bf Version 1.1.89}:  resolved Issue 0876: {\bf flush files}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to flush solution and sensor files immediately after writing, simplifying the readout process; add option for large scale simulations, which are always flushed - helping for continuation of computations on supercomputers}
+    \item   date resolved: {\bf 2022-01-20 14:01},
+date raised: 2022-01-20 
+  \ei
+  \item {\bf Version 1.1.88}:  resolved Issue 0875: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: fixed fontSize option and add options for minor/major ticks and SAVE figure to PlotSensor(...) using fileName=...}
+    \item   date resolved: {\bf 2022-01-19 11:08},
+date raised: 2022-01-19 
+  \ei
+  \item {\bf Version 1.1.87}:  resolved Issue 0800: {\bf GeneralContact ANCFCable}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add ANCFCable2D to GeneralContact, enabling contact with planar spheres (cylinders)}
+    \item   date resolved: {\bf 2022-01-18 18:54},
+date raised: 2021-11-19 
+  \ei
+  \item {\bf Version 1.1.86}:  resolved Issue 0866: {\bf numberOfThreads}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: move simulationSettings.numberOfThreads into new section parallel in simulationSettings; remove comment [not implemented]}
+    \item   date resolved: {\bf 2022-01-18 17:43},
+date raised: 2022-01-15 
+  \ei
+  \item {\bf Version 1.1.85}:  resolved Issue 0872: {\bf preStepPyExecute}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: remove preStepPyExecute from docu, time integration / static solver interface and from CSolverBase}
+    \item   date resolved: {\bf 2022-01-18 16:57},
+date raised: 2022-01-18 
+  \ei
+  \item {\bf Version 1.1.84}:  resolved Issue 0874: {\bf improved Newton restart}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: added an additional Newton iteration after restarting modified Newton or when switching to full Newton; this reduces effects in generalized alpha and may improve behaviour with severe nonlinearities}
+    \item   date resolved: {\bf 2022-01-18 13:44},
+date raised: 2022-01-18 
+  \ei
+  \item {\bf Version 1.1.83}:  resolved Issue 0869: {\bf adaptiveStepRecoveryIterations}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to static and dynamic solvers to adjust max. Newton+disc. iterations prior to increase of step size; changed (previous internal) default value from 5 to 7}
+    \item   date resolved: {\bf 2022-01-17 19:54},
+date raised: 2022-01-17 
+  \ei
+  \item {\bf Version 1.1.82}:  resolved Issue 0868: {\bf solverSettings.stepInformation}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: change modes to add up binary flags; ADD several new options to show Newton iterations, jacobians, discontinuous iterations, per step or period; also add option to show output at every step}
+    \item   date resolved: {\bf 2022-01-17 12:11},
+date raised: 2022-01-17 
+  \ei
+  \item {\bf Version 1.1.81}:  resolved Issue 0857: {\bf GetInterpolatedSignalValue}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: new function to interpolate a numeric signal with time/data vectors at a certain time point}
+    \item   date resolved: {\bf 2022-01-11 15:41},
+date raised: 2022-01-11 
+  \ei
+  \item {\bf Version 1.1.80}:  resolved Issue 0856: {\bf IndexFromValue}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: function got faster mode in case of constant sampling rate}
+    \item   date resolved: {\bf 2022-01-11 14:39},
+date raised: 2022-01-11 
+  \ei
+  \item {\bf Version 1.1.79}:  resolved Issue 0854: {\bf Add LTG description}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add section on local-to-global mapping of coordinates \refSection{sec:systemData:LTG}}
+    \item   date resolved: {\bf 2022-01-08 12:09},
+date raised: 2022-01-08 
+  \ei
+  \item {\bf Version 1.1.78}:  resolved Issue 0849: {\bf publications directory}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: create separate directory Examples/publications/ for publication data, Python files of numerical examples, etc.}
+    \item   date resolved: {\bf 2022-01-06 16:32},
+date raised: 2022-01-06 
+  \ei
+  \item {\bf Version 1.1.77}:  resolved Issue 0846: {\bf analytic jacobians}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add analytic jacobians general functionality, realized for CartesianSpringDamper and CoordinateSpringDamper; deactivate with newton.numericalDifferentiation.forODE2connectors = False}
+    \item   date resolved: {\bf 2021-12-23 11:07},
+date raised: 2021-12-23 
+  \ei
+  \item {\bf Version 1.1.76}:  resolved Issue 0770: {\bf Marker jacobian derivative2}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add jacobian derivative to most important connector markers}
+    \item {\bf notes: implemented for markers except MarkerSuperElement; only MarkerPosition and MarkerRigidBody affected mostly; first tests show that jacobianDerivative agrees with numerical differentiation, BUT even increases iteration numbers}
+    \item   date resolved: {\bf 2021-12-22 21:21},
+date raised: 2021-09-28 
+  \ei
+  \item {\bf Version 1.1.75}:  resolved Issue 0842: {\bf implement AccessFunctionType::JacobianTtimesVector\_q}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: implement function needed for MarkerBody for objects ANCFCable, ObjectFFRF and ObjectFFRFreducedOrder; currently raising exception if used in this setup!}
+    \item   date resolved: {\bf 2021-12-22 21:18},
+date raised: 2021-12-22 
+  \ei
+  \item {\bf Version 1.1.74}:  resolved Issue 0831: {\bf Explicit solvers}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: remove second ComputeODE2Acceleration() call and copy solutionODE2\_tt from beginning of time step rk.stageDerivODE2\_t[0], same for ODE1 variables; add flag but change that by default as it speeds up 2x; could also use information from previous step ...?}
+    \item   date resolved: {\bf 2021-12-20 13:09},
+date raised: 2021-12-15 
+  \ei
+  \item {\bf Version 1.1.73}:  resolved Issue 0832: {\bf explicit integrator}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add flag timeintegration.explicitIntegration.computeEndOfStepAccelerations to compute end-of-step accelerations; this computation doubles the effort of explicit one-step-methods, particularly relevant in particles or contact simulations}
+    \item   date resolved: {\bf 2021-12-17 12:38},
+date raised: 2021-12-17 
+  \ei
+  \item {\bf Version 1.1.72}:  resolved Issue 0450: {\bf MT integration}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: fully integrate multithreading into system.cpp, vector.cpp and dense solver}
+    \item {\bf notes: integrated into system, missing mass matrix and jacobian}
+    \item   date resolved: {\bf 2021-12-09 18:17},
+date raised: 2020-09-16 
+  \ei
+  \item {\bf Version 1.1.71}:  resolved Issue 0799: {\bf GeneralContact description}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add general section in theDoc for description of GeneralContact}
+    \item   date resolved: {\bf 2021-12-09 12:36},
+date raised: 2021-11-19 
+  \ei
+  \item {\bf Version 1.1.70}:  resolved Issue 0793: {\bf performance section}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add performance and speedup section to theDoc, explaining most useful settings like modifiedNewton, EigenSparse, writeToFile, step size, numberOfThreads, constant mass matrix, etc.}
+    \item   date resolved: {\bf 2021-12-09 12:36},
+date raised: 2021-11-02 
+  \ei
+  \item {\bf Version 1.1.69}:  resolved Issue 0823: {\bf add trig-sphere friction tests}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add simple test cases to check friction implementation}
+    \item   date resolved: {\bf 2021-12-09 08:28},
+date raised: 2021-12-06 
+  \ei
+  \item {\bf Version 1.1.68}:  resolved Issue 0822: {\bf shrink mesh}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add method to shrink meshes using max distance to surface with normals; used for contact trig-sphere implementation}
+    \item {\bf notes: currently slows down for larger meshes due to elimination of duplicate points!}
+    \item   date resolved: {\bf 2021-12-09 08:28},
+date raised: 2021-12-06 
+  \ei
+  \item {\bf Version 1.1.67}: {\bf \color{warningRed}  resolved BUG 0827}: {\bf GraphicsData cube}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: cubes has wrong numbering of nodes}
+    \item {\bf notes: FIXED numbering in order to allow for correct normals needed in contact computation}
+    \item   date resolved: {\bf 2021-12-07 17:14},
+date raised: 2021-12-07 
+  \ei
+  \item {\bf Version 1.1.66}:  resolved Issue 0826: {\bf GraphicsData normals}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add normals to some GraphicsData  cube objects}
+    \item   date resolved: {\bf 2021-12-07 16:27},
+date raised: 2021-12-07 
+  \ei
+  \item {\bf Version 1.1.65}:  resolved Issue 0825: {\bf GraphicsData add defaults}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add some default values, especially to (center)point of GraphicsDataSphere, GraphicsDataCylinder, GraphicsDataOrthoCube, etc. in order to reduce interface sizes for objects added in the centerpoint [0,0,0]; thus some defaults were also necessary for radius or sizes!}
+    \item   date resolved: {\bf 2021-12-07 14:41},
+date raised: 2021-12-07 
+  \ei
+  \item {\bf Version 1.1.64}:  resolved Issue 0824: {\bf PlotSensor}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: added serval NEW options, including: newFigure, colorCodeOffset, figureName and closeAll; NOTE that now PlotSensor by default opens a new figure!}
+    \item   date resolved: {\bf 2021-12-07 12:11},
+date raised: 2021-12-07 
+  \ei
+  \item {\bf Version 1.1.63}: {\bf \color{warningRed}  resolved BUG 0820}: {\bf RigidBody visualization}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: normals in rigid body visualization transformed wrongly}
+    \item {\bf notes: before, rotating bodies may have shown shading, now resolved}
+    \item   date resolved: {\bf 2021-12-05 17:32},
+date raised: 2021-12-05 
+  \ei
+  \item {\bf Version 1.1.62}:  resolved Issue 0816: {\bf GraphicsData convert}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add function GraphicsData2TrigsAndPoints(...) to convert graphicsData into triangles and points}
+    \item   date resolved: {\bf 2021-12-05 15:43},
+date raised: 2021-12-02 
+  \ei
+  \item {\bf Version 1.1.61}:  resolved Issue 0814: {\bf robotics.future, robotics.utilities, robotics.mobile}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add special submodules for robotics functions; future contains currently developed submodules that will be available in future at a different location in robotics}
+    \item   date resolved: {\bf 2021-12-05 15:43},
+date raised: 2021-12-02 
+  \ei
+  \item {\bf Version 1.1.60}:  resolved Issue 0819: {\bf ObjectRigidBody}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: correct HasConstantMassMatrix for Lie group nodes and COM=0}
+    \item   date resolved: {\bf 2021-12-05 11:19},
+date raised: 2021-12-05 
+  \ei
+  \item {\bf Version 1.1.59}:  resolved Issue 0804: {\bf GeneralContact TriangleMesh}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: Add rigid-body-marker based triangle mesh to GeneralContact}
+    \item   date resolved: {\bf 2021-12-04 10:08},
+date raised: 2021-11-25 
+  \ei
+  \item {\bf Version 1.1.58}:  resolved Issue 0818: {\bf MergeGraphicsDataTriangleList}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: now works if either both lists contain normals or both do not}
+    \item   date resolved: {\bf 2021-12-03 20:15},
+date raised: 2021-12-03 
+  \ei
+  \item {\bf Version 1.1.57}:  resolved Issue 0817: {\bf NodePointGround}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add Node::Orientation to NodeType, such that it can also be used as a rigidBody node}
+    \item   date resolved: {\bf 2021-12-03 14:34},
+date raised: 2021-12-03 
+  \ei
+  \item {\bf Version 1.1.56}:  resolved Issue 0815: {\bf tCPU showing wrong time}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: minor bug; time shown is since starting of iPython}
+    \item   date resolved: {\bf 2021-12-02 17:48},
+date raised: 2021-12-02 
+  \ei
+  \item {\bf Version 1.1.55}:  resolved Issue 0813: {\bf exudyn.robotics.special}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extend and move roboticsSpecial to robotics.special; add special robotics functionality likde manipulability}
+    \item   date resolved: {\bf 2021-12-02 11:03},
+date raised: 2021-12-02 (resolved by: Martin Sereinig)
+  \ei
+  \item {\bf Version 1.1.54}:  resolved Issue 0618: {\bf robotics submodule}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: Create robotics.special and robotics.mecanum or robotics.ros submodules with subdirectories}
+    \item   date resolved: {\bf 2021-12-02 11:02},
+date raised: 2021-03-23 
+  \ei
+  \item {\bf Version 1.1.53}:  resolved Issue 0812: {\bf Suppress warnings}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add flag to globally suppress warnings}
+    \item {\bf notes: use exudyn.SuppressWarnings(True) to turn off warnings}
+    \item   date resolved: {\bf 2021-12-01 08:50},
+date raised: 2021-12-01 
+  \ei
+  \item {\bf Version 1.1.52}:  resolved Issue 0811: {\bf add default constructors}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add rule of five default constructors to SlimVector, SlimArray, ConstSizeVector and ConstSizeMatrix; remove mutable from data}
+    \item   date resolved: {\bf 2021-11-28 21:56},
+date raised: 2021-11-28 
+  \ei
+  \item {\bf Version 1.1.51}:  resolved Issue 0810: {\bf GeneralContact visualization}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add visualization for searchtree (box) and bounding boxes}
+    \item {\bf notes: use SC.visualizationSettings.contact to adjust the various options to visualize the contact search tree}
+    \item   date resolved: {\bf 2021-11-26 23:20},
+date raised: 2021-11-26 
+  \ei
+  \item {\bf Version 1.1.50}:  resolved Issue 0809: {\bf ParameterVariation}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: Added a additional argument parameterFunctionData={} to function ParameterVariation(). The argument parameterFunctionData can be used to make global data available inside the parameterFunction.}
+    \item   date resolved: {\bf 2021-11-26 12:57},
+date raised: 2021-11-26 (resolved by: Stefan Holzinger)
+  \ei
+  \item {\bf Version 1.1.49}:  resolved Issue 0808: {\bf Performance test for GeneralContact}
+(testint)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: added test with sphere contact}
+    \item   date resolved: {\bf 2021-11-26 10:49},
+date raised: 2021-11-26 
+  \ei
+  \item {\bf Version 1.1.48}:  resolved Issue 0802: {\bf GeneralContact}
+(testing)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add TestModel for Sphere-Sphere GeneralContact}
+    \item   date resolved: {\bf 2021-11-25 22:58},
+date raised: 2021-11-25 
+  \ei
+  \item {\bf Version 1.1.47}:  resolved Issue 0807: {\bf GeneralContact}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: added new functions to initialize searchTree, searchTreeBox and frictionPairings which were previously in FinalizeContact(...)}
+    \item   date resolved: {\bf 2021-11-25 22:16},
+date raised: 2021-11-25 
+  \ei
+  \item {\bf Version 1.1.46}:  resolved Issue 0806: {\bf removed FinalizeContact}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: removed this function, which is now automatically called in mbs.Assemble()}
+    \item   date resolved: {\bf 2021-11-25 22:15},
+date raised: 2021-11-25 
+  \ei
+  \item {\bf Version 1.1.45}:  resolved Issue 0805: {\bf AssembleSystemInitialize}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add additional function inside mbs.Assemble() to initialize GeneralContact}
+    \item   date resolved: {\bf 2021-11-25 22:14},
+date raised: 2021-11-25 
+  \ei
+  \item {\bf Version 1.1.44}:  resolved Issue 0779: {\bf sensor recorder}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add utilities function for recording signals internally in mbs; avoids writing to sensor files, which helps reducing overhead in ParameterVariation and GeneticOptimization}
+    \item {\bf notes: available in Python utilities function AddSensorRecorder(...)}
+    \item   date resolved: {\bf 2021-11-25 11:10},
+date raised: 2021-10-17 
+  \ei
+  \item {\bf Version 1.1.43}:  resolved Issue 0801: {\bf Box3D}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: check Ubuntu20 warnings; replace Vector3D pmin with Real pmin[3] to avoid warnings and gain speedup}
+    \item   date resolved: {\bf 2021-11-25 11:08},
+date raised: 2021-11-23 
+  \ei
   \item {\bf Version 1.1.42}:  resolved Issue 0798: {\bf Implicit GeneralContact}
 (extension)
   \begin{itemize}[label=$\bullet$]
@@ -2402,6 +3372,11 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 0830}:  {\bf PostNewton}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: PostNewton missing in explicit solvers; add warning or add after single steps (but exclude in contact computation!)}
+    \item date raised: 2021-12-15 
+  \ei
   \item open {\bf BUG 0752}:  {\bf tkinter MacOS}
   \begin{itemize}[label=$\bullet$]
     \item {description: tkinter fails when loaded inside interactive.py; early call to Tk() inside an example works and seems to help; check options to correctly load tkinter in MacOS (Rosetta 2, on M1)}

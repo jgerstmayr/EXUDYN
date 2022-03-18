@@ -35,6 +35,7 @@ AccessFunctionType CObjectMass1D::GetAccessFunctionTypes() const
 {
 	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + 
 		(Index)AccessFunctionType::AngularVelocity_qt + 
+		(Index)AccessFunctionType::JacobianTtimesVector_q +
 		(Index)AccessFunctionType::DisplacementMassIntegral_q);
 }
 
@@ -55,6 +56,11 @@ void CObjectMass1D::GetAccessFunctionBody(AccessFunctionType accessType, const V
 	{
 		//no action (but needed for application of rigid-body joints, similar to ground joints):
 		value.SetMatrix(3, 1, { 0, 0, 0 }); //a 3D torque vector acts on 1 coordinate
+		break;
+	}
+	case AccessFunctionType::JacobianTtimesVector_q: //jacobian w.r.t. global position and global orientation!!!
+	{
+		value.SetNumberOfRowsAndColumns(0, 0); //indicates that all entries are zero
 		break;
 	}
 	case AccessFunctionType::DisplacementMassIntegral_q:

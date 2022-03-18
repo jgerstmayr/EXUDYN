@@ -142,7 +142,6 @@ if solveDynamic:
         return True #True, means that everything is alright, False=stop simulation
     
     mbs.SetPreStepUserFunction(UFchangeLoad)
-    #simulationSettings.timeIntegration.preStepPyExecute = "mbs.SetLoadParameter(0,'loadVector',[0, 0, E*I*3.141592653589793*mbs.systemData.GetCurrentTime()])"
 
     exu.SolveDynamic(mbs, simulationSettings)
     #v = mbs.CallObjectFunction(1,'GetAngularVelocity',{'localPosition':[L/2,0,0],'configuration':'Current'})

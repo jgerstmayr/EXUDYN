@@ -4,8 +4,8 @@
 # Details:  The processing module supports multiple execution of EXUDYN models.
 #           It includes parameter variation and (genetic) optimization functionality.
 #
-# Author:   Johannes Gerstmayr 
-# Date:     2020-11-17
+# Author:   Johannes Gerstmayr, Stefan Holzinger
+# Date:     2020-11-17 (2022-02-04 modified by Stefan Holzinger)
 # Notes:    Parallel processing, which requires multiprocessing library, can lead to considerable speedup (measured speedup factor > 50 on 80 core machine). The progess bar during multiprocessing requires the library tqdm.
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
@@ -15,6 +15,8 @@
 
 import numpy as np
 import sys
+import time
+from copy import deepcopy #, copy 
 
 #function: internal output function for ParameterVariation and GeneticOptimization
 # write header or values to output file and increase counter
@@ -158,6 +160,7 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
 #    showProgress: if True, shows for every iteration the progress bar (requires tqdm library)
 #    resultsFile: if provided, output is immediately written to resultsFile during processing
 #    numberOfThreads: default: same as number of cpus (threads); used for multiprocessing lib;
+#    parameterFunctionData: dictionary containing additional data passed to the parameterFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
 #**output:
 #    returns [parameterList, values], containing, e.g., parameterList={'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]} and the result values of the parameter variation accoring to the parameterList, 
 #           values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
@@ -165,7 +168,7 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
 #   ParameterVariation(parameters={'mass':(1,10,10), 'stiffness':(1000,10000,10)}, parameterFunction=Test, useMultiProcessing=True)
 def ParameterVariation(parameterFunction, parameters, 
                        useLogSpace=False, debugMode=False, addComputationIndex=False,
-                       useMultiProcessing=False, showProgress = True,
+                       useMultiProcessing=False, showProgress = True, parameterFunctionData={},
                        **kwargs):
     
     # debugMode = False
@@ -264,6 +267,11 @@ def ParameterVariation(parameterFunction, parameters,
         parameterSet = {}
         for (key,value) in parameterDict.items(): 
             parameterSet[key] = value[i]
+
+        if parameterFunctionData != {}:
+            parameterSet['functionData'] = parameterFunctionData
+            #not needed: parameterSet['functionData'] = copy.deepcopy(parameterFunctionData)
+            
         parameterList += [parameterSet]
 
     values = ProcessParameterList(parameterFunction, parameterList, addComputationIndex, useMultiProcessing, 
@@ -629,7 +637,330 @@ def GeneticOptimization(objectiveFunction, parameters,
     return [optimumParameter, optimumValue, parameterList, valueList]
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: Compute minimum of given objectiveFunction. This function is based on scipy.optimize.minimize() and it provides the same interface as GeneticOptimization().  
+#**input:
+#    objectiveFunction: function, which takes the form parameterFunction(parameterDict) and which returns a value or list (or numpy array) which reflects the size of the objective to be minimized
+#    parameters: given as a dictionary, consist of name and tuple containing the search range for this parameter (begin, end), e.g. 'mass':(10,50)
+#    storeFunctionValues: if True, objectiveFunction values are computed (additional costs!) and stored in every iteration into valueList
+#    initialGuess: initial guess. Array of real elements of size (n,), where 'n' is the number of independent variables. If not provided by the user, initialGuess is computed from bounds provided in parameterDict.
+#    method: solver that should be used, e.g. 'Nelder-Mead', 'Powell', 'CG' etc. A list of available solvers can be found in the documentation of scipy.optimize.minimize().
+#    tol: tolerance for termination. When tol is specified, the selected minimization algorithm sets some relevant solver-specific tolerance(s) equal to tol. For detailed control, use solver-specific options using the 'options' variable.
+#    options: dictionary of solver options. Can be used to set absolute and relative error tolerances. Detailed information can be found in the documentation of scipy.optimize.minimize().
+#    enforceBounds: if True, ensures that only parameters within the bounds specified in ParameterDict are used for minimization; this may help to avoid, e.g., negative values, but may lead to non-convergence 
+#    verbose: prints solver information into console, e.g. number of iterations 'nit', number of funcion evaluations 'nfev', status etc.
+#    showProgress: if True, shows for every iteration objective function value, number of current iteration, time needed for current iteration, maximum number of iterations until solver option 'maxiter' is reached.
+#    addComputationIndex: if True, key 'computationIndex' is added for consistency reasons with GeneticOptimizaiton to every parameterDict in the call to parameterFunction(); however, the value is always 0, because no multi threading is used in Minimize(...)
+#    resultsFile: if provided, the results are stored columnwise into the given file and written after every generation; use resultsMonitor.py to track results in realtime
+#    useScipyBounds: if True, use scipy.optimize.minimize() option 'bounds' to apply bounds on variable specified in ParameterDict. Note, this option is only used by some specific methods of scipy.optimize.minimize()! method='Nelder-Mead' ignores this option for example! if False, option 'enforceBounds' will be set to False!
+#    args: extra arguments passed to the objective function and its derivatives (fun, jac and hess functions). 
+#    jac: method for computing the gradient vector. 
+#    hess: method for computing the Hessian matrix. 
+#    hessp: hessian of objective function times an arbitrary vector p.
+#    constraints: constraints definition (only for COBYLA, SLSQP and trust-constr). 
+#**author: Stefan Holzinger, Johannes Gerstmayr
+#**output: returns [optimumParameter, optimumValue, parameterList, valueList], containing the optimum parameter set 'optimumParameter', optimum value 'optimumValue', the whole list of parameters parameterList with according objective values 'valueList'
+#**notes: This function is still under development and shows an experimental state! There are currently unused arguments of scipy.optimize.minimize(): Detailed information can be found in the documentation of scipy.optimize.minimize().
+def Minimize(objectiveFunction, parameters, initialGuess=[], method='Nelder-Mead', tol=1e-4, options={}, 
+             enforceBounds=True, debugMode=False, showProgress=True, addComputationIndex=False,
+             storeFunctionValues=True, **kwargs):
+    from scipy import optimize #for minimize
+    
+    # get parameter names
+    parKeyLst = list(parameters.keys())
+    
+    # number of parameters
+    nParameters = len(parKeyLst)
+    
+    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    resultsFile = '' # if resultsFile name is provided, write solution to resultsFile
+    if 'resultsFile' in kwargs: 
+        resultsFile = kwargs['resultsFile']
+    
+    maxiter = 200*nParameters # maximum iterations used by th solver (default value of method='Nelder-Mead')
+    if 'maxiter' in options:
+        maxiter = options['maxiter']
+    
+    
+    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # get boundaries ((min, max), ... ,(min, max))
+    bounds = [None]*nParameters 
+    for i in range(nParameters):
+        bounds[i] = parameters[parKeyLst[i]]    
+    bounds = tuple(bounds) # type cast: list --> tuple
+    
+    useScipyBounds = False
+    scipyMinimizeBounds = None # 'bounds' option of scipy.optimize.minimize() will not be used!
+    if 'useScipyBounds' in kwargs: 
+        if kwargs['useScipyBounds']:
+            useScipyBounds = True
+            scipyMinimizeBounds = bounds # use option 'bounds'
+        
+    
+    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # process initial guess
+    if initialGuess: # initial guess has been provided by the user
+        initialGuess = initialGuess
+    else: # no initial guess has been provided by the user --> compute initial guess (mean value) from boundaries given by range in parameterDict
+        initialGuess = [None]*nParameters
+        for i in range(nParameters):
+            initialGuess[i] = np.mean(bounds[i])
 
+
+    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #create lists for output
+    parameterValueLst = [None]*nParameters # type=list(list()); contains parameter values for each iteration
+    for i in range(nParameters):
+        parameterValueLst[i] = []
+    valueList = [] # objective function value for initial guess parameters
+
+
+    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # map initialGuess list --> dict 
+    def ParameterListToParameterDict(initialGuess, *args):
+        paraDict = {}
+        for i in range(nParameters):
+            paraDict[parKeyLst[i]] = initialGuess[i]
+
+        if addComputationIndex: # add computation index
+            paraDict['computationIndex'] = 0 #itCtr[0]
+        
+        return paraDict
+         
+    
+    # count number of iterations
+    itCtr = [0]
+    resultsFileCnt = [0] # counter for output file
+
+    # this function is a inerface to exudyn.processing.WriteToFile()
+    def WriteToFileMinimize(resFileName, parDictInit, pDict, objFunVal, resFileCnt):       
+        resultsFileCntTemp = WriteToFile(resFileName, 
+                                         parDictInit, # parameter dict with value range supplied by user
+                                         [pDict], # parameter values 
+                                         [objFunVal], # objective function values
+                                         resFileCnt, # line counter --> write data to file at this line
+                                         writeHeader = (resFileCnt == 0), 
+                                         fileType='optimization using scipy.optimize.minimize(method='+method+')')       
+        return resultsFileCntTemp
+
+    startTime = time.time()  #for calculating time to go
+
+    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # callback: needed to get parameters after each iteration for file writing and post processing
+    def StoreParameterFunctionValues(parametersAtIteration, *args):
+        # print(parametersAtIteration2)
+        for i in range(nParameters):
+            parameterValueLst[i].append(parametersAtIteration[i])
+        
+        # map initial guess (type list) to dict
+        pDict = ParameterListToParameterDict(parametersAtIteration)
+
+        if storeFunctionValues or resultsFile != '':
+            # compute objective function value        
+            valuesAtIteration = objectiveFunction(pDict)  #additional costs!
+            valueList.append(valuesAtIteration) # add value to value list
+            # write parameters and objective function at current iteration to file
+            if resultsFile != '':
+                resultsFileCnt[0] = WriteToFileMinimize(resultsFile, parameters, pDict, valuesAtIteration, resultsFileCnt[0])
+        
+        
+        # increase iteration counter 
+        itCtr[0] += 1 
+        
+        # time needed for iteration     
+        iterationsToGo = (maxiter-itCtr[0]) 
+        timeToGo = 0
+        timeSpent = time.time() - startTime
+        if itCtr[0] != 0:
+            timeToGo = timeSpent/itCtr[0] * iterationsToGo
+
+        # print progess to console 
+        if showProgress: 
+            print('***** ')
+            print('iteration ' + str(itCtr[0]) + ' / max. ' + str(iterationsToGo))
+            print('  time = ', timeSpent, 's')
+            print('  time to go (max) = ', timeToGo, 's')
+            print('  objective function value: ', valuesAtIteration)
+            
+
+
+
+    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # local parameterFunction used for minimization
+    def ParameterFunctionMinimize(parametersAtIteration):
+    
+        if not useScipyBounds: # if useScipyBounds=True, use scipy option 'bounds', else apply manual enforcement of bounds. 
+            if enforceBounds: # enforce bounds by mapping initial guess to allowed parameter range
+                for i in range(nParameters):
+                    pVal = parametersAtIteration[i]
+                    lowerBound = min(bounds[i])
+                    upperBound = max(bounds[i])
+                    if pVal < lowerBound:
+                        parametersAtIteration[i] = lowerBound
+                    if pVal > upperBound:
+                        parametersAtIteration[i] = upperBound
+
+        return objectiveFunction(ParameterListToParameterDict(parametersAtIteration))
+    
+    
+    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # perform optimizaion
+    optimizeResult = optimize.minimize(ParameterFunctionMinimize, initialGuess, 
+                                        method=method, 
+                                        bounds=scipyMinimizeBounds, 
+                                        callback=StoreParameterFunctionValues, 
+                                        tol=tol,
+                                        options=options,
+                                        #jac=jac,
+                                        #hess=hess,
+                                        #constraints=constraints,
+                                        )
+    
+    # if showProgress: # print progress data for final iteration to console
+    StoreParameterFunctionValues(optimizeResult['x'])
+    
+    if debugMode: # show solver informations (e.g. number of function evaluations etc.)
+        print('---------------------------------------\n')
+        print('solver output:\n')
+        print(optimizeResult, '\n')
+        print('---------------------------------------\n')
+
+    # iteration ctr of optimize.minimize is one-based! --> add first (0th) iteration to itCtr
+    itCtr = itCtr[0] + 1  
+
+    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # optimization results; generate same data for return as in GeneticOptimization()
+    optimizedParameter = optimizeResult['x']
+    optimumValue = optimizeResult['fun']
+    parameterList = {}
+    optimumParameter = {}
+    for i in range(nParameters):
+        parameterList[parKeyLst[i]] = parameterValueLst[i]
+        optimumParameter[parKeyLst[i]] = optimizedParameter[i]
+        
+    return [optimumParameter, optimumValue, parameterList, valueList]
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  
+#**function: Perform a sensitivity analysis by successively calling the function parameterFunction(parameterList[i]) with a one at a time variation of parameters in the defined increments. 
+#  e.g., parameterList[0] =['mass':13, 'stiffness':12000] to be computed and returns a value or a list of values which is then stored for each parameter
+#**input:
+#    parameterFunction: function, which takes the form parameterFunction(parameterDict) and which returns one or more output values for which the sensitivity is calculated
+#    parameters: given as a dictionary, consist of name and tuple of (begin, Variation steps, numberOfValues) e.g. 'mass':(10,0.01,5), for a reference mass of 10, incremented by 0.01*10 and using 5 steps in negative and positive, doing 10 steps in total
+#    scaledByReference: if true multiplies the sensitivities with the corresponding reference parameters, so that the sensitivity resembles a change relative to the reference value
+#    debugMode: if True, additional information is shown
+#    addComputationIndex: if True, key 'computationIndex' is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter etc. 
+#    useMultiProcessing: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
+#    showProgress: if True, shows for every iteration the progress bar (requires tqdm library)
+#    resultsFile: if provided, output is immediately written to resultsFile during processing
+#    numberOfThreads: default: same as number of cpus (threads); used for multiprocessing lib;
+#    parameterFunctionData: dictionary containing additional data passed to the parameterFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
+#**output:
+#    returns [parameterList, valRef, valuesSorted, sensitivity], parameterList containing the list of dictionaries processed. valRef is the Solution for the reference values paramList[0], valuesSorted contains the results sorted by the dictionary key that was varied in the simulation. The sensitivity contains the calculated sensitivity, where the rows are the corresponding outputparameters, while the columns are the input parameters, thereby the index sensitivity[1,0] is the sensitivity of output parameter 1 with respect to the input parameter 0. 
+#**author: Peter Manzl
+#**example:
+#   ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': (mRef, 0.01, 3), 'spring': (1000,0.01, 10),}, multiprocessing=True)
+def ComputeSensitivities(parameterFunction, parameters, scaledByReference=False, 
+                       debugMode=False, addComputationIndex=False, useMultiProcessing=False, 
+                       showProgress = True, parameterFunctionData=dict(),**kwargs):
+    
+    
+    if 'multiprocessing' in sys.modules:
+        from multiprocessing import cpu_count
+        numberOfThreads = cpu_count() #cpu_count gives number of threads
+        if debugMode:
+            print("using", numberOfThreads, "cpus")
+    else:
+        numberOfThreads = 8
+    if 'numberOfThreads' in kwargs: 
+        numberOfThreads = kwargs['numberOfThreads']
+
+    resultsFile = ''
+    if 'resultsFile' in kwargs: 
+        resultsFile = kwargs['resultsFile']
+        
+    paramKeys = list(parameters.keys())
+    for i in range(len(parameters)): 
+        iKey = paramKeys[i]
+        if not(hasattr(parameters[iKey], '__iter__')): # 
+            parameters[iKey] = (parameters[iKey], 1e-3) # only a scalar value for reference value is given
+        if len(parameters[iKey]) == 2: 
+            parameters[iKey] = tuple(list(parameters[iKey]) + [0])
+    # create Reference parameters [0]
+    parameterList = [] #list of parameter dictionaries
+    
+    parameterList += [{paramKeys[0]: parameters[paramKeys[0]][0]}]
+    nVar = [parameters[paramKeys[0]][2]]
+    for i in range(1, len(paramKeys)): 
+        parameterList[0][paramKeys[i]] = parameters[paramKeys[i]][0]
+        nVar += [parameters[paramKeys[i]][2]]
+    
+    
+    
+    for i in range(len(nVar)):
+        iKey =paramKeys[i] 
+
+        fVal = parameters[iKey][1]
+        # except 
+        if debugMode: 
+            print('Variate {} by {} each in {} steps'.format(iKey, fVal, nVar[i]))
+        
+        if nVar[i] == 0: # use forward difference
+            parameterList += [deepcopy(parameterList[0])]
+            parameterList[-1][iKey] = parameterList[-1][iKey] * (1+fVal)
+        else:         
+            for j in range(nVar[i]*2): 
+                if j < nVar[i]: 
+                    jVar = j -  nVar[i]
+                else: 
+                    jVar = j  - nVar[i] +1
+                parameterList += [deepcopy(parameterList[0])]
+                valVar = max(jVar*fVal, 1e-6) # if fVal == 0! 
+                parameterList[-1][iKey] = parameterList[-1][iKey] *(1+jVar*fVal)
+                if parameterList[-1][iKey] == 0: 
+                    parameterList[-1][iKey] += max(fVal, 1e-6)
+    
+    if addComputationIndex: 
+        for cnt in range(1, len(parameterList)): 
+            parameterList[cnt]['computationIndex'] = cnt
+        
+    if parameterFunctionData != {}:
+        for cnt in range(0, len(parameterList)): 
+            parameterList[cnt]['functionData'] = parameterFunctionData
+
+    values = ProcessParameterList(parameterFunction, parameterList, addComputationIndex, useMultiProcessing, 
+                                  showProgress = showProgress, numberOfThreads=numberOfThreads,
+                                  resultsFile = resultsFile, parameters=parameters)
+
+
+    # calculate sensitivity of the parameter by forward/central difference
+    sensitivity = np.zeros([len(nVar), len(values[0])])
+    valuesSorted = {paramKeys[0]: []}
+    iForward = nVar[0] + 1
+    iBackward = nVar[0]
+    for i in range(sensitivity.shape[0]): # iterate over keys from input
+        iKey = paramKeys[i]
+        for j in range(sensitivity.shape[1]): # iterate over outputvalues 
+            if nVar[i] == 0: # use forward difference
+                sensitivity[i][j] = (values[iForward][j] - values[0][j])/(parameterList[iForward][iKey] - parameterList[0][iKey])
+            else:
+                sensitivity[i][j] = (values[iForward][j] - values[iBackward][j])/(parameterList[iForward][iKey] - parameterList[iBackward][iKey])
+            
+            if scaledByReference: # multiply with the reference value so the sensitivity shows the influence by change of percent of the input
+                sensitivity[i][j] = sensitivity[i][j] * parameterList[0][iKey]
+        if nVar[i] == 0: 
+            valuesSorted[iKey] = np.array([values[iForward]])
+            iForward +=1
+            iBackward = iForward - 1
+        else: 
+            valuesSorted[iKey] = np.array(values[iBackward-nVar[i]+1:iForward+nVar[i]])
+            try: 
+                iForward += nVar[i] + nVar[i+1]
+            except: 
+                continue
+            iBackward = iForward -1
+    valRef = values[0]
+    return [parameterList, valRef, valuesSorted, sensitivity]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: visualize results of optimization for every parameter (2D plots)
@@ -682,3 +1013,54 @@ def PlotOptimizationResults2D(parameterList, valueList, xLogScale=False, yLogSca
     return [figList, axList]
 
 
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: visualize results of Sensitivityanalyis for every parameter (2D plots)
+#**input: 
+#   valRef: The output values of the reference solution
+#   valuesSorted: The output values of the analysed function sorted by the parameter which was varied
+#   sensitivity: The sensitivity Matrix calculated by the function \texttt{ComputeSensitivities()}
+#   fVar: The list of variation stepsizes. It is assumed to be 1e-3 if not defined.
+#   strYAxis: A list of strings to label the plots yAxis
+#   
+#**output: return [fig, axs] containing the corresponding handles; creates a subplot for every row in the sensitivity matrix
+#**author: Peter Manzl
+def PlotSensitivityResults(valRef, valuesSorted, sensitivity, fVar=None, strYAxis = None):
+    import matplotlib.pyplot as plt
+    if strYAxis == None: 
+        strYAxis = ['']*sensitivity.shape[1]
+    if fVar ==None: 
+        fVar = [1e-3] * sensitivity.shape[1]
+    if type(fVar) != list: # if one scalar varaible is passed it is assumed it is the same for each parameter
+        fVar = [fVar]*sensitivity.shape[1]
+    # the rows of the sensitivity are the different outputparameters, while the columns are the input parameters
+    n = []
+    fig, axs = plt.subplots(sensitivity.shape[1]) 
+    for i in range(sensitivity.shape[1]): # each type of values gets a subplot 
+        for j in range(len(list(valuesSorted.keys()))): # iterate over the variated parameters/keys
+            iKey = list(valuesSorted.keys())[j]
+            n += [int(len(valuesSorted[iKey])/2)] # there are +- n variations = 2*2 in the list
+            iVar = np.linspace(-n[j]*fVar[j]*100, n[j]*fVar[j]*100, 2*n[j]+1) # variations 
+            if len(iVar) != 1: 
+                iPlt = iVar # 2*n+1, contains the reference value
+                
+                pltValues = np.r_[valuesSorted[iKey][:int(len(iVar)/2),i], valRef[i], valuesSorted[iKey][int(len(iVar)/2):,i]] 
+            else: 
+                pltValues = [valRef[i], valuesSorted[iKey][0,i]]
+                iVar = np.r_[iVar, fVar[i]*100]
+                iPlt = iVar
+            iVar = np.delete(iVar, n[j]) # without the reference value
+            axs[i].plot(iPlt, pltValues, '--', color=np.ones(3)*0.8) # connect all values including reference values
+            if sensitivity[j,i] != 0: 
+                sDigits = int(-np.log10(abs(sensitivity[j,i])) + 4)
+            else: 
+                sDigits = 1
+            axs[i].plot(iVar, valuesSorted[iKey][:,i], 'o', label='{}, s={}'.format(iKey, np.round(sensitivity[j,i], sDigits))) # plot variation as points
+        axs[i].plot(0, valRef[i], 'd', label='Ref') # reference value in the center of plot
+        axs[i].set(ylabel=strYAxis[i])
+        axs[i].legend()
+        axs[i].grid()
+    axs[-1].set( xlabel='Variation in $\%$') # in % because spacing is fVar*100 on x-Axis
+    plt.tight_layout()
+    return [fig, axs]

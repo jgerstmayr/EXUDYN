@@ -2,9 +2,9 @@
 * @class        MainNodeRigidBodyRotVecLGParameters
 * @brief        Parameter class for MainNodeRigidBodyRotVecLG
 *
-* @author       Gerstmayr Johannes
+* @author       Gerstmayr Johannes, Holzinger Stefan
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:58 (last modified)
+* @date         2021-12-22  08:16:19 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -48,7 +48,7 @@ public: // AUTO:
 * @class        MainNodeRigidBodyRotVecLG
 * @brief        A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies or beams; the node has 3 displacement coordinates and three rotation coordinates.
 *
-* @author       Gerstmayr Johannes
+* @author       Gerstmayr Johannes, Holzinger Stefan
 * @date         2019-07-01 (generated)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.

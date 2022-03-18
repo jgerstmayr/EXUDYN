@@ -207,7 +207,8 @@ def TypeConversion(typeStr, typeConversion):
 
 #************************************************
 #convert type to known C++ type or keep it (in case of special class)
-def GenerateHeader(classStr, descriptionStr, addModifiedDate = True, addIfdefOnce = True):
+def GenerateHeader(classStr, descriptionStr, addModifiedDate = True, addIfdefOnce = True, 
+                   author = ''):
 
     now=datetime.datetime.now()
     monthZero = '' #add leading zero for month
@@ -230,6 +231,9 @@ def GenerateHeader(classStr, descriptionStr, addModifiedDate = True, addIfdefOnc
     dateStr = str(now.year) + '-' + monthZero + str(now.month) + '-' + dayZero + str(now.day)
     timeStr = hourZero+str(now.hour) + ':' + minuteZero+str(now.minute) + ':' + secondZero+str(now.second)
     
+    if author == '':
+        author = 'Gerstmayr Johannes'
+    
     #************************************
     #header
     s='' #generate a string
@@ -238,7 +242,7 @@ def GenerateHeader(classStr, descriptionStr, addModifiedDate = True, addIfdefOnc
     s+='* @class        '+classStr+'\n'
     s+='* @brief        '+descriptionStr+'\n'
     s+='*\n'
-    s+='* @author       Gerstmayr Johannes\n'
+    s+='* @author       '+author+'\n'
     s+='* @date         2019-07-01 (generated)\n'
     if addModifiedDate:
         s+='* @date         '+ dateStr+ '  ' + timeStr + ' (last modified)\n' #this causes all files to change ...
@@ -516,7 +520,7 @@ def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName):
 
 
     if itemShortName != '' and itemName != itemShortName:
-        keywords += ['mbs.Add'+itemType+'('+itemShortName]
+        keywords += ['mbs.Add'+itemType+'('+itemShortName+'(']
 
     fileListOrig = []
     for kw in keywords:

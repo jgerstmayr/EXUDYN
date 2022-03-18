@@ -102,7 +102,7 @@ for nBodies in nBodiesList:
     tNewtonIncrementList = []
 
     for nThreads in threadsList:
-        simulationSettings.numberOfThreads = nThreads
+        simulationSettings.parallel.numberOfThreads = nThreads
         #print("=====================================================")
         print("compute with", nThreads, " threads")
         #print("=======================================")

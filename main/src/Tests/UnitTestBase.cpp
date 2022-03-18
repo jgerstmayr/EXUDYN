@@ -11,12 +11,11 @@
 *
 ************************************************************************************************ */
 
+#include "Tests/UnitTestBase.h" 
 
-#include "Utilities/BasicDefinitions.h"
-#define PERFORM_UNIT_TESTS
 #ifdef PERFORM_UNIT_TESTS
 using namespace std;
-
+#define PerformUnitTests
 
 //enable memory leak checks by leak number {xxx}
 #ifdef _DEBUG
@@ -44,8 +43,6 @@ using namespace std;
 using namespace EXUstd;
 using namespace EXUmath;
 
-#include "Tests/UnitTestBase.h" 
-
 
 //#include "Utilities/BasicFunctions.h"
 //#include "Tests/UnitTestBase.h" 
@@ -62,12 +59,12 @@ using namespace EXUmath;
 //#include "Linalg/Matrix.h"
 //using namespace EXUmath;
 
-//#define PerformUnitTests //set with compiler flags in setup.py
 #ifdef PerformUnitTests
     #include "AllVectorUnitTests.h" 
     #include "AllArrayUnitTests.h" 
     #include "AllMatrixUnitTests.h" 
     #include "TemplatedVectorArrayUnitTests.h" 
+	#include "AllBasicLinalgUnitTests.h"
 #endif
 
 extern bool linalgPrintUsePythonFormat; //!< true: use python format for output of vectors and matrices; false: use matlab format
@@ -337,6 +334,10 @@ int UnitTestBase::PerformVectorAndArrayTests(int flags)
 
     //matrix tests:
     failCounter += lest::run(matrix_specific_test, arglist_lest, stringStream);
+
+	//basiclinalg tests:
+	failCounter += lest::run(basic_linalg_poly_test, arglist_lest, stringStream);
+
 #endif
     if (failCounter) {
         stringStream << "\n\n\n***********************\n AT LEAST ONE TEST FAILED!\n***********************\n\n";

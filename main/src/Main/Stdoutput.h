@@ -29,6 +29,7 @@ class OutputBuffer : public std::stringbuf //uses solution of so:redirect-stdcou
 {
 private:
 	std::string buf;     //this buffer is used until end of line is detected
+	std::string visualizationBuffer;     //this buffer is used in visualization thread => does not call Python functions!
 	bool suspendWriting; //this flag is used to suspend writing via Python, e.g., during parallel computation
 	bool writeToFile;    //redirect all output to file
 	bool writeToConsole; //redirect all output to console
@@ -44,7 +45,10 @@ public:
 	} 
 	//! virtual int sync(); //this solution does not work!
 	virtual int overflow(int c = EOF);
-	
+
+	//! function which allows to write asynchronuously during visualization thread; requires lateron call of pout in main thread (to clear buffer!)
+	virtual void WriteVisualization(const STDstring& string);
+
 	//! set delay added to writing in order to resolve problems of some ipython consoles
 	virtual void SetDelayMilliSeconds(Index delayMilliSeconds) { waitMilliSeconds = delayMilliSeconds; }
 
@@ -72,18 +76,6 @@ void PyWarning(std::string warning_msg, std::ofstream& file); //!< prints a form
 
 
 void PyGetCurrentFileInformation(std::string& fileName, Index& lineNumber); //!< retrieve current parsed file information from python (for error/warning messages...)
-
-//DELETE:
-////! put executable string into queue, which is called from other thread
-//void PyQueueExecutableString(STDstring str); //call python function and execute string as python code
-//
-////! put executable key codes into queue, which is called from main thread
-//void PyQueueKeyPressed(int key, int action, int mods, std::function<void(int, int, int)> keyPressUserFunctionInit); //call python user function
-//
-////! function to be called from main (python) thread, as this thread holds the gil
-//void PyProcessExecuteQueue(); //call python function and execute string as python code
-//
-//extern std::atomic_flag graphicsUpdateAtomicFlag; //avoid that user interacts with Renderer while TKinter dialog is shown
 
 //********************************
 extern std::ostream pout;  //!< provide a output stream (e.g. for Python); remove the following line if linkage to Python is not needed!

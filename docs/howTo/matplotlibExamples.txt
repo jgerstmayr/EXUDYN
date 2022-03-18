@@ -121,6 +121,54 @@ plt.xticks((-1, 0, 1), ('$-1$', r'$\pm 0$', '$+1$'), color='k', size=20)
 plt.text(-1, .30, r'gamma: $\gamma$', {'color': 'r', 'fontsize': 20})
 #see: https://matplotlib.org/3.1.0/gallery/text_labels_and_annotations/usetex_demo.html
 
+#plot lines with markers
+import matplotlib.pyplot as plt
+import numpy as np
+plt.close('all')
+data = np.loadtxt('solution/node.txt', comments='#', delimiter=',')
+# plt.plot(data[:,0], data[:,1], color='red', marker='o',
+#          linestyle='dashed',linewidth=2, markersize=12)
+plt.plot(data[:,0], data[:,1], color='blue', marker='o',
+         linestyle='-',linewidth=2,markersize=10, label='asdf')
+plt.plot(data[:,0], data[:,1], color='white', marker='o',
+          linestyle='none',markersize=14)
+plt.plot(data[:,0], data[:,1], color='blue', marker='o',
+          linestyle='none',markersize=10)
+plt.legend()
+plt.show()
+
+
+from exudyn.plot import PlotSensor
+
+#PlotSensor(mbs, sensorNumbers=s, components=[1], componentsX=[0])
+import matplotlib.pyplot as plt
+import numpy as np
+plt.close('all')
+data = np.loadtxt('solution/node.txt', comments='#', delimiter=',')
+# plt.plot(data[:,0], data[:,1], color='red', marker='o',
+#          linestyle='dashed',linewidth=2, markersize=12)
+plt.plot(data[:,0], data[:,1], color='blue',
+         linestyle='-',linewidth=2)
+plt.plot(data[:,0], data[:,1], color='white', marker='o',
+          linestyle='none',markersize=14)
+plt.plot(data[:,0], data[:,1], color='blue', marker='o',
+          linestyle='none',markersize=10)
+
+from matplotlib.lines import Line2D
+
+#custom legend with line+marker:
+legend_elements = [Line2D([0], [0.1], color='b', marker='o', markersize=10, lw=2, label='Line'),
+                   # Line2D([0], [0], marker='o', color='w', label='Scatter',
+                   #        markerfacecolor='g', markersize=15),
+                   # Patch(facecolor='orange', edgecolor='r',
+                   #       label='Color Patch')
+                   ]
+
+plt.legend(handles=legend_elements)#, loc='center')
+
+#plt.legend()
+plt.show()
+
 
 
 

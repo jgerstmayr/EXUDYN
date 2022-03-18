@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:58 (last modified)
+* @date         2022-03-15  19:59:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -36,8 +36,9 @@ public: // AUTO:
     Real physicsAxialDamping;                     //!< AUTO:  [SI:N/s] axial stiffness of beam; the additional virtual work due to damping is \f$\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx\f$
     Real physicsReferenceAxialStrain;             //!< AUTO:  [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value
     Real physicsReferenceCurvature;               //!< AUTO:  [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value
+    Real strainIsRelativeToReference;             //!< AUTO:  if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of \f$\varepsilon_0\f$ and \f$\kappa_0\f$ serve as a reference geometry; allows also values between 0. and 1.
     Index2 nodeNumbers;                           //!< AUTO: two node numbers ANCF cable element
-    bool useReducedOrderIntegration;              //!< AUTO: false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
+    Index useReducedOrderIntegration;             //!< AUTO: 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
     //! AUTO: default constructor with parameter initialization
     CObjectANCFCable2DParameters()
     {
@@ -49,8 +50,9 @@ public: // AUTO:
         physicsAxialDamping = 0.;
         physicsReferenceAxialStrain = 0.;
         physicsReferenceCurvature = 0.;
+        strainIsRelativeToReference = 0.;
         nodeNumbers = Index2({EXUstd::InvalidIndex, EXUstd::InvalidIndex});
-        useReducedOrderIntegration = false;
+        useReducedOrderIntegration = 0;
     };
 };
 
@@ -108,9 +110,15 @@ public: // AUTO:
     }
 
     //! AUTO:  access to useReducedOrderIntegration from derived class
-    virtual bool UseReducedOrderIntegration() const override
+    virtual Index UseReducedOrderIntegration() const override
     {
         return parameters.useReducedOrderIntegration;
+    }
+
+    //! AUTO:  access to strainIsRelativeToReference from derived class
+    virtual Real StrainIsRelativeToReference() const override
+    {
+        return parameters.strainIsRelativeToReference;
     }
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
@@ -156,11 +164,16 @@ public: // AUTO:
             (Index)OutputVariableType::Position +
             (Index)OutputVariableType::Displacement +
             (Index)OutputVariableType::Velocity +
+            (Index)OutputVariableType::VelocityLocal +
+            (Index)OutputVariableType::Rotation +
             (Index)OutputVariableType::Director1 +
             (Index)OutputVariableType::StrainLocal +
             (Index)OutputVariableType::CurvatureLocal +
             (Index)OutputVariableType::ForceLocal +
-            (Index)OutputVariableType::TorqueLocal );
+            (Index)OutputVariableType::TorqueLocal +
+            (Index)OutputVariableType::AngularVelocity +
+            (Index)OutputVariableType::Acceleration +
+            (Index)OutputVariableType::AngularAcceleration );
     }
 
 };

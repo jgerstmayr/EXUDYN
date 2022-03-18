@@ -177,6 +177,39 @@ protected:
 
 public:
 
+	//! append a row given by Vector; if allocated matrix size is insufficient, a resize is performed (including memory allocation)
+	virtual void AppendRow(const VectorBase<T>& vector)
+	{
+		Index n = vector.NumberOfItems();
+		if (this->numberOfRows * this->numberOfColumns + n > this->allocatedSize)
+		{
+			ResizableMatrixBase<T> m(this->allocatedSize*2+n,1);
+			m.SetNumberOfRowsAndColumns(this->numberOfRows, this->numberOfColumns);
+			m.CopyFrom(*this);
+
+			Swap(m);
+			//destructor of m will now free memory ...
+		}
+		if (this->numberOfRows != 0)
+		{
+			CHECKandTHROW(this->numberOfColumns == n,
+				"ResizableMatrixBase::AppendRow: matrix numberOfColumns is different from added row size");
+			this->numberOfRows++;
+		}
+		else //first row:
+		{
+			this->numberOfRows = 1;		
+			this->numberOfColumns = n;
+		}
+		//copy and insert vector data
+		for (Index i = 0; i < n; i++)
+		{
+			this->GetItem(this->numberOfRows - 1, i) = vector[i];
+		}
+	}
+
+
+
 	//operators+(Matrix,Matrix), etc. not implemented (as compared to ConstMatrix), because ResizeableMatrix is intended for operations, where no copy is performed
 	
 	//! add matrix to *this matrix (for each component); both matrices must have same size; FAST / no memory allocation

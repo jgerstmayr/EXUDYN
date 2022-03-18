@@ -78,20 +78,20 @@ oRolling=mbs.AddObject(ObjectConnectorRollingDiscPenalty(markerNumbers=[markerGr
 
 #sensor for trace of contact point:
 if exudynTestGlobals.useGraphics:
-    mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrail.txt', 
+    sTrail=mbs.AddSensor(SensorObject(objectNumber=oRolling, storeInternal=True,#fileName='solution/rollingDiscTrail.txt', 
                                outputVariableType = exu.OutputVariableType.Position))
     
-    mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrailVel.txt', 
-                               outputVariableType = exu.OutputVariableType.VelocityLocal))
+    sTrailVel=mbs.AddSensor(SensorObject(objectNumber=oRolling, storeInternal=True,#fileName='solution/rollingDiscTrailVel.txt', 
+                               outputVariableType = exu.OutputVariableType.Velocity))
     
 
-    mbs.AddSensor(SensorBody(bodyNumber=b0, fileName='solution/rollingDiscAngVel.txt', 
+    sAngVel=mbs.AddSensor(SensorBody(bodyNumber=b0, storeInternal=True,#fileName='solution/rollingDiscAngVel.txt', 
                                outputVariableType = exu.OutputVariableType.AngularVelocity))
     
-    mbs.AddSensor(SensorBody(bodyNumber=b0, fileName='solution/rollingDiscPos.txt', 
+    sPos=mbs.AddSensor(SensorBody(bodyNumber=b0, storeInternal=True,#fileName='solution/rollingDiscPos.txt', 
                                outputVariableType = exu.OutputVariableType.Position))
     
-    mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscForceLocal.txt', 
+    sForce=mbs.AddSensor(SensorObject(objectNumber=oRolling, storeInternal=True,#fileName='solution/rollingDiscForceLocal.txt', 
                                outputVariableType = exu.OutputVariableType.ForceLocal))
 
 mbs.Assemble()
@@ -109,6 +109,7 @@ simulationSettings.timeIntegration.endTime = tEnd
 #simulationSettings.solutionSettings.solutionWritePeriod = 0.01
 simulationSettings.solutionSettings.sensorsWritePeriod = 0.0005
 #simulationSettings.timeIntegration.verboseMode = 1
+simulationSettings.solutionSettings.writeSolutionToFile = False
 
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
@@ -141,32 +142,12 @@ if exudynTestGlobals.useGraphics:
     ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
     #plot results
     if True:
-        import matplotlib.pyplot as plt
-        import matplotlib.ticker as ticker
+        from exudyn.plot import PlotSensor
+        
+        PlotSensor(mbs, sTrail, componentsX=[0],components=[1], closeAll=True, title='wheel trail')
 
-        data = np.loadtxt('solution/rollingDiscTrail.txt', comments='#', delimiter=',') 
-        #plt.plot(data[:,1], data[:,2], 'r-',label='contact point trail') #x/y coordinates of trail
+        PlotSensor(mbs, sPos, components=[0,1,2], title='wheel position')
+        PlotSensor(mbs, sForce, components=[0,1,2], title='wheel force')
 
-        data = np.loadtxt('solution/rollingDiscPos.txt', comments='#', delimiter=',') 
-        plt.plot(data[:,0], data[:,1], 'r-',label='coin pos x') 
-        plt.plot(data[:,0], data[:,2], 'g-',label='coin pos y') 
-        plt.plot(data[:,0], data[:,3], 'b-',label='coin pos z') 
-    
-        data = np.loadtxt('solution/rollingDiscForceLocal.txt', comments='#', delimiter=',') 
-        plt.plot(data[:,0], data[:,1], 'r--',label='local force x') 
-        plt.plot(data[:,0], data[:,2], 'g--',label='local force y') 
-        plt.plot(data[:,0], data[:,3], 'b--',label='local force z') 
-        #plt.plot(data[:,0], (data[:,1]**2+data[:,2]**2)**0.5, 'k-',label='friction force') 
-    
-        data = np.loadtxt('solution/rollingDiscAngVel.txt', comments='#', delimiter=',') 
-        plt.plot(data[:,0], data[:,1], 'k-',label='ang vel x') 
-
-        ax=plt.gca() # get current axes
-        ax.grid(True, 'major', 'both')
-        ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-        ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-        plt.tight_layout()
-        plt.legend()
-        plt.show() 
-    
+        PlotSensor(mbs, sAngVel, components=[0], title='wheel local angular velocity')
 

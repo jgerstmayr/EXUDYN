@@ -85,7 +85,7 @@ fixANCFRotation = 0
 cable2Template=Cable2D(physicsMassPerLength=10, physicsBendingStiffness=50000*complianceFactBend, physicsAxialStiffness=2e8*complianceFactAxial)
 
 [cable2NodeList, cable2ObjectList, suspensionLoadList, cable2NodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, 
-				positionOfNode0=[0,0], positionOfNode1=[L,0], numberOfElements=nEl, 
+				positionOfNode0=[0,0,0], positionOfNode1=[L,0,0], numberOfElements=nEl, 
 				cableTemplate=cable2Template, massProportionalLoad=[0,-gravityFieldConstant,0], 
 				fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
 ##################################################################################################################################################################
@@ -101,7 +101,7 @@ cable1Template=ALECable2D(physicsMassPerLength=3, physicsBendingStiffness=4000*c
 cable1Template.nodeNumbers[2]=nALE
 
 [cable1NodeList, cable1ObjectList, haulageLoadList, cable1NodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, 
-			positionOfNode0=[0,-offset], positionOfNode1=[L,-offset], numberOfElements=nEl, 
+			positionOfNode0=[0,-offset,0], positionOfNode1=[L,-offset,0], numberOfElements=nEl, 
 			cableTemplate=cable1Template, massProportionalLoad=[0,-gravityFieldConstant,0], 
 			fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
 
@@ -146,7 +146,7 @@ for i in cable1ObjectList:
     if useFriction: 
         mbs.AddObject(ObjectContactFrictionCircleCable2D(markerNumbers=[mContactCarrier, mContactCable], 
 						nodeNumber = nodeDataContactCable, numberOfContactSegments=nSegments, 
-						contactStiffness = cStiffness, circleRadius = carrierWheelRadius, offset = 0))  
+						contactStiffness = cStiffness, circleRadius = carrierWheelRadius))  
     else:
         mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mContactCarrier, mContactCable], 
 					nodeNumber = nodeDataContactCable, numberOfContactSegments=nSegments, 
@@ -203,7 +203,7 @@ SC.visualizationSettings.general.circleTiling = 64
 SC.visualizationSettings.nodes.defaultSize=0.125
 SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
 SC.visualizationSettings.contour.outputVariableComponent = 1 # plot y-component
-SC.visualizationSettings.connectors.contactPointsDefaultSize = .005
+SC.visualizationSettings.contact.contactPointsDefaultSize = .005
 SC.visualizationSettings.connectors.showContact = True
 
 
@@ -224,8 +224,8 @@ exu.Print("select cable coordinate", nc)
 sol = mbs.systemData.GetODE2Coordinates(); 
 uStatic = sol[nc]; #y-displacement of first node of four bar mechanism
 exu.Print('static solution of cable1 =',uStatic)
-exudynTestGlobals.testError = uStatic - (-2.197321886974786) #2020-03-05(corrected Cable2DshapeMarker): -2.197321886974786 #2019-12-26:  2.1973218859908146
-exudynTestGlobals.testResult = uStatic
+exudynTestGlobals.testError = uStatic - (-2.1973218869310713) #before 2022-03-09 (old ObjectContactFrictionCircleCable2D): -2.197321886974786     2020-03-05(corrected Cable2DshapeMarker): -2.197321886974786 #2019-12-26:  2.1973218859908146
+exudynTestGlobals.testResult = uStatic 
 
 #++++++++++++++++++++++++++++++++++++++++
 #store solution for next computation
@@ -281,7 +281,7 @@ sol = mbs.systemData.GetODE2Coordinates();
 uDynamic = sol[nc]; #y-displacement of first node of four bar mechanism
 exu.Print('dynamic solution of cable1 =',uDynamic)
 
-exudynTestGlobals.testError += uDynamic - (-2.2290811574753953) #2020-03-05(corrected Cable2DshapeMarker): -2.2290811574753953 #2019-12-26: -2.2290811558815617; 2019-12-18: -2.229126333291627
+exudynTestGlobals.testError += uDynamic - (-2.229081157258582) #before 2022-03-09 (old ObjectContactFrictionCircleCable2D) : (-2.2290811574753953)   #2020-03-05(corrected Cable2DshapeMarker): -2.2290811574753953 #2019-12-26: -2.2290811558815617; 2019-12-18: -2.229126333291627
 exudynTestGlobals.testResult += uDynamic
 
 

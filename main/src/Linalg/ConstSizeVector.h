@@ -31,7 +31,7 @@
 *  	cout << v1 << "\n";					//write "[1.1, 2.7, 3.0]" to cout
 *  	ConstSizeVectorBase<Real,3> v3({ 1,2 });
 *  	ConstSizeVectorBase<Real,3> v4({ 4,5,6.6 });
-*  	ConstSizeVectorBase<Real,6> v = v3.Append(v4); //make [1 2 4 5 6.6] without memory allocation
+*  	ConstSizeVectorBase<Real,6> v = v3.ReturnAppended(v4); //make [1 2 4 5 6.6] without memory allocation
 *   cout << "v6=" << v << "\n";
 * @endcode
 ************************************************************************************************ */
@@ -40,13 +40,11 @@
 
 #include "Linalg/Vector.h"
 
-#ifdef USE_NEW_CONSTSIZEVECTOR
-
 template<typename T, Index dataSize>
 class ConstSizeVectorBase
 {
 protected:
-	mutable T data[dataSize];
+	T data[dataSize];
 	Index numberOfItems;	//!< currently used number of Reals
 
 public:
@@ -54,6 +52,14 @@ public:
 	//ConstSizeVectorBase() //don't use, rule of 5
 	//{
 	//}
+	ConstSizeVectorBase(ConstSizeVectorBase<T, dataSize> const& other) = default;
+	ConstSizeVectorBase<T, dataSize>& operator=(ConstSizeVectorBase<T, dataSize> const& other) = default;
+
+	ConstSizeVectorBase<T, dataSize>(ConstSizeVectorBase<T, dataSize>&& other) = default;
+	ConstSizeVectorBase<T, dataSize>& operator=(ConstSizeVectorBase<T, dataSize>&& other) = default;
+
+	~ConstSizeVectorBase() = default; //rule of 5
+
 
 	//! initialize ConstSizeVectorBase if init==true, using default numberOfItems = dataSize, otherwise nothing
 	ConstSizeVectorBase(bool init = true)
@@ -153,11 +159,6 @@ public:
 		}
 	}
 
-	////! rule of 5
-	//~ConstSizeVectorBase()
-	//{
-	//};
-
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// BASIC FUNCTIONS
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -178,11 +179,14 @@ public:
 		numberOfItems = 0;
 	}
 
-	T* begin() const { return data; }					    //!< C++11 std::begin() for iterators; iterator range is always the currently used numberOfItems.
-	T* end() const { return &data[numberOfItems]; }				//!< C++11 std::end() for iterators; iterator range is always the currently used numberOfItems.
+	const T* begin() const { return data; }						//!< C++11 std::begin() for iterators; iterator range is always the currently used numberOfItems.
+	const T* end() const { return &data[numberOfItems]; }			//!< C++11 std::end() for iterators; iterator range is always the currently used numberOfItems.
+	T* begin() { return data; }						//!< C++11 std::begin() for iterators; iterator range is always the currently used numberOfItems.
+	T* end() { return &data[numberOfItems]; }			//!< C++11 std::end() for iterators; iterator range is always the currently used numberOfItems.
 
-	Index NumberOfItems() const { return numberOfItems; }	            //!< Number of currently used Reals; WILL BE DIFFERENT in ResizableVector and in VectorX
-	T* GetDataPointer() const { return &data[0]; }                       //!< return pointer to first data containing T numbers; const needed for LinkedDataVectors.
+	Index NumberOfItems() const { return numberOfItems; }	//!< Number of currently used Reals; WILL BE DIFFERENT in ResizableVector and in VectorX
+	const T* GetDataPointer() const { return &data[0]; }	//!< return pointer to first data containing T numbers; const needed for LinkedDataVectors.
+	T* GetDataPointer() { return &data[0]; }				//!< return pointer to first data containing T numbers; const needed for LinkedDataVectors.
 
 	//! set numberOfItems Reals to given value.
 	void SetAll(T value)
@@ -496,14 +500,22 @@ public:
 		return result;
 	}
 
-	//! append a ConstSizeVectorBase<n> to ConstSizeVectorBase<n>; both vectors must have same templated length (but could have different actual length); RETURNS a ConstSizeVectorBase<2*n>
-	auto Append(const ConstSizeVectorBase<T, dataSize>& vector) const
+	//! append a ConstSizeVectorBase<n> to ConstSizeVectorBase<n> and return the merged vectors; both vectors must have same templated length (but could have different actual length); RETURNS a ConstSizeVectorBase<2*n>
+	auto ReturnAppended(const ConstSizeVectorBase<T, dataSize>& vector) const
 	{
 		//constexpr Index size = dataSize;
 		ConstSizeVectorBase<T, 2 * dataSize> newVector(NumberOfItems() + vector.NumberOfItems()); //NumberOfItems might be smaller than (dataSize1+dataSize2)
 		newVector.CopyFrom(*this, 0, 0, NumberOfItems());
 		newVector.CopyFrom(vector, 0, NumberOfItems(), vector.NumberOfItems());
 		return newVector;
+	}
+
+	//! append item to this vector, increase numberOfItems
+	void AppendItem(const T& item)
+	{
+		CHECKandTHROW((NumberOfItems() < dataSize), "ConstSizeVectorBase::AppendItem(...): exceeded size");
+		data[NumberOfItems()] = item;
+		SetNumberOfItems(NumberOfItems() + 1);
 	}
 
 
@@ -619,279 +631,6 @@ public:
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#else
-
-template<typename T, Index dataSize>
-class ConstSizeVectorBase: public VectorBase<T>
-{
-protected:
-    T constData[dataSize];
-
-public:
-    //! default constructor, calls special constructor if vector for linking data, no allocation; no data item initialization (undefined values), rule of 5
-    ConstSizeVectorBase()
-    {
-    	this->numberOfItems = dataSize;
-		this->data = &constData[0];
-    }
-
-
-    //! initialize ConstSizeVectorBase with numberOfItemsInit <= dataSize; no data item initialization (undefined values)
-    //! @todo: add private constructors Vector(T), Vector(T,T), Vector(int, int) in order to avoid programming errors; same for ConstSizeVectorBase
-    ConstSizeVectorBase(Index numberOfItemsInit)
-    {
-        CHECKandTHROW(numberOfItemsInit <= dataSize, "ERROR: call to ConstSizeVectorBase(Index): dataSize mismatch");
-		this->data = &constData[0];
-		this->numberOfItems = numberOfItemsInit;
-	}
-
-    //! initialize ConstSizeVectorBase with numberOfItemsInit Reals; assign all data items with 'initializationValue'
-    ConstSizeVectorBase(Index numberOfItemsInit, T initializationValue)
-    {
-        CHECKandTHROW(numberOfItemsInit <= dataSize, "ERROR: call to ConstSizeVectorBase(Index): dataSize mismatch");
-
-		this->data = &constData[0];
-		this->numberOfItems = numberOfItemsInit;
-
-        //Index cnt = 0;
-        for (auto &value : *this) {
-            value = initializationValue;
-        }
-    }
-
-    //! constructor with initializer list; condition: listOfReals.size() <= dataSize
-    ConstSizeVectorBase(std::initializer_list<T> listOfReals) //pass by value as a standard in C++11
-    {
-        CHECKandTHROW((Index)listOfReals.size() <= dataSize, "ERROR: ConstSizeVectorBase::constructor, dataSize mismatch with initializer_list");
-        //static_assert supported by C++14 (supports listOfReals.size() as constexpr) ==> needs /std:c++17 flag
-
-		this->data = &constData[0];
-		this->numberOfItems = (Index)listOfReals.size();
-
-        Index cnt = 0;
-        for (auto val : listOfReals) {
-            constData[cnt++] = val;
-        }
-    }
-
-private:
-	ConstSizeVectorBase(std::initializer_list<Index>) = delete; //constructor forbidden, as it would convert wrongly for ConstSizeVector({2}) into ConstSizeVector(2)
-public:
-
-    //! copy constructor; compile-time error, if dataSize mismatch!; copies only in range [0,vector.numberOfItems items], rule of 5
-    ConstSizeVectorBase(const ConstSizeVectorBase<T,dataSize>& vector)
-    {
-		this->data = &constData[0];
-		this->numberOfItems = vector.numberOfItems;
-
-		Index cnt = 0;
-        for (auto value : vector) {
-            constData[cnt++] = value;
-        }
-    }
-
-	//! move constructor, rule of 5 (but does not work yet)
-	//ConstSizeVectorBase(ConstSizeVectorBase<T, dataSize>&& other) = default; 
-	//ConstSizeVectorBase(ConstSizeVectorBase<T, dataSize>&& other) noexcept
-	//{
-	//	this->data = &constData[0];
-
-	//	Index cnt = 0;
-	//	for (auto val : other)
-	//	{
-	//		this->constData[cnt++] = std::exchange(val, (T)0.);
-	//	}
-	//	this->numberOfItems = std::exchange(other.numberOfItems, 0);
-	//}
-
-	//! @brief Initialize ConstSizeVectorBase by data given from vector at startPositionVector; 
-    //! copies 'dataSize' items, independently of array size (might cause memory access error)
-    ConstSizeVectorBase(const VectorBase<T>& vector, Index startPositionVector)
-    {
-        CHECKandTHROW(startPositionVector >= 0, "ERROR: ConstSizeVectorBase(const VectorBase<T>&, Index), startPositionVector < 0");
-        CHECKandTHROW(dataSize + startPositionVector <= vector.NumberOfItems(), "ERROR: ConstSizeVectorBase(const VectorBase<T>&, Index), dataSize mismatch");
-
-		this->data = &constData[0];
-		this->numberOfItems = dataSize;
-
-        Index cnt = startPositionVector;
-        for (auto &value : *this) {
-            value = vector[cnt++];
-        }
-    }
-
-    //! override destructor / delete[] from VectorBase<T>; no memory deallocated
-    virtual ~ConstSizeVectorBase()
-    {
-		this->data = nullptr; //because destructor ~VectorBase<T> & VectorBase<T>::FreeMemory() are called hereafter ==> this will cause ~VectorBase<T> not to delete anything!
-    };
-
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // BASIC FUNCTIONS
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	virtual VectorType GetType() const { return VectorType::ConstVector; }
-
-    //override iterator functions from VectorBase<T>, check performance!
-    //T* begin() const override { return &this->data[0]; }				//!< C++11 std::begin() for iterators; iterator range is always the currently used numberOfItems.
-    //T* end() const override { return &this->data[this->numberOfItems]; }		//!< C++11 std::end() for iterators; iterator range is always the currently used numberOfItems.
-    Index MaxNumberOfItems() const { return dataSize; }             //!< Get dataSize (available memory) of ConstSizeVectorBase
-
-    //! call to ConstSizeVectorBase::SetNumberOfItems leads to run-time error if newNumberOfItems > dataSize; used in SetVector({...}) and in operator=; does not reset data
-    virtual void SetNumberOfItems(Index newNumberOfItems) override
-    {
-        CHECKandTHROW(newNumberOfItems <= dataSize, "ERROR: call to ConstSizeVectorBase::SetNumberOfItems with newNumberOfItems > dataSize");
-		this->numberOfItems = newNumberOfItems;
-    }
-
-	//! reset to zero size; no memory delete!
-	virtual void Reset() override
-	{
-		this->numberOfItems = 0;
-	}
-
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // OPERATORS: some operators need to be overwritten because of vector generation
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-    //! @brief copy assignment operator; copies the currently used entries in range [0,numberOfItems]; rule of 5
-    ConstSizeVectorBase<T,dataSize>& operator= (const ConstSizeVectorBase<T, dataSize>& vector)
-    {
-        if (this == &vector) { return *this; }
-
-		//no check necessary, because only possible for equal datasizes!!!
-		//CHECKandTHROW(vector.NumberOfItems() <= dataSize, "ERROR: call to ConstSizeVectorBase::operator= with vector.dataSize > dataSize");
-		this->numberOfItems = vector.NumberOfItems();
-
-        Index cnt = 0;
-        for (auto item : vector) {
-            constData[cnt++] = item;
-        }
-        return *this;
-    }
-
-	//fails to complile, compiler wants to use move assignment operator:
-//private:
-//	ConstSizeVectorBase<T, dataSize>& operator= (ConstSizeVectorBase<T, dataSize>&& other) = delete;
-//public:
-	//! move assignment operator, rule of 5 (does not work in such a way!)
-	//ConstSizeVectorBase<T, dataSize>& operator= (ConstSizeVectorBase<T, dataSize>&& other) noexcept
-	//{
-	//	//no check necessary, because only possible for equal datasizes!!!
-	//	//CHECKandTHROW((other.NumberOfItems() <= dataSize), "ConstSizeVectorBase::operator=: incompatible size of vectors: dataSize");
-
-	//	for (Index i = 0; i < other.NumberOfItems(); i++) { //copy only items
-	//		std::swap(constData[i], other.constData[i]);
-	//	}
-
-	//	std::swap(this->numberOfItems, other.numberOfItems);
-	//	return *this;
-	//}
-
-    //! add two vectors, result = v1+v2 (for each component); only operated in range [0,numberOfItems]
-    friend ConstSizeVectorBase<T, dataSize> operator+ (const ConstSizeVectorBase<T, dataSize>& v1, const ConstSizeVectorBase<T, dataSize>& v2)
-    {
-        CHECKandTHROW((v1.NumberOfItems() == v2.NumberOfItems()), "ConstSizeVectorBase::operator+: incompatible size of vectors");
-        //not necessary, because impossible: CHECKandTHROW((v1.NumberOfItems() <= dataSize), "ConstSizeVectorBase::operator+: incompatible size of vectors: dataSize");
-        
-        ConstSizeVectorBase<T, dataSize> result(v1.NumberOfItems());
-        Index cnt = 0;
-        for (auto &item : result) {
-            item = v1[cnt] + v2[cnt];
-            cnt++;
-        }
-        return result;
-    }
-
-    //! add two vectors, result = v1-v2 (for each component); only operated in range [0,numberOfItems]
-    friend ConstSizeVectorBase<T, dataSize> operator- (const ConstSizeVectorBase<T, dataSize>& v1, const ConstSizeVectorBase<T, dataSize>& v2)
-    {
-        CHECKandTHROW((v1.NumberOfItems() == v2.NumberOfItems()), "ConstSizeVectorBase::operator-: incompatible size of vectors");
-		//not necessary, because impossible: CHECKandTHROW((v1.NumberOfItems() <= dataSize), "ConstSizeVectorBase::operator-: incompatible size of vectors: dataSize");
-        ConstSizeVectorBase<T, dataSize> result(v1.NumberOfItems());
-        Index cnt = 0;
-        for (auto &item : result) {
-            item = v1[cnt] - v2[cnt];
-            cnt++;
-        }
-        return result;
-    }
-
-    //! scalar multiply, result = scalar * v (for each component); only operated in range [0,numberOfItems]
-    friend ConstSizeVectorBase<T, dataSize> operator* (const ConstSizeVectorBase<T, dataSize>& v, T scalar)
-    {
-        CHECKandTHROW((v.NumberOfItems() <= dataSize), "ConstSizeVectorBase::operator* (scalar * v): incompatible size of vectors");
-        ConstSizeVectorBase<T, dataSize> result(v.NumberOfItems());
-        Index cnt = 0;
-        for (auto &item : result) {
-            item = scalar * v[cnt++];
-        }
-        return result;
-    }
-
-    //! scalar multiply, result = v * scalar (for each component); only operated in range [0,numberOfItems]
-    friend ConstSizeVectorBase<T, dataSize> operator* (T scalar, const ConstSizeVectorBase<T, dataSize>& v)
-    {
-        CHECKandTHROW((v.NumberOfItems() <= dataSize), "ConstSizeVectorBase::operator* (v * scalar): incompatible size of vectors");
-        ConstSizeVectorBase<T, dataSize> result(v.NumberOfItems());
-        Index cnt = 0;
-        for (auto &item : result) {
-            item = scalar * v[cnt++];
-        }
-        return result;
-    }
-    
-    //! append a ConstSizeVectorBase<n> to ConstSizeVectorBase<n>; both vectors must have same templated length (but could have different actual length); RETURNS a ConstSizeVectorBase<2*n>
-    auto Append(const ConstSizeVectorBase<T, dataSize>& vector) const
-    {
-        //constexpr Index size = dataSize;
-        ConstSizeVectorBase<T, 2 * dataSize> newVector(this->NumberOfItems() + vector.NumberOfItems()); //NumberOfItems might be smaller than (dataSize1+dataSize2)
-        newVector.CopyFrom(*this, 0, 0, this->NumberOfItems());
-        newVector.CopyFrom(vector, 0, this->NumberOfItems(), vector.NumberOfItems());
-        return newVector;
-    }
-
-
-protected: //functions cannot be called from outside 
-    //! call to ConstSizeVectorBase::AllocateMemory leads to run-time error (must not be called)
-    void AllocateMemory(Index numberOfRealsInit)
-    {
-        CHECKandTHROWstring("ERROR: call to ConstSizeVectorBase::AllocateMemory(...) forbidden");
-        //static_assert(0, "ERROR: call to ConstSizeVectorBase::AllocateMemory(...) forbidden");
-    }
-
-    //! ConstSizeVectorBase must not delete[] data; function called because of VectorBase<T> destructor 
-    virtual void FreeMemory() {}
-
-    //! append is forbidden for ConstSizeVectorBase, because to many problems with dataSize expected (v1.Append(v2) would crash if v1 does not have length of v1.length+v2.length)
-	VectorBase<T> Append(const VectorBase<T>& vector) const
-    {
-        CHECKandTHROWstring("ERROR: Append called for ConstSizeVectorBase");
-        return *this;
-    }
-
-};
-#endif //USE_NEW_CONSTSIZEVECTOR
 
 template<Index dataSize>
 using ConstSizeVector = ConstSizeVectorBase<Real, dataSize>;

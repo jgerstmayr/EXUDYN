@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-11-16  08:25:45 (last modified)
+* @date         2022-03-07  09:35:24 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,11 +29,13 @@ class CMarkerBodyCable2DShapeParameters // AUTO:
 public: // AUTO: 
     Index bodyNumber;                             //!< AUTO: body number to which marker is attached to
     Index numberOfSegments;                       //!< AUTO: number of number of segments; each segment is a line and is associated to a data (history) variable; must be same as in according contact element
+    Real verticalOffset;                          //!< AUTO: vertical offset from beam axis in positive (local) Y-direction; this offset accounts for consistent computation of positions and velocities at the surface of the beam
     //! AUTO: default constructor with parameter initialization
     CMarkerBodyCable2DShapeParameters()
     {
         bodyNumber = EXUstd::InvalidIndex;
         numberOfSegments = 3;
+        verticalOffset = 0.;
     };
 };
 
@@ -97,8 +99,8 @@ public: // AUTO:
     //! AUTO:  Compute marker data (e.g. position and positionJacobian) for a marker
     virtual void ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const override;
 
-    //! AUTO:  fill in according data for derivative of jacobian times vector v, e.g.: d(Jpos.T @ v)/dq
-    virtual void ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector& v, MarkerData& markerData) const override;
+    //! AUTO:  fill in according data for derivative of jacobian times vector v6D, e.g.: d(Jpos.T @ v6D[0:3])/dq; v6D represents 3 force components and 3 torque components in global coordinates!
+    virtual void ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const override;
 
 };
 

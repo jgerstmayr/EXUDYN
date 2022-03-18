@@ -194,6 +194,42 @@ def GaussIntegrate(functionOfX, integrationOrder, a, b):
     return value
 
 
+#integration points per integration order (1, 3, ...); for interval [-1,1]
+lobattoIntegrationPoints=[[-1.,1.],
+                          [-1., 0., 1.],
+                          [-1., -(1./5.)**0.5, (1./5.)**0.5, 1.]]
+
+#integration weights per integration order (1, 3, ...); for interval [-1,1]
+lobattoIntegrationWeights=[[ 1., 1.],
+                           [ 1./3., 4./3., 1./3.],
+                           [ 1./6., 5./6., 5./6., 1./6.]]
+
+#**function: compute numerical integration of functionOfX in interval [a,b] using Lobatto integration
+#**input: 
+#  functionOfX: scalar, vector or matrix-valued function with scalar argument (X or other variable)
+#  integrationOrder: even number in \{2,4,6\}; currently maximum order is 6
+#  a: integration range start 
+#  b: integration range end 
+#**output: (scalar or vectorized) integral value
+def LobattoIntegrate(functionOfX, integrationOrder, a, b):
+    cnt = 0
+    value = 0*functionOfX(0) #initialize value with correct shape
+    if integrationOrder > 6:
+        raise ValueError("LobattoIntegrate: maximum implemented integration order is 6!")
+    if integrationOrder%2 != 0 or integrationOrder < 2:
+        raise ValueError("LobattoIntegrate: integration order must be even (2,4,6,...) and > 1")
+    
+    points = lobattoIntegrationPoints[int(integrationOrder/2)-1]
+    weights = lobattoIntegrationWeights[int(integrationOrder/2)-1]
+    
+    for p in points:
+        x = 0.5*(b - a)*p + 0.5*(b + a)
+        value += 0.5*(b - a)*weights[cnt]*functionOfX(x);
+        cnt += 1
+
+    return value
+
+
 
 
 

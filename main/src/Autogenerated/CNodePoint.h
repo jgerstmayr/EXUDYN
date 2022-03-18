@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:58 (last modified)
+* @date         2021-12-20  14:37:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -95,6 +95,12 @@ public: // AUTO:
     virtual void GetPositionJacobian(Matrix& value) const override
     {
         value.SetScalarMatrix(3,1.);
+    }
+
+    //! AUTO:  provide derivative w.r.t. coordinates of rotation Jacobian times vector; for current configuration
+    virtual void GetRotationJacobianTTimesVector_q(const Vector3D& vector, Matrix& jacobian_q) const override
+    {
+        jacobian_q.SetNumberOfRowsAndColumns(0, 0);
     }
 
     //! AUTO:  return internally stored reference coordinates of node

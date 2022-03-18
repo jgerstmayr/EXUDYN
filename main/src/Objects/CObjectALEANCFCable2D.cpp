@@ -300,15 +300,75 @@ void CObjectALEANCFCable2D::GetAccessFunctionBody(AccessFunctionType accessType,
 		Vector4D SV = ComputeShapeFunctions(x, L);
 		value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
 
-		value.SetAll(0.);
-		value(0, 0) = SV[0];
-		value(1, 1) = SV[0];
-		value(0, 2) = SV[1];
-		value(1, 3) = SV[1];
-		value(0, 4) = SV[2];
-		value(1, 5) = SV[2];
-		value(0, 6) = SV[3];
-		value(1, 7) = SV[3];
+		////OLD:
+		//value.SetAll(0.);
+		//value(0, 0) = SV[0];
+		//value(1, 1) = SV[0];
+		//value(0, 2) = SV[1];
+		//value(1, 3) = SV[1];
+		//value(0, 4) = SV[2];
+		//value(1, 5) = SV[2];
+		//value(0, 6) = SV[3];
+		//value(1, 7) = SV[3];
+
+		if (localPosition[1] == 0)
+		{
+			value.SetAll(0.);
+			value(0, 0) = SV[0];
+			value(1, 1) = SV[0];
+			value(0, 2) = SV[1];
+			value(1, 3) = SV[1];
+			value(0, 4) = SV[2];
+			value(1, 5) = SV[2];
+			value(0, 6) = SV[3];
+			value(1, 7) = SV[3];
+		}
+		else
+		{
+			Real y = localPosition[1];
+			Vector4D SV_x = ComputeShapeFunctions_x(x, L);
+			Vector2D r_x = ComputeSlopeVector(x, ConfigurationType::Current);
+			Real norm = r_x.GetL2Norm();
+			Real normInv = 0;
+			Vector2D n({ -r_x[1], r_x[0] });
+			if (norm != 0.)
+			{
+				normInv = 1. / norm;
+			}
+			else
+			{
+				CHECKandTHROWstring("CObjectANCFCable2DBase::GetPosition(...): slope vector has length 0!");
+			}
+			n *= normInv;
+			//p = r(localPosition[0]) + localPosition[1] * n; n=1/sqrt(rx^T*rx)*[-rx[1],rx[0]]
+			//dp/dq = S + (ry^T*S_x)/(rx^T*rx) (3/2) * n + 1/sqrt(rx^T*rx) * S_x^perpendicular
+			Real norm3 = norm * norm * norm; //could be SIMPLIFIED, because n also contains 1/norm ....
+
+			//pout << "  slope=" << r_x << ", norm=" << norm << ", n=" << n << "\n";
+			//
+			for (Index i = 0; i < 4; i++)
+			{
+				Vector2D Svec[2]; //SV_x
+				Svec[0] = Vector2D({ SV_x[i],0 });
+				Svec[1] = Vector2D({ 0, SV_x[i] });
+				Vector2D SvecP[2];
+				SvecP[0] = Vector2D({ 0., SV_x[i] });
+				SvecP[1] = Vector2D({ -SV_x[i], 0. });
+
+				for (Index j = 0; j < 2; j++)
+				{
+					Real u = -y * (r_x*Svec[j]) / norm3;
+					value(0, i * 2 + j) = u * n[0] + y * normInv * SvecP[j][0];
+					value(1, i * 2 + j) = u * n[1] + y * normInv * SvecP[j][1];
+
+					value(j, i * 2 + j) += SV[i];
+				}
+
+			}
+		}
+
+
+
 		break;
 	}
 	case AccessFunctionType::AngularVelocity_qt:

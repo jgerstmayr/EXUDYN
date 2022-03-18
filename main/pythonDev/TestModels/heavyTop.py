@@ -58,6 +58,9 @@ v0 = [0.,0.,0.] #initial translational velocity
 
 nodeTypeList = [exu.NodeType.RotationEulerParameters, exu.NodeType.RotationRxyz]
 
+sAngVel=[]
+sPos=[]
+sCoords=[]
 for nodeType in nodeTypeList:
     
     nRB = 0
@@ -96,12 +99,15 @@ for nodeType in nodeTypeList:
         sAdd = ''
         if nodeType == exu.NodeType.RotationRxyz:
             sAdd = 'Rxyz' #avoid that both sensor file names are identical
-        #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorRotation'+sAdd+'.txt', outputVariableType=exu.OutputVariableType.Rotation))
-        mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVelLocal'+sAdd+'.txt', outputVariableType=exu.OutputVariableType.AngularVelocityLocal))
+        #mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True,#fileName='solution/sensorRotation'+sAdd+'.txt', outputVariableType=exu.OutputVariableType.Rotation))
+        sAngVel+=[mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True, #fileName='solution/sensorAngVelLocal'+sAdd+'.txt', 
+                                           outputVariableType=exu.OutputVariableType.AngularVelocityLocal))]
         #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVel'+sAdd+'.txt', outputVariableType=exu.OutputVariableType.AngularVelocity))
         
-        mbs.AddSensor(SensorBody(bodyNumber=oRB, fileName='solution/sensorPosition'+sAdd+'.txt', localPosition=rp, outputVariableType=exu.OutputVariableType.Position))
-        mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorCoordinates'+sAdd+'.txt', outputVariableType=exu.OutputVariableType.Coordinates))
+        sPos+=[mbs.AddSensor(SensorBody(bodyNumber=oRB, storeInternal=True, #fileName='solution/sensorPosition'+sAdd+'.txt', 
+                                        localPosition=rp, outputVariableType=exu.OutputVariableType.Position))]
+        sCoords+=[mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True, #fileName='solution/sensorCoordinates'+sAdd+'.txt', 
+                                           outputVariableType=exu.OutputVariableType.Coordinates))]
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 mbs.Assemble()
@@ -158,52 +164,63 @@ exudynTestGlobals.testResult = u
 #compute exact solution:
 
 if exudynTestGlobals.useGraphics:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-    plt.close("all")
+    from exudyn.plot import PlotSensor
+    fileRef = '../../../docs/verification/HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt'
+    PlotSensor(mbs, sCoords[0], components=[3,4,5,6], labels=['theta 0','theta 1','theta 2','theta 3'], 
+               closeAll=True, offsets=[1.,0,0,0], yLabel='Euler parameters') #offsets for reference coords
+    PlotSensor(mbs, fileRef, components=[0,1,2,3], labels=['theta 0 ref','theta 1 ref','theta 2 ref','theta 3 ref'], 
+               colorCodeOffset=7, newFigure=False)
     
-    [fig1, ax1] = plt.subplots()
-    [fig2, ax2] = plt.subplots()
-    [fig3, ax3] = plt.subplots()
-    data1 = np.loadtxt('solution/sensorCoordinates.txt', comments='#', delimiter=',')
-    ax1.plot(data1[:,0], data1[:,1+3]+1, 'r-', label='theta 0')  #1, because coordinates to not include ref. values
-    ax1.plot(data1[:,0], data1[:,2+3], 'g-', label='theta 1') 
-    ax1.plot(data1[:,0], data1[:,3+3], 'b-', label='theta 2') 
-    ax1.plot(data1[:,0], data1[:,4+3], 'k-', label='theta 3') 
-    
-    data1 = np.loadtxt('../../../docs/verification/HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt', comments='#', delimiter=',')
-    ax1.plot(data1[:,0], data1[:,1], 'r:', label='theta 0 ref')  #1, because coordinates to not include ref. values
-    ax1.plot(data1[:,0], data1[:,2], 'g:', label='theta 1 ref') 
-    ax1.plot(data1[:,0], data1[:,3], 'b:', label='theta 2 ref') 
-    ax1.plot(data1[:,0], data1[:,4], 'k:', label='theta 3 ref') 
-    ax1.set_ylabel("Euler parameter")
-    
-    data2 = np.loadtxt('solution/sensorAngVel.txt', comments='#', delimiter=',')
-    ax2.plot(data2[:,0], data2[:,1], 'r-', label='omega X') 
-    ax2.plot(data2[:,0], data2[:,2], 'g-', label='omega Y') 
-    ax2.plot(data2[:,0], data2[:,3], 'b-', label='omega Z') 
-    
-    data3 = np.loadtxt('solution/sensorPosition.txt', comments='#', delimiter=',')
-    ax3.plot(data3[:,0], data3[:,1], 'r-', label='position X') 
-    ax3.plot(data3[:,0], data3[:,2], 'g-', label='position Y') 
-    ax3.plot(data3[:,0], data3[:,3], 'b-', label='position Z') 
-    
-    axList=[ax1,ax2,ax3]
-    figList=[fig1, fig2, fig3]
-    
-    for ax in axList:
-        ax.grid(True, 'major', 'both')
-        ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-        ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-        ax.set_xlabel("time (s)")
-        ax.legend()
+    PlotSensor(mbs, sAngVel[0], components=[0,1,2], labels=['omega X','omega Y','omega Z'])
+    PlotSensor(mbs, sPos[0], components=[0,1,2])
+
+    # if False:
+    #     import matplotlib.pyplot as plt
+    #     import matplotlib.ticker as ticker
+    #     plt.close("all")
         
-    ax2.set_ylabel("angular velocity (rad/s)")
-    ax3.set_ylabel("coordinate (m)")
-    
-    for f in figList:
-        f.tight_layout()
-        f.show() #bring to front
+    #     [fig1, ax1] = plt.subplots()
+    #     [fig2, ax2] = plt.subplots()
+    #     [fig3, ax3] = plt.subplots()
+    #     data1 = np.loadtxt('solution/sensorCoordinates.txt', comments='#', delimiter=',')
+    #     ax1.plot(data1[:,0], data1[:,1+3]+1, 'r-', label='theta 0')  #1, because coordinates to not include ref. values
+    #     ax1.plot(data1[:,0], data1[:,2+3], 'g-', label='theta 1') 
+    #     ax1.plot(data1[:,0], data1[:,3+3], 'b-', label='theta 2') 
+    #     ax1.plot(data1[:,0], data1[:,4+3], 'k-', label='theta 3') 
+        
+    #     data1 = np.loadtxt('../../../docs/verification/HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt', comments='#', delimiter=',')
+    #     ax1.plot(data1[:,0], data1[:,1], 'r:', label='theta 0 ref')  #1, because coordinates to not include ref. values
+    #     ax1.plot(data1[:,0], data1[:,2], 'g:', label='theta 1 ref') 
+    #     ax1.plot(data1[:,0], data1[:,3], 'b:', label='theta 2 ref') 
+    #     ax1.plot(data1[:,0], data1[:,4], 'k:', label='theta 3 ref') 
+    #     ax1.set_ylabel("Euler parameter")
+        
+    #     data2 = np.loadtxt('solution/sensorAngVel.txt', comments='#', delimiter=',')
+    #     ax2.plot(data2[:,0], data2[:,1], 'r-', label='omega X') 
+    #     ax2.plot(data2[:,0], data2[:,2], 'g-', label='omega Y') 
+    #     ax2.plot(data2[:,0], data2[:,3], 'b-', label='omega Z') 
+        
+    #     data3 = np.loadtxt('solution/sensorPosition.txt', comments='#', delimiter=',')
+    #     ax3.plot(data3[:,0], data3[:,1], 'r-', label='position X') 
+    #     ax3.plot(data3[:,0], data3[:,2], 'g-', label='position Y') 
+    #     ax3.plot(data3[:,0], data3[:,3], 'b-', label='position Z') 
+        
+    #     axList=[ax1,ax2,ax3]
+    #     figList=[fig1, fig2, fig3]
+        
+    #     for ax in axList:
+    #         ax.grid(True, 'major', 'both')
+    #         ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
+    #         ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
+    #         ax.set_xlabel("time (s)")
+    #         ax.legend()
+            
+    #     ax2.set_ylabel("angular velocity (rad/s)")
+    #     ax3.set_ylabel("coordinate (m)")
+        
+    #     for f in figList:
+    #         f.tight_layout()
+    #         f.show() #bring to front
     
 
 

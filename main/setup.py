@@ -103,6 +103,24 @@ if USEGLFW:
 __version__ = exudynVersionString
 print('build Exudyn version',exudynVersionString)
 
+
+#++++++++++++++++++++++++++++++++++++++++++
+#add date and time into latex and .rst file
+def NumTo2digits(n):
+    return '0'*(n<10)+str(n)
+
+import datetime
+
+now=datetime.datetime.now()
+buildDateString = str(now.year) + '-' + NumTo2digits(now.month) + '-' + NumTo2digits(now.day)
+buildDateString += '  ' + NumTo2digits(now.hour) + ':' + NumTo2digits(now.minute)# + ':' + NumTo2digits(now.second)
+buildDateString = 'build date and time='+buildDateString
+fileDate =open('../docs/theDoc/buildDate.tex','w')  #clear file by one write access
+fileDate.write(buildDateString)
+fileDate.close()
+#++++++++++++++++++++++++++++++++++++++++++
+
+
 class get_pybind_include(object):
     def __str__(self):
         import pybind11
@@ -166,6 +184,7 @@ ext_modules = [
                  'src/Objects/CObjectConnectorCoordinateSpringDamper.cpp',
                  'src/Objects/CObjectConnectorCoordinateVector.cpp',
                  'src/Objects/CObjectConnectorDistance.cpp',
+                 'src/Objects/CObjectConnectorGravity.cpp',
                  'src/Objects/CObjectConnectorRigidBodySpringDamper.cpp',
                  'src/Objects/CObjectConnectorRollingDiscPenalty.cpp',
                  'src/Objects/CObjectConnectorSpringDamper.cpp',
@@ -174,6 +193,7 @@ ext_modules = [
                  'src/Objects/CObjectContactConvexRoll.cpp',
                  'src/Objects/CObjectContactCoordinate.cpp',
                  'src/Objects/CObjectContactFrictionCircleCable2D.cpp',
+                 'src/Objects/CObjectContactFrictionCircleCable2DOld.cpp',
                  'src/Objects/CObjectFFRF.cpp',
                  'src/Objects/CObjectFFRFreducedOrder.cpp',
                  'src/Objects/CObjectGenericODE1.cpp',
@@ -210,6 +230,7 @@ ext_modules = [
                  'src/System/CLoad.cpp',
                  'src/System/CNode.cpp',
                  'src/System/CObjectBody.cpp',
+                 'src/System/CObjectConnector.cpp',
                  'src/System/CSensor.cpp',
                  'src/System/MainNode.cpp',
                  'src/System/MainObject.cpp',
@@ -413,9 +434,12 @@ setup(
     long_description="""EXUDYN
 A flexible multibody dynamics systems simulation code with Python and C++
 For license information see LICENSE.txt
-For more information, installation and tutorials see docs/theDoc/theDoc.pdf""",
+For more information, installation and tutorials see
+https://github.com/jgerstmayr/EXUDYN
+and
+https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf""",
     package_dir={'':'pythonDev'},   #only add packages from that dir; must include a __init__.py file
-    packages=['exudyn'],            #adds all python files (=modules) in directories with __init__.py file; this is a subdirectory to the directory provided in package_dir
+    packages=['exudyn','exudyn/robotics'],            #adds all python files (=modules) in directories with __init__.py file; this is a subdirectory to the directory provided in package_dir
     ext_modules=ext_modules,
     setup_requires=['pybind11==2.6.0'], #replaced previous require>=2.5.0, because compilation with VS2017 fails with pybind11 2.7.0 version of 2021-10-04: setup_requires=['pybind11>=2.5.0'],
     cmdclass={'build_ext': BuildExt},

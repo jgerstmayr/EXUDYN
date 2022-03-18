@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-09-16  17:25:12 (last modified)
+* @date         2022-03-16  23:48:44 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -119,6 +119,7 @@ public: // AUTO:
         EPyUtils::SetMatrix3DSafely(d, "rotationMarker0", cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetMatrix3DSafely(d, "rotationMarker1", cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "offset")) { cObjectConnectorTorsionalSpringDamper->GetParameters().offset = py::cast<Real>(d["offset"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "velocityOffset")) { cObjectConnectorTorsionalSpringDamper->GetParameters().velocityOffset = py::cast<Real>(d["velocityOffset"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "torque")) { cObjectConnectorTorsionalSpringDamper->GetParameters().torque = py::cast<Real>(d["torque"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorTorsionalSpringDamper->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "springTorqueUserFunction")) { if (EPyUtils::CheckForValidFunction(d["springTorqueUserFunction"])) 
@@ -143,6 +144,7 @@ public: // AUTO:
         d["rotationMarker0"] = EXUmath::Matrix3DToStdArray33(cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker0); //! AUTO: cast variables into python (not needed for standard types) 
         d["rotationMarker1"] = EXUmath::Matrix3DToStdArray33(cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker1); //! AUTO: cast variables into python (not needed for standard types) 
         d["offset"] = (Real)cObjectConnectorTorsionalSpringDamper->GetParameters().offset; //! AUTO: cast variables into python (not needed for standard types) 
+        d["velocityOffset"] = (Real)cObjectConnectorTorsionalSpringDamper->GetParameters().velocityOffset; //! AUTO: cast variables into python (not needed for standard types) 
         d["torque"] = (Real)cObjectConnectorTorsionalSpringDamper->GetParameters().torque; //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectConnectorTorsionalSpringDamper->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         if (cObjectConnectorTorsionalSpringDamper->GetParameters().springTorqueUserFunction)
@@ -168,6 +170,7 @@ public: // AUTO:
         else if (parameterName.compare("rotationMarker0") == 0) { return py::cast(EXUmath::Matrix3DToStdArray33(cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker0));} //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker1") == 0) { return py::cast(EXUmath::Matrix3DToStdArray33(cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker1));} //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return py::cast((Real)cObjectConnectorTorsionalSpringDamper->GetParameters().offset);} //! AUTO: get parameter
+        else if (parameterName.compare("velocityOffset") == 0) { return py::cast((Real)cObjectConnectorTorsionalSpringDamper->GetParameters().velocityOffset);} //! AUTO: get parameter
         else if (parameterName.compare("torque") == 0) { return py::cast((Real)cObjectConnectorTorsionalSpringDamper->GetParameters().torque);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorTorsionalSpringDamper->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("springTorqueUserFunction") == 0) { return py::cast((std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)>)cObjectConnectorTorsionalSpringDamper->GetParameters().springTorqueUserFunction);} //! AUTO: get parameter
@@ -190,6 +193,7 @@ public: // AUTO:
         else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::SetMatrix3DSafely(value, cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::SetMatrix3DSafely(value, cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().offset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("velocityOffset") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().velocityOffset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("torque") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().torque = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("springTorqueUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorTorsionalSpringDamper->GetParameters().springTorqueUserFunction = py::cast<std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else

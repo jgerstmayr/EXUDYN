@@ -121,11 +121,13 @@ nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coordinate = 1))
 
 #Spring-Damper between two marker coordinates
 if withUserFunction:
+    sensorFileName='solution/sensorPos'+sMode+'.txt'
     mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker], 
                                          stiffness = spring, damping = damper, 
                                          springForceUserFunction = springForce,
                                          visualization=VCoordinateSpringDamper(show=False))) 
 else:
+    sensorFileName=''
     mbs.AddObject(ObjectContactCoordinate(markerNumbers = [groundMarker, nodeMarker], 
                                           nodeNumber = nData,
                                           contactStiffness = spring, contactDamping = damper, 
@@ -139,11 +141,8 @@ loadC = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker,
 
 if exudynTestGlobals.useGraphics:
     sPos = mbs.AddSensor(SensorNode(nodeNumber=n1, outputVariableType=exu.OutputVariableType.Position, 
-                             fileName="solution/sensorPos"+sMode+".txt"))
-    # sVel = mbs.AddSensor(SensorNode(nodeNumber=n1, outputVariableType=exu.OutputVariableType.Velocity, 
-    #                          fileName="solution/sensorVel"+sMode+".txt"))
-    # sAcc = mbs.AddSensor(SensorNode(nodeNumber=n1, outputVariableType=exu.OutputVariableType.Acceleration, 
-    #                          fileName="solution/sensorAcc"+sMode+".txt"))
+                                    storeInternal=True,fileName=sensorFileName
+                                    ))
 
 mbs.Assemble()
 
@@ -153,6 +152,7 @@ simulationSettings.solutionSettings.sensorsWritePeriod = 1e-10
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.minimumStepSize = 1e-10
+simulationSettings.timeIntegration.stepInformation = 3 #do not show step increase
 
 #important settings for contact:
 simulationSettings.timeIntegration.verboseMode = 1
@@ -190,16 +190,10 @@ exudynTestGlobals.testResult = u[1]
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-if exudynTestGlobals.useGraphics:
+if exudynTestGlobals.useGraphics and True: #to run this, run model first with withUserFunction=True
     from exudyn.plot import PlotSensor
-    import matplotlib.pyplot as plt
-    plt.close('all')
-
-    plt.figure('Pos')
-    data = np.loadtxt("solution/sensorPosUser.txt", comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,2], 'b-', label="user contact") 
-
-    PlotSensor(mbs, sensorNumbers=[sPos], components=[1])
+    PlotSensor(mbs, sensorNumbers=[sPos, 'solution/sensorPosUser.txt'], components=1, 
+               labels=['internal contact','user function'])
 
 
 

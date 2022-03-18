@@ -33,18 +33,18 @@ void UserFunctionExceptionHandling(Tfunction&& f, const char* functionName)
 	//mostly catches python errors:
 	catch (const pybind11::error_already_set& ex)
 	{
-		SysError("Error in python USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your python code!");
-		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+		SysError("Error in Python USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your Python code!");
+		//not needed due to change of SysError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 
 	catch (const EXUexception& ex)
 	{
-		SysError("Internal error in python in USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your python code!");
-		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+		SysError("Internal error in Python in USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your Python code!");
+		//not needed due to change of SysError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception
 	{
-		SysError("Unknown error in python USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!): check your python code!");
+		SysError("Unknown error in Python USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!): check your Python code!");
 	}
 #else
 	f();
@@ -64,13 +64,13 @@ void SolverExceptionHandling(Tfunction&& f, const char* functionName)
 	//mostly catches python errors:
 	catch (const pybind11::error_already_set& ex)
 	{
-		SysError("Error in solver function '" + STDstring(functionName) + "' originating from python code (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your python code!");
-		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+		SysError("Error in solver function '" + STDstring(functionName) + "' originating from Python code (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your Python code!");
+		//not needed due to change of SysError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (const EXUexception& ex)
 	{
 		SysError("EXUDYN raised internal error in '" + STDstring(functionName) + "':\n" + STDstring(ex.what()));
-		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+		//not needed due to change of SysError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception
 	{

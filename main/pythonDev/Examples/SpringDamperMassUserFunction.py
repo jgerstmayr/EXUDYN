@@ -86,7 +86,6 @@ simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.displayStatistics = True
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 #simulationSettings.linearSolverType = exu.LinearSolverType.EXUdense
-#simulationSettings.numberOfThreads = 1 #not available for eigen LU sparse matrix solver
 
 SC.visualizationSettings.nodes.show = True
 SC.visualizationSettings.bodies.show = False

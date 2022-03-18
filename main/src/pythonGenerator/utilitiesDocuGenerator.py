@@ -12,6 +12,7 @@ from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, Extra
 fileDir='../../pythonDev/exudyn/'
 filesParsed=[
              'basicUtilities.py',
+             'beams.py',
              'FEM.py',
              'graphicsDataUtilities.py',
              'GUI.py', 
@@ -22,9 +23,14 @@ filesParsed=[
              'plot.py',
              'processing.py',
              'rigidBodyUtilities.py',
-             'robotics.py',
-             'roboticsSpecial.py',
-             'signal.py',
+             'robotics/roboticsCore.py',
+             'robotics/future.py',
+             'robotics/models.py',
+             'robotics/mobile.py',
+             'robotics/motion.py',
+             'robotics/special.py',
+             'robotics/utilities.py',
+             'signalProcessing.py',
              'solver.py',
              'utilities.py',
              #'lieGroupIntegration.py', #Stefan Holzinger
@@ -374,7 +380,7 @@ def DictToItemsText(functionDict, tagList, addStr):
 
 #*****************************************************
 #write single function description into latex code
-def WriteFunctionDescription2Latex(functionDict, moduleName, isClassFunction = False, className=''):
+def WriteFunctionDescription2Latex(functionDict, moduleNamePython, isClassFunction = False, className=''):
     sLatex = ''
     argList = functionDict['argumentsList']
     argDefault = functionDict['defaultArgumentsList']
@@ -393,10 +399,10 @@ def WriteFunctionDescription2Latex(functionDict, moduleName, isClassFunction = F
         lineNumberStr = '\#L'+str(functionDict['lineNumber']+1)
     sLatex += '\\begin{flushleft}\n'
     #github link:
-    sLatex += '\\noindent '+addStr+'{def {\\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/' + moduleName +'.py'+lineNumberStr+'}{' + functionName +'}{' '}}}'
+    sLatex += '\\noindent '+addStr+'{def {\\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/' + moduleNamePython +'.py'+lineNumberStr+'}{' + functionName +'}{' '}}}'
     #relative file link:
-    #sLatex += '\\noindent '+addStr+'{def {\\bf \exuUrl{file:../../main/pythonDev/exudyn/' + moduleName +'.py'+'}{' + functionName +'}{' '}}}'
-    sLatex += '\\label{sec:'+ moduleName + ':' + classLabelStr + functionName.replace('\_','_') + '}\n'
+    #sLatex += '\\noindent '+addStr+'{def {\\bf \exuUrl{file:../../main/pythonDev/exudyn/' + moduleNamePython +'.py'+'}{' + functionName +'}{' '}}}'
+    sLatex += '\\label{sec:'+ moduleNamePython + ':' + classLabelStr + functionName.replace('\_','_') + '}\n'
     sLatex += '('
     sep = ''
     for i in range(len(argList)):
@@ -427,8 +433,10 @@ sLatex = ''
 for fileName in filesParsed:
     [functionList,classList,header] = ParsePythonFile(fileDir+fileName)
     moduleName = fileName[:-3]
-    sLatex += '\\mysubsection{Module: '+moduleName+'}\n'
-    sLatex += '\\label{sec:module:'+moduleName+'}\n'
+    moduleNameLatex = moduleName.replace('robotics/roboticsCore','robotics').replace('/','.')
+    moduleNamePython = moduleName.split('/')[-1]
+    sLatex += '\\mysubsection{Module: '+moduleNameLatex+'}\n'
+    sLatex += '\\label{sec:module:'+moduleNameLatex+'}\n'
 
 #*****************************************************
     if 'Details' in header: #write details as intro to section
@@ -461,7 +469,7 @@ for fileName in filesParsed:
         if not isFirstFunction:
             sLatex += "\\noindent\\rule{8cm}{0.75pt}\\vspace{1pt} \\\\ \n"
             #sLatex += "\\hline\\vspace{3pt}\\\\ \n"
-        sLatex += WriteFunctionDescription2Latex(funcDict, moduleName)
+        sLatex += WriteFunctionDescription2Latex(funcDict, moduleNamePython)
         
         #++++++++++++++++++++++++++++++++++++
         #add example references for function
@@ -474,7 +482,7 @@ for fileName in filesParsed:
 
     #insert class descriptions with functions
     for classDict in classList:
-        sLatex += '\\mysubsubsection{CLASS '+classDict['className']+' (in module '+moduleName+')}\n'
+        sLatex += '\\mysubsubsection{CLASS '+classDict['className']+' (in module '+moduleNameLatex+')}\n'
         #sLatex += '\\bi'
         sLatex += '\\noindent\\textcolor{steelblue}{{\\bf class description}}: ' + classDict['class']
         #sLatex += '\\ei'
@@ -494,7 +502,7 @@ for fileName in filesParsed:
             if not isFirstFunction:
                 sLatex += "\\noindent\\rule{8cm}{0.75pt}\\vspace{1pt} \\\\ \n"
                 #sLatex += "\\hline\\vspace{3pt}\\\\ \n"
-            sLatex += WriteFunctionDescription2Latex(funcDict, moduleName, isClassFunction=True, className=classDict['className'])
+            sLatex += WriteFunctionDescription2Latex(funcDict, moduleNamePython, isClassFunction=True, className=classDict['className'])
             isFirstFunction=False
 
         #use split in class, for derived classes like InertiaCylinder(RigidBodyInertia)

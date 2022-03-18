@@ -103,14 +103,67 @@ void CObjectConnectorCoordinateSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, con
 
 }
 
+//FUTURE: needed if MarkerNodeRotationCoordinate has jacDerivative: 
+void CObjectConnectorCoordinateSpringDamper::ComputeJacobianForce6D(const MarkerDataStructure& markerData, Index objectNumber, Vector6D& force6D) const
+{
+	if (parameters.activeConnector)
+	{
+		Real relPos, relVel, force;
+		ComputeSpringForce(markerData, objectNumber, relPos, relVel, force);
+		force6D.SetVector({ force, 0., 0., 0., 0., 0. }); //for coordinate connectors, use only first coordinate
+	}
+	else { force6D.SetAll(0.); }
+}
 
-////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-//OutputVariableType CObjectConnectorCoordinateSpringDamper::GetOutputVariableTypes() const
-//{
-//	//return OutputVariableType::_None;
-//	return (OutputVariableType)((Index)OutputVariableType::Distance + (Index)OutputVariableType::Displacement +
-//		(Index)OutputVariableType::Velocity + (Index)OutputVariableType::Force);
-//}
+void CObjectConnectorCoordinateSpringDamper::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
+	Real factorODE2, Real factorODE2_t,
+	Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const
+{
+	if (parameters.activeConnector)
+	{
+		temp.localJacobian.SetNumberOfRowsAndColumns(1, 1);
+		//compute inner jacobian: factorODE2 * d(F)/(dq) + factorODE2_t * d(F)/(dq_t)
+		Real localJac = parameters.stiffness * factorODE2 + parameters.damping * factorODE2_t;
+
+		if (parameters.dryFriction != 0.)
+		{
+			//this is one line code duplication:
+			Real relVel = (markerData.GetMarkerData(1).vectorValue_t[0] - markerData.GetMarkerData(0).vectorValue_t[0]);
+			Real smooth = 0.01; //add some smoothening of the proportional zone for the Jacobian, as it otherwise may cause problems with Newton (switching variable would be better!)
+			if (fabs(relVel) < parameters.dryFrictionProportionalZone*(1.-smooth))
+			{
+				//as long as vVel < dryFrictionProportionalZone, friction force shall linearly increase
+				localJac += 1. / parameters.dryFrictionProportionalZone * parameters.dryFriction;
+			}
+			else if (fabs(relVel) < parameters.dryFrictionProportionalZone*(1. + smooth))
+			{
+				//untested!
+				Real fact = (parameters.dryFrictionProportionalZone*(1. + smooth) - fabs(relVel)) / (2 * smooth*parameters.dryFrictionProportionalZone);
+				localJac += fact / parameters.dryFrictionProportionalZone * parameters.dryFriction;
+			}
+			//otherwise zero
+
+		}
+		temp.localJacobian(0, 0) = localJac;
+		//pout << "inside, localJac=" << localJac << "\n";
+	}
+	//compute jacobianODE2 in dense mode; temp.localJacobian is modified!
+	ComputeJacobianODE2_ODE2generic(temp.localJacobian, jacobianODE2, temp, factorODE2, factorODE2_t, objectNumber, markerData, 
+		parameters.activeConnector, true, false);
+}
+
+
+JacobianType::Type CObjectConnectorCoordinateSpringDamper::GetAvailableJacobians() const
+{
+	if (!parameters.springForceUserFunction)
+	{
+		return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
+	}
+	else 
+	{
+		return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
+	}
+}
 
 //! provide according output variable in "value"
 void CObjectConnectorCoordinateSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const

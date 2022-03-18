@@ -124,10 +124,10 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
 #**function: solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver; NOTE that this function is directly available from exudyn (using exudyn.SolveStatic(...))
 #**input:
 #   mbs: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
-#   simulationSettings: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)
+#   simulationSettings: specific simulation settings out of exu.SimulationSettings(), as described in \refSection{sec:SolutionSettings}; use options for newton, discontinuous settings, etc., from staticSolver sub-items
 #   updateInitialValues: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
 #   storeSolver: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
-#**output: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf section \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
+#**output: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
 #**example:
 # import exudyn as exu
 # from exudyn.itemInterface import *
@@ -164,19 +164,19 @@ def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(),
         success = staticSolver.SolveSystem(mbs, simulationSettings)
     except:
         pass
-        #print error message after except, to catch all errors
+    finally:
+        if not success:
+            #resolved (delete):
+            # exudyn.Print not shown in Spyder at this time (because of exception?)
+            # print(SolverErrorMessage(staticSolver, mbs, isStatic=True, showCausingObjects=showCausingItems, 
+            #                          showCausingNodes=showCausingItems, showHints=showHints), flush=True)
+            exudyn.Print(SolverErrorMessage(staticSolver, mbs, isStatic=True, showCausingObjects=showCausingItems, 
+                                     showCausingNodes=showCausingItems, showHints=showHints))
+            raise ValueError("SolveStatic terminated due to errors")
 
-    if not success:
-        # exudyn.Print not shown in Spyder at this time (because of exception?)
-        # exudyn.Print(SolverErrorMessage(staticSolver, mbs, isStatic=True, showCausingObjects=showCausingItems, 
-        #                          showCausingNodes=showCausingItems, showHints=showHints))
-        print(SolverErrorMessage(staticSolver, mbs, isStatic=True, showCausingObjects=showCausingItems, 
-                                 showCausingNodes=showCausingItems, showHints=showHints))
-        raise ValueError("SolveStatic terminated due to errors")
-
-    elif updateInitialValues:
-        currentState = mbs.systemData.GetSystemState() #get current values
-        mbs.systemData.SetSystemState(systemStateList=currentState, configuration = exudyn.ConfigurationType.Initial)
+        elif updateInitialValues:
+            currentState = mbs.systemData.GetSystemState() #get current values
+            mbs.systemData.SetSystemState(systemStateList=currentState, configuration = exudyn.ConfigurationType.Initial)
 
 
     return success
@@ -184,13 +184,13 @@ def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(),
 #**function: solves the dynamic mbs problem using simulationSettings and solver type; check theDoc.pdf for MainSolverImplicitSecondOrder for further details of the dynamic solver; NOTE that this function is directly available from exudyn (using exudyn.SolveDynamic(...))
 #**input:
 #   mbs: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
-#   simulationSettings: specific simulation settings
+#   simulationSettings: specific simulation settings out of exu.SimulationSettings(), as described in \refSection{sec:SolutionSettings}; use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special \refSection{secSpeedUp})
 #   solverType: use exudyn.DynamicSolverType to set specific solver (default=generalized alpha)
 #   updateInitialValues: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
 #   storeSolver: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
 #   showHints: show additional hints, if solver fails
 #   showCausingItems: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
-#**output: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf section \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
+#**output: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
 #**example:
 # import exudyn as exu
 # from exudyn.itemInterface import *
@@ -246,23 +246,20 @@ def SolveDynamic(mbs,
             success = dynamicSolver.SolveSystem(mbs, simulationSettings)
         except:
             pass
-            # print(SolverErrorMessage(dynamicSolver, mbs, isStatic=False, showCausingObjects=showCausingItems, 
-            #                          showCausingNodes=showCausingItems, showHints=showHints))
-            #print(dynamicSolver.conv)
-            # import sys
-            # sys.exit() #produce no further error messages
-            #raise ValueError("SolveDynamic terminated due to errors, see messages above")
-
-        if not success:
-            print(SolverErrorMessage(dynamicSolver, mbs, isStatic=False, showCausingObjects=showCausingItems, 
-                                     showCausingNodes=showCausingItems, showHints=showHints))
-            raise ValueError("SolveDynamic terminated")
-            
-        CheckSolverInfoStatistics(dynamicSolver.GetSolverName(), stat, dynamicSolver.it.newtonStepsCount) #now check if these statistics are ok
-
-        #restore old settings:
-        simulationSettings.timeIntegration.generalizedAlpha.useNewmark = newmarkOld
-        simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = index2Old
+        finally:
+            if not success:
+                #resolved (delete):
+                # print(SolverErrorMessage(dynamicSolver, mbs, isStatic=False, showCausingObjects=showCausingItems, 
+                #                          showCausingNodes=showCausingItems, showHints=showHints), flush=True)
+                exudyn.Print(SolverErrorMessage(dynamicSolver, mbs, isStatic=False, showCausingObjects=showCausingItems, 
+                                         showCausingNodes=showCausingItems, showHints=showHints))
+                raise ValueError("SolveDynamic terminated")
+                
+            CheckSolverInfoStatistics(dynamicSolver.GetSolverName(), stat, dynamicSolver.it.newtonStepsCount) #now check if these statistics are ok
+    
+            #restore old settings:
+            simulationSettings.timeIntegration.generalizedAlpha.useNewmark = newmarkOld
+            simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = index2Old
     elif (solverType == exudyn.DynamicSolverType.ExplicitEuler or 
             solverType == exudyn.DynamicSolverType.ExplicitMidpoint or
             solverType == exudyn.DynamicSolverType.RK33 or

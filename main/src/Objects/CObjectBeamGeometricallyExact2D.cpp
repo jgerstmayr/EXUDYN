@@ -159,7 +159,10 @@ void CObjectBeamGeometricallyExact2D::ComputeODE2LHS(Vector& ode2Lhs, Index obje
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
 AccessFunctionType CObjectBeamGeometricallyExact2D::GetAccessFunctionTypes() const
 {
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::DisplacementMassIntegral_q);
+	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + 
+		(Index)AccessFunctionType::AngularVelocity_qt +
+		(Index)AccessFunctionType::JacobianTtimesVector_q+
+		(Index)AccessFunctionType::DisplacementMassIntegral_q);
 }
 
 //! provide Jacobian at localPosition in 'value' according to object access
@@ -178,60 +181,13 @@ void CObjectBeamGeometricallyExact2D::GetAccessFunctionBody(AccessFunctionType a
 		Vector2D SV = ComputeShapeFunctions(x);
 		value.SetNumberOfRowsAndColumns(3, nODE2Coordinates); //3D velocity, 6 coordinates qt
 
-		if (localPosition[1] == 0)
-		{
-			value.SetAll(0.);
-			value(0, 0) = SV[0];
-			value(1, 1) = SV[0];
-			value(0, 3) = SV[1];
-			value(1, 4) = SV[1];
-		}
-		else
-		{
-			CHECKandTHROWstring("CObjectBeamGeometricallyExact2D::GetAccessFunctionBody for markers: only implemented if localPosition[1]==0");
-				//	//pout << "inside ..." << "\n";
-				//	//value.SetAll(0.);
-				//	Real y = localPosition[1];
-				//	Vector4D SV_x = ComputeShapeFunctions_x(x, L);
-				//	Vector2D r_x = ComputeSlopeVector(x, ConfigurationType::Current);
-				//	Real norm = r_x.GetL2Norm();
-				//	Real normInv = 0;
-				//	Vector2D n({ -r_x[1], r_x[0] });
-				//	if (norm != 0.)
-				//	{
-				//		normInv = 1. / norm;
-				//	}
-				//	else
-				//	{
-				//		CHECKandTHROWstring("CObjectANCFCable2DBase::GetPosition(...): slope vector has length 0!");
-				//	}
-				//	n *= normInv;
-				//	//p = r(localPosition[0]) + localPosition[1] * n; n=1/sqrt(rx^T*rx)*[-rx[1],rx[0]]
-				//	//dp/dq = S + (ry^T*S_x)/(rx^T*rx) (3/2) * n + 1/sqrt(rx^T*rx) * S_x^perpendicular
-				//	Real norm3 = norm * norm * norm; //could be SIMPLIFIED, because n also contains 1/norm ....
+		value.SetAll(0.);
+		value(0, 0) = SV[0];
+		value(1, 1) = SV[0];
+		value(0, 3) = SV[1];
+		value(1, 4) = SV[1];
 
-				//	//pout << "  slope=" << r_x << ", norm=" << norm << ", n=" << n << "\n";
-				//	//
-				//	for (Index i = 0; i < 4; i++)
-				//	{
-				//		Vector2D Svec[2]; //SV_x
-				//		Svec[0] = Vector2D({ SV_x[i],0 });
-				//		Svec[1] = Vector2D({ 0, SV_x[i] });
-				//		Vector2D SvecP[2];
-				//		SvecP[0] = Vector2D({ 0., SV_x[i] });
-				//		SvecP[1] = Vector2D({ -SV_x[i], 0. });
-
-				//		for (Index j = 0; j < 2; j++)
-				//		{
-				//			Real u = -y * (r_x*Svec[j]) / norm3;
-				//			value(0, i * 2 + j) = u * n[0] + y * normInv * SvecP[j][0];
-				//			value(1, i * 2 + j) = u * n[1] + y * normInv * SvecP[j][1];
-
-				//			value(j, i * 2 + j) += SV[i];
-				//		}
-
-				//	}
-		}
+		CHECKandTHROW(localPosition[1] == 0, "CObjectBeamGeometricallyExact2D::GetAccessFunctionBody (for MarkerBody): only implemented if localPosition[1]==0");
 
 		break;
 	}
@@ -248,6 +204,12 @@ void CObjectBeamGeometricallyExact2D::GetAccessFunctionBody(AccessFunctionType a
 		value(2, 2) = SV[0];
 		value(2, 5) = SV[1];
 
+		break;
+	}
+	case AccessFunctionType::JacobianTtimesVector_q: //jacobian w.r.t. global position and global orientation!!!
+	{
+		CHECKandTHROW(localPosition[1] == 0, "CObjectBeamGeometricallyExact2D::GetAccessFunctionBody [JacobianTtimesVector_q] (for MarkerBody): only implemented if localPosition[1]==0");
+		value.SetNumberOfRowsAndColumns(0, 0); //indicates that all entries are zero
 		break;
 	}
 	case AccessFunctionType::DisplacementMassIntegral_q:

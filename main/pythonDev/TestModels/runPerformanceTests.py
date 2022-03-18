@@ -100,6 +100,7 @@ exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 testFileList = [
+                'generalContactSpheresTest.py',
                 'perf3DRigidBodies.py',
                 'perfObjectFFRFreducedOrder.py',
                 'perfRigidPendulum.py',
@@ -112,6 +113,7 @@ totalTests = len(testFileList)
 testsFailed = [] #list of numbers containing the test numbers of failed tests
 exudynTestGlobals.useGraphics = False
 exudynTestGlobals.performTests = True
+exudynTestGlobals.isPerformanceTest = True
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -177,7 +179,8 @@ else:
         exu.Print('  PERFORMANCE TEST ' + str(i) + ' (' + testFileList[i] + ') FAILED')
 
 exu.Print('TOTAL PERFORMANCE TEST TIME = ' + str(totalTime) + ' seconds')
-exu.Print('Reference value (i9)        = 60 seconds (P3.7) / 42.7 seconds (P3.8)')
+exu.Print('Reference value (i9)        = 88.12 seconds (P3.6 32bit) / 74.11 seconds (P3.7) / 57.30 seconds (P3.8)')
+#exu.Print('Reference value (i9)        =  seconds (P3.7) / 42.7 seconds (P3.8)')
 exu.Print('****************************************************')
 
     

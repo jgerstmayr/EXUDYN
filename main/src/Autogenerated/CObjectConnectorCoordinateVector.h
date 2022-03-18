@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-09-30  09:45:07 (last modified)
+* @date         2022-03-17  19:12:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -22,18 +22,22 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
+#include <functional> //! AUTO: needed for std::function
+class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectConnectorCoordinateVectorParameters
 class CObjectConnectorCoordinateVectorParameters // AUTO: 
 {
 public: // AUTO: 
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
-    Matrix scalingMarker0;                        //!< AUTO: linear scaling matrix for coordinate vector of marker 0; matrix provided in python numpy format
-    Matrix scalingMarker1;                        //!< AUTO: linear scaling matrix for coordinate vector of marker 1; matrix provided in python numpy format
-    Matrix quadraticTermMarker0;                  //!< AUTO: quadratic scaling matrix for coordinate vector of marker 0; matrix provided in python numpy format
-    Matrix quadraticTermMarker1;                  //!< AUTO: quadratic scaling matrix for coordinate vector of marker 1; matrix provided in python numpy format
+    Matrix scalingMarker0;                        //!< AUTO: linear scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format
+    Matrix scalingMarker1;                        //!< AUTO: linear scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format
+    Matrix quadraticTermMarker0;                  //!< AUTO: quadratic scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format
+    Matrix quadraticTermMarker1;                  //!< AUTO: quadratic scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format
     Vector offset;                                //!< AUTO: offset added to constraint equation; only active, if no userFunction is defined
     bool velocityLevel;                           //!< AUTO: If true: connector constrains velocities (only works for \hac{ODE2} coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored
+    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector,bool)> constraintUserFunction;//!< AUTO: A Python user function which computes the constraint equations; to define the number of algebraic equations, set scalingMarker0 as a numpy.zeros((nAE,1)) array with nAE being the number algebraic equations; see description below
+    std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,bool)> jacobianUserFunction;//!< AUTO: A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t.\ the coordinates (times \f$f_{ODE2}\f$) and w.r.t.\ the velocities (times \f$f_{ODE2_t}\f$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorCoordinateVectorParameters()
@@ -45,6 +49,8 @@ public: // AUTO:
         quadraticTermMarker1 = Matrix();
         offset = Vector();
         velocityLevel = false;
+        constraintUserFunction = 0;
+        jacobianUserFunction = 0;
         activeConnector = true;
     };
 };
@@ -140,6 +146,12 @@ public: // AUTO:
     {
         return parameters.activeConnector;
     }
+
+    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionConstraint(Vector& algebraicEquations, const MainSystemBase& mainSystem, Real t, Index itemIndex, const ResizableVector& qMarker0, const ResizableVector& qMarker1, const ResizableVector& qMarker0_t, const ResizableVector& qMarker1_t, bool velocityLevel) const;
+
+    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& jacobian, const MainSystemBase& mainSystem, Real t, Index itemIndex, const ResizableVector& qMarker0, const ResizableVector& qMarker1, const ResizableVector& qMarker0_t, const ResizableVector& qMarker1_t, bool velocityLevel) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

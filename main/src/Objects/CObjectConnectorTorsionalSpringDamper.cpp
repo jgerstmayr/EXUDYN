@@ -51,7 +51,8 @@ void CObjectConnectorTorsionalSpringDamper::ComputeSpringTorque(const MarkerData
 	//compute resulting torque:
 	if (!parameters.springTorqueUserFunction)
 	{
-		torque = parameters.stiffness * (angle - parameters.offset) + parameters.damping * omega + parameters.torque;
+		torque = parameters.stiffness * (angle - parameters.offset) + 
+			parameters.damping * (omega - parameters.velocityOffset) + parameters.torque;
 	}
 	else
 	{

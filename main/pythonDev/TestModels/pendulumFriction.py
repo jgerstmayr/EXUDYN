@@ -108,7 +108,8 @@ simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = simul
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.60 #0.62 is approx. the limit
 
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
-simulationSettings.solutionSettings.coordinatesSolutionFileName= "coordinatesSolution.txt"
+simulationSettings.solutionSettings.coordinatesSolutionFileName= "solution/coordinatesSolution.txt"
+simulationSettings.solutionSettings.writeSolutionToFile=False
 
 #simulationSettings.displayStatistics = True
 
@@ -136,22 +137,26 @@ if exudynTestGlobals.useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
+    from exudyn.plot import PlotSensor
     
-    data = np.loadtxt('solution/pendulumFrictionRotation0.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,1], 'b-', label='rotation 0') #ccordinate 1 = rotation, scalar for ObjectRigidBody2D
-    data = np.loadtxt('solution/pendulumFrictionRotation0marker.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,3], 'r-', label='rotation 0') #ccordinate 3 = rotation, Z-coordinate because marker always 3D
+    PlotSensor(mbs, [sRot1, sRot2], components=[0,2], closeAll=True, markerStyles=['x','+'])
+
+    # import matplotlib.pyplot as plt
+    # import matplotlib.ticker as ticker
     
-    ax=plt.gca() # get current axes
-    ax.grid(True, 'major', 'both')
-    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-    plt.xlabel("time (s)")
-    plt.ylabel("angle (rad)")
-    plt.tight_layout() #better arrangement of plot
-    plt.legend()
-    plt.show() 
+    # data = np.loadtxt('solution/pendulumFrictionRotation0.txt', comments='#', delimiter=',')
+    # plt.plot(data[:,0], data[:,1], 'b-', label='rotation 0') #ccordinate 1 = rotation, scalar for ObjectRigidBody2D
+    # data = np.loadtxt('solution/pendulumFrictionRotation0marker.txt', comments='#', delimiter=',')
+    # plt.plot(data[:,0], data[:,3], 'r-', label='rotation 0') #ccordinate 3 = rotation, Z-coordinate because marker always 3D
+    
+    # ax=plt.gca() # get current axes
+    # ax.grid(True, 'major', 'both')
+    # ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
+    # ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
+    # plt.xlabel("time (s)")
+    # plt.ylabel("angle (rad)")
+    # plt.tight_layout() #better arrangement of plot
+    # plt.legend()
+    # plt.show() 
     
 

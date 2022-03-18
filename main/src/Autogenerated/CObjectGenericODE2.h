@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-11-14  14:42:29 (last modified)
+* @date         2022-03-01  20:14:20 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,9 +39,9 @@ public: // AUTO:
     PyMatrixContainer stiffnessMatrix;            //!< AUTO: stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction
     PyMatrixContainer dampingMatrix;              //!< AUTO: damping matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with stiffnessMatrix and jacobianUserFunction
     Vector forceVector;                           //!< AUTO: generalized force vector added to RHS
-    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> forceUserFunction;//!< AUTO: A python user function which computes the generalized user force vector for the \hac{ODE2} equations; see description below
-    std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector)> massMatrixUserFunction;//!< AUTO: A python user function which computes the mass matrix instead of the constant mass matrix given in \f$\Mm\f$; return numpy array or MatrixContainer; see description below
-    std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,Real,Real)> jacobianUserFunction;//!< AUTO: A python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t.\ the coordinates (times \f$f_{ODE2}\f$) and w.r.t.\ the velocities (times \f$f_{ODE2_t}\f$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below
+    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> forceUserFunction;//!< AUTO: A Python user function which computes the generalized user force vector for the \hac{ODE2} equations; see description below
+    std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector)> massMatrixUserFunction;//!< AUTO: A Python user function which computes the mass matrix instead of the constant mass matrix given in \f$\Mm\f$; return numpy array or MatrixContainer; see description below
+    std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,Real,Real)> jacobianUserFunction;//!< AUTO: A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t.\ the coordinates (times \f$f_{ODE2}\f$) and w.r.t.\ the velocities (times \f$f_{ODE2_t}\f$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below
     ArrayIndex coordinateIndexPerNode;            //!< AUTO: this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
     //! AUTO: default constructor with parameter initialization
     CObjectGenericODE2Parameters()

@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectContactFrictionCircleCable2D
-* @brief        A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a Rigid-Body Marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with 3\f$\times\f$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=1), last friction position]; the contact gap \f$g\f$ is integrated (piecewise linear) along the cable and circle; the contact force \f$f_c\f$ is zero for \f$gap>0\f$ and otherwise computed from \f$f_c = g*contactStiffness + \dot g*contactDamping\f$; during Newton iterations, the contact force is actived only, if \f$dataCoordinate[0] <= 0\f$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
+* @brief        A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a Rigid-Body Marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with 3\f$\times\f$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position].
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:40 (last modfied)
+* @date         2022-03-10  14:25:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -25,6 +25,7 @@
 class VisualizationObjectContactFrictionCircleCable2D: public VisualizationObject // AUTO: 
 {
 protected: // AUTO: 
+    bool showContactCircle;                       //!< AUTO: if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general)
     float drawSize;                               //!< AUTO: drawing size = diameter of spring; size == -1.f means that default connector size is used
     Float4 color;                                 //!< AUTO: RGBA connector color; if R==-1, use default color
 
@@ -33,6 +34,7 @@ public: // AUTO:
     VisualizationObjectContactFrictionCircleCable2D()
     {
         show = true;
+        showContactCircle = true;
         drawSize = -1.f;
         color = Float4({-1.f,-1.f,-1.f,-1.f});
     };
@@ -46,6 +48,13 @@ public: // AUTO:
     {
         return true;
     }
+
+    //! AUTO:  Write (Reference) access to:if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general)
+    void SetShowContactCircle(const bool& value) { showContactCircle = value; }
+    //! AUTO:  Read (Reference) access to:if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general)
+    const bool& GetShowContactCircle() const { return showContactCircle; }
+    //! AUTO:  Read (Reference) access to:if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general)
+    bool& GetShowContactCircle() { return showContactCircle; }
 
     //! AUTO:  Write (Reference) access to:drawing size = diameter of spring; size == -1.f means that default connector size is used
     void SetDrawSize(const float& value) { drawSize = value; }

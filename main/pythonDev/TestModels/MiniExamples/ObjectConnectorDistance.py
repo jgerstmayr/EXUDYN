@@ -19,7 +19,6 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
-testError=1 #set default error, if failed
 exu.Print("start mini example for class ObjectConnectorDistance")
 try: #puts example in safe environment
     #example with 1m pendulum, 50kg under gravity
@@ -45,5 +44,5 @@ try: #puts example in safe environment
 except BaseException as e:
     exu.Print("An error occured in test example for ObjectConnectorDistance:", e)
 else:
-    exu.Print("example for ObjectConnectorDistance completed, test error =", testError)
+    exu.Print("example for ObjectConnectorDistance completed, test result =", exudynTestGlobals.testResult)
 

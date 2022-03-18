@@ -16,7 +16,6 @@ from math import sin, pi #for animation
 import time        
 import tkinter
 import tkinter.font as tkFont
-import matplotlib.pyplot as plt
 import copy		   #copy numpy objects
 import exudyn
 
@@ -335,6 +334,7 @@ class InteractiveDialog:
     #**classFunction: initialize figure and subplots for plots structure
     def InitializePlots(self):
         if len(self.plots) != 0:
+            import matplotlib.pyplot as plt
             plt.rcParams.update({'font.size': self.plots['fontSize']})
         
             fig = plt.figure()

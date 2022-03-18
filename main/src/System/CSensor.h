@@ -27,7 +27,7 @@
 class CSensor
 {
 protected: 
-
+	ResizableMatrix internalStorage; //!< resizable matrix for internal storage of sensor values; automatically resized by solver
 public: 
 	virtual ~CSensor() {} //added for correct deletion of derived classes
 
@@ -106,22 +106,23 @@ public:
 		CHECKandTHROWstring("Invalid call to CSensor::GetSensorValues");
 	}
 
-	//localPosition stored in SensorBody
-	////! get sensor values into values vector; special call for body sensors: additional localPosition needed
-	//virtual void GetSensorValuesBody(const CSystemData& cSystemData, Vector& values, const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const {
-	//	CHECKandTHROWstring("Invalid call to CSensor::GetSensorValuesBody");
-	//}
-
-	//! get sensor values into values vector; special call for body sensors: additional localPosition needed
+	//! get flag which determines if sensor data is written to file
 	virtual bool GetWriteToFileFlag() const {
 		CHECKandTHROWstring("Invalid call to CSensor::GetWriteToFileFlag");
 		return false;
 	}
 
-	////! time period used to output sensor values (e.g.: 0 ... always, 0.01 .. every 10 milliseconds, ...)
-	//virtual Real GetFileWritingInterval() const {
-	//	CHECKandTHROWstring("Invalid call to CSensor::GetFileWritingInterval");
-	//}
+	//! get flag which determines if sensor data is stored internally
+	virtual bool GetStoreInternalFlag() const {
+		CHECKandTHROWstring("Invalid call to CSensor::GetStoreInternalFlag");
+		return false;
+	}
+
+	//! read access to internal storage
+	virtual const ResizableMatrix& GetInternalStorage() const { return internalStorage; }
+
+	//! write access to internal storage
+	virtual ResizableMatrix& GetInternalStorage() { return internalStorage; }
 
 	//! directory and file name for sensor file output
 	virtual STDstring GetFileName() const {

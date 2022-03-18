@@ -172,14 +172,47 @@ The user has a couple of basic solvers available in \codeName\ :
 \bi
   \item \texttt{exudyn.SolveStatic(...)}: compute static solution for given problem (may also be used to compute kinematic behaviour by prescribing joint motion)
   \item \texttt{exudyn.SolveDynamic(...)}: time integration of equations of motion
-  \item \texttt{exudyn.ComputeLinearizedSystem(...)}: computes the linearized system of equations and returns mass, stiffness, damping matrices (\mybold{coming SOON})
+  \item \texttt{exudyn.ComputeLinearizedSystem(...)}: computes the linearized system of equations and returns mass, stiffness, damping matrices
   \item \texttt{exudyn.ComputeODE2Eigenvalues(...)}: computes the eigenvalues of the linearized system of equations; only possible if no algebraic constraints in system; uses scipy to compute eigenvalues
 \ei
-There are advanced methods, like in \texttt{exudyn.processing}:
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\begin{figure}[hb]
+  \centering
+	\begin{tikzpicture}[node distance = 2cm, auto, thick,scale=0.7, every node/.style={scale=0.7}]
+			% Place nodes
+			\node [wideblock] (solveStatic) {static solver};
+			\node [wideblock, right of=solveStatic, node distance=5cm] (solveDynamic) {dynamic solver};
+			\node [wideblock, right of=solveDynamic, node distance=5cm] (computeLinearized) {compute linearized system};
+			\node [wideblock, right of=computeLinearized, node distance=5cm] (computeEWP) {eigenvalue solver};
+%      
+			\node [cloud, below of=solveDynamic, node distance=3cm, xshift = 2.5cm] (basicSolvers) {Basic solvers};
+			\node [wideblock, below of=basicSolvers, node distance=3cm] (parameterVariation) {parameter variation};
+			\node [wideblock, left of=parameterVariation, node distance=5cm] (optimization) {optimization};
+			\node [wideblock, right of=parameterVariation, node distance=5cm] (sensitivityAnalysis) {sensitivity analysis};
+			\path [arrow] (basicSolvers) -- (solveDynamic);
+			\path [arrow] (basicSolvers) -- (solveStatic);
+			\path [arrow] (basicSolvers) -- (computeLinearized);
+			\path [arrow] (basicSolvers) -- (computeEWP);
+
+			\path [arrow] (parameterVariation) -- (basicSolvers);
+			\path [arrow] (optimization) -- (basicSolvers);
+			\path [arrow] (sensitivityAnalysis) -- (basicSolvers);
+	\end{tikzpicture}
+  \caption{Basic and advanced solvers in \codeName\ ; advanced solvers build upon any basic solver to perform more sophisticated operations}
+	\label{fig_available_solvers}
+\end{figure}
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+There are advanced solvers, like in \texttt{exudyn.processing}:
 \bi
-  \item \texttt{GeneticOptimization(...)}: find optimum for given set of parameter ranges; works in parallel
+  \item \mybold{Optimization}:
+  \bi
+    \texttt{GeneticOptimization(...)}: find optimum for given set of parameter ranges using genetic optimization; works in parallel
+    \texttt{Minimize(...)}: find optimum with \texttt{scipy.optimize.minimize(...)}
+  \ei
+\ei
+\bi
   \item \texttt{ParameterVariation(...)}: compute a series of simulations for given set(s) of parameters; works in parallel
-  \item \texttt{SensitivityAnalysis(...)}: compute sensitivities for certain parameters; works in parallel (\mybold{coming SOON})
+  \item \texttt{ComputeSensitivities(...)}: compute sensitivities for certain parameters; works in parallel
 \ei
 The advanced methods are build upon the basic solvers and essentially run single simulations in the background, see the according examples.
 
@@ -678,7 +711,7 @@ and Newmarks's parameters,
 	\beta = \frac{1}{4}(1- \alpha_m + \alpha_f)^2
 \ee
 
-\begin{figure}%
+\begin{figure}[tbh]%
 \begin{center}
 \includegraphics[width=0.6\columnwidth]{figures/spectralRadiusZeta0}%
 \end{center}

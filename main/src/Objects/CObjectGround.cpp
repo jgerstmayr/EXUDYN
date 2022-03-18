@@ -39,7 +39,10 @@ void CObjectGround::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
 AccessFunctionType CObjectGround::GetAccessFunctionTypes() const
 {
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::DisplacementMassIntegral_q);
+	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + 
+		(Index)AccessFunctionType::AngularVelocity_qt + 
+		(Index)AccessFunctionType::JacobianTtimesVector_q +
+		(Index)AccessFunctionType::DisplacementMassIntegral_q);
 }
 
 //! provide Jacobian at localPosition in "value" according to object access
@@ -48,14 +51,25 @@ void CObjectGround::GetAccessFunctionBody(AccessFunctionType accessType, const V
 	switch (accessType)
 	{
 	case AccessFunctionType::TranslationalVelocity_qt:
+	{
 		value.SetNumberOfRowsAndColumns(0, 0); // no action induced from ground joint!
 		break;
+	}
 	case AccessFunctionType::AngularVelocity_qt:
+	{
 		value.SetNumberOfRowsAndColumns(0, 0); // no action induced from ground joint!
 		break;
+	}
+	case AccessFunctionType::JacobianTtimesVector_q: //jacobian w.r.t. global position and global orientation!!!
+	{
+		value.SetNumberOfRowsAndColumns(0, 0); //indicates that all entries are zero
+		break;
+	}
 	case AccessFunctionType::DisplacementMassIntegral_q:
+	{
 		value.SetNumberOfRowsAndColumns(0, 0); // no action induced from ground joint!
 		break;
+	}
 	default:
 		SysError("CObjectGround:GetAccessFunctionBody illegal accessType");
 	}

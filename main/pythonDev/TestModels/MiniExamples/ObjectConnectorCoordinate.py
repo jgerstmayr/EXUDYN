@@ -19,7 +19,6 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
-testError=1 #set default error, if failed
 exu.Print("start mini example for class ObjectConnectorCoordinate")
 try: #puts example in safe environment
     def OffsetUF(mbs, t, itemNumber, lOffset): #gives 0.05 at t=1
@@ -45,5 +44,5 @@ try: #puts example in safe environment
 except BaseException as e:
     exu.Print("An error occured in test example for ObjectConnectorCoordinate:", e)
 else:
-    exu.Print("example for ObjectConnectorCoordinate completed, test error =", testError)
+    exu.Print("example for ObjectConnectorCoordinate completed, test result =", exudynTestGlobals.testResult)
 

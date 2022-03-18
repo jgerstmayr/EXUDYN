@@ -17,11 +17,12 @@
 
 #include "Linalg/MatrixContainer.h"	
 
-#ifdef useMatrixContainerTriplets
-	#define APPEND_TO_TRIPLETS AppendPure
-#else
-	#define APPEND_TO_TRIPLETS push_back
-#endif
+//#ifdef useMatrixContainerTriplets
+//	#define APPEND_TO_TRIPLETS AppendPure
+//#else
+//	#define APPEND_TO_TRIPLETS push_back
+//#endif
+
 
 //! factorize matrix (invert, SparseLU, etc.); -1=success
 Index GeneralMatrixEXUdense::FactorizeNew(bool ignoreRedundantEquation, Index redundantEquationsStart)
@@ -176,7 +177,6 @@ void GeneralMatrixEigenSparse::AddSubmatrix(const Matrix& submatrix, Real factor
 				Real value = submatrix(i, j);
 				if (value != 0.)
 				{
-					//triplets.APPEND_TO_TRIPLETS(SparseTriplet((StorageIndex)LTGrows[i], (StorageIndex)LTGcolumns[j], value));
 					triplets.AppendPure(SparseTriplet((StorageIndex)LTGrows[i], (StorageIndex)LTGcolumns[j], value));
 				}
 			}
@@ -282,7 +282,6 @@ void GeneralMatrixEigenSparse::AddSubmatrixTransposedWithFactor(const Matrix& su
 			Real value = submatrix(j, i);
 			if (value != 0.)
 			{
-				//triplets.APPEND_TO_TRIPLETS(SparseTriplet((StorageIndex)(i + rowOffset), (StorageIndex)(j + columnOffset), factor*value));
 				triplets.AppendPure(SparseTriplet((StorageIndex)(i + rowOffset), (StorageIndex)(j + columnOffset), factor*value));
 			}
 		}

@@ -63,11 +63,11 @@ oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nODE2],
                                                visualization=VObjectGenericODE2(show=False)))
 
 sCoords2 = mbs.AddSensor(SensorNode(nodeNumber = nODE2, 
-                                    fileName='solution/testODE2.txt',
+                                    storeInternal=True,#fileName='solution/testODE2.txt',
                                     writeToFile = False,
                                     outputVariableType=exu.OutputVariableType.Coordinates))    
 sCoords2_t = mbs.AddSensor(SensorNode(nodeNumber = nODE2, 
-                                    fileName='solution/testODE2_t.txt',
+                                    storeInternal=True,#fileName='solution/testODE2_t.txt',
                                     writeToFile = False,
                                     outputVariableType=exu.OutputVariableType.Coordinates_t))    
 

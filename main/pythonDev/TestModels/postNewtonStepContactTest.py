@@ -137,22 +137,23 @@ loadC = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker,
 
 
 if exudynTestGlobals.useGraphics:
-    sPos = mbs.AddSensor(SensorNode(nodeNumber=n1, outputVariableType=exu.OutputVariableType.Position, 
-                             fileName="solution/sensorPos.txt"))
-    sVel = mbs.AddSensor(SensorNode(nodeNumber=n1, outputVariableType=exu.OutputVariableType.Velocity, 
-                             fileName="solution/sensorVel.txt"))
-    sAcc = mbs.AddSensor(SensorNode(nodeNumber=n1, outputVariableType=exu.OutputVariableType.Acceleration, 
-                             fileName="solution/sensorAcc.txt"))
+    sPos = mbs.AddSensor(SensorNode(nodeNumber=n1, storeInternal=True,#fileName="solution/sensorPos.txt"
+                             outputVariableType=exu.OutputVariableType.Position))
+    sVel = mbs.AddSensor(SensorNode(nodeNumber=n1, storeInternal=True,#fileName="solution/sensorVel.txt"
+                                    outputVariableType=exu.OutputVariableType.Velocity))
+    sAcc = mbs.AddSensor(SensorNode(nodeNumber=n1, storeInternal=True,#fileName="solution/sensorAcc.txt"
+                                    outputVariableType=exu.OutputVariableType.Acceleration))
     #dummy, for PlotSensor
+    #these files are created, if doRefSol=True:
     sPosRef = mbs.AddSensor(SensorNode(nodeNumber=n1, outputVariableType=exu.OutputVariableType.Position, 
-                                       writeToFile=doRefSol, #set True to compute reference solution
-                                        fileName="solution/sensorPosRef.txt"))
+                                       storeInternal=not doRefSol,fileName="solution/sensorPosRef.txt",
+                                       writeToFile=doRefSol)) #set True to compute reference solution
     sVelRef = mbs.AddSensor(SensorNode(nodeNumber=n1, outputVariableType=exu.OutputVariableType.Velocity, 
-                                       writeToFile=doRefSol, #set True to compute reference solution
-                                        fileName="solution/sensorVelRef.txt"))
+                                       storeInternal=not doRefSol,fileName="solution/sensorVelRef.txt",
+                                       writeToFile=doRefSol)) #set True to compute reference solution
     sAccRef = mbs.AddSensor(SensorNode(nodeNumber=n1, outputVariableType=exu.OutputVariableType.Acceleration, 
-                                       writeToFile=doRefSol, #set True to compute reference solution
-                                        fileName="solution/sensorAccRef.txt"))
+                                       storeInternal=not doRefSol,fileName="solution/sensorAccRef.txt",
+                                       writeToFile=doRefSol)) #set True to compute reference solution
 
 #exu.Print(mbs)
 mbs.Assemble()
@@ -163,6 +164,7 @@ simulationSettings.solutionSettings.sensorsWritePeriod = 1e-5
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.minimumStepSize = 1e-10
+simulationSettings.timeIntegration.stepInformation = 3 #do not show step increase
 
 #important settings for contact:
 simulationSettings.timeIntegration.discontinuous.iterationTolerance = 1e-8 #this is the accepted penetration before reducing step size
@@ -202,12 +204,9 @@ if exudynTestGlobals.useGraphics:
     import matplotlib.pyplot as plt
     plt.close('all')
 
-    plt.figure('Pos')
-    PlotSensor(mbs, sensorNumbers=[sPos, sPosRef], components=[1,1])
-    plt.figure('Vel')
-    PlotSensor(mbs, sensorNumbers=[sVel, sVelRef], components=[1,1])
-    plt.figure('Acc')
-    PlotSensor(mbs, sensorNumbers=[sAcc, sAccRef], components=[1,1])
+    PlotSensor(mbs, sensorNumbers=[sPos, sPosRef], components=[1,1], figureName='Pos')
+    PlotSensor(mbs, sensorNumbers=[sVel, sVelRef], components=[1,1], figureName='Vel')
+    PlotSensor(mbs, sensorNumbers=[sAcc, sAccRef], components=[1,1], figureName='Acc')
 
 
 

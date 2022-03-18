@@ -19,7 +19,6 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
-testError=1 #set default error, if failed
 exu.Print("start mini example for class ObjectRigidBody2D")
 try: #puts example in safe environment
     node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates = [1,1,0.25*np.pi], 
@@ -39,5 +38,5 @@ try: #puts example in safe environment
 except BaseException as e:
     exu.Print("An error occured in test example for ObjectRigidBody2D:", e)
 else:
-    exu.Print("example for ObjectRigidBody2D completed, test error =", testError)
+    exu.Print("example for ObjectRigidBody2D completed, test result =", exudynTestGlobals.testResult)
 

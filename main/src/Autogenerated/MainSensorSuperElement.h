@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:21:00 (last modified)
+* @date         2022-02-18  20:35:37 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -110,6 +110,7 @@ public: // AUTO:
         cSensorSuperElement->GetParameters().writeToFile = py::cast<bool>(d["writeToFile"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "fileName", cSensorSuperElement->GetParameters().fileName); /*! AUTO:  safely cast to C++ type*/
         cSensorSuperElement->GetParameters().outputVariableType = (OutputVariableType)py::cast<Index>(d["outputVariableType"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cSensorSuperElement->GetParameters().storeInternal = py::cast<bool>(d["storeInternal"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationSensorSuperElement->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
@@ -124,6 +125,7 @@ public: // AUTO:
         d["writeToFile"] = (bool)cSensorSuperElement->GetParameters().writeToFile; //! AUTO: cast variables into python (not needed for standard types) 
         d["fileName"] = (std::string)cSensorSuperElement->GetParameters().fileName; //! AUTO: cast variables into python (not needed for standard types) 
         d["outputVariableType"] = (OutputVariableType)cSensorSuperElement->GetParameters().outputVariableType; //! AUTO: cast variables into python (not needed for standard types) 
+        d["storeInternal"] = (bool)cSensorSuperElement->GetParameters().storeInternal; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationSensorSuperElement->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -138,6 +140,7 @@ public: // AUTO:
         else if (parameterName.compare("writeToFile") == 0) { return py::cast((bool)cSensorSuperElement->GetParameters().writeToFile);} //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { return py::cast((std::string)cSensorSuperElement->GetParameters().fileName);} //! AUTO: get parameter
         else if (parameterName.compare("outputVariableType") == 0) { return py::cast((OutputVariableType)cSensorSuperElement->GetParameters().outputVariableType);} //! AUTO: get parameter
+        else if (parameterName.compare("storeInternal") == 0) { return py::cast((bool)cSensorSuperElement->GetParameters().storeInternal);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationSensorSuperElement->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("SensorSuperElement::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
@@ -153,6 +156,7 @@ public: // AUTO:
         else if (parameterName.compare("writeToFile") == 0) { cSensorSuperElement->GetParameters().writeToFile = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { EPyUtils::SetStringSafely(value, cSensorSuperElement->GetParameters().fileName); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("outputVariableType") == 0) { cSensorSuperElement->GetParameters().outputVariableType = py::cast<OutputVariableType>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("storeInternal") == 0) { cSensorSuperElement->GetParameters().storeInternal = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationSensorSuperElement->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("SensorSuperElement::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

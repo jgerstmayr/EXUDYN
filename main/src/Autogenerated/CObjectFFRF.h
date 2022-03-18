@@ -2,9 +2,9 @@
 * @class        CObjectFFRFParameters
 * @brief        Parameter class for CObjectFFRF
 *
-* @author       Gerstmayr Johannes
+* @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2021-11-14  14:42:29 (last modified)
+* @date         2022-03-01  20:14:20 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,12 +35,12 @@ class CObjectFFRFParameters // AUTO:
 {
 public: // AUTO: 
     ArrayIndex nodeNumbers;                       //!< AUTO: node numbers which provide the coordinates for the object (consecutively as provided in this list); the \f$(n_\mathrm{nf}+1)\f$ nodes represent the nodes of the FE mesh (except for node 0); the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame
-    PyMatrixContainer massMatrixFF;               //!< AUTO: body-fixed and ONLY flexible coordinates part of mass matrix of object given in python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
-    PyMatrixContainer stiffnessMatrixFF;          //!< AUTO: body-fixed and ONLY flexible coordinates part of stiffness matrix of object in python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
-    PyMatrixContainer dampingMatrixFF;            //!< AUTO: body-fixed and ONLY flexible coordinates part of damping matrix of object in python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
+    PyMatrixContainer massMatrixFF;               //!< AUTO: body-fixed and ONLY flexible coordinates part of mass matrix of object given in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
+    PyMatrixContainer stiffnessMatrixFF;          //!< AUTO: body-fixed and ONLY flexible coordinates part of stiffness matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
+    PyMatrixContainer dampingMatrixFF;            //!< AUTO: body-fixed and ONLY flexible coordinates part of damping matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
     Vector forceVector;                           //!< AUTO: generalized, force vector added to RHS; the rigid body part \f$\fv_r\f$ is directly applied to rigid body coordinates while the flexible part \f$\fv\indf\f$ is transformed from global to local coordinates; note that this force vector only allows to add gravity forces for bodies with \hac{COM} at the origin of the reference frame
-    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> forceUserFunction;//!< AUTO: A python user function which computes the generalized user force vector for the \hac{ODE2} equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q\_t; see description below
-    std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)> massMatrixUserFunction;//!< AUTO: A python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the \hac{FFRF} mass matrix; see description below
+    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> forceUserFunction;//!< AUTO: A Python user function which computes the generalized user force vector for the \hac{ODE2} equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q\_t; see description below
+    std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)> massMatrixUserFunction;//!< AUTO: A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the \hac{FFRF} mass matrix; see description below
     bool computeFFRFterms;                        //!< AUTO: flag decides whether the standard \hac{FFRF} terms are computed; use this flag for user-defined definition of \hac{FFRF} terms in mass matrix and quadratic velocity vector
     //! AUTO: default constructor with parameter initialization
     CObjectFFRFParameters()
@@ -61,7 +61,7 @@ public: // AUTO:
 * @class        CObjectFFRF
 * @brief        This object is used to represent equations modelled by the \hac{FFRF}. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \hac{FFRF}. Note that temporary matrices and vectors are subject of change in future.
 *
-* @author       Gerstmayr Johannes
+* @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.

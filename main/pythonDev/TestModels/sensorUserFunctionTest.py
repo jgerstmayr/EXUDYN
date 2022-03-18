@@ -41,13 +41,17 @@ def UFsensor(mbs, t, sensorNumbers, factors, configuration):
     return [factors[0]*phi] #return angle in degree
 
 sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=[sNode], factors=[180/pi], 
-                                 fileName='solution/sensorTestPhi.txt',
+                                 storeInternal=True,#fileName='solution/sensorTestPhi.txt',
                                  writeToFile = exudynTestGlobals.useGraphics,
                                  sensorUserFunction=UFsensor))
 
 #assemble and solve system for default parameters
 mbs.Assemble()
-exu.SolveDynamic(mbs)
+
+simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+simulationSettings.solutionSettings.writeSolutionToFile = False
+
+exu.SolveDynamic(mbs, simulationSettings)
 
 #evaluate final (=current) output values
 u = mbs.GetSensorValues(sUser)

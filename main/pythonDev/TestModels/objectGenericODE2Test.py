@@ -182,8 +182,8 @@ if addJoint:
                                                     
 
 fileDir = 'solution/'
-mbs.AddSensor(SensorSuperElement(bodyNumber=oGenericODE2, meshNodeNumber=nMid, #meshnode number!
-                         fileName=fileDir+'nMidDisplacementLinearTest.txt', 
+sDisp=mbs.AddSensor(SensorSuperElement(bodyNumber=oGenericODE2, meshNodeNumber=nMid, #meshnode number!
+                         storeInternal=True,#fileName=fileDir+'nMidDisplacementLinearTest.txt', 
                          outputVariableType = exu.OutputVariableType.Displacement))
 
 mbs.Assemble()
@@ -217,6 +217,7 @@ SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displac
 SC.visualizationSettings.contour.outputVariableComponent = 1 #y-component
 
 simulationSettings.solutionSettings.solutionInformation = "ObjectGenericODE2 test"
+simulationSettings.solutionSettings.writeSolutionToFile=False
 
 h=1e-3
 tEnd = 0.05
@@ -256,8 +257,6 @@ if exudynTestGlobals.useGraphics:
     exu.StopRenderer() #safely close rendering window!
     lastRenderState = SC.GetRenderState() #store model view for next simulation
 
-#data = np.loadtxt(fileDir+'nMidDisplacementLinearTest.txt', comments='#', delimiter=',')
-#result = abs(data).sum()
 accumulatedError += mbs.GetNodeOutput(nMid,exu.OutputVariableType.Position)[0] #take x-coordinate of position
 
 exu.Print('solution of ObjectGenericODE2=',accumulatedError)
@@ -268,26 +267,9 @@ exudynTestGlobals.testResult = accumulatedError
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
 if exudynTestGlobals.useGraphics:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-    cList=['r-','g-','b-','k-','c-','r:','g:','b:','k:','c:']
- 
-    data = np.loadtxt(fileDir+'nMidDisplacementLinearTest.txt', comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
-    plt.plot(data[:,0], data[:,2], cList[0],label='uMid,linear') #numerical solution, 1 == x-direction
-
-    ax=plt.gca() # get current axes
-    ax.grid(True, 'major', 'both')
-    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    plt.tight_layout()
-    plt.legend()
-    plt.show() 
-
-
-
-
-
-
+    from exudyn.plot import PlotSensor
+    
+    PlotSensor(mbs, sDisp, components=1, closeAll=True, labels=['uMid,linear'])
 
 
 

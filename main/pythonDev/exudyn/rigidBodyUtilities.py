@@ -415,6 +415,50 @@ def RotXYZ2EulerParameters(alpha):
     return np.array([q0, q1, q2, q3])
 
 
+#%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#            Euler ANGLES
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# **function: convert rotation matrix to zyz Euler angles;  A=Az*Ay*Az;
+# **input:
+#  rotationMatrix: 3x3 rotation matrix as list of lists or np.array
+#  flip:           argument to choose first Euler angle to be in quadrant 2 or 3.
+# **output: vector of Euler rotation parameters [Z,Y,Z] (in radiant) as np.array
+# **notes: tested (compared with Robotcs, Vision and Control book of P. Corke)
+# **author: Martin Sereinig
+def RotationMatrix2RotZYZ(rotationMatrix, flip):
+    # Method as per Paul, p 69.
+    # euler = [phi theta psi]
+    eulangles = np.zeros([3])
+    eps = 10**(-14)
+
+    if abs(rotationMatrix[0, 2]) < eps and abs(rotationMatrix[1, 2]) < eps:
+        # singularity
+        eulangles[0] = 0
+        sp = 0
+        cp = 1
+        eulangles[1] = np.arctan2(
+            cp*rotationMatrix[0, 2] + sp*rotationMatrix[1, 2], rotationMatrix[2, 2])
+        eulangles[2] = np.arctan2(-sp * rotationMatrix[0, 0] + cp *
+                                  rotationMatrix[1, 0], -sp*rotationMatrix[0, 1] + cp*rotationMatrix[1, 1])
+    else:
+        # non singular
+        # Only positive phi is returned.
+        if flip:
+            eulangles[0] = np.arctan2(-rotationMatrix[1, 2], -rotationMatrix[0, 2])
+        else:
+            eulangles[0] = np.arctan2(rotationMatrix[1, 2], rotationMatrix[0, 2])
+
+        sp = np.sin(eulangles[0])
+        cp = np.cos(eulangles[0])
+        eulangles[1] = np.arctan2(
+            cp*rotationMatrix[0, 2] + sp*rotationMatrix[1, 2], rotationMatrix[2, 2])
+        eulangles[2] = np.arctan2(-sp * rotationMatrix[0, 0] + cp *
+                                  rotationMatrix[1, 0], -sp*rotationMatrix[0, 1] + cp*rotationMatrix[1, 1])
+    return eulangles
+
+
+
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: compute rotation matrix w.r.t. X-axis (first axis)

@@ -170,6 +170,20 @@ void CNodeRigidBodyRxyz::GetGlocal_t(ConstSizeMatrix<maxRotationCoordinates * nD
 	matrix = RigidBodyMath::RotXYZ2Glocal_tTemplate<CSVector4D, LinkedDataVector>(GetRotationParameters(configuration), GetRotationParameters_t(configuration));
 }
 
+//! compute d(G^T*v)/dq for Rxyz parameters; needed for jacobians
+void CNodeRigidBodyRxyz::GetGTv_q(const Vector3D& v, ConstSizeMatrix<maxRotationCoordinates * maxRotationCoordinates>& matrix,
+	ConfigurationType configuration) const
+{
+	matrix = RigidBodyMath::RotXYZGTv_qTemplate<CSVector4D>(GetRotationParameters(), v);
+}
+
+//! compute d(Glocal^T*v)/dq for Rxyz parameters; needed for jacobians
+void CNodeRigidBodyRxyz::GetGlocalTv_q(const Vector3D& v, ConstSizeMatrix<maxRotationCoordinates * maxRotationCoordinates>& matrix,
+	ConfigurationType configuration) const
+{
+	matrix = RigidBodyMath::RotXYZGlocalTv_qTemplate<CSVector4D>(GetRotationParameters(), v);
+}
+
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -272,6 +286,17 @@ void CNodeRigidBodyRxyz::GetRotationJacobian(Matrix& value) const
 	}
 }
 
+//! provide derivative w.r.t. coordinates of rotation Jacobian times vector; for current configuration
+void CNodeRigidBodyRxyz::GetRotationJacobianTTimesVector_q(const Vector3D& vector, Matrix& jacobian_q) const
+{
+	//d(rot)/dq = [I_{3x3}, G]
+	//d(rot^T*v)/dq = [0_{3x3}, 0_{3x3}]
+	//                [0_{rx3}, GTv_rot]
+	jacobian_q.SetNumberOfRowsAndColumns(nDisplacementCoordinates + nRotationCoordinates, nDisplacementCoordinates + nRotationCoordinates);
+	jacobian_q.SetAll(0.);
+	jacobian_q.SetSubmatrix(RigidBodyMath::RotXYZGTv_qTemplate<CSVector4D>(GetRotationParameters(), vector), 
+		nDisplacementCoordinates, nDisplacementCoordinates, 1.);
+}
 
 //! provide according output variable in "value"
 void CNodeRigidBodyRxyz::GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const

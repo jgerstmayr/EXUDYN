@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:59 (last modified)
+* @date         2022-03-10  14:27:39 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -124,6 +124,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectContactCircleCable2D->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectContactCircleCable2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VshowContactCircle")) { visualizationObjectContactCircleCable2D->GetShowContactCircle() = py::cast<bool>(d["VshowContactCircle"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { visualizationObjectContactCircleCable2D->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectContactCircleCable2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
@@ -144,6 +145,7 @@ public: // AUTO:
         d["activeConnector"] = (bool)cObjectContactCircleCable2D->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectContactCircleCable2D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["VshowContactCircle"] = (bool)visualizationObjectContactCircleCable2D->GetShowContactCircle(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdrawSize"] = (float)visualizationObjectContactCircleCable2D->GetDrawSize(); //! AUTO: cast variables into python (not needed for standard types) 
         d["Vcolor"] = (std::vector<float>)visualizationObjectContactCircleCable2D->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -162,6 +164,7 @@ public: // AUTO:
         else if (parameterName.compare("offset") == 0) { return py::cast((Real)cObjectContactCircleCable2D->GetParameters().offset);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectContactCircleCable2D->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectContactCircleCable2D->GetShow());} //! AUTO: get parameter
+        else if (parameterName.compare("VshowContactCircle") == 0) { return py::cast((bool)visualizationObjectContactCircleCable2D->GetShowContactCircle());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectContactCircleCable2D->GetDrawSize());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectContactCircleCable2D->GetColor());} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectContactCircleCable2D::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
@@ -182,6 +185,7 @@ public: // AUTO:
         else if (parameterName.compare("offset") == 0) { cObjectContactCircleCable2D->GetParameters().offset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectContactCircleCable2D->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectContactCircleCable2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VshowContactCircle") == 0) { visualizationObjectContactCircleCable2D->GetShowContactCircle() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { visualizationObjectContactCircleCable2D->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectContactCircleCable2D->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectContactCircleCable2D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user

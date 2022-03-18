@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:21:00 (last modified)
+* @date         2022-03-01  20:14:21 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -32,7 +32,7 @@ public: // AUTO:
     Index markerNumber;                           //!< AUTO: marker's number to which load is applied
     Vector3D loadVector;                          //!< AUTO: vector-valued load [SI:N]
     bool bodyFixed;                               //!< AUTO: if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower torque; if false: global coordinates are used
-    std::function<StdVector(const MainSystem&,Real,StdVector3D)> loadVectorUserFunction;//!< AUTO: A python function which defines the time-dependent load with parameters (Real t, Vector3D load); the load represents the current value of the load; WARNING: this factor does not work in combination with static computation (loadFactor); Example for python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]
+    std::function<StdVector(const MainSystem&,Real,StdVector3D)> loadVectorUserFunction;//!< AUTO: A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]
     //! AUTO: default constructor with parameter initialization
     CLoadTorqueVectorParameters()
     {

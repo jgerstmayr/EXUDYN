@@ -171,20 +171,31 @@ const lest::test constSizeVector_specific_test[] =
 
     CASE("ConstSizeVector constructors, SetNumberOfItems, (Max)NumberOfItems")
     {
-        ConstSizeVector<4> x(4);
+        ConstSizeVector<4> x(4, 0.);
         EXPECT(x.NumberOfItems() == 4);
         EXPECT(x.MaxNumberOfItems() == 4);
+		EXPECT(ToString(x) == "[0 0 0 0]");
 
         ConstSizeVector<4> y(3);
         EXPECT(y.NumberOfItems() == 3);
         EXPECT(y.MaxNumberOfItems() == 4);
 
         y = ConstSizeVector<4>({ 1.1, 2., 3., 4. });
-        x[3] = 10;
-        x.SetNumberOfItems(3);
-        y.SetNumberOfItems(3);
-        x = y; //x[3] should be left unchanged
-        EXPECT(x.NumberOfItems() == 3);
+		EXPECT(ToString(y) == "[1.1 2 3 4]");
+		x[3] = 10;
+		EXPECT(ToString(x) == "[0 0 0 10]");
+		x.SetNumberOfItems(3);
+		EXPECT(ToString(x) == "[0 0 0]");
+		y.SetNumberOfItems(3);
+		EXPECT(ToString(y) == "[1.1 2 3]");
+		//x=y; //will call move operator, which will copy all items ...!
+		x.CopyFrom(y); //copy forced; x[3] should be left unchanged
+		EXPECT(ToString(x) == "[1.1 2 3]");
+		y[1] = 5;
+		EXPECT(ToString(y) == "[1.1 5 3]");
+		EXPECT(ToString(x) == "[1.1 2 3]");
+
+		EXPECT(x.NumberOfItems() == 3);
         EXPECT(y.NumberOfItems() == 3);
         x.SetNumberOfItems(4);
         EXPECT(ToString(x) == "[1.1 2 3 10]");
@@ -205,16 +216,17 @@ const lest::test constSizeVector_specific_test[] =
         ConstSizeVector<4> y({1., 2., 5.}); //numberOfItems=3
         EXPECT(y.NumberOfItems() == 3);
 
-        x = y; //x:numberOfItems becomes 3
+        //x = y; //x:numberOfItems becomes 3
+		x.CopyFrom(y);
         EXPECT(x.NumberOfItems() == 3);
         EXPECT(ToString(x) == "[1 2 5]");
 
         x.SetNumberOfItems(4);
-        EXPECT(ToString(x) == "[1 2 5 13]");
-
-        ConstSizeVector<4> z(y); //numberOfItems=4
+		y[2] = 7;
+		EXPECT(ToString(x) == "[1 2 5 13]");
+		ConstSizeVector<4> z(y); //numberOfItems=4
         EXPECT(z.NumberOfItems() == 3);
-        EXPECT(ToString(z) == "[1 2 5]");
+        EXPECT(ToString(z) == "[1 2 7]");
 
         ConstSizeVector<2> w(0, 7.); //numberOfItems=0
         EXPECT(w.NumberOfItems() == 0);
@@ -246,6 +258,8 @@ const lest::test constSizeVector_specific_test[] =
 
     CASE("ConstSizeVector operators for numberOfItems < dataSize")
     {
+		//NOTE NOTE NOTE
+		//behavior has changed, since ConstSizeVector uses move operations!
         ConstSizeVector<4> x({ 3., 1., 5.5, 6. });
         ConstSizeVector<4> y({ 1., 2., 3., 4. });
 
@@ -253,39 +267,40 @@ const lest::test constSizeVector_specific_test[] =
         x.SetNumberOfItems(3);
         y.SetNumberOfItems(3);
 
+		//uses move assignement, thus overrides z[3] !
         z = x + y; //z.numberOfItems==3 now
+
         EXPECT(z.NumberOfItems() == 3);
 
-        z.SetNumberOfItems(4);
         EXPECT(ToString(x) == "[3 1 5.5]");
         EXPECT(ToString(y) == "[1 2 3]");
-        EXPECT(ToString(z) == "[4 3 8.5 4.4]"); //component [3] not touched by operator
+        EXPECT(ToString(z) == "[4 3 8.5]"); 
 
         z = x - y; //z.numberOfItems==3 now
         z.SetNumberOfItems(4);
-        EXPECT(ToString(z) == "[2 -1 2.5 4.4]"); //component [3] not touched by operator
+        //EXPECT(ToString(z) == "[2 -1 2.5 4.4]"); //does not work because of move assignment
 
         z.SetNumberOfItems(3);
         z += y;
-        z.SetNumberOfItems(4);
-        EXPECT(ToString(z) == "[3 1 5.5 4.4]");
+        //z.SetNumberOfItems(4);
+        EXPECT(ToString(z) == "[3 1 5.5]");
 
-        z.SetNumberOfItems(3);
+        //z.SetNumberOfItems(3);
         z -= y;
-        z.SetNumberOfItems(4);
-        EXPECT(ToString(z) == "[2 -1 2.5 4.4]");
+        //z.SetNumberOfItems(4);
+        EXPECT(ToString(z) == "[2 -1 2.5]");
 
-        z.SetNumberOfItems(3);
+        //z.SetNumberOfItems(3);
         z *= 2.2;
-        z.SetNumberOfItems(4);
-        EXPECT(ToString(z) == "[4.4 -2.2 5.5 4.4]");
+        //z.SetNumberOfItems(4);
+        EXPECT(ToString(z) == "[4.4 -2.2 5.5]");
 
-        z.SetNumberOfItems(3);
+        //z.SetNumberOfItems(3);
         z /= 2.2;
-        z.SetNumberOfItems(4);
-        EXPECT(ToString(z) == "[2 -1 2.5 4.4]");
+        //z.SetNumberOfItems(4);
+        EXPECT(ToString(z) == "[2 -1 2.5]");
 
-        z.SetNumberOfItems(3);
+        //z.SetNumberOfItems(3);
         Real s = z*x;
         EXPECT(s == (2 * 3 - 1 * 1 + 2.5 * 5.5));
 

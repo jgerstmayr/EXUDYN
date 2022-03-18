@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2020-09-08  18:14:40 (last modfied)
+* @date         2022-03-10  14:27:39 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -25,6 +25,7 @@
 class VisualizationObjectContactCircleCable2D: public VisualizationObject // AUTO: 
 {
 protected: // AUTO: 
+    bool showContactCircle;                       //!< AUTO: if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general)
     float drawSize;                               //!< AUTO: drawing size = diameter of spring; size == -1.f means that default connector size is used
     Float4 color;                                 //!< AUTO: RGBA connector color; if R==-1, use default color
 
@@ -33,6 +34,7 @@ public: // AUTO:
     VisualizationObjectContactCircleCable2D()
     {
         show = true;
+        showContactCircle = true;
         drawSize = -1.f;
         color = Float4({-1.f,-1.f,-1.f,-1.f});
     };
@@ -46,6 +48,13 @@ public: // AUTO:
     {
         return true;
     }
+
+    //! AUTO:  Write (Reference) access to:if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general)
+    void SetShowContactCircle(const bool& value) { showContactCircle = value; }
+    //! AUTO:  Read (Reference) access to:if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general)
+    const bool& GetShowContactCircle() const { return showContactCircle; }
+    //! AUTO:  Read (Reference) access to:if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general)
+    bool& GetShowContactCircle() { return showContactCircle; }
 
     //! AUTO:  Write (Reference) access to:drawing size = diameter of spring; size == -1.f means that default connector size is used
     void SetDrawSize(const float& value) { drawSize = value; }

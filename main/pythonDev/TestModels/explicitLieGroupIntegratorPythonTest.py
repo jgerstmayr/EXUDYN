@@ -100,12 +100,16 @@ mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC1]))
 mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC2]))
 
 if exudynTestGlobals.useGraphics:
-    #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorRotation.txt', outputVariableType=exu.OutputVariableType.Rotation))
-    mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVelLocal.txt', outputVariableType=exu.OutputVariableType.AngularVelocityLocal))
+    #mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True,#fileName='solution/sensorRotation.txt', outputVariableType=exu.OutputVariableType.Rotation))
+    sAngVelLoc=mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True))#fileName='solution/sensorAngVelLocal.txt', outputVariableType=exu.OutputVariableType.AngularVelocityLocal
     #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVel.txt', outputVariableType=exu.OutputVariableType.AngularVelocity))
     
-    mbs.AddSensor(SensorBody(bodyNumber=oRB, fileName='solution/sensorPosition.txt', localPosition=rp, outputVariableType=exu.OutputVariableType.Position))
-    mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorCoordinates.txt', outputVariableType=exu.OutputVariableType.Coordinates))
+    sPos=mbs.AddSensor(SensorBody(bodyNumber=oRB, 
+                                    storeInternal=True,#fileName='solution/sensorPosition.txt', 
+                                    localPosition=rp, outputVariableType=exu.OutputVariableType.Position))
+    sCoords=mbs.AddSensor(SensorNode(nodeNumber=nRB, 
+                                    storeInternal=True,#fileName='solution/sensorCoordinates.txt', 
+                                    outputVariableType=exu.OutputVariableType.Coordinates))
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 mbs.Assemble()
@@ -180,51 +184,14 @@ if exudynTestGlobals.useGraphics: #only start graphics once, but after backgroun
     exu.StopRenderer() #safely close rendering window!
 
 if exudynTestGlobals.useGraphics:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-    plt.close("all")
-    
-##    [fig1, ax1] = plt.subplots()
-    [fig2, ax2] = plt.subplots()
-#    [fig3, ax3] = plt.subplots()
-#    data1 = np.loadtxt('solution/sensorCoordinates.txt', comments='#', delimiter=',')
-##    ax1.plot(data1[:,0], data1[:,1+3], 'r-', label='coordinate 0')  #1, because coordinates to not include ref. values
-##    ax1.plot(data1[:,0], data1[:,2+3], 'g-', label='coordinate 1') 
-##    ax1.plot(data1[:,0], data1[:,3+3], 'b-', label='coordinate 2') 
-    
-    
-    data2 = np.loadtxt('solution/sensorAngVelLocal.txt', comments='#', delimiter=',')
-    ax2.plot(data2[:,0], data2[:,1], 'r-', label='omega X') 
-    ax2.plot(data2[:,0], data2[:,2], 'g-', label='omega Y') 
-    ax2.plot(data2[:,0], data2[:,3], 'b-', label='omega Z') 
 
-    data1 = np.loadtxt('../../../docs/verification/HeavyTopSolution/HeavyTop_TimeBodyAngularVelocity_RK4.txt', comments='#', delimiter=',')
-    ax2.plot(data1[:,0], data1[:,1], 'r:', label='omega 0 ref')  #1, because coordinates to not include ref. values
-    ax2.plot(data1[:,0], data1[:,2], 'g:', label='omega 1 ref') 
-    ax2.plot(data1[:,0], data1[:,3], 'b:', label='omega 2 ref') 
+    from exudyn.plot import PlotSensor
+
+    fileVerif = '../../../docs/verification/HeavyTopSolution/HeavyTop_TimeBodyAngularVelocity_RK4.txt'
     
-#    data3 = np.loadtxt('solution/sensorPosition.txt', comments='#', delimiter=',')
-#    ax3.plot(data3[:,0], data3[:,1], 'r-', label='position X') 
-#    ax3.plot(data3[:,0], data3[:,2], 'g-', label='position Y') 
-#    ax3.plot(data3[:,0], data3[:,3], 'b-', label='position Z') 
-#    ax3.loglog(ts, val, 'b-', label='conv') 
-#    
-#    axList=[ax1,ax2,ax3]
-#    figList=[fig1, fig2, fig3]
-    axList=[ax2]
-    figList=[fig2]
-    
-    for ax in axList:
-        ax.grid(True, 'major', 'both')
-        #ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-        #ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-        ax.set_xlabel("time (s)")
-        ax.legend()
-        
-    ax2.set_ylabel("angular velocity (rad/s)")
-#    ax3.set_ylabel("coordinate (m)")
-    
-    for f in figList:
-        f.tight_layout()
-        f.show() #bring to front
-    
+    PlotSensor(mbs, sensorNumbers=[sAngVelLoc]*3, labels=['omega X','omega Y','omega Z'],
+               components=[0,1,2],yLabel='angular velocity (rad/s)', closeAll=True)
+    PlotSensor(mbs, sensorNumbers=[fileVerif]*3,newFigure=False, colorCodeOffset=3+7,
+               labels=['omega ref X','omega ref Y','omega ref Z'], #markerStyles=['^ ','x ','o '], 
+               components=[0,1,2],yLabel='angular velocity (rad/s)')
+

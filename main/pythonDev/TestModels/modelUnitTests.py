@@ -27,12 +27,15 @@ class TestInterface:
 
 #this class is for interaction of test suite with examples given as (autonomous) .py file
 class ExudynTestStructure:
-    def __init__(self, useGraphics = True, performTests = False, testError = 0, testResult = 0, testTolFact = 1):
+    def __init__(self, useGraphics = True, performTests = False, testError = 0, 
+                 testResult = 0, testTolFact = 1, isPerformanceTest = False):
         self.useGraphics = useGraphics
         self.testError = testError      #for regular test models (store reference solution inside)
         self.testError = testError      #for regular test models (store reference solution inside)
         self.testTolFact = testTolFact  #additional factor to raise tolerance
         self.performTests = performTests #this variable is only used for testing if example is calculated outside test mode
+        self.isPerformanceTest = isPerformanceTest #only true for performance tests; allows to use test both for error and performance test
+
         self.useCorrectedAccGenAlpha = True  #always corrected
         self.useNewGenAlphaSolver = True    #active by default
         
@@ -115,7 +118,7 @@ def ANCFCable2DBendingTest(mbs, testInterface):
 
     simulationSettings = testInterface.exu.SimulationSettings() #takes currently set values or default values
     simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/ANCFCable2D_bending_test.txt"
-
+    simulationSettings.solutionSettings.writeSolutionToFile=False
     simulationSettings.timeIntegration.numberOfSteps = 1000
     #simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/1000
     simulationSettings.timeIntegration.endTime = 0.1
@@ -181,8 +184,14 @@ def SpringDamperMesh(mbs, testInterface):
         body = mbs.AddObject({'objectType': 'Ground', 'referencePosition': [0,j,0]})
         mbs.AddMarker({'markerType': 'BodyPosition',  'bodyNumber': body,  'localPosition': [0.0, 0.0, 0.0], 'bodyFixed': False})
         for i in range(nBodies-1): 
-            node = mbs.AddNode({'nodeType': 'Point','referenceCoordinates': [i+1, j, 0.0],'initialCoordinates': [(i+1)*0.05*0, 0.0, 0.0], 'initialVelocities': [0., 0., 0.],})
-            body = mbs.AddObject({'objectType': 'MassPoint', 'physicsMass': 10, 'nodeNumber': node})
+            #does not work for analytical jacobian in static case: z-coordinate unconstrained
+            # node = mbs.AddNode({'nodeType': 'Point','referenceCoordinates': [i+1, j, 0.0],
+            #                     'initialCoordinates': [(i+1)*0.05*0, 0.0, 0.0], 
+            #                     'initialVelocities': [0., 0., 0.],})
+            # body = mbs.AddObject({'objectType': 'MassPoint', 'physicsMass': 10, 'nodeNumber': node})
+            node = mbs.AddNode(NodePoint2D(referenceCoordinates=[i+1, j],
+                                           initialCoordinates=[(i+1)*0.05*0, 0]))
+            body = mbs.AddObject(ObjectMassPoint2D(physicsMass= 10, nodeNumber= node))
             mbs.AddMarker({'markerType': 'BodyPosition',  'bodyNumber': body,  'localPosition': [0.0, 0.0, 0.0], 'bodyFixed': False})
 
     #add spring-dampers:
@@ -231,6 +240,7 @@ def SpringDamperMesh(mbs, testInterface):
     simulationSettings.timeIntegration.verboseMode = 0
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
     simulationSettings.displayStatistics = True
+    simulationSettings.solutionSettings.writeSolutionToFile=False
 
     testInterface.SC.visualizationSettings.nodes.defaultSize = 0.05
 
@@ -258,6 +268,7 @@ def SpringDamperMesh(mbs, testInterface):
     simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-5
     simulationSettings.staticSolver.newton.relativeTolerance = 1e-6
     simulationSettings.staticSolver.newton.absoluteTolerance = 1e-1
+    simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2connectors = True #be compatible with old solution
     #simulationSettings.staticSolver.verboseMode = 1
 
     testInterface.exu.SolveStatic(mbs, simulationSettings)
@@ -314,6 +325,7 @@ def MathematicalPendulumTest(mbs, testInterface):
 
     simulationSettings = testInterface.exu.SimulationSettings()
 
+    simulationSettings.solutionSettings.writeSolutionToFile=False
     simulationSettings.timeIntegration.numberOfSteps = 1000
     simulationSettings.timeIntegration.endTime = 2
 
@@ -381,6 +393,7 @@ def RigidPendulumTest(mbs, testInterface):
     #mbs.systemData.Info()
 
     simulationSettings = testInterface.exu.SimulationSettings() #takes currently set values or default values
+    simulationSettings.solutionSettings.writeSolutionToFile=False
 
     simulationSettings.timeIntegration.numberOfSteps = 1000
     simulationSettings.timeIntegration.endTime = 0.5
@@ -494,6 +507,7 @@ def SliderCrank2DTest(mbs, testInterface):
     mbs.Assemble()
 
     simulationSettings = testInterface.exu.SimulationSettings() #takes currently set values or default values
+    simulationSettings.solutionSettings.writeSolutionToFile=False
 
     simulationSettings.timeIntegration.numberOfSteps = 1000
     simulationSettings.timeIntegration.endTime = 1
@@ -642,6 +656,7 @@ def SlidingJoint2DTest(mbs, testInterface):
     mbs.Assemble()
 
     simulationSettings = testInterface.exu.SimulationSettings() #takes currently set values or default values
+    simulationSettings.solutionSettings.writeSolutionToFile=False
 
     fact = 200
     simulationSettings.timeIntegration.numberOfSteps = 1*fact
@@ -723,6 +738,7 @@ def CartesianSpringDamperTest(mbs, testInterface):
     mbs.Assemble()
 
     simulationSettings = testInterface.exu.SimulationSettings()
+    simulationSettings.solutionSettings.writeSolutionToFile=False
     tEnd = 1
     steps = 1000
     simulationSettings.timeIntegration.numberOfSteps = steps
@@ -735,7 +751,7 @@ def CartesianSpringDamperTest(mbs, testInterface):
     u = mbs.GetNodeOutput(n1, testInterface.exu.OutputVariableType.Position)
     uCartesianSpringDamper= u[0] - L
     if testInterface.useCorrectedAccGenAlpha:
-        errorCartesianSpringDamper = uCartesianSpringDamper - 0.011834933406052683 #2021-09-27: new JacobianODE2RHS
+        errorCartesianSpringDamper = uCartesianSpringDamper - 0.011834933407061654 #until 2022-01-25 (changed jacobians): 0.011834933406052683 #2021-09-27: new JacobianODE2RHS
         #errorCartesianSpringDamper = uCartesianSpringDamper -0.011834933407364412 #2021-02-04: 0.011834933407364412 
     else:
         errorCartesianSpringDamper = uCartesianSpringDamper - 0.011834933407594783 #15.12.2019: 0.011834933407594783; beofre 15.12.2019: 0.011834933407038783 #for 1000 steps, endtime=1; accurate up to 3e-6 to exact solution
@@ -792,7 +808,8 @@ def CoordinateSpringDamperTest(mbs, testInterface):
     simulationSettings.displayStatistics = False
     
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
-    
+    simulationSettings.solutionSettings.writeSolutionToFile=False
+
     if testInterface.useGraphics: 
         testInterface.exu.StartRenderer()
     
@@ -805,7 +822,7 @@ def CoordinateSpringDamperTest(mbs, testInterface):
     u = mbs.GetNodeOutput(n1, testInterface.exu.OutputVariableType.Position)
     uCoordinateSpringDamper= u[0] - L
     if testInterface.useCorrectedAccGenAlpha:
-        errorCoordinateSpringDamper = uCoordinateSpringDamper - 0.01183493340619235 #2021-09-27: new JacobianODE2RHS
+        errorCoordinateSpringDamper = uCoordinateSpringDamper - 0.011834933407061654 #until 2022-01-25 (changed jacobians): 0.01183493340619235 #2021-09-27: new JacobianODE2RHS
         #errorCoordinateSpringDamper = uCoordinateSpringDamper -0.011834933407368853 #2021-02-04: 0.011834933407368853
     else:
         errorCoordinateSpringDamper = uCoordinateSpringDamper - 0.011834933406690284 #15.12.2019: 0.011834933406690284; beofre 15.12.2019: 0.011834933407047 #for 1000 steps, endtime=1; this is different from CartesianSpringDamper because of offset L (rounding errors around 1e-14)
@@ -815,9 +832,8 @@ def CoordinateSpringDamperTest(mbs, testInterface):
     return abs(errorCoordinateSpringDamper)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#switching constraints test with: preStepPyExecute, Get/SetParameters, activeConnector, 
+#switching constraints test with: mbs.SetPreStepUserFunction, Get/SetParameters, activeConnector, 
 def SwitchingConstraintsTest(mbs, testInterface):
-    #global mbs #needed for preStepPyExecute inside function
 
     rect = [-2.5,-1.5,0.5,1.5] #xmin,ymin,xmax,ymax
     background = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]} #background
@@ -881,6 +897,7 @@ def SwitchingConstraintsTest(mbs, testInterface):
     simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
     simulationSettings.solutionSettings.solutionInformation = "Rigid pendulum with switching constraints"
     simulationSettings.displayStatistics = False
+    simulationSettings.solutionSettings.writeSolutionToFile=False
 
     #testInterface.useGraphics = True
     if testInterface.useGraphics: 
@@ -910,65 +927,87 @@ def RunAllModelUnitTests(mbs, testInterface):
     #errTol = 1e-13
     errTol = 4e-13 #changed this since the new solver
     
-    testInterface.exu.Print("\n\n****************\n GraphicsDataTest:[TEST " + str(totalTests+1) + "]\n****************\n")
-    err = GraphicsDataTest(mbs, testInterface); totalError += err; totalTests += 1; 
-    if (abs(err) > errTol): testsFailed+=[totalTests]
-    testInterface.exu.Print('error in GraphicsDataTest = ',err)
-    mbs.Reset()
+    listTests=[GraphicsDataTest,ANCFCable2DBendingTest,SpringDamperMesh,MathematicalPendulumTest,
+               RigidPendulumTest,SliderCrank2DTest,SlidingJoint2DTest,CartesianSpringDamperTest,
+               CoordinateSpringDamperTest, SwitchingConstraintsTest]
 
-    testInterface.exu.Print("\n\n****************\n ANCFCable2DBendingTest:[TEST " + str(totalTests+1) + "]\n****************\n")
-    err = ANCFCable2DBendingTest(mbs, testInterface); totalError += err; totalTests += 1
-    if (abs(err) > errTol): testsFailed+=[totalTests]
-    testInterface.exu.Print('error in ANCFCable2DBendingTest = ',err)
-    mbs.Reset()
+    for TEST in listTests:    
+        testInterface.exu.Print("\n\n****************\n "+TEST.__name__+":[TEST " + str(totalTests+1) + "]\n****************\n")
+        err = 1e38 #some large value
+        try:
+            err = TEST(mbs, testInterface); 
+            if (abs(err) > errTol): 
+                testsFailed+=[totalTests]
+                testInterface.exu.Print('UNITTEST *FAILED*: error in '+TEST.__name__+' = ',err)
+            else:
+                testInterface.exu.Print('UNITTEST OK: error in '+TEST.__name__+' = ',err)
+        except Exception as e:
+            testsFailed+=[totalTests+1]
+            #testInterface.exu.Print('TEST '+TEST.__name__+' *FAILED* and raised exception:\n'+str(e))
+            #print('TEST '+TEST.__name__+' *FAILED* and raised exception:\n'+str(e), flush=True)
+        finally:
+            totalError += err; totalTests += 1; 
+            mbs.Reset()
+    
+    # testInterface.exu.Print("\n\n****************\n GraphicsDataTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    # err = GraphicsDataTest(mbs, testInterface); totalError += err; totalTests += 1; 
+    # if (abs(err) > errTol): testsFailed+=[totalTests]
+    # testInterface.exu.Print('error in GraphicsDataTest = ',err)
+    # mbs.Reset()
 
-    testInterface.exu.Print("\n\n****************\n SpringDamperMesh:[TEST " + str(totalTests+1) + "]\n****************\n")
-    err = SpringDamperMesh(mbs, testInterface); totalError += err; totalTests += 1
-    if (abs(err) > errTol): testsFailed+=[totalTests]
-    testInterface.exu.Print('error in SpringDamperMesh = ',err)
-    mbs.Reset()
+    # testInterface.exu.Print("\n\n****************\n ANCFCable2DBendingTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    # err = ANCFCable2DBendingTest(mbs, testInterface); totalError += err; totalTests += 1
+    # if (abs(err) > errTol): testsFailed+=[totalTests]
+    # testInterface.exu.Print('error in ANCFCable2DBendingTest = ',err)
+    # mbs.Reset()
 
-    testInterface.exu.Print("\n\n****************\n MathematicalPendulumTest:[TEST " + str(totalTests+1) + "]\n****************\n")
-    err = MathematicalPendulumTest(mbs, testInterface); totalError += err; totalTests += 1
-    if (abs(err) > errTol): testsFailed+=[totalTests]
-    testInterface.exu.Print('error in MathematicalPendulumTest = ',err)
-    mbs.Reset()
+    # testInterface.exu.Print("\n\n****************\n SpringDamperMesh:[TEST " + str(totalTests+1) + "]\n****************\n")
+    # err = SpringDamperMesh(mbs, testInterface); totalError += err; totalTests += 1
+    # if (abs(err) > errTol): testsFailed+=[totalTests]
+    # testInterface.exu.Print('error in SpringDamperMesh = ',err)
+    # mbs.Reset()
 
-    testInterface.exu.Print("\n\n****************\n RigidPendulumTest:[TEST " + str(totalTests+1) + "]\n****************\n")
-    err = RigidPendulumTest(mbs, testInterface); totalError += err; totalTests += 1
-    if (abs(err) > errTol): testsFailed+=[totalTests]
-    testInterface.exu.Print('error in RigidPendulumTest = ',err)
-    mbs.Reset()
+    # testInterface.exu.Print("\n\n****************\n MathematicalPendulumTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    # err = MathematicalPendulumTest(mbs, testInterface); totalError += err; totalTests += 1
+    # if (abs(err) > errTol): testsFailed+=[totalTests]
+    # testInterface.exu.Print('error in MathematicalPendulumTest = ',err)
+    # mbs.Reset()
 
-    testInterface.exu.Print("\n\n****************\n SliderCrank2DTest:[TEST " + str(totalTests+1) + "]\n****************\n")
-    err = SliderCrank2DTest(mbs, testInterface); totalError += err; totalTests += 1
-    if (abs(err) > errTol): testsFailed+=[totalTests]
-    testInterface.exu.Print('error in SliderCrank2DTest = ',err)
-    mbs.Reset()
+    # testInterface.exu.Print("\n\n****************\n RigidPendulumTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    # err = RigidPendulumTest(mbs, testInterface); totalError += err; totalTests += 1
+    # if (abs(err) > errTol): testsFailed+=[totalTests]
+    # testInterface.exu.Print('error in RigidPendulumTest = ',err)
+    # mbs.Reset()
 
-    testInterface.exu.Print("\n\n****************\n SlidingJoint2DTest:[TEST " + str(totalTests+1) + "]\n****************\n")
-    err = SlidingJoint2DTest(mbs, testInterface); totalError += err; totalTests += 1
-    if (abs(err) > errTol): testsFailed+=[totalTests]
-    testInterface.exu.Print('error in SlidingJoint2DTest = ',err)
-    mbs.Reset()
+    # testInterface.exu.Print("\n\n****************\n SliderCrank2DTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    # err = SliderCrank2DTest(mbs, testInterface); totalError += err; totalTests += 1
+    # if (abs(err) > errTol): testsFailed+=[totalTests]
+    # testInterface.exu.Print('error in SliderCrank2DTest = ',err)
+    # mbs.Reset()
 
-    testInterface.exu.Print("\n\n****************\n CartesianSpringDamperTest:[TEST " + str(totalTests+1) + "]\n****************\n")
-    err = CartesianSpringDamperTest(mbs, testInterface); totalError += err; totalTests += 1
-    if (abs(err) > errTol): testsFailed+=[totalTests]
-    testInterface.exu.Print('error in CartesianSpringDamperTest = ',err)
-    mbs.Reset()
+    # testInterface.exu.Print("\n\n****************\n SlidingJoint2DTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    # err = SlidingJoint2DTest(mbs, testInterface); totalError += err; totalTests += 1
+    # if (abs(err) > errTol): testsFailed+=[totalTests]
+    # testInterface.exu.Print('error in SlidingJoint2DTest = ',err)
+    # mbs.Reset()
 
-    testInterface.exu.Print("\n\n****************\n CoordinateSpringDamperTest:[TEST " + str(totalTests+1) + "]\n****************\n")
-    err = CoordinateSpringDamperTest(mbs, testInterface); totalError += err; totalTests += 1
-    if (abs(err) > errTol): testsFailed+=[totalTests]
-    testInterface.exu.Print('error in CoordinateSpringDamperTest = ',err)
-    mbs.Reset()
+    # testInterface.exu.Print("\n\n****************\n CartesianSpringDamperTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    # err = CartesianSpringDamperTest(mbs, testInterface); totalError += err; totalTests += 1
+    # if (abs(err) > errTol): testsFailed+=[totalTests]
+    # testInterface.exu.Print('error in CartesianSpringDamperTest = ',err)
+    # mbs.Reset()
 
-    testInterface.exu.Print("\n\n****************\n SwitchingConstraintsTest: [TEST " + str(totalTests+1) + "]\n****************\n")
-    err = SwitchingConstraintsTest(mbs, testInterface); totalError += err; totalTests += 1
-    if (abs(err) > errTol): testsFailed+=[totalTests]
-    testInterface.exu.Print('error in SwitchingConstraintsTest = ',err)
-    mbs.Reset()
+    # testInterface.exu.Print("\n\n****************\n CoordinateSpringDamperTest:[TEST " + str(totalTests+1) + "]\n****************\n")
+    # err = CoordinateSpringDamperTest(mbs, testInterface); totalError += err; totalTests += 1
+    # if (abs(err) > errTol): testsFailed+=[totalTests]
+    # testInterface.exu.Print('error in CoordinateSpringDamperTest = ',err)
+    # mbs.Reset()
+
+    # testInterface.exu.Print("\n\n****************\n SwitchingConstraintsTest: [TEST " + str(totalTests+1) + "]\n****************\n")
+    # err = SwitchingConstraintsTest(mbs, testInterface); totalError += err; totalTests += 1
+    # if (abs(err) > errTol): testsFailed+=[totalTests]
+    # testInterface.exu.Print('error in SwitchingConstraintsTest = ',err)
+    # mbs.Reset()
 
 
 

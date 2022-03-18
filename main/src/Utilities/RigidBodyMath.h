@@ -73,9 +73,9 @@ namespace RigidBodyMath {
 	template<class TVector>
 	inline ConstSizeMatrix<3*maxRotCoordinates> EP2GTemplate(const TVector& ep)
 	{
-		return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0],-2.*ep[3], 2.*ep[2],
-											-2.*ep[2], 2.*ep[3], 2.*ep[0],-2.*ep[1],
-											-2.*ep[3],-2.*ep[2], 2.*ep[1], 2.*ep[0] });
+		return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, { -2.*ep[1], 2.*ep[0],-2.*ep[3], 2.*ep[2],
+															-2.*ep[2], 2.*ep[3], 2.*ep[0],-2.*ep[1],
+															-2.*ep[3],-2.*ep[2], 2.*ep[1], 2.*ep[0] });
 	}
 
 	//! compute time derivative of G-Matrix from Euler Parameters ep_t
@@ -83,8 +83,8 @@ namespace RigidBodyMath {
 	inline ConstSizeMatrix<3*maxRotCoordinates> EP_t2G_tTemplate(const TVector& ep_t)
 	{
 		return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {	-2.*ep_t[1], 2.*ep_t[0],-2.*ep_t[3], 2.*ep_t[2],
-											-2.*ep_t[2], 2.*ep_t[3], 2.*ep_t[0],-2.*ep_t[1],
-											-2.*ep_t[3],-2.*ep_t[2], 2.*ep_t[1], 2.*ep_t[0] });
+															-2.*ep_t[2], 2.*ep_t[3], 2.*ep_t[0],-2.*ep_t[1],
+															-2.*ep_t[3],-2.*ep_t[2], 2.*ep_t[1], 2.*ep_t[0] });
 	}
 
 	////! compute transposed G-Matrix from Euler Parameters ep; G is defined such that the global angular velocity vector omega follows from: omega = G*ep_t
@@ -102,9 +102,9 @@ namespace RigidBodyMath {
 	template<class TVector>
 	inline ConstSizeMatrix<3*maxRotCoordinates> EP2GlocalTemplate(const TVector& ep)
 	{
-		return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0], 2.*ep[3],-2.*ep[2],
-											-2.*ep[2],-2.*ep[3], 2.*ep[0], 2.*ep[1],
-											-2.*ep[3], 2.*ep[2],-2.*ep[1], 2.*ep[0] });
+		return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, { -2.*ep[1], 2.*ep[0], 2.*ep[3],-2.*ep[2],
+															-2.*ep[2],-2.*ep[3], 2.*ep[0], 2.*ep[1],
+															-2.*ep[3], 2.*ep[2],-2.*ep[1], 2.*ep[0] });
 	}
 
 	////! compute transposed Glocal-Matrix from Euler Parameters ep;
@@ -122,8 +122,38 @@ namespace RigidBodyMath {
 	inline ConstSizeMatrix<3*maxRotCoordinates> EP_t2Glocal_tTemplate(const TVector& ep_t)
 	{
 		return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, { -2.*ep_t[1], 2.*ep_t[0], 2.*ep_t[3],-2.*ep_t[2],
-											-2.*ep_t[2],-2.*ep_t[3], 2.*ep_t[0], 2.*ep_t[1],
-											-2.*ep_t[3], 2.*ep_t[2],-2.*ep_t[1], 2.*ep_t[0] });
+															-2.*ep_t[2],-2.*ep_t[3], 2.*ep_t[0], 2.*ep_t[1],
+															-2.*ep_t[3], 2.*ep_t[2],-2.*ep_t[1], 2.*ep_t[0] });
+	}
+
+	//! compute d(G^T*v)/dq for Euler parameters
+	inline ConstSizeMatrix<maxRotCoordinates*maxRotCoordinates> EPGTv_q(const Vector3D& v)
+	{
+		//G^T*v:
+		//(4, 4, { -2.*ep[1] * v[0] -2.*ep[2] * v[1] -2.*ep[3] * v[2],
+		//		    2.*ep[0] * v[0] +2.*ep[3] * v[1] -2.*ep[2] * v[2],
+		//		   -2.*ep[3] * v[0] +2.*ep[0] * v[1] +2.*ep[1] * v[2],
+		//		    2.*ep[2] * v[0] -2.*ep[1] * v[1] +2.*ep[0] * v[2] });
+
+		return ConstSizeMatrix<maxRotCoordinates*maxRotCoordinates>(4, 4, {       0., -2.*v[0], -2.*v[1], -2.*v[2],
+																			 2.*v[0],       0., -2.*v[2],  2.*v[1],
+																			 2.*v[1],  2.*v[2],       0., -2.*v[0],
+																			 2.*v[2], -2.*v[1],  2.*v[0],       0. });
+	}
+
+	//! compute d(G^T*v)/dq for Euler parameters
+	inline ConstSizeMatrix<maxRotCoordinates*maxRotCoordinates> EPGlocalTv_q(const Vector3D& v)
+	{
+		//Glocal^T*v:
+		//(4, 4, { -2.*ep[1] * v[0] -2.*ep[2] * v[1] -2.*ep[3] * v[2],
+		//		    2.*ep[0] * v[0] -2.*ep[3] * v[1] +2.*ep[2] * v[2],
+		//		    2.*ep[3] * v[0] +2.*ep[0] * v[1] -2.*ep[1] * v[2],
+		//		   -2.*ep[2] * v[0] +2.*ep[1] * v[1] +2.*ep[0] * v[2] });
+
+		return ConstSizeMatrix<maxRotCoordinates*maxRotCoordinates>(4, 4, {       0., -2.*v[0], -2.*v[1], -2.*v[2],
+																			 2.*v[0],       0.,  2.*v[2], -2.*v[1],
+																			 2.*v[1], -2.*v[2],       0.,  2.*v[0],
+																			 2.*v[2],  2.*v[1], -2.*v[0],       0. });
 	}
 
 	//! compute rotation matrix from 4-components vector of Euler parameters ep
@@ -383,6 +413,58 @@ namespace RigidBodyMath {
 			   rot_t[1]*c1, 0, 0 });
 	}
 
+	//! compute d(G^T*v)/dq for RotXYZ parameters
+	template<class TVector>
+	inline ConstSizeMatrix<maxRotCoordinates*maxRotCoordinates> RotXYZGTv_qTemplate(const TVector& rot, const Vector3D& v)
+	{
+		Real c0 = cos(rot[0]);
+		Real s0 = sin(rot[0]);
+		Real c1 = cos(rot[1]);
+		Real s1 = sin(rot[1]);
+
+		//G^T
+		//return ConstSizeMatrix<3 * maxRotCoordinates>(3, 3,
+		//	{ 1,        0,     0,
+		//	  0,       c0,    s0,
+		//	 s1, -c1 * s0, c0*c1 });
+
+		//G^T*v:
+		//	{ 1*v[0]+       0*v[1]+     0*v[2],
+		//	  0*v[0]+      c0*v[1]+    s0*v[2],
+		//	 s1*v[0]- c1 * s0*v[1]+ c0*c1*v[2] });
+
+		return ConstSizeMatrix<maxRotCoordinates*maxRotCoordinates>(3, 3, {
+				                     0.,                             0., 0.,
+				       -s0*v[1]+c0*v[2],                             0., 0.,
+				 -c1*c0*v[1]-s0*c1*v[2], -c1*v[0]+s1*s0*v[1]-c0*s1*v[2], 0. });
+	}
+
+	//! compute d(Glocal^T*v)/dq for RotXYZ parameters
+	template<class TVector>
+	inline ConstSizeMatrix<maxRotCoordinates*maxRotCoordinates> RotXYZGlocalTv_qTemplate(const TVector& rot, const Vector3D& v)
+	{
+		Real c1 = cos(rot[1]);
+		Real s1 = sin(rot[1]);
+		Real c2 = cos(rot[2]);
+		Real s2 = sin(rot[2]);
+
+		//Glocal^T
+		//return ConstSizeMatrix<3 * maxRotCoordinates>(3, 3,
+		//	{ c1*c2, -c1 * s2, s1,
+		//	     s2,       c2,  0,
+		//	      0,        0,  1 });
+
+		//Glocal^T*v:
+		//	{ c1*c2*v[0]  -c1 * s2*v[1] +s1*v[2],
+		//	     s2*v[0]  +     c2*v[1] + 0*v[2],
+		//	      0*v[0]  +      0*v[1] + 1*v[2] });
+
+		return ConstSizeMatrix<maxRotCoordinates*maxRotCoordinates>(3, 3, {
+				0.,-s1*c2*v[0] + s1 * s2*v[1] + c1 * v[2],-c1*s2*v[0] - c1 * c2*v[1],
+				0.,                                    0.,       c2*v[0] - s2 * v[1],
+				0.,                                    0.,                        0. });
+	}
+
 
 	//inline Matrix3D RotationVector2RotationMatrix(const Vector3D& rot) { return RotationVector2RotationMatrixTemplate(rot); }
 	//inline Matrix3D RotationVector2RotationMatrix(const CSVector4D& rot) { return RotationVector2RotationMatrixTemplate(rot); } //for NodeRigidBody compatibility functions
@@ -460,6 +542,12 @@ namespace RigidBodyMath {
 			return mat;
 		}
 	}
+
+	//! compute d(G^T*v)/dq for rotation vector (Glocal = I, G = RotationMatrix)
+	//template<class TVector>
+	//inline ConstSizeMatrix<maxRotCoordinates*maxRotCoordinates> RotationVectorGTv_qTemplate(const TVector& rot, const Vector3D& v)
+	//==> use autodiff!, see CNodeRigidBodyRotVecLG.cpp
+
 	//********************************************************************************
 	//simple functions for ROTATION MATRICES
 

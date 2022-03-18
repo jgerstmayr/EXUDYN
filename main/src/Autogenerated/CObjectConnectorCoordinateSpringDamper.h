@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-11-14  14:44:50 (last modified)
+* @date         2022-03-01  20:14:20 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -36,7 +36,7 @@ public: // AUTO:
     Real dryFriction;                             //!< AUTO: dry friction force [SI:N] against relative velocity; assuming a normal force \f$f_N\f$, the friction force can be interpreted as \f$f_\mu = \mu f_N\f$
     Real dryFrictionProportionalZone;             //!< AUTO: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
-    std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real)> springForceUserFunction;//!< AUTO: A python function which defines the spring force with 8 parameters, see equations section / see description below
+    std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real)> springForceUserFunction;//!< AUTO: A Python function which defines the spring force with 8 parameters, see equations section / see description below
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorCoordinateSpringDamperParameters()
     {
@@ -108,10 +108,13 @@ public: // AUTO:
     virtual void ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
-    virtual JacobianType::Type GetAvailableJacobians() const override
-    {
-        return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
-    }
+    virtual JacobianType::Type GetAvailableJacobians() const override;
+
+    //! AUTO:  Computational function: compute Jacobian of \hac{ODE2} \ac{LHS} equations w.r.t. ODE2 coordinates and ODE2 velocities; write either dense local jacobian into dense matrix of MatrixContainer or ADD sparse triplets INCLUDING ltg mapping to sparse matrix of MatrixContainer
+    virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const override;
+
+    //! AUTO:  compute global 6D force and torque which is used for computation of derivative of jacobian; used only in combination with ComputeJacobianODE2_ODE2
+    virtual void ComputeJacobianForce6D(const MarkerDataStructure& markerData, Index objectNumber, Vector6D& force6D) const override;
 
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:21:00 (last modified)
+* @date         2022-02-18  20:35:37 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,6 +108,7 @@ public: // AUTO:
         cSensorLoad->GetParameters().loadNumber = EPyUtils::GetLoadIndexSafely(d["loadNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cSensorLoad->GetParameters().writeToFile = py::cast<bool>(d["writeToFile"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "fileName", cSensorLoad->GetParameters().fileName); /*! AUTO:  safely cast to C++ type*/
+        cSensorLoad->GetParameters().storeInternal = py::cast<bool>(d["storeInternal"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationSensorLoad->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
@@ -120,6 +121,7 @@ public: // AUTO:
         d["loadNumber"] = (LoadIndex)cSensorLoad->GetParameters().loadNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["writeToFile"] = (bool)cSensorLoad->GetParameters().writeToFile; //! AUTO: cast variables into python (not needed for standard types) 
         d["fileName"] = (std::string)cSensorLoad->GetParameters().fileName; //! AUTO: cast variables into python (not needed for standard types) 
+        d["storeInternal"] = (bool)cSensorLoad->GetParameters().storeInternal; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationSensorLoad->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -132,6 +134,7 @@ public: // AUTO:
         else if (parameterName.compare("loadNumber") == 0) { return py::cast((LoadIndex)cSensorLoad->GetParameters().loadNumber);} //! AUTO: get parameter
         else if (parameterName.compare("writeToFile") == 0) { return py::cast((bool)cSensorLoad->GetParameters().writeToFile);} //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { return py::cast((std::string)cSensorLoad->GetParameters().fileName);} //! AUTO: get parameter
+        else if (parameterName.compare("storeInternal") == 0) { return py::cast((bool)cSensorLoad->GetParameters().storeInternal);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationSensorLoad->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("SensorLoad::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
@@ -145,6 +148,7 @@ public: // AUTO:
         else if (parameterName.compare("loadNumber") == 0) { cSensorLoad->GetParameters().loadNumber = EPyUtils::GetLoadIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("writeToFile") == 0) { cSensorLoad->GetParameters().writeToFile = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { EPyUtils::SetStringSafely(value, cSensorLoad->GetParameters().fileName); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("storeInternal") == 0) { cSensorLoad->GetParameters().storeInternal = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationSensorLoad->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("SensorLoad::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

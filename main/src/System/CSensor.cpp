@@ -40,6 +40,11 @@ py::object MainSensor::GetSensorValues(const CSystemData& cSystemData, Configura
 
 }
 
+py::array_t<Real> MainSensor::GetInternalStorage()
+{
+	return EPyUtils::Matrix2NumPy(GetCSensor()->GetInternalStorage());
+}
+
 
 //! main function to generate sensor output values
 void CSensorNode::GetSensorValues(const CSystemData& cSystemData, Vector& values, ConfigurationType configuration) const
@@ -52,6 +57,10 @@ void CSensorNode::GetSensorValues(const CSystemData& cSystemData, Vector& values
 void CSensorObject::GetSensorValues(const CSystemData& cSystemData, Vector& values, ConfigurationType configuration) const
 {
 	const CObject* cObject = cSystemData.GetCObjects()[parameters.objectNumber];
+
+	//connectors, or special objects have no configuration-dependent functions (ComputeMarkerDataStructure)
+	CHECKandTHROW(configuration == ConfigurationType::Current, "SensorObject::GetSensorValues: only Current configuration can be used"); 
+
 	if (((Index)cObject->GetType() & (Index)CObjectType::Connector) == 0)
 	{
 		//must be object ==> may leed to illegal call, if not implemented

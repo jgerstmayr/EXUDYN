@@ -96,14 +96,16 @@ else:
     mbs.AddObject(CartesianSpringDamper(markerNumbers = [mRigid0b,mGround0b], 
                                         stiffness=[kJoint,kJoint,0],
                                         damping = [dJoint,dJoint,0]))
-    
-    
-mbs.AddSensor(SensorNode(nodeNumber=nRB0, fileName="solution/sensorCrankPos.txt", 
-                             outputVariableType=exu.OutputVariableType.Position))
-mbs.AddSensor(SensorNode(nodeNumber=nRB0, fileName="solution/sensorCrankAngVel.txt", 
-                             outputVariableType=exu.OutputVariableType.AngularVelocity))
-sCrankAngle = mbs.AddSensor(SensorNode(nodeNumber=nRB0, fileName="solution/sensorCrankAngle.txt", 
-                             outputVariableType=exu.OutputVariableType.Rotation))
+
+sCrankPos = mbs.AddSensor(SensorNode(nodeNumber=nRB0, #fileName="solution/sensorCrankPos.txt", 
+                         storeInternal=True,
+                         outputVariableType=exu.OutputVariableType.Position))
+sCrankAngVel = mbs.AddSensor(SensorNode(nodeNumber=nRB0, #fileName="solution/sensorCrankAngVel.txt", 
+                         storeInternal=True,
+                         outputVariableType=exu.OutputVariableType.AngularVelocity))
+sCrankAngle = mbs.AddSensor(SensorNode(nodeNumber=nRB0, #fileName="solution/sensorCrankAngle.txt", 
+                         storeInternal=True,
+                         outputVariableType=exu.OutputVariableType.Rotation))
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add connecting rods and pistons:
@@ -257,10 +259,12 @@ mbs.AddObject(CoordinateConstraint(markerNumbers=[mDT4Coordinate,mRigid0Rotation
                                    velocityLevel = True, #needed to securly compute multiple rotations
                                    visualization=VObjectConnectorCoordinate(show=False)))
 
-mbs.AddSensor(SensorBody(bodyNumber=oDT4, fileName="solution/sensorFlyWheelAngVel.txt", 
-                             outputVariableType=exu.OutputVariableType.AngularVelocity))
-sFlyWheelAngle = mbs.AddSensor(SensorNode(nodeNumber=nDT4, fileName="solution/sensorFlyWheelRotation.txt", 
-                             outputVariableType=exu.OutputVariableType.Coordinates))
+sFlyWheelAngVel = mbs.AddSensor(SensorBody(bodyNumber=oDT4, #fileName="solution/sensorFlyWheelAngVel.txt", 
+                         storeInternal=True,
+                         outputVariableType=exu.OutputVariableType.AngularVelocity))
+sFlyWheelAngle = mbs.AddSensor(SensorNode(nodeNumber=nDT4, #fileName="solution/sensorFlyWheelRotation.txt", 
+                         storeInternal=True,
+                         outputVariableType=exu.OutputVariableType.Coordinates))
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add torque (could also use LoadTorqueVector() on mDT0Rigid)
@@ -332,31 +336,9 @@ if exudynTestGlobals.useGraphics:
 
 
 if exudynTestGlobals.useGraphics:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-    cList=['r-','g-','b-','k-','c-','r:','g:','b:','k:','c:']
- 
-    data = np.loadtxt('solution/sensorCrankPos.txt', comments='#', delimiter=',') #new result from this file
-    plt.plot(data[:,0], data[:,1], cList[0],label='crank position') #numerical solution, 1 == x-direction
-
-    data = np.loadtxt('solution/sensorCrankAngVel.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,3], cList[1],label='crank angular velocity') #numerical solution, 1 == x-direction
-
-    data = np.loadtxt('solution/sensorCrankAngle.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,3], cList[2],label='crank angle') #numerical solution, 1 == x-direction
-
-    data = np.loadtxt('solution/sensorFlyWheelAngVel.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,3], cList[1+6],label='flywheel angular velocity') #numerical solution, 1 == x-direction
-
-    data = np.loadtxt('solution/sensorFlyWheelRotation.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,1], cList[3],label='flywheel angle') #numerical solution, 1 == x-direction
-
-    ax=plt.gca() # get current axes
-    ax.grid(True, 'major', 'both')
-    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    plt.tight_layout()
-    plt.legend()
-    plt.show() 
-
-
+    from exudyn.plot import PlotSensor
+    
+    PlotSensor(mbs, sensorNumbers=[sCrankPos, sCrankAngVel, sCrankAngle, sFlyWheelAngVel, sFlyWheelAngle], 
+               components=[0,2,2,2,0], markerStyles=['^ ','o ','H ','x','v '],closeAll=True,markerSizes=12,
+               labels=['crank position','crank angular velocity','crank angle','flywheel angular velocity', 'flywheel angle'])
+    

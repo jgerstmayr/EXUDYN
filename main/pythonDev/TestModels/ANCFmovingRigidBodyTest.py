@@ -48,7 +48,7 @@ fixANCFRotation = 1
 #######################SUSPENSION ROPE##################################################################################################################################################################
 suspensionCableTemplate=Cable2D(physicsMassPerLength=20.87, physicsBendingStiffness=78878*complianceFactBend, physicsAxialStiffness=398240000*complianceFactAxial)
 
-[suspensionCableNodeList, suspensionCableObjectList, suspensionLoadList, suspensionCableNodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, positionOfNode0=[0,0], positionOfNode1=[L,0], numberOfElements=nEl, cableTemplate=suspensionCableTemplate,
+[suspensionCableNodeList, suspensionCableObjectList, suspensionLoadList, suspensionCableNodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, positionOfNode0=[0,0,0], positionOfNode1=[L,0,0], numberOfElements=nEl, cableTemplate=suspensionCableTemplate,
                                                                   massProportionalLoad=[0,-gravityFieldConstant,0], fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
 ##################################################################################################################################################################
 
@@ -61,7 +61,7 @@ mALE = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nALE, coordinate=0)) #ALE
 haulageCableTemplate=ALECable2D(physicsMassPerLength=6.96, physicsBendingStiffness=5956*complianceFactBend, physicsAxialStiffness=96725000*complianceFactAxial)
 haulageCableTemplate.nodeNumbers[2]=nALE
 
-[haulageCableNodeList, haulageCableObjectList, haulageLoadList, haulageCableNodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, positionOfNode0=[0,offset], positionOfNode1=[L,offset], numberOfElements=nEl, cableTemplate=haulageCableTemplate,
+[haulageCableNodeList, haulageCableObjectList, haulageLoadList, haulageCableNodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, positionOfNode0=[0,offset,0], positionOfNode1=[L,offset,0], numberOfElements=nEl, cableTemplate=haulageCableTemplate,
                                                                   massProportionalLoad=[0,-gravityFieldConstant,0], fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
 
 cAleConstraint=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGlobalGround,mALE]))
@@ -178,7 +178,7 @@ SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displac
 SC.visualizationSettings.contour.outputVariableComponent = 1 # plot y-component
 
 
-SC.visualizationSettings.connectors.contactPointsDefaultSize = .005
+SC.visualizationSettings.contact.contactPointsDefaultSize = .005
 SC.visualizationSettings.connectors.showContact = True
  
 

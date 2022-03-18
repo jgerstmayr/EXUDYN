@@ -146,7 +146,7 @@ void PyProcessPythonProcessQueue()
 		{
 			PyWarning("Error when executing process " + ProcessID::GetTypeString(processID) + +"':\n" + STDstring(ex.what()) + "\n; maybe a module is missing!");
 			deactivateGlobalPyRuntimeErrorFlag = false;
-			throw; //avoid multiple exceptions trown again (don't know why!)!
+			throw; //avoid multiple exceptions trown again 
 		}
 		catch (const EXUexception& ex)
 		{
@@ -154,13 +154,13 @@ void PyProcessPythonProcessQueue()
 			PyWarning("Error when executing process " + ProcessID::GetTypeString(processID) +
 				":\n" + STDstring(ex.what()) + "\n; maybe a module is missing!!");
 			deactivateGlobalPyRuntimeErrorFlag = false;
-			throw; //avoid multiple exceptions trown again (don't know why!)!
-			//throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+			throw; //avoid multiple exceptions trown again 
+			//throw(ex); //avoid multiple exceptions trown again 
 		}
 		catch (...) //any other exception
 		{
 			//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag); //clear 
-			PyWarning("Error when executing process " + ProcessID::GetTypeString(processID) + "\nmaybe a module is missing and check your python code!!");
+			PyWarning("Error when executing process " + ProcessID::GetTypeString(processID) + "\nmaybe a module is missing and check your Python code!!");
 		}
 		//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag); 
 		deactivateGlobalPyRuntimeErrorFlag = false;
@@ -198,21 +198,19 @@ void PyProcessExecutableStringQueue()
 			//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag); 
 			PyWarning("Error when executing '" + STDstring(execStr) + "':\n" + STDstring(ex.what()) + "\n; maybe a module is missing!");
 			deactivateGlobalPyRuntimeErrorFlag = false;
-			throw; //avoid multiple exceptions trown again (don't know why!)!
-			//throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+			throw; //avoid multiple exceptions trown again; see notes in pybind11: Any Python error must be thrown or cleared, or Python/pybind11 will be left in an invalid state
 		}
 		catch (const EXUexception& ex)
 		{
 			//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag); //clear 
 			PyWarning("Error when executing '" + STDstring(execStr) + "':\n" + STDstring(ex.what()) + "\n; maybe a module is missing!!");
 			deactivateGlobalPyRuntimeErrorFlag = false;
-			throw; //avoid multiple exceptions trown again (don't know why!)!
-			//throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+			throw; //avoid multiple exceptions trown again see notes in pybind11: Any Python error must be thrown or cleared, or Python/pybind11 will be left in an invalid state
 		}
 		catch (...) //any other exception
 		{
 			//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag); //clear 
-			PyWarning("Error when executing '" + STDstring(execStr) + "'\nmaybe a module is missing and check your python code!!");
+			PyWarning("Error when executing '" + STDstring(execStr) + "'\nmaybe a module is missing and check your Python code!!");
 		}
 		//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag); 
 		deactivateGlobalPyRuntimeErrorFlag = false;
@@ -361,14 +359,14 @@ mouse wheel           ... zoom
 Key(s) action:
 1,2,3,4 or 5          ... visualization update speed (0.02, 0.1=default, 0.5, 2, 
                           100 seconds)
-'.' or KEYPAD '+'     ... zoom in
-',' or KEYPAD '-'     ... zoom out
+'.' or KEYPAD '+'     ... zoom in (with optional CTRL key for small zoom)
+',' or KEYPAD '-'     ... zoom out (with optional CTRL key for small zoom)
 CTRL+1                ... set view to 1/2-plane
 SHIFT+CTRL+1          ... set view to 1/2-plane (viewed from behind)
 CTRL+2                ... set view to 1/3-plane
 SHIFT+CTRL+2          ... set view to 1/3-plane (viewed from behind)
 CTRL+3,4,5,6          ... other views (with optional SHIFT key)
-CURSOR UP, DOWN, etc. ... move scene (use CTRL for small movements)
+CURSOR UP, DOWN, etc. ... move scene (use CTRL for small movements, SHIFT for rotations (ALT for z-axis))
 KEYPAD 2/8,4/6,1/9    ... rotate scene about 1,2 or 3-axis (use CTRL for small rotations)
 F2                    ... ignore all keyboard input, except for KeyPress user function, 
                           F2 and escape keys

@@ -138,11 +138,11 @@ void CNodeRigidBody2D::GetOutputVariable(OutputVariableType variableType, Config
 		//Matrix3D rotMat = GetRotationMatrix(configuration);
 		//Vector3D rot = RigidBodyMath::RotationMatrix2RotXYZ(rotMat);
 
-		Real phi = GetCoordinateVector(configuration)[0];
+		Real phi = GetCoordinateVector(configuration)[2];
 		if (configuration != ConfigurationType::Reference) {
-			phi += GetCoordinateVector(ConfigurationType::Reference)[0];
+			phi += GetCoordinateVector(ConfigurationType::Reference)[2];
 		}
-		Vector3D rot({0,0,phi});
+		Vector3D rot({0.,0.,phi});
 
 		value.SetVector(3, rot.GetDataPointer());
 		break;

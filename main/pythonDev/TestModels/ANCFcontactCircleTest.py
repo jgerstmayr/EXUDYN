@@ -154,7 +154,7 @@ SC.visualizationSettings.bodies.showNumbers = False
 SC.visualizationSettings.nodes.defaultSize = 0.01
 SC.visualizationSettings.markers.defaultSize = 0.01
 SC.visualizationSettings.connectors.defaultSize = 0.01
-SC.visualizationSettings.connectors.contactPointsDefaultSize = 0.005
+SC.visualizationSettings.contact.contactPointsDefaultSize = 0.005
 SC.visualizationSettings.connectors.showContact = 1
 
 simulationSettings.solutionSettings.solutionInformation = "ANCF cable with imposed curvature or applied tip force/torque"
@@ -164,6 +164,7 @@ simulationSettings.staticSolver.verboseMode = 0 #otherwise, load steps are shown
 simulationSettings.staticSolver.numberOfLoadSteps  = 40
 simulationSettings.staticSolver.loadStepGeometric = True;
 simulationSettings.staticSolver.loadStepGeometricRange = 1e4;
+simulationSettings.staticSolver.adaptiveStep = False
 
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-7 #10000
 simulationSettings.staticSolver.newton.absoluteTolerance = 1e-10
@@ -190,5 +191,5 @@ if exudynTestGlobals.useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
-exudynTestGlobals.testError = sol[n-3] - (-0.4842656133238705) #2021-05-07 (deactivated StaticSolveOldSolver):-0.4842656133238705  #2019-12-17(relTol=1e-7 / up to 7 digits accurate): -0.4842656547442095;  2019-11-22: (-0.4844812763485709) (with relTol=1e-5);  y-displacement
+exudynTestGlobals.testError = sol[n-3] - (-0.4842698420787613) #-0.4842698420787613 ; 2021-05-07 (deactivated StaticSolveOldSolver):-0.4842656133238705  #2019-12-17(relTol=1e-7 / up to 7 digits accurate): -0.4842656547442095;  2019-11-22: (-0.4844812763485709) (with relTol=1e-5);  y-displacement
 exudynTestGlobals.testResult = sol[n-3]

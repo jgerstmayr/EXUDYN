@@ -115,8 +115,10 @@ enum class AccessFunctionType { //determines which connectors/forces can be appl
 	DisplacementMassIntegral_q = (Index)Marker::BodyMass,		//for distributed (body-mass) loads
 	DisplacementSurfaceNormalIntegral_q = (Index)Marker::BodySurfaceNormal, //for surface loads: CAUTION: pressure acts normal to surface!!!
 	SuperElement = (Index)Marker::SuperElement,					//for super elements, using TranslationalVelocity_qt and AngularVelocity_qt
-	//Rotv1v2v3_q = (Index)Marker::Rotv1v2v3,						//for joints, e.g., prismatic or rigid body; in fact, a marker of type orientation must also provide Rotv1v2v3
-	SuperElementAlternativeRotationMode= (1 << 31)							//for super elements, using TranslationalVelocity_qt and AngularVelocity_qt
+	//Rotv1v2v3_q = (Index)Marker::Rotv1v2v3,					//for joints, e.g., prismatic or rigid body; in fact, a marker of type orientation must also provide Rotv1v2v3
+	
+	JacobianTtimesVector_q = (1 << 30),							//access function to compute derivative of jacobian^T times vector (provided in markerData.vectorValue)
+	SuperElementAlternativeRotationMode= (1 << 31)				//for super elements, using TranslationalVelocity_qt and AngularVelocity_qt
 
 };
 
@@ -165,7 +167,7 @@ inline const char* GetSensorTypeString(SensorType var)
 
 
 //! OutputVariable used for output data in objects, nodes, loads, ...
-//enum class OutputVariableType : unsigned __int64 { //should work for larger enums...
+//enum class OutputVariableType : unsigned __int64 { //or uint64_t from stdint.h; should work for larger enums...
 enum class OutputVariableType {
 	//all cases are independent of 2D/3D, which is known by the object itself; TYPES CAN BE COMBINED (==> used for available types in element)
 	_None = 0, //marks that no type is used
@@ -176,36 +178,37 @@ enum class OutputVariableType {
 	Velocity = 1 << 4,				//!< velocity vector, e.g. of node or body center of mass
 	VelocityLocal = 1 << 5,			//!< local velocity vector (used e.g. in joints)
 	Acceleration = 1 << 6,			//!< acceleration vector, e.g. of node or body center of mass
-	RotationMatrix = 1 << 7,		//!< rotation matrix, e.g. rigid body
-	AngularVelocity = 1 << 8,		//!< angular velocity vector, e.g. rigid body; scalar quantity in 2D-elements
-	AngularVelocityLocal = 1 << 9,	//!< angular velocity vector in local (body-fixed) coordinates
-	AngularAcceleration = 1 << 10,	//!< angular acceleration vector, e.g. rigid body; scalar quantity in 2D-elements
-	//AngularAccelerationLocal = 1 << 11,	//!< angular acceleration vector, e.g. rigid body; scalar quantity in 2D-elements
-	Rotation = 1 << 12,				//!< angle, e.g. joint angle; rotation parameters; scalar rotation in 2D rigid body
-	Coordinates = 1 << 13,			//!< single object or node coordinate(s) as output
-	Coordinates_t = 1 << 14,		//!< single object or node velocity coordinate(s) as output
-	Coordinates_tt = 1 << 15,		//!< single object or node velocity coordinate(s) as output
-	SlidingCoordinate = 1 << 16,	//!< scalar coordinate in sliding joint
-	Director1 = 1 << 17,			//!< direction or (axial) slope vector 1 (in 2D-elements)
-	Director2 = 1 << 18,			//!< direction or (normal1) slope vector 2 (in 2D-elements or shells)
-	Director3 = 1 << 19,			//!< direction or (normal2) slope vector 3 (in 3D-elements or shells)
+	AccelerationLocal = 1 << 7,			//!< acceleration vector, e.g. of node or body center of mass
+	RotationMatrix = 1 << 8,		//!< rotation matrix, e.g. rigid body
+	AngularVelocity = 1 << 9,		//!< angular velocity vector, e.g. rigid body; scalar quantity in 2D-elements
+	AngularVelocityLocal = 1 << 10,	//!< angular velocity vector in local (body-fixed) coordinates
+	AngularAcceleration = 1 << 11,	//!< angular acceleration vector, e.g. rigid body; scalar quantity in 2D-elements
+	AngularAccelerationLocal = 1 << 12,	//!< angular acceleration vector, e.g. rigid body; scalar quantity in 2D-elements
+	Rotation = 1 << 13,				//!< angle, e.g. joint angle; rotation parameters; scalar rotation in 2D rigid body
+	Coordinates = 1 << 14,			//!< single object or node coordinate(s) as output
+	Coordinates_t = 1 << 15,		//!< single object or node velocity coordinate(s) as output
+	Coordinates_tt = 1 << 16,		//!< single object or node velocity coordinate(s) as output
+	SlidingCoordinate = 1 << 17,	//!< scalar coordinate in sliding joint
+	Director1 = 1 << 18,			//!< direction or (axial) slope vector 1 (in 2D-elements)
+	Director2 = 1 << 19,			//!< direction or (normal1) slope vector 2 (in 2D-elements or shells)
+	Director3 = 1 << 20,			//!< direction or (normal2) slope vector 3 (in 3D-elements or shells)
 //
-	Force = 1 << 20,				//!< force e.g. in connector/constraint or section force in beam in global coordinates
-	ForceLocal = 1 << 21,			//!< local force e.g. in connector/constraint or section force in beam
-	Torque = 1 << 22,				//!< torque e.g. in connector/constraint or section moment/torque in beam in global coordinates
-	TorqueLocal = 1 << 23,			//!< local torque e.g. in connector/constraint or section moment/torque in beam
+	Force = 1 << 21,				//!< force e.g. in connector/constraint or section force in beam in global coordinates
+	ForceLocal = 1 << 22,			//!< local force e.g. in connector/constraint or section force in beam
+	Torque = 1 << 23,				//!< torque e.g. in connector/constraint or section moment/torque in beam in global coordinates
+	TorqueLocal = 1 << 24,			//!< local torque e.g. in connector/constraint or section moment/torque in beam
 
 //  unused for now, maybe later on in finite elements, fluid, etc.:
-	//Strain = 1 << 24,				//!< strain components (global/ Almansi)
-	//Stress = 1 << 25,				//!< stress components (global / Cauchy)
+	//Strain = 1 << 25,				//!< strain components (global/ Almansi)
+	//Stress = 1 << 26,				//!< stress components (global / Cauchy)
 	//Curvature,					//!< global curvature not expected to be needed in future
 
 // use this for beam-quantities as they are local:
-	StrainLocal = 1 << 26,			//!< local strain components (e.g. axial strain and shear strain in beam, or engineering strain components in finite element)
-	StressLocal = 1 << 27,			//!< local stress components (e.g. axial stress and shear stress in beam, or engineering stress components in finite element)
-	CurvatureLocal = 1 << 28,		//!< local curvature (components) in beam or shell
+	StrainLocal = 1 << 27,			//!< local strain components (e.g. axial strain and shear strain in beam, or engineering strain components in finite element)
+	StressLocal = 1 << 28,			//!< local stress components (e.g. axial stress and shear stress in beam, or engineering stress components in finite element)
+	CurvatureLocal = 1 << 29,		//!< local curvature (components) in beam or shell
 //
-	ConstraintEquation = 1 << 29,	//!< evaluates constraint equation (=current deviation or drift of constraint equation)
+	ConstraintEquation = 1 << 30,	//!< evaluates constraint equation (=current deviation or drift of constraint equation)
 
 	//Curvature = 1 << 21,			//!< global curvature (components) in beam or shell
 	//keep this list synchronized with function GetOutputVariableTypeString(...) !!!

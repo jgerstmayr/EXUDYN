@@ -147,14 +147,17 @@ if True:
     ssx = 20 #search tree size
     #ssy = int(500*f) #search tree size
     ssy = 200
-    mbs.Assemble()
-    gContact.FinalizeContact(mbs, searchTreeSize=np.array([ssx,ssy,ssx]), frictionPairingsInit=np.eye(1), 
-                             searchTreeBoxMin=np.array([-1.2*H,-0.75*H,-1.2*H]), searchTreeBoxMax=np.array([1.2*H,4*16*H,1.2*H])
-                             )
+    # mbs.Assemble()
+    # gContact.FinalizeContact(mbs, searchTreeSize=np.array([ssx,ssy,ssx]), frictionPairingsInit=np.eye(1), 
+    #                          searchTreeBoxMin=np.array([-1.2*H,-0.75*H,-1.2*H]), 
+    #                          searchTreeBoxMax=np.array([1.2*H,4*16*H,1.2*H])
+    #                          )
+    gContact.SetFrictionPairings(np.eye(1))
+    gContact.SetSearchTreeCellSize(numberOfCells=[ssx,ssy,ssx])
+    gContact.SetSearchTreeBox(pMin=np.array([-1.2*H,-0.75*H,-1.2*H]), pMax=np.array([1.2*H,4*16*H,1.2*H]))
     print('treesize=',ssx*ssx*ssy)
-else:
-    #assemble and solve system for default parameters
-    mbs.Assemble()
+
+mbs.Assemble()
 print("finish gContact")
 
 tEnd = 10
@@ -171,7 +174,7 @@ simulationSettings.solutionSettings.exportVelocities = False
 simulationSettings.displayComputationTime = True
 #simulationSettings.displayStatistics = True
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.numberOfThreads = 4
+simulationSettings.parallel.numberOfThreads = 4
 
 simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2 = False
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
@@ -217,6 +220,7 @@ if simulate:
 
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
+    simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
     exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
     print(gContact)
     #p = mbs.GetNodeOutput(n, variableType=exu.OutputVariableType.Position)

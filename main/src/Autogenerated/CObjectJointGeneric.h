@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-11-14  14:42:30 (last modified)
+* @date         2022-03-01  20:14:21 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,7 +35,7 @@ public: // AUTO:
     Matrix3D rotationMarker1;                     //!< AUTO: local rotation matrix for marker \f$m1\f$; translation and rotation axes for marker \f$m1\f$ are defined in the local body coordinate system and additionally transformed by rotationMarker1
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     Vector6D offsetUserFunctionParameters;        //!< AUTO: vector of 6 parameters for joint's offsetUserFunction
-    std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)> offsetUserFunction;//!< AUTO: A python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters)
+    std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)> offsetUserFunction;//!< AUTO: A Python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters)
     std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)> offsetUserFunction_t;//!< AUTO: (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters
     //! AUTO: default constructor with parameter initialization
     CObjectJointGenericParameters()

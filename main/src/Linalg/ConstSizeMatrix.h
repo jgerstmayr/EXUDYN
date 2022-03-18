@@ -41,13 +41,11 @@
 #include "Utilities/BasicDefinitions.h"
 #include "Linalg/Matrix.h"
 
-#ifdef USE_NEW_CONSTSIZEMATRIX
-
 template <typename T, Index dataSize>
 class ConstSizeMatrixBase
 {
 private:
-	mutable T data[dataSize];
+	T data[dataSize];
 	Index numberOfRows;
 	Index numberOfColumns;
 
@@ -55,15 +53,20 @@ public:
 
 	//Constructors, Destructor
 
-	//! no default constructor, rule of 5
-	//ConstSizeMatrixBase(bool init = true)
-		
 	//! create empty (0 x 0) matrix, replaces default constructor, rule of 5
 	ConstSizeMatrixBase(bool init = true)
 	{
 		this->numberOfRows = 0;
 		this->numberOfColumns = 0;
 	}
+
+	ConstSizeMatrixBase(ConstSizeMatrixBase<T, dataSize> const& other) = default;
+	ConstSizeMatrixBase<T, dataSize>& operator=(ConstSizeMatrixBase<T, dataSize> const& other) = default;
+
+	ConstSizeMatrixBase<T, dataSize>(ConstSizeMatrixBase<T, dataSize>&& other) = default;
+	ConstSizeMatrixBase<T, dataSize>& operator=(ConstSizeMatrixBase<T, dataSize>&& other) = default;
+
+	~ConstSizeMatrixBase() = default; //rule of 5
 
 	//! copy constructor, based on iterators, rule of 5
 	//ConstSizeMatrixBase(const ConstSizeMatrixBase& matrix)
@@ -183,14 +186,15 @@ public:
 	// BASIC FUNCTIONS
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-	T* begin() const { return &data[0]; }						            //!< C++11 std::begin() for iterators; iterator range is always the currently used numberOfItems.
-	//const T* begin() const { return &data[0]; }				                //!< C++11 std::begin() for iterators, const version needed for ==, +=, etc.; iterator range is always the currently used numberOfItems.
-	T* end() const { return &data[numberOfRows*numberOfColumns]; }			//!< C++11 std::end() for iterators; iterator range is always the currently used numberOfItems.
-	//const T* end() const { return &data[numberOfRows*numberOfColumns]; }	//!< C++11 std::end() for iterators, const version needed for ==, +=, etc.; iterator range is always the currently used numberOfItems.
+	const T* begin() const { return &data[0]; }				                //!< C++11 std::begin() for iterators, const version needed for ==, +=, etc.; iterator range is always the currently used numberOfItems.
+	T* begin() { return &data[0]; }						            //!< C++11 std::begin() for iterators; iterator range is always the currently used numberOfItems.
+	const T* end() const { return &data[numberOfRows*numberOfColumns]; }	//!< C++11 std::end() for iterators, const version needed for ==, +=, etc.; iterator range is always the currently used numberOfItems.
+	T* end() { return &data[numberOfRows*numberOfColumns]; }			//!< C++11 std::end() for iterators; iterator range is always the currently used numberOfItems.
 
 	Index NumberOfRows() const { return numberOfRows; };                            //!< number of columns (currently used)
 	Index NumberOfColumns() const { return numberOfColumns; };                      //!< number of rows (currently used)
-	T* GetDataPointer() const { return data; }									//!< return pointer to first data containing T numbers; const needed for LinkedDataVectors.
+	const T* GetDataPointer() const { return data; }									//!< return pointer to first data containing T numbers; const needed for LinkedDataVectors.
+	T* GetDataPointer() { return data; }									//!< return pointer to first data containing T numbers
 	bool IsConstSizeMatrix() const { return true; }						//!< for derived classes: determine, if matrix has constant size
 
 	//! Set rows and columns sizes (also used in derived classes)
@@ -269,6 +273,23 @@ public:
 			GetUnsafe(j, j) = value;
 		}
 
+	}
+
+	//Set Matrix with diadic product of vectors vA . vB
+	template<class TVectorA, class TVectorB>
+	void SetWithDiadicProduct(const TVectorA& vectorA, const TVectorB& vectorB)
+	{
+		CHECKandTHROW((vectorA.NumberOfItems()*vectorB.NumberOfItems() <= dataSize), "ConstSizeMatrixBase::SetWithDiadicProduct: matrix size > dataSize");
+		SetNumberOfRowsAndColumns(vectorA.NumberOfItems(), vectorB.NumberOfItems());
+
+		for (Index i = 0; i < NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < NumberOfColumns(); j++)
+			{
+				GetItem(i, j) = vectorA.GetUnsafe(i) * vectorB.GetUnsafe(j);
+				//GetUnsafe(i, j) = vectorA.GetUnsafe(i) * vectorB.GetUnsafe(j);
+			}
+		}
 	}
 
 protected:
@@ -375,7 +396,7 @@ public:
 		return &(data[row*numberOfColumns]);
 	}
 
-	T* operator[](Index row) const
+	const T* operator[](Index row) const
 	{
 		CHECKandTHROW(/*(row >= 0) && */(row < numberOfRows), "Matrix::operator[](Index) const: request of invalid row");
 
@@ -663,14 +684,14 @@ public:
 	{
 		CHECKandTHROW(this->numberOfRows == columnSize,
 			"ConstSizeMatrixBase::GetColumnVector(...): size mismatch");
-		CHECKandTHROW(column <= this->numberOfColumns,
+		CHECKandTHROW(column < this->numberOfColumns,
 			"ConstSizeMatrixBase::GetColumnVector(...): illegal column");
 
 		SlimVectorBase<T, columnSize> result;
 
 		for (Index i = 0; i < this->numberOfRows; i++)
 		{
-			result[i] = (*this)(i, column);
+			result[i] = this->GetUnsafe(i, column);
 		}
 		return result;
 	}
@@ -679,14 +700,33 @@ public:
 	{
 		CHECKandTHROW(this->numberOfRows == 3,
 			"ConstSizeMatrixBase::GetColumnVector(...): size mismatch");
-		CHECKandTHROW(column <= this->numberOfColumns,
+		CHECKandTHROW(column < this->numberOfColumns,
 			"ConstSizeMatrixBase::GetColumnVector(...): illegal column");
 
 		SlimVectorBase<T, 3> result;
 
 		for (Index i = 0; i < this->numberOfRows; i++)
 		{
-			result[i] = (*this)(i, column);
+			result[i] = this->GetUnsafe(i, column);
+		}
+		return result;
+	}
+
+	//! get row vector as a SlimVector (no memory allocation, but final size needs to be known at compile time)
+	//! use e.g.: Vector3D v = GetColumnVector<3>(i);
+	template<Index rowSize>
+	SlimVectorBase<T, rowSize> GetRowVector(Index row) const
+	{
+		CHECKandTHROW(this->numberOfColumns == rowSize,
+			"ConstSizeMatrixBase::GetRowVector(...): size mismatch");
+		CHECKandTHROW(row < this->numberOfRows,
+			"ConstSizeMatrixBase::GetRowVector(...): illegal row");
+
+		SlimVectorBase<T, rowSize> result;
+
+		for (Index i = 0; i < this->numberOfColumns; i++)
+		{
+			result[i] = this->GetUnsafe(row, i);
 		}
 		return result;
 	}
@@ -694,392 +734,10 @@ public:
 };
 
 
-
-#else
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
-
-
-
-template <typename T, Index dataSize>
-class ConstSizeMatrixBase : public MatrixBase<T>
-{
-private:
-	T constData[dataSize];
-public:
-
-	//Constructors, Destructor
-
-	//! create empty (0 x 0) matrix, default constructor, rule of 5
-	ConstSizeMatrixBase()
-	{
-		this->data = &constData[0]; //constructor should always start with data linkage
-									//use this-> to access member variables, because of templated base class
-		this->numberOfRows = 0;
-		this->numberOfColumns = 0;
-	}
-
-	//! copy constructor, based on iterators, rule of 5
-	ConstSizeMatrixBase(const ConstSizeMatrixBase& matrix)
-	{
-		this->data = &constData[0];
-
-		//not needed, because only with same matrices possible!
-		//CHECKandTHROW((matrix.numberOfRows*matrix.numberOfColumns <= dataSize),
-		//	"ConstSizeMatrixBase::ConstSizeMatrixBase(const ConstSizeMatrixBase& matrix): dataSize too small");
-
-		ResizeMatrix(matrix.NumberOfRows(), matrix.NumberOfColumns());
-
-		Index cnt = 0;
-		for (auto value : matrix) { this->data[cnt++] = value; }
-	}
-
-	//! move constructor, rule of 5
-	//ConstSizeMatrixBase(ConstSizeMatrixBase&& other) noexcept
-	//{
-	//	//exchange of pointers will not work! 
-	//	//this->data = std::exchange(other.data, nullptr);
-	//	//this->numberOfRows = std::exchange(other.numberOfRows, 0);
-	//	//this->numberOfColumns = std::exchange(other.numberOfColumns, 0);
-	//	for (Index i = 0; i < other.numberOfRows*other.numberOfColumns; i++) {
-	//		constData[i] = std::exchange(other.constData[i], (T)0);
-	//	}
-	//	this->numberOfRows = std::exchange(other.numberOfRows, 0);
-	//	this->numberOfColumns = std::exchange(other.numberOfColumns, 0);
-	//}
-
-	//! create matrix with dimensions numberOfRowsInit x numberOfColumnsInit; data is not initialized
-	ConstSizeMatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit)
-	{
-		this->data = &constData[0];
-
-		CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 && numberOfRowsInit*numberOfColumnsInit <= dataSize),
-			"ConstSizeMatrixBase::ConstSizeMatrixBase(Index, Index): invalid parameters");
-
-		ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
-	}
-
-	//! create matrix with dimensions numberOfRowsInit x numberOfColumnsInit; initialize items with 'initializationValue'
-	ConstSizeMatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit, T initializationValue)
-    {
-		this->data = &constData[0];
-		
-		CHECKandTHROW((numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 && numberOfRowsInit*numberOfColumnsInit <= dataSize),
-            "ConstSizeMatrixBase::ConstSizeMatrixBase(Index, Index, T): invalid parameters");
-		CHECKandTHROW((initializationValue == 0), "ConstSizeMatrixBase: initializationValue != 0"); 
-
-        ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
-
-        for (auto &item : *this) {
-            item = initializationValue;
-        }
-    }
-
-    //! create matrix with dimensions numberOfRowsInit x numberOfColumnsInit; initialize data with initializer list
-	ConstSizeMatrixBase(Index numberOfRowsInit, Index numberOfColumnsInit, std::initializer_list<T> listOfReals)
-    {
-		this->data = &constData[0];
-		
-		CHECKandTHROW((numberOfRowsInit*numberOfColumnsInit == (Index)listOfReals.size()),
-                       "ConstSizeMatrixBase::ConstSizeMatrixBase(Index, Index, initializer_list): inconsistent size of initializer_list");
-
-        ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
-
-        Index cnt = 0;
-        for (auto value : listOfReals) {
-			this->data[cnt++] = value;
-        }
-    }
-
-	//! copy constructor with MatrixBase; @todo: check if ConstSizeMatrixBase(const MatrixBase& matrix) is NEEDED?
-	ConstSizeMatrixBase(const MatrixBase<T>& matrix)
-	{
-		this->data = &constData[0];
-
-		CHECKandTHROW((matrix.NumberOfRows()*matrix.NumberOfColumns() <= dataSize),
-			"ConstSizeMatrixBase::ConstSizeMatrixBase(const MatrixBase& matrix): dataSize too small");
-
-		ResizeMatrix(matrix.NumberOfRows(), matrix.NumberOfColumns());
-
-		Index cnt = 0;
-		for (auto value : matrix) { this->data[cnt++] = value; }
-	}
-
-	//! copy from std::array<std::array<Real,nCols>,nRows> matrix; gcc-7 having problems with that!
-	template<Index matrixColumns, Index matrixRows>
-	ConstSizeMatrixBase(const std::array<std::array<T, matrixColumns>, matrixRows>& matrix)
-	{
-		this->data = &constData[0];
-
-		CHECKandTHROW((matrixRows*matrixColumns <= dataSize),
-			"ConstSizeMatrixBase::ConstSizeMatrixBase(const std::array<std::array<T, matrixColumns>, matrixRows>& matrix): dataSize too small");
-
-		ResizeMatrix(matrixRows, matrixColumns);
-
-		Index cnt = 0;
-		for (Index rows = 0; rows < matrixRows; rows++)
-		{
-			for (Index cols = 0; cols < matrixColumns; cols++)
-			{
-				constData[cnt++] = matrix[rows][cols];
-			}
-		}
-	}
-
-	ConstSizeMatrixBase(const StdArray33F& matrix)
-	{
-		this->data = &constData[0];
-		CHECKandTHROW((dataSize == 9),
-			"ConstSizeMatrixBase::ConstSizeMatrixBase(const StdArray33F& matrix& matrix): dataSize invalid");
-
-		ResizeMatrix(3,3);
-
-		Index cnt = 0;
-		for (Index rows = 0; rows < 3; rows++)
-		{
-			for (Index cols = 0; cols < 3; cols++)
-			{
-				constData[cnt++] = matrix[rows][cols];
-			}
-		}
-	}
-
-	virtual ~ConstSizeMatrixBase<T, dataSize>()
-    {
-		this->data = nullptr; //MatrixBase destructor called hereafter
-		//do nothing, because no memory allocated
-    };
-
-
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // BASIC FUNCTIONS
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-protected:
-	virtual Index MaxAllocatedSize() const { return dataSize; }
-	virtual bool IsConstSizeMatrix() const  override { return true; }
-
-	//! Initialization of data ==> should never be called in ConstSizeMatrixBase; @todo: delete after tests finished
-	virtual void Init() override
-	{
-		this->numberOfRows = 0;
-		this->numberOfColumns = 0;
-		CHECKandTHROWstring("ConstSizeMatrixBase::Init(): should never be called");
-	};
-
-    //! Set new size of matrix; for external access, use 'SetNumberOfRowsAndColumns' to modify size of matrix
-    virtual void ResizeMatrix(Index numberOfRowsInit, Index numberOfColumnsInit) override
-    {
-		//checks done already in caller function!
-		//CHECKandTHROW((numberOfRowsInit*numberOfColumnsInit <= dataSize),
-		//	"ConstSizeMatrixBase::ResizeMatrix(Index,Index): dataSize too small");
-		
-		this->numberOfRows = numberOfRowsInit;
-		this->numberOfColumns = numberOfColumnsInit;
-    }
-
-public:
-	//Assignment-operator, copy only active data from matrix
-	ConstSizeMatrixBase<T, dataSize>& operator= (const ConstSizeMatrixBase<T, dataSize>& matrix)
-	{
-		if (this == &matrix) { return *this; }
-
-		//not needed, because requirements always fulfilled!:
-		//CHECKandTHROW((this->numberOfRows*this->numberOfColumns <= dataSize),
-		//	"ConstSizeMatrixBase::operator=: dataSize too small");
-
-		ResizeMatrix(matrix.NumberOfRows(), matrix.NumberOfColumns());
-
-		Index cnt = 0;
-		for (auto value : matrix) { this->data[cnt++] = value; }
-
-		return *this;
-	}
-
-	//! move assignment operator, rule of 5 (but does not work in such a way)
-	//leads immediatly to crash
-	//ConstSizeMatrixBase<T, dataSize>& operator= (ConstSizeMatrixBase<T, dataSize>&& other) = default;
-	//ConstSizeMatrixBase<T, dataSize>& operator= (ConstSizeMatrixBase<T, dataSize>&& other) noexcept
-	//{
-	//	std::swap(*this, other); //seems to work for static data?
-	//	return *this;
-
-	//	//std::swap(this->numberOfRows, other.numberOfRows);
-	//	//std::swap(this->numberOfColumns, other.numberOfColumns);
-	//	//return *this;
-	//}
-
-	//! add two matrices m1 and m2 (for each component); creates new ConstSizeMatrixBase / no memory allocation
-	friend ConstSizeMatrixBase<T,dataSize> operator+ (const ConstSizeMatrixBase& m1, const ConstSizeMatrixBase& m2)
-	{
-		CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfColumns() && m1.NumberOfRows() == m2.NumberOfRows(),
-			"operator+(ConstSizeMatrixBase,ConstSizeMatrixBase): Size mismatch");
-		//CHECKandTHROW((m1.NumberOfColumns()*m1.NumberOfRows() <= dataSize),
-		//	"ConstSizeMatrixBase::operator+(const ConstSizeMatrixBase&, const ConstSizeMatrixBase&): dataSize too small");
-
-		ConstSizeMatrixBase<T, dataSize> result(m1.NumberOfColumns(), m1.NumberOfRows());
-		Index cnt = 0;
-		for (auto &item : result)
-		{
-			item = m1.GetItem(cnt) + m2.GetItem(cnt);
-			cnt++; //do not put cnt++ in above line, because order of summation may be interchanged ==> wrong ++ !!!
-		}
-		return result;
-	}
-
-	//! subtract matrix m2 from m1 (for each component); creates new ConstSizeMatrixBase / no memory allocation
-	friend ConstSizeMatrixBase<T, dataSize> operator- (const ConstSizeMatrixBase& m1, const ConstSizeMatrixBase& m2)
-	{
-		CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfColumns() && m1.NumberOfRows() == m2.NumberOfRows(),
-			"operator+(ConstSizeMatrixBase,ConstSizeMatrixBase): Size mismatch");
-		//CHECKandTHROW((m1.NumberOfColumns()*m1.NumberOfRows() <= dataSize),
-		//	"ConstSizeMatrixBase::operator+(const ConstSizeMatrixBase&, const ConstSizeMatrixBase&): dataSize too small");
-
-		ConstSizeMatrixBase<T, dataSize> result(m1.NumberOfColumns(), m1.NumberOfRows());
-		Index cnt = 0;
-		for (auto &item : result)
-		{
-			item = m1.GetItem(cnt) - m2.GetItem(cnt);
-			cnt++; //do not put cnt++ in above line, because order of summation may be interchanged ==> wrong ++ !!!
-		}
-		return result;
-	}
-
-    //! multiply matrix m1*m2 (matrix multiplication); algorithm has order O(n^3); creates new ConstSizeMatrixBase / no memory allocation
-    friend ConstSizeMatrixBase<T, dataSize> operator* (const ConstSizeMatrixBase& m1, const ConstSizeMatrixBase& m2)
-    {
-        CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfRows(),
-            "operator*(ConstSizeMatrixBase,ConstSizeMatrixBase): Size mismatch");
-		//CHECKandTHROW((m1.NumberOfRows()*m2.NumberOfColumns() <= dataSize),
-		//	"ConstSizeMatrixBase::operator*(const ConstSizeMatrixBase&, const ConstSizeMatrixBase&): dataSize too small");
-
-        ConstSizeMatrixBase<T, dataSize> result(m1.NumberOfRows(), m2.NumberOfColumns());
-
-        for (Index i = 0; i < m2.NumberOfColumns(); i++) 
-        {
-            for (Index j = 0; j < m1.NumberOfRows(); j++)
-            {
-                T value = 0;
-                for (Index k = 0; k < m1.NumberOfColumns(); k++)
-                {
-                    value += m1(j, k)*m2(k,i);
-                }
-                result(j,i) = value;
-            }
-        }
-        return result;
-    }
-
-    //! multiply matrix with scalar value; creates new ConstSizeMatrixBase / no memory allocation
-    friend ConstSizeMatrixBase operator* (const ConstSizeMatrixBase& matrix, const T& value)
-    {
-        ConstSizeMatrixBase<T, dataSize> result = matrix;
-        result *= value;
-        return result;
-    }
-
-    //! multiply scalar value with matrix; creates new ConstSizeMatrixBase / no memory allocation
-    friend ConstSizeMatrixBase operator* (const T& value, const ConstSizeMatrixBase& matrix)
-    {
-		ConstSizeMatrixBase<T, dataSize> result = matrix;
-		result *= value;
-		return result;
-	}
-
-	//does not work!!!
-	//template<class TVector, Index dataSize2>
-	//friend SlimVectorBase<T, dataSize2> operator*(const ConstSizeMatrixBase& matrix, const TVector& vector)
-
-	//leads to problems, would also be used for 4x3 matrices!!!
-	//friend SlimVectorBase<T, 3> operator*(const ConstSizeMatrixBase& matrix, const SlimVectorBase<T, 3>& vector)
-
-
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // EXTENDED FUNCTIONS
-    // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-    //! computes and returns the transposed of *this (does not change *this)
-    virtual ConstSizeMatrixBase<T, dataSize> GetTransposed() const
-    {
-        ConstSizeMatrixBase<T, dataSize> result(this->numberOfColumns, this->numberOfRows);
-
-        for (Index i = 0; i < this->numberOfRows; i++) {
-            for (Index j = 0; j < this->numberOfColumns; j++) {
-                result(j,i) = (*this)(i,j);
-            }
-        }
-        return result;
-    }
-
-	//! get fast inverse for 1D, 2D and 3D case
-	virtual ConstSizeMatrixBase<T, dataSize> GetInverse() const
-	{
-		CHECKandTHROW(this->numberOfColumns <= 3 && this->numberOfColumns == this->numberOfRows, "ConstSizeMatrixBase::GetInverse(): only implemented for dimensions (1x1, 2x2 and 3x3)");
-
-		switch (this->numberOfColumns)
-		{
-			case 1: 
-			{
-				T x = (*this)(0, 0);
-				CHECKandTHROW(x != 0, "Matrix1D::Invert: matrix is singular");
-				return ConstSizeMatrixBase<T, dataSize>(1, 1, { (T)1. / x });
-				break;
-			}
-			case 2: 
-			{
-				//m=[a b; c d]
-				//minv = 1/(ad-bc)[d -b; -c a]
-				ConstSizeMatrixBase<T, dataSize> result(2, 2);
-				T det = ((*this)(0, 0)*(*this)(1, 1) - (*this)(0, 1)*(*this)(1, 0));
-				CHECKandTHROW(det != 0, "Matrix2D::Invert: matrix is singular");
-
-				T invdet = (T)1 / det;
-
-				result(0, 0) = invdet * (*this)(1, 1);
-				result(0, 1) =-invdet * (*this)(0, 1);
-				result(1, 0) =-invdet * (*this)(1, 0);
-				result(1, 1) = invdet * (*this)(0, 0);
-				return result;
-				break;
-			}
-			case 3:
-			{
-				const ConstSizeMatrixBase<T, dataSize>& m = *this;
-				T det = m(0, 0) * (m(1, 1) * m(2, 2) - m(2, 1) * m(1, 2)) - m(0, 1) * (m(1, 0) * m(2, 2) - m(1, 2) * m(2, 0)) + m(0, 2) * (m(1, 0) * m(2, 1) - m(1, 1) * m(2, 0));
-				CHECKandTHROW(det != 0, "Matrix3D::Invert: matrix is singular");
-
-				T invdet = (T)1 / det;
-
-				ConstSizeMatrixBase<T, dataSize> result(3,3); // inverse of matrix m
-				result(0, 0) = invdet * (m(1, 1) * m(2, 2) - m(2, 1) * m(1, 2));
-				result(0, 1) = invdet * (m(0, 2) * m(2, 1) - m(0, 1) * m(2, 2));
-				result(0, 2) = invdet * (m(0, 1) * m(1, 2) - m(0, 2) * m(1, 1));
-				result(1, 0) = invdet * (m(1, 2) * m(2, 0) - m(1, 0) * m(2, 2));
-				result(1, 1) = invdet * (m(0, 0) * m(2, 2) - m(0, 2) * m(2, 0));
-				result(1, 2) = invdet * (m(1, 0) * m(0, 2) - m(0, 0) * m(1, 2));
-				result(2, 0) = invdet * (m(1, 0) * m(2, 1) - m(2, 0) * m(1, 1));
-				result(2, 1) = invdet * (m(2, 0) * m(0, 1) - m(0, 0) * m(2, 1));
-				result(2, 2) = invdet * (m(0, 0) * m(1, 1) - m(1, 0) * m(0, 1));
-				return result;
-				break;
-			}
-			default: //may not occur due to static assertion
-				return *this;
-		}
-	}
-
-};
-
-#endif
 
 //multiplication must be defined outside and with "9" ConstSizeMatrixBase<T, 9>, otherwise this operator is also used for 4x3 matrices
-template<typename T>
-SlimVectorBase<T, 3> operator*(const ConstSizeMatrixBase<T, 9>& matrix, const SlimVectorBase<T, 3>& vector)
+template<typename T, typename T2>
+SlimVectorBase<T, 3> operator*(const ConstSizeMatrixBase<T, 9>& matrix, const SlimVectorBase<T2, 3>& vector)
 {
 	CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
 		"operator*(ConstSizeMatrixBase,SlimVectorBase<T, 3>): Size mismatch");
@@ -1101,8 +759,8 @@ SlimVectorBase<T, 3> operator*(const ConstSizeMatrixBase<T, 9>& matrix, const Sl
 }
 
 //multiplication must be defined outside and with "9" ConstSizeMatrixBase<T, 9>, otherwise this operator is also used for 4x3 matrices
-template<typename T>
-SlimVectorBase<T, 3> operator*(const SlimVectorBase<T, 3>& vector, const ConstSizeMatrixBase<T, 9>& matrix)
+template<typename T, typename T2>
+SlimVectorBase<T, 3> operator*(const SlimVectorBase<T2, 3>& vector, const ConstSizeMatrixBase<T, 9>& matrix)
 {
 	CHECKandTHROW(matrix.NumberOfRows() == vector.NumberOfItems(),
 		"operator*(SlimVectorBase<T, 3>,ConstSizeMatrixBase): Size mismatch");

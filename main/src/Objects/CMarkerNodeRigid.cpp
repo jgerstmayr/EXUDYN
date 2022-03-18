@@ -61,3 +61,10 @@ void CMarkerNodeRigid::ComputeMarkerData(const CSystemData& cSystemData, bool co
 
 }
 
+//! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(J.T @ v)/dq
+void CMarkerNodeRigid::ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const
+{
+	Vector3D v3D({ v6D[3], v6D[4], v6D[5]}); //rotation part, e.g., torque
+	((CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]))->GetRotationJacobianTTimesVector_q(v3D, markerData.jacobianDerivative);
+}
+

@@ -33,64 +33,84 @@
 class Box3D
 {
 public:
-	Box3D()
+	//! create box; by default, it is set to an empty box
+	Box3D(bool clear=true)
 	{
-		Clear();
+		if (clear)
+		{
+			Clear();
+		}
 		////set empty box:
 		//pmin = Vector3D({ EXUstd::MAXREAL, EXUstd::MAXREAL, EXUstd::MAXREAL });
 		//pmax = Vector3D({EXUstd::LOWESTREAL, EXUstd::LOWESTREAL, EXUstd::LOWESTREAL});
 	}
 	Box3D(const Vector3D& p1, const Vector3D& p2)
 	{
-		pmin.X() = EXUstd::Minimum(p1.X(),p2.X());
-		pmin.Y() = EXUstd::Minimum(p1.Y(),p2.Y());
-		pmin.Z() = EXUstd::Minimum(p1.Z(),p2.Z());
+		pmin[0] = EXUstd::Minimum(p1.X(),p2.X());
+		pmin[1] = EXUstd::Minimum(p1.Y(),p2.Y());
+		pmin[2] = EXUstd::Minimum(p1.Z(),p2.Z());
 
-		pmax.X() = EXUstd::Maximum(p1.X(),p2.X());
-		pmax.Y() = EXUstd::Maximum(p1.Y(),p2.Y());
-		pmax.Z() = EXUstd::Maximum(p1.Z(),p2.Z());
+		pmax[0] = EXUstd::Maximum(p1.X(),p2.X());
+		pmax[1] = EXUstd::Maximum(p1.Y(),p2.Y());
+		pmax[2] = EXUstd::Maximum(p1.Z(),p2.Z());
 	}
 	Box3D(const Box3D& b)
 	{
-		pmin = b.pmin;
-		pmax = b.pmax;
+		pmin[0] = b.pmin[0];
+		pmin[1] = b.pmin[1];
+		pmin[2] = b.pmin[2];
+		pmax[0] = b.pmax[0];
+		pmax[1] = b.pmax[1];
+		pmax[2] = b.pmax[2];
 	}
 	Box3D(const Vector3D& c, Real r)
 	{
-		pmin = c;
-		pmax = c;
+		pmin[0] = c.X();
+		pmin[1] = c.Y();
+		pmin[2] = c.Z();
+		pmax[0] = c.X();
+		pmax[1] = c.Y();
+		pmax[2] = c.Z();
 		Increase(r);
 	}
 
 	//! check if box is empty, only based on x-value!
 	bool Empty() const 
 	{
-		if (pmin.X() == EXUstd::MAXREAL) {return true;}
+		if (pmin[0] == EXUstd::MAXREAL) {return true;}
 		return false;
 	}
 	void Clear()
 	{
 		//set empty box:
-		pmin = Vector3D({ EXUstd::MAXREAL, EXUstd::MAXREAL, EXUstd::MAXREAL });
-		pmax = Vector3D({ EXUstd::LOWESTREAL, EXUstd::LOWESTREAL, EXUstd::LOWESTREAL });
+		pmin[0] = EXUstd::MAXREAL;
+		pmin[1] = EXUstd::MAXREAL;
+		pmin[2] = EXUstd::MAXREAL;
+		pmax[0] = EXUstd::LOWESTREAL;
+		pmax[1] = EXUstd::LOWESTREAL;
+		pmax[2] = EXUstd::LOWESTREAL;
 	}
 
 	void Add(const Vector3D & p)
 	{
 		if (Empty())
 		{
-			pmin = p;
-			pmax = p;
+			pmin[0] = p.X();
+			pmin[1] = p.Y();
+			pmin[2] = p.Z();
+			pmax[0] = p.X();
+			pmax[1] = p.Y();
+			pmax[2] = p.Z();
 		}
 		else
 		{
-			pmin.X() = EXUstd::Minimum(pmin.X(),p.X());
-			pmin.Y() = EXUstd::Minimum(pmin.Y(),p.Y());
-			pmin.Z() = EXUstd::Minimum(pmin.Z(),p.Z());
+			pmin[0] = EXUstd::Minimum(pmin[0], p.X());
+			pmin[1] = EXUstd::Minimum(pmin[1], p.Y());
+			pmin[2] = EXUstd::Minimum(pmin[2], p.Z());
 
-			pmax.X() = EXUstd::Maximum(pmax.X(),p.X());
-			pmax.Y() = EXUstd::Maximum(pmax.Y(),p.Y());
-			pmax.Z() = EXUstd::Maximum(pmax.Z(),p.Z());
+			pmax[0] = EXUstd::Maximum(pmax[0], p.X());
+			pmax[1] = EXUstd::Maximum(pmax[1], p.Y());
+			pmax[2] = EXUstd::Maximum(pmax[2], p.Z());
 		}
 	}
 	void Add(const Box3D& b)
@@ -99,38 +119,68 @@ public:
 
 		if (Empty())
 		{
-			pmin = b.PMin();
-			pmax = b.PMax();
+			pmin[0] = b.pmin[0];
+			pmin[1] = b.pmin[1];
+			pmin[2] = b.pmin[2];
+			pmax[0] = b.pmax[0];
+			pmax[1] = b.pmax[1];
+			pmax[2] = b.pmax[2];
 		}
 		else
 		{
-			pmin.X() = EXUstd::Minimum(pmin.X(),b.pmin.X());
-			pmin.Y() = EXUstd::Minimum(pmin.Y(),b.pmin.Y());
-			pmin.Z() = EXUstd::Minimum(pmin.Z(),b.pmin.Z());
+			pmin[0] = EXUstd::Minimum(pmin[0], b.pmin[0]);
+			pmin[1] = EXUstd::Minimum(pmin[1], b.pmin[1]);
+			pmin[2] = EXUstd::Minimum(pmin[2], b.pmin[2]);
 
-			pmax.X() = EXUstd::Maximum(pmax.X(),b.pmax.X());
-			pmax.Y() = EXUstd::Maximum(pmax.Y(),b.pmax.Y());
-			pmax.Z() = EXUstd::Maximum(pmax.Z(),b.pmax.Z());
+			pmax[0] = EXUstd::Maximum(pmax[0], b.pmax[0]);
+			pmax[1] = EXUstd::Maximum(pmax[1], b.pmax[1]);
+			pmax[2] = EXUstd::Maximum(pmax[2], b.pmax[2]);
 		}
 	}
-	const Vector3D& PMin() const { return pmin; }
-	const Vector3D& PMax() const { return pmax; }
-	Vector3D& PMin() { return pmin; }
-	Vector3D& PMax() { return pmax; }
+	//! get c-arrays
+	const Real* PMinC() const { return pmin; }
+	const Real* PMaxC() const { return pmax; }
+
+	//! convert to Vector3D
+	Vector3D PMin() const { return Vector3D({ pmin[0], pmin[1], pmin[2] }); }
+	Vector3D PMax() const { return Vector3D({ pmax[0], pmax[1], pmax[2] }); }
+
+	//! direct read access to Reals:
+	EXUINLINE const Real& PMinX() const { return pmin[0]; }
+	EXUINLINE const Real& PMinY() const { return pmin[1]; }
+	EXUINLINE const Real& PMinZ() const { return pmin[2]; }
+	EXUINLINE const Real& PMaxX() const { return pmax[0]; }
+	EXUINLINE const Real& PMaxY() const { return pmax[1]; }
+	EXUINLINE const Real& PMaxZ() const { return pmax[2]; }
+
+	//! direct write access to Reals:
+	EXUINLINE Real& PMinX() { return pmin[0]; }
+	EXUINLINE Real& PMinY() { return pmin[1]; }
+	EXUINLINE Real& PMinZ() { return pmin[2]; }
+	EXUINLINE Real& PMaxX() { return pmax[0]; }
+	EXUINLINE Real& PMaxY() { return pmax[1]; }
+	EXUINLINE Real& PMaxZ() { return pmax[2]; }
+
+
+	//! set with Vector3D
+	EXUINLINE void SetPMin(const Vector3D& p) { pmin[0] = p[0]; pmin[1] = p[1]; pmin[2] = p[2]; }
+	EXUINLINE void SetPMax(const Vector3D& p) { pmax[0] = p[0]; pmax[1] = p[1]; pmax[2] = p[2]; }
+
+	//! some math operations on boxes
 	const Real SizeX() const {return pmax[0]-pmin[0];}
 	const Real SizeY() const {return pmax[1]-pmin[1];}
 	const Real SizeZ() const {return pmax[2]-pmin[2];}
-	Vector3D Center() const {return 0.5*(pmin+pmax);}
-	Real Radius() const {return 0.5*(pmax-pmin).GetL2Norm();}
+	Vector3D Center() const {return Vector3D({ 0.5*(pmin[0]+pmax[0]), 0.5*(pmin[1] + pmax[1]), 0.5*(pmin[2] + pmax[2]) });}
+	Real Radius() const {return 0.5*(PMax() - PMin()).GetL2Norm();}
 
 	void Increase(Real x, Real y, Real z)
 	{
-		pmin.X() -= x;
-		pmin.Y() -= y;
-		pmin.Z() -= z;
-		pmax.X() += x;
-		pmax.Y() += y;
-		pmax.Z() += z;
+		pmin[0] -= x;
+		pmin[1] -= y;
+		pmin[2] -= z;
+		pmax[0] += x;
+		pmax[1] += y;
+		pmax[2] += z;
 	}
 	void Increase(Real x) 
 	{
@@ -138,12 +188,14 @@ public:
 	}
   void InflateFactor(Real x)
 	{
-		Vector3D pmi = PMin();
-		Vector3D pma = PMax();
 		Vector3D pc = Center();
-		pmin = pc + ( pmi-pc ) * x;
-		pmax = pc + ( pma-pc ) * x;
-	}
+		pmin[0] = pc[0] + (pmin[0] - pc[0]) * x;
+		pmin[1] = pc[1] + (pmin[1] - pc[1]) * x;
+		pmin[2] = pc[2] + (pmin[2] - pc[2]) * x;
+		pmax[0] = pc[0] + (pmax[0] - pc[0]) * x;
+		pmax[1] = pc[1] + (pmax[1] - pc[1]) * x;
+		pmax[2] = pc[2] + (pmax[2] - pc[2]) * x;
+  }
 
 	//! check if box b intersects with this (boundary included)
 	bool Intersect(const Box3D& b) const 
@@ -176,7 +228,9 @@ public:
 	}
 
 private:
-	Vector3D pmin, pmax;
+	//Vector3D pmin, pmax; //maybe not that efficient because no simple type; gives warning in gcc
+	Real pmin[3];
+	Real pmax[3];
 };
 
 
@@ -287,12 +341,12 @@ public:
 	//return 6 indices for box: minx, maxx, miny, maxy, minz, maxz
 	void GetBoxIndizes(const Box3D& b, Index6& ind) const
 	{
-		ind[0] = IndX(b.PMin().X());
-		ind[1] = IndX(b.PMax().X());
-		ind[2] = IndY(b.PMin().Y());
-		ind[3] = IndY(b.PMax().Y());
-		ind[4] = IndZ(b.PMin().Z());
-		ind[5] = IndZ(b.PMax().Z());
+		ind[0] = IndX(b.PMinX());
+		ind[1] = IndX(b.PMaxX());
+		ind[2] = IndY(b.PMinY());
+		ind[3] = IndY(b.PMaxY());
+		ind[4] = IndZ(b.PMinZ());
+		ind[5] = IndZ(b.PMaxZ());
 	}
 
 	//return items in box defined by 6 indices: minx, maxx, miny, maxy, minz, maxz
@@ -346,12 +400,12 @@ public:
 	{
 		items.SetNumberOfItems(0);
 		Index ind[6];
-		ind[0] = IndX(b.PMin().X());
-		ind[1] = IndX(b.PMax().X());
-		ind[2] = IndY(b.PMin().Y());
-		ind[3] = IndY(b.PMax().Y());
-		ind[4] = IndZ(b.PMin().Z());
-		ind[5] = IndZ(b.PMax().Z());
+		ind[0] = IndX(b.PMinX());
+		ind[1] = IndX(b.PMaxX());
+		ind[2] = IndY(b.PMinY());
+		ind[3] = IndY(b.PMaxY());
+		ind[4] = IndZ(b.PMinZ());
+		ind[5] = IndZ(b.PMaxZ());
 		Index ix, iy, iz, i;
 		ArrayIndex* id;
 
@@ -372,17 +426,18 @@ public:
 	}
 
 	//get items in box b; do not add duplicates by using indexFlags array, having one bool per index, all initialized with false
-	//leave out items with index >= currentIndex
-	void GetSingleItemsInBoxHalf(const Box3D& b, ArrayIndex& items, ResizableArray<bool>& indexFlags, Index currentIndex, bool clearIndexFlags = true) const
+	//leave out items with index >= maxIndex or index < minIndex
+	void GetSingleItemsInBoxMaxMinIndex(const Box3D& b, ArrayIndex& items, ResizableArray<bool>& indexFlags, 
+		Index maxIndex, Index minIndex = 0, bool clearIndexFlags = true) const
 	{
 		items.SetNumberOfItems(0);
 		Index ind[6];
-		ind[0] = IndX(b.PMin().X());
-		ind[1] = IndX(b.PMax().X());
-		ind[2] = IndY(b.PMin().Y());
-		ind[3] = IndY(b.PMax().Y());
-		ind[4] = IndZ(b.PMin().Z());
-		ind[5] = IndZ(b.PMax().Z());
+		ind[0] = IndX(b.PMinX());
+		ind[1] = IndX(b.PMaxX());
+		ind[2] = IndY(b.PMinY());
+		ind[3] = IndY(b.PMaxY());
+		ind[4] = IndZ(b.PMinZ());
+		ind[5] = IndZ(b.PMaxZ());
 		Index ix, iy, iz, i;
 		ArrayIndex* id;
 
@@ -396,7 +451,7 @@ public:
 					for (i = 0; i < id->NumberOfItems(); i++)
 					{
 						Index newItem = id->GetItemUnsafe(i);
-						if (!indexFlags[newItem] && newItem < currentIndex)
+						if (!indexFlags[newItem] && (newItem < maxIndex) && (newItem >= minIndex))
 						{
 							items.AppendPure(newItem);
 							indexFlags[newItem] = true;
@@ -415,17 +470,62 @@ public:
 		}
 	}
 	
+	void GetSingleItemsInBoxMaxMinIndex(const Box3D& b, ArrayIndex& items, ResizableArray<bool>& indexFlags,
+		const ResizableArray<Box3D>& allBoundingBoxes, Index maxIndex, Index minIndex = 0, bool clearIndexFlags = true) const
+	{
+		items.SetNumberOfItems(0);
+		Index ind[6];
+		ind[0] = IndX(b.PMinX());
+		ind[1] = IndX(b.PMaxX());
+		ind[2] = IndY(b.PMinY());
+		ind[3] = IndY(b.PMaxY());
+		ind[4] = IndZ(b.PMinZ());
+		ind[5] = IndZ(b.PMaxZ());
+		Index ix, iy, iz, i;
+		ArrayIndex* id;
+
+		for (ix = ind[0]; ix <= ind[1]; ix++)
+		{
+			for (iy = ind[2]; iy <= ind[3]; iy++)
+			{
+				for (iz = ind[4]; iz <= ind[5]; iz++)
+				{
+					id = &data[GlobalIndex(ix, iy, iz)];
+					for (i = 0; i < id->NumberOfItems(); i++)
+					{
+						Index newItem = id->GetItemUnsafe(i);
+						if (!indexFlags[newItem] && 
+							(newItem < maxIndex) && (newItem >= minIndex) &&
+							b.Intersect(allBoundingBoxes[newItem]))
+						{
+							items.AppendPure(newItem);
+							indexFlags[newItem] = true;
+						}
+					}
+				}
+			}
+		}
+		//reset indexFlags back to original state, containing only false
+		if (clearIndexFlags)
+		{
+			for (Index i : items)
+			{
+				indexFlags[i] = false;
+			}
+		}
+	}
+
 	//get items in box b; do not add duplicates by using indexFlags array, having one bool per index, all initialized with false
 	void GetSingleItemsInBox(const Box3D& b, ArrayIndex& items, ResizableArray<bool>& indexFlags, bool clearIndexFlags=true) const
 	{
 		items.SetNumberOfItems(0);
 		Index ind[6];
-		ind[0] = IndX(b.PMin().X());
-		ind[1] = IndX(b.PMax().X());
-		ind[2] = IndY(b.PMin().Y());
-		ind[3] = IndY(b.PMax().Y());
-		ind[4] = IndZ(b.PMin().Z());
-		ind[5] = IndZ(b.PMax().Z());
+		ind[0] = IndX(b.PMinX());
+		ind[1] = IndX(b.PMaxX());
+		ind[2] = IndY(b.PMinY());
+		ind[3] = IndY(b.PMaxY());
+		ind[4] = IndZ(b.PMinZ());
+		ind[5] = IndZ(b.PMaxZ());
 		Index ix, iy, iz, i;
 		ArrayIndex* id;
 
@@ -462,12 +562,12 @@ public:
 	void AddItemsInBox(const Box3D& b, ArrayIndex& items) const
 	{
 		Index ind[6];
-		ind[0] = IndX(b.PMin().X());
-		ind[1] = IndX(b.PMax().X());
-		ind[2] = IndY(b.PMin().Y());
-		ind[3] = IndY(b.PMax().Y());
-		ind[4] = IndZ(b.PMin().Z());
-		ind[5] = IndZ(b.PMax().Z());
+		ind[0] = IndX(b.PMinX());
+		ind[1] = IndX(b.PMaxX());
+		ind[2] = IndY(b.PMinY());
+		ind[3] = IndY(b.PMaxY());
+		ind[4] = IndZ(b.PMinZ());
+		ind[5] = IndZ(b.PMaxZ());
 		Index ix, iy, iz, i;
 		ArrayIndex* id;
 
@@ -514,12 +614,12 @@ public:
 	//! add item to search tree
 	void AddItem(const Box3D& b, Index identifier)
 	{
-		Index pMinX = IndX(b.PMin().X());
-		Index pMaxX = IndX(b.PMax().X());
-		Index pMinY = IndY(b.PMin().Y());
-		Index pMaxY = IndY(b.PMax().Y());
-		Index pMinZ = IndZ(b.PMin().Z());
-		Index pMaxZ = IndZ(b.PMax().Z());
+		Index pMinX = IndX(b.PMinX());
+		Index pMaxX = IndX(b.PMaxX());
+		Index pMinY = IndY(b.PMinY());
+		Index pMaxY = IndY(b.PMaxY());
+		Index pMinZ = IndZ(b.PMinZ());
+		Index pMaxZ = IndZ(b.PMaxZ());
 		//Index gi = iX + iY * sx + iZ * (sx*sy);
 		Index sxsy = sx * sy;
 		Index gi;
@@ -554,7 +654,7 @@ public:
 	{
 		//(Index) would behave wrong between -1 to +1: (int)0.8 => 0, (int)(-0.8) => 0
 		//        floor(...) corrects this: floor(0.8) => 0, fllor(-0.8) => -1
-		Index i = (Index)floor(((x - box.PMin().X())*(Real)sx) / box.SizeX());
+		Index i = (Index)floor(((x - box.PMinX())*(Real)sx) / box.SizeX());
 		if (i < 0) { i = 0; }
 		if (i >= sx) { i = sx - 1; }
 		return i;
@@ -563,7 +663,7 @@ public:
 	//! return y-index for a Real y-value in Box
 	Index IndY(Real y) const
 	{
-		Index i = (Index)floor(((y - box.PMin().Y())*(Real)sy) / box.SizeY());
+		Index i = (Index)floor(((y - box.PMinY())*(Real)sy) / box.SizeY());
 		if (i < 0) { i = 0; }
 		if (i >= sy) { i = sy - 1; }
 		return i;
@@ -572,7 +672,7 @@ public:
 	//! return z-index for a Real z-value in Box
 	Index IndZ(Real z) const
 	{
-		Index i = (Index)floor(((z - box.PMin().Z())*(Real)sz) / box.SizeZ());
+		Index i = (Index)floor(((z - box.PMinZ())*(Real)sz) / box.SizeZ());
 		if (i < 0) { i = 0; }
 		if (i >= sz) { i = sz - 1; }
 		return i;

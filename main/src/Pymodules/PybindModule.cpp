@@ -101,6 +101,15 @@ extern Index matrix_delete_counts; //global counter of item deallocations; is in
 extern Index linkedDataVectorCast_counts; //global counter for unwanted type conversion from LinkedDataVector to Vector
 #endif
 
+#pragma message("==========================")
+#ifdef use_AVX2
+#pragma message("** compiled with AVX2 **")
+#elif defined(use_AVX512)
+#pragma message("** compiled with AVX512 **")
+#else
+#pragma message("** compiled without AVX **")
+#endif
+
 ////test verified with numpy:
 //Matrix3D M(3, 3, { 0.1,2,0.3,-0.2,2,0.7,0.1,0.11,-3 });
 //pout << "M=" << M << "\n";
@@ -119,9 +128,7 @@ py::str PyGetVersionString()
 #ifndef EXUDYN_RELEASE
 	str += "(pre-release)";
 #pragma message("====================================")
-#pragma message("====================================")
 #pragma message("EXUDYN not compiled in release mode!")
-#pragma message("====================================")
 #pragma message("====================================")
 #endif
 #ifdef __FAST_EXUDYN_LINALG
@@ -143,6 +150,13 @@ void PySetWriteToFile(STDstring filename, bool flagWriteToFile, bool flagAppend)
 {
 	outputBuffer.SetWriteToFile(filename, flagWriteToFile, flagAppend);
 } 
+
+extern bool suppressWarnings; //!< global flag to suppress warnings
+//! set flag to suppress (=true) or enable (=false) warnings
+void PySuppressWarnings(bool flag)
+{
+	suppressWarnings = flag;
+}
 
 ////redirect printing via exudyn, such that all output can be streamed to file ...
 //void PyPrint(py::object pyObject)
@@ -488,7 +502,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//private: .def_readwrite("index", &NodeIndex::index)
 		.def("GetTypeString", &NodeIndex::GetTypeString,
-			"get type string for identification in python")
+			"get type string for identification in Python")
 		.def("GetIndex", &NodeIndex::GetIndex,
 			"get index converted to index / int")
 		.def("SetIndex", &NodeIndex::SetIndex,
@@ -510,7 +524,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//private: .def_readwrite("index", &ObjectIndex::index)
 		.def("GetTypeString", &ObjectIndex::GetTypeString,
-			"get type string for identification in python")
+			"get type string for identification in Python")
 		.def("GetIndex", &ObjectIndex::GetIndex,
 			"get index converted to index / int")
 		.def("SetIndex", &ObjectIndex::SetIndex,
@@ -532,7 +546,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//private: .def_readwrite("index", &MarkerIndex::index)
 		.def("GetTypeString", &MarkerIndex::GetTypeString,
-			"get type string for identification in python")
+			"get type string for identification in Python")
 		.def("GetIndex", &MarkerIndex::GetIndex,
 			"get index converted to index / int")
 		.def("SetIndex", &MarkerIndex::SetIndex,
@@ -554,7 +568,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//private: .def_readwrite("index", &LoadIndex::index)
 		.def("GetTypeString", &LoadIndex::GetTypeString,
-			"get type string for identification in python")
+			"get type string for identification in Python")
 		.def("GetIndex", &LoadIndex::GetIndex,
 			"get index converted to index / int")
 		.def("SetIndex", &LoadIndex::SetIndex,
@@ -576,7 +590,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//private: .def_readwrite("index", &SensorIndex::index)
 		.def("GetTypeString", &SensorIndex::GetTypeString,
-			"get type string for identification in python")
+			"get type string for identification in Python")
 		.def("GetIndex", &SensorIndex::GetIndex,
 			"get index converted to index / int")
 		.def("SetIndex", &SensorIndex::SetIndex,
@@ -600,7 +614,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 	//	.def(py::init<std::vector<NodeIndex>>())
 	//	//+++++++++++++++++++++++++++++++++++++++++++
 	//	.def("GetTypeString", &ArrayNodeIndex::GetTypeString,
-	//		"get type string for identification in python")
+	//		"get type string for identification in Python")
 	//	.def("GetArrayIndex", &ArrayNodeIndex::GetArrayIndex,
 	//		"get index converted to index / int")
 	//	.def("SetArrayIndex", &ArrayNodeIndex::SetArrayIndex,

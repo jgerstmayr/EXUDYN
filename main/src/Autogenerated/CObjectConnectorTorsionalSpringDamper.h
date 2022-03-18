@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-11-14  14:42:30 (last modified)
+* @date         2022-03-16  23:48:44 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -36,9 +36,10 @@ public: // AUTO:
     Matrix3D rotationMarker0;                     //!< AUTO: local rotation matrix for marker 0; transforms joint into marker coordinates
     Matrix3D rotationMarker1;                     //!< AUTO: local rotation matrix for marker 1; transforms joint into marker coordinates
     Real offset;                                  //!< AUTO: rotational offset considered in the spring torque calculation
+    Real velocityOffset;                          //!< AUTO: angular velocity offset considered in the damper torque calculation
     Real torque;                                  //!< AUTO: additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control)
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
-    std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)> springTorqueUserFunction;//!< AUTO: A python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below
+    std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)> springTorqueUserFunction;//!< AUTO: A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorTorsionalSpringDamperParameters()
     {
@@ -49,6 +50,7 @@ public: // AUTO:
         rotationMarker0 = EXUmath::unitMatrix3D;
         rotationMarker1 = EXUmath::unitMatrix3D;
         offset = 0.;
+        velocityOffset = 0.;
         torque = 0.;
         activeConnector = true;
         springTorqueUserFunction = 0;

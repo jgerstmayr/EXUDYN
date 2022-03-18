@@ -23,6 +23,9 @@
 #ifdef USE_GLFW_GRAPHICS
 using namespace std::string_literals; // enables s-suffix for std::string literals
 
+//if this flag is set, the GLFW thread will be detached (which may be advantageous is stoprenderer is not called); otherwise it is a joinable thread
+#define detachGLFWthread 
+
 #include <ostream>
 //#include <stdlib.h> //only works in MSVC for initialization with std::vector
 #include <array>
@@ -399,7 +402,7 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 		//process keys for move, rotate, zoom
 		float rotStep = visSettings->interactive.keypressRotationStep; //degrees
 		float transStep = visSettings->interactive.keypressTranslationStep * state->zoom; //degrees
-		if (mods == GLFW_MOD_CONTROL) //only for rotStep and transStep
+		if ((mods & GLFW_MOD_CONTROL) != 0) //only for rotStep and transStep
 		{
 			rotStep *= 0.1f;
 			transStep *= 0.1f;
@@ -407,12 +410,22 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 
 		float zoomStep = visSettings->interactive.zoomStepFactor;
 		Float3 incRot({ 0.f,0.f,0.f });
+		bool hasShift = (mods & GLFW_MOD_SHIFT) != 0;
+		bool hasAlt = (mods & GLFW_MOD_ALT) != 0;
+
 		if (key == GLFW_KEY_KP_2 && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[0] = rotStep; }
 		if (key == GLFW_KEY_KP_8 && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[0] = -rotStep; }
 		if (key == GLFW_KEY_KP_4 && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[1] = rotStep; }
 		if (key == GLFW_KEY_KP_6 && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[1] = -rotStep; }
 		if (key == GLFW_KEY_KP_7 && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[2] = rotStep; }
 		if (key == GLFW_KEY_KP_9 && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[2] = -rotStep; }
+
+		if (hasShift && key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT))	  { incRot[0] = rotStep; }
+		if (hasShift && key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT))  { incRot[0] = -rotStep; }
+		if (hasShift && key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[1] = rotStep; }
+		if (hasShift && key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[1] = -rotStep; }
+		if (hasAlt && key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[2] = rotStep; }
+		if (hasAlt && key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[2] = -rotStep; }
 
 		if (incRot[0] + incRot[1] + incRot[2] != 0.f)
 		{
@@ -553,12 +566,11 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 		}
 
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-		if (key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[1] -= transStep; }
-		if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[1] += transStep; }
-		if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[0] += transStep; }
-		if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[0] -= transStep; }
+		
+		if (!hasShift && key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[1] -= transStep; }
+		if (!hasShift && key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[1] += transStep; }
+		if (!hasShift && key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[0] += transStep; }
+		if (!hasShift && key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[0] -= transStep; }
 
 		if ((key == GLFW_KEY_KP_SUBTRACT || key == GLFW_KEY_COMMA) && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
@@ -1188,9 +1200,10 @@ void GlfwRenderer::StopRenderer()
 			//after this command, this thread is terminated! ==> nothing will be done any more
 			if (rendererThread.joinable()) //thread is still running from previous call ...
 			{
-				//pout << "join thread ...\n";
+				if (verboseRenderer) { outputBuffer.WriteVisualization("StopRenderer(): second thread join main thread ...\n"); }
+
 				rendererThread.join();
-				//pout << "thread joined\n";
+				if (verboseRenderer) { outputBuffer.WriteVisualization("  ... joined\n"); }
 				//not necessary: rendererThread.~thread(); //check if this is necessary/right ==> will not be called after .joint() ...
 			}
 		}
@@ -1199,161 +1212,210 @@ void GlfwRenderer::StopRenderer()
 			FinishRunLoop(); //shut down
 		}
 	}
+	else
+	{
+		if (useMultiThreadedRendering)
+		{
+			if (rendererThread.joinable()) //thread is still running from previous call ...
+			{
+				if (verboseRenderer) { outputBuffer.WriteVisualization("StopRenderer(): window already closed; now second thread join main thread ...\n"); }
+				//pout << "join thread ...\n";
+				rendererThread.join();
+				if (verboseRenderer) { outputBuffer.WriteVisualization("  ... joined\n"); }
+			}
+		}
+	}
 }
 
 void GlfwRenderer::InitCreateWindow()
 {
-	//this is now running in separate thread, can only output to rendererOut.
-	if (verboseRenderer) { PrintDelayed("InitCreateWindow"); }
-	glfwSetErrorCallback(error_callback);
-	if (!glfwInit())
+	try
 	{
-		if (verboseRenderer) { PrintDelayed("glfwInit failed"); }
+		//this is now running in separate thread, can only output to rendererOut.
+		if (verboseRenderer) { PrintDelayed("InitCreateWindow"); }
+		glfwSetErrorCallback(error_callback);
+		if (!glfwInit())
+		{
+			if (verboseRenderer) { PrintDelayed("glfwInit failed"); }
 
-		rendererError = 1;
-		exit(EXIT_FAILURE);
-	}
-	
+			rendererError = 1;
+			exit(EXIT_FAILURE);
+		}
+
 
 #ifndef __APPLE__
-	if (visSettings->openGL.multiSampling == 2 || visSettings->openGL.multiSampling == 4 || visSettings->openGL.multiSampling == 8 || visSettings->openGL.multiSampling == 16) //only 4 is possible right now ... otherwise no multisampling
-	{
-		glfwWindowHint(GLFW_SAMPLES, (int)visSettings->openGL.multiSampling); //multisampling=4, means 4 times larger buffers! but leads to smoother graphics
-		glEnable(GL_MULTISAMPLE); //usually activated by default, but better to have it anyway
-		if (verboseRenderer) { PrintDelayed("enable GL_MULTISAMPLE"); }
-	}
+		if (visSettings->openGL.multiSampling == 2 || visSettings->openGL.multiSampling == 4 || visSettings->openGL.multiSampling == 8 || visSettings->openGL.multiSampling == 16) //only 4 is possible right now ... otherwise no multisampling
+		{
+			glfwWindowHint(GLFW_SAMPLES, (int)visSettings->openGL.multiSampling); //multisampling=4, means 4 times larger buffers! but leads to smoother graphics
+			glEnable(GL_MULTISAMPLE); //usually activated by default, but better to have it anyway
+			if (verboseRenderer) { PrintDelayed("enable GL_MULTISAMPLE"); }
+		}
 #endif
 
-	if (visSettings->window.alwaysOnTop)
-	{
-		glfwWindowHint(GLFW_FLOATING, GLFW_TRUE); //GLFW_FLOATING (default: GLFW_FALSE)  specifies whether the windowed mode window will be floating above other regular windows, also called topmost or always - on - top.This is intended primarily for debugging purposes and cannot be used to implement proper full screen windows.Possible values are GLFW_TRUE and GLFW_FALSE.
-		if (verboseRenderer) { PrintDelayed("enable GLFW_FLOATING"); }
-	}
-	//glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE); //(default: GLFW_TRUE) specifies whether the windowed mode window will be given input focus when created. Possible values are GLFW_TRUE and GLFW_FALSE.
-	//GLFW_FOCUS_ON_SHOW (default: GLFW_TRUE) specifies whether the window will be given input focus when glfwShowWindow is called. Possible values are GLFW_TRUE and GLFW_FALSE
-	//GLFW_SCALE_TO_MONITOR (default: GLFW_FALSE) specified whether the window content area should be resized based on the monitor content scale of any monitor it is placed on. This includes the initial placement when the window is created. Possible values are GLFW_TRUE and GLFW_FALSE.
-
-	//window = glfwCreateWindow(visSettings->openGLWindowSize[0], visSettings->openGLWindowSize[1], "Exudyn OpenGL window", NULL, NULL);
-	int sizex = (int)state->currentWindowSize[0];
-	int sizey = (int)state->currentWindowSize[1];
-
-	const int minWidth = 2; //avoid zero size
-	const int minHeight = 2; //avoid zero size
-	const int maxWidth = 2 * 8192; //limit upper size to 16K, 16:9 for now ...
-	const int maxHeight = 2 * 4608; //limit upper size to 16K, 16:9 for now ...
-
-	if (sizex < minWidth) { sizex = minWidth; }//limit lower size: negative numbers or zero could make problems ...
-	if (sizey < minHeight) { sizey = minHeight; }
-
-	if (sizex > maxWidth) { sizex = maxWidth; }
-	if (sizey > maxHeight) { sizey = maxHeight; }
-
-	window = glfwCreateWindow(sizex, sizey, "Exudyn OpenGL window", NULL, NULL);
-
-	if (!window)
-	{
-		rendererError = 2;
-		glfwTerminate();
-		if (useMultiThreadedRendering)
+		if (visSettings->window.alwaysOnTop)
 		{
-			PrintDelayed("GLFWRenderer::InitCreateWindow: Render window could not be created");
-			exit(EXIT_FAILURE); //for task
+			glfwWindowHint(GLFW_FLOATING, GLFW_TRUE); //GLFW_FLOATING (default: GLFW_FALSE)  specifies whether the windowed mode window will be floating above other regular windows, also called topmost or always - on - top.This is intended primarily for debugging purposes and cannot be used to implement proper full screen windows.Possible values are GLFW_TRUE and GLFW_FALSE.
+			if (verboseRenderer) { PrintDelayed("enable GLFW_FLOATING"); }
+		}
+		//glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE); //(default: GLFW_TRUE) specifies whether the windowed mode window will be given input focus when created. Possible values are GLFW_TRUE and GLFW_FALSE.
+		//GLFW_FOCUS_ON_SHOW (default: GLFW_TRUE) specifies whether the window will be given input focus when glfwShowWindow is called. Possible values are GLFW_TRUE and GLFW_FALSE
+		//GLFW_SCALE_TO_MONITOR (default: GLFW_FALSE) specified whether the window content area should be resized based on the monitor content scale of any monitor it is placed on. This includes the initial placement when the window is created. Possible values are GLFW_TRUE and GLFW_FALSE.
+
+		//window = glfwCreateWindow(visSettings->openGLWindowSize[0], visSettings->openGLWindowSize[1], "Exudyn OpenGL window", NULL, NULL);
+		int sizex = (int)state->currentWindowSize[0];
+		int sizey = (int)state->currentWindowSize[1];
+
+		const int minWidth = 2; //avoid zero size
+		const int minHeight = 2; //avoid zero size
+		const int maxWidth = 2 * 8192; //limit upper size to 16K, 16:9 for now ...
+		const int maxHeight = 2 * 4608; //limit upper size to 16K, 16:9 for now ...
+
+		if (sizex < minWidth) { sizex = minWidth; }//limit lower size: negative numbers or zero could make problems ...
+		if (sizey < minHeight) { sizey = minHeight; }
+
+		if (sizex > maxWidth) { sizex = maxWidth; }
+		if (sizey > maxHeight) { sizey = maxHeight; }
+
+		window = glfwCreateWindow(sizex, sizey, "Exudyn OpenGL window", NULL, NULL);
+
+		if (!window)
+		{
+			rendererError = 2;
+			glfwTerminate();
+			if (useMultiThreadedRendering)
+			{
+				PrintDelayed("GLFWRenderer::InitCreateWindow: Render window could not be created");
+				exit(EXIT_FAILURE); //for task
+			}
+			else
+			{
+				SysError("GLFWRenderer::InitCreateWindow: Render window could not be created");
+				return;
+			}
 		}
 		else
 		{
-			SysError("GLFWRenderer::InitCreateWindow: Render window could not be created");
-			return;
+			if (verboseRenderer) { PrintDelayed("glfwCreateWindow(...) successful"); }
 		}
-	}
-	else
-	{
-		if (verboseRenderer) { PrintDelayed("glfwCreateWindow(...) successful"); }
-	}
 
-	//allow for very small windows, but never get 0 ...; x-size anyway limited due to windows buttons
-	glfwSetWindowSizeLimits(window, 2, 2, maxWidth, maxHeight);
-	if (verboseRenderer) { PrintDelayed("glfwSetWindowSizeLimits(...) successful"); }
+		//allow for very small windows, but never get 0 ...; x-size anyway limited due to windows buttons
+		glfwSetWindowSizeLimits(window, 2, 2, maxWidth, maxHeight);
+		if (verboseRenderer) { PrintDelayed("glfwSetWindowSizeLimits(...) successful"); }
 
-	//+++++++++++++++++++++++++++++++++
-	//set keyback functions
-	glfwSetKeyCallback(window, key_callback);			//keyboard input
-	glfwSetScrollCallback(window, scroll_callback);		//mouse wheel input
-	glfwSetMouseButtonCallback(window, mouse_button_callback);
-	glfwSetCursorPosCallback(window, cursor_position_callback);
-	if (verboseRenderer) { PrintDelayed("mouse and key callbacks successful"); }
+		//+++++++++++++++++++++++++++++++++
+		//set keyback functions
+		glfwSetKeyCallback(window, key_callback);			//keyboard input
+		glfwSetScrollCallback(window, scroll_callback);		//mouse wheel input
+		glfwSetMouseButtonCallback(window, mouse_button_callback);
+		glfwSetCursorPosCallback(window, cursor_position_callback);
+		if (verboseRenderer) { PrintDelayed("mouse and key callbacks successful"); }
 
-	glfwSetWindowCloseCallback(window, window_close_callback);
-	glfwSetWindowRefreshCallback(window, Render);
-	if (verboseRenderer) { PrintDelayed("window callbacks successful"); }
+		glfwSetWindowCloseCallback(window, window_close_callback);
+		glfwSetWindowRefreshCallback(window, Render);
+		if (verboseRenderer) { PrintDelayed("window callbacks successful"); }
 
-	glfwMakeContextCurrent(window);
-	if (verboseRenderer) { PrintDelayed("glfwMakeContextCurrent(...) successful"); }
+		glfwMakeContextCurrent(window);
+		if (verboseRenderer) { PrintDelayed("glfwMakeContextCurrent(...) successful"); }
 
-	//+++++++++++++++++
-	//initialize opengl
-	glClearDepth(1.0f);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_NORMALIZE);
+		//+++++++++++++++++
+		//initialize opengl
+		glClearDepth(1.0f);
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_NORMALIZE);
 
-	//std::cout << "OpenGL version=" << glGetString(GL_VERSION) << "\n";
+		//std::cout << "OpenGL version=" << glGetString(GL_VERSION) << "\n";
 
-	//+++++++++++++++++
-	//determine the windows scale; TODO: add callback to redraw if monitor is changed: glfwSetWindowContentScaleCallback(...)
+		//+++++++++++++++++
+		//determine the windows scale; TODO: add callback to redraw if monitor is changed: glfwSetWindowContentScaleCallback(...)
 #ifdef __linux__
-	fontScale = 1; //glfwGetWindowContentScale() crashes on Ubuntu18.04 and 20.04 compilation
+		fontScale = 1; //glfwGetWindowContentScale() crashes on Ubuntu18.04 and 20.04 compilation
 #else
-	float xWindowScale, yWindowScale;
-	glfwGetWindowContentScale(window, &xWindowScale, &yWindowScale);
-	fontScale = 0.5f*(xWindowScale + yWindowScale); //simplified for now!
-	if (!visSettings->general.useWindowsMonitorScaleFactor) { fontScale = 1; }
+		float xWindowScale, yWindowScale;
+		glfwGetWindowContentScale(window, &xWindowScale, &yWindowScale);
+		fontScale = 0.5f*(xWindowScale + yWindowScale); //simplified for now!
+		if (!visSettings->general.useWindowsMonitorScaleFactor) { fontScale = 1; }
 #endif
-	guint fontSize = (guint)(visSettings->general.textSize*fontScale);
+		guint fontSize = (guint)(visSettings->general.textSize*fontScale);
 
-	InitFontBitmap(fontSize);
-	if (verboseRenderer) { PrintDelayed("InitFontBitmap(...) successful"); }
+		InitFontBitmap(fontSize);
+		if (verboseRenderer) { PrintDelayed("InitFontBitmap(...) successful"); }
 
-	InitGLlists();
-	if (verboseRenderer) { PrintDelayed("InitGLlists(...) successful"); }
+		InitGLlists();
+		if (verboseRenderer) { PrintDelayed("InitGLlists(...) successful"); }
 
-	//+++++++++++++++++++++++++++++++++
-	//depending on flags, do some changes to window
-	if (visSettings->window.showWindow)
-	{
-		glfwShowWindow(window); //show the window when created ... should by anyway done, but did not work in Spyder so far
+		//+++++++++++++++++++++++++++++++++
+		//depending on flags, do some changes to window
+		if (visSettings->window.showWindow)
+		{
+			glfwShowWindow(window); //show the window when created ... should by anyway done, but did not work in Spyder so far
+		}
+		else
+		{
+			glfwIconifyWindow(window); //iconify window
+		}
+		if (visSettings->window.maximize)
+		{
+			glfwMaximizeWindow(window);
+		}
+
+		//+++++++++++++++++++++++++++++++++
+		//do this just before RunLoop, all initialization finished ...
+		firstRun = 0; //zoom all on startup of window
+		rendererActive = true; //this is still threadsafe, because main thread waits for this signal!
+		//+++++++++++++++++++++++++++++++++
+
 	}
-	else
+	catch (const std::exception& e) // reference to the base of a polymorphic object
 	{
-		glfwIconifyWindow(window); //iconify window
+		outputBuffer.WriteVisualization(STDstring("Exception in GLFW::InitCreateWindow:\n") + e.what() + "\n");
+		return;
 	}
-	if (visSettings->window.maximize)
+	catch (...)
 	{
-		glfwMaximizeWindow(window);
+		outputBuffer.WriteVisualization("Unknown Exception in GLFW::InitCreateWindow\n");
+		return;
 	}
 
-	//+++++++++++++++++++++++++++++++++
-	//do this just before RunLoop, all initialization finished ...
-	firstRun = 0; //zoom all on startup of window
-	rendererActive = true; //this is still threadsafe, because main thread waits for this signal!
-	//+++++++++++++++++++++++++++++++++
-
+	//exceptions starting from here are catched in RunLoop before FinishRunLoop (which stops thread...)
 	if (useMultiThreadedRendering)
 	{
 		if (verboseRenderer) { PrintDelayed("InitCreateWindow finished: Starting renderer loop"); }
 		RunLoop();
 	}
 	else
-	{ 
-		if (verboseRenderer) { PrintDelayed("InitCreateWindow finished: Ready to update window using "); }
+	{
+		if (verboseRenderer) { PrintDelayed("InitCreateWindow finished: Ready to update window using DoRendererIdleTasks(...)"); }
 	}
 }
 
 void GlfwRenderer::RunLoop()
 {
-	while (rendererActive && !glfwWindowShouldClose(window) &&
-		!stopRenderer && !globalPyRuntimeErrorFlag)
+	try
 	{
-		DoRendererTasks();
+		while (rendererActive && !glfwWindowShouldClose(window) &&
+			!stopRenderer && !globalPyRuntimeErrorFlag)
+		{
+			DoRendererTasks();
+		}
 	}
+	catch (const std::exception& e) // reference to the base of a polymorphic object
+	{
+		outputBuffer.WriteVisualization(STDstring("Exception in Renderer loop:\n") + e.what() + "\nclosing renderer.\n");
+		//std::cout << "** Exception in Renderer loop:\n" << e.what() << "\nclosing renderer.\n";
+	}
+	catch (...)
+	{
+
+		outputBuffer.WriteVisualization("Unknown Exception in Renderer loop\nclosing renderer.\n");
+		//std::cout << "** Unknown Exception in Renderer loop\nclosing renderer.\n";
+	}
+	EXUstd::ReleaseSemaphore(renderFunctionRunning); //in case that it crashed after lock
+	EXUstd::ReleaseSemaphore(showMessageSemaphore); //in case that it crashed after lock
+	for (auto data : *graphicsDataList) //lock prevents from closing renderer consistently!
+	{
+		data->ClearLock();
+	}
+
 	FinishRunLoop();
 }
 
@@ -1387,25 +1449,11 @@ void GlfwRenderer::DoRendererTasks()
 		glfwWaitEventsTimeout((double)updateInterval); //wait x seconds for next event
 	}
 
-	////does not work: 
-	//const double maxInterval = 0.010;   //10ms loop, before loop is split; this is rather small in order to rapidly interupt RunLoop from PythonExecutableQueue
-	//double summedInterval = 0.;			//accumulated intervals
-	//double minInterval = EXUstd::Minimum((double)(visSettings->general.graphicsUpdateInterval), 1e-6); //1e-6 because of while loop
-	//double currentInterval = EXUstd::Minimum(maxInterval, minInterval);
-	//while (summedInterval < minInterval)
-	//{
-	//	//! get state of callback lock
-	//	if (!PyGetRendererCallbackLock())
-	//	{
-	//		glfwWaitEventsTimeout(currentInterval); //wait x seconds for next event
-	//	}
-	//	summedInterval += currentInterval;
-	//	currentInterval = maxInterval; //after first interval, always wait 5ms
-	//}
 }
 
 void GlfwRenderer::FinishRunLoop()
 {
+	if (verboseRenderer) { outputBuffer.WriteVisualization("Finish renderer loop ...\n"); }
 
 	if (globalPyRuntimeErrorFlag)
 	{
@@ -1413,13 +1461,17 @@ void GlfwRenderer::FinishRunLoop()
 	}
 	basicVisualizationSystemContainer->StopSimulation(); //if user waits for termination of render engine, it tells that window is closed
 
-	glfwDestroyWindow(window);
-	window = nullptr;
+	if (window)
+	{
+		glfwDestroyWindow(window); //should be called from main thread, but also works this way!
+		window = nullptr;
+	}
 	rendererActive = false; //for new startup of renderer
 	stopRenderer = false;	//if stopped by user
-	glfwTerminate(); //move to destructor
+	glfwTerminate();		//should be called from main thread, but also works this way!
 
 	DeleteFonts();
+	if (verboseRenderer) { outputBuffer.WriteVisualization("  ... renderer loop finished\n"); }
 }
 
 //! run renderer idle for certain amount of time; use this for single-threaded, interactive animations; waitSeconds==-1 waits forever
@@ -1625,16 +1677,18 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 			Vector2D lastPressedCoords = factor * Vector2D({ stateMachine.lastMousePressedX - 0.5*state->currentWindowSize[0],
 				-1.*(stateMachine.lastMousePressedY - 0.5*state->currentWindowSize[1]) }) + cp;
 
-			char glx[16];
-			char gly[16];
-			sprintf(glx, "%7.3g", state->openGLcoordinates[0]);
-			sprintf(gly, "%7.3g", state->openGLcoordinates[1]);
-			char lpx[16];
-			char lpy[16];
-			sprintf(lpx, "%7.3g", lastPressedCoords[0]);
-			sprintf(lpy, "%7.3g", lastPressedCoords[1]);
-			char dist[16];
-			sprintf(dist,"%7.3g", (state->openGLcoordinates - lastPressedCoords).GetL2Norm());
+			const Index nCharMax = 24;
+			Index precision = EXUstd::Maximum(0, EXUstd::Minimum(visSettings->general.rendererPrecision, 16));
+			char glx[nCharMax];
+			char gly[nCharMax];
+			snprintf(glx, nCharMax, "%7.*g", precision, state->openGLcoordinates[0]);
+			snprintf(gly, nCharMax, "%7.*g", precision, state->openGLcoordinates[1]);
+			char lpx[nCharMax];
+			char lpy[nCharMax];
+			snprintf(lpx, nCharMax, "%7.*g", precision, lastPressedCoords[0]);
+			snprintf(lpy, nCharMax, "%7.*g", precision, lastPressedCoords[1]);
+			char dist[nCharMax];
+			snprintf(dist,nCharMax, "%7.*g", precision, (state->openGLcoordinates - lastPressedCoords).GetL2Norm());
 
 			STDstring mouseStr = STDstring("mouse=(") + glx + "," + gly + ")" +
 				", last=(" + lpx + "," + lpy + "), dist=" + dist;
@@ -1683,7 +1737,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		//DrawString(basicVisualizationSystemContainer->GetComputationMessage().c_str(), scale, poff, textColor);
 		STDstring contourStr = STDstring("contour plot: ")+GetOutputVariableTypeString(visSettings->contour.outputVariable) +
 			"\ncomponent=" + EXUstd::ToString(visSettings->contour.outputVariableComponent) +
-			"\nmin=" + EXUstd::ToString(minVal) + ",max=" + EXUstd::ToString(maxVal);
+			"\nmin=" + EXUstd::Num2String(minVal, visSettings->contour.colorBarPrecision) + ",max=" + EXUstd::Num2String(maxVal, visSettings->contour.colorBarPrecision);
 		DrawString(contourStr.c_str(), fontSize, p0, textColor);
 		p0 += Float3({0.f,-3.2f*scale,0.f});
 
@@ -1731,9 +1785,10 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 			glEnd();
 			if (visSettings->openGL.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
 
-			char str[20];
-			std::sprintf(str, "% .2g", value);
-			DrawString(str, fontSize*fontSmallFactor, p0 + Float3({ 1.2f*sizeX,-0.8f*sizeY,0}), textColor);
+			//const Index nCharMax = 24;
+			//char str[nCharMax];
+			//std::snprintf(str, nCharMax, "% .*g", visSettings->contour.colorBarPrecision, value);
+			DrawString(EXUstd::Num2String(value, visSettings->contour.colorBarPrecision).c_str(), fontSize*fontSmallFactor, p0 + Float3({ 1.2f*sizeX,-0.8f*sizeY,0}), textColor);
 
 			p0 += Float3({ 0.f,-sizeY,0.f });
 

@@ -93,10 +93,6 @@ void PyProcessShowRightMouseSelectionDialog(Index itemID);
 //! this function MAY BE ONLY CALLED FROM PYTHON THREAD, NOT from GLFW!!:
 void PyProcessExecuteStringAsPython(const STDstring& str);
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-//DELETE: extern std::atomic_flag graphicsUpdateAtomicFlag; //avoid that user interacts with Renderer while TKinter dialog is shown
-
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! perform idle tasks for single-threaded renderer

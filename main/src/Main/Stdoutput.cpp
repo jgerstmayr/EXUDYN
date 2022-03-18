@@ -39,6 +39,7 @@
 #include "Utilities/TimerStructure.h"
 
 namespace py = pybind11;
+using namespace pybind11::literals; //brings in the '_a' literals; e.g. for short arguments definition
 
 //comment the following line, if C++17 or stdc++fs library are not available on your system!
 
@@ -132,16 +133,41 @@ int OutputBuffer::overflow(int c)
 	{
 		if (!suspendWriting)
 		{
+			buf.push_back('\n');
+			if (visualizationBuffer.size())
+			{
+				for (char visChar: visualizationBuffer)
+				{
+					buf.push_back(visChar);
+				}
+				visualizationBuffer.clear(); //erases memory, same as visualizationBuffer = ""
+				//visualizationBuffer = "capacity=" + EXUstd::ToString(visualizationBuffer.capacity()) + "\n";
+			}
+
 			if (writeToConsole)
 			{
-				py::print(buf);
+				//if python raised already an error, exudyn.Print() will not work, because py::print() still has the exception error_already_set
+				// ==> therefore add try and catch to print, such that subsequent print commands work again
+				try
+				{
+					//py::print(buf);
+					py::print(buf, "end"_a = "");
+				}
+				catch (py::error_already_set &eas) {
+					// Discard the Python error: for future print commands?
+					eas.discard_as_unraisable(__func__); //prints long message ...
+					//py::print(buf); 
+					py::print(buf, "end"_a = "");//try again to print, which should work now
+				}
+
 				if (waitMilliSeconds) {
 					std::this_thread::sleep_for(std::chrono::milliseconds(waitMilliSeconds)); //add this to enable Spyder to print messages
 				}
 			}
 			if (writeToFile)
 			{
-				file << buf << "\n"; //add "\n" as compared to py::print, which already adds end line command
+				//file << buf << "\n"; //add "\n" as compared to py::print, which already adds end line command
+				file << buf;
 			}
 			buf.clear();
 		}
@@ -153,6 +179,14 @@ int OutputBuffer::overflow(int c)
 	//py::print((char)c); //this would be much slower as each character needs to be processed with py::print
 	EXUstd::ReleaseSemaphore(outputBufferAtomicFlag); //clear outputBuffer
 	return c;
+}
+
+//! function which allows to write asynchronuously during visualization thread; requires lateron call of pout in main thread (to clear buffer!)
+void OutputBuffer::WriteVisualization(const STDstring& string)
+{
+	EXUstd::WaitAndLockSemaphoreIgnore(outputBufferAtomicFlag); //lock outputBuffer
+	visualizationBuffer += string;
+	EXUstd::ReleaseSemaphore(outputBufferAtomicFlag); //clear outputBuffer
 }
 
 void OutputBuffer::SetWriteToFile(STDstring filename, bool flagWriteToFile, bool flagAppend)
@@ -224,11 +258,11 @@ void PyError(std::string error_msg, std::ofstream& file)
 	{
 		file << "\nUser ERROR [file '" << fileName << "', line " << lineNumber << "]: \n";
 		file << error_msg << "\n\n";
-		file << "Exudyn: parsing of python file terminated due to python (user) error\n\n";
+		file << "Exudyn: parsing of Python file terminated due to python (user) error\n\n";
 		file << "********************************************************************\n\n";
 	}
-	PyErr_SetString(PyExc_RuntimeError, "Exudyn: parsing of python file terminated due to python (user) error");
-	//this kills kernel in spyder: CHECKandTHROWstring("Exudyn: parsing of python file terminated due to python (user) error!");
+	//PyErr_SetString(PyExc_RuntimeError, "Exudyn: parsing of python file terminated due to python (user) error");
+	throw std::runtime_error("Exudyn: parsing of Python file terminated due to Python (user) error");
 }
 
 //!< prints a formated error message (+log file, etc.); 'error_msg' shall only contain the error information, do not write "Python ERROR: ..." or similar
@@ -261,7 +295,8 @@ void SysError(std::string error_msg, std::ofstream& file)
 		file << "Exudyn: parsing of python file terminated due to system error\n\n";
 		file << "********************************************************************\n\n";
 	}
-	PyErr_SetString(PyExc_RuntimeError, "Exudyn: parsing of python file terminated due to system error");
+	throw std::runtime_error("Exudyn: parsing of Python file terminated due to system error");
+	//PyErr_SetString(PyExc_RuntimeError, "Exudyn: parsing of python file terminated due to system error");
 }
 
 //!< prints a formated warning message (+log file, etc.); 'warning_msg' shall only contain the warning information, do not write "Python WARNING: ..." or similar
@@ -271,21 +306,25 @@ void PyWarning(std::string warning_msg)
 	PyWarning(warning_msg, dummy);
 }
 
-//! prints a formated warning message (+log file, etc.); 'warning_msg' shall only contain the warning information, do not write "Python WARNING: ..." or similar
+bool suppressWarnings = false; //!< global flag to suppress warnings
+							  //! prints a formated warning message (+log file, etc.); 'warning_msg' shall only contain the warning information, do not write "Python WARNING: ..." or similar
 //! additional output to file
 void PyWarning(std::string warning_msg, std::ofstream& file)
 {
-	STDstring fileName;
-	Index lineNumber;
-	PyGetCurrentFileInformation(fileName, lineNumber);
-
-	pout << "\nPython WARNING [file '" << fileName << "', line " << lineNumber << "]: \n";
-	pout << warning_msg << "\n\n";
-
-	if (file.is_open())
+	if (!suppressWarnings)
 	{
-		file << "\nPython WARNING [file '" << fileName << "', line " << lineNumber << "]: \n";
-		file << warning_msg << "\n\n";
+		STDstring fileName;
+		Index lineNumber;
+		PyGetCurrentFileInformation(fileName, lineNumber);
+
+		pout << "\nPython WARNING [file '" << fileName << "', line " << lineNumber << "]: \n";
+		pout << warning_msg << "\n\n";
+
+		if (file.is_open())
+		{
+			file << "\nPython WARNING [file '" << fileName << "', line " << lineNumber << "]: \n";
+			file << warning_msg << "\n\n";
+		}
 	}
 }
 

@@ -209,7 +209,7 @@ NodeIndex MainSystem::AddMainNodePyClass(py::object pyObject)
 		//will fail, if dictObject is invalid: PyError("Error in AddNode(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
 		PyError(STDstring("Error in AddNode(...):") +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
-		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+		//not needed due to change of PyError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception
 	{
@@ -457,7 +457,7 @@ ObjectIndex MainSystem::AddMainObjectPyClass(py::object pyObject)
 		//will fail, if dictObject is invalid: PyError("Error in AddObject(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
 		PyError(STDstring("Error in AddObject(...):") +
 				"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
-		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+		//not needed due to change of PyError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception
 	{
@@ -713,7 +713,7 @@ MarkerIndex MainSystem::AddMainMarkerPyClass(py::object pyObject)
 		//will fail, if dictObject is invalid: PyError("Error in AddMarker(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
 		PyError(STDstring("Error in AddMarker(...):") +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
-		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+		//not needed due to change of PyError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception
 	{
@@ -875,7 +875,7 @@ LoadIndex MainSystem::AddMainLoadPyClass(py::object pyObject)
 		//will fail, if dictObject is invalid: PyError("Error in AddLoad(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
 		PyError(STDstring("Error in AddLoad(...):") +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
-		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+		//not needed due to change of PyError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception
 	{
@@ -1054,7 +1054,7 @@ SensorIndex MainSystem::AddMainSensorPyClass(py::object pyObject)
 		//will fail, if dictObject is invalid: PyError("Error in AddSensor(...) with dictionary=\n" + EXUstd::ToString(dictObject) +
 		PyError(STDstring("Error in AddSensor(...):") +
 			"\nCheck your python code (negative indices, invalid or undefined parameters, ...)\nException message=\n" + STDstring(ex.what()));
-		throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+		//not needed due to change of PyError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception
 	{
@@ -1160,6 +1160,27 @@ py::object MainSystem::PyGetSensorValues(const py::object& itemIndex, Configurat
 	else
 	{
 		PyError(STDstring("MainSystem::GetSensorValues: invalid access to sensor number ") + EXUstd::ToString(itemNumber));
+		return py::int_(EXUstd::InvalidIndex);
+	}
+}
+
+//! get sensor's stored data (if it exists ...)
+py::array_t<Real> MainSystem::PyGetSensorStoredData(const py::object& itemIndex)
+{
+
+	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
+	if (itemNumber < mainSystemData.GetMainSensors().NumberOfItems())
+	{
+		if (!mainSystemData.GetMainSensors().GetItem(itemNumber)->GetCSensor()->GetStoreInternalFlag())
+		{
+			PyError(STDstring("MainSystem::GetSensorStoredData: sensor number ") + EXUstd::ToString(itemNumber)+" has no internal data as storeInternal==False");
+			return py::int_(EXUstd::InvalidIndex);
+		}
+		return mainSystemData.GetMainSensors().GetItem(itemNumber)->GetInternalStorage();
+	}
+	else
+	{
+		PyError(STDstring("MainSystem::GetSensorStoredData: invalid access to sensor number ") + EXUstd::ToString(itemNumber));
 		return py::int_(EXUstd::InvalidIndex);
 	}
 }

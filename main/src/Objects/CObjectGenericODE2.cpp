@@ -149,7 +149,7 @@ void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 		Vector userForce;
 
 		EvaluateUserFunctionForce(userForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates, tempCoordinates_t);
-
+		CHECKandTHROW(userForce.NumberOfItems() == nODE2, "CObjectGenericODE2: forceUserFunction return a vector with different size from ObjectGenericODE2 system size");
 		ode2Lhs -= userForce;
 	}
 

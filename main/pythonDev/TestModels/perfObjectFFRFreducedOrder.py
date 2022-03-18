@@ -116,12 +116,12 @@ if addSupports:
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 fileDir = 'solution/'
-mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], meshNodeNumber=nMid, #meshnode number!
-                         fileName=fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', 
+sDisp=mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], meshNodeNumber=nMid, #meshnode number!
+                         storeInternal=True, #fileName=fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', 
                          outputVariableType = exu.OutputVariableType.Displacement))
 
-mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], 
-                         fileName=fileDir+'nRigidBodyAngVelCMS'+str(nModes)+'Test.txt', 
+sAngVel=mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], 
+                         storeInternal=True, #fileName=fileDir+'nRigidBodyAngVelCMS'+str(nModes)+'Test.txt', 
                          outputVariableType = exu.OutputVariableType.AngularVelocity))
 
 mbs.Assemble()
@@ -187,7 +187,8 @@ if exudynTestGlobals.useGraphics:
 exu.SolveDynamic(mbs, simulationSettings)
     
 
-data = np.loadtxt(fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', comments='#', delimiter=',')
+# data = np.loadtxt(fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', comments='#', delimiter=',')
+data = mbs.GetSensorStoredData(sDisp)
 result = abs(data).sum()
 #pos = mbs.GetObjectOutputBody(objFFRF['oFFRFreducedOrder'],exu.OutputVariableType.Position, localPosition=[0,0,0])
 exu.Print('solution of perfObjectFFRFreducedOrder=',result)

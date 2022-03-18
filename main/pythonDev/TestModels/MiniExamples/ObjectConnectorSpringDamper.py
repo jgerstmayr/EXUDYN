@@ -19,7 +19,6 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
-testError=1 #set default error, if failed
 exu.Print("start mini example for class ObjectConnectorSpringDamper")
 try: #puts example in safe environment
     node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
@@ -43,5 +42,5 @@ try: #puts example in safe environment
 except BaseException as e:
     exu.Print("An error occured in test example for ObjectConnectorSpringDamper:", e)
 else:
-    exu.Print("example for ObjectConnectorSpringDamper completed, test error =", testError)
+    exu.Print("example for ObjectConnectorSpringDamper completed, test result =", exudynTestGlobals.testResult)
 

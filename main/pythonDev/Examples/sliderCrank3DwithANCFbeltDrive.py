@@ -455,7 +455,7 @@ SC.visualizationSettings.nodes.showNumbers = False
 SC.visualizationSettings.bodies.showNumbers = False
 SC.visualizationSettings.connectors.showNumbers = False
 SC.visualizationSettings.connectors.defaultSize = 0.005
-SC.visualizationSettings.connectors.contactPointsDefaultSize = 0.01
+SC.visualizationSettings.contact.contactPointsDefaultSize = 0.01
 SC.visualizationSettings.connectors.showContact = True
 
 #create animation:

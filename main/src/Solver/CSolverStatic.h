@@ -58,6 +58,11 @@ public:
 		Real suggestedStepSize = -1.) override
 	{
 		it.currentStepSize = EXUstd::Minimum(it.maxStepSize, simulationSettings.staticSolver.adaptiveStepIncrease*it.currentStepSize);
+
+		if (IsVerboseCheck(1) && (output.stepInformation & StepInfo::stepIncreaseInfo) && (it.currentStepSize != it.maxStepSize))
+		{
+			VerboseWrite(1, STDstring("  Solve steps: adaptive increase to step size = ") + EXUstd::ToString(it.currentStepSize) + " due to fast convergence\n");
+		}
 	}
 
 	//! update currentTime (and load factor); MUST be overwritten in special solver class

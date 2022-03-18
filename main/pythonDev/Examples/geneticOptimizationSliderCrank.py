@@ -35,28 +35,25 @@ s2opt = -m3/m2*L2      #-0.15
 #this is the function which is repeatedly called from ParameterVariation
 #parameterSet contains dictinary with varied parameters
 def ParameterFunction(parameterSet):
-
-    s1=L1*0.5
-    s2=L2*0.5
-    if False:
-        s1 = s1opt
-        s2 = s2opt
-
-    if 's1' in parameterSet:
-        s1 = parameterSet['s1']
-    h=0.002
-    if 'h' in parameterSet:
-        h = parameterSet['h']
-    if 's2' in parameterSet:
-        s2 = parameterSet['s2']
-
-    iCalc = 'Ref' #needed for parallel computation ==> output files are different for every computation
-    if 'computationIndex' in parameterSet:
-        iCalc = str(parameterSet['computationIndex'])
-        #print("computation index=",iCalc, flush=True)
-
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
+    
+    #++++++++++++++++++++++++++++++++++++++++++++++
+    #++++++++++++++++++++++++++++++++++++++++++++++
+    #store default parameters in structure (all these parameters can be varied!)
+    class P: pass #create emtpy structure for parameters; simplifies way to update parameters
+    P.s1=L1*0.5
+    P.s2=L2*0.5
+    P.h=0.002
+    P.computationIndex = ''
+    
+    # #now update parameters with parameterSet (will work with any parameters in structure P)
+    for key,value in parameterSet.items():
+        setattr(P,key,value)
+
+    #++++++++++++++++++++++++++++++++++++++++++++++
+    #++++++++++++++++++++++++++++++++++++++++++++++
+    #START HERE: create parameterized model
     
     testCases = 1 #floating body
     nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) #ground node for coordinate constraint
@@ -96,10 +93,10 @@ def ParameterFunction(parameterSet):
     omega=2*pi/60*300 #3000 rpm
     M=0.1 #torque (default: 0.1)
 
-    s1L=-s1
-    s1R=L1-s1
-    s2L=-s2
-    s2R=L2-s2
+    s1L=-P.s1
+    s1R=L1-P.s1
+    s2L=-P.s2
+    s2R=L2-P.s2
     
     #lambda=L1/L2
     J1=(m1/12.)*L1**2 #inertia w.r.t. center of mass
@@ -117,7 +114,7 @@ def ParameterFunction(parameterSet):
                                       thickness=0.8*ty, width=[tz,tz], color=color4lightred,nTiles=16)
     
     #crank:
-    nRigid1 = mbs.AddNode(Rigid2D(referenceCoordinates=[s1,0,0], 
+    nRigid1 = mbs.AddNode(Rigid2D(referenceCoordinates=[P.s1,0,0], 
                                   initialVelocities=[0,0,0]));
     oRigid1 = mbs.AddObject(RigidBody2D(physicsMass=m1, 
                                         physicsInertia=J1,
@@ -125,7 +122,7 @@ def ParameterFunction(parameterSet):
                                         visualization=VObjectRigidBody2D(graphicsData= [graphics1])))
     
     #connecting rod:
-    nRigid2 = mbs.AddNode(Rigid2D(referenceCoordinates=[L1+s2,0,0], 
+    nRigid2 = mbs.AddNode(Rigid2D(referenceCoordinates=[L1+P.s2,0,0], 
                                   initialVelocities=[0,0,0]));
     oRigid2 = mbs.AddObject(RigidBody2D(physicsMass=m2, 
                                         physicsInertia=J2,
@@ -186,9 +183,9 @@ def ParameterFunction(parameterSet):
     mbs.AddLoad(LoadCoordinate(markerNumber=mRigid1CoordinateTheta, load = M)) #torque at crank
 
     #write motion of support frame:    
-    sensorFileName = 'solution/floatingPos'+iCalc+'.txt'
-    sFloating = mbs.AddSensor(SensorNode(nodeNumber=nFloating, fileName=sensorFileName, 
-                             outputVariableType=exu.OutputVariableType.Position))
+    sFloating = mbs.AddSensor(SensorNode(nodeNumber=nFloating,
+                                         storeInternal=True,
+                                         outputVariableType=exu.OutputVariableType.Position))
     
     #++++++++++++++++++++++++++++++++
     #assemble, adjust settings and start time integration
@@ -197,11 +194,9 @@ def ParameterFunction(parameterSet):
     simulationSettings = exu.SimulationSettings() #takes currently set values or default values
     tEnd = 3
     
-    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) 
+    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/P.h) 
     simulationSettings.timeIntegration.endTime = tEnd              
 
-    #simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8 #10000
-    #simulationSettings.timeIntegration.verboseMode = 1 #10000
     
     simulationSettings.solutionSettings.solutionWritePeriod = 2e-3
     simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
@@ -237,35 +232,19 @@ def ParameterFunction(parameterSet):
     exu.SolveDynamic(mbs, simulationSettings)
         
     if useGraphics: 
-        #+++++++++++++++++++++++++++++++++++++
-        #animate solution
-#        mbs.WaitForUserToContinue
-#        fileName = 'coordinatesSolution.txt'
-#        solution = LoadSolutionFile('coordinatesSolution.txt')
-#        AnimateSolution(mbs, solution, 10, 0.025, True)
-        #+++++++++++++++++++++++++++++++++++++
-
         SC.WaitForRenderEngineStopFlag()
         exu.StopRenderer() #safely close rendering window!
     
     #++++++++++++++++++++++++++++++++++++++++++
     #evaluate error:
-    data = np.loadtxt(sensorFileName, comments='#', delimiter=',')
+    #data = np.loadtxt(sensorFileName, comments='#', delimiter=',')
+    data = mbs.GetSensorStoredData(sFloating)
 
     errorNorm = max(abs(data[:,1])) + max(abs(data[:,2])) #max displacement in x and y direction
 
-    #++++++++++++++++++++++++++++++++++++++++++
-    #clean up optimization
-    if True: #delete files; does not work for parallel, consecutive operation
-        if iCalc != 'Ref':
-            os.remove(sensorFileName) #remove files in order to clean up
-            while(os.path.exists(sensorFileName)): #wait until file is really deleted -> usually some delay
-                sleep(0.001) #not nice, but there is no other way than that
-        
     if useGraphics:
         print("max. oszillation=", errorNorm)
         from exudyn.plot import PlotSensor
-        
         PlotSensor(mbs, sensorNumbers=[sFloating,sFloating], components=[0,1])
 
     del mbs
@@ -306,7 +285,14 @@ if __name__ == '__main__': #include this to enable parallel processing
         exu.Print("[pOpt, vOpt]=", [pOpt, vOpt])
         u = vOpt
         exu.Print("optimum=",u)
-    
+        # using files:
+        # [pOpt, vOpt]= [{'s1': -0.07497827333782427, 's2': -0.14943029494085874}, 3.4312580948e-05] 
+        # optimum= 3.4312580948e-05 
+
+        # using internal storage:
+        # [pOpt, vOpt]= [{'s1': -0.07497827333782427, 's2': -0.14943029494085874}, 3.431258094752888e-05] 
+        # optimum= 3.431258094752888e-05
+        
         if False:
             # from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
             import matplotlib.pyplot as plt
@@ -321,28 +307,3 @@ if __name__ == '__main__': #include this to enable parallel processing
 
 
 
-
-
-if False:
-    dataIndex2 = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
-    #dataMatlab = np.loadtxt('slidercrankRefSolM0.1_tol1e-4.txt', comments='#', delimiter=',') #this is quite inaccurate
-    dataMatlab2 = np.loadtxt('slidercrankRefSolM0.1_tol1e-6.txt', comments='#', delimiter=',')
-                            
-    vODE2=mbs.systemData.GetODE2Coordinates()
-    nODE2=len(vODE2) #number of ODE2 coordinates
-
-    nAngle = mbs.systemData.GetObjectLTGODE2(oRigid1)[2] #get coordinate index of angle
-    plt.plot(dataIndex2[:,0], dataIndex2[:,1+nAngle], 'b-') #plot angle of crank;
-    plt.plot(dataIndex2[:,0], dataIndex2[:,1+nODE2+nAngle], 'r-') #plot angular velocity of crank
-    #plt.plot(dataMatlab[:,0], dataMatlab[:,2], 'g-') #plot angular velocity of crank from MATLAB
-    plt.plot(dataMatlab2[:,0], dataMatlab2[:,2], 'k-') #plot angular velocity of crank from MATLAB
-    
-    #plt.plot(dataIndex3[:,0], dataIndex3[:,1+globalIndex], 'b-') #plot x-coordinate of slider
-    
-    ax=plt.gca() # get current axes
-    ax.grid(True, 'major', 'both')
-    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    plt.tight_layout()
-    plt.show() 
-    

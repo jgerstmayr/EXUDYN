@@ -175,7 +175,7 @@ if __name__ == '__main__': #include this to enable parallel processing
     
     plt.close('all')
     fig = plt.figure()
-    ax = fig.gca(projection='3d')
+    ax = fig.add_subplot(projection='3d')
     
     #reshape output of parametervariation to fit plot_surface
     X = np.array(pDict['mass']).reshape((n,n))
@@ -201,7 +201,7 @@ if __name__ == '__main__': #include this to enable parallel processing
                                          )
 
     fig = plt.figure()
-    ax = fig.gca(projection='3d')
+    ax = fig.add_subplot(projection='3d')
     
     X = np.concatenate((pDict['mass'],pDict2['mass']))
     Y = np.concatenate((pDict['spring'],pDict2['spring']))

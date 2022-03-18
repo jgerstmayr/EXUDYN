@@ -116,12 +116,12 @@ if addSupports:
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 fileDir = 'solution/'
-mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], meshNodeNumber=nMid, #meshnode number!
-                         fileName=fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', 
+sDisp=mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], meshNodeNumber=nMid, #meshnode number!
+                         storeInternal=True,#fileName=fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', 
                          outputVariableType = exu.OutputVariableType.Displacement))
 
-mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], 
-                         fileName=fileDir+'nRigidBodyAngVelCMS'+str(nModes)+'Test.txt', 
+sAngVel=mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], 
+                         storeInternal=True,#fileName=fileDir+'nRigidBodyAngVelCMS'+str(nModes)+'Test.txt', 
                          outputVariableType = exu.OutputVariableType.AngularVelocity))
 
 mbs.Assemble()
@@ -168,6 +168,7 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
 simulationSettings.solutionSettings.sensorsWritePeriod = h
 simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/coordinatesSolutionCMStest.txt"
+simulationSettings.solutionSettings.writeSolutionToFile=False
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
 #simulationSettings.displayStatistics = True
@@ -186,14 +187,15 @@ if exudynTestGlobals.useGraphics:
 exu.SolveDynamic(mbs, simulationSettings)
     
 
-data = np.loadtxt(fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', comments='#', delimiter=',')
+# data = np.loadtxt(fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', comments='#', delimiter=',')
+data = mbs.GetSensorStoredData(sDisp)
 result = abs(data).sum()
 #pos = mbs.GetObjectOutputBody(objFFRF['oFFRFreducedOrder'],exu.OutputVariableType.Position, localPosition=[0,0,0])
 exu.Print('solution of ObjectFFRFreducedOrder=',result)
 
 #factor 0.05: make error smaller, as there are small changes for different runs (because of scipy sparse eigenvalue solver!)
-exudynTestGlobals.testError = 0.05*(result - (0.5354530110580623)) #2020-05-26(added EP-constraint): 0.5354530110580623; 2020-05-17 (tEnd=0.01, h=1e-4): 0.535452257303538 
-exudynTestGlobals.testResult = 0.05*result
+exudynTestGlobals.testError = 0.01*(result - (0.5354530110580623)) #2020-05-26(added EP-constraint): 0.5354530110580623; 2020-05-17 (tEnd=0.01, h=1e-4): 0.535452257303538 
+exudynTestGlobals.testResult = 0.01*result
 
 if exudynTestGlobals.useGraphics:
     SC.WaitForRenderEngineStopFlag()
@@ -203,26 +205,10 @@ if exudynTestGlobals.useGraphics:
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #plot results
 if exudynTestGlobals.useGraphics:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-    cList=['r-','g-','b-','k-','c-','r:','g:','b:','k:','c:']
- 
-    data = np.loadtxt(fileDir+'nMidDisplacementCMS8.txt', comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
-    plt.plot(data[:,0], data[:,2], cList[0],label='uMid,CMS8') #numerical solution, 1 == x-direction
-
-    data = np.loadtxt(fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', comments='#', delimiter=',') #new result from this file
-    plt.plot(data[:,0], data[:,2], cList[1],label='uMid,'+str(nModes)+'Test') #numerical solution, 1 == x-direction
-
-    data = np.loadtxt(fileDir+'nMidDisplacementFFRF.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,2], cList[2],label='uMid,FFRF') #numerical solution, 1 == x-direction
-
-    ax=plt.gca() # get current axes
-    ax.grid(True, 'major', 'both')
-    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    plt.tight_layout()
-    plt.legend()
-    plt.show() 
+    from exudyn.plot import PlotSensor
+    
+    PlotSensor(mbs, [fileDir+'nMidDisplacementCMS8.txt',sDisp,fileDir+'nMidDisplacementFFRF.txt'],
+               components=1, closeAll=True)
 
 
 

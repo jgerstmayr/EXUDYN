@@ -48,16 +48,14 @@
 //#include "Utilities/BasicDefinitions.h" //defines Real
 #include "Utilities/BasicFunctions.h"   //for Minimum
 
-//#ifdef USE_NEW_CONSTSIZEVECTOR
-//#include "Linalg/ConstSizeVector.h"
-//#endif
-
 
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 extern Index vector_new_counts; //global counter of item allocations; is increased every time a new is called
 extern Index linkedDataVectorCast_counts; //global counter for unwanted type conversion from LinkedDataVector to Vector
 extern Index vector_delete_counts; //global counter of item deallocations; is increased every time a delete is called
 #endif
+
+typedef std::vector<Real> StdVector; //needed for user functions
 
 enum class VectorType {
 	Vector = 1,
@@ -196,6 +194,8 @@ public:
 	T* end() const { return &data[numberOfItems]; }				//!< C++11 std::end() for iterators; iterator range is always the currently used numberOfItems.
 
     Index NumberOfItems() const { return numberOfItems; }	            //!< Number of currently used Reals; WILL BE DIFFERENT in ResizableVector and in VectorX
+	bool IsValidIndex(Index index) const { return (index >= 0) && (index < NumberOfItems()); } 	//!< check if an index is in range of valid items
+
 	T* GetDataPointer() const { return data; }                       //!< return pointer to first data containing T numbers; const needed for LinkedDataVectors.
 
     //! set a new numberOfItems for vector; if (numberOfItems==newSize) ==> do nothing; ALL DATA GETS LOST in case of resize!
@@ -329,30 +329,6 @@ public:
 		return true;
 	}
 
-#ifndef USE_NEW_CONSTSIZEVECTOR
-	//! add vector v to *this vector (for each component); both vectors must have same size
-    VectorBase& operator+=(const VectorBase& v)
-    {
-		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator+=: incompatible size of vectors");
-        Index cnt = 0;
-        for (auto item : v) {
-            (*this)[cnt++] += item;
-        }
-        return *this;
-    }
-
-	//! add SlimVector v to *this vector (for each component); both vectors must have same size
-	template <Index dataSize>
-	VectorBase& operator+=(const SlimVectorBase<T, dataSize>& v)
-	{
-		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator+=(SlimVectorBase): incompatible size of vectors");
-		Index cnt = 0;
-		for (auto item : v) {
-			(*this)[cnt++] += item;
-		}
-		return *this;
-	}
-#else
 	//! add Tvector v to *this vector (for each component); both vectors must have same size
 	template <class Tvector>
 	VectorBase& operator+=(const Tvector& v)
@@ -375,8 +351,8 @@ public:
 	//	}
 	//	return *this;
 	//}
-#endif
-    //! substract vector v from *this vector (for each component); both vectors must have same size
+
+	//! substract vector v from *this vector (for each component); both vectors must have same size
     VectorBase& operator-=(const VectorBase& v)
     {
 		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator-=: incompatible size of vectors");
@@ -500,18 +476,7 @@ public:
     // EXTENDED FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#ifndef USE_NEW_CONSTSIZEVECTOR
 	//! add vector scalar * v to *this vector
-	void MultAdd(T scalar, const VectorBase& v)
-	{
-		CHECKandTHROW((v.NumberOfItems() == NumberOfItems()), "VectorBase::MultAdd: incompatible size of vectors");
-		for (Index i = 0; i < NumberOfItems(); i++) 
-		{
-			data[i] += scalar * v[i];
-		}
-	}
-#else
-		//! add vector scalar * v to *this vector
 	template<class Tvector>
 	void MultAdd(T scalar, const Tvector& v)
 	{
@@ -521,18 +486,46 @@ public:
 			data[i] += scalar * v[i];
 		}
 	}
-#endif
 
-
-	//DELETE: duplicate
-	////! add factor*vector to *this; no memory allocated; might be more efficient than doing this separatly
-	//void MultiplyAdd(const T& factor, const VectorBase& vector)
+	//! add vector scalar * v to *this vector
+	//large vector: use AVX
+	//huge vector: use AVX + multithreading
+	//may not be used if LinkedDataVector is linked to unaligned part of vector
+	//template<class Tvector, bool largeVector = false, bool hugeVector = false>
+	//void MultAdd(T scalar, const Tvector& v)
 	//{
-	//	CHECKandTHROW((NumberOfItems() == vector.NumberOfItems()), "VectorBase::MultiplyAdd(): incompatible sizes");
+	//	copy first part of this function to LinkedDataVector to avoid operation on non-aligned data!
 
-	//	Index cnt = 0;
-	//	for (auto &item : *this) {
-	//		item += factor * vector[cnt++];
+	//	CHECKandTHROW((v.NumberOfItems() == NumberOfItems()), "VectorBase::MultAdd: incompatible size of vectors");
+	//	if constexpr (largeVector == false || exuVectorLengthAlignment == 1)
+	//	{
+	//		for (Index i = 0; i < NumberOfItems(); i++)
+	//		{
+	//			data[i] += scalar * v[i];
+	//		}
+	//	}
+	//	else
+	//	{
+	//		for (Index i = 0; i < NumberOfItems(); i++)
+	//		{
+	//			data[i] += scalar * v[i];
+	//		}
+
+	//		Index nShift = NumberOfItems() / exuVectorLengthAlignment;
+	//		PReal* vP = (PReal*)v.GetDataPointer();
+	//		PReal* dataP = (PReal*)data.GetDataPointer();
+	//		for (Index i = 0; i < (nShift*(exuVectorLengthAlignment/exuMemoryAlignment)); i+= (exuVectorLengthAlignment / exuMemoryAlignment))
+	//		{
+	//			//optimize for latency; using 4 PReal speeds up only slightly
+	//			PReal a = dataP[i] + scalar * vP[i];
+	//			PReal b = dataP[i + 1] + scalar * vP[i + 1];
+	//			dataP[i] = a;
+	//			dataP[i + 1] = b;
+	//		}
+	//		for (Index i = nShift * exuVectorLengthAlignment; i < NumberOfItems(); i++)
+	//		{
+	//			data[i] += scalar * v[i];
+	//		}
 	//	}
 	//}
 
@@ -560,21 +553,6 @@ public:
         for (auto &item : *this) { item /= norm; }
     }
 
-#ifndef USE_NEW_CONSTSIZEVECTOR
-	//! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
-	void CopyFrom(const VectorBase& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
-	{
-		//CHECKandTHROW((vectorPosition >= 0), "VectorBase::CopyFrom(...): vectorPosition < 0");
-		//CHECKandTHROW((thisPosition >= 0), "VectorBase::CopyFrom(...): thisPosition < 0");
-		CHECKandTHROW((thisPosition + numberOfCopiedItems <= NumberOfItems()), "VectorBase::CopyFrom(...): thisPosition index mismatch");
-		CHECKandTHROW((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()), "VectorBase::CopyFrom(...): vectorPosition index mismatch");
-
-		for (Index i = 0; i < numberOfCopiedItems; i++)
-		{
-			(*this)[i + thisPosition] = vector[i + vectorPosition];
-		}
-	}
-#else
 	//! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
 	template<class Tvector>
 	void CopyFrom(const Tvector& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
@@ -590,7 +568,21 @@ public:
 			//this->GetUnsafe(i + thisPosition) = vector[i + vectorPosition];
 		}
 	}
-#endif
+
+	//! copy from other std::vector
+	void CopyFrom(const StdVector& vector)
+	{
+		SetNumberOfItems((Index)vector.size());
+
+		//may be faster => test ...
+		//std::copy(vector.begin(), vector.end(), this->begin());
+
+		Index cnt = 0;
+		for (Real val : vector) 
+		{
+			this->GetUnsafe(cnt++) = val;
+		}
+	}
 
 	//! copy from other vector (or even array) and perform type conversion (e.g. for graphics)
 	template<class TVector>
@@ -697,6 +689,5 @@ VectorBase<T>::VectorBase(std::initializer_list<T> listOfReals)
 
 typedef VectorBase<Real> Vector;
 typedef VectorBase<float> VectorF; //always float, used for graphics
-typedef std::vector<Real> StdVector; //needed for user functions
 
 #endif

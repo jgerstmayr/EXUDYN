@@ -283,7 +283,7 @@ simulationSettings.timeIntegration.endTime = deltaT
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
 simulationSettings.displayComputationTime = True
-simulationSettings.numberOfThreads = 2
+simulationSettings.parallel.numberOfThreads = 2
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #set up interactive window

@@ -56,7 +56,7 @@ namespace EXUstd
 
 		//Eigen::initParallel(); //use this in case, that omp is used in other parts of the code
 
-		int nthreads = (int)simulationSettings.numberOfThreads; //activated /Zc:twoPhase- in compiler options to suppress warning
+		int nthreads = (int)simulationSettings.parallel.numberOfThreads; //activated /Zc:twoPhase- in compiler options to suppress warning
 		if (nthreads < 1 || nthreads > 100) { PyError("simulationSettings.numberOfThreads is out of range(1..100)!"); return; }
 
 //#ifdef USE_OPENMP //needs omp.h, not available on MacOS

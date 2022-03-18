@@ -126,7 +126,7 @@ if useCircleContact:
         mbs.AddObject(ObjectContactFrictionCircleCable2D(markerNumbers=[mRigid, mCable], nodeNumber = nodeDataContactCable, 
                                                  numberOfContactSegments=nSegments, contactStiffness = cStiffness, contactDamping=cDamping, 
                                                  frictionVelocityPenalty = 10, frictionCoefficient=2,
-                                                 circleRadius = r2, offset = 0))
+                                                 circleRadius = r2))
 
 
 mbs.Assemble()
@@ -146,6 +146,9 @@ simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8 #10000
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-10*100
 
+#simulationSettings.timeIntegration.discontinuous.maxIterations = 5
+# simulationSettings.timeIntegration.discontinuous.iterationTolerance = 0.001 #with 
+
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.newton.maxModifiedNewtonIterations = 5
 #simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
@@ -160,14 +163,15 @@ SC.visualizationSettings.bodies.showNumbers = False
 SC.visualizationSettings.nodes.defaultSize = 0.01
 SC.visualizationSettings.markers.defaultSize = 0.01
 SC.visualizationSettings.connectors.defaultSize = 0.01
-SC.visualizationSettings.connectors.contactPointsDefaultSize = 0.005
+SC.visualizationSettings.contact.contactPointsDefaultSize = 0.005
 SC.visualizationSettings.connectors.showContact = 1
 
 simulationSettings.solutionSettings.solutionInformation = "ANCF cable with rigid contact"
 
+# exudynTestGlobals.useGraphics=False
 if exudynTestGlobals.useGraphics: 
     exu.StartRenderer()
-    #mbs.WaitForUserToContinue()
+    mbs.WaitForUserToContinue()
 
 solveDynamic = True
 if solveDynamic: 
@@ -201,7 +205,7 @@ else:
     exu.Print('static tip displacement: x='+str(sol[n-4])+', y='+str(sol[n-3])) 
 
 #put outside if
-exudynTestGlobals.testError = u - (-0.014188649931870346) #2019-12-26: -0.014188649931870346; 2019-12-16: (-0.01418281035370442);
+exudynTestGlobals.testError = u - (-0.014187561328096003) #until 2022-03-09 (old ObjectContactFrictionCircleCable2D): -0.014188649931870346   #2019-12-26: -0.014188649931870346; 2019-12-16: (-0.01418281035370442);
 exudynTestGlobals.testResult = u
 exu.Print("test result=",exudynTestGlobals.testResult)
 

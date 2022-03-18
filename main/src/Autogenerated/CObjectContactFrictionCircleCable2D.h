@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-09-28  19:19:58 (last modified)
+* @date         2022-03-14  12:31:55 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,15 +30,14 @@ class CObjectContactFrictionCircleCable2DParameters // AUTO:
 {
 public: // AUTO: 
     ArrayIndex markerNumbers;                     //!< AUTO: markers define contact gap
-    Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with 3 \f$\times n_{cs}\f$  dataCoordinates (used for active set strategy \f$\ra\f$ hold the gap of the last discontinuous iteration and the friction state)
+    Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with 3 \f$\times n_{cs}\f$  dataCoordinates (used for active set strategy \f$\ra\f$ hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*\f$n_{cs}\f$+[-2]*\f$n_{cs}\f$+[0.]*\f$n_{cs}\f$, meaning that there is no initial contact with undefined slip/stick
     Index numberOfContactSegments;                //!< AUTO: number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker
     Real contactStiffness;                        //!< AUTO: contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) \f$f_n\f$ act in contact normal direction only upon penetration
     Real contactDamping;                          //!< AUTO: contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration
-    Real frictionVelocityPenalty;                 //!< AUTO: velocity dependent penalty coefficient for friction [SI:N/(m s)/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential velocities in the contact area
-    Real frictionStiffness;                       //!< AUTO: CURRENTLY NOT IMPLEMENTED: displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area
+    Real frictionVelocityPenalty;                 //!< AUTO: tangential velocity dependent penalty coefficient for friction [SI:N/(m s)/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential velocities in the contact area
+    Real frictionStiffness;                       //!< AUTO: tangential displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area
     Real frictionCoefficient;                     //!< AUTO: friction coefficient [SI: 1]; tangential specific friction forces (per length) \f$f_t\f$ must fulfill the condition \f$f_t \le \mu f_n\f$
     Real circleRadius;                            //!< AUTO: radius [SI:m] of contact circle
-    Real offset;                                  //!< AUTO: offset [SI:m] of contact, e.g. to include thickness of cable element
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectContactFrictionCircleCable2DParameters()
@@ -52,7 +51,6 @@ public: // AUTO:
         frictionStiffness = 0.;
         frictionCoefficient = 0.;
         circleRadius = 0.;
-        offset = 0.;
         activeConnector = true;
     };
 };
@@ -60,7 +58,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectContactFrictionCircleCable2D
-* @brief        A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a Rigid-Body Marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with 3\f$\times\f$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=1), last friction position]; Note that friction can be only considered in the dynamic case where velocities are available, while it is inactive in the static case.
+* @brief        A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a Rigid-Body Marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with 3\f$\times\f$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position].
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -85,6 +83,9 @@ protected: // AUTO:
     CObjectContactFrictionCircleCable2DParameters parameters; //! AUTO: contains all parameters for CObjectContactFrictionCircleCable2D
 
 public: // AUTO: 
+    static const Index isStickCase = 0; //AUTO: value which represents stick
+    static const Index isUndefinedCase = -2; //AUTO: value which represents undefined stick/slip
+    static const Index absValueSlipCase = 1; //AUTO: slip may be +-1 !
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
@@ -147,9 +148,6 @@ public: // AUTO:
         return true;
     }
 
-    //! AUTO:  Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-    virtual OutputVariableType GetOutputVariableTypes() const override;
-
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;
 
@@ -173,6 +171,14 @@ public: // AUTO:
 
     //! AUTO:  return if contact is active-->avoids computation of ODE2LHS, speeds up computation
     bool IsContactActive() const;
+
+    virtual OutputVariableType GetOutputVariableTypes() const override
+    {
+        return (OutputVariableType)(
+            (Index)OutputVariableType::Coordinates +
+            (Index)OutputVariableType::Coordinates_t +
+            (Index)OutputVariableType::ForceLocal );
+    }
 
 };
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-09-27  18:50:21 (last modified)
+* @date         2022-03-15  20:27:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -168,11 +168,14 @@ public: // AUTO:
             (Index)OutputVariableType::Displacement +
             (Index)OutputVariableType::Velocity +
             (Index)OutputVariableType::VelocityLocal +
+            (Index)OutputVariableType::RotationMatrix +
             (Index)OutputVariableType::Rotation +
             (Index)OutputVariableType::AngularVelocity +
-            (Index)OutputVariableType::RotationMatrix +
+            (Index)OutputVariableType::AngularVelocityLocal +
             (Index)OutputVariableType::Acceleration +
-            (Index)OutputVariableType::AngularAcceleration );
+            (Index)OutputVariableType::AccelerationLocal +
+            (Index)OutputVariableType::AngularAcceleration +
+            (Index)OutputVariableType::AngularAccelerationLocal );
     }
 
 };

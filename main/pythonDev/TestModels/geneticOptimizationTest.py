@@ -22,47 +22,46 @@ import numpy as np #for postprocessing
 import os
 from time import sleep
 
+dataRef = None
 #this is the function which is repeatedly called from ParameterVariation
 #parameterSet contains dictinary with varied parameters
 def ParameterFunction(parameterSet):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
+    global dataRef #can be avoided, if reference solution is written to file!
 
-    #default values
-    mass = 1.6          #mass in kg
-    spring = 4000       #stiffness of spring-damper in N/m
-    damper = 8    #old: 8; damping constant in N/(m/s)
-    u0=-0.08            #initial displacement
-    v0=1                #initial velocity
-    force =80               #force applied to mass
+    
+    #++++++++++++++++++++++++++++++++++++++++++++++
+    #++++++++++++++++++++++++++++++++++++++++++++++
+    #store default parameters in structure (all these parameters can be varied!)
+    class P: pass #create emtpy structure for parameters; simplifies way to update parameters
 
-    #process parameters
-    if 'mass' in parameterSet:
-        mass = parameterSet['mass']
-        
-    if 'spring' in parameterSet:
-        spring = parameterSet['spring']
+    P.mass = 1.6          #mass in kg
+    P.spring = 4000       #stiffness of spring-damper in N/m
+    P.damper = 8    #old: 8; damping constant in N/(m/s)
+    P.u0=-0.08            #initial displacement
+    P.v0=1                #initial velocity
+    P.force =80           #force applied to mass
+    P.computationIndex = ''
 
-    if 'force' in parameterSet:
-        force = parameterSet['force']
+    #now update parameters with parameterSet (will work with any parameters in structure P)
+    for key,value in parameterSet.items():
+        setattr(P,key,value)
 
-    iCalc = 'Ref' #needed for parallel computation ==> output files are different for every computation
-    if 'computationIndex' in parameterSet:
-        iCalc = str(parameterSet['computationIndex'])
-        #print("computation index=",iCalc, flush=True)
-
+    #++++++++++++++++++++++++++++++++++++++++++++++
+    #++++++++++++++++++++++++++++++++++++++++++++++
+    #create model using parameters P starting here:
 
     L=0.5               #spring length (for drawing)
-    
     n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], 
-                         initialCoordinates = [u0,0,0], 
-                         initialVelocities= [v0,0,0]))
+                         initialCoordinates = [P.u0,0,0], 
+                         initialVelocities= [P.v0,0,0]))
     
     #ground node
     nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
     
     #add mass point (this is a 3D object with 3 coordinates):
-    massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1))
+    massPoint = mbs.AddObject(MassPoint(physicsMass = P.mass, nodeNumber = n1))
     
     #marker for ground (=fixed):
     groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
@@ -71,25 +70,24 @@ def ParameterFunction(parameterSet):
     
     #spring-damper between two marker coordinates
     nC = mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker], 
-                                              stiffness = spring, damping = damper)) 
+                                              stiffness = P.spring, damping = P.damper)) 
     
     #add load:
-    mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
-                                             load = force))
+    mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, load = P.force))
     #add sensor:
-    sensorFileName = 'solution/paramVarDisplacement'+iCalc+'.txt'
-    mbs.AddSensor(SensorObject(objectNumber=nC, fileName=sensorFileName, 
-                               outputVariableType=exu.OutputVariableType.Displacement))
-    #print("sensorFileName",sensorFileName)
     
-    #print(mbs)
+    sDisp = mbs.AddSensor(SensorObject(objectNumber=nC, 
+                               storeInternal=True,
+                               outputVariableType=exu.OutputVariableType.Displacement))
+ 
+    #++++++++++++++++++++++++++++++++++++++++++++++
+    #assemble and compute solution
     mbs.Assemble()
     
     steps = 100  #number of steps to show solution
     tEnd = 1     #end time of simulation
     
     simulationSettings = exu.SimulationSettings()
-    #simulationSettings.solutionSettings.solutionWritePeriod = 5e-3  #output interval general
     simulationSettings.solutionSettings.writeSolutionToFile = False
     simulationSettings.solutionSettings.sensorsWritePeriod = 2e-3  #output interval of sensors
     simulationSettings.timeIntegration.numberOfSteps = steps
@@ -102,32 +100,23 @@ def ParameterFunction(parameterSet):
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #evaluate difference between reference and optimized solution
     #reference solution:
-    dataRef = np.loadtxt('solution/paramVarDisplacementRef.txt', comments='#', delimiter=',')
-    data = np.loadtxt(sensorFileName, comments='#', delimiter=',')
+    data = mbs.GetSensorStoredData(sDisp)
 
+    if P.computationIndex=='Ref': 
+        dataRef = data
+        
     diff = data[:,1]-dataRef[:,1]
     
     errorNorm = np.sqrt(np.dot(diff,diff))/steps*tEnd
 
-            
-    if True: #delete files; does not work for parallel, consecutive operation
-        if iCalc != 'Ref':
-            os.remove(sensorFileName) #remove files in order to clean up
-            while(os.path.exists(sensorFileName)): #wait until file is really deleted -> usually some delay
-                sleep(0.001) #not nice, but there is no other way than that
-        
-    del mbs
-    del SC
-    
     return errorNorm
 
+#generate reference data, also in multi-threaded version this will be computed for all threads!
+refval = ParameterFunction({'computationIndex':'Ref'}) # compute reference solution
 
 #now perform parameter variation
 if __name__ == '__main__': #include this to enable parallel processing
     import time
-
-    refval = ParameterFunction({}) # compute reference solution
-    #print("refval =", refval)
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
     #GeneticOptimization    
@@ -146,12 +135,12 @@ if __name__ == '__main__': #include this to enable parallel processing
                                          useMultiProcessing=False, #may be problematic for test
                                          showProgress=False,
                                          )
-    #exu.Print("--- %s seconds ---" % (time.time() - start_time))
+    exu.Print("--- %s seconds ---" % (time.time() - start_time))
 
     exu.Print("[pOpt, vOpt]=", [pOpt, vOpt])
     u = vOpt
     exu.Print("optimum=",u)
-    exudynTestGlobals.testError = u - (0.0030262381385228617) #2020-12-18: (nElements=32) -2.7613614363986017e-05
+    exudynTestGlobals.testError = u - 0.0030262381366063158 #until 2022-02-20(changed to storeInternal): (0.0030262381385228617) #2020-12-18: (nElements=32) -2.7613614363986017e-05
     exudynTestGlobals.testResult = u
 
     if exudynTestGlobals.useGraphics and False:
@@ -170,7 +159,8 @@ if __name__ == '__main__': #include this to enable parallel processing
                        showProgress=False)
     #exu.Print("vList=", v)
     u=v[3]
-    exudynTestGlobals.testError += u - (0.09814894553377107) #2020-12-18: (nElements=32) -2.7613614363986017e-05
+    exudynTestGlobals.testError += u - 0.09814894553165972 #until 2022-02-20(changed to storeInternal):(0.09814894553377107) #2020-12-18: (nElements=32) -2.7613614363986017e-05
     exudynTestGlobals.testResult += u
-    
+    exu.Print('geneticOptimizationTest testResult=', exudynTestGlobals.testResult)
+    exu.Print('geneticOptimizationTest error=', exudynTestGlobals.testError)
 

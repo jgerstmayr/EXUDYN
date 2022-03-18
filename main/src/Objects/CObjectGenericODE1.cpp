@@ -86,6 +86,7 @@ void CObjectGenericODE1::ComputeODE1RHS(Vector& ODE1Rhs, Index objectNumber) con
 		Vector userForce;
 
 		EvaluateUserFunctionRHS(userForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates);
+		CHECKandTHROW(userForce.NumberOfItems() == nODE1, "CObjectGenericODE1: forceUserFunction return a vector with different size from ObjectGenericODE1 system size");
 
 		ODE1Rhs += userForce;
 	}

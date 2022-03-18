@@ -5,6 +5,7 @@
 #
 # Author:   Johannes Gerstmayr
 # Date:     2019-11-15
+# Update:   2022-03-16: get to run static example again, compared to paper!
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
@@ -42,17 +43,18 @@ mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #generate ANCF beams with utilities function
-nElements = 32*2
 cableTemplate = Cable2D(#physicsLength = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
                         physicsMassPerLength = rho*A,
                         physicsBendingStiffness = E*I,
                         physicsAxialStiffness = E*A,
+                        useReducedOrderIntegration = 0,
                         #nodeNumbers = [0, 0], #will be filled in GenerateStraightLineANCFCable2D(...)
                         )
 
 positionOfNode0 = [0, 0, 0] # starting point of line
 positionOfNode1 = [L, 0, 0] # end point of line
-numberOfElements = 32*2
+numberOfElements = 32*2#32*2
+
 #alternative to mbs.AddObject(Cable2D(...)) with nodes:
 ancf=GenerateStraightLineANCFCable2D(mbs,
                 positionOfNode0, positionOfNode1,
@@ -67,7 +69,7 @@ mbs.AddLoad(Force(markerNumber = mANCFLast, loadVector = [0, -f, 0])) #will be c
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 mbs.Assemble()
-print(mbs)
+# print(mbs)
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
 tEnd = 0.1
@@ -76,7 +78,7 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.solutionSettings.writeSolutionToFile = True
 simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/1000
-simulationSettings.displayComputationTime = True
+simulationSettings.displayComputationTime = False
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
@@ -90,6 +92,7 @@ simulationSettings.displayStatistics = True
 SC.visualizationSettings.nodes.defaultSize = 0.01
 
 simulationSettings.solutionSettings.solutionInformation = "Planar four-bar-mechanism with initial angular velocity and gravity"
+simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 
 doDynamicSimulation = True #switch between static and dynamic simulation
 
@@ -99,15 +102,13 @@ if doDynamicSimulation:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 else:
-    simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-9
     simulationSettings.staticSolver.verboseMode = 0
     
-    simulationSettings.staticSolver.newton.relativeTolerance = 1e-10 #10000
-    simulationSettings.staticSolver.newton.absoluteTolerance = 1e-10
-    simulationSettings.staticSolver.newton.maxIterations = 50
+    simulationSettings.staticSolver.newton.relativeTolerance = 1e-10
+    simulationSettings.staticSolver.newton.absoluteTolerance = 1e-3 #1 for 256 elements; needs to be larger for larger number of load steps
+    #simulationSettings.staticSolver.numberOfLoadSteps = 1
     
-    #exu.StartRenderer()
-    nLoadSteps = 10;
+    nLoadSteps = 1;
     for loadSteps in range(nLoadSteps):
         nLoad = 0
         loadValue = f**((loadSteps+1)/nLoadSteps) #geometric increment of loads
@@ -116,22 +117,38 @@ else:
         mbs.SetLoadParameter(nLoad, 'loadVector', [0, -loadValue,0])
         print('load vector=' + str(mbs.GetLoadParameter(nLoad, 'loadVector')) )
     
-        exu.SolveStatic(mbs, simulationSettings)
+        exu.SolveStatic(mbs, simulationSettings, updateInitialValues=True)
+        #exu.SolveStatic(mbs, simulationSettings, updateInitialValues=False) #second solve to increase accuracy
     
         sol = mbs.systemData.GetODE2Coordinates()
-        #print('sol step  ' + str(loadSteps) + '  ='+str(sol))
-        mbs.systemData.SetODE2Coordinates(coordinates=sol, configuration=exu.ConfigurationType.Initial) #set initial conditions for next step
         
         n = len(sol)
-        print('tip displacement: x='+str(sol[n-4])+', y='+str(sol[n-3])) #16 elements: x=-0.5104965058039698, y=-1.2092832506553663
+        print('nEL=',numberOfElements, ', tip displacement: x='+str(sol[n-4])+', y='+str(sol[n-3])) 
         #MATLAB 1 element: x=0.3622447298905063, y=0.9941447587249748 = paper "on the correct ..."
-        #here:
+        #2022-03-16:
+        # nEL= 1 ,  tip displacement: x=-0.36224472989050654,y=-0.9941447587249747
+        # nEL= 2 ,  tip displacement: x=-0.4889263085609102, y=-1.1752228652637502
+        # nEL= 4 ,  tip displacement: x=-0.5074287154557922, y=-1.2055337025602493
+        # nEL= 8 ,  tip displacement: x=-0.5085092365729895, y=-1.207197756093103
+        # nEL= 16 , tip displacement: x=-0.5085365799149556, y=-1.207238895003594
+        # nEL= 32 , tip displacement: x=-0.508537277761696,  y=-1.2072398264650905
+        # nEL= 64 , tip displacement: x=-0.5085373030408489, y=-1.207239853404364
+        # nEL= 128, tip displacement: x=-0.5085373043168473, y=-1.2072398545511795
+        # nEL= 256, tip displacement: x=-0.5085373043916903, y=-1.207239854614031
+        
+        #with second SolveStatic:
+        #nEL= 256 , tip displacement: x=-0.5085373043209366, y=-1.2072398545457574
+        #converged:                   x=-0.508537304326,     y=-1.207239854550
+
+        #here (OLD):
         #1:  x=-0.36224472989050543, y=-0.994144758724973
         #2:  x=-0.4889263083414858, y=-1.1752228650551666
         #4:  x=-0.5074287151188892, y=-1.2055337022335404
         #8:  x=-0.5085092364970802, y=-1.2071977560198281
         #64: x=-0.5085373029700947, y=-1.2072398533360738
         #256:x=-0.5085373043209689, y=-1.2072398545457785
+        
+        
     
     
         #sol = mbs.systemData.GetODE2Coordinates(exu.ConfigurationType.Initial)

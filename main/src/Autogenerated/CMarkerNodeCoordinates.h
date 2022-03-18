@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-11-15  23:04:42 (last modified)
+* @date         2022-03-16  23:19:06 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CMarkerNodeCoordinates
-* @brief        A node-Marker attached to all \hac{ODE2} coordinates of a node; IN CONTRAST DOT MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values!; this marker allows connecting a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for \hac{ODE1} coordinates use MarkerNodeODE1Coordinates (under development).
+* @brief        A node-Marker attached to all \hac{ODE2} coordinates of a node; IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! for \hac{ODE1} coordinates use MarkerNodeODE1Coordinates (under development).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -94,8 +94,8 @@ public: // AUTO:
     //! AUTO:  Compute marker data (e.g. position and positionJacobian) for a marker
     virtual void ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const override;
 
-    //! AUTO:  fill in according data for derivative of jacobian times vector v, e.g.: d(Jpos.T @ v)/dq
-    virtual void ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector& v, MarkerData& markerData) const override;
+    //! AUTO:  fill in according data for derivative of jacobian times vector v6D, e.g.: d(Jpos.T @ v6D[0:3])/dq; v6D represents 3 force components and 3 torque components in global coordinates!
+    virtual void ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const override;
 
 };
 

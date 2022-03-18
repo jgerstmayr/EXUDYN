@@ -24,6 +24,9 @@ from exudyn.rigidBodyUtilities import *
 from exudyn.graphicsDataUtilities import *
 from exudyn.itemInterface import *
 
+#for compatibility with older models:
+from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: helper functions for matplotlib, returns a list of 28 line codes to be used in plot, e.g. 'r-' for red solid line
 #**input: index in range(0:28)
@@ -126,19 +129,38 @@ def SmoothStepDerivative(x, x0, x1, value0, value1):
         loadValue = (value1-value0) * 0.5*(pi/dx*sin((x-x0)/dx*pi)) 
     return loadValue
 
-#**function: get index from value in given data vector (numpy array); usually used to get specific index of time vector
+#**function: get index from value in given data vector (numpy array); usually used to get specific index of time vector; this function is slow (linear search), if sampling rate is non-constant; otherwise set assumeConstantSampleRate=True!
 #**input: 
 #  data: containing (almost) equidistant values of time
 #  value: e.g., time to be found in data
 #  tolerance: tolerance, which is accepted (default: tolerance=1e-7)
+#  rangeWarning: warn, if index returns out of range; if warning is deactivated, function uses the closest value
+#**notes: to obtain the interpolated value of a time-signal array, use GetInterpolatedSignalValue() in exudyn.signalProcessing
 #**output: index
-def IndexFromValue(data, value, tolerance=1e-7):
-    bestTol = 1e37
+def IndexFromValue(data, value, tolerance=1e-7, assumeConstantSampleRate=False, rangeWarning=True):
     index  = -1
-    for i in range(len(data)):
-        if abs(data[i] - value) < min(bestTol, tolerance):
-            index = i
-            bestTol = abs(data[i] - value)
+    
+    if assumeConstantSampleRate and len(data) > 1:
+        dt = data[1] - data[0]
+        if dt == 0.:
+            raise ValueError('IndexFromValue: sample rate is zero!')
+        index = int((value-data[0]) / dt)
+        if index < 0:
+            index = 0
+            if rangeWarning:
+                print('Warning: IndexFromValue: index returned smaller than 0; using 0 instead')
+        elif index >= len(data):
+            if rangeWarning:
+                print('Warning: IndexFromValue: index returned larger than array length-1; using array max length-1 instead')
+            index = len(data)-1
+            
+    else:
+        bestTol = 1e37
+        for i in range(len(data)):
+            if abs(data[i] - value) < min(bestTol, tolerance):
+                index = i
+                bestTol = abs(data[i] - value)
+
     if index == -1:
         raise ValueError("IndexFromValue: value not found with given tolerance")
     return index
@@ -344,6 +366,8 @@ def HighlightItem(SC, mbs, itemNumber, itemType=exudyn.ItemType.Object, showNumb
 def UFsensorRecord(mbs, t, sensorNumbers, factors, configuration):
     iSensor = sensorNumbers[0]
     val = mbs.GetSensorValues(iSensor, configuration=configuration) #get all values
+    if type(val) == float:# or type(x) == nd.float64:
+        val = np.array([val]) #for scalar values
     ti = int((t+1e-9)/factors[0]) #add 1e-10 safety factor due to rounding errors when adding time steps (may lead to small errors after 1e7 steps)
     if ti >= 0 and ti < len(mbs.variables['sensorRecord'+str(iSensor)]):
         mbs.variables['sensorRecord'+str(iSensor)][ti,0] = t
@@ -351,14 +375,14 @@ def UFsensorRecord(mbs, t, sensorNumbers, factors, configuration):
         
     return val #return value usually not used further
 
-#**function: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecorder'+str(iSensor)] where iSensor is the mbs sensor number
+#**function: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecord'+str(sensorNumber)] where sensorNumber is the mbs sensor number
 #**input: 
 #  mbs: mbs containing object
 #  sensorNumber: integer sensor number to be recorded
 #  endTime: end time of simulation, as given in simulationSettings.timeIntegration.endTime 
 #  sensorsWritePeriod: as given in simulationSettings.solutionSettings.sensorsWritePeriod
 #  sensorOutputSize: size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)
-#**output: adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables['sensorRecord'+str(iSensor)] and the information is written row-wise: [time, sensorValue1, sensorValue2, ...]
+#**output: adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables['sensorRecord'+str(sensorNumber)] and the information is written row-wise: [time, sensorValue1, sensorValue2, ...]
 #**notes: This sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
 def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutputSize=3):
     nSteps = int(endTime/sensorsWritePeriod)
@@ -381,21 +405,358 @@ def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutp
 #**function: read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:
 #**input: 
 #  fileName: string containing directory and filename of stored coordinatesSolutionFile
-#  saveMode: if true, it uses the numpy genfromtxt function to load inconsistent lines as well
-#**output: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with binary values showing the exported columns [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData],'nColumns': the number of data columns and 'nRows': the number of data rows
-def LoadSolutionFile(fileName, safeMode=False):
+#  saveMode: if True, it loads lines directly to load inconsistent lines as well; use this for huge files (>2GB); is slower but needs less memory!
+#  verbose: if True, some information is written when importing file (use for huge files to track progress)
+#  maxRows: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
+#**output: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
+def LoadSolutionFile(fileName, safeMode=False, maxRows=-1, verbose=True):
+
+    #check if is binary or ASCII
+    isBinary = False
+    with open(fileName, 'r') as file:
+        data = np.fromfile(file, dtype=np.byte, count=6)
+        if data.size==6:
+            s = NumpyInt8ArrayToString(data)
+            if s=='EXUBIN':
+                isBinary=True
+
+    if isBinary:
+        return LoadBinarySolutionFile(fileName,maxRows,verbose)
+    
+    #read HEADER
+    with open(fileName) as fileRead:
+        # fileRead=open(fileName,'r') 
+        fileLines = []
+        fileLines += [fileRead.readline()]
+        fileLines += [fileRead.readline()]
+        fileLines += [fileRead.readline()]
+        fileLines += [fileRead.readline()]
+        fileLines += [fileRead.readline()]
+        # fileRead.close()
+
+    if len(fileLines[4]) == 0:
+        raise ValueError('ERROR in LoadSolution: file empty or header missing')
+        
+    leftStr=fileLines[4].split('=')[0]
+    if leftStr[0:30] != '#number of written coordinates': 
+        raise ValueError('ERROR in LoadSolution: file header corrupted')
+
+    columnsExported = eval(fileLines[4].split('=')[1]) #load according column information into vector: [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData]
+    nColumns = sum(columnsExported)
+
+    #read DATA
     if not safeMode:
         data = np.loadtxt(fileName, comments='#', delimiter=',')
     else:
-        data = np.genfromtxt(fileName,comments='#',delimiter=',',invalid_raise=False)
+        #alternative, but needs factor 5 times the memory of data loaded:
+        #  data = np.genfromtxt(fileName,comments='#',delimiter=',',invalid_raise=False)
 
-    # fileRead=open(fileName,'r') 
-    # fileLines = fileRead.readlines()
-    # fileRead.close()
-    # leftStr=fileLines[4].split('=')[0]
-    # if leftStr[0:30] != '#number of written coordinates': 
-        # print('ERROR in LoadSolution: file header corrupted')
+        with open(fileName) as file:
+            lines = file.readlines()
+        
+        if verbose: print('text file loaded ... converting ...')
+        
+        cntDataRows = 0
+        dataRowStart = -1
+        cnt = 0
+        for line in lines: 
+            if line[0]!='#': 
+                if dataRowStart == -1:
+                    dataRowStart = cnt
+                cntDataRows+=1
+            cnt+=1
+            
+        if maxRows != -1 and cntDataRows > maxRows:
+            cntDataRows = maxRows
+        
+        if cntDataRows == 0 or dataRowStart == -1:
+            raise ValueError('LoadSolutionFile: no rows found')
+        else:
+            print('data starts at',dataRowStart, ', found', cntDataRows, 'rows')
 
+        if verbose: print('check columns ...')
+        
+        cols = len(lines[dataRowStart].split(','))
+        if cols != nColumns+1:
+            raise ValueError('ERROR in LoadSolution: number of columns in first data row is inconsistent: got ',cols,' columns, but expected ', nColumns+1)
+        
+        #check last line, which may be incomplete:
+        colsLastLine = len(lines[dataRowStart+cntDataRows-1].split(','))
+        skipLast = 0
+        if colsLastLine != cols:
+            print('LoadSolution: WARNING number of columns in last data row is inconsistent; will be skipped')
+            skipLast = 1
+        
+        if verbose: print('file contains ',cntDataRows, ' rows and ', cols, ' columns (incl. time)',sep='')
+        
+        data = np.zeros((cntDataRows, nColumns+1))
+        
+        progress = 0
+        progressInfo = 5000000
+        for i in range(cntDataRows-skipLast):
+            if verbose and progress>=progressInfo: #update progress
+                print('import data row', i, '/', cntDataRows)
+                progress = 0
+            progress+=nColumns
+            ylist = lines[i+dataRowStart].split(',')
+            if len(ylist) == nColumns+1:
+                y=np.array(ylist, dtype=float)
+                data[i,:] = y[:]
+            elif verbose:
+                print('  data row', i, 'is inconsistent ... skipped')
+
+    if verbose: print('columns imported =', columnsExported)
+    if verbose: print('total columns to be imported =', nColumns, ', array size of file =', np.size(data,1))
+
+    if (nColumns + 1) != np.size(data,1): #one additional column for time!
+        raise ValueError('ERROR in LoadSolution: number of columns is inconsistent')
+
+    nRows = np.size(data,0)
+
+    return dict({'data': data, 'columnsExported': columnsExported,'nColumns': nColumns,'nRows': nRows})
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
+#helper functions for reading binary files:
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: simple conversion of int8 arrays into strings (not highly efficient, so use only for short strings)
+def NumpyInt8ArrayToString(npArray):
+    s=''
+    for x in npArray:
+        s+=chr(x)
+    return s
+
+#**function: read single Index from current file position in binary solution file
+def BinaryReadIndex(file, intType):
+    data = np.fromfile(file, dtype=intType, count=1)
+    if data.size != 1: return [0,True] #end of file
+    return [data[0], False]
+
+#**function: read single Real from current file position in binary solution file
+def BinaryReadReal(file, realType):
+    data = np.fromfile(file, dtype=realType, count=1)
+    if data.size != 1: return [0,True] #end of file
+    return [data[0], False]
+
+#**function: read string from current file position in binary solution file
+def BinaryReadString(file, intType):
+    dataLength = np.fromfile(file, dtype=intType, count=1)[0]
+    data = np.fromfile(file, dtype=np.byte, count=dataLength)
+    return [NumpyInt8ArrayToString(data), False]
+
+#**function: read Index array from current file position in binary solution file
+def BinaryReadArrayIndex(file, intType):
+    dataLength = np.fromfile(file, dtype=intType, count=1)[0]
+    data = np.fromfile(file, dtype=intType, count=dataLength)
+    return [data, False]
+
+#**function: read Real vector from current file position in binary solution file
+#**output: return data as numpy array, or False if no data read
+def BinaryReadRealVector(file, intType, realType):
+    sizeData = np.fromfile(file, dtype=intType, count=1)
+    if sizeData.size != 1: return [[],True] #end of file
+    dataLength = sizeData[0]
+    data = np.fromfile(file, dtype=realType, count=dataLength)
+    if data.size != dataLength: return [[],True] #end of file
+    return [data, False]
+
+
+#++++++++++++++++++++++++++++++++++++++++++++
+#**function: read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary
+#**input: 
+#  fileName: string containing directory and filename of stored coordinatesSolutionFile
+#  verbose: if True, some information is written when importing file (use for huge files to track progress)
+#  maxRows: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
+#**output: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
+def LoadBinarySolutionFile(fileName, maxRows=-1, verbose=True):
+    print('verbose=',verbose)
+    with open(fileName, 'r') as file:
+        data = np.fromfile(file, dtype=np.byte, count=6)
+        s = NumpyInt8ArrayToString(data)
+        if int(verbose)>1: print(s)
+        if s!='EXUBIN':
+            raise ValueError('LoadBinarySolutionFile: no binary header found!')
+
+        if verbose: print('read binary file')
+        fileEnd = False
+# 			ExuFile::BinaryWriteHeader(solFile, bfs);
+        dataHeader = np.fromfile(file, dtype=np.byte, count=10)
+        #dataHeader[0] == '\n'
+        indexSize = int(dataHeader[1])
+        realSize = int(dataHeader[2])
+        pointerSize = int(dataHeader[3])
+        bigEndian = int(dataHeader[4])
+        
+        if indexSize==4:
+            intType = np.int32
+        elif indexSize==8:
+            intType = np.int64
+        else:
+            raise ValueError('Read binary file: invalid Index type size!')
+        
+        if realSize==4:
+            realType = np.float32
+        elif realSize==8:
+            realType = np.float64
+        else:
+            raise ValueError('LoadBinarySolutionFile: invalid Real type size!')
+        
+        if verbose>1: 
+            print('  indexSize=',indexSize)
+            print('  realSize=',realSize)
+            print('  pointerSize=',pointerSize)
+            print('  bigEndian=',bigEndian)
+
+# 		ExuFile::BinaryWrite(EXUstd::exudynVersion, solFile, bfs);
+        sVersion, fileEnd=BinaryReadString(file, intType)
+        if verbose: print('  version=',sVersion)
+
+# 		ExuFile::BinaryWrite(STDstring("Mode0000"), solFile, bfs); //change this in future to add new features
+        sMode, fileEnd=BinaryReadString(file, intType)
+        if int(verbose)>1: print('  mode=',sMode)
+
+# 			STDstring str = "Exudyn " + GetSolverName() + " ";
+# 			if (isStatic) { str+="static "; }
+# 			str+="solver solution file";
+# 			ExuFile::BinaryWrite(str, solFile, bfs);
+        sSolver, fileEnd=BinaryReadString(file, intType)
+        if int(verbose)>1: print('  solver=',sSolver)
+
+# 			//solFile << "#simulation started=" << EXUstd::GetDateTimeString() << "\n";
+# 			ExuFile::BinaryWrite(EXUstd::GetDateTimeString(), solFile, bfs);
+        sTime, fileEnd=BinaryReadString(file, intType)
+        if int(verbose)>1: print('  data/time=',sTime)
+
+# 			//not needed in binary format:
+# 			//solFile << "#columns contain: time, ODE2 displacements";
+# 			//if (solutionSettings.exportVelocities) { solFile << ", ODE2 velocities"; }
+# 			//if (solutionSettings.exportAccelerations) { solFile << ", ODE2 accelerations"; }
+# 			//if (nODE1) { solFile << ", ODE1 coordinates"; } //currently not available, but for future solFile structure necessary!
+# 			//if (nVel1) { solFile << ", ODE1 velocities"; }
+# 			//if (solutionSettings.exportAlgebraicCoordinates) { solFile << ", AE coordinates"; }
+# 			//if (solutionSettings.exportDataCoordinates) { solFile << ", ODE2 velocities"; }
+# 			//solFile << "\n";
+
+# 			//solFile << "#number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [" <<
+# 			//	nODE2 << "," << nODE1 << "," << nAE << "," << nData << "]\n"; //this will allow to know the system information, independently of coordinates written
+# 			ArrayIndex sysCoords({nODE2, nODE1, nAE, nData});
+# 			ExuFile::BinaryWrite(sysCoords, solFile, bfs);
+        systemSizes, fileEnd=BinaryReadArrayIndex(file, intType)
+        if verbose: print('  systemSizes=',systemSizes)
+
+
+# 			//solFile << "#number of written coordinates [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = [" << //these are the exported coordinates line-by-line
+# 			//	nODE2 << "," << nVel2 << "," << nAcc2 << "," << nODE1 << "," << nVel1 << "," << nAEexported << "," << nDataExported << "]\n"; //python convert line with v=eval(line.split('=')[1])
+# 			ArrayIndex writtenCoords({ nODE2, nVel2, nAcc2, nODE1, nVel1, nAEexported, nDataExported });
+# 			ExuFile::BinaryWrite(writtenCoords, solFile, bfs);
+        columnsExported, fileEnd=BinaryReadArrayIndex(file, intType)
+        if verbose: print('  columnsExported=',columnsExported)
+        nColumns = sum(columnsExported) #total size of data per row
+        
+# 			//solFile << "#total columns exported  (excl. time) = " << totalCoordinates << "\n";
+# 			ExuFile::BinaryWrite(totalCoordinates, solFile, bfs);
+        totalCoordinates, fileEnd = BinaryReadIndex(file, intType)
+
+# 			Index numberOfSteps;
+# 			if (!isStatic) { numberOfSteps = timeint.numberOfSteps; }
+# 			else { numberOfSteps = staticSolver.numberOfLoadSteps; }
+# 			ExuFile::BinaryWrite(numberOfSteps, solFile, bfs);
+        numberOfSteps, fileEnd = BinaryReadIndex(file, intType)
+        
+# 			//solution information: always export string, even if has zero length:
+# 			ExuFile::BinaryWrite(solutionSettings.solutionInformation, solFile, bfs);
+        solutionInformation, fileEnd=BinaryReadString(file, intType)
+        if int(verbose)>1: print('  solutionInformation="'+solutionInformation+'"')
+
+# 			//add some checksum ...
+# 			ExuFile::BinaryWrite(STDstring("EndOfHeader"), solFile, bfs);
+# 			//next byte starts with solution
+        EndOfHeader, fileEnd=BinaryReadString(file, intType)
+        if int(verbose)>1: print('  EndOfHeader found: ',EndOfHeader)
+        if EndOfHeader!='EndOfHeader':
+            raise ValueError('LoadBinarySolutionFile: EndOfHeader not found')
+
+
+        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        #read time steps
+# 		if (isBinary) //add size, only in binary mode
+# 		{
+# 			//including 1 real for time+1 Index for nVectors, but excluding bytes for this Index
+# 			Index lineSizeBytes = nVectors * bfs.indexSize + nValues * bfs.realSize + bfs.indexSize + bfs.realSize;
+# 			ExuFile::BinaryWrite(lineSizeBytes, solFile, bfs); //size of line, for fast skipping of solution line
+# 			ExuFile::BinaryWrite(nVectors, solFile, bfs); //number of vectors could vary if needed
+# 		}
+        if fileEnd: print('  ==> end of file found during in header')
+        fileEnd = False
+        data = np.zeros((0,nColumns+1))
+        nRows = 0
+        line = np.zeros(nColumns+1)
+        validEndFound = False
+        dataList = [] #list is much faster than hstack !
+        
+        while not fileEnd:
+            #print('read row ',nRows)
+            if maxRows != -1 and nRows >= maxRows:
+                fileEnd = True
+                break
+
+            #includes time and all values for solution according to header    
+            sizeData = np.fromfile(file, dtype=intType, count=1)
+            if sizeData.size != 1: 
+                fileEnd=True
+                break
+            dataLength = sizeData[0]
+            if dataLength  == -1:
+                if int(verbose)>1: print('end of file reached')
+                validEndFound = True
+                break
+            if int(verbose)>1: 
+                print('  dataLength=',dataLength)
+                
+            line = np.fromfile(file, dtype=realType, count=dataLength)
+            if line.size != dataLength: 
+                fileEnd=True
+                break
+            #line, fileEnd=BinaryReadRealVector(file, intType, realType)
+            if int(verbose)>1: 
+                print('  read',line.size, 'columns (',nColumns+1,'expected)')
+                print('  line=',line)
+            if fileEnd: break
+            if line.size != nColumns+1:
+                raise ValueError('LoadBinarySolutionFile: rows are inconsistent')
+            
+            nRows += 1
+
+            dataList+=[line]
+            #data = np.vstack((data, line)) #slow!
+
+        if verbose: print('  read '+str(nRows)+' rows from file')
+        
+        data = np.array(dataList)
+        nRows = np.size(data,0)
+
+        if not validEndFound:
+            print('LoadBinarySolutionFile: WARNING: end of file inconsistent!')
+        else:
+            if int(verbose)>1: 
+                print('  valid end of data found')
+                print('LoadBinarySolutionFile finished')
+    
+        return dict({'data': data, 'columnsExported': columnsExported,'nColumns': nColumns,'nRows': nRows})
+        
+
+
+
+#++++++++++++++++++++++++++++++++++++++++++++
+#**function: recover solution file with last row not completely written (e.g., if crashed, interrupted or no flush file option set)
+#**input: 
+#  fileName: string containing directory and filename of stored coordinatesSolutionFile
+#  newFileName: string containing directory and filename of new coordinatesSolutionFile
+#  verbose: 0=no information, 1=basic information, 2=information per row
+#**output: writes only consistent rows of file to file with name newFileName
+def RecoverSolutionFile(fileName, newFileName, verbose=0):
+    #read file header
     fileRead=open(fileName,'r') 
     fileLines = []
     fileLines += [fileRead.readline()]
@@ -412,16 +773,102 @@ def LoadSolutionFile(fileName, safeMode=False):
         raise ValueError('ERROR in LoadSolution: file header corrupted')
 
     columnsExported = eval(fileLines[4].split('=')[1]) #load according column information into vector: [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData]
-    print('columns imported =', columnsExported)
     nColumns = sum(columnsExported)
-    print('total columns to be imported =', nColumns, ', array size of file =', np.size(data,1))
+    expectedColumns = nColumns+1
+    if verbose >= 1:
+        print('columns imported =', columnsExported)
+        print('total columns to be imported =', expectedColumns, '(incl. time)\n')
 
-    if (nColumns + 1) != np.size(data,1): #one additional column for time!
-        print('ERROR in LoadSolution: number of columns is inconsistent')
 
-    nRows = np.size(data,0)
+    with open(newFileName, 'w') as fileWrite:
+        with open(fileName) as file:
+            cnt = 0
+            cntSolution = 0
+            for line in file:
+                if line[0] == '#':
+                    if len(line) < 1000 and verbose >= 1:
+                        print('HEADER:', line, end='')
+                    fileWrite.write(line)
+                else:
+                    #cols = len(line.split(','))
+                    cols = line.count(',')+1 #+1 needed, because two columns for one comma
+                    if cols == expectedColumns:
+                        if verbose >= 2:
+                            print('data row ',cntSolution,', #cols=',cols, ', text=',line[0:12],'...', sep='')
+                        fileWrite.write(line)
+                    else:
+                        if verbose >= 1:
+                            print('\nWARNING: ignored solution data',cntSolution, '(file line',cnt,'), columns=', cols, '\n')
+                    cntSolution += 1
+                
+                cnt += 1
 
-    return dict({'data': data, 'columnsExported': columnsExported,'nColumns': nColumns,'nRows': nRows})
+#++++++++++++++++++++++++++++++++++++++++++++
+#**function: recover initial coordinates, time, etc. from given restart file
+#**input: 
+#  mbs: MainSystem to be operated with
+#  simulationSettings: simulationSettings which is updated and shall be used afterwards for SolveDynamic(...) or SolveStatic(...)
+#  restartFileName: string containing directory and filename of stored restart file, as given in solutionSettings.restartFileName
+#  verbose: False=no information, True=basic information
+#**output: modifies simulationSettings and sets according initial conditions in mbs
+def InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose=True):
+    raise ValueError('InitializeFromRestartFile: not fully implemented')
+
+    fileRead=open(fileName,'r') 
+    fileLines = fileRead.readlines()
+    
+    #fileLines = []
+    #fileLines += [fileRead.readline()]
+    #fileLines += [fileRead.readline()]
+    #fileLines += [fileRead.readline()]
+    #fileLines += [fileRead.readline()]
+    #fileLines += [fileRead.readline()]
+    fileRead.close()
+    if len(fileLines[4]) == 0:
+        raise ValueError('ERROR in InitializeFromRestartFile: file empty or header missing')
+        
+    leftStr=fileLines[4].split('=')[0]
+    if leftStr[0:30] != '#number of written coordinates': 
+        raise ValueError('ERROR in InitializeFromRestartFile: file header corrupted')
+
+    columnsExported = eval(fileLines[4].split('=')[1]) #load according column information into vector: [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData]
+    nColumns = sum(columnsExported)
+    expectedColumns = nColumns+1
+    if verbose:
+        print('columns available in restart file =', columnsExported)
+        print('total columns to be imported =', expectedColumns, '(incl. time)\n')
+
+    if fileLines[-1][0:9]!='#FINISHED':
+        raise ValueError('ERROR in InitializeFromRestartFile: last line does not contain "#FINISHED" and is thus expected to be corrupted!')
+
+    #now everything should be ok and we can just read the line with numpy:
+    data = np.loadtxt(fileName, comments='#', delimiter=',')
+    nRows = np.size(data,0) #should be 1
+    if nRows != 1:
+        raise ValueError('ERROR in InitializeFromRestartFile: got more than one rows, but expected one')
+
+    row = 0 #first row used 
+    rowData = data[row]
+    #cols = solution['columnsExported']
+    [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = columnsExported
+
+    #note that these visualization updates are not threading safe!
+    mbs.systemData.SetODE2Coordinates(rowData[1:1+nODE2], configuration)
+    if (nVel2): mbs.systemData.SetODE2Coordinates_t(rowData[1+nODE2:1+nODE2+nVel2], configuration)
+    if (nAcc2): mbs.systemData.SetODE2Coordinates_tt(rowData[1+nODE2+nVel2:1+nODE2+nVel2+nAcc2], configuration)
+    if (nODE1): mbs.systemData.SetODE1Coordinates(rowData[1+nODE2+nVel2+nAcc2:1+nODE2+nVel2+nAcc2+nODE1], configuration)
+    if (nVel1): mbs.systemData.SetODE1Coordinates_t(rowData[1+nODE2+nVel2+nAcc2+nODE1:1+nODE2+nVel2+nAcc2+nODE1+nVel1], configuration)
+    
+    if (nAlgebraic): mbs.systemData.SetAECoordinates(rowData[1+nODE2+nVel2+nAcc2+nODE1+nVel1:1+nODE2+nVel2+nAcc2+nODE1+nVel1+nAlgebraic], configuration)
+    if (nData): mbs.systemData.SetDataCoordinates(rowData[1+nODE2+nVel2+nAcc2+nODE1+nVel1+nAlgebraic:1+nODE2+nVel2+nAcc2+nODE1+nVel1+nAlgebraic+nData], configuration)
+
+    if configuration == exudyn.ConfigurationType.Visualization:
+        mbs.systemData.SetTime(rowData[0], exudyn.ConfigurationType.Visualization)
+        mbs.SendRedrawSignal()
+    
+    #add integration parameters to simulationSettings ...
+    
+    if verbose: print('\nInitializeFromRestartFile finished\n')
     
 #++++++++++++++++++++++++++++++++++++++++++++
 #**function: load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization
@@ -487,6 +934,7 @@ def AnimateSolution(mbs, solution, rowIncrement = 1, timeout=0.04, createImages 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph
 #**input:
+#   mbs: MainSystem to be operated with
 #   showLoads: toggle appearance of loads in mbs
 #   showSensors: toggle appearance of sensors in mbs
 #   useItemNames: if True, object names are shown instead of basic object types (Node, Load, ...)
@@ -841,6 +1289,20 @@ class TCPIPdata:
 #     [...] #start renderer; simulate model
 # finally: #use this to always close connection, even in case of errors
 #     CloseTCPIPconnection(mbs.sys['TCPIPobject'])
+#
+# #*****************************************
+# #the following settings work between Python and MATLAB-Simulink (client), and gives stable results(with only delay of one step):
+# # TCP/IP Client Send:
+# #   priority = 2 (in properties)
+# #   blocking = false
+# #   Transfer Delay on (but off also works)
+# # TCP/IP Client Receive:
+# #   priority = 1 (in properties)
+# #   blocking = true
+# #   Sourec Data type = double
+# #   data size = number of double in packer
+# #   Byte order = BigEndian
+# #   timeout = 10
 def CreateTCPIPconnection(sendSize, receiveSize, IPaddress='127.0.0.1', port=52421, 
                           bigEndian=False, verbose=False):
     import socket
@@ -892,168 +1354,4 @@ def CloseTCPIPconnection(TCPIPobject):
     TCPIPobject.socket.close()
     
 
-
-#the following way works between Python and MATLAB-Simulink (client),
-#and gives stable results(with only delay of one step):
-#
-# TCP/IP Client Send:
-#   priority = 2 (in properties)
-#   blocking = false
-#   Transfer Delay on (but off also works)
-# TCP/IP Client Receive:
-#   priority = 1 (in properties)
-#   blocking = true
-#   Sourec Data type = double
-#   data size = number of double in packer
-#   Byte order = BigEndian
-#   timeout = 10
-
-
-
-    
-#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: generate cable elements along straight line with certain discretization
-#**input:
-#  mbs: the system where ANCF cables are added
-#  positionOfNode0: 3D position (list or np.array) for starting point of line
-#  positionOfNode1: 3D position (list or np.array) for end point of line
-#  numberOfElements: for discretization of line
-#  cableTemplate: a ObjectANCFCable2D object, containing the desired cable properties; cable length and node numbers are set automatically
-#  massProportionalLoad: a 3D list or np.array, containing the gravity vector or zero
-#  fixedConstraintsNode0: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope)
-#  fixedConstraintsNode1: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope)
-#  vALE: used for ObjectALEANCFCable2D objects
-#**output: returns a list [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
-#**example: see Examples/ANCF_cantilever_test.py
-def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numberOfElements, cableTemplate,
-                                massProportionalLoad=[0,0,0], fixedConstraintsNode0=[0,0,0,0], fixedConstraintsNode1=[0,0,0,0],
-                                vALE=0, ConstrainAleCoordinate=True):
-    
-
-    cableNodeList=[]
-    cableNodePositionList=[positionOfNode0]
-    cableObjectList=[]
-    loadList=[]
-    cableCoordinateConstraintList=[]
-
-    # length of one element, calculated from first and last node position:
-    cableLength = NormL2(VSub(positionOfNode1, positionOfNode0))/numberOfElements
-    
-    # slope of elements in reference position, calculated from first and last node position:
-    cableSlopeVec = Normalize(VSub(positionOfNode1, positionOfNode0))
-   
-    # add first ANCF node (straight reference configuration):
-    nCable0 = mbs.AddNode(Point2DS1(referenceCoordinates=[positionOfNode0[0],positionOfNode0[1],cableSlopeVec[0],cableSlopeVec[1]])) 
-    cableNodeList+=[nCable0]
-    
-    
-    cableTemplate.physicsLength = cableLength
-    
-#    #ALE node: 
-#    if vALE !=0:
-#        nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0], initialCoordinates=[0], initialCoordinates_t=[vALE]))
-#        mALE = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nALE, coordinate=0)) #ALE velocity  marker
-
-    # add all other ANCF nodes (straight reference configuration) and attach Gravity marker to them:
-    for i in range(numberOfElements): 
-        
-        positionOfCurrentNode=[positionOfNode0[0]+cableLength*cableSlopeVec[0]*(i+1),positionOfNode0[1]+cableLength*cableSlopeVec[1]*(i+1)]
-        cableNodePositionList+=[positionOfCurrentNode]
-        
-        nCableLast = mbs.AddNode(Point2DS1(referenceCoordinates=[positionOfCurrentNode[0],positionOfCurrentNode[1],cableSlopeVec[0],cableSlopeVec[1]]))
-        cableNodeList+=[nCableLast]
-        
-
-#        if vALE ==0:
-#            cableTemplate.nodeNumbers=[cableNodeList[i],cableNodeList[i+1]]
-#        else:
-        cableTemplate.nodeNumbers[0:2]=[cableNodeList[i],cableNodeList[i+1]]
-            
-        oCable=mbs.AddObject(cableTemplate)
-        cableObjectList+=[oCable]
-
-        if NormL2(massProportionalLoad) != 0:
-            mBodyMassLast = mbs.AddMarker(MarkerBodyMass(bodyNumber=oCable))
-            lLoadLast=mbs.AddLoad(Gravity(markerNumber=mBodyMassLast,loadVector=massProportionalLoad))
-            loadList+=[lLoadLast]
-        
-    
-    if (NormL2(fixedConstraintsNode0+fixedConstraintsNode1)) != 0:
-        # ground "node" at 0,0,0:
-        nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) 
-        # add marker to ground "node": 
-        mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0))
-    
-
-        for j in range(4):            
-            if fixedConstraintsNode0[j] != 0:            
-                #fix ANCF coordinates of first node
-                mCableCoordinateConstraint0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nCable0, coordinate=j)) #add marker
-                cBoundaryCondition=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint0])) #add constraint
-                cableCoordinateConstraintList+=[cBoundaryCondition]
-            
-        for j in range(4):            
-            if fixedConstraintsNode1[j] != 0:                 
-                # fix right end position coordinates, i.e., add markers and constraints:
-                mCableCoordinateConstraint1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nCableLast, coordinate=j))#add marker
-                cBoundaryCondition=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint1])) #add constraint  
-                cableCoordinateConstraintList+=[cBoundaryCondition]
-        
-#        if vALE !=0 and ConstrainAleCoordinate:
-#            cConstrainAle=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mALE]))
-            
-    
-    return [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
-
-
-#**function: generate a sliding joint from a list of cables, marker to a sliding body, etc.
-def GenerateSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,localMarkerIndexOfStartCable=0,slidingCoordinateStartPosition=0):
-
-    cableMarkerList = []#list of Cable2DCoordinates markers
-    offsetList = []     #list of offsets counted from first cable element; needed in sliding joint
-    offset = 0          #first cable element has offset 0
-    
-    for item in cableObjectList: #create markers for cable elements
-        m = mbs.AddMarker(MarkerBodyCable2DCoordinates(bodyNumber = item))
-        cableMarkerList += [m]
-        offsetList += [offset]  
-        offset += mbs.GetObjectParameter(item,'physicsLength')
-    
-    nodeDataSlidingJoint = mbs.AddNode(NodeGenericData(initialCoordinates=[localMarkerIndexOfStartCable,slidingCoordinateStartPosition],numberOfDataCoordinates=2)) #initial index in cable list
-    
-    oSlidingJoint = mbs.AddObject(ObjectJointSliding2D(markerNumbers=[markerBodyPositionOfSlidingBody,cableMarkerList[localMarkerIndexOfStartCable]], 
-                                                      slidingMarkerNumbers=cableMarkerList, 
-                                                      slidingMarkerOffsets=offsetList, 
-                                                      nodeNumber=nodeDataSlidingJoint))
-
-    return [oSlidingJoint]
-
-
-
-
-
-#**function: generate an ALE sliding joint from a list of cables, marker to a sliding body, etc.
-def GenerateAleSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,AleNode,
-                            localMarkerIndexOfStartCable=0,AleSlidingOffset=0,
-                            activeConnector=True, penaltyStiffness=0):
-
-    cableMarkerList = []#list of Cable2DCoordinates markers
-    offsetList = []     #list of offsets counted from first cable element; needed in sliding joint
-    offset = 0          #first cable element has offset 0
-    usePenalty = (penaltyStiffness!=0) #penaltyStiffness=0 ==> no penalty formulation!
-    
-    for item in cableObjectList: #create markers for cable elements
-        m = mbs.AddMarker(MarkerBodyCable2DCoordinates(bodyNumber = item))
-        cableMarkerList += [m]
-        offsetList += [offset]  
-        offset += mbs.GetObjectParameter(item,'physicsLength')
-    
-    nodeDataAleSlidingJoint = mbs.AddNode(NodeGenericData(initialCoordinates=[localMarkerIndexOfStartCable],numberOfDataCoordinates=1)) #initial index in cable list   
-    oAleSlidingJoint = mbs.AddObject(ObjectJointALEMoving2D(markerNumbers=[markerBodyPositionOfSlidingBody,cableMarkerList[localMarkerIndexOfStartCable]], 
-                                                      slidingMarkerNumbers=cableMarkerList, slidingMarkerOffsets=offsetList,
-                                                      nodeNumbers=[nodeDataAleSlidingJoint, AleNode], slidingOffset=AleSlidingOffset,activeConnector=activeConnector,
-                                                      usePenaltyFormulation = usePenalty, penaltyStiffness=penaltyStiffness))
-
-
-    return [oAleSlidingJoint]
 

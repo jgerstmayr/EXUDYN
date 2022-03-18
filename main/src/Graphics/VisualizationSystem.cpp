@@ -99,6 +99,8 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 	}
 	EXUstd::ReleaseSemaphore(postProcessData->accessState); //now visualizationStateUpdate can be written again in main thread
 
+	try
+	{
 
 	if (postProcessData->updateCounter == postProcessData->recordImageCounter) //this is the signal that a frame shall be recorded
 	{
@@ -107,11 +109,11 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 		postProcessData->recordImageCounter--;				 //decrease value such that next update does not lead to image record
 	}
 
-	if (((postProcessData->postProcessDataReady && postProcessData->updateCounter > graphicsData.GetVisualizationCounter()) 
+	if (((postProcessData->postProcessDataReady && postProcessData->updateCounter > graphicsData.GetVisualizationCounter())
 		|| visualizationSystemContainer.UpdateGraphicsDataNowInternal()) && systemData->GetCData().IsSystemConsistent())
 	{
 		graphicsData.GetVisualizationCounter() = postProcessData->updateCounter; //next update will only be done if postProcessData->updateCounter increases
-		
+
 		//flushdata also locks data ...
 		graphicsData.FlushData(); //currently data is always recomputed; FUTURE: differ between structure update and vertex/rigid body update, etc.
 
@@ -126,7 +128,7 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 		for (auto item : vSystemData.GetVisualizationObjects())
 		{
 			if (item->GetShow() && ((!(item->IsConnector()) && visualizationSystemContainer.settings.bodies.show) ||
-				(item->IsConnector() && visualizationSystemContainer.settings.connectors.show) ))
+				(item->IsConnector() && visualizationSystemContainer.settings.connectors.show)))
 			{
 				if (item->HasUserFunction()) { systemHasUserFunction = true; break; };
 			}
@@ -213,9 +215,9 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 			cnt = 0;
 			for (auto item : vSystemData.GetVisualizationObjects())
 			{
-				if (item->GetShow() && !(item->IsConnector())) 
-				{ 
-					item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); 
+				if (item->GetShow() && !(item->IsConnector()))
+				{
+					item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt);
 				}
 				cnt++; //synchronize itemNumber with item!!!
 			}
@@ -357,6 +359,17 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 		}
 
 		//++++++++++++++++++++++++++++++++++++++++++++++
+		//visualize GeneralContacts:
+		if (true)
+		{
+			const CSystem* cSystem = GetMainSystemBacklink()->GetCSystem();
+			for (GeneralContact* gc : cSystem->GetGeneralContacts()) //usually only 1
+			{
+				gc->visualization.DrawContacts(*gc, visualizationSystemContainer.GetVisualizationSettings(), this);
+			}
+		}
+
+		//++++++++++++++++++++++++++++++++++++++++++++++
 		//visualize sensors:
 		if (visualizationSystemContainer.settings.sensors.show)
 		{
@@ -370,8 +383,24 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 
 		graphicsData.ClearLock();
 	}
-	//std::cout << "  update graphics end\n";
-	//EXUstd::ReleaseSemaphore(postProcessData->accessState);
+	}
+	catch (const std::exception& e) // reference to the base of a polymorphic object
+	{
+		//std::cout <<       "++++++++++++++++++++\n" << "Exception in VisualizationSystem::UpdateGraphicsData:\n" << e.what() << "\n********************\n";
+		
+		//works from visualization thread:
+		outputBuffer.WriteVisualization(STDstring("Exception in VisualizationSystem::UpdateGraphicsData(...):\n  ") + e.what() + "\n");
+		//CHECKandTHROWstring(""); //not necessary, would lead to immediately closing of renderer
+		graphicsData.ClearLock(); //MUST BE called before FlushData!!!
+		//graphicsData.FlushData(); //otherwise is in an undefined state
+		//outputBuffer.WriteVisualization("test2");
+	}
+	catch (...)
+	{
+		outputBuffer.WriteVisualization(STDstring("********************\n")+"unknown exception in VisualizationSystem::UpdateGraphicsData(...)\n********************\n");
+		graphicsData.ClearLock(); //MUST BE called before FlushData!!!
+		graphicsData.FlushData(); //otherwise is in an undefined state
+	}
 }
 
 //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)

@@ -47,17 +47,6 @@ namespace EXUvis {
 		}
 	}
 
-	//! compute normalized normal from triangle points, Vector3D version
-	Vector3D ComputeTriangleNormal(const std::array<Vector3D, 3>& trigPoints)
-	{
-		Vector3D v1 = trigPoints[1] - trigPoints[0];
-		Vector3D v2 = trigPoints[2] - trigPoints[0];
-		Vector3D n = v1.CrossProduct(v2); //@todo: need to check correct outward normal direction in openGL
-		Real len = n.GetL2Norm();
-		if (len != 0.f) { n *= 1.f / len; }
-		return n;
-	}
-
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! copy bodyGraphicsData (of body) into global graphicsData (of system)
 	void AddBodyGraphicsData(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, const Float3& position,
@@ -125,7 +114,7 @@ namespace EXUvis {
 				for (Index i = 0; i < 3; i++)
 				{
 					EXUmath::RigidBodyTransformation(rotation, position, item.points[i], item.points[i]);
-					EXUmath::RigidBodyTransformation(rotation, position, item.normals[i], item.normals[i]);
+					item.normals[i] = rotation * item.normals[i];
 				}
 			}
 			else
@@ -251,18 +240,18 @@ namespace EXUvis {
 		Real alpha0 = angleRange[0];
 
 		Real fact = (Real)nTiles; //#create correct part of cylinder (closed/not closed
-		if (alpha < 2.*EXUstd::pi) { fact = (Real)(nTiles - 1); } 
+		if (alpha < 2.*EXUstd::pi) { fact = (Real)(nTiles - 1); }
 
 		std::array<Vector3D, 3> points;
 		std::array<Vector3D, 3> normals;
-		std::array<Float4, 3> colors({color,color,color}); //all triangles have same color
+		std::array<Float4, 3> colors = { {color,color,color} }; //std::array has no real initializer list==>use {{}}; all triangles have same color
 
 		Vector3D nF1 = vAxis;
 		nF1.Normalize();
 
-		std::array<Vector3D, 3> normalsFace0({ (nF1),(nF1),(nF1) });
+		std::array<Vector3D, 3> normalsFace0 = { { (nF1),(nF1),(nF1) } };
 		nF1 = -nF1;
-		std::array<Vector3D, 3> normalsFace1({ nF1,nF1,nF1 });
+		std::array<Vector3D, 3> normalsFace1 = { { nF1,nF1,nF1 } };
 		Vector3D n0(0);
 		Vector3D n1(0);
 
@@ -380,7 +369,7 @@ namespace EXUvis {
 		
 		std::array<Vector3D, 3> points;
 		std::array<Vector3D, 3> normals; // = { Vector3D(0), Vector3D(0), Vector3D(0) };
-		std::array<Float4, 3> colors({ color,color,color }); //all triangles have same color
+		std::array<Float4, 3> colors = { { color,color,color } }; //all triangles have same color
 
 		Index nTiles2 = 2 * nTiles;
 		//create points for circles around z - axis with tiling
@@ -453,23 +442,8 @@ namespace EXUvis {
 
 	//! draw cube with midpoint and size in x,y and z direction
 	void DrawOrthoCube(const Vector3D& midPoint, const Vector3D& size, const Float4& color, GraphicsData& graphicsData, 
-		Index itemID)
+		Index itemID, bool showFaces, bool showEdges)
 	{
-		//sketch of cube: (z goes upwards from node 1 to node 5)
-		// bottom :         top:
-		// ^ y				^ y
-		// |				|
-		// 3---2			7---6
-		// |   |			|   |
-		// |   |			|   |
-		// 0---1--> x		4---5--> x
-
-		//std::array<SlimArray<Index,3>, 12> //does not work with recursive initializer list
-		const Index nTrigs = 12;
-		//Index trigList[nTrigs][3] = { {0, 1, 2}, {0, 2, 3},  {6, 5, 4}, {6, 4, 7},  {0, 4, 1}, {1, 4, 5},  {1, 5, 2}, {2, 5, 6},  {2, 6, 3}, {3, 6, 7},  {3, 7, 0}, {0, 7, 4} };
-
-		SlimVectorBase<Index, 12*3> trigList = { 0, 1, 2, 0, 2, 3, 6, 5, 4, 6, 4, 7, 0, 4, 1, 1, 4, 5, 1, 5, 2, 2, 5, 6, 2, 6, 3, 3, 6, 7, 3, 7, 0, 0, 7, 4 };
-
 		Real x = 0.5*size[0];
 		Real y = 0.5*size[1];
 		Real z = 0.5*size[2];
@@ -482,27 +456,62 @@ namespace EXUvis {
 			point += midPoint;
 		}
 
-		std::array<Vector3D, 3> points;
-		std::array<Vector3D, 3> normals = { Vector3D(0), Vector3D(0), Vector3D(0) };
-		SlimVectorBase<Float4, 3> colors({ color,color,color }); //all triangles have same color
-		//std::array<Vector3D, 8> pc = { Vector3D({-x,-y,-z}), Vector3D({ x,-y,-z}), Vector3D({ x, y,-z}), Vector3D({-x, y,-z}),
-		//							   Vector3D({-x,-y, z}), Vector3D({ x,-y, z}), Vector3D({ x, y, z}), Vector3D({-x, y, z}) }; //cube corner points
-
-		//std::array<Vector3D, 3> points;
-		//std::array<Vector3D, 3> normals = { Vector3D(0), Vector3D(0), Vector3D(0) };
-		//std::array<Float4, 3> colors({ color,color,color }); //all triangles have same color
-
-		for (Index i = 0; i < nTrigs; i++)
+		if (showEdges)
 		{
-			points[0] = pc[trigList[i*3+0]];
-			points[1] = pc[trigList[i*3+1]];
-			points[2] = pc[trigList[i*3+2]];
-			//points[0] = pc[trigList[i][0]];
-			//points[1] = pc[trigList[i][1]];
-			//points[2] = pc[trigList[i][2]];
-			ComputeTriangleNormals(points, normals);
-			graphicsData.AddTriangle(points, normals, colors, itemID);
+			graphicsData.AddLine(pc[0], pc[1], color, color, itemID);
+			graphicsData.AddLine(pc[1], pc[2], color, color, itemID);
+			graphicsData.AddLine(pc[2], pc[3], color, color, itemID);
+			graphicsData.AddLine(pc[3], pc[0], color, color, itemID);
+			graphicsData.AddLine(pc[4], pc[5], color, color, itemID);
+			graphicsData.AddLine(pc[5], pc[6], color, color, itemID);
+			graphicsData.AddLine(pc[6], pc[7], color, color, itemID);
+			graphicsData.AddLine(pc[7], pc[4], color, color, itemID);
+			graphicsData.AddLine(pc[0], pc[4], color, color, itemID);
+			graphicsData.AddLine(pc[1], pc[5], color, color, itemID);
+			graphicsData.AddLine(pc[2], pc[6], color, color, itemID);
+			graphicsData.AddLine(pc[3], pc[7], color, color, itemID);
 		}
+
+		if (showFaces)
+		{
+			//sketch of cube: (z goes upwards from node 1 to node 5)
+			// bottom :         top:
+			// ^ y				^ y
+			// |				|
+			// 3---2			7---6
+			// |   |			|   |
+			// |   |			|   |
+			// 0---1--> x		4---5--> x
+
+			//std::array<SlimArray<Index,3>, 12> //does not work with recursive initializer list
+			const Index nTrigs = 12;
+			//Index trigList[nTrigs][3] = { {0, 1, 2}, {0, 2, 3},  {6, 5, 4}, {6, 4, 7},  {0, 4, 1}, {1, 4, 5},  {1, 5, 2}, {2, 5, 6},  {2, 6, 3}, {3, 6, 7},  {3, 7, 0}, {0, 7, 4} };
+
+			SlimVectorBase<Index, 12 * 3> trigList = { 0, 1, 2, 0, 2, 3, 6, 5, 4, 6, 4, 7, 0, 4, 1, 1, 4, 5, 1, 5, 2, 2, 5, 6, 2, 6, 3, 3, 6, 7, 3, 7, 0, 0, 7, 4 };
+
+			std::array<Vector3D, 3> points;
+			std::array<Vector3D, 3> normals = { Vector3D(0), Vector3D(0), Vector3D(0) };
+			SlimVectorBase<Float4, 3> colors({ color,color,color }); //all triangles have same color
+			//std::array<Vector3D, 8> pc = { Vector3D({-x,-y,-z}), Vector3D({ x,-y,-z}), Vector3D({ x, y,-z}), Vector3D({-x, y,-z}),
+			//							   Vector3D({-x,-y, z}), Vector3D({ x,-y, z}), Vector3D({ x, y, z}), Vector3D({-x, y, z}) }; //cube corner points
+
+			//std::array<Vector3D, 3> points;
+			//std::array<Vector3D, 3> normals = { Vector3D(0), Vector3D(0), Vector3D(0) };
+			//std::array<Float4, 3> colors({ color,color,color }); //all triangles have same color
+
+			for (Index i = 0; i < nTrigs; i++)
+			{
+				points[0] = pc[trigList[i * 3 + 0]];
+				points[1] = pc[trigList[i * 3 + 1]];
+				points[2] = pc[trigList[i * 3 + 2]];
+				//points[0] = pc[trigList[i][0]];
+				//points[1] = pc[trigList[i][1]];
+				//points[2] = pc[trigList[i][2]];
+				ComputeTriangleNormals(points, normals);
+				graphicsData.AddTriangle(points, normals, colors, itemID);
+			}
+		}
+
 	}
 
 

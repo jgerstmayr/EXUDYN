@@ -42,16 +42,14 @@ class MainSystem; //for backlink
 class VisualizationSystem //: public VisualizationSystemBase
 {
 public: //declared as public for direct access via pybind
-	virtual ~VisualizationSystem() {} //added for correct deletion of derived classes
 	VisualizationSystemData vSystemData;//!< data structure containing the visualization items
     GraphicsData graphicsData;			//!< data to be processed by OpenGL renderer
-	//VisualizationSettings settings;		//!< general settings for visualization
 	PostProcessData* postProcessData;	//!< link to postProcessData of CSystem ==> communication between the two threads
 	CSystemData* systemData;			//!< REMOVE: link to CSystemData; this is a temporary access, before visualization objects are introduced
 
-	//RenderState renderState;		//!< Data linked to state variables of the OpenGL engine (e.g. zoom, transformation matrices, ...)
 	const float contourPlotFlag = -2.f;	//!< this is the value of transparency used to identify contour plot values in GraphicsData items
 	//static constexpr float contourPlotFlag = -2.f;	//!< needs C++17 and is therefore avoided ...
+	Vector tempVector;					//!< temporary vector e.g. during drawing for GetOutputVariable
 
 private:
 	//additional data for user functions
@@ -60,6 +58,8 @@ private:
 	//accessible through mainSytemUF: VisualizationSettings* visualizationSettingsUF; //!< REMOVE: set when setting postProcessData->requestUserFunctionDrawing; this is a temporary access to visualizationSettings for user functions
 
 public:
+	virtual ~VisualizationSystem() {}	//added for correct deletion of derived classes
+
 	GraphicsData& GetGraphicsData() { return graphicsData; }
 	const GraphicsData& GetGraphicsData() const { return graphicsData; }
 

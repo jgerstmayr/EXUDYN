@@ -40,15 +40,14 @@ void CObjectConnectorSpringDamper::ComputeConnectorProperties(const MarkerDataSt
 			// delta W_spring = k*(l-l0)*(1/l)*l_vec* [delta l_vec]
 			force += (parameters.stiffness * (springLength - parameters.referenceLength));
 
-			//damping term + force:
-			// delta W_damper = d*l_dot*(1/l)*l_vec* [delta l_vec] = d*(vVel*vPos)*(1/l^2)*l_vec* [delta l_vec]
-			force += (parameters.damping * (relVel*forceDirection)) + parameters.force;
+			//damping term  + force:
+			force += (parameters.damping * (relVel*forceDirection - parameters.velocityOffset)) + parameters.force;
 		}
 		else
 		{
 			Real forceAdd;
 			EvaluateUserFunctionForce(forceAdd, cSystemData->GetMainSystemBacklink(), markerData.GetTime(), itemIndex,
-				springLength - parameters.referenceLength, relVel*forceDirection);
+				springLength - parameters.referenceLength, relVel*forceDirection - parameters.velocityOffset);
 			force += forceAdd;
 		}
 	}
@@ -92,6 +91,157 @@ void CObjectConnectorSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, const MarkerD
 		}
 	}
 }
+
+
+
+
+
+//! compute global 6D force and torque which is used for computation of derivative of jacobian; used only in combination with ComputeJacobianODE2_ODE2
+void CObjectConnectorSpringDamper::ComputeJacobianForce6D(const MarkerDataStructure& markerData, Index objectNumber, Vector6D& force6D) const
+{
+	if (parameters.activeConnector)
+	{
+		Real force;
+		Vector3D relPos, relVel, forceDirection;
+		ComputeConnectorProperties(markerData, objectNumber, relPos, relVel, force, forceDirection);
+		Vector3D fVec = force * forceDirection;
+
+		force6D.SetVector({ fVec[0], fVec[1], fVec[2], 0., 0., 0. });
+	}
+	else { force6D.SetAll(0.); }
+}
+
+//! Computational function: compute Jacobian of \hac{ODE2} \ac{LHS} equations w.r.t. ODE2 coordinates and ODE2 velocities; write either dense local jacobian into dense matrix of MatrixContainer or ADD sparse triplets INCLUDING ltg mapping to sparse matrix of MatrixContainer
+void CObjectConnectorSpringDamper::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
+	Real factorODE2, Real factorODE2_t,
+	Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const
+{
+	//approx. 3.5 times faster than numerical jacobian!
+	if (parameters.activeConnector)
+	{
+		temp.localJacobian.SetNumberOfRowsAndColumns(3, 3);
+		//temp.localJacobian.SetAll(0.);
+		//compute inner jacobian: factorODE2 * d(F)/(dq) + factorODE2_t * d(F)/(dq_t)
+		Real force;
+		Vector3D relPos, relVel, forceDirection;
+		ComputeConnectorProperties(markerData, objectNumber, relPos, relVel, force, forceDirection);
+
+		//Real factor = parameters.stiffness * factorODE2 + parameters.damping * factorODE2_t;
+		//temp.localJacobian.SetWithDiadicProduct(factor*forceDirection, forceDirection);
+
+		//Real factor = parameters.stiffness * factorODE2 + parameters.damping * factorODE2_t;
+		Real L = relPos.GetL2Norm();
+		//Real L = relPos * forceDirection;
+		Real Linv = 1. / L;
+
+		Matrix3D innerJac;
+
+		Matrix3D IsubVV2;
+		IsubVV2.SetWithDiadicProduct((-Linv)*forceDirection, forceDirection);
+		IsubVV2(0, 0) += Linv;
+		IsubVV2(1, 1) += Linv;
+		IsubVV2(2, 2) += Linv;
+
+		//force times derivative of relPos
+		innerJac = (factorODE2 * force)*IsubVV2;
+
+		//derivative of velocity term in force w.r.t. relPos times direction
+		Matrix3D VV1;
+		VV1.SetWithDiadicProduct((factorODE2 * parameters.damping)*forceDirection, relVel);
+		innerJac += VV1*IsubVV2;
+
+		//derivative of force w.r.t. relPos (k) and relVel (d) times direction
+		Matrix3D VV2;
+		VV2.SetWithDiadicProduct((factorODE2*parameters.stiffness + factorODE2_t * parameters.damping)*forceDirection, forceDirection);
+		innerJac += VV2;
+
+		////velocity term:
+		//Matrix3D VV3;
+		//VV3.SetWithDiadicProduct(factorODE2_t * parameters.damping * forceDirection, forceDirection);
+		//innerJac += VV3;
+
+		//else //compute numerical jacobian, agrees 100% with analytical
+		//{
+		//	//const ResizableMatrix& jac0 = markerData.GetMarkerData(0).positionJacobian;
+		//	//const ResizableMatrix& jac1 = markerData.GetMarkerData(1).positionJacobian;
+
+		//	////CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorCartesianSpringDamper::ComputeJacobianODE2_ODE2");
+		//	//Index n0 = jac0.NumberOfColumns();
+		//	//Index n1 = jac1.NumberOfColumns();
+		//	innerJac.SetScalarMatrix(3, 0.);
+
+		//	Real force;
+		//	Vector3D relPos, relVel, forceDirection;
+		//	ComputeConnectorProperties(markerData, objectNumber, relPos, relVel, force, forceDirection);
+		//	Vector3D f0 = force * forceDirection;
+
+		//	LinkedDataVector pos0(markerData.GetMarkerData(0).position);
+		//	LinkedDataVector pos1(markerData.GetMarkerData(1).position);
+		//	LinkedDataVector vel0(markerData.GetMarkerData(0).velocity);
+		//	LinkedDataVector vel1(markerData.GetMarkerData(1).velocity);
+
+		//	Real eps = 1e-8;
+		//	Real store;
+		//	Vector3D f1;
+		//	for (Index j = 0; j < 3; j++)
+		//	{
+		//		store = pos1[j];
+		//		pos1[j] += eps;
+		//		ComputeConnectorProperties(markerData, objectNumber, relPos, relVel, force, forceDirection);
+		//		pos1[j] = store;
+		//		f1 = force * forceDirection;
+		//		for (Index i = 0; i < 3; i++)
+		//		{
+		//			innerJac(i, j) += factorODE2*(1. / eps)*(f1[i] - f0[i]);
+		//		}
+
+		//		store = vel1[j];
+		//		vel1[j] += eps;
+		//		ComputeConnectorProperties(markerData, objectNumber, relPos, relVel, force, forceDirection);
+		//		vel1[j] = store;
+		//		f1 = force * forceDirection;
+		//		for (Index i = 0; i < 3; i++)
+		//		{
+		//			innerJac(i, j) += factorODE2_t*(1. / eps)*(f1[i] - f0[i]);
+		//		}
+
+
+		//	}
+
+		//}
+		temp.localJacobian.CopyFrom(innerJac);
+
+	}
+	
+	//compute jacobianODE2 in dense mode; temp.localJacobian is modified!
+	ComputeJacobianODE2_ODE2generic(temp.localJacobian, jacobianODE2, temp, factorODE2, factorODE2_t, objectNumber, markerData,
+		parameters.activeConnector, false, false);
+	//pout << jacobianODE2.GetEXUdenseMatrix() << "\n";
+
+
+
+}
+
+//! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
+JacobianType::Type CObjectConnectorSpringDamper::GetAvailableJacobians() const
+{
+//inner jacobian agrees with numerical jacobian, but d(vel)/dpos not yet included!
+//#ifdef EXUDYN_RELEASE
+//	bool jacAnalytic = false;
+//#else
+	bool jacAnalytic = true;
+//#endif
+	if (!parameters.springForceUserFunction && jacAnalytic) {
+		return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
+	}
+	else {
+		return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
+	}
+}
+
+
+
+
 
 
 //! provide according output variable in "value"

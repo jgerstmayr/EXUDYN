@@ -35,9 +35,9 @@ public:
 	ResizableMatrix rotationJacobian;	//d(omega)/dq_t
 	ResizableMatrix jacobian;	//general jacobian, e.g. for coordinate marker; ?d(Rotv123)/dq for rigid bodies?
 
-	ResizableMatrix positionJacobianDerivative;	//d(d(pos)/dq*v)/dq //depends on connector configuration!!!
-	ResizableMatrix rotationJacobianDerivative;	//d(d(omega)/dq_t*v)/dq //depends on connector configuration!!!
-	ResizableMatrix jacobianDerivative;	//general d(jacobian*v)/dq, e.g. for coordinate marker; 
+	//ResizableMatrix positionJacobianDerivative;	//d(d(pos)/dq*v)/dq //depends on connector configuration!!!
+	//ResizableMatrix rotationJacobianDerivative;	//d(d(omega)/dq_t*v)/dq //depends on connector configuration!!!
+	ResizableMatrix jacobianDerivative;	//general d(jacobian*v)/dq; has always (size of q) x (size of q)
 
 	//removed and replaced by vectorValue! Real value;					//general value, e.g. for coordinate marker
 	//removed and replaced by vectorValue_t! Real value_t;				//general value at velocity level, e.g. for coordinate marker

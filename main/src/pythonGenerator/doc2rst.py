@@ -5,6 +5,8 @@ Created on Tue Jun 09 23:53:30 2020
 @author: Johannes Gerstmayr
 
 goal: generate .rst files from tex documentation
+
+usage: call 'rstviewer README.rst' directly in powershell; alternatively use restview
 """
 import copy #for deep copies
 from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword
@@ -13,11 +15,11 @@ sourceDir='../../../docs/theDoc/'
 destDir='../../../'
 filesParsed=[
               'version.tex',
+              'buildDate.tex',
               'gettingStarted.tex',
               'introduction.tex',
               'tutorial.tex',
              ]
-
 
 convWords={'(\\the\\month-\\the\\year)':'',
            '    \item':'\item',
@@ -39,7 +41,8 @@ convWords={'(\\the\\month-\\the\\year)':'',
            '\\codeName':'Exudyn',
            '\\pythonstyle\\begin{lstlisting}':'\n.. code-block:: python\n',
            '\\begin{lstlisting}':'\n.. code-block::\n',
-           '\\end{lstlisting}':'\ \n',
+           #'\\end{lstlisting}':'\ \n',#gives errors with restview.exe
+           '\\end{lstlisting}':'\n',
            '\\begin{center}':'',
            '\\end{center}':'',
            '\\includegraphics[height=6cm]{../demo/screenshots/plotSpringDamper}':'see theDoc.pdf',
@@ -52,10 +55,18 @@ convWords={'(\\the\\month-\\the\\year)':'',
            '\\be':'', 
            '\\ee':'',
            '\\it':'',
+           #specials:
+           '\\ge':'>=',
            '\\_':'_',
+           '\\textdegree':'°',
+           '\\ac':'',
+           #
            '{\"a}':'ä',
            '{\"o}':'ö',
            '{\"u}':'ü',
+           '\\"a':'ä', #if '{' is already removed earlier
+           '\\"o':'ö',
+           '\\"u':'ü',
            '{':'',
            '}':'',
            '$':'',
@@ -215,6 +226,7 @@ def ReplaceCommands(s, conversionDict): #replace strings provided in conversion 
 
 
 def ConvertFile(s):
+    s=s.replace('\\ ',' ') #replace special spaces from latex first; spaces that are added later shall be kept!
     s=ReplaceCommands(s, convCommands)
     s=ReplaceWords(s, convWords)
     
@@ -239,6 +251,10 @@ for fileName in filesParsed:
             sFile += line# + '\n'
     
     #print(sFile)
+    if fileName == 'version.tex':
+        sRST += '\n| '
+    if fileName == 'buildDate.tex':
+        sRST += '| '
     sRST += ConvertFile(sFile)
     
 sRST += '\n\n\ **FOR FURTHER INFORMATION GO TO theDoc.pdf !!!**\ \n\n'

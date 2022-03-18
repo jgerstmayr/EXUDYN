@@ -23,9 +23,6 @@
 //#define EXUDYN_RELEASE			//!< defined in preprocessor flags, in setup.py (for all versions), set this flag to exclude experimental parts of the code
 #define _USE_MATH_DEFINES		//!< this must be included very first before any cmath is included; needed for M_PI and other constants ==> but not used anymore
 
-#define USE_NEW_CONSTSIZEVECTOR //!< remove virtual functions and decouple ConstSizeVector from Vector
-#define USE_NEW_CONSTSIZEMATRIX //!< remove virtual functions and decouple ConstSizeMatrix from Matrix
-
 //#define __NOGLFW //passed from compiler
 #ifndef __NOGLFW //passed from compiler
   #define USE_GLFW_GRAPHICS		//!< set this flag to enable OpenGL graphics with glfw
@@ -34,9 +31,50 @@
 //#define PERFORM_UNIT_TESTS	//!< defined in preprocessor flags, in setup.py (only for certain versions)
 #define DoublePrecision
 
+//use approach here: https://github.com/robbmcleod/cpufeature/tree/master/cpufeature
+//  to automatically detect if AVX is available and show error messages (or try to automatically select according .pyd file in __init__.py)
+
+#ifdef DoublePrecision
+	typedef double Real;		//!< define datatype Real; use typedef for eigen lib
+#else 
+	typedef float Real;
+	#define SinglePrecision // added from SH. needed to switch between double/float AVX instructions
+#endif // DoublePrecision
+
+
+#ifdef __AVX2__				//enabled by compiler; will also create many intrinsics automatically (e.g. for SlimVector<4>)
+	#define use_AVX2		//!< this is used for specific vector operations, e.g., in Vector.AddLarge(...)
+	//#define use_AVX512
+	#ifdef use_AVX2
+		#ifdef DoublePrecision
+			#define exuMemoryAlignment 4		//alignment of Real times sizeof(Real) for vectors; for AVX	
+			#define exuVectorLengthAlignment 8	//alignment in Real for vectors; for AVX	
+		#else
+			#define exuMemoryAlignment 8		//alignment of Real times sizeof(Real) for vectors; for AVX	
+			#define exuVectorLengthAlignment 16 //alignment in Real for vectors; for AVX	
+		#endif
+	#endif
+	#ifdef use_AVX512
+		#ifdef DoublePrecision
+			#define exuMemoryAlignment 8		//alignment of Real times sizeof(Real) for vectors; for AVX	
+			#define exuVectorLengthAlignment 16	//alignment in Real for vectors; for AVX	
+		#else
+			#define exuMemoryAlignment 16		//alignment of Real times sizeof(Real) for vectors; for AVX	
+			#define exuVectorLengthAlignment 32 //alignment in Real for vectors; for AVX	
+		#endif
+#endif
+#else
+	#define exuMemoryAlignment 1	   //alignment of Real times sizeof(Real) for vectors; for AVX	
+	#define exuVectorLengthAlignment 1 //alignment in Real for vectors; for optimized operations
+#endif
+
+//Define empty argument (used for some macros)
+#define EXU_NOARG 
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//MULTITHREADED computation CURRENTLY IN TRIAL STATE, only works for special cases!
+//MULTITHREADED computation using ngsolve taskmanager; thanks to Joachim Schöberl
 #define USE_NGSOLVE_TASKMANAGER //!< for multithreaded computation
+//#undef USE_NGSOLVE_TASKMANAGER //!< for multithreaded computation
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -98,14 +136,7 @@ typedef std::string STDstring;	//!< decouple std::string for future extensions, 
 
 typedef uint32_t UInt;          //!< explicitly used for smaller indices
 
-#ifdef DoublePrecision
-typedef double Real;		//!< define datatype Real; use typedef for eigen lib
-#else 
-typedef float Real;
-#define SinglePrecision // added from SH. needed to switch between double/float AVX instructions
-#endif // DoublePrecision
-
-#define INLINE inline // flag is compatible with netgen, see ngs_core.hpp
+#define EXUINLINE inline // flag is compatible with netgen, see ngs_core.hpp
 
 //define EXUstd constants
 namespace EXUstd {

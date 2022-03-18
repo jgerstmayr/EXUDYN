@@ -30,6 +30,7 @@
 #include <fstream>
 
 #include "Linalg/LinearSolver.h" //for GeneralMatrixEXUdense
+#include "Main/WriteBinary.h"
 #include "Solver/CSolver.h"
 
 class CSystem;
@@ -167,6 +168,9 @@ public:
 	virtual Real PostNewton(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! output helper functions:
+	//! create solution filename - with appropriate ending, if not provided
+	virtual STDstring GetSolutionFileName(const SimulationSettings& simulationSettings);
+
 	//! write unique file header, depending on static/dynamic simulation
 	virtual void WriteSolutionFileHeader(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
 
@@ -204,10 +208,27 @@ public:
 		os << "CSolverBase";
 		return os;
 	}
-
-	//! this function is used for performance tests during development and will be erased in future; do not use
-	void NGsolveMTtest();
 };
+
+//enum for step information flags:
+//0 ... show only step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step or period, 4 ... show Newton jacobians (jac) per step or period, 
+//8 ... show discontinuous iterations (Dit) per step or period, 16 ... show step size (dt), 32 ... show CPU time spent; 64 ... show adaptive step reduction warnings; 
+//128 ... show step increase information; 1024 ... show every time step; time is usually shown in fractions of seconds (s), hours (h), or days"
+namespace StepInfo { //binary flags, added up
+	enum Flag {
+		timeToGo = 1 << 0,
+		newtonIterations = 1 << 1,
+		newtonJacobians = 1 << 2,
+		discIterations = 1 << 3,
+		stepSize = 1 << 4,
+		CPUtimeSpent = 1 << 5,
+		stepReductionWarn = 1 << 6,
+		stepIncreaseInfo = 1 << 7,
+		//abc = 1 << 8,
+		//xyz = 1 << 9,
+		everyStep = 1 << 10 //1024
+	};
+}
 
 
 #endif

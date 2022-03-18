@@ -173,7 +173,7 @@ SC.visualizationSettings.loads.show = False
 SC.visualizationSettings.nodes.defaultSize = 0.002
 SC.visualizationSettings.markers.defaultSize = 0.002
 SC.visualizationSettings.connectors.defaultSize = 0.01
-SC.visualizationSettings.connectors.contactPointsDefaultSize = 0.005
+SC.visualizationSettings.contact.contactPointsDefaultSize = 0.005
 SC.visualizationSettings.connectors.showContact = 1
 
 #SC.visualizationSettings.general.minSceneSize = 4
@@ -215,8 +215,6 @@ def gondulaReset(oRigid, oSlidingJoint, maxL, vSliding):
 
 
 maxL = 0.9999*L
-#deprecated:
-#simulationSettings.timeIntegration.preStepPyExecute = "gondulaReset(" + str(oRigid) + ", " + str(slidingJoint) + ", " + str(maxL) + ", " + str(vSliding) + ")\n"
 
 #new user function executed at every beginning of time steps
 def UFgondulaReset(mbs, t):

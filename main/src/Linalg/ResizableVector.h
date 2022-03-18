@@ -31,9 +31,7 @@
 #define RESIZABLEVECTORBASE__H
 
 #include "Linalg/Vector.h"
-#ifdef USE_NEW_CONSTSIZEVECTOR
 #include "Linalg/ConstSizeVector.h"
-#endif
 
 template<typename T>
 class ResizableVectorBase: public VectorBase<T>
@@ -111,7 +109,6 @@ public:
 		}
 	}
 
-#ifdef USE_NEW_CONSTSIZEVECTOR
 	//template<class Tvector>
 	//void CopyFrom(const Tvector& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
 	//! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
@@ -130,7 +127,6 @@ public:
 		}
 	}
 
-#endif
 	void CopyFrom(const VectorBase<T>& vector)
 	{
 		SetNumberOfItems(vector.NumberOfItems());

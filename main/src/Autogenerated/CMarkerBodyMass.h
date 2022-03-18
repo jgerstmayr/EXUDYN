@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:59 (last modified)
+* @date         2021-12-22  08:59:48 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -76,7 +76,7 @@ public: // AUTO:
         return parameters.bodyNumber;
     }
 
-    //! AUTO:  return marker type (for node treatment in computation)
+    //! AUTO:  return marker type (for body treatment in computation)
     virtual Marker::Type GetType() const override
     {
         return (Marker::Type)(Marker::Body + Marker::Object + Marker::BodyMass);

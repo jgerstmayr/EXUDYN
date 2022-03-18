@@ -90,6 +90,9 @@ exu.Print("compareFullModifiedNewton u=",u)
 exudynTestGlobals.testError = u - (0.0001583478719999567 ) #2020-12-18: 0.0001583478719999567 
 exudynTestGlobals.testResult = u
 
+import os
+os.remove('solution/modifiedNewton.txt')
+os.remove('solution/fullNewton.txt')
 
 if exudynTestGlobals.useGraphics:
     # plt.plot(dataM[:,0], dataM[:,3+2], 'b-') #plot column i over column 0 (time)

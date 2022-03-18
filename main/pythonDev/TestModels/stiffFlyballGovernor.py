@@ -274,9 +274,15 @@ else:
 mbs.AddObject(SpringDamper(markerNumbers=[markerSliderPointE, markerRodACSlider], stiffness=k, damping=c, referenceLength=l0))
 mbs.AddObject(SpringDamper(markerNumbers=[markerSliderPointF, markerRodBDSlider], stiffness=k, damping=c, referenceLength=l0))
 
-mbs.AddSensor(SensorNode(nodeNumber = nodeNumberList[1], fileName='solution/flyballSliderPosition.txt',outputVariableType=exu.OutputVariableType.Position))
-mbs.AddSensor(SensorNode(nodeNumber = nodeNumberList[2], fileName='solution/flyballSliderRotation.txt',outputVariableType=exu.OutputVariableType.Rotation)) #Tait Bryan rotations
-mbs.AddSensor(SensorNode(nodeNumber = nodeNumberList[0], fileName='solution/flyballShaftAngularVelocity.txt',outputVariableType=exu.OutputVariableType.AngularVelocity))
+sPos=mbs.AddSensor(SensorNode(nodeNumber = nodeNumberList[1], 
+                         storeInternal=True,#fileName='solution/flyballSliderPosition.txt',
+                         outputVariableType=exu.OutputVariableType.Position))
+sRot=mbs.AddSensor(SensorNode(nodeNumber = nodeNumberList[2], 
+                         storeInternal=True,#fileName='solution/flyballSliderRotation.txt',
+                         outputVariableType=exu.OutputVariableType.Rotation)) #Tait Bryan rotations
+sAngVel=mbs.AddSensor(SensorNode(nodeNumber = nodeNumberList[0], 
+                         storeInternal=True,#fileName='solution/flyballShaftAngularVelocity.txt',
+                         outputVariableType=exu.OutputVariableType.AngularVelocity))
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -292,7 +298,7 @@ if exudynTestGlobals.useGraphics: #only start graphics once, but after backgroun
 dynamicSolver = exu.MainSolverImplicitSecondOrder()
 
 fact = 20 #200000
-if not exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
     fact = 20
 
 simulationSettings.timeIntegration.numberOfSteps = fact #1000 steps for test suite/error
@@ -376,23 +382,14 @@ exu.ConfigurationType.Current)]
 #v 3 = [ 1.91975841e-16 -5.60155553e+00 -4.90500111e-10]
 
 if exudynTestGlobals.useGraphics:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-    plt.close('all')
+    from exudyn.plot import PlotSensor
     
-    data = np.loadtxt('solution/flyballSliderPosition.txt', comments='#', delimiter=',')
-    #plt.plot(data[:,0], data[:,3], 'r-') #z coordinate of slider
-    #data = np.loadtxt('solution/flyballShaftAngularVelocity.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,1], 'b-') #z coordinate of slider
-    plt.plot(data[:,0], data[:,2], 'g-') #z coordinate of slider
-    plt.plot(data[:,0], data[:,3], 'k-') #z coordinate of slider
-
-    data = np.loadtxt('solution/flyballSliderRotation.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,1], 'r--') #z coordinate of slider
-    plt.plot(data[:,0], data[:,2], 'g--') #z coordinate of slider
-    plt.plot(data[:,0], data[:,3], 'b--') #z coordinate of slider
+    PlotSensor(mbs, sPos, components=[0,1,2], closeAll=True)
+    PlotSensor(mbs, sRot, components=[0,1,2])
 
     if False:
+        import matplotlib.pyplot as plt
+        import matplotlib.ticker as ticker
         #data = np.loadtxt('solution/flyballSliderPositionRxyz.txt', comments='#', delimiter=',')    #rigid joints?
         data = np.loadtxt('solution/flyballSliderPositionRK4Rxyz.txt', comments='#', delimiter=',') #compliant joints
         #plt.plot(data[:,0], data[:,3], 'r:') #z coordinate of slider
@@ -400,17 +397,13 @@ if exudynTestGlobals.useGraphics:
         plt.plot(data[:,0], data[:,2], 'g:') #z coordinate of slider
         plt.plot(data[:,0], data[:,3], 'k:') #z coordinate of slider
     
-#    data = np.loadtxt('solution/flyballSliderPositionRK4Rxyz.txt', comments='#', delimiter=',')
-#    plt.plot(data[:,0], data[:,3], 'g:') #z coordinate of slider
-#    data = np.loadtxt('solution/flyballShaftAngularVelocityRK4Rxyz.txt', comments='#', delimiter=',')
-#    plt.plot(data[:,0], data[:,3], 'k:') #z coordinate of slider
     
-    ax=plt.gca() # get current axes
-    ax.grid(True, 'major', 'both')
-    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-    plt.tight_layout()
-    plt.show() 
+        ax=plt.gca() # get current axes
+        ax.grid(True, 'major', 'both')
+        ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
+        ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
+        plt.tight_layout()
+        plt.show() 
 
 
 

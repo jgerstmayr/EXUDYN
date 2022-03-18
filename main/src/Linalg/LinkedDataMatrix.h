@@ -52,16 +52,14 @@ public:
 		this->data = m.data;
 	}
 
-#ifdef USE_NEW_CONSTSIZEMATRIX
 	//! link to existing const matrix
 	template<Index dataSize>
 	LinkedDataMatrixBase(const ConstSizeMatrixBase<T,dataSize>& m)
 	{
 		this->numberOfRows = m.NumberOfRows();
 		this->numberOfColumns = m.NumberOfColumns();
-		this->data = m.GetDataPointer();
+		this->data = const_cast<T*>(m.GetDataPointer());
 	}
-#endif 
 
 	//! create matrix with dimensions numberOfRowsInit x numberOfColumnsInit; initialize items with values stored at pointer T*; this method can potentially link to invalid data!
 	//! can also link to vectors, matrices of other formats, etc.

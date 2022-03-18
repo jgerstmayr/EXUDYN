@@ -164,6 +164,9 @@ public:
 	void AssembleLTGLists() { cSystem->AssembleLTGLists(*this); }
 	void AssembleInitializeSystemCoordinates() { cSystem->AssembleInitializeSystemCoordinates(*this); }
 
+	//! initialize some system data, e.g., generalContact objects (searchTree, etc.)
+	void AssembleSystemInitialize() { cSystem->AssembleSystemInitialize(*this); }
+
 	//! set user function to be called by solvers at beginning of step (static or dynamic step)
 	void PySetPreStepUserFunction(const py::object& value);
 	//! set user function to be called immediately after Newton (after an update of the solution has been computed, but before discontinuous iteration)
@@ -298,6 +301,8 @@ public:
 	py::dict PyGetSensorDefaults(STDstring typeName);
 	//! get sensor's values
 	py::object PyGetSensorValues(const py::object& itemIndex, ConfigurationType configuration = ConfigurationType::Current);
+	//! get sensor's values
+	py::array_t<Real> PyGetSensorStoredData(const py::object& itemIndex);
 
 	//! Get (read) parameter 'parameterName' of 'itemNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 	virtual py::object PyGetSensorParameter(const py::object& itemIndex, const STDstring& parameterName) const;

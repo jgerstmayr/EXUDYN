@@ -19,29 +19,35 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
-testError=1 #set default error, if failed
 exu.Print("start mini example for class ObjectANCFCable2D")
 try: #puts example in safe environment
-    node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
-    oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
-    
-    m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
-    m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oMassPoint, localPosition=[0,0,0]))
-    
-    mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
-                                              referenceLength = 1, #shorter than initial distance
-                                              stiffness = 100,
-                                              damping = 1))
+    rhoA = 78.
+    EA = 1000000.
+    EI = 833.3333333333333
+    cable = Cable2D(physicsMassPerLength=rhoA, 
+                    physicsBendingStiffness=EI, 
+                    physicsAxialStiffness=EA, 
+                    )
+
+    ancf=GenerateStraightLineANCFCable2D(mbs=mbs,
+                    positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+                    numberOfElements=32, #converged to 4 digits
+                    cableTemplate=cable, #this defines the beam element properties
+                    massProportionalLoad = [0,-9.81,0],
+                    fixedConstraintsNode0 = [1,1,0,1], #add constraints for pos and rot (r'_y)
+                    )
+    lastNode = ancf[0][-1]
 
     #assemble and solve system for default parameters
     mbs.Assemble()
-    exu.SolveDynamic(mbs, exu.SimulationSettings())
+    exu.SolveStatic(mbs)
 
-    #check result at default integration time
-    testError = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0] - 0.9736596225944887
+    #check result
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
+    #ux=-0.5013058140308901
 
 except BaseException as e:
     exu.Print("An error occured in test example for ObjectANCFCable2D:", e)
 else:
-    exu.Print("example for ObjectANCFCable2D completed, test error =", testError)
+    exu.Print("example for ObjectANCFCable2D completed, test result =", exudynTestGlobals.testResult)
 

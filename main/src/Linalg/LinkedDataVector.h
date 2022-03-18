@@ -34,9 +34,7 @@
 #include "Linalg/Vector.h"
 #include "Linalg/SlimVector.h"
 
-#ifdef USE_NEW_CONSTSIZEVECTOR
-	#include "Linalg/ConstSizeVector.h"
-#endif
+#include "Linalg/ConstSizeVector.h"
 
 template<typename T>
 class LinkedDataVectorBase : public VectorBase<T>
@@ -46,7 +44,6 @@ public:
     //! default constructor, does not link yet (data=nullptr means no linking)
     LinkedDataVectorBase() : VectorBase<T>() {}
 
-//#ifndef USE_NEW_CONSTSIZEVECTOR
 	//! links data to VectorBase<T> (also resizable VectorBase<T>); no copying!
     //! @todo check a way to eliminate the const_cast for LinkedDataVectorBase(const VectorBase<T>& vector)
     //LinkedDataVectorBase(const VectorBase<T>& vector) : VectorBase<T>(vector.GetDataPointer(), vector.NumberOfItems())
@@ -93,7 +90,6 @@ public:
 		this->data = const_cast<T*>(ptr); //needed, if vector passed as const ... workaround
 		this->numberOfItems = numberOfItemsLinked;
 	}
-#ifdef USE_NEW_CONSTSIZEVECTOR
 	template<Index dataSize>
 	LinkedDataVectorBase(const ConstSizeVectorBase<T, dataSize>& vector) : VectorBase<T>()
 	{
@@ -114,39 +110,6 @@ public:
 		this->numberOfItems = numberOfItemsLinked;
 	}
 
-#endif
-//#else
-////	//! links data to SlimVector<dataSize>; no copying!
-////	template<Index dataSize>
-////	LinkedDataVectorBase(const ConstSizeVectorBase<T, dataSize>& vector) : VectorBase<T>()
-////	{
-////		//const T* ptr = &(vector[0]);
-////		const T* ptr = &(vector.GetDataPointer());
-////		this->data = const_cast<T*>(ptr); //needed, if vector passed as const ... workaround
-////		this->numberOfItems = vector.NumberOfItems();
-////}
-//
-//	//! links data to VectorBase<T> (also resizable VectorBase<T>); no copying!
-//	//LinkedDataVectorBase(const VectorBase<T>& vector) : VectorBase<T>(vector.GetDataPointer(), vector.NumberOfItems())
-//	template<Tvector>
-//	LinkedDataVectorBase(const Tvector& vector) : VectorBase<T>()
-//	{
-//		this->data = vector.GetDataPointer();
-//		this->numberOfItems = vector.NumberOfItems();
-//	}
-//
-//	//! links data to SlimVector<dataSize>; data given by vector at startPosition, using numberOfItemsLinked items (LinkedDataVectorBase has 'numberOfItemsLinked' virtual items);
-//	template<Tvector>
-//	LinkedDataVectorBase(const Tvector& vector, Index startPosition, Index numberOfItemsLinked) : VectorBase<T>()
-//	{
-//		CHECKandTHROW(startPosition >= 0, "ERROR: LinkedDataVectorBase(const Tvector&, Index), startPosition < 0");
-//		CHECKandTHROW(numberOfItemsLinked + startPosition <= vector.NumberOfItems(), "ERROR: LinkedDataVectorBase(const Tvector&, Index, Index), size mismatch");
-//
-//		const T* ptr = &vector.GetUnsafe(startPosition);
-//		this->data = const_cast<T*>(ptr); //needed, if vector passed as const ... workaround
-//		this->numberOfItems = numberOfItemsLinked;
-//	}
-//#endif
 
 //! override destructor / delete[] from VectorBase<T>; no memory deallocated
     virtual ~LinkedDataVectorBase()

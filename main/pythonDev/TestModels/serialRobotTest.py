@@ -20,6 +20,7 @@ from exudyn.utilities import *
 from exudyn.rigidBodyUtilities import *
 from exudyn.graphicsDataUtilities import *
 from exudyn.robotics import *
+from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration
 
 from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
@@ -80,36 +81,11 @@ q0 = [0,0,0,0,0,0] #zero angle configuration
 q1 = [0,       np.pi/8, np.pi*0.25, 0,np.pi/8,0] #configuration 1
 q2 = [np.pi/2,-np.pi/8,-np.pi*0.125, 0,np.pi/4,0] #configuration 2
 
-#trajectory points structure:
-point0={'q':q0, #use any initial configuration!
-        #'q_t':q0,
-        'type':'linearVelocity',
-        'time':0}
-
-pointList = [point0]
-pointList += [{'q':q1, #q1
-        #'q_t':q0,
-        'type':'linearVelocity',
-        'time':0.25}]
-pointList +=[{'q':q2, #q2
-        #'q_t':q0,
-        'type':'linearVelocity',
-        'time':0.5}]
-pointList +=[{'q':q0, #q2
-        #'q_t':q0,
-        'type':'linearVelocity',
-        'time':1}]
-pointList +=[{'q':q0, #q2
-        #'q_t':q0,
-        'type':'linearVelocity',
-        'time':1}]
-pointList +=[{'q':q0, #q2, forever
-        #'q_t':q0,
-        'type':'linearVelocity',
-        'time':1e6}] #forever
-robotTrajectory={'PTP':pointList}
-
-
+trajectory=Trajectory(q0, 0)
+trajectory.Add(ProfileConstantAcceleration(q1, 0.25))
+trajectory.Add(ProfileConstantAcceleration(q2, 0.25))
+trajectory.Add(ProfileConstantAcceleration(q0, 0.5 ))
+trajectory.Add(ProfileConstantAcceleration(q0, 1e6))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #test robot model
@@ -186,7 +162,10 @@ def PreStepUF(mbs, t):
         joint = i
         phi = mbs.GetObjectOutput(jointList[joint], exu.OutputVariableType.Rotation)[2] #z-rotation
         omega = mbs.GetObjectOutput(jointList[joint], exu.OutputVariableType.AngularVelocityLocal)[2] #z-angular velocity
-        [u,v,a] = MotionInterpolator(t, robotTrajectory, joint)
+
+        #[u,v,a] = MotionInterpolator(t, robotTrajectory, joint) #OLD, until V1.1.135
+        [u,v,a] = trajectory.EvaluateCoordinate(t, joint)
+        
     
         torque = (Pcontrol[joint]*(phi+u) + Dcontrol[joint]*(omega+v))
         torque -= staticTorques[joint] #add static torque compensation
@@ -205,24 +184,25 @@ mbs.SetPreStepUserFunction(PreStepUF)
 
 
 #add sensors:
+sJointRot = []
+sJointAngVel = []
+sJointTorque = []
 cnt = 0
 for jointLink in jointList:
-    sJointRot = mbs.AddSensor(SensorObject(objectNumber=jointLink, 
-                               fileName="solution/joint" + str(cnt) + "Rot.txt",
+    sJointRot += [mbs.AddSensor(SensorObject(objectNumber=jointLink, 
+                               storeInternal=True,#fileName="solution/joint" + str(cnt) + "Rot.txt",
                                outputVariableType=exu.OutputVariableType.Rotation,
-                               writeToFile = sensorWriteToFile))
-    sJointAngVel = mbs.AddSensor(SensorObject(objectNumber=jointLink, 
-                               fileName="solution/joint" + str(cnt) + "AngVel.txt",
+                               writeToFile = sensorWriteToFile))]
+    sJointAngVel += [mbs.AddSensor(SensorObject(objectNumber=jointLink, 
+                               storeInternal=True,#fileName="solution/joint" + str(cnt) + "AngVel.txt",
                                outputVariableType=exu.OutputVariableType.AngularVelocityLocal,
-                               writeToFile = sensorWriteToFile))
+                               writeToFile = sensorWriteToFile))]
     cnt+=1
 
 cnt = 0
-jointTorque0List = []
 for load0 in robotDict['jointTorque0List']:
-    sTorque = mbs.AddSensor(SensorLoad(loadNumber=load0, fileName="solution/jointTorque" + str(cnt) + ".txt", 
-                                       writeToFile = sensorWriteToFile))
-    jointTorque0List += [sTorque]
+    sJointTorque += [mbs.AddSensor(SensorLoad(loadNumber=load0,storeInternal=True,# fileName="solution/jointTorque" + str(cnt) + ".txt", 
+                                              writeToFile = sensorWriteToFile))]
     cnt+=1
 
 
@@ -244,7 +224,8 @@ tEnd = 0.2 #0.2 for testing
 h = 0.001
 
 if exudynTestGlobals.useGraphics:
-    tEnd = 1.2
+    tEnd = 0.2
+    # tEnd = 1.2
 
 #mbs.WaitForUserToContinue()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -253,7 +234,7 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.solutionSettings.solutionWritePeriod = h
 simulationSettings.solutionSettings.sensorsWritePeriod = h
-#simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solutionSettings.writeSolutionToFile = exudynTestGlobals.useGraphics
 # simulationSettings.timeIntegration.simulateInRealtime = True
 # simulationSettings.timeIntegration.realtimeFactor = 0.25
 
@@ -284,7 +265,7 @@ lastRenderState = SC.GetRenderState() #store model view
 
 #compute final torques:
 measuredTorques=[]
-for sensorNumber in jointTorque0List:
+for sensorNumber in sJointTorque:
     measuredTorques += [1e-2*mbs.GetSensorValues(sensorNumber)[2]]
 exu.Print("torques at tEnd=", VSum(measuredTorques))
 
@@ -295,43 +276,51 @@ exudynTestGlobals.testResult = VSum(measuredTorques)
 #exu.Print('error=', exudynTestGlobals.testError)
 
 if exudynTestGlobals.useGraphics:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-    plt.rcParams.update({'font.size': 14})
-    plt.close("all")
+    from exudyn.plot import PlotSensor
     
-    for i in range(6):
-        data = np.loadtxt("solution/jointTorque" + str(i) + ".txt", comments='#', delimiter=',')
-        plt.plot(data[:,0], data[:,3], PlotLineCode(i), label="joint torque"+str(i)) #z-rotation
+    PlotSensor(mbs, sJointTorque, components=2, closeAll=True, yLabel='joint torques (Nm)', title='joint torques')
 
-    plt.xlabel("time (s)")
-    plt.ylabel("joint torque (Nm)")
-    ax=plt.gca() # get current axes
-    ax.grid(True, 'major', 'both')
-    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-    plt.tight_layout()
-    ax.legend(loc='center right')
-    plt.show() 
-    plt.savefig("solution/robotJointTorques.pdf")
+    PlotSensor(mbs, sJointRot, components=2, yLabel='joint angles (rad)', title='joint angles')
 
-    doJointAngles = False
-    if doJointAngles:
-        plt.close("all")
+    # import matplotlib.pyplot as plt
+    # import matplotlib.ticker as ticker
+    # plt.rcParams.update({'font.size': 14})
+    # plt.close("all")
+    
+    # for i in range(6):
+    #     #data = np.loadtxt("solution/jointTorque" + str(i) + ".txt", comments='#', delimiter=',')
+    #     data = mbs.GetSensorStoredData(sTorque[i])
+    #     plt.plot(data[:,0], data[:,3], PlotLineCode(i), label="joint torque"+str(i)) #z-rotation
+
+    # plt.xlabel("time (s)")
+    # plt.ylabel("joint torque (Nm)")
+    # ax=plt.gca() # get current axes
+    # ax.grid(True, 'major', 'both')
+    # ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
+    # ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
+    # plt.tight_layout()
+    # ax.legend(loc='center right')
+    # plt.show() 
+    # plt.savefig("solution/robotJointTorques.pdf")
+
+    # doJointAngles = False
+    # if doJointAngles:
+    #     plt.close("all")
         
-        for i in range(6):
-            data = np.loadtxt("solution/joint" + str(i) + "Rot.txt", comments='#', delimiter=',')
-            plt.plot(data[:,0], data[:,3], PlotLineCode(i), label="joint"+str(i)) #z-rotation
+    #     for i in range(6):
+    #         #data = np.loadtxt("solution/joint" + str(i) + "Rot.txt", comments='#', delimiter=',')
+    #         data = mbs.GetSensorStoredData(sRot[i])
+    #         plt.plot(data[:,0], data[:,3], PlotLineCode(i), label="joint"+str(i)) #z-rotation
             
-        plt.xlabel("time (s)")
-        plt.ylabel("joint angle (rad)")
-        ax=plt.gca() 
-        ax.grid(True, 'major', 'both')
-        ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-        ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-        plt.tight_layout()
-        ax.legend()
-        plt.rcParams.update({'font.size': 16})
-        plt.show() 
-        plt.savefig("solution/robotJointAngles.pdf")
+    #     plt.xlabel("time (s)")
+    #     plt.ylabel("joint angle (rad)")
+    #     ax=plt.gca() 
+    #     ax.grid(True, 'major', 'both')
+    #     ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
+    #     ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
+    #     plt.tight_layout()
+    #     ax.legend()
+    #     plt.rcParams.update({'font.size': 16})
+    #     plt.show() 
+    #     plt.savefig("solution/robotJointAngles.pdf")
 

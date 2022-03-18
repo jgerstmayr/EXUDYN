@@ -30,7 +30,7 @@ mbs = SC.AddSystem()
 #useGraphics = exudynTestGlobals.useGraphics
 useGraphics = False
 useConstraints = False
-drawResults = False
+drawResults = True
 
 color = [0.1,0.1,0.8,1]
 r = 0.5 #radius
@@ -105,17 +105,17 @@ if useConstraints:
     mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC2]))
 
 if True:
-    sRot = mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorRotation.txt', 
+    sRot = mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True,#fileName='solution/sensorRotation.txt', 
                              writeToFile = drawResults,
                              outputVariableType=exu.OutputVariableType.Rotation))
-    sOmega = mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVel.txt', 
+    sAngVelLoc = mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True,#fileName='solution/sensorAngVel.txt', 
                              writeToFile = drawResults,
                              outputVariableType=exu.OutputVariableType.AngularVelocity))
 
-    sPos = mbs.AddSensor(SensorBody(bodyNumber=oRB, fileName='solution/sensorPosition.txt', 
+    sPos = mbs.AddSensor(SensorBody(bodyNumber=oRB, storeInternal=True,#fileName='solution/sensorPosition.txt', 
                              writeToFile = drawResults,
                              localPosition=rp, outputVariableType=exu.OutputVariableType.Position))
-    sCoords = mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorCoordinates.txt', 
+    sCoords = mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True,#fileName='solution/sensorCoordinates.txt', 
                              writeToFile = drawResults,
                              outputVariableType=exu.OutputVariableType.Coordinates))
 
@@ -197,7 +197,7 @@ for method in methods:
     # print(exu.InfoStat())
     solverType = method
     exu.SolveDynamic(mbs, solverType=solverType, simulationSettings=simulationSettings)
-    omega=mbs.GetSensorValues(sOmega) 
+    omega=mbs.GetSensorValues(sAngVelLoc) 
     pos=mbs.GetSensorValues(sPos) 
     coords=mbs.GetSensorValues(sCoords) 
     
@@ -211,33 +211,23 @@ for method in methods:
     # print(exu.InfoStat())
 
 err *=1e-3 #avoid problems with 32/64 bits
-exu.Print("explicitLieGrouIntegratorTest err=",err)
+exu.Print("explicitLieGrouIntegratorTest result=",err)
 
 exudynTestGlobals.testError = err - (0.16164013319819076) #2021-01-26: 0.16164013319819076 
 exudynTestGlobals.testResult = err
+exu.Print("explicitLieGrouIntegratorTest error=",exudynTestGlobals.testError)
 
 if useGraphics: #only start graphics once, but after background is set
     #SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
 if drawResults:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-    #plt.close("all")
+    from exudyn.plot import PlotSensor
 
-    [fig, ax] = plt.subplots()
-
-    data2 = np.loadtxt('solution/sensorAngVelLocal.txt', comments='#', delimiter=',')
-    ax.plot(data2[:,0], data2[:,1], 'r-', label='omega X') 
-    ax.plot(data2[:,0], data2[:,2], 'g-', label='omega Y') 
-    ax.plot(data2[:,0], data2[:,3], 'b-', label='omega Z') 
-
-    ax.grid(True, 'major', 'both')
-    ax.set_xlabel("time (s)")
-    ax.legend()
-    
-    ax.set_ylabel("angular velocity (rad/s)")
-
-    fig.tight_layout()
-    fig.show() #bring to front
+    PlotSensor(mbs, sensorNumbers=[sAngVelLoc], labels=['omega X'],subPlot=[1,3,1],
+               components=[0],yLabel='angular velocity (rad/s)', closeAll=True)
+    PlotSensor(mbs, sensorNumbers=[sAngVelLoc], labels=['omega Y'],subPlot=[1,3,2],newFigure=False,
+               components=[1],yLabel='angular velocity (rad/s)',colorCodeOffset=1)
+    PlotSensor(mbs, sensorNumbers=[sAngVelLoc], labels=['omega Z'],subPlot=[1,3,3],newFigure=False,
+               components=[2],yLabel='angular velocity (rad/s)',colorCodeOffset=1)
 

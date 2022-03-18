@@ -348,6 +348,9 @@ public:
 	//! provide rotation Jacobian in matrix value (for marker) for current configuration
 	virtual void GetRotationJacobian(Matrix& value) const { CHECKandTHROWstring("CNodeODE2::GetRotationJacobian: call illegal"); }
 
+	//! provide derivative w.r.t. coordinates of rotation Jacobian times vector; for current configuration
+	virtual void GetRotationJacobianTTimesVector_q(const Vector3D& vector, Matrix& jacobian_q) const { CHECKandTHROWstring("CNodeODE2::GetJacobianTimesVector_q: call illegal"); }
+
 	//! ONLY for nodes with AE / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();
 	virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const { CHECKandTHROWstring("ERROR: illegal call to CNodeODE2::ComputeAlgebraicEquations"); }
 
@@ -502,6 +505,12 @@ public:
 	virtual void GetGlocal(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeRigidBody::GetGlocal(...): invalid call"); }
 	virtual void GetG_t(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeRigidBody::GetG_t(...): invalid call"); }
 	virtual void GetGlocal_t(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeRigidBody::GetGlocal_t(...): invalid call"); }
+
+	//! compute d(G^T*v)/dq for any set of parameters; needed for jacobians
+	virtual void GetGTv_q(const Vector3D& v, ConstSizeMatrix<maxRotationCoordinates * maxRotationCoordinates>& matrix, ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeRigidBody::GetGTv_q(...): invalid call"); }
+
+	//! compute d(Glocal^T*v)/dq for any set of parameters; needed for jacobians
+	virtual void GetGlocalTv_q(const Vector3D& v, ConstSizeMatrix<maxRotationCoordinates * maxRotationCoordinates>& matrix, ConfigurationType configuration = ConfigurationType::Current) const { CHECKandTHROWstring("CNodeRigidBody::GetGlocalTv_q(...): invalid call"); }
 
 	//! obtain Glocal and local angular velocity
 	virtual void CollectCurrentNodeData1(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, Vector3D& angularVelocityLocal) const { CHECKandTHROWstring("CNodeRigidBody::CollectCurrentNodeData1(...): invalid call"); }

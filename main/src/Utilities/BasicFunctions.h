@@ -72,8 +72,8 @@ namespace EXUstd {
 	template <class T>
 	inline int Sgn(T a)
 	{
-		if (a > 0) return 1;
-		if (a < 0) return -1;
+		if (a > 0) { return 1; }
+		else if (a < 0) { return -1; }
 		return 0;
 	}
 
@@ -139,9 +139,9 @@ namespace EXUstd {
 	void QuickSort(ArrayClass& array)
 	{
 		Index len = array.NumberOfItems();
-		Index i, j, inc;
 		if (!len) { return; } //exit if array has zero length (next line would fail otherwise!)
 
+		Index i, j, inc;
 		auto item = array[0];
 
 		inc = 1; //Determine the starting increment.
@@ -182,6 +182,29 @@ namespace EXUstd {
 	inline STDstring Num2String(const T& number)
 	{
 		return std::to_string(number);
+	}
+
+	//! convert Real to string, using snprintf with precision
+	inline STDstring Num2String(Real number, Index precision, bool leadingSpace = false)
+	{
+		const Index nCharMax = 24;
+		char str[nCharMax];
+		if (!leadingSpace)
+		{
+			std::snprintf(str, nCharMax, "%.*g", Maximum(0, Minimum(precision, 16)), number);
+		}
+		else
+		{
+			std::snprintf(str, nCharMax, "% .*g", Maximum(0, Minimum(precision, 16)), number);
+		}
+
+		return STDstring(str);
+	}
+
+	//! convert float to string, using snprintf with precision
+	inline STDstring Num2String(float number, Index precision, bool leadingSpace = false)
+	{
+		return Num2String((Real)number, Minimum(precision, 7), leadingSpace);
 	}
 
 	//! Get current date and time string

@@ -71,7 +71,7 @@ namespace EXUmath {
 
 	//! compute cot(x) = 1./tan(x); fails for x=0
 	template <class T>
-	double Cot(T x) { return(1. / tan(x)); }
+	Real Cot(T x) { return(1. / tan(x)); }
 
 	inline Vector3D GetUnitVector(Index i)
 	{
@@ -198,6 +198,13 @@ namespace EXUmath {
 	static const SlimVector<5> gaussRuleOrder9Points({ -0.906179845938664, -0.5384693101056831, 0., 0.5384693101056831, 0.906179845938664 });
 	static const SlimVector<5> gaussRuleOrder9Weights({ 0.23692688505618914, 0.47862867049936636, 0.5688888888888889, 0.47862867049936636, 0.23692688505618914 });
 
+	static const SlimVector<2> lobattoRuleOrder2Points({ -1., 1.});
+	static const SlimVector<2> lobattoRuleOrder2Weights({ 1., 1.});
+	static const SlimVector<3> lobattoRuleOrder4Points({ -1., 0., 1.});
+	static const SlimVector<3> lobattoRuleOrder4Weights({ 1./3., 4./3., 1./3.});
+	static const SlimVector<4> lobattoRuleOrder6Points({ -1., -sqrt(1./5.), sqrt(1./5.), 1.});
+	static const SlimVector<4> lobattoRuleOrder6Weights({ 1./6., 5./6., 5./6., 1./6.});
+
 	//numerically integrate a function in interval [a,b]
 	//inline does not work on older MacOS
 #ifndef __APPLE__
@@ -214,6 +221,73 @@ namespace EXUmath {
 	};
 #endif
 	//auto function = [](Real x) {return x*x; }; //define a function 
+
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//POLYNOMIALS
+
+	//! evalute polynomial (coeff[0] + coeff[1]*x + coeff[2]*x^2 + ...) at x; coeffs contains polynomial coefficients, coeffs[0] is constant coefficient
+	template<class TVector>
+	inline Real EvaluatePolynomial(const TVector& coeffs, Real x)
+	{
+		CHECKandTHROW(coeffs.NumberOfItems() > 0, "EvaluatePolynomial: coeffs must have at least size 1");
+		Real xx = 1;
+		Real value = coeffs[0];
+		for (Index i = 1; i < coeffs.NumberOfItems(); i++)
+		{
+			xx *= x;
+			value += xx * coeffs[i];
+		}
+
+		//Real value = coeffs[0];
+		//if (coeffs.NumberOfItems() > 1)
+		//{
+		//	Real xx = x;
+		//	value += xx * coeffs[1];
+		//	for (Index i = 2; i < coeffs.NumberOfItems(); i++)
+		//	{
+		//		xx *= x;
+		//		value += xx * coeffs[i];
+		//	}
+		//}
+		return value;
+	}
+
+	//! evalute first derivative of polynomial (coeff[0] + coeff[1]*x + coeff[2]*x^2 + ...) at x; 
+	//! diff poly = (coeff[1] + 2*coeff[2]*x + 3*coeff[3]*x^2 + ...)
+	template<class TVector>
+	inline Real EvaluatePolynomial_x(const TVector& coeffs, Real x)
+	{
+		Real xx = 1.;
+		Real value = coeffs[1];
+		for (Index i = 2; i < coeffs.NumberOfItems(); i++)
+		{
+			xx *= x;
+			value += (Real)i * xx * coeffs[i];
+		}
+		return value;
+
+		//if (coeffs.NumberOfItems() > 1)
+		//{
+		//	Real value = coeffs[1];
+		//	if (coeffs.NumberOfItems() > 2)
+		//	{
+		//		Real xx = x;
+		//		value += 2.* xx * coeffs[2];
+		//		for (Index i = 3; i < coeffs.NumberOfItems(); i++)
+		//		{
+		//			xx *= x;
+		//			value += (Real)i * xx * coeffs[i];
+		//		}
+		//	}
+		//	return value;
+		//}
+		//else
+		//{
+		//	return 0.;
+		//}
+	}
+
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//ResizableMatrix/ResizableVector
@@ -435,6 +509,41 @@ namespace EXUmath {
 		Index m_row, m_col;
 		Real m_value;
 	};
+
+	template<class TMatrix>
+	void AddMatrixToSparseTripletVector(ResizableArray<Triplet>& triplets, const TMatrix& matrix, const ArrayIndex& ltgRows, const ArrayIndex& ltgColumns)
+	{
+		for (Index i = 0; i < matrix.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < matrix.NumberOfColumns(); j++)
+			{
+				Real value = matrix(i, j);
+				if (value != 0.) {
+					triplets.AppendPure(Triplet(ltgRows[i], ltgColumns[j], value)); }
+			}
+		}
+	}
+
+	template<class TMatrix, bool addTransposed=false>
+	void AddMatrixToSparseTripletVector(ResizableArray<Triplet>& triplets, const TMatrix& matrix,
+		const ArrayIndex& ltgRows, const ArrayIndex& ltgColumns, Real factor)
+	{
+		for (Index i = 0; i < matrix.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < matrix.NumberOfColumns(); j++)
+			{
+				Real value = factor * matrix(i, j);
+				if (value != 0.) 
+				{
+					triplets.AppendPure(Triplet(ltgRows[i], ltgColumns[j], value));
+					if constexpr(addTransposed)
+					{
+						triplets.AppendPure(Triplet(ltgColumns[j], ltgRows[i], value));
+					}
+				}
+			}
+		}
+	}
 
 	//! simple sparse matrix container for simplistic operations
 	class SparseTripletMatrix
@@ -699,7 +808,7 @@ namespace EXUmath {
 			}
 		}
 
-		//! add triplets to given dense matrix, using row and column offset and factor
+		//! add triplets to given dense vector, using row and column offset and factor
 		void AddToDenseVector(Vector& denseVector, Index rowOffset = 0, Real factor = 1.) const
 		{
 			if (rowOffset == 0 && factor == 1.)
@@ -747,4 +856,9 @@ typedef ResizableArray<SparseTriplet> SparseTripletVector;	//! this vector store
 
 
 
+
 #endif
+
+
+
+

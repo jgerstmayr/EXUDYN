@@ -80,10 +80,21 @@ public:
 	virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t,
 		Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeJacobianODE2_ODE2"); }
 
-	//! compute 'force' which is used for computation of derivative of jacobian; used only in combination with ComputeJacobianODE2_ODE2
-	virtual void ComputeJacobianForce(const MarkerDataStructure& markerData, Index objectNumber, Vector& force) const {
-		CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeJacobianForce");
+	//! compute 'force' which is used for computation of derivative of jacobian; for position connectors this is a force, 
+	//! while for position+rotation connectors, this is a generalized 6D force; used only in combination with ComputeJacobianODE2_ODE2
+	virtual void ComputeJacobianForce6D(const MarkerDataStructure& markerData, Index objectNumber, Vector6D& force6D) const {
+		CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeJacobianForce6D");
 	}
+
+	//! function to compute jacobian for connectors having a simple structure with a local jacobian 
+	//! using K=d(F)/(dq), D=d(F)/(dq_t) ==> localJac = factorODE2*K + factorODE_t*D
+	//! localJac is modified inside this function!
+	//! jacobianODE2 is computed using the marker jacobians and the jacobianDerivative stored in markerData
+	//! dense mode is used here; if activeConnector=false, jacobian becomes a zeros matrix
+	//! works for coordinate connectors (isCoordinateConnector=true) or position/orientation markers (pure position if hasRotationJacobian=false)
+	virtual void ComputeJacobianODE2_ODE2generic(ResizableMatrix& localJac, EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
+		Real factorODE2, Real factorODE2_t, Index objectNumber, const MarkerDataStructure& markerData, bool activeConnector, 
+		bool isCoordinateConnector, bool hasRotationJacobian) const;
 
 	//! compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians
 	virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianAE"); }

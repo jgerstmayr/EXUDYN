@@ -247,7 +247,7 @@ sFemoral = mbs.AddSensor(SensorLoad(loadNumber=loadFemoralB, fileName='solution/
 #                                outputVariableType = exu.OutputVariableType.Position))
     
 #     mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrailVel.txt', 
-#                                outputVariableType = exu.OutputVariableType.VelocityLocal))
+#                                outputVariableType = exu.OutputVariableType.Velocity))
     
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++

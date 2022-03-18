@@ -23,6 +23,99 @@
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations" 
 void CObjectJointRevoluteZ::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel) const
 {
+	
+	if (parameters.activeConnector)
+	{
+		//CPU time for total algebraic equations (including call from CSystem.cpp):
+		//  index3 takes roughly 175ns (i7)
+		//  index2 takes roughly 300ns (i7)
+		constexpr Index lockedAxis1 = 0; //x
+		constexpr Index lockedAxis2 = 1; //y
+		constexpr Index freeAxis = 2;	 //z
+
+		algebraicEquations.SetNumberOfItems(nConstraints);
+		//const LinkedDataVector& lambda = markerData.GetLagrangeMultipliers();
+
+		const MarkerData& markerData0 = markerData.GetMarkerData(0);
+		const MarkerData& markerData1 = markerData.GetMarkerData(1);
+
+		const Matrix3D& A0 = markerData0.orientation;
+		//const Matrix3D& A0off = parameters.rotationMarker0;
+		//Matrix3D A0all = (A0*A0off);
+
+
+		const Matrix3D& A1 = markerData1.orientation;
+		//const Matrix3D& A1off = parameters.rotationMarker1;
+		//Matrix3D A1all = (A1*A1off);
+
+
+		Vector3D vRot0 = A0*parameters.rotationMarker0.GetColumnVector<3>(freeAxis);
+		Vector3D vLocked1 = A1 * parameters.rotationMarker1.GetColumnVector<3>(lockedAxis1);
+		Vector3D vLocked2 = A1 * parameters.rotationMarker1.GetColumnVector<3>(lockedAxis2);
+		//Vector3D vRot0 = A0all.GetColumnVector<3>(freeAxis);
+		//Vector3D vLocked1 = A1all.GetColumnVector<3>(lockedAxis1);
+		//Vector3D vLocked2 = A1all.GetColumnVector<3>(lockedAxis2);
+
+		if (!velocityLevel)
+		{
+			//++++++++++++++++++++++++++++++++
+			//translation constraints:
+			//global equations in case that all position coordinates are locked!
+			Vector3D vPos = (markerData1.position - markerData0.position);
+
+			algebraicEquations[0] = vPos[0];
+			algebraicEquations[1] = vPos[1];
+			algebraicEquations[2] = vPos[2];
+
+			//++++++++++++++++++++++++++++++++
+			//rotation constraints:
+			algebraicEquations[lockedAxis1 + 3] = vRot0 * vLocked1;
+			algebraicEquations[lockedAxis2 + 3] = vRot0 * vLocked2;
+			//algebraicEquations[freeAxis + 3] = lambda[freeAxis + 3]; //only in generic joint
+		}
+		else //index2
+		{
+			//CHECKandTHROWstring("CObjectJointRevoluteZ: velocity level not implemented");
+			CHECKandTHROW(markerData1.velocityAvailable && markerData0.velocityAvailable, "CObjectJointRevoluteZ::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
+
+			//++++++++++++++++++++++++++++++++
+			//translation constraints:
+
+			//use difference of velocities in global coordinates
+			Vector3D vVel = (markerData1.velocity - markerData0.velocity);
+
+			algebraicEquations[0] = vVel[0];
+			algebraicEquations[1] = vVel[1];
+			algebraicEquations[2] = vVel[2];
+
+			//++++++++++++++++++++++++++++++++
+			//rotation constraints:
+			//Matrix3D A0_t = markerData0.orientation * RigidBodyMath::Vector2SkewMatrix(markerData0.angularVelocityLocal);
+			//Matrix3D A1_t = markerData1.orientation * RigidBodyMath::Vector2SkewMatrix(markerData1.angularVelocityLocal);
+			//Matrix3D A0all_t = (A0_t*A0off);
+			//Matrix3D A1all_t = (A1_t*A1off);
+
+			//Vector3D vRot0_t = A0all_t.GetColumnVector<3>(freeAxis);
+			//Vector3D vLocked1_t = A1all_t.GetColumnVector<3>(lockedAxis1);
+			//Vector3D vLocked2_t = A1all_t.GetColumnVector<3>(lockedAxis2);
+
+			Vector3D vRot0_t = A0 * markerData0.angularVelocityLocal.CrossProduct(parameters.rotationMarker0.GetColumnVector<3>(freeAxis));
+			Vector3D vLocked1_t = A1 * markerData1.angularVelocityLocal.CrossProduct(parameters.rotationMarker1.GetColumnVector<3>(lockedAxis1));
+			Vector3D vLocked2_t = A1 * markerData1.angularVelocityLocal.CrossProduct(parameters.rotationMarker1.GetColumnVector<3>(lockedAxis2));
+
+
+			//free axis leads to Lagrange multiplier; locked axes must be perpendicular to rotation axis of marker0 (vRot0)
+			algebraicEquations[lockedAxis1 + 3] = vRot0_t * vLocked1 + vRot0 * vLocked1_t;
+			algebraicEquations[lockedAxis2 + 3] = vRot0_t * vLocked2 + vRot0 * vLocked2_t;
+			//algebraicEquations[freeAxis + 3] = lambda[freeAxis + 3]; //only in generic joint
+		}
+	}
+	else
+	{
+		algebraicEquations.CopyFrom(markerData.GetLagrangeMultipliers()); //equation [lambda0,lambda1]^T = [0,0]^T, means that the current values need to be copied
+	}
+	
+/*
 	if (parameters.activeConnector)
 	{
 
@@ -98,6 +191,8 @@ void CObjectJointRevoluteZ::ComputeAlgebraicEquations(Vector& algebraicEquations
 	{
 		algebraicEquations.CopyFrom(markerData.GetLagrangeMultipliers()); //equation [lambda0,lambda1]^T = [0,0]^T, means that the current values need to be copied
 	}
+*/
+
 }
 
 

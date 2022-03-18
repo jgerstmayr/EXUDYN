@@ -45,27 +45,29 @@ STDstring CSolverTimer::ToString() const
 	if (Sum() != 0.) // avoid division by zero ...
 	{
 		Real sum = Sum() / 100.;
+		Real limit = 0.;
 		ostr << "  total time   = " << total << " seconds\n";
 		ostr << "  measured time= " << Sum() << " seconds (=" << 100.*Sum() / total << "%) \n";
-		ostr << "  factorization     = " << factorization / sum << "%\n";
-		ostr << "  newtonIncrement   = " << newtonIncrement / sum << "%\n";
-		ostr << "  integrationFormula= " << integrationFormula / sum << "%\n";
-		ostr << "  ODE2RHS           = " << ODE2RHS / sum << "%\n";
-		ostr << "  ODE1RHS           = " << ODE1RHS / sum << "%\n";
-		ostr << "  AERHS             = " << AERHS / sum << "%\n";
-		ostr << "  totalJacobian     = " << totalJacobian / sum << "%\n";
-		ostr << "  jacobianODE2_t    = " << jacobianODE2_t / sum << "%\n";
-		ostr << "  jacobianODE2      = " << jacobianODE2 / sum << "%\n";
-		ostr << "  jacobianODE1      = " << jacobianODE1 / sum << "%\n";
-		ostr << "  jacobianAE        = " << jacobianAE / sum << "%\n";
-		ostr << "  massMatrix        = " << massMatrix / sum << "%\n";
-		ostr << "  reactionForces    = " << reactionForces / sum << "%\n";
-		ostr << "  postNewtonStep    = " << postNewton / sum << "%\n";
-		ostr << "  errorEstimator    = " << errorEstimator / sum << "%\n";
-		ostr << "  writeSolution     = " << writeSolution / sum << "%\n";
-		ostr << "  overhead          = " << overhead / sum << "%\n";
-		ostr << "  python            = " << python / sum << "%\n";
-		ostr << "  visualization/user= " << visualization / sum << "%\n";
+		ostr << "  non-zero timer [__ sub-timer]:\n";
+		if (factorization / sum > limit) ostr << "  factorization     = " << factorization / sum << "%\n";
+		if (newtonIncrement / sum > limit) ostr << "  newtonIncrement   = " << newtonIncrement / sum << "%\n";
+		if (integrationFormula / sum > limit) ostr << "  integrationFormula= " << integrationFormula / sum << "%\n";
+		if (ODE2RHS / sum > limit) ostr << "  ODE2RHS           = " << ODE2RHS / sum << "%\n";
+		if (ODE1RHS / sum > limit) ostr << "  ODE1RHS           = " << ODE1RHS / sum << "%\n";
+		if (AERHS / sum > limit) ostr << "  AERHS             = " << AERHS / sum << "%\n";
+		if (totalJacobian / sum > limit) ostr << "  totalJacobian     = " << totalJacobian / sum << "%\n";
+		if (jacobianODE2_t / sum > limit) ostr << "  __jacobianODE2_t  = " << jacobianODE2_t / sum << "%\n";
+		if (jacobianODE2 / sum > limit) ostr << "  __jacobianODE2    = " << jacobianODE2 / sum << "%\n";
+		if (jacobianODE1 / sum > limit) ostr << "  __jacobianODE1    = " << jacobianODE1 / sum << "%\n";
+		if (jacobianAE / sum > limit) ostr << "  __jacobianAE      = " << jacobianAE / sum << "%\n";
+		if (massMatrix / sum > limit) ostr << "  massMatrix        = " << massMatrix / sum << "%\n";
+		if (reactionForces / sum > limit) ostr << "  reactionForces    = " << reactionForces / sum << "%\n";
+		if (postNewton / sum > limit) ostr << "  postNewtonStep    = " << postNewton / sum << "%\n";
+		if (errorEstimator / sum > limit) ostr << "  errorEstimator    = " << errorEstimator / sum << "%\n";
+		if (writeSolution / sum > limit) ostr << "  writeSolution     = " << writeSolution / sum << "%\n";
+		if (overhead / sum > limit) ostr << "  overhead          = " << overhead / sum << "%\n";
+		if (python / sum > limit) ostr << "  __python          = " << python / sum << "%\n";
+		if (visualization / sum > limit) ostr << "  visualization/user= " << visualization / sum << "%\n";
 	}
 	else
 	{

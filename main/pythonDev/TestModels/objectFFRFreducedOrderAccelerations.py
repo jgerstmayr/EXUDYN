@@ -127,35 +127,31 @@ if addSupports:
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 fileDir = 'solution/'
 #rigid body node:
-mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], 
-                         fileName=fileDir+'rbDisplacement.txt', 
+mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], storeInternal=True,#fileName=fileDir+'rbDisplacement.txt', 
                          outputVariableType = exu.OutputVariableType.Displacement))
 
-mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], 
-                         fileName=fileDir+'rbVelocity.txt', 
+mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], storeInternal=True,#fileName=fileDir+'rbVelocity.txt', 
                          outputVariableType = exu.OutputVariableType.Velocity))
 
-mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], 
-                         fileName=fileDir+'rbAcceleration.txt', 
+mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], storeInternal=True,#fileName=fileDir+'rbAcceleration.txt', 
                          outputVariableType = exu.OutputVariableType.Acceleration))
+
+mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], storeInternal=True,#fileName=fileDir+'nRigidBodyAngVelCMS.txt', 
+                         outputVariableType = exu.OutputVariableType.AngularVelocity))
 
 
 #FFRF object, selected node:
-mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], meshNodeNumber=nMid, #meshnode number!
-                         fileName=fileDir+'nMidDisplacementCMS.txt', 
+sCMSdisp=mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], meshNodeNumber=nMid, #meshnode number!
+                         storeInternal=True,#fileName=fileDir+'nMidDisplacementCMS.txt', 
                          outputVariableType = exu.OutputVariableType.Displacement))
 
-mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], meshNodeNumber=nMid, #meshnode number!
-                         fileName=fileDir+'nMidVelocityCMS.txt', 
+sCMSvel=mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], meshNodeNumber=nMid, #meshnode number!
+                         storeInternal=True,#fileName=fileDir+'nMidVelocityCMS.txt', 
                          outputVariableType = exu.OutputVariableType.Velocity))
 
-mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], meshNodeNumber=nMid, #meshnode number!
-                         fileName=fileDir+'nMidAccelerationCMS.txt', 
+sCMSacc=mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], meshNodeNumber=nMid, #meshnode number!
+                         storeInternal=True,#fileName=fileDir+'nMidAccelerationCMS.txt', 
                          outputVariableType = exu.OutputVariableType.Acceleration))
-
-mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], 
-                         fileName=fileDir+'nRigidBodyAngVelCMS.txt', 
-                         outputVariableType = exu.OutputVariableType.AngularVelocity))
 
 mbs.Assemble()
 
@@ -190,7 +186,7 @@ simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrde
 
 h=1e-4
 tEnd = 0.001
-exudynTestGlobals.useGraphics = False
+#exudynTestGlobals.useGraphics = False
 if exudynTestGlobals.useGraphics:
     tEnd = 0.1
     #if exudynTestGlobals.useGraphics:
@@ -207,6 +203,7 @@ simulationSettings.solutionSettings.sensorsWritePeriod = h
 simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/coordinatesSolutionCMStest.txt"
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
+simulationSettings.solutionSettings.writeSolutionToFile = False
 #simulationSettings.displayStatistics = True
 #simulationSettings.displayComputationTime = True
 
@@ -223,12 +220,14 @@ if exudynTestGlobals.useGraphics:
 exu.SolveDynamic(mbs, simulationSettings)
     
 
-data = np.loadtxt(fileDir+'nMidAccelerationCMS.txt', comments='#', delimiter=',')
+data=mbs.GetSensorStoredData(sCMSacc)
+#data = np.loadtxt(fileDir+'nMidAccelerationCMS.txt', comments='#', delimiter=',')
 result = abs(data).sum()
 exu.Print('solution of ObjectFFRFreducedOrderAccelerations=',result)
 
 exudynTestGlobals.testError = (result - (61576.266114362006 ))/(2*result) #2021-01-03: added '/(2*result)' as error is too large (2e-10); 2020-12-19: (dense eigenvalue solver gives repeatable results!) 61576.266114362006 
 exudynTestGlobals.testResult = result/(2*61576.266114362006)
+exu.Print('ObjectFFRFreducedOrderAccelerations test result=',exudynTestGlobals.testResult)
 
 if exudynTestGlobals.useGraphics:
     #SC.WaitForRenderEngineStopFlag()
@@ -238,20 +237,26 @@ if exudynTestGlobals.useGraphics:
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #plot results
 if exudynTestGlobals.useGraphics:
+        
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     
-    from exudyn.signal import FilterSensorOutput, FilterSignal
-    #plt.rcParams.update({'font.size': 20})
+    from exudyn.signalProcessing import FilterSensorOutput, FilterSignal
+    # from exudyn.plot import PlotSensor
+
     cList=['r-','g-','b-','k-','c-','r:','g:','b:','k:','c:']
  
-    data = np.loadtxt(fileDir+'nMidDisplacementCMS.txt', comments='#', delimiter=',') #new result from this file
-    # plt.plot(data[:,0], data[:,2], cList[1],label='displ mid') #numerical solution, 1 == x-direction
+    # data = np.loadtxt(fileDir+'nMidDisplacementCMS.txt', comments='#', delimiter=',') #new result from this file
+    # # plt.plot(data[:,0], data[:,2], cList[1],label='displ mid') #numerical solution, 1 == x-direction
 
-    dataV = np.loadtxt(fileDir+'nMidVelocityCMS.txt', comments='#', delimiter=',') #new result from this file
-    #plt.plot(dataV[:,0], dataV[:,2], cList[0],label='vel mid') 
+    # dataV = np.loadtxt(fileDir+'nMidVelocityCMS.txt', comments='#', delimiter=',') #new result from this file
+    # #plt.plot(dataV[:,0], dataV[:,2], cList[0],label='vel mid') 
 
-    dataA = np.loadtxt(fileDir+'nMidAccelerationCMS.txt', comments='#', delimiter=',') #new result from this file
+    # dataA = np.loadtxt(fileDir+'nMidAccelerationCMS.txt', comments='#', delimiter=',') #new result from this file
+    
+    data = mbs.GetSensorStoredData(sCMSdisp)
+    dataV = mbs.GetSensorStoredData(sCMSvel)
+    dataA = mbs.GetSensorStoredData(sCMSacc)
     plt.plot(dataA[:,0], dataA[:,2], cList[0],label='acc mid') 
 
     # der = FilterSensorOutput(data, 0, 3, 1)
@@ -275,8 +280,6 @@ if exudynTestGlobals.useGraphics:
     der2 = FilterSignal(data[:,2], samplingRate=data[1,0]-data[0,0], filterWindow=5, polyOrder=3, derivative=2)
     plt.plot(der0, der2, cList[3],label='diffdiff(displ) mid, savgol, w=5, p=3') 
 
-    plt.legend()
-    
     ax=plt.gca() # get current axes
     ax.grid(True, 'major', 'both')
     ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
@@ -285,13 +288,13 @@ if exudynTestGlobals.useGraphics:
     plt.legend()
 
     plt.figure()
-    data = np.loadtxt(fileDir+'nMidDisplacementCMS.txt', comments='#', delimiter=',') #new result from this file
-    # plt.plot(data[:,0], data[:,2], cList[1],label='uMid,Test') #numerical solution, 1 == x-direction
+    # data = np.loadtxt(fileDir+'nMidDisplacementCMS.txt', comments='#', delimiter=',') #new result from this file
+    # # plt.plot(data[:,0], data[:,2], cList[1],label='uMid,Test') #numerical solution, 1 == x-direction
 
-    dataV = np.loadtxt(fileDir+'nMidVelocityCMS.txt', comments='#', delimiter=',') #new result from this file
-    #plt.plot(dataV[:,0], dataV[:,2], cList[0],label='vMid,Test') 
+    # dataV = np.loadtxt(fileDir+'nMidVelocityCMS.txt', comments='#', delimiter=',') #new result from this file
+    # #plt.plot(dataV[:,0], dataV[:,2], cList[0],label='vMid,Test') 
 
-    dataA = np.loadtxt(fileDir+'nMidAccelerationCMS.txt', comments='#', delimiter=',') #new result from this file
+    # dataA = np.loadtxt(fileDir+'nMidAccelerationCMS.txt', comments='#', delimiter=',') #new result from this file
     plt.plot(dataA[:,0], dataA[:,2], cList[0],label='rigid node, acc') 
 
     der = FilterSensorOutput(dataV, filterWindow=5, polyOrder=3, derivative=1)

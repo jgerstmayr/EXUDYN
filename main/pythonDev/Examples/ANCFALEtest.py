@@ -84,8 +84,7 @@ if useGraphics:
     mbs.variables['sALEvel'] = mbs.AddSensor(SensorNode(nodeNumber=nALE, fileName='solution/nodeALEvel.txt',
                              outputVariableType=exu.OutputVariableType.Coordinates_t))
 
-#constraint to prescribe ALE velocity; will be set in PreStepUserFunction
-oCCvALE=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mALE], offset=vALE0, 
+oCCvALE=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mALE], offset=vALE0*0,  #for static computation
                                            velocityLevel = False,
                                            activeConnector = True,
                                            visualization=VCoordinateConstraint(show=False))) # False for static computation

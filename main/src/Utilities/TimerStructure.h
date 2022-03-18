@@ -30,7 +30,12 @@
 #ifdef __FAST_EXUDYN_LINALG
 	#define STARTGLOBALTIMER(_Expression) 
 	#define STOPGLOBALTIMER(_Expression) 
+	#define STARTGLOBALTIMERmain(_Expression) 
+	#define STOPGLOBALTIMERmain(_Expression) 
 #else
+    //main timers are always kept!
+	#define STARTGLOBALTIMERmain(_Expression) (globalTimers.StartTimer(_Expression))
+	#define STOPGLOBALTIMERmain(_Expression) (globalTimers.StopTimer(_Expression))
 	#ifdef USEGLOBALTIMERS
 		#define STARTGLOBALTIMER(_Expression) (globalTimers.StartTimer(_Expression))
 		#define STOPGLOBALTIMER(_Expression) (globalTimers.StopTimer(_Expression))
@@ -110,7 +115,10 @@ public:
 		ostr.precision(5); //reduced precision for nicer output...
 		for (Index i = 0; i < (Index)counters.size(); i++)
 		{
-			ostr << "  " << counterNames[i] << " = " << counters[i] * 1000 << "ms\n"; //print timings in milliseconds
+			if (counters[i] != 0.) //exclude timers that are exactly zero:
+			{
+				ostr << "  " << counterNames[i] << " = " << counters[i] << "s\n";
+			}
 		}
 		return ostr.str();
 	}
@@ -121,10 +129,15 @@ class TimerStructureRegistrator
 {
 public:
 	//! register a timer by creating instance with this constructor:
-	TimerStructureRegistrator(const char* timerName, Index& timerNumber, TimerStructure& globalTimerStructure)
+	TimerStructureRegistrator(const char* timerName, Index& timerNumber, TimerStructure& globalTimerStructure, bool addAlways=false)
 	{
 	#ifdef USEGLOBALTIMERS
 		timerNumber = globalTimerStructure.AddTimer(timerName);
+	#else
+		if (addAlways)
+		{
+			timerNumber = globalTimerStructure.AddTimer(timerName);
+		}
 	#endif
 	}
 };

@@ -90,9 +90,14 @@ gGround = GraphicsDataOrthoCubePoint(centerPoint=[0,0,-0.001],size=[30,30,0.002]
 oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
 markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 
-mbs.AddSensor(SensorBody(bodyNumber=bCar, fileName='solution/rollingDiscCarVel.txt', 
-                            outputVariableType = exu.OutputVariableType.Velocity))
+sCarVel = mbs.AddSensor(SensorBody(bodyNumber=bCar, #fileName='solution/rollingDiscCarVel.txt', 
+                                   storeInternal=True,
+                                   outputVariableType = exu.OutputVariableType.Velocity))
 
+sAngVels=[]
+sWheelPos=[]
+sRollPos=[]
+sRollForce=[]
 
 
 for iWheel in range(nWheels):
@@ -169,17 +174,21 @@ for iWheel in range(nWheels):
 
     strNum = str(iWheel)
     if exudynTestGlobals.useGraphics:
-        mbs.AddSensor(SensorBody(bodyNumber=b0, fileName='solution/rollingDiscAngVelLocal'+strNum+'.txt', 
-                                   outputVariableType = exu.OutputVariableType.AngularVelocityLocal))
+        sAngVels+=[mbs.AddSensor(SensorBody(bodyNumber=b0, #fileName='solution/rollingDiscAngVelLocal'+strNum+'.txt', 
+                                 storeInternal=True,
+                                 outputVariableType = exu.OutputVariableType.AngularVelocityLocal))]
     
-        mbs.AddSensor(SensorBody(bodyNumber=b0, fileName='solution/rollingDiscPos'+strNum+'.txt', 
-                                   outputVariableType = exu.OutputVariableType.Position))
+        sWheelPos+=[mbs.AddSensor(SensorBody(bodyNumber=b0, #fileName='solution/rollingDiscPos'+strNum+'.txt', 
+                                     storeInternal=True,
+                                     outputVariableType = exu.OutputVariableType.Position))]
     
-        mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrail'+strNum+'.txt', 
-                                   outputVariableType = exu.OutputVariableType.Position))
+        sRollPos+=[mbs.AddSensor(SensorObject(objectNumber=oRolling, #fileName='solution/rollingDiscTrail'+strNum+'.txt', 
+                                            storeInternal=True,
+                                            outputVariableType = exu.OutputVariableType.Position))]
     
-        mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscForce'+strNum+'.txt', 
-                                   outputVariableType = exu.OutputVariableType.ForceLocal))
+        sRollForce+=[mbs.AddSensor(SensorObject(name='wheelForce'+strNum,objectNumber=oRolling, #fileName='solution/rollingDiscForce'+strNum+'.txt', 
+                                               storeInternal=True,
+                                               outputVariableType = exu.OutputVariableType.ForceLocal))]
 
 
 
@@ -201,7 +210,7 @@ tEnd = 0.5 #40#1.2
 h=0.002 #no visual differences for step sizes smaller than 0.0005
 
 if exudynTestGlobals.useGraphics:
-    #tEnd = 40
+    tEnd = 4
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
@@ -234,62 +243,20 @@ exudynTestGlobals.testResult = u
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
 if exudynTestGlobals.useGraphics:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
- 
-    symStr = ['r-','g-','b-','k-']    
-    symStr2 = ['r--','g--','b--','k--']    
+    from exudyn.plot import PlotSensor
+    
+    PlotSensor(mbs,sensorNumbers=sCarVel, components=[0,1,2], title='car velocitiy', closeAll=True)
     for i in range(4):
-        s = str(i)
-        data = np.loadtxt('solution/rollingDiscTrail'+s+'.txt', comments='#', delimiter=',') 
-        plt.plot(data[:,1], data[:,2], symStr[i],label='trail wheel'+s) #x/y coordinates of trail
-        data = np.loadtxt('solution/rollingDiscForce'+s+'.txt', comments='#', delimiter=',') 
-        #plt.plot(data[:,0], data[:,2], symStr[i],label='wheel force y'+s) 
-        #data = np.loadtxt('solution/rollingDiscAngVelLocal'+s+'.txt', comments='#', delimiter=',') 
-        #plt.plot(data[:,0], data[:,1], symStr2[i],label='wheel ang vel'+s) 
+        PlotSensor(mbs, sensorNumbers=sRollPos[i], componentsX=0, components=1, 
+                   labels='wheel trail '+str(i), newFigure=(i==0), colorCodeOffset=i)
+        #trail and wheel pos are almost same, just if car slightly tilts, there is a deviation
+        PlotSensor(mbs, sensorNumbers=sWheelPos[i], componentsX=0, components=1, 
+                   labels='wheel pos '+str(i), newFigure=False, colorCodeOffset=i+7,
+                   lineStyles='', markerStyles='x')
     
-    data = np.loadtxt('solution/rollingDiscPos0.txt', comments='#', delimiter=',') 
-    #plt.plot(data[:,0], data[:,1], 'r-',label='coin pos x') 
-    #plt.plot(data[:,0], data[:,2], 'g-',label='coin pos y') 
-    #plt.plot(data[:,0], data[:,3], 'b-',label='coin pos z') 
+    PlotSensor(mbs, sensorNumbers=sRollForce, components=[2]*4, title='wheel contact forces')
 
-    # data = np.loadtxt('solution/rollingDiscCarVel0.txt', comments='#', delimiter=',') 
-    # #plt.plot(data[:,0], data[:,2], 'r-',label='car vel y') 
-    # plt.plot(data[:,0], (data[:,1]**2+data[:,2]**2)**0.5, 'r-',label='car |vel|') 
+    PlotSensor(mbs, sensorNumbers=sRollForce*2, components=[0]*4+[1]*4, title='wheel lateral (X) and drive/acceleration (Y) forces')
 
-    data = np.loadtxt('solution/rollingDiscForce0.txt', comments='#', delimiter=',') 
-    #plt.plot(data[:,0], (data[:,1]**2+data[:,2]**2)**0.5, 'k-',label='friction force') 
-
-    data = np.loadtxt('solution/rollingDiscAngVelLocal0.txt', comments='#', delimiter=',') 
-    #plt.plot(data[:,0], data[:,1], 'r-',label='ang vel x') 
-
-    #data = np.loadtxt('solution/rollingDiscAngVelLocal.txt', comments='#', delimiter=',') 
-    #plt.plot(data[:,0], data[:,1], 'k-',label='ang vel local x') #x/y coordinates of trail
-
-    if False:
-        data = np.loadtxt('solution/rollingDiscTrail0.txt', comments='#', delimiter=',') 
-        nData = len(data)
-        vVec = np.zeros((nData,2))
-        dt = data[1,0]-data[0,0]
-        for i in range(nData-1):
-            vVec[i+1,0:2] = 1/dt*(data[i+1,1:3]-data[i,1:3])
-
-        plt.plot(data[:,0], vVec[:,0], 'r-',label='contact point vel x') 
-        plt.plot(data[:,0], vVec[:,1], 'k-',label='contact point vel y') 
-        plt.plot(data[:,0], (vVec[:,0]**2+vVec[:,1]**2)**0.5, 'g-',label='|contact point vel|')
-
-        trailVel = np.loadtxt('solution/rollingDiscTrailVel.txt', comments='#', delimiter=',') 
-    
-        plt.plot(data[:,0], trailVel[:,1], 'r--',label='trail vel x')
-        plt.plot(data[:,0], trailVel[:,2], 'k--',label='trail vel y')
-        plt.plot(data[:,0], trailVel[:,3], 'y--',label='trail vel z')
-        plt.plot(data[:,0], (trailVel[:,1]**2+trailVel[:,2]**2)**0.5, 'b--',label='|trail vel|')
-
-    ax=plt.gca() # get current axes
-    ax.grid(True, 'major', 'both')
-    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    plt.tight_layout()
-    plt.legend()
-    plt.show() 
+    PlotSensor(mbs, sensorNumbers=sAngVels, components=[0]*4, title='wheel local angular velocity')
 

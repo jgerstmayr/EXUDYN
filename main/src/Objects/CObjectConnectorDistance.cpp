@@ -85,7 +85,7 @@ void CObjectConnectorDistance::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2,
 	}
 	else
 	{
-		jacobian_AE.SetScalarMatrix(2, 1.); //represents derivative of algebraic equation '[lambda0,lambda1]^T = [0,0]^T'
+		jacobian_AE.SetScalarMatrix(1, 1.); //represents derivative of algebraic equation '[lambda0]^T = [0]^T'
 	}
 }
 

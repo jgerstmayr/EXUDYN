@@ -28,14 +28,7 @@ COMPATIBILITY:
 
 RUNNING Exudyn in SPYDER:
 
-2a) running Exudyn in Spyder may cause problems with the GLFW visualization, which does not always close
-	the GLFW window appropriatly; runing Exudyn a second time, causes a crash
-    ==> WORKAROUND:
-	1) restart kernel in current console by mouse click on "x" (closing button)
-	2) preferences->Run: Set "Execute in an external system terminal" ==> in this way multiple runs are possible with graphics
-
-
-3) Anaconda3-5.2.0-Windows-x86_64.exe: in Microsoft Surface book 2: spyder crashes on startup if installed in parallel to VS2017 python
+2) Anaconda3-5.2.0-Windows-x86_64.exe: in Microsoft Surface book 2: spyder crashes on startup if installed in parallel to VS2017 python
 ==> use Anaconda3-5.1.0-Windows-x86_64.exe instead (works!)
 
 

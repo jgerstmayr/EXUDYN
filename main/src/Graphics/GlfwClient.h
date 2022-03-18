@@ -231,11 +231,13 @@ public:
 		{
 			if (lineFeed)
 			{
-				PyQueueExecutableString("print('" + str + "')\n");
+				//PyQueueExecutableString("print('" + str + "')\n");
+				outputBuffer.WriteVisualization(str+'\n'); //shall be faster by putting into outputBuffer, rather than executing python command
 			}
 			else
 			{
-				PyQueueExecutableString("print('" + str + "', end='')\n");
+				//PyQueueExecutableString("print('" + str + "', end='')\n");
+				outputBuffer.WriteVisualization(str + '\n'); //shall be faster by putting into outputBuffer, rather than executing python command
 			}
 		}
 		else

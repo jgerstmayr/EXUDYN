@@ -121,12 +121,13 @@ if addSupports:
                                                     
 
 fileDir = 'solution/'
-mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRF'], meshNodeNumber=nMid, #meshnode number!
-                         fileName=fileDir+'nMidDisplacementFFRFtest.txt', 
+#keep files, as they are checked in the .git repo:
+sDisp=mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRF'], meshNodeNumber=nMid, #meshnode number!
+                         storeInternal=True,#fileName=fileDir+'nMidDisplacementFFRFtest.txt', 
                          outputVariableType = exu.OutputVariableType.Displacement))
 
-mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], 
-                         fileName=fileDir+'nRigidBodyAngVelFFRFtest.txt', 
+sAngVel=mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], 
+                         storeInternal=True,#fileName=fileDir+'nRigidBodyAngVelFFRFtest.txt', 
                          outputVariableType = exu.OutputVariableType.AngularVelocity))
 
 mbs.Assemble()
@@ -158,6 +159,7 @@ SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displac
 SC.visualizationSettings.contour.outputVariableComponent = 1 #y-component
 
 simulationSettings.solutionSettings.solutionInformation = "ObjectFFRF test"
+simulationSettings.solutionSettings.writeSolutionToFile=False
 
 h=1e-4
 tEnd = 0.0025
@@ -173,6 +175,7 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
 simulationSettings.solutionSettings.sensorsWritePeriod = h
 simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/coordinatesSolutionFFRFtest.txt"
+simulationSettings.solutionSettings.writeSolutionToFile=False
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
 #simulationSettings.displayStatistics = True
@@ -192,12 +195,13 @@ if exudynTestGlobals.useGraphics:
 exu.SolveDynamic(mbs, simulationSettings)
     
 
-data = np.loadtxt(fileDir+'nMidDisplacementFFRFtest.txt', comments='#', delimiter=',')
+#data = np.loadtxt(fileDir+'nMidDisplacementFFRFtest.txt', comments='#', delimiter=',')
+data = mbs.GetSensorStoredData(sDisp)
 result = abs(data).sum()
 #pos = mbs.GetObjectOutputBody(objFFRF['oFFRFreducedOrder'],exu.OutputVariableType.Position, localPosition=[0,0,0])
 exu.Print('solution of ObjectFFRFtest2=',result)
 
-exudynTestGlobals.testError = result - (0.03553746369388042) #2020-05-26 (tEnd=0.0025, h=1e-4): 0.03553746369388042 
+exudynTestGlobals.testError = result - (0.03552188069017914) #2022-02-20: changed to internal sensor storage; 2020-05-26 (tEnd=0.0025, h=1e-4): 0.03553746369388042 
 exudynTestGlobals.testResult = result
 
 if exudynTestGlobals.useGraphics:
@@ -208,21 +212,25 @@ if exudynTestGlobals.useGraphics:
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
 if exudynTestGlobals.useGraphics:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-    cList=['r-','g-','b-','k-','c-','r:','g:','b:','k:','c:']
+    from exudyn.plot import PlotSensor
+    
+    PlotSensor(mbs, [fileDir+'nMidDisplacementCMS8.txt',sDisp], components=1, closeAll=True)
+
+    # import matplotlib.pyplot as plt
+    # import matplotlib.ticker as ticker
+    # cList=['r-','g-','b-','k-','c-','r:','g:','b:','k:','c:']
  
-    data = np.loadtxt(fileDir+'nMidDisplacementCMS8Test.txt', comments='#', delimiter=',') #new result from this file
-    plt.plot(data[:,0], data[:,2], cList[1],label='uMid,CMS8') #numerical solution, 1 == x-direction
+    # data = np.loadtxt(fileDir+'nMidDisplacementCMS8.txt', comments='#', delimiter=',') #new result from this file
+    # plt.plot(data[:,0], data[:,2], cList[1],label='uMid,CMS8') #numerical solution, 1 == x-direction
 
-    data = np.loadtxt(fileDir+'nMidDisplacementFFRFtest.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,2], cList[2],label='uMid,FFRF') #numerical solution, 1 == x-direction
+    # data = np.loadtxt(fileDir+'nMidDisplacementFFRFtest.txt', comments='#', delimiter=',')
+    # plt.plot(data[:,0], data[:,2], cList[2],label='uMid,FFRF') #numerical solution, 1 == x-direction
 
-    ax=plt.gca() # get current axes
-    ax.grid(True, 'major', 'both')
-    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    plt.tight_layout()
-    plt.legend()
-    plt.show() 
+    # ax=plt.gca() # get current axes
+    # ax.grid(True, 'major', 'both')
+    # ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
+    # ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
+    # plt.tight_layout()
+    # plt.legend()
+    # plt.show() 
 

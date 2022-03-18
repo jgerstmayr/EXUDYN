@@ -61,6 +61,9 @@ public:
 	//! GetSensorOutput with configuration; copies values==>slow!; can be scalar or vector-valued! maps to CSensor GetSensorValues(...)
 	virtual py::object GetSensorValues(const CSystemData& cSystemData, ConfigurationType configuration = ConfigurationType::Current) const;
 
+	//! get stored internal sensor data (Matrix containing time and sensor values in rows)
+	virtual py::array_t<Real>  GetInternalStorage();
+
 	//! Get (read) parameter 'parameterName' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 	virtual py::object GetParameter(const STDstring& parameterName) const { SysError("Invalid call to MainSensor::GetParameter"); return py::object(); }
 	//! Set (write) parameter 'parameterName' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)

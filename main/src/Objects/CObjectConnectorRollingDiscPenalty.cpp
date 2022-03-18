@@ -181,8 +181,19 @@ void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariab
 	Vector2D localSlipVelocity;
 	ComputeContactForces(markerData, parameters, false, pC, vC, wLateral, w2, w3, fContact, localSlipVelocity);
 
-	//Vector3D fPos = fContact[0] * wLateral + fContact[1] * w2 + fContact[2] * parameters.planeNormal; //in global coordinates now
-	Vector3D vCG; //velocity of the trail, in joint coordinates; computed by neglegting the rotation of the wheel for the contact point
+	//special joint transformation matrix
+	Matrix3D AJ1(3, 3, {
+		wLateral[0], w2[0], parameters.planeNormal[0],
+		wLateral[1], w2[1], parameters.planeNormal[1],
+		wLateral[2], w2[2], parameters.planeNormal[2] });
+	////transpose of special joint transformation matrix
+	//Matrix3D AJ1T(3, 3, {
+	//	wLateral[0], wLateral[1], wLateral[2],
+	//	w2[0], w2[1], w2[2],
+	//	w3[0], w3[1], w3[2]});
+	Vector3D vSlip = AJ1.GetTransposed()*vC; //splip velocity in special joint coordinates; computed by neglegting the rotation of the wheel for the contact point
+
+	Vector3D vTrail; //velocity of the trail, in joint coordinates; computed by neglegting the rotation of the wheel for the contact point
 	Real r = parameters.discRadius;
 
 	//compute trail velocity: point projected from pC to wheel axis:
@@ -201,16 +212,21 @@ void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariab
 		axisOffsetX_t = sign * r * cosAlpha_t / EXUstd::Square(cosAlpha) *(-1. / sqrt(1. - cosAlpha * cosAlpha) * cosAlpha * cosAlpha - sqrt(1. - cosAlpha * cosAlpha));
 	}
 
-	vCG = v1 - omega1.CrossProduct(A1*Vector3D({ axisOffsetX,0,0 })) - A1 * Vector3D({ axisOffsetX_t,0,0 });
-	vCG[2] = 0; //z-velocity
+	vTrail = v1 - omega1.CrossProduct(A1*Vector3D({ axisOffsetX,0,0 })) - A1 * Vector3D({ axisOffsetX_t,0,0 });
+	vTrail[2] = 0; //z-velocity
 
 	switch (variableType)
 	{
 	case OutputVariableType::Position: value.CopyFrom(pC); break;
-	case OutputVariableType::VelocityLocal: value.CopyFrom(vCG); break;
+	case OutputVariableType::VelocityLocal: value.CopyFrom(vSlip); break;
+	case OutputVariableType::Velocity: value.CopyFrom(vTrail); break;
 	case OutputVariableType::ForceLocal:
 	{
-		value.CopyFrom(fContact);
+		value.CopyFrom(fContact); //is already in joint J1 coordinates
+		break;
+	}
+	case OutputVariableType::RotationMatrix: {
+		value.SetVector(9, AJ1.GetDataPointer());
 		break;
 	}
 	default:

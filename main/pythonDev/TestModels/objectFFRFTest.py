@@ -483,14 +483,15 @@ if addSupports:
     useSpringDamper = True
 
     if testMode == 0:
-        mLeft = mbs.AddMarker(MarkerGenericBodyPosition(bodyNumber=oGenericODE2, 
-                                                        nodeNumbers=nodeListLeft, 
-                                                        weightingFactors=weightsLeft, 
-                                                        useFirstNodeAsReferenceFrame=useFFRF))
-        mRight = mbs.AddMarker(MarkerGenericBodyPosition(bodyNumber=oGenericODE2, 
-                                                        nodeNumbers=nodeListRight, 
-                                                        weightingFactors=weightsRight,
-                                                        useFirstNodeAsReferenceFrame=useFFRF))
+        raise ValueError('does not exist any more')
+        # mLeft = mbs.AddMarker(MarkerGenericBodyPosition(bodyNumber=oGenericODE2, 
+        #                                                 nodeNumbers=nodeListLeft, 
+        #                                                 weightingFactors=weightsLeft, 
+        #                                                 useFirstNodeAsReferenceFrame=useFFRF))
+        # mRight = mbs.AddMarker(MarkerGenericBodyPosition(bodyNumber=oGenericODE2, 
+        #                                                 nodeNumbers=nodeListRight, 
+        #                                                 weightingFactors=weightsRight,
+        #                                                 useFirstNodeAsReferenceFrame=useFFRF))
     else:
         mLeft = mbs.AddMarker(MarkerSuperElementPosition(bodyNumber=oGenericODE2, 
                                                         meshNodeNumbers=np.array(nodeListLeft)-1, #these are the meshNodeNumbers
@@ -510,47 +511,10 @@ if addSupports:
                                                     
 
 fileDir = 'solution/'
-#mbs.AddSensor(SensorNode(nodeNumber=nMid, 
-#                         fileName=fileDir+'nMidDisplacement'+modeNames[testMode]+'.txt', 
-#                         outputVariableType = exu.OutputVariableType.Displacement))
-
-#mbs.AddSensor(SensorNode(nodeNumber=nMid, 
-#                         fileName=fileDir+'nMidPosition'+modeNames[testMode]+'.txt', 
-#                         outputVariableType = exu.OutputVariableType.Position))
-
-mbs.AddSensor(SensorSuperElement(bodyNumber=oGenericODE2, meshNodeNumber=nMid-1, #meshnode is -1
-                         fileName=fileDir+'nMidDisplacement'+modeNames[testMode]+'test.txt', 
+sDisp=mbs.AddSensor(SensorSuperElement(bodyNumber=oGenericODE2, meshNodeNumber=nMid-1, #meshnode is -1
+                         storeInternal=True,#fileName=fileDir+'nMidDisplacement'+modeNames[testMode]+'test.txt', 
                          outputVariableType = exu.OutputVariableType.Displacement))
 
-#mbs.AddSensor(SensorSuperElement(bodyNumber=oGenericODE2, meshNodeNumber=nMid-1, #meshnode is -1
-#                         fileName=fileDir+'nMidPosition'+modeNames[testMode]+'.txt', 
-#                         outputVariableType = exu.OutputVariableType.Position))
-#
-#mbs.AddSensor(SensorNode(nodeNumber=nRB, 
-#                         fileName=fileDir+'nRigidBodyAngVel'+modeNames[testMode]+'.txt', 
-#                         outputVariableType = exu.OutputVariableType.AngularVelocity))
-#
-#mbs.AddSensor(SensorNode(nodeNumber=nRB, 
-#                         fileName=fileDir+'nRigidBodyRotation'+modeNames[testMode]+'.txt', 
-#                         outputVariableType = exu.OutputVariableType.Rotation))
-#
-#mbs.AddSensor(SensorNode(nodeNumber=nRB, 
-#                         fileName=fileDir+'nRigidBodyPosition'+modeNames[testMode]+'.txt', 
-#                         outputVariableType = exu.OutputVariableType.Position))
-#
-#mbs.AddSensor(SensorNode(nodeNumber=nRB, 
-#                         fileName=fileDir+'nRigidBodyRotationMatrix'+modeNames[testMode]+'.txt', 
-#                         outputVariableType = exu.OutputVariableType.RotationMatrix))
-
-#mbs.AddSensor(SensorObject(objectNumber=oSJleft, 
-#                         fileName=fileDir+'jointLeftDisplacement'+modeNames[testMode]+'.txt', 
-#                         outputVariableType = exu.OutputVariableType.Displacement))
-
-#mbs.AddSensor(SensorObject(objectNumber=oSJright, 
-#                         fileName=fileDir+'jointRightDisplacement'+modeNames[testMode]+'.txt', 
-#                         outputVariableType = exu.OutputVariableType.Displacement))
-
-#exu.Print("nMidPos =", mbs.GetNode(nMid)['referenceCoordinates'])
 
 #exu.Print(mbs)
 mbs.Assemble()
@@ -585,6 +549,7 @@ SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displac
 SC.visualizationSettings.contour.outputVariableComponent = 2 #z-component
 
 simulationSettings.solutionSettings.solutionInformation = modeNames[testMode]
+simulationSettings.solutionSettings.writeSolutionToFile=False
 
 h=1e-4
 tEnd = 0.001
@@ -615,13 +580,14 @@ if exudynTestGlobals.useGraphics:
 
 exu.SolveDynamic(mbs, simulationSettings)
 
-data = np.loadtxt(fileDir+'nMidDisplacement'+modeNames[testMode]+'test.txt', comments='#', delimiter=',')
+data = mbs.GetSensorStoredData(sDisp)
+#data = np.loadtxt(fileDir+'nMidDisplacement'+modeNames[testMode]+'test.txt', comments='#', delimiter=',')
 result = abs(data).sum()
 #pos = mbs.GetObjectOutputBody(objFFRF['oFFRFreducedOrder'],exu.OutputVariableType.Position, localPosition=[0,0,0])
 exu.Print('solution of ObjectFFRF=',result)
 
-exudynTestGlobals.testError = result - (0.006445369560936511) #2020-05-17 (tEnd=0.001, h=1e-4): 0.006445369560936511
-exudynTestGlobals.testResult = result
+exudynTestGlobals.testError = result - (0.0064600108120842666) #2022-02-20 (changed to internal sensor data); 2020-05-17 (tEnd=0.001, h=1e-4): 0.006445369560936511
+exudynTestGlobals.testResult = result#0.006460010812070858 
 
     
 if exudynTestGlobals.useGraphics:
@@ -633,27 +599,8 @@ if exudynTestGlobals.useGraphics:
 #plot results
 cList=['r-','g-','b-','k-','c-','r:','g:','b:','k:','c:']
 if exudynTestGlobals.useGraphics:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-
-    i=1 
-    name = modeNames[i]
-    data = np.loadtxt(fileDir+'nMidDisplacement'+modeNames[i]+'test.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,1], cList[i],label='uMid,'+modeNames[i]) #numerical solution, 1 == x-direction
-    #data = np.loadtxt(fileDir+'nRigidBodyAngVel'+modeNames[i]+'.txt', comments='#', delimiter=',')
-    #plt.plot(data[:,0], 1e-3/(2*pi)*data[:,3], cList[i+2], label='omega,'+modeNames[i]) #numerical solution, 3 == omega_z
-    #data = np.loadtxt(fileDir+'nRigidBodyPosition'+modeNames[i]+'.txt', comments='#', delimiter=',')
-    #plt.plot(data[:,0], data[:,2], cList[i+4],label='pRef,'+modeNames[i]) #numerical solution, 1 == x-direction
-
-    ax=plt.gca() # get current axes
-    ax.grid(True, 'major', 'both')
-    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    plt.tight_layout()
-    plt.legend()
-    plt.show() 
-
-
-
+    from exudyn.plot import PlotSensor
+    
+    PlotSensor(mbs, sDisp, components=0, closeAll=True)
 
 

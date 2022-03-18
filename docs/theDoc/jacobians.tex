@@ -1,0 +1,82 @@
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%\mysubsection{GeneralContact}
+%+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+%\mysubsubsubsection{Definition of quantities}
+%\startTable{intermediate variables}{symbol}{description}
+%\rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
+%\rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{}
+%\rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
+%\rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{}
+%\finishTable
+%\mysubsubsubsection{Connector forces}
+%Displacement between marker m0 to marker m1 positions,
+%\be \label{eq_ObjectCartesianSpringDamper_deltaPos}
+  %\Delta\! \LU{0}{\pv}= \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}
+%\ee
+%and relative velocity,
+%\be
+  %\Delta\! \LU{0}{\vv}= \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}
+%\ee
+%If \texttt{activeConnector = True}, the spring force vector is computed as
+%\be
+  %\LU{0}{\fv_{SD}} = \diag(\kv)\cdot(\Delta\! \LU{0}{\pv}-\LU{0}{\vv_{\mathrm{off}}}) + \diag(\dv) \cdot \Delta\! \LU{0}{\vv} 
+%\ee
+%If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
+%\be
+  %\LU{0}{\fv_{SD}} = \mathrm{UF}(mbs, t, i_N, \Delta\! \LU{0}{\pv}, \Delta\! \LU{0}{\vv}, \kv, \dv, \vv_{\mathrm{off}})
+%\ee
+%and \texttt{iN} represents the itemNumber (=objectNumber).
+%If \texttt{activeConnector = False}, $\fv_{SD}$ is set to zero.
+%%+++++++++++++++++++++++++++++++++++++++++++++++++++
+%
+%The force $\fv_{SD}$ acts via the markers' position jacobians $\Jm_{pos,m0}$ and $\Jm_{pos,m1}$.
+%The generalized forces added to the \ac{LHS} equations read for marker $m0$,
+%\be
+  %\fv_{LHS,m0} = -\LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\fv_{SD}} \eqComma
+%\ee
+%and for marker $m1$,
+%\be
+  %\fv_{LHS,m1} =  \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{SD}} \eqDot
+%\ee
+%The \ac{LHS} equation parts are added accordingly using the \ac{LTG} mapping.
+%Note that the different signs result from the signs in \eq{eq_ObjectCartesianSpringDamper_deltaPos}.
+%
+%The connector also provides an analytic jacobian, which is used if \texttt{newton.numericalDifferentiation.forODE2 = False}.
+%The jacobian for the coupled equation parts $\fv_{LHS,m0}$ and $\fv_{LHS,m1}$ is based on the local jacobians
+%\bea
+  %\Jm_{loc0} &=& f_{ODE2}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\pv}_{m0}} +
+                 %f_{ODE2_t}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\vv}_{m0}}
+              %= -f_{ODE2} \cdot \diag(\kv) - f_{ODE2_t} \cdot \diag(\dv) \eqComma \nonumber \\
+  %\Jm_{loc1} &=& f_{ODE2}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\pv}_{m1}} +
+                 %f_{ODE2_t}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\vv}_{m1}}
+              %=  f_{ODE2} \cdot \diag(\kv) + f_{ODE2_t} \cdot \diag(\dv) \eqDot
+%\eea
+%Here, $f_{ODE2}$ is the factor for the position derivative and $f_{ODE2_t}$ is the factor for the velocity derivative, which allows a computation of the computation for both the position as well as the velocity part at the same time.
+%
+%The complete jacobian for the \ac{LHS} equations then reads,
+%\bea
+  %\Jm_{CSD}&=&\mp{\displaystyle \frac{\partial \fv_{LHS,m0}}{\partial  \qv_{m0}}}
+              %{\displaystyle \frac{\partial \fv_{LHS,m0}}{\partial  \qv_{m1}}}
+              %{\displaystyle \frac{\partial \fv_{LHS,m1}}{\partial  \qv_{m0}}}
+              %{\displaystyle \frac{\partial \fv_{LHS,m1}}{\partial  \qv_{m1}}} + \Jm_{CSD'} \nonumber \\
+        %&=& \mp{-\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc0} \Jm_{pos,m0}}
+               %{-\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc1} \Jm_{pos,m1}}
+               %{\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc0} \Jm_{pos,m0}}
+               %{\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc1} \Jm_{pos,m1}} + \Jm_{CSD'} \nonumber \\
+        %&=& \mp{\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc1} \Jm_{pos,m0}}
+               %{-\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc1} \Jm_{pos,m1}}
+               %{-\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc1} \Jm_{pos,m0}}
+               %{\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc1} \Jm_{pos,m1}} + \Jm_{CSD'}
+%\eea
+%Here, $\qv_{m0}$ are the coordinates associated with marker $m0$ and $\qv_{m1}$ of marker $m1$.
+%
+%The second term $\Jm_{CSD'}$ is only non-zero if $\frac{\partial \LU{0}{\Jm_{pos,i}\tp}}{\partial \qv_{i}}$ is non-zero, using $i \in \{m0, \, m1\}$.
+%As the latter terms would require to compute a 3-dimensional array, the second jacobian term is computed as 
+%\be \label{eq_ObjectCartesianSpringDamper_jacDeriv}
+  %\Jm_{CSD'} = \mp{-\frac{\partial \LU{0}{\Jm_{pos,m0}\tp} \fv'}{\partial \qv_{m0}}}{}{}
+                  %{ \frac{\partial \LU{0}{\Jm_{pos,m1}\tp} \fv'}{\partial \qv_{m1}}}
+%\ee
+%in which we set $\fv' = \LU{0}{\fv_{SD}}$, but the derivatives in \eq{eq_ObjectCartesianSpringDamper_jacDeriv} are evaluated by setting $\fv' = const$.

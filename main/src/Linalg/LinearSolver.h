@@ -49,6 +49,49 @@
 //with    Eigen(no usage yet): 63.4 (53.6 without Eigen) seconds compile time on Surface Pro 5: 2019-11-16
 //with    Eigen(no usage yet): 19.3 (15.4 without Eigen) seconds compile time on I9 / 14 core: 2019-11-18
 
+
+typedef std::complex<Real> RealC;
+//eigenvalue solver based on Eigen
+namespace EXUmath {
+	//! compute [size] eigenvalues of polynomial with [size+1] coefficients
+	template<Index size>
+	void PolynomialRoots(const ConstSizeVector<size+1>& coeffs,
+		ConstSizeVectorBase<std::complex<Real>, size>& complexRoots)
+	{
+		typedef Eigen::Matrix<Eigen::dcomplex, size, size> EigMatrixC;
+		EigMatrixC A;
+		A.setZero();
+		CHECKandTHROW(coeffs[size] != 0., "PolynomialRoots: highest coefficient may not be zero!");
+
+		//A = [[0, 0, 0, 0, 0, -c0 / c6], 
+		//	[1, 0, 0, 0, 0, -c1 / c6], 
+		//	[0, 1, 0, 0, 0, -c2 / c6], 
+		//	[0, 0, 1, 0, 0, -c3 / c6], 
+		//	[0, 0, 0, 1, 0, -c4 / c6], 
+		//	[0, 0, 0, 0, 1, -c5 / c6]]
+
+		Real invCoeffMax = 1. / coeffs[size];
+		for (Index i = 0; i < size; i++)
+		{
+			A(i, size - 1) = RealC(-coeffs[i] * invCoeffMax, 0);
+		}
+		for (Index i = 1; i < size; i++)
+		{
+			A(i, i - 1) = RealC(1., 0.);
+		}
+
+		Eigen::ComplexEigenSolver<EigMatrixC> ces;
+		ces.compute(A, false); //17microsecs for 6x6 matrix!
+		//pout << "The eigenvalues of A are:" << endl << ces.eigenvalues() << endl;
+
+		for (Index i = 0; i < size; i++)
+		{
+			complexRoots[i] = ces.eigenvalues()[i];
+		}
+	}
+};
+
+
 //! container for storage of different system matrix formats; this shall grant storage-independent access and manipulation; do not access individual entries of matrix directly (may be slow)
 class GeneralMatrix
 {

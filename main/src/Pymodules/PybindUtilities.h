@@ -497,7 +497,7 @@ namespace EPyUtils {
 			Index columns;
 			for (Index i = 0; i < rows; i++)
 			{
-				if (py::isinstance<py::list>(stdlist[i]))
+				if (py::isinstance<py::list>(stdlist[i]) || py::isinstance<py::array>(stdlist[i]))
 				{
 					std::vector<Real> rowVector = py::cast<std::vector<Real>>(stdlist[i]);
 					if (i == 0) 
@@ -519,7 +519,7 @@ namespace EPyUtils {
 				}
 				else
 				{
-					PyError("Matrix size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!');
+					PyError("Matrix in illegal format!");
 				}
 			}
 			return true;
@@ -554,6 +554,71 @@ namespace EPyUtils {
 		PyError(STDstring("failed to convert to Matrix: " + py::cast<std::string>(value)));
 		return false;
 	}
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//! convert pyObject as list of lists, list of arrays or 2D numpy array into destArray; works for SlimVector and SlimArray
+	//! Titem can be Real or Index
+	template<class TArray, class Titem>
+	inline bool SetListOfArraysSafely(const py::object& pyObject, ResizableArray<TArray>& destArray)
+	{
+		TArray test;
+		Index columns = test.NumberOfItems();
+		if (py::isinstance<py::list>(pyObject))
+		{
+			std::vector<py::object> stdlist = py::cast<std::vector<py::object>>(pyObject); //! # read out dictionary and cast to C++ type
+			Index rows = (Index)stdlist.size();
+			destArray.SetNumberOfItems(rows);
+			for (Index i = 0; i < rows; i++)
+			{
+				if (py::isinstance<py::list>(stdlist[i]) || py::isinstance<py::array>(stdlist[i]))
+				{
+					std::vector<Titem> rowVector = py::cast<std::vector<Titem>>(stdlist[i]);
+					if ((Index)rowVector.size() == columns)
+					{
+						for (Index j = 0; j < columns; j++)
+						{
+							destArray[i][j] = rowVector[j];
+						}
+					}
+					else
+					{
+						PyError("List of arrays size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!');
+					}
+				}
+				else
+				{
+					PyError("List of arrays with illegal format!");
+				}
+			}
+			return true;
+		}
+		else if (py::isinstance<py::array>(pyObject))
+		{
+			std::vector<py::object> stdlist = py::cast<std::vector<py::object>>(pyObject); //! # read out dictionary and cast to C++ type
+			Index rows = (Index)stdlist.size();
+			destArray.SetNumberOfItems(rows);
+			for (Index i = 0; i < rows; i++)
+			{
+				std::vector<Titem> rowVector = py::cast<std::vector<Titem>>(stdlist[i]);
+				if ((Index)rowVector.size() == columns)
+				{
+					for (Index j = 0; j < columns; j++)
+					{
+						destArray[i][j] = rowVector[j];
+					}
+				}
+				else
+				{
+					PyError("List of arrays size mismatch: expected " + EXUstd::ToString(columns) + " columns in row " + EXUstd::ToString(i) + '!');
+				}
+			}
+			return true;
+		}
+		PyError(STDstring("Failed to convert to list of arrays: " + py::cast<std::string>(pyObject)));
+		return false;
+	}
+
+
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//functions for py::object safe conversion:
 

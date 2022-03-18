@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:21:00 (last modified)
+* @date         2022-02-18  20:35:37 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,6 +113,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "sensorUserFunction")) { if (EPyUtils::CheckForValidFunction(d["sensorUserFunction"])) 
             { cSensorUserFunction->GetParameters().sensorUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,StdArrayIndex,StdVector,ConfigurationType)>>((py::function)d["sensorUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
             else {cSensorUserFunction->GetParameters().sensorUserFunction = 0;  /*AUTO: otherwise assign with zero!*/ }} 
+        cSensorUserFunction->GetParameters().storeInternal = py::cast<bool>(d["storeInternal"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationSensorUserFunction->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
@@ -131,6 +132,7 @@ public: // AUTO:
         else
             {d["sensorUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
+        d["storeInternal"] = (bool)cSensorUserFunction->GetParameters().storeInternal; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationSensorUserFunction->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -145,6 +147,7 @@ public: // AUTO:
         else if (parameterName.compare("writeToFile") == 0) { return py::cast((bool)cSensorUserFunction->GetParameters().writeToFile);} //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { return py::cast((std::string)cSensorUserFunction->GetParameters().fileName);} //! AUTO: get parameter
         else if (parameterName.compare("sensorUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,StdArrayIndex,StdVector,ConfigurationType)>)cSensorUserFunction->GetParameters().sensorUserFunction);} //! AUTO: get parameter
+        else if (parameterName.compare("storeInternal") == 0) { return py::cast((bool)cSensorUserFunction->GetParameters().storeInternal);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationSensorUserFunction->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("SensorUserFunction::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
@@ -161,6 +164,7 @@ public: // AUTO:
         else if (parameterName.compare("fileName") == 0) { EPyUtils::SetStringSafely(value, cSensorUserFunction->GetParameters().fileName); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("sensorUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cSensorUserFunction->GetParameters().sensorUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,StdArrayIndex,StdVector,ConfigurationType)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
             if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter
+        else if (parameterName.compare("storeInternal") == 0) { cSensorUserFunction->GetParameters().storeInternal = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationSensorUserFunction->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("SensorUserFunction::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

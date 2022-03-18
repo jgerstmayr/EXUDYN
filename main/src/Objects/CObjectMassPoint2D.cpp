@@ -40,7 +40,9 @@ void CObjectMassPoint2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
 AccessFunctionType CObjectMassPoint2D::GetAccessFunctionTypes() const
 {
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::DisplacementMassIntegral_q);
+	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + 
+		(Index)AccessFunctionType::JacobianTtimesVector_q +
+		(Index)AccessFunctionType::DisplacementMassIntegral_q);
 }
 
 //! provide Jacobian at localPosition in "value" according to object access
@@ -49,11 +51,20 @@ void CObjectMassPoint2D::GetAccessFunctionBody(AccessFunctionType accessType, co
 	switch (accessType)
 	{
 	case AccessFunctionType::TranslationalVelocity_qt:
+	{
 		value.SetMatrix(3, 2, { 1.,0.,0.,1.,0.,0. }); //a 3D Vector (e.g. 3D ForceVector) acts on two coordinates (x,y)
 		break;
+	}
+	case AccessFunctionType::JacobianTtimesVector_q: //jacobian w.r.t. global position and global orientation!!!
+	{
+		value.SetNumberOfRowsAndColumns(0, 0); //indicates that all entries are zero
+		break;
+	}
 	case AccessFunctionType::DisplacementMassIntegral_q:
+	{
 		value.SetMatrix(3, 2, { parameters.physicsMass,0.,0.,parameters.physicsMass,0.,0. }); //a 3D Vector (e.g. 3D ForceVector) acts on two coordinates (x,y)
 		break;
+	}
 	default:
 		SysError("CObjectMassPoint2D:GetAccessFunctionBody illegal accessType");
 	}

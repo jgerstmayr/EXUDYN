@@ -192,8 +192,10 @@ The following code generates a reference (exact) solution for our example:
 \end{lstlisting}
 %
 Now we can load our results from the default solution file \texttt{coordinatesSolution.txt}, which is in the same
-directory as your python tutorial file. For convenient reading the file containing commented lines, we use a numpy feature and
-finally plot the displacement of coordinate 0 or our mass point\footnote{\texttt{data[:,0]} contains the simulation time, \texttt{data[:,1]} contains displacement of (global) coordinate 0, \texttt{data[:,2]} contains displacement of (global) coordinate 1, ...)}:
+directory as your python tutorial file. 
+\mybold{Note} that the visualization of results can be simplified considerably using the \texttt{PlotSensor(...)} utility function as shown in the \mybold{Rigid body and joints tutorial}!
+
+For reading the file containing commented lines (this does not work in binary mode!), we use a numpy feature and finally plot the displacement of coordinate 0 or our mass point\footnote{\texttt{data[:,0]} contains the simulation time, \texttt{data[:,1]} contains displacement of (global) coordinate 0, \texttt{data[:,2]} contains displacement of (global) coordinate 1, ...)}:
 \pythonstyle\begin{lstlisting}
   data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
   plt.plot(data[:,0], data[:,1], 'b-', label='displacement (m); numerical solution') 
@@ -241,6 +243,7 @@ The matplotlib output should look like this:
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \newpage
 \mysubsection{Rigid body and joints tutorial}
+\label{sec:tutorial:rigidBodyJoints}
 The python source code of the first tutorial can be found in the file:
 \bi
   \item[] \texttt{main/pythonDev/Examples/rigidBodyTutorial3.py}
@@ -445,7 +448,7 @@ Alternatively we can print the full internal information as a dictionary using:
 \pythonstyle\begin{lstlisting}
   mbs.systemData.Info() #show detailed information
 \end{lstlisting}
-which results in the following output:
+which results in the following output (shortened):
 \plainlststyle
 \begin{lstlisting}
   node0:
@@ -524,11 +527,18 @@ The option \texttt{autoFitScene} is used in order to avoid zooming while loading
 \end{lstlisting}
 the function \texttt{WaitForUserToContinue()} waits with simulation until we press SPACE bar. This allows us to make some pre-checks.
 
-\noindent Finally, implicit time integration (simulation) is started with:
+\noindent Finally, the \mybold{index 2} (velocity level) implicit time integration (simulation) is started with:
 \pythonstyle\begin{lstlisting}
   exu.SolveDynamic(mbs, simulationSettings = simulationSettings,
                    solverType=exu.DynamicSolverType.TrapezoidalIndex2)
 \end{lstlisting}
+This solver is used in the present example, but should be considered with care as it leads to (small) drift of position constraints, linearly increasing in time. Using sufficiently small time steps, this effect is often negligible on the advantage of having a \mybold{energy-conserving integrator} (guaranteed for linear systems, but very often also for the nonlinear multibody system). Due to the velocity level, the integrator is less sensitive to consistent initial conditions on position level and compatible to frequent step size changes, however, initial jumps in velocities may never damp out in undamped systems.
+
+\noindent Alternatively, an \mybold{index 3} implicit time integration -- the generalized-$\alpha$ method -- is started with:
+\pythonstyle\begin{lstlisting}
+  exu.SolveDynamic(mbs, simulationSettings = simulationSettings)
+\end{lstlisting}
+Note that the \mybold{generalized-$\alpha$ method} includes numerical damping (adjusted with the spectral radius) for stabilization of index 3 constraints. This leads to effects every time the integrator is (re-)started, e.g., when adapting time step sizes. For fixed step sizes, this is \mybold{the recommended integrator}.
 
 \noindent After simulation, the library would immediately exit (and jump back to iPython or close the terminal window). In order to avoid this, we can use \texttt{WaitForRenderEngineStopFlag()} to wait until we press key 'Q'.
 \pythonstyle\begin{lstlisting}
@@ -545,7 +555,7 @@ If we do not stop the renderer (\texttt{StopRenderer()}), it will stay open for 
   SolutionViewer(mbs, sol)
 \end{lstlisting}
 
-\noindent Finally, we can plot our sensor, drawing the y-component of the sensor:
+\noindent Finally, we can plot our sensor, drawing the y-component of the sensor (check out the many options in \texttt{PlotSensor(...)} to conveniently represent results!):
 \pythonstyle\begin{lstlisting}
   from exudyn.plot import PlotSensor
   PlotSensor(mbs, [sens1],[1])

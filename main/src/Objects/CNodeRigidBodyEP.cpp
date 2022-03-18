@@ -181,6 +181,17 @@ void CNodeRigidBodyEP::GetGlocal_t(ConstSizeMatrix<maxRotationCoordinates * nDim
 	matrix = RigidBodyMath::EP_t2Glocal_t(GetRotationParameters_t(configuration));
 }
 
+//! compute d(G^T*v)/dq for Euler parameters; needed for jacobians
+void CNodeRigidBodyEP::GetGTv_q(const Vector3D& v, ConstSizeMatrix<maxRotationCoordinates * maxRotationCoordinates>& matrix, ConfigurationType configuration) const
+{
+	matrix = RigidBodyMath::EPGTv_q(v);
+}
+
+//! compute d(G^T*v)/dq for Euler parameters; needed for jacobians
+void CNodeRigidBodyEP::GetGlocalTv_q(const Vector3D& v, ConstSizeMatrix<maxRotationCoordinates * maxRotationCoordinates>& matrix, ConfigurationType configuration) const
+{
+	matrix = RigidBodyMath::EPGlocalTv_q(v);
+}
 
 Vector3D CNodeRigidBodyEP::GetPosition(ConfigurationType configuration) const
 {
@@ -281,6 +292,18 @@ void CNodeRigidBodyEP::GetRotationJacobian(Matrix& value) const
 			value(i, j + nDisplacementCoordinates) = G(i, j);
 		}
 	}
+}
+
+//! provide derivative w.r.t. coordinates of rotation Jacobian times vector; for current configuration
+void CNodeRigidBodyEP::GetRotationJacobianTTimesVector_q(const Vector3D& vector, Matrix& jacobian_q) const
+{
+	//omega = G*q_t
+	//d(rot)/dq = [I_{3x3}, G]
+	//d(rot^T*v)/dq = [0_{3x3}, 0_{3x4}]
+	//                [0_{4x3}, GTv_theta]
+	jacobian_q.SetNumberOfRowsAndColumns(nDisplacementCoordinates + nRotationCoordinates, nDisplacementCoordinates + nRotationCoordinates);
+	jacobian_q.SetAll(0.);
+	jacobian_q.SetSubmatrix(RigidBodyMath::EPGTv_q(vector), nDisplacementCoordinates, nDisplacementCoordinates, 1.);
 }
 
 //! provide according output variable in "value"

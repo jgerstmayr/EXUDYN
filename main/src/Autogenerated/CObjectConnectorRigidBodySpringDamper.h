@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-11-14  14:42:30 (last modified)
+* @date         2022-03-01  20:14:20 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -37,8 +37,8 @@ public: // AUTO:
     Matrix3D rotationMarker1;                     //!< AUTO: local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1
     Vector6D offset;                              //!< AUTO: translational and rotational offset considered in the spring force calculation
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
-    std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)> springForceTorqueUserFunction;//!< AUTO: A python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below
-    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)> postNewtonStepUserFunction;//!< AUTO: A python function which computes the error of the PostNewtonStep; see description below
+    std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)> springForceTorqueUserFunction;//!< AUTO: A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below
+    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)> postNewtonStepUserFunction;//!< AUTO: A Python function which computes the error of the PostNewtonStep; see description below
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorRigidBodySpringDamperParameters()
     {

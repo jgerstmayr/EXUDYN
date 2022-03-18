@@ -37,7 +37,7 @@ public:
 	ResizableMatrix localJacobian_t;    //!< local velocity (object)-jacobian during numerical/automatic differentiation
 
 	JacobianTemp jacobianTemp;          //!< additional temporary data needed for jacobian computation
-	ResizableVector jacobianForce;      //!< for computation of jacobian derivative
+	//ResizableVector jacobianForce;      //!< for computation of jacobian derivative
 	EXUmath::MatrixContainer jacobianODE2Container;  //!< DENSE: local object jacobian matrix, SPARSE: (linked) system jacobian
 
 	ResizableVector generalizedLoad;    //!< generalized load vector added to ODE2 right-hand-side

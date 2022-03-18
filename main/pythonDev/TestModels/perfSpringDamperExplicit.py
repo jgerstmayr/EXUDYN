@@ -57,10 +57,6 @@ nC = mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMar
 mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
                                          load = f))
 
-# #add sensor:
-# mbs.AddSensor(SensorObject(objectNumber=nC, fileName='groundForce.txt', 
-#                            outputVariableType=exu.OutputVariableType.Force))
-
 mbs.Assemble()
 
 tEnd = 500     #end time of simulation
@@ -77,6 +73,7 @@ simulationSettings.timeIntegration.verboseMode = 1
 
 exu.Print("Run perfSpringDamperExplicit WITHOUT CPU timing:")
 #Solve twice (with/without computation time!)
+simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
 exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
 
 exu.Print("Run perfSpringDamperExplicit WITH CPU timing:")

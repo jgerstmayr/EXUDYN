@@ -170,12 +170,12 @@ if addSupports:
                                                     
 
 fileDir = 'solution/'
-mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], meshNodeNumber=nMid, #meshnode number!
-                         fileName=fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', 
+sDisp=mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], meshNodeNumber=nMid, #meshnode number!
+                         storeInternal=True,#fileName=fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', 
                          outputVariableType = exu.OutputVariableType.Displacement))
 
-mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], 
-                         fileName=fileDir+'nRigidBodyAngVelCMS'+str(nModes)+'Test.txt', 
+sAngVel=mbs.AddSensor(SensorNode(nodeNumber=objFFRF['nRigidBody'], 
+                         storeInternal=True,#fileName=fileDir+'nRigidBodyAngVelCMS'+str(nModes)+'Test.txt', 
                          outputVariableType = exu.OutputVariableType.AngularVelocity))
 
 mbs.Assemble()
@@ -257,43 +257,19 @@ if exudynTestGlobals.useGraphics:
     lastRenderState = SC.GetRenderState() #store model view for next simulation
 
 
-data = np.loadtxt(fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', comments='#', delimiter=',')
+#data = np.loadtxt(fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', comments='#', delimiter=',')
+data=mbs.GetSensorStoredData(sDisp)
 result = abs(data).sum()
 #pos = mbs.GetObjectOutputBody(objFFRF['oFFRFreducedOrder'],exu.OutputVariableType.Position, localPosition=[0,0,0])
 exu.Print('solution of superElementRigidJointTest=',result)
 
-exudynTestGlobals.testError = result - (0.015213599619996621) #2021-01-04: 0.015213599619996604 (Python3.7)
+exudynTestGlobals.testError = result - (0.015217208913989071)
 exudynTestGlobals.testResult = result
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
 if exudynTestGlobals.useGraphics:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-    cList=['r-','g-','b-','k-','c-','r:','g:','b:','k:','c:']
- 
-#    data = np.loadtxt(fileDir+'nMidDisplacementCMS8.txt', comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
-#    plt.plot(data[:,0], data[:,2], cList[0],label='uMid,CMS8') #numerical solution, 1 == x-direction
-
-    data = np.loadtxt(fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', comments='#', delimiter=',') #new result from this file
-    plt.plot(data[:,0], data[:,2], cList[1],label='uMid,'+str(nModes)+'Test') #numerical solution, 1 == x-direction
-
-#    data = np.loadtxt(fileDir+'nMidDisplacementFFRF.txt', comments='#', delimiter=',')
-#    plt.plot(data[:,0], data[:,2], cList[2],label='uMid,FFRF') #numerical solution, 1 == x-direction
-
-    ax=plt.gca() # get current axes
-    ax.grid(True, 'major', 'both')
-    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    plt.tight_layout()
-    plt.legend()
-    plt.show() 
-
-
-
-
-
-
-
-
+    from exudyn.plot import PlotSensor
+    
+    PlotSensor(mbs, sDisp, components=1, closeAll=True, labels=['uMid,linear'])
 

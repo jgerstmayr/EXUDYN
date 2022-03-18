@@ -33,7 +33,9 @@ void CObjectRotationalMass1D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
 AccessFunctionType CObjectRotationalMass1D::GetAccessFunctionTypes() const
 {
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt);
+	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + 
+		(Index)AccessFunctionType::AngularVelocity_qt+
+		(Index)AccessFunctionType::JacobianTtimesVector_q);
 }
 
 //! provide Jacobian at localPosition in "value" according to object access
@@ -43,6 +45,10 @@ void CObjectRotationalMass1D::GetAccessFunctionBody(AccessFunctionType accessTyp
 	{
 	case AccessFunctionType::TranslationalVelocity_qt:
 	{
+		CHECKandTHROW((localPosition[0] == 0) && (localPosition[1] == 0), "ObjectRotationalMass1D::GetAccessFunctionBody: BodyMarkers and Loads to ObjectRotationalMass1D can only act at localPosition[0]==0 and localPosition[1]==0; otherwise use ObjectRigidBody2D");
+		//would require to compute action on axis: similar to ObjectRigidBody2D, then depends on coordinates (sin/cos)?
+		//v = GetRotationMatrix(...) * (Vector3D({ 0.,0.,omegaLocal }) x localPosition)
+		//dv/dq_t = ...
 		value.SetMatrix(3, 1, { 0.,0.,0. }); //a ForceVector has no action on RotationalMass1D
 		break;
 	}
@@ -51,6 +57,12 @@ void CObjectRotationalMass1D::GetAccessFunctionBody(AccessFunctionType accessTyp
 		//this function relates a 3D angular velocity to the time derivative of all coordinates: omega = Jac*q_dot
 		Vector3D v = parameters.referenceRotation * Vector3D({ 0.,0.,1. }); //local angular velocity is around z-axis!
 		value.SetMatrix(3, 1, {v[0], v[1], v[2]}); //the 3D torque vector (only z-component) acts on the 3rd coordinate phi_t
+		break;
+	}
+	case AccessFunctionType::JacobianTtimesVector_q: //jacobian w.r.t. global position and global orientation; HACK: Matrix value(0,0:6) contains 3D force + 3D torque
+	{
+		CHECKandTHROW((localPosition[0] == 0) && (localPosition[1] == 0), "ObjectRotationalMass1D::GetAccessFunctionBody [JacobianTtimesVector_q]: BodyMarkers and Loads to ObjectRotationalMass1D can only act at localPosition[0]==0 and localPosition[1]==0; otherwise use ObjectRigidBody2D");
+		value.SetNumberOfRowsAndColumns(0, 0); //indicates that all entries are zero
 		break;
 	}
 	//case AccessFunctionType::DisplacementMassIntegral_q:

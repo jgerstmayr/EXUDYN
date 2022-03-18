@@ -93,8 +93,8 @@ public: //
 		CHECKandTHROWstring("Invalid call to CMarker::ComputeMarkerData");
 	}
 
-	//! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(Jpos.T @ v)/dq
-	virtual void ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector& v, MarkerData& markerData) const {
+	//! compute markerdata: fill in according data for derivative of jacobian times 6D vector v6D, e.g.: d(Jpos.T @ v6D[0:3])/dq
+	virtual void ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const {
 		CHECKandTHROWstring("Invalid call to CMarker::ComputeMarkerDataJacobianDerivative");
 	}
 

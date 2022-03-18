@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:58 (last modified)
+* @date         2021-12-20  14:37:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -73,7 +73,7 @@ public: // AUTO:
     //! AUTO:  return node type (for node treatment in computation)
     virtual Node::Type GetType() const override
     {
-        return (Node::Type)(Node::Position + Node::Position2D + Node::GenericODE2 + Node::Ground);
+        return (Node::Type)(Node::Position + Node::Position2D + Node::Orientation + Node::GenericODE2 + Node::Ground);
     }
 
     //! AUTO:  Returns position of node, which is the reference position for all configurations
@@ -88,10 +88,34 @@ public: // AUTO:
         return Vector3D(0.);
     }
 
+    //! AUTO:  return configuration dependent rotation matrix of node; returns always a 3D Vector
+    virtual Matrix3D GetRotationMatrix(ConfigurationType configuration = ConfigurationType::Current) const override
+    {
+        return EXUmath::unitMatrix3D;
+    }
+
+    //! AUTO:  return configuration dependent local (=body-fixed) angular velocity of node; in 2D case, this is the same as the global angular velocity; returns always a 3D Vector
+    virtual Vector3D GetAngularVelocityLocal(ConfigurationType configuration = ConfigurationType::Current) const override
+    {
+        return Vector3D(0.);
+    }
+
     //! AUTO:  return zero sized matrix for ground node (no action)
     virtual void GetPositionJacobian(Matrix& value) const override
     {
         value.SetNumberOfRowsAndColumns(0,0);
+    }
+
+    //! AUTO:  provide 'rotation' jacobian \f$\Jm_R\f$ of node; derivative of 3D angular velocity vector with respect to all velocity coordinates ('G-matrix'); action of torque \f$\mv\f$: \f$\Qm_m = \Jm_R^T \mv\f$
+    virtual void GetRotationJacobian(Matrix& value) const override
+    {
+        value.SetNumberOfRowsAndColumns(0,0);
+    }
+
+    //! AUTO:  provide derivative w.r.t. coordinates of rotation Jacobian times vector; for current configuration
+    virtual void GetRotationJacobianTTimesVector_q(const Vector3D& vector, Matrix& jacobian_q) const override
+    {
+        jacobian_q.SetNumberOfRowsAndColumns(0, 0);
     }
 
     //! AUTO:  return internally stored reference coordinates of node

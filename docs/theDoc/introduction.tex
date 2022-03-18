@@ -13,20 +13,31 @@ For an introduction to the solvers, see \refSection{sec:solvers}.
 \mysubsubsection{Overview of modules}
 Currently, the module structure is simple:
 \bi
-  \item Python parts:
-  \bi
-    \item[--] \texttt{itemInterface}: contains the interface, which transfers python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
-    \item[--] \texttt{exudynUtilities}: constains helper classes in Python, which allows simpler working with \codeName\ 
-  \ei
-  \item C++ parts, see Figs.\ \ref{fig_exudyn_overview} and \ref{fig_system_overview}:
+  \item \mybold{C++ parts}, see Figs.\ \ref{fig_exudyn_overview} and \ref{fig_system_overview}:
   \bi
     \item[--] \texttt{exudyn}:
-    %\footnote{For versions < 1.0.0: there is a second module, called exudynFast, which deactivates all range-, index- or memory allocation checks at the gain of higher speed (probably 30 percent in regular cases and up to 100 percent in the 64 bit version). This module is included by \texttt{import exudynFast as exu} and can be used same as exudyn. To check the version, just type exu.\_\_doc\_\_ and you will see a note on 'exudynFast' in the exudynFast module.}:
     on this level, there are just very few functions: \texttt{SystemContainer()}, \texttt{StartRenderer()}, \texttt{StopRenderer()}, \texttt{GetVersionString()}, \texttt{SolveStatic(...)}, \texttt{SolveDynamic(...)}, ... as well as system and user variable dictionaries \texttt{exudyn.variables} and \texttt{exudyn.sys}
     \item[--] \texttt{SystemContainer}: contains the systems (most important), solvers (static, dynamics, ...), visualization settings
     \item[--] \texttt{mbs}: system created with \texttt{mbs = SC.AddSystem()}, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
     loads can added to the system, see \refSection{sec:item:reference:manual};
     \item[--] \texttt{mbs.systemData}: contains the initial, current, visualization, ... states of the system and holds the items, see \fig{fig_system_overview}
+  \ei
+  \item \mybold{Python parts} (this list is continuously extended, see \refSection{sec:pythonUtilityFunctions}), sorted by importance:
+  \bi
+    \item[--] \texttt{exudyn.utilities}: constains helper classes in Python and includes \codeName\ modules \texttt{basicUtilities}, \texttt{rigidBodyUtilities}, \texttt{graphicsDataUtilities}, and \texttt{itemInterface}, which is recommended to be loaded at beginning of your model file
+    \item[--] \texttt{exudyn.itemInterface}: contains the interface, which transfers python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
+    \item[--] \texttt{exudyn.basicUtilities}: contains basic helper classes, without importing numpy
+    \item[--] \texttt{exudyn.rigidBodyUtilities}: contains important helper classes for creation of rigid body inertia, rigid bodies, and rigid body joints; includes helper functions for rotation parameterization, rotation matrices, homogeneous transformations, etc.
+    \item[--] \texttt{exudyn.graphicsDataUtilities}: provides some basic drawing utilities, definition of colors and basic drawing objects (including \sc{STL} import); rotation/translation of graphicsData objects
+    \item[--] \texttt{exudyn.plot}: containing helper functions, which are physics related such as friction
+    \item[--] \texttt{exudyn.processing}: methods for optimization, parameter variation, sensitivity analysis, etc.
+    \item[--] \texttt{exudyn.FEM}: everything related to finite element import and creation of model order reduction flexible bodies
+    \item[--] \texttt{exudyn.robotics}: submodule containing several helper modules related to manipulators (\texttt{robotics}, \texttt{robotics.models}), mobile robots (\texttt{robotics.mobile}), trajectory generation (\texttt{robotics.motion}), etc.
+    \item[--] \texttt{exudyn.beams}: helper functions for creation of beams along straight lines and curves, sliding joints, etc.
+    \item[--] \texttt{exudyn.interactive}: helper classes to create interactive models (e.g. for teaching or demos)
+    \item[--] \texttt{exudyn.physics}: containing helper functions, which are physics related such as friction
+    \item[--] \texttt{exudyn.signalProcessing}: filters, FFT, etc.; interfaces to scipy and numpy methods
+    \item[--] \texttt{exudyn.solver}: functions imported when loading \texttt{exudyn}, containing main solvers
   \ei
 \ei
 %
@@ -78,7 +89,7 @@ Currently, the module structure is simple:
       \node [wideblock, text width=3cm, below of=initial] (reference) {reference state};
       \node [wideblock, text width=3cm, dashed, fill=gray!10, below of=reference] (otherStates) {other states};
       
-      \node [wideblock, right of=systemData, node distance=5cm] (ltg) {\ac{LTG} coordinate index lists};
+      \node [wideblock, right of=systemData, node distance=5cm] (ltg) {\acs{LTG} coordinate index lists};
       
       \node [wideblock, below of=systemData, xshift=2.4cm] (nodes) {list of nodes};
       \node [wideblock, below of=nodes] (objects) {list of objects};
@@ -103,7 +114,7 @@ Currently, the module structure is simple:
       \path [line] (systemData) |- (sensors);
 %
   \end{tikzpicture}
-  \caption{Overview of systemData, which connects items and states. Note that access to items is provided via functions in \texttt{system}.}
+  \caption{Overview of systemData, which connects items, states and stores the \acs{LTG}. Note that access to items is provided via functions in \texttt{system}.}
   \label{fig_system_overview}
 
 \end{figure}
@@ -116,12 +127,13 @@ In this documentation, we will use the term \mybold{item} to identify nodes, obj
   \mathrm{item} \in \{\mathrm{node}, \mathrm{object}, \mathrm{marker}, \mathrm{load}, \mathrm{sensor} \}
 \ee
 \vspace{12pt}\\
-\mybold{Indexes: arrays and vector starting with 0:} \vspace{6pt}\\
+\mybold{Indexes: arrays and vectors starting with 0:} \vspace{6pt}\\
 As known from Python, all \mybold{indexes} of arrays, vectors, matrices, ...\ are starting with 0. This means that the first component of the vector \texttt{v=[1,2,3]} is accessed with \texttt{v[0]} in Python (and also in the C++ part of \codeName ). The range is usually defined as \texttt{range(0,3)}, in which '3' marks the index after the last valid component of an array or vector.
+\ignoreRST{\vspace{12pt}\\}
 %
-\vspace{12pt}\\
-\mybold{Dimensionality of objects and vectors: } \vspace{6pt}\\ 
-\ac{2D} vs.\ \ac{3D}\vspace{6pt}\\ 
+\mybold{Dimensionality of objects and vectors:} \ignoreRST{\vspace{6pt}}\\ 
+\ac{2D} vs.\ \ac{3D}
+\ignoreRST{\vspace{6pt}\\}
 As a convention, quantities in \codeName\ are 3D, such as nodes, objects, markers, loads, measured quantities, etc. 
 For that reason, we denote planar nodes, objects, etc.\ with the suffix 2D, but 3D objects do not get this suffix.
 
@@ -230,6 +242,17 @@ Nodes usually have separated reference and initial quantities. Here,
 
 Initial displacement (or rotation) values are provided separately, in order to start a system from a configuration different from the reference configuration.
 As an example, the initial configuration of a \texttt{NodePoint} is given by \texttt{referenceCoordinates + initialCoordinates}, while the initial state of a dynamic system additionally needs \texttt{initialVelocities}.
+
+\mysubsection{Mapping between local and global coordinates} \label{sec:systemData:LTG}
+%
+The \ac{LTG}-mappings between local coordinates, on node or object level, and global (=system) coordinates follows the following rules:
+\bi
+\item \ac{LTG}-mappings are computed during \texttt{mbs.Assemble()} and are not available before.
+\item Nodes own a global index which relates the local coordinates to global (system) coordinate. E.g., for a \ac{ODE2} node with node number \texttt{i}, this index can be obtained via the function \texttt{mbs.GetNodeODE2Index(i)}.
+\item The order of global coordinates is simply following the node numbering. If we add three nodes \texttt{NodePoint}, the system will contain 9 coordinates, where the first triple (starting index 0) belongs to node 0, the second triple (starting index 3) belongs to node 1 and the third triple (starting index 6) belongs to node 2. After \texttt{mbs.Assemble()}, you can access the system coordinates via \texttt{mbs.systemData.GetODE2Coordinates()}, which returns a numpy array with 9 coordinates, containing the initial values provided in \texttt{NodePoint} (default: zero).
+\item Objects have their own \ac{LTG}-mappings for their respective coordinate types. The \ac{ODE2} coordinates of an object \texttt{j} can be retrieved via \texttt{mbs.systemData.GetObjectLTGODE2(j)}. For a body, these are the global \ac{ODE2} coordinates representing the body; for a connector, these are the coordinates to which the connector is linked (usually coordinates of two bodies); for a ground object, the \ac{LTG}-mapping is empty; see also \refSection{sec:systemData:ObjectLTG}.
+\item Constraints create algebraic variables (Lagrange multipliers) automatically. For a constraint with object number \texttt{k}, the global index to algebraic variables (of \ac{AE}-type) can be accessed via \texttt{mbs.systemData.GetObjectLTGAE(k)}.
+\ei
 
 
 \mysubsection{Exudyn Basics} \label{sec:exudynBasics}
@@ -483,6 +506,7 @@ You can call the \texttt{SolutionViewer} either in the model, or at the command 
 \end{lstlisting}
 An example for the \texttt{SolutionViewer} is integrated into the \texttt{Examples/} directory, see \texttt{solutionViewerTest.py}. 
 
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Generating animations}
 \label{secGeneratingAnimations}
 %
@@ -509,6 +533,120 @@ After the video has been created, you should delete the single images:
 \plainlststyle
 \lstinputlisting[breaklines=true, basicstyle=\ttm]{../userTools/makeAnimations/deleteTGAimages.bat}
 }
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Contact problems}
+%
+Since Q4 2021 a contact module is available in \codeName. 
+This separate module \texttt{GeneralContact} is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
+\onlyRST{
+
+.. |cpic1| image:: docs/theDoc/figures/contactTests.png
+   :width: 45%
+
+.. |cpic2| image:: docs/theDoc/figures/contactTests2.jpg
+   :width: 45%
+
+|cpic1| |cpic2|
+
+[Some tests and examples using \texttt{GeneralContact}]
+
+}
+\ignoreRST{
+\begin{figure}[tbh]%
+\begin{center}
+\includegraphics[width=0.35\columnwidth]{figures/contactTests} \hspace{1cm}%
+\includegraphics[width=0.35\columnwidth]{figures/contactTests2}%
+\end{center}
+\caption{Some tests and examples using \texttt{GeneralContact}.}%
+\label{fig:contactExamples}%
+\end{figure}
+}
+
+\noindent \mybold{Note}:
+\bi
+\item \texttt{GeneralContact} is (in most cases) restricted to dynamic simulation (explicit or implicit) if friction is used; without friction, it also works in the static case
+\item in addition to \texttt{GeneralContact} there are special objects, in particular for rolling and simple 1D contacts, that are available as single objects, cf.\ \texttt{ObjectConnectorRollingDiscPenalty}
+\item \texttt{GeneralContact} is recommended to be used for large numbers of contacts, while the single objects are integrated more directly into mbs.
+\ei
+
+\noindent Currently, \texttt{GeneralContact} includes:
+\bi
+  \item Sphere-Sphere contact (attached to any marker); may represent circle-circle contact in 2D
+  \item Triangles mounted on rigid bodies, in contact with Spheres
+  \item ANCFCable2D contacting with spheres (which then represent circles in 2D)
+\ei
+For details on the contact formulations, see \refSection{secContactTheory}.
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Removing convergence problems and solver failures}
+\label{secConvergenceProblems}
+Nonlinear formulations (such as most multibody systems, especially nonlinear finite elements) cause problems and there is no general nonlinear solver which may reliably and accurately solve such problems.
+Tuning solver parameters is at hand of the user. 
+In general, the Newton solver tries to reduce the error by the factor given in \texttt{simulationSettings.staticSolver.newton.relativeTolerance} (for static solver), which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in \texttt{simulationSettings.staticSolver.newton.absoluteTolerance} (for static solver), which is by default rather low (1e-10) -- in order to achieve accurate results for small systems or small motion (in mm or $\mu$m regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.
+
+\noindent The following hints shall be followed (also some solver hints).
+\bi
+  \item \mybold{static solver}: load steps are reduced even if the solution seems to be smooth and less steps are expected; larger number of steps may happen for finer discretization; you may adjust (increase) \texttt{.newton.relativeTolerance} / \texttt{.newton.absoluteTolerance} in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy
+  \item \mybold{static solver}: load steps are reduced significantly for highly nonlinear problems; solver repeatedly writes that steps are reduced $\ra$ try to use \texttt{loadStepGeometric} and use a large \texttt{loadStepGeometricRange}: this allows to start with very small loads in which the system is nearly linear (e.g. for thin strings or belts under gravity).
+  \item \mybold{static solver}: in case that your system is (nearly) kinematic, a static solution can be achieved using \texttt{stabilizerODE2term}, which adds mass-proportional stiffness terms during load steps $< 1$.
+  \item very small loads or even \mybold{zero loads} do not converge: \texttt{SolveDynamic} or \texttt{SolveStatic} \mybold{terminated due to errors}
+  \bi
+  \item[$\ra$] the reason is the nonlinearity of formulations (nonlinear kinematics, nonlinear beam, etc.) and round off errors, which restrict Newton to achieve desired tolerances
+  \item[$\ra$] adjust (increase) \texttt{.newton.relativeTolerance} / \texttt{.newton.absoluteTolerance} in static solver or in time integration
+  \item[$\ra$] in many cases, especially for static problems, the \texttt{.newton.newtonResidualMode = 1} evaluates the increments; the nonlinear problems is assumed to be converged, if increments are within given absolute/relative tolerances; this also works usually better for kinematic solutions
+  \ei
+  \item for \mybold{discontinuous problems}: try to adjust solver parameters; especially the \texttt{discontinuous.iterationTolerance} and \texttt{discontinuous.maxIterations}; try to make smaller load or time steps in order to resolve switching points of contact or friction; generalized alpha solvers may cause troubles when reducing step sizes $\ra$ use TrapezoidalIndex2 solver
+  \item if you see further problems, please post them (including relevant example) at the \codeName\ github page!
+\ei
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Performance and ways to speed up computations}
+\label{secSpeedUp}
+%
+Multibody dynamics simulation should be accurate and reliable on the one hand side. Most solver settings are such that they lead to comparatively reliable results.
+However, in some cases there is a significant possibility for speeding up computations, which are described in the following list. Not all recommendations may apply to your models.
+
+The following examples refer to \texttt{simulationSettings = exu.SimulationSettings()}.
+In general, to see where CPU time is lost, use the option turn on \texttt{simulationSettings.displayComputationTime = True} to see which parts of the solver need most of the time (deactivated in current Python3.8 version!).
+
+\noindent \mybold{Possible speed ups in general}:
+\bi
+  \item for models with more than 50 coordinates, switching to sparse solvers might greatly improve speed: \texttt{simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse}
+  \item try to avoid Python function or try to speed up Python functions
+  \item instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in \texttt{mbs.SetPreStepUserFunction(...)}
+  \item for \mybold{discontinuous problems}, try to adjust solver parameters; especially the discontinuous.iterationTolerance which may be too tight and cause many iterations; iterations may be limited by discontinuous.maxIterations, which at larger values solely multiplies the computation time with a factor if all iterations are performed
+\ei
+\mybold{Possible speed ups for dynamic simulations}:
+\bi
+  \item for implicit integration, turn on \mybold{modified Newton}, which updates jacobians only if needed: \texttt{simulationSettings.timeIntegration.newton.useModifiedNewton = True}
+  \item switch to Python3.8: this version excludes range checks and timings; usually 30\% faster
+  \item use \mybold{multi-threading}: \texttt{simulationSettings.parallel.numberOfThreads = ...}, depending on the number of cores (larger values usually do not help); improves greatly for contact problems, but also for some objects computed in parallel; will improve significantly in future
+  \item decrease number of steps (\texttt{simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)}) by increasing the step size $h$ if not needed for accuracy reasons; not that in general, the solver will reduce steps in case of divergence, but not for accuracy reasons, which may still lead to divergence if step sizes are too large
+  \item switch off measuring computation time, if not needed: \texttt{simulationSettings.displayComputationTime = False}
+  \item try to switch to \mybold{explicit solvers}, if problem has no constraints and if problem is not stiff
+  \item try to have \mybold{constant mass matrices} (see according objects, which have constant mass matrices; e.g. rigid bodies using RotationVector Lie group node have constant mass matrix)
+  \item for explicit integration, set \texttt{computeEndOfStepAccelerations = False}, if you do not need accurate evaluation of accelerations at end of time step (will then be taken from beginning)
+  \item if you are sure that your mass matrix is constant, set \texttt{simulationSettings.timeIntegration.reuseConstantMassMatrix = True}; check results!
+  \item check that \texttt{simulationSettings.timeIntegration.simulateInRealtime = False}; if set True, it breaks down simulation to real time
+  \item do not record images, if not needed: \texttt{simulationSettings.solutionSettings.recordImagesInterval = -1}
+  \item in case of bad convergence, decreasing the step size might also help; check also other flags for adaptive step size and for Newton
+  \item use \texttt{simulationSettings.timeIntegration.verboseMode = 1}; larger values create lots of output which drastically slows down
+  \item use \texttt{simulationSettings.timeIntegration.verboseModeFile = 0}, otherwise output written to file
+  \item adjust \texttt{simulationSettings.solutionSettings.sensorsWritePeriod} to avoid time spent on writing sensor files
+  \item use \texttt{simulationSettings.timeIntegration.writeSolutionToFile = False}, otherwise much output may be written to file; 
+  \item if solution file is needed, adjust \texttt{simulationSettings.solutionSettings.solutionWritePeriod} to larger values and also adjust \texttt{simulationSettings.solutionSettings.outputPrecision}, e.g., to 6, in order to avoid larger files; also adjust \texttt{simulationSettings.solutionSettings.exportVelocities = False} and \texttt{simulationSettings.solutionSettings.exportAccelerations = False} to avoid large output files
+\ei
+
+
+
+
+
+
+
+
+
+
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -605,12 +743,15 @@ The following notation conventions are applied (\mybold{no exceptions!}):
 \bi
     \item use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, ...; EXCEPTION: for algorithms following formulas, e.g., $f = M*q_{tt} + K*q$, GBar, ...
     \item use UpperCamelCase for functions, classes, structs, ...
-    \item Special cases for CamelCase: write 'ODEsystem', BUT: 'ODE1Equations'
+    \item Special cases for CamelCase (with some exceptions that happened in the past ...): 
+    \bi
+    \item continue upper case after upper case abbreviations in case of \mybold{functions or classes}: 'ODESystem', 'Point2DClass', 'ANCFCable2D', 'ANCFALE', 'ComputeODE1Equations', ... (this is not always nice to read, but has become a standard and will be further used!) 
+    \item for variables and class member variables continue \mybold{lower case}: 'nODE1variables', 'dim2Dspecial', 'ANCFsize'
+    \item abbreviations at beginning of expressions: for functions or classes use \texttt{ODEComputeCoords()}, for variables avoid 'ODE' at beginning: use 'nODE' or write 'odeCoordinates'
+    \ei
     \item '[...]Init' ... in arguments, for initialization of variables; e.g. 'valueInit' for initialization of member variable 'value'
-    \item use American English troughout: Visualization, etc.
-    \item for (abbreviations) in captial letters, e.g. ODE, use a lower case letter afterwards:
-    \item do not use consecutive capitalized words, e.g. DO NOT WRITE 'ODEAE'
-    \item for functions use \texttt{ODEComputeCoords()}, for variables avoid 'ODE' at beginning: use nODE or write odeCoords
+    \item use American English throughout: Visualization, etc.
+    \item AVOID consecutive capitalized words, e.g., avoid 'ODEAE'
     \item do not use '\_' within variable or function names; exception: derivatives
     \item use name which exactly describes the function/variable: 'numberOfItems' instead of 'size' or 'l'
     \item examples for variable names: secondOrderSize, massMatrix, mThetaTheta
@@ -626,16 +767,25 @@ The following notation conventions are applied (\mybold{no exceptions!}):
 \mysubsubsection{No-abbreviations-rule}
 %
 The code uses a \mybold{minimum set of abbreviations}; however, the following abbreviation rules are used throughout:
-In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (5-line member functions).
+In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (short, 5-line member functions).
 
-Exceptions to the NO-ABBREVIATIONS-RULE:
+\mybold{Exceptions} to the NO-ABBREVIATIONS-RULE, see also \hyperref[sec:listOfAbbreviations]{\underline{List of Abbreviations}}: %no section number!!!: \refSection{sec:listOfAbbreviations}
 \bi
-    \item ODE ... ordinary differential equations;
-    \item ODE2 ... marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)
-    \item ODE1 ... marks parts related to first order differential equations (ES, EvalF in HOTINT)
-    \item AE ... algebraic equations (IS, EvalG in HOTINT); write 'AEcoordinates' for 'algebraicEquationsCoordinates'
+    \item \ac{ODE}
+    \item \ac{ODE2}: marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)
+    \item \ac{ODE1}: marks parts related to first order differential equations (ES, EvalF in HOTINT)
+    \item \ac{AE}; note: using the term 'AEcoordinates' for 'algebraicEquationsCoordinates'
     \item 'C[...]' ... Computational, e.g. for ComputationalNode ==> use 'CNode'
-    \item min, max ... minimum and maximum
+    \item \ac{min}, \ac{max}
+    \item \ac{abs}, \ac{rel}
+    \item \ac{trig} 
+    \item \ac{quad}
+    \item \ac{RHS}
+    \item \ac{LHS}
+    \item \ac{EP}
+    \item \ac{Rxyz}: consecutive rotations around x, y and z-axis (Tait-Bryan rotations);
+    \item \ac{coeffs}
+    \item \ac{pos}
     \item write time derivatives with underscore: \_t, \_tt; example: Position\_t, Position\_tt, ...
     \item write space-wise derivatives ith underscore: \_x, \_xx, \_y, ...
     \item if a scalar, write coordinate derivative with underscore: \_q, \_v (derivative w.r.t. velocity coordinates)

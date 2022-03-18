@@ -103,7 +103,7 @@ for case in range(2):
         #marker for next chain body
         mPosLast = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB, localPosition = VAdd([sx,0.,0],com)))
 
-    mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName="solution/sensor"+str(case)+".txt", 
+    sCoords=mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True,#fileName="solution/sensor"+str(case)+".txt", 
                              outputVariableType=exu.OutputVariableType.Coordinates))
     nodeList += [nRB]
     objectList += [oRB]
@@ -118,6 +118,7 @@ simulationSettings.timeIntegration.numberOfSteps = 1*fact
 simulationSettings.timeIntegration.endTime = 0.01*fact
 simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/1000
 simulationSettings.timeIntegration.verboseMode = 1
+simulationSettings.solutionSettings.writeSolutionToFile = False
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True

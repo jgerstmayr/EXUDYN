@@ -93,9 +93,12 @@ oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[g
 markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 
 if exudynTestGlobals.useGraphics and True:
-    mbs.AddSensor(SensorBody(bodyNumber=bCar, fileName='solution/rollingDiscCarVel.txt', 
+    sCarVel = mbs.AddSensor(SensorBody(bodyNumber=bCar, storeInternal=True, #fileName='solution/rollingDiscCarVel.txt', 
                                 outputVariableType = exu.OutputVariableType.Velocity))
 
+sPos=[]
+sTrail=[]
+sForce=[]
 
 
 for iWheel in range(nWheels):
@@ -173,19 +176,18 @@ for iWheel in range(nWheels):
     oRollingDiscs += [oRolling]
 
     strNum = str(iWheel)
-    sAngularVelWheels += [mbs.AddSensor(SensorBody(bodyNumber=b0, fileName='solution/rollingDiscAngVelLocal'+strNum+'.txt', 
+    sAngularVelWheels += [mbs.AddSensor(SensorBody(bodyNumber=b0, storeInternal=True,#fileName='solution/rollingDiscAngVelLocal'+strNum+'.txt', 
                                outputVariableType = exu.OutputVariableType.AngularVelocityLocal))]
 
     if exudynTestGlobals.useGraphics and True:
-        mbs.AddSensor(SensorBody(bodyNumber=b0, fileName='solution/rollingDiscPos'+strNum+'.txt', 
-                                   outputVariableType = exu.OutputVariableType.Position))
+        sPos+=[mbs.AddSensor(SensorBody(bodyNumber=b0, storeInternal=True,#fileName='solution/rollingDiscPos'+strNum+'.txt', 
+                                   outputVariableType = exu.OutputVariableType.Position))]
     
-        mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrail'+strNum+'.txt', 
-                                   outputVariableType = exu.OutputVariableType.Position))
+        sTrail+=[mbs.AddSensor(SensorObject(name='Trail'+strNum,objectNumber=oRolling, storeInternal=True,#fileName='solution/rollingDiscTrail'+strNum+'.txt', 
+                                   outputVariableType = exu.OutputVariableType.Position))]
     
-        mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscForce'+strNum+'.txt', 
-                                   outputVariableType = exu.OutputVariableType.ForceLocal))
-
+        sForce+=[mbs.AddSensor(SensorObject(objectNumber=oRolling, storeInternal=True,#fileName='solution/rollingDiscForce'+strNum+'.txt', 
+                                   outputVariableType = exu.OutputVariableType.ForceLocal))]
 
 
 torqueFactor = 100
@@ -317,25 +319,9 @@ if exudynTestGlobals.useGraphics:
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
 if exudynTestGlobals.useGraphics:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
- 
-    symStr = ['r-','g-','b-','k-']    
-    symStr2 = ['r--','g--','b--','k--']    
-    for i in range(4):
-        s = str(i)
-        data = np.loadtxt('solution/rollingDiscTrail'+s+'.txt', comments='#', delimiter=',') 
-        plt.plot(data[:,1], data[:,2], symStr[i],label='trail wheel'+s) #x/y coordinates of trail
-        data = np.loadtxt('solution/rollingDiscForce'+s+'.txt', comments='#', delimiter=',') 
-        #plt.plot(data[:,0], data[:,2], symStr[i],label='wheel force y'+s) 
-        #data = np.loadtxt('solution/rollingDiscAngVelLocal'+s+'.txt', comments='#', delimiter=',') 
-        #plt.plot(data[:,0], data[:,1], symStr2[i],label='wheel ang vel'+s) 
+    from exudyn.plot import PlotSensor
     
-    ax=plt.gca() # get current axes
-    ax.grid(True, 'major', 'both')
-    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-    plt.tight_layout()
-    plt.legend()
-    plt.show() 
-
+    PlotSensor(mbs, sTrail, componentsX=[0]*4, components=[1]*4, title='wheel trails', closeAll=True,
+               markerStyles=['x ','o ','^ ','D '], markerSizes=12)
+    PlotSensor(mbs, sForce, components=[1]*4, title='wheel forces')
+    

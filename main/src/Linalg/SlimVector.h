@@ -36,7 +36,6 @@
 #include <vector>
 #include <array>
 
-//template <typename T, Index dataSize> class SlimVectorBase;
 
 template<typename T, Index dataSize> //! dataSize number of Reals in SlimVector; must be constexpr
 class SlimVectorBase
@@ -51,7 +50,16 @@ public:
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     //! default constructor: no initialization here, in order to allow simple copy of data
-	SlimVectorBase() {}; //rule of 5 ==> would require to eliminate this, but still faster in this way!
+	//SlimVectorBase() {}; //rule of 5 ==> would require to eliminate this, but still faster in this way!
+	SlimVectorBase() = default; //rule of 5
+
+	SlimVectorBase(SlimVectorBase<T, dataSize> const& other) = default;
+	SlimVectorBase<T, dataSize>& operator=(SlimVectorBase<T, dataSize> const& other) = default;
+
+	SlimVectorBase<T, dataSize>(SlimVectorBase<T, dataSize>&& other) = default;
+	SlimVectorBase<T, dataSize>& operator=(SlimVectorBase<T, dataSize>&& other) = default;
+
+	~SlimVectorBase() = default; //rule of 5
 
 	//! copy constructor
 	//SlimVectorBase(const SlimVectorBase<T, dataSize>& other): data(other.data)
@@ -76,7 +84,6 @@ public:
 	//}
 
 	//! constructor with a single scalar value used for all vector components.
-	//SlimVectorBase(T scalarValue = (T)0) //add default argument as replacement for default constructor
 	SlimVectorBase(T scalarValue) 
 	{
         for (auto &item : *this) { item = scalarValue; }
@@ -135,8 +142,6 @@ public:
 		}
 	}
 
-	//~SlimVectorBase() { }; //rule of 5
-
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // BASIC FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -146,6 +151,7 @@ public:
     const T* begin() const { return &data[0]; }		//!< C++11 std::begin() for iterators, const version needed for ==, +=, etc.
     const T* end() const { return &data[dataSize]; } //!< C++11 std::end() for iterators, const version needed for ==, +=, etc.
     Index NumberOfItems() const { return dataSize; }	//!< number of ('T') components in vector (for 'SlimVectorBase<T, 3> v;' NumberOfItems() returns 3).
+	bool IsValidIndex(Index index) const { return (index >= 0) && (index < NumberOfItems()); } 	//!< check if an index is in range of valid items
 	const T* GetDataPointer() const { return &data[0]; }         //!< return pointer to first data containing T numbers.
 	T* GetDataPointer() { return &data[0]; }         //!< return pointer to first data containing T numbers.
 

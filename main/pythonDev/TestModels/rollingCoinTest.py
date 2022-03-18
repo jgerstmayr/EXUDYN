@@ -74,15 +74,13 @@ oRolling=mbs.AddObject(ObjectJointRollingDisc(markerNumbers=[markerGround, marke
 
 #sensor for trace of contact point:
 if exudynTestGlobals.useGraphics:
-    mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrail.txt', 
+    sTrail=mbs.AddSensor(SensorObject(objectNumber=oRolling, storeInternal=True,#fileName='solution/rollingDiscTrail.txt', 
                                outputVariableType = exu.OutputVariableType.Position))
     
-    mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrailVel.txt', 
-                               outputVariableType = exu.OutputVariableType.VelocityLocal))
+    sVel=mbs.AddSensor(SensorObject(objectNumber=oRolling, storeInternal=True,#fileName='solution/rollingDiscTrailVel.txt', 
+                               outputVariableType = exu.OutputVariableType.Velocity))
     
 
-#mbs.AddSensor(SensorBody(bodyNumber=b0, fileName='solution/rollingDiscAngVel.txt', 
-#                           outputVariableType = exu.OutputVariableType.AngularVelocity))
 
 mbs.Assemble()
 
@@ -99,6 +97,7 @@ simulationSettings.timeIntegration.endTime = tEnd
 #simulationSettings.solutionSettings.solutionWritePeriod = 0.01
 simulationSettings.solutionSettings.sensorsWritePeriod = 0.0005
 #simulationSettings.timeIntegration.verboseMode = 1
+simulationSettings.solutionSettings.writeSolutionToFile = False
 
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
@@ -131,38 +130,43 @@ if exudynTestGlobals.useGraphics:
     ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
     #plot results
     if True:
-        import matplotlib.pyplot as plt
-        import matplotlib.ticker as ticker
+        from exudyn.plot import PlotSensor
+        
+        PlotSensor(mbs, sTrail, componentsX=[0],components=[1], closeAll=True, title='wheel trail')
 
-        if True:
-            data = np.loadtxt('solution/rollingDiscTrail.txt', comments='#', delimiter=',') 
-            plt.plot(data[:,1], data[:,2], 'r-',label='contact point trail') #x/y coordinates of trail
-        else:
-            #show trail velocity computed numerically and from sensor:
-            data = np.loadtxt('solution/rollingDiscTrail.txt', comments='#', delimiter=',') 
-    
-            nData = len(data)
-            vVec = np.zeros((nData,2))
-            dt = data[1,0]-data[0,0]
-            for i in range(nData-1):
-                vVec[i+1,0:2] = 1/dt*(data[i+1,1:3]-data[i,1:3])
-    
-            plt.plot(data[:,0], vVec[:,0], 'r-',label='contact point vel x') 
-            plt.plot(data[:,0], vVec[:,1], 'k-',label='contact point vel y') 
-            plt.plot(data[:,0], (vVec[:,0]**2+vVec[:,1]**2)**0.5, 'g-',label='|contact point vel|')
-    
-            trailVel = np.loadtxt('solution/rollingDiscTrailVel.txt', comments='#', delimiter=',') 
-            plt.plot(data[:,0], trailVel[:,1], 'r--',label='trail vel x')
-            plt.plot(data[:,0], trailVel[:,2], 'k--',label='trail vel y')
-            plt.plot(data[:,0], trailVel[:,3], 'y--',label='trail vel z')
-            plt.plot(data[:,0], (trailVel[:,1]**2+trailVel[:,2]**2)**0.5, 'b--',label='|trail vel|')
 
-        ax=plt.gca() # get current axes
-        ax.grid(True, 'major', 'both')
-        ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-        ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
-        plt.tight_layout()
-        plt.legend()
-        plt.show() 
+        # import matplotlib.pyplot as plt
+        # import matplotlib.ticker as ticker
+
+        # if True:
+        #     data = np.loadtxt('solution/rollingDiscTrail.txt', comments='#', delimiter=',') 
+        #     plt.plot(data[:,1], data[:,2], 'r-',label='contact point trail') #x/y coordinates of trail
+        # else:
+        #     #show trail velocity computed numerically and from sensor:
+        #     data = np.loadtxt('solution/rollingDiscTrail.txt', comments='#', delimiter=',') 
+    
+        #     nData = len(data)
+        #     vVec = np.zeros((nData,2))
+        #     dt = data[1,0]-data[0,0]
+        #     for i in range(nData-1):
+        #         vVec[i+1,0:2] = 1/dt*(data[i+1,1:3]-data[i,1:3])
+    
+        #     plt.plot(data[:,0], vVec[:,0], 'r-',label='contact point vel x') 
+        #     plt.plot(data[:,0], vVec[:,1], 'k-',label='contact point vel y') 
+        #     plt.plot(data[:,0], (vVec[:,0]**2+vVec[:,1]**2)**0.5, 'g-',label='|contact point vel|')
+    
+        #     trailVel = np.loadtxt('solution/rollingDiscTrailVel.txt', comments='#', delimiter=',') 
+        #     plt.plot(data[:,0], trailVel[:,1], 'r--',label='trail vel x')
+        #     plt.plot(data[:,0], trailVel[:,2], 'k--',label='trail vel y')
+        #     plt.plot(data[:,0], trailVel[:,3], 'y--',label='trail vel z')
+        #     plt.plot(data[:,0], (trailVel[:,1]**2+trailVel[:,2]**2)**0.5, 'b--',label='|trail vel|')
+
+        # ax=plt.gca() # get current axes
+        # ax.grid(True, 'major', 'both')
+        # ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
+        # ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) #use maximum of 8 ticks on y-axis
+        # plt.tight_layout()
+        # plt.legend()
+        # plt.show() 
     
 

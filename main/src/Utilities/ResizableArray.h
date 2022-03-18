@@ -228,9 +228,14 @@ public:
 		if (numberOfItems > maxNumberOfItems) { EnlargeMaxNumberOfItemsTo(numberOfItems); };
 	}
 
+	//! reset function without argument (needed in contact, but may be erased?)
 	void SetNumberOfItems0() {
 		numberOfItems = 0;
 	}
+
+	//! check if an index is in range of valid items
+	bool IsValidIndex(Index index) const { return (index >= 0) && (index < NumberOfItems()); }
+
 	//! if maxNumberOfItems is smaller than minSize, enlarge array to fit at least 'minSize'; NOTE(different from HOTINT1): only 'numberOfItems' copied; this function corresponds to old TArray::ReSize(); NOTE: numberOfItems stays UNCHANGED; copies data if array is enlarged
 	void EnlargeMaxNumberOfItemsTo(Index minSize);
 

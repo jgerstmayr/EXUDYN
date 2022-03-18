@@ -34,8 +34,6 @@
 //+++++++++++++++++   EXPLICIT TIME INTEGRATION SOLVER   ++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-bool doDebug = false;
-
 //! initialize things at the very beginning of initialize
 void CSolverExplicitTimeInt::PreInitializeSolverSpecific(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
@@ -260,13 +258,13 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 	Real t0 = computationalSystem.GetSystemData().GetCData().startOfStepState.time; //it.currentTime already has the step end time
 	STOPTIMER(timer.overhead);
 
-	if (doDebug)
+	if (IsVerbose(2))
 	{
-		pout << "\n+++++++++++++++++++++++++++++\n";
-		pout << "constant mass=" << hasConstantMassMatrix << "\n";
-		pout << "u0=" << solutionODE2 << "\n";
-		pout << "v0=" << solutionODE2_t << "\n";
-		pout << "nonLie=" << nonLieODE2Coordinates << "\n";
+		Verbose(2, "\n+++++++++++++++++++++++++++++\n");
+		Verbose(2, "constant mass = " + EXUstd::ToString(hasConstantMassMatrix) + "\n");
+		Verbose(2, "u0 = " + EXUstd::ToString(solutionODE2) + "\n");
+		Verbose(2, "v0 = " + EXUstd::ToString(solutionODE2_t) + "\n");
+		Verbose(2, "non-Lie coords = " + EXUstd::ToString(nonLieODE2Coordinates) + "\n");
 	}
 
 	//compute stage derivatives Ki:
@@ -303,15 +301,18 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		computationalSystem.GetSystemData().GetCData().currentState.time = t0 + it.currentStepSize * rk.time[i];
 		STOPTIMER(timer.integrationFormula);
 
-		if (doDebug)
+		if (IsVerbose(2))
 		{
-			pout << "\nsolODE2  =" << solutionODE2 << "\n";
-			pout << "solODE2_t=" << solutionODE2_t << "\n";
+			Verbose(2, "  sol ODE2  = " + EXUstd::ToString(solutionODE2) + "\n");
+			Verbose(2, "  sol ODE2_t= " + EXUstd::ToString(solutionODE2_t) + "\n");
 		}
 
-		STARTTIMER(timer.ODE1RHS);
-		computationalSystem.ComputeSystemODE1RHS(data.tempCompData, rk.stageDerivODE1[i]); //Ki=rk.stageDerivODE1[i]
-		STOPTIMER(timer.ODE1RHS);
+		if (data.nODE1 != 0)
+		{
+			STARTTIMER(timer.ODE1RHS);
+			computationalSystem.ComputeSystemODE1RHS(data.tempCompData, rk.stageDerivODE1[i]); //Ki=rk.stageDerivODE1[i]
+			STOPTIMER(timer.ODE1RHS);
+		}
 		ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, rk.stageDerivODE2_t[i], data.systemMassMatrix);
 		if (!useLieGroupIntegration)
 		{
@@ -322,16 +323,14 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 			STARTTIMER(timer.integrationFormula);
 			LieGroupComputeKstage(computationalSystem, solutionODE2_t, rk.stageDerivODE2[i],
 				rk.stageDerivODE2[i], it.currentStepSize, i);  //stageDerivLieODE2 
-			if (doDebug)
-			{
-				pout << "k" << i << "   =" << rk.stageDerivODE2_t[i] << "\n";
-				pout << "K" << i << "   =" << rk.stageDerivODE2[i] << "\n";
-			}
-			//pout << "K" << i << "lie=" << rk.stageDerivLieODE2[i] << "\n";
+			//if (doDebug)
+			//{
+			//	pout << "k" << i << "   =" << rk.stageDerivODE2_t[i] << "\n";
+			//	pout << "K" << i << "   =" << rk.stageDerivODE2[i] << "\n";
+			//}
 			STOPTIMER(timer.integrationFormula);
 		}
 		//+++++++++++++++++++++++++++++++++++++++++++++++++
-		//std::cout << "K" << i << "=" << rk.stageDerivODE1[i] << "\n";
 
 		//finally solutionODE1 = u(t) for next stage and for final step computation
 		solutionODE2.CopyFrom(rk.startOfStepODE2);		//solutionODE2=currentState.ODE2Coords must be updated during step computation
@@ -401,10 +400,21 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 	//compute final accelerations and velocities for ODE1 (could be taken cheaper from beginning of next step ...):
 	//no special task for Lie group methods
 	computationalSystem.GetSystemData().GetCData().currentState.time = it.currentTime; //it.currentTime has step endTime
-	STARTTIMER(timer.ODE1RHS);
-	computationalSystem.ComputeSystemODE1RHS(data.tempCompData, solutionODE1_t); //Ki=rk.stageDerivODE1[i]
-	STOPTIMER(timer.ODE1RHS);
-	ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, solutionODE2_tt, data.systemMassMatrix);
+	if (data.nODE1 != 0)
+	{
+		STARTTIMER(timer.ODE1RHS);
+		computationalSystem.ComputeSystemODE1RHS(data.tempCompData, solutionODE1_t); //Ki=rk.stageDerivODE1[i]
+		STOPTIMER(timer.ODE1RHS);
+	}
+	if (simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations) //this is the correct acceleration at end of step
+	{
+		ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, solutionODE2_tt, data.systemMassMatrix);
+	}
+	else //use this as an approximation; this will lead to a delay in accelerations; usually accelerations are only used in sensors, 
+		//which shall be ok in most cases and it avoids a second call to the very expensive function ComputeODE2Acceleration(...)
+	{
+		solutionODE2_tt.CopyFrom(rk.stageDerivODE2_t[nStages-1]);
+	}
 
 	//also eliminate accelerations for constrained coordinates:
 	EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2_tt);
@@ -539,7 +549,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 }
 
 
-//! reduce step size (1..normal, 2..severe problems); return true, if reduction was successful
+//! reduce step size (severity: 1..normal, 2..severe problems: not relevant for explicit integrator); return true, if reduction was successful
 bool CSolverExplicitTimeInt::ReduceStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings,
 	Index severity, Real suggestedStepSize)
 {
@@ -623,10 +633,10 @@ bool CSolverExplicitTimeInt::ComputeODE2Acceleration(CSystem& computationalSyste
 	computationalSystem.ComputeSystemODE2RHS(data.tempCompDataArray, ode2Rhs); //tempODE2 contains RHS (linear case: tempODE2 = F_applied - K*u - D*v)
 	STOPTIMER(timer.ODE2RHS);
 
-	if (doDebug)
+	if (IsVerbose(3))
 	{
-		pout << "M=" << massMatrix->GetEXUdenseMatrix() << "\n";
-		pout << "RHS=" << ode2Rhs << "\n";
+		Verbose(3, "  mass matrix  = " + EXUstd::ToString(*(massMatrix)) + "\n");
+		Verbose(3, "  RHS          = " + EXUstd::ToString(ode2Rhs) + "\n");
 	}
 
 	if (!hasConstantMassMatrix)
@@ -898,7 +908,7 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 			cnt++;
 		}
 
-		Verbose(1, "constrainedODE2Coordinates = " + EXUstd::ToString(constrainedODE2Coordinates) + "\n");
+		Verbose(2, "constrainedODE2Coordinates = " + EXUstd::ToString(constrainedODE2Coordinates) + "\n");
 		//check if all constraints are of CoordinateConstraint type
 		//SysError("SolverExplicit: eliminateCoordinateConstraints = True not implemented", file.solverFile);
 	}
@@ -966,7 +976,10 @@ void CSolverExplicitTimeInt::PrecomputeLieGroupStructures(CSystem& computational
 void CSolverExplicitTimeInt::UpdateODE2StageCoordinatesLieGroup(CSystem& computationalSystem, 
 	Vector& solutionODE2, Real stepSize, Index i)
 {
-	if (doDebug) {pout << "\nUpdateODE2StageCoordinatesLieGroup:\n";}
+	if (IsVerbose(4))
+	{
+		Verbose(4, "\nUpdateODE2StageCoordinatesLieGroup:\n");
+	}
 	//updates for regular coordinates
 	for (Index j = 0; j < i; j++)
 	{
@@ -1009,7 +1022,10 @@ void CSolverExplicitTimeInt::UpdateODE2StageCoordinatesLieGroup(CSystem& computa
 		}
 
 		Vector3D deltaRot = EXUlie::CompositionRotationVector(vec0, Ksum);
-		if (doDebug) { pout << "comp(" << vec0 << "," << Ksum << ")=" << deltaRot << "\n"; }
+		if (IsVerbose(4))
+		{
+			Verbose(4, "  composition( " + EXUstd::ToString(vec0) + ", " + EXUstd::ToString(Ksum) + " = " + EXUstd::ToString(deltaRot) + "\n");
+		}
 
 		deltaRot -= vecRef;
 		LinkedDataVector dest(solutionODE2, off + nPos, nRot); //update rotations
@@ -1022,7 +1038,7 @@ void CSolverExplicitTimeInt::UpdateODE2StageCoordinatesLieGroup(CSystem& computa
 void CSolverExplicitTimeInt::LieGroupComputeKstage(CSystem& computationalSystem, const Vector& solutionODE2_t,
 	Vector& stageDerivODE2, Vector& stageDerivLieODE2, Real stepSize, Index i)
 {
-	if (doDebug) { pout << "\nLieGroupComputeKstage:\n"; }
+	//if (doDebug) { pout << "\nLieGroupComputeKstage:\n"; }
 	//updates for regular coordinates
 	for (Index k : nonLieODE2Coordinates)
 	{
@@ -1053,7 +1069,7 @@ void CSolverExplicitTimeInt::LieGroupComputeKstage(CSystem& computationalSystem,
 		}
 
 		Vector3D Ku = EXUlie::TExpSO3Inv(Ku0sum) * (omega0 + Kv0sum);
-		if (doDebug) { pout << "TExp(" << Ku0sum << ")*(" << omega0 << "+" << Kv0sum << ")=" << Ku << "\n"; }
+		//if (doDebug) { pout << "TExp(" << Ku0sum << ")*(" << omega0 << "+" << Kv0sum << ")=" << Ku << "\n"; }
 		LinkedDataVector dest(stageDerivODE2, off + nPos, nRot); //stageDerivLieODE2 
 		dest.SetVector(Ku); //writes into dest vector, linked to according stageDeriv(Lie)ODE2 part
 	}

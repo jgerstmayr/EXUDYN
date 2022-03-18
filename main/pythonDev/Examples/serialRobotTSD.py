@@ -18,7 +18,7 @@ from exudyn.utilities import *
 from exudyn.rigidBodyUtilities import *
 from exudyn.graphicsDataUtilities import *
 from exudyn.robotics import *
-
+from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration, ProfilePTP
 
 import numpy as np
 from numpy import linalg as LA
@@ -116,35 +116,15 @@ q1 = [0, pi/8, pi*0.75, 0,pi/8,0] #configuration 1
 q2 = [pi,-pi, -pi*0.5,1.5*pi,-pi*2,pi*2] #configuration 2
 q3 = [3*pi,0,-0.25*pi,0,0,0] #zero angle configuration
 
-#trajectory points structure:
-point0={'q':q0, #use any initial configuration!
-        #'q_t':q0,
-        'type':'linearVelocity',
-        'time':0}
+#trajectory generated with optimal acceleration profiles:
+trajectory = Trajectory(initialCoordinates=q0, initialTime=0)
+trajectory.Add(ProfileConstantAcceleration(q3,0.25))
+trajectory.Add(ProfileConstantAcceleration(q1,0.25))
+trajectory.Add(ProfileConstantAcceleration(q2,0.25))
+trajectory.Add(ProfileConstantAcceleration(q0,0.25))
+#traj.Add(ProfilePTP([1,1],syncAccTimes=False, maxVelocities=[1,1], maxAccelerations=[5,5]))
 
-pointList = [point0]
-pointList += [{'q':q3, #q1
-        #'q_t':q0,
-        'type':'linearVelocity',
-        'time':0.25}]
-pointList +=[{'q':q1, #q2
-        #'q_t':q0,
-        'type':'linearVelocity',
-        'time':0.5}]
-pointList +=[{'q':q2, #q2
-        #'q_t':q0,
-        'type':'linearVelocity',
-        'time':0.75}]
-pointList +=[{'q':q0, #q2
-        #'q_t':q0,
-        'type':'linearVelocity',
-        'time':1.}]
-pointList +=[{'q':q0, #q2, forever
-        #'q_t':q0,
-        'type':'linearVelocity',
-        'time':1e6}] #forever
-robotTrajectory={'PTP':pointList}
-
+# x = traj.EvaluateCoordinate(t,0)
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -203,7 +183,7 @@ loadList1 = robotDict['jointTorque1List'] #(right body)
 #print(loadList0, loadList1)
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #control robot
-compensateStaticTorques = True 
+compensateStaticTorques = False 
 useTSD = True
 torsionalSDlist = []
 
@@ -236,19 +216,23 @@ def PreStepUF(mbs, t):
         #print("tau=", staticTorques)
     else:
         staticTorques = np.zeros(len(jointList))
+        
+    [u,v,a] = trajectory.Evaluate(t)
+
     #compute load for joint number
     for i in range(len(jointList)):
         joint = jointList[i]
         phi = mbs.GetObjectOutput(joint, exu.OutputVariableType.Rotation)[2] #z-rotation
         omega = mbs.GetObjectOutput(joint, exu.OutputVariableType.AngularVelocityLocal)[2] #z-angular velocity
-        [u,v,a] = MotionInterpolator(t, robotTrajectory, i)
-    
+        #[u1,v1,a1] = MotionInterpolator(t, robotTrajectory, i)
+        u1 = u[i]
+        v1 = v[i]
         if useTSD:
             tsd = torsionalSDlist[i]
-            mbs.SetObjectParameter(tsd, 'offset', -u)
-            mbs.SetObjectParameter(tsd, 'torque', Dcontrol[i]*v - staticTorques[i]) #additional torque from given velocity 
+            mbs.SetObjectParameter(tsd, 'offset', -u1)
+            mbs.SetObjectParameter(tsd, 'torque', Dcontrol[i]*v1 - staticTorques[i]) #additional torque from given velocity 
         else:
-            torque = 1*(Pcontrol[i]*(phi+u) + Dcontrol[i]*(omega+v))
+            torque = 1*(Pcontrol[i]*(phi+u1) + Dcontrol[i]*(omega+v1))
             torque -= staticTorques[i] #add static torque compensation
             
             load0 = torque * unitTorques0[i] #includes sign and correct unit-torque vector
@@ -318,8 +302,9 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = h*2
-simulationSettings.solutionSettings.sensorsWritePeriod = h
+simulationSettings.solutionSettings.solutionWritePeriod = h*1
+simulationSettings.solutionSettings.sensorsWritePeriod = h*10
+simulationSettings.solutionSettings.binarySolutionFile = True
 #simulationSettings.solutionSettings.writeSolutionToFile = False
 # simulationSettings.timeIntegration.simulateInRealtime = True
 # simulationSettings.timeIntegration.realtimeFactor = 0.25

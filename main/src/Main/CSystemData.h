@@ -442,19 +442,19 @@ inline void CSystemData::ComputeMarkerDataStructure(const CObjectConnector* conn
 	}
 }
 
-//!synchronize with ComputeMarkerDataStructure function!
-//!compute jacobian derivative times constant vector v, e.g.: d(Jpos.T @ v)/dq
-inline void CSystemData::ComputeMarkerDataStructureJacobianODE2(const CObjectConnector* connector, const Vector& v, MarkerDataStructure& markerDataStructure) const
-{
-	const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
-	Index nMarkers = connector->GetMarkerNumbers().NumberOfItems();
-	markerDataStructure.SetTime(GetCData().currentState.GetTime()); //only needed for user functions, but kept for future
-
-	for (Index k = 0; k < nMarkers; k++)
-	{
-		GetCMarkers()[markerNumbers[k]]->ComputeMarkerDataJacobianDerivative(*this, v, markerDataStructure.GetMarkerData(k));
-	}
-}
+////!synchronize with ComputeMarkerDataStructure function!
+////!compute jacobian derivative times constant vector v, e.g.: d(Jpos.T @ v)/dq
+//inline void CSystemData::ComputeMarkerDataStructureJacobianODE2(const CObjectConnector* connector, const Vector& v, MarkerDataStructure& markerDataStructure) const
+//{
+//	const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
+//	Index nMarkers = connector->GetMarkerNumbers().NumberOfItems();
+//	markerDataStructure.SetTime(GetCData().currentState.GetTime()); //only needed for user functions, but kept for future
+//
+//	for (Index k = 0; k < nMarkers; k++)
+//	{
+//		GetCMarkers()[markerNumbers[k]]->ComputeMarkerDataJacobianDerivative(*this, v, markerDataStructure.GetMarkerData(k));
+//	}
+//}
 
 
 

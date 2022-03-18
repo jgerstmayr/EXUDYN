@@ -148,13 +148,13 @@ mbs.AddObject(GenericJoint(markerNumbers=[markerSlider, markerConrodC], constrai
                             visualization=VObjectJointGeneric(axesRadius=0.005, axesLength=0.02)))
 
 if exudynTestGlobals.useGraphics:
-    mbs.AddSensor(SensorNode(nodeNumber = n0, fileName='solution/crankAngle.txt',
+    sCrankAngle=mbs.AddSensor(SensorNode(nodeNumber = n0, storeInternal=True,#fileName='solution/crankAngle.txt',
                              outputVariableType=exu.OutputVariableType.Rotation))
-    mbs.AddSensor(SensorNode(nodeNumber = n0, fileName='solution/crankAngularVelocity.txt',
+    sCrankAngVel=mbs.AddSensor(SensorNode(nodeNumber = n0, storeInternal=True,#fileName='solution/crankAngularVelocity.txt',
                              outputVariableType=exu.OutputVariableType.AngularVelocity))
-    mbs.AddSensor(SensorNode(nodeNumber = n2, fileName='solution/sliderPosition.txt',
+    sSliderPos=mbs.AddSensor(SensorNode(nodeNumber = n2, storeInternal=True,#fileName='solution/sliderPosition.txt',
                              outputVariableType=exu.OutputVariableType.Position))
-    mbs.AddSensor(SensorNode(nodeNumber = n2, fileName='solution/sliderVelocity.txt',
+    sSliderVel=mbs.AddSensor(SensorNode(nodeNumber = n2, storeInternal=True,#fileName='solution/sliderVelocity.txt',
                              outputVariableType=exu.OutputVariableType.Velocity))
 
 if fixedVelocity:
@@ -240,9 +240,11 @@ if exudynTestGlobals.useGraphics:
     
     [fig1, ax1] = plt.subplots()
     [fig2, ax2] = plt.subplots()
-    data1 = np.loadtxt('solution/crankAngularVelocity.txt', comments='#', delimiter=',')
+    # data1 = np.loadtxt('solution/crankAngularVelocity.txt', comments='#', delimiter=',')
+    data1 = mbs.GetSensorStoredData(sCrankAngVel)
     ax1.plot(data1[:,0], data1[:,1], 'r-', label='crank angular velocity')  
-    data1 = np.loadtxt('solution/crankAngle.txt', comments='#', delimiter=',')
+    # data1 = np.loadtxt('solution/crankAngle.txt', comments='#', delimiter=',')
+    data1 = mbs.GetSensorStoredData(sCrankAngle)
     ax1.plot(data1[:,0], data1[:,1], 'b-', label='crank angle')  
     data1 = np.loadtxt('../../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masarati.txt', comments='#', delimiter=',')
     ax1.plot(data1[:,0], data1[:,2], 'r:', label='Ref Masarati: crank angle')  
@@ -252,7 +254,8 @@ if exudynTestGlobals.useGraphics:
     ax1.plot(data1[:,0], data1[:,2], 'g:', label='Ref Chaojie: crank angle')  
     
 
-    data2 = np.loadtxt('solution/sliderPosition.txt', comments='#', delimiter=',')
+    # data2 = np.loadtxt('solution/sliderPosition.txt', comments='#', delimiter=',')
+    data2 = mbs.GetSensorStoredData(sSliderPos)
     ax2.plot(data2[:,0], data2[:,1], 'b-', label='slider position')  
     #data2 = np.loadtxt('solution/sliderPosition_1e-4.txt', comments='#', delimiter=',')
     #ax2.plot(data2[:,0], data2[:,1], 'r-', label='slider position, dt=1e-4')  

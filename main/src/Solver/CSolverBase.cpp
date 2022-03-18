@@ -70,6 +70,9 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 	const StaticSolverSettings& staticSolver = simulationSettings.staticSolver;
 	const SolutionSettings& solutionSettings = simulationSettings.solutionSettings;
 	
+	if (simulationSettings.outputPrecision >= 8) { file.binaryFileSettings.realSize = sizeof(double); }
+	else { file.binaryFileSettings.realSize = sizeof(float); }
+
 	if (IsStaticSolver())
 	{
 		output.verboseMode = staticSolver.verboseMode;
@@ -88,7 +91,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 
 	//timer.Reset(simulationSettings.displayComputationTime); //done in SolveSteps
 
-	STDstring solutionFileName = solutionSettings.coordinatesSolutionFileName;
+	STDstring solutionFileName = GetSolutionFileName(simulationSettings);
 	STDstring solverFileName = solutionSettings.solverInformationFileName;
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -98,8 +101,18 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 	{
 		CheckPathAndCreateDirectories(solutionFileName);
 
-		if (solutionSettings.appendToFile) { file.solutionFile.open(solutionFileName, std::ofstream::app); }
-		else { file.solutionFile.open(solutionFileName, std::ofstream::out); }
+		std::ios_base::openmode fileMode = std::ofstream::out; //int does not work in linux!
+		if (solutionSettings.appendToFile) 
+		{ 
+			fileMode = fileMode | std::ofstream::app; 
+		}
+
+		if (solutionSettings.binarySolutionFile) { fileMode = std::ofstream::binary; } //no append right now!
+
+		//if (solutionSettings.appendToFile) { file.solutionFile.open(solutionFileName, std::ofstream::app); }
+		//else { file.solutionFile.open(solutionFileName, std::ofstream::out); }
+		file.solutionFile.open(solutionFileName, fileMode);
+
 		if (!file.solutionFile.is_open()) //failed to open file ...  e.g. invalid file name
 		{
 			output.writeToSolutionFile = false;
@@ -144,7 +157,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 			std::ofstream* sensorFile = new std::ofstream;
 			file.sensorFileList.push_back(sensorFile);
 			auto fileMode = std::ofstream::out;
-			if (solutionSettings.appendToFile) { fileMode = std::ofstream::app; }
+			if (solutionSettings.sensorsAppendToFile) { fileMode = std::ofstream::app; }
 
 			CheckPathAndCreateDirectories(item->GetFileName());
 			sensorFile->open(item->GetFileName(), fileMode);
@@ -163,6 +176,37 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 		else
 		{
 			file.sensorFileList.push_back(nullptr);
+		}
+		
+		//process for internal storage:
+		if (item->GetStoreInternalFlag())
+		{
+			if (!solutionSettings.sensorsAppendToFile || item->GetInternalStorage().NumberOfRows() == 0)
+			{
+
+				Index stepsPlanned = 100; //allocate at least some space which makes no big problems
+				if (IsStaticSolver())
+				{
+					stepsPlanned = EXUstd::Maximum(simulationSettings.staticSolver.numberOfLoadSteps, stepsPlanned);
+				}
+				else
+				{ 
+					Real writeSteps = simulationSettings.timeIntegration.endTime - simulationSettings.timeIntegration.startTime;
+					if (simulationSettings.solutionSettings.sensorsWritePeriod != 0)
+					{
+						writeSteps /= simulationSettings.solutionSettings.sensorsWritePeriod;
+					}
+					stepsPlanned = EXUstd::Maximum((Index)writeSteps, stepsPlanned);
+					stepsPlanned = EXUstd::Minimum(10000, stepsPlanned); //not too big, if they are never computed ...!
+				}
+
+				//pre-allocate data:
+				item->GetInternalStorage().SetNumberOfRowsAndColumns(stepsPlanned, 4); //typical size for position sensor; will be less optimal for Coordinates sensor with 100+ coordinates, but only log2(nSteps) memory allocations
+
+				//this marks that sensor data is reset ...
+				item->GetInternalStorage().SetNumberOfRowsAndColumns(0, 0); 
+
+			};
 		}
 	}
 
@@ -266,6 +310,12 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	it.rejectedModifiedNewtonSteps = 0;		//count number of rejections of modifiedNewtonMethod
 	it.discontinuousIterationsCount = 0;	//count total number of discontinuous iterations
 
+	//used for computing average Newton iterations and jacobians:
+	output.lastNewtonStepsCount = 0;
+	output.lastNewtonJacobiCount = 0;
+	output.lastDiscontinuousIterationsCount = 0;
+
+
 	it.newtonSteps = 0;						//consistently initialize
 	it.discontinuousIteration = 0;			//consistently initialize
 
@@ -283,13 +333,13 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 
 #ifdef USE_NGSOLVE_TASKMANAGER
 	//Eigen::initParallel(); //with C++11 and eigen 3.3 optional
-	Index nThreads = simulationSettings.numberOfThreads;
+	Index nThreads = simulationSettings.parallel.numberOfThreads;
 	//pout << "numThreads before init=" << ngstd::TaskManager::GetNumThreads() << "\n";
 	if (nThreads > 1)
 	{
 		//verboseMode not defined at this point ==> this part needs to move to initialization of solver!
-		//VerboseWrite(1, STDstring("TaskManager::SetNumThreads = ") + EXUstd::ToString(simulationSettings.numberOfThreads) + "\n");
-		ngstd::TaskManager::SetNumThreads(simulationSettings.numberOfThreads);
+		//VerboseWrite(1, STDstring("TaskManager::SetNumThreads = ") + EXUstd::ToString(simulationSettings.parallel.numberOfThreads) + "\n");
+		ngstd::TaskManager::SetNumThreads(simulationSettings.parallel.numberOfThreads);
 
 		//for checking where time is lost
 		//TaskManager::SetPajeTrace(true);
@@ -380,6 +430,7 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 	computationalSystem.GetSystemData().GetCData().initialState.time = it.startTime; //hereafter copied to currentState
 	it.currentTime = it.startTime;
 	computationalSystem.GetSystemData().GetCData().currentState = computationalSystem.GetSystemData().GetCData().initialState;
+	computationalSystem.GetSystemData().GetCData().startOfStepState = computationalSystem.GetSystemData().GetCData().initialState;
 
 	if (!IsStaticSolver()) //not needed in static solver
 	{
@@ -405,56 +456,6 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 	WriteSensorsFileHeader(computationalSystem, simulationSettings);
 
 }
-
-void CSolverBase::NGsolveMTtest()
-{
-	/*
-	size_t n = 100;
-	const int m = 10;
-	int loop = (int)(1e7 / m);
-	double gflop = (1.*n*m*loop) / 1.e9; //number of operations in 10^9 units
-
-							   //for (size_t n = 10; n <= 10000; n *= 10)
-	ngstd::Array<double> res(n);
-	std::mutex mtx;           // mutex for critical section
-
-	ngstd::ParallelFor(n, [&res, &m, &mtx, this](size_t i)
-		//for (i=1; i <= n; i++)
-	{
-		//std::unique_lock<std::mutex> lck(mtx, std::defer_lock);
-		//lck.lock(); //start critical section
-		//std::cout << "i=" << i << "\n";
-		//std::cout << "thread=" << ngstd::TaskManager().GetThreadId() << "\n";
-		//lck.unlock(); //finish critical section
-
-		double val1 = 1 + 1e-7*i;
-		double val2 = 1 + 2e-7*i;
-		double val3 = 1 + 3e-7*i;
-		double val4 = 1 + 4e-7*i;
-		double prod = 1;
-		double sum = 1;
-		double sum2 = 2;
-		this->GetSolverName();
-		for (int j = 0; j < m; j++)
-		{
-			prod *= val1;
-			//prod *= val2;
-			//prod *= val3;
-			//prod *= val4;
-			//sum += val1;
-			//sum += val2;
-			//sum += val3;
-			//sum += val4;
-			//sum2 += val1;
-			//sum2 += val2;
-			//sum2 += val3;
-			sum2 += val4;
-		}
-		res[8] += prod + sum + sum2;
-	}); //ParallelFor
-	*/
-}
-
 
 //! specific call to the start solver
 bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
@@ -501,7 +502,7 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
 #ifdef USE_NGSOLVE_TASKMANAGER
-	Index nThreads = simulationSettings.numberOfThreads;
+	Index nThreads = simulationSettings.parallel.numberOfThreads;
 	if (nThreads > 1 && ngstd::TaskManager::GetNumThreads() > 1)
 	{
 		VerboseWrite(1, "Exit TaskManager\n");
@@ -511,6 +512,33 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 
 	if (IsVerboseCheck(1))
 	{
+		//write final step information if stopped or if failed
+		if (conv.stepReductionFailed || conv.newtonSolutionDiverged ||
+			computationalSystem.GetPostProcessData()->stopSimulation)
+		{
+			Real t = computationalSystem.GetSystemData().GetCData().GetCurrent().GetTime();
+			Real tCPU = EXUstd::GetTimeInSeconds();
+			STDstring str = "STEP " + EXUstd::ToString(it.currentStepIndex) + " (stopped)";
+			if (!IsStaticSolver()) { str += ", t = " + EXUstd::ToString(t) + "s"; }
+			else { str += ", factor = " + EXUstd::ToString(ComputeLoadFactor(simulationSettings)); }
+
+			if (output.stepInformation & StepInfo::timeToGo) {
+				str += ", tCPU=" + EXUstd::ToString(tCPU - output.cpuStartTime) + "s";
+			}
+
+			if ((output.stepInformation & StepInfo::newtonIterations) && it.currentStepIndex != 0) {
+				str += ", Nit/step = " + EXUstd::ToString(it.newtonStepsCount / (Real)(it.currentStepIndex));
+			}
+			if ((output.stepInformation & StepInfo::newtonJacobians) && it.currentStepIndex != 0) {
+				str += " Dit/step = " + EXUstd::ToString(it.discontinuousIterationsCount / (Real)(it.currentStepIndex)) +
+					" jac/step = " + EXUstd::ToString(it.newtonJacobiCount / (Real)(it.currentStepIndex));
+			}
+			str += "\n";
+			if (output.verboseMode >= 1) { pout << str; }
+			if (output.verboseModeFile >= 1) { file.solverFile << str; }
+
+		}
+
 		if (computationalSystem.GetPostProcessData()->stopSimulation)
 		{
 			VerboseWrite(1, STDstring("solver stopped by user after ") + EXUstd::ToString(timer.total) + " seconds.\n");
@@ -524,15 +552,15 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 		if (simulationSettings.displayComputationTime) //computation statistics
 		{
 			VerboseWrite(1, timer.ToString());
-		}
-		if (simulationSettings.displayGlobalTimers) //contact, etc.
-		{
-			STDstring sGlobal;
-			sGlobal = globalTimers.ToString();
-			if (sGlobal.size())
+			if (simulationSettings.displayGlobalTimers) //contact, etc.
 			{
-				sGlobal = "special timers:\n" + sGlobal + "\n";
-				VerboseWrite(1, sGlobal);
+				STDstring sGlobal;
+				sGlobal = globalTimers.ToString();
+				if (sGlobal.size())
+				{
+					sGlobal = "special timers:\n" + sGlobal + "\n";
+					VerboseWrite(1, sGlobal);
+				}
 			}
 		}
 		if (simulationSettings.displayStatistics)
@@ -543,15 +571,38 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 
 	if (simulationSettings.solutionSettings.writeFileFooter && output.writeToSolutionFile)
 	{
-		file.solutionFile << "#simulation finished=" << EXUstd::GetDateTimeString() << "\n";
-		file.solutionFile << "#Solver Info:";
-		file.solutionFile << " stepReductionFailed(or step failed)=" << conv.stepReductionFailed;
-		file.solutionFile << ",discontinuousIterationSuccessful=" << conv.discontinuousIterationSuccessful;
-		file.solutionFile << ",newtonSolutionDiverged=" << conv.newtonSolutionDiverged;
-		file.solutionFile << ",massMatrixNotInvertible=" << conv.massMatrixNotInvertible;
-		file.solutionFile << ",total time steps=" << it.currentStepIndex-1; //initial step is also counted in it.currentStepIndex
-		file.solutionFile << ",total Newton iterations=" << it.newtonStepsCount;
-		file.solutionFile << ",total Newton jacobians=" << it.newtonJacobiCount << "\n";
+		if (!simulationSettings.solutionSettings.binarySolutionFile)
+		{
+			file.solutionFile << "#simulation finished=" << EXUstd::GetDateTimeString() << "\n";
+			file.solutionFile << "#Solver Info:";
+			file.solutionFile << " stepReductionFailed(or step failed)=" << conv.stepReductionFailed;
+			file.solutionFile << ",discontinuousIterationSuccessful=" << conv.discontinuousIterationSuccessful;
+			file.solutionFile << ",newtonSolutionDiverged=" << conv.newtonSolutionDiverged;
+			file.solutionFile << ",massMatrixNotInvertible=" << conv.massMatrixNotInvertible;
+			file.solutionFile << ",total time steps=" << it.currentStepIndex - 1; //initial step is also counted in it.currentStepIndex
+			file.solutionFile << ",total Newton iterations=" << it.newtonStepsCount;
+			file.solutionFile << ",total Newton jacobians=" << it.newtonJacobiCount << "\n";
+		}
+		else
+		{
+			const ExuFile::BinaryFileSettings& bfs = file.binaryFileSettings;
+
+			ExuFile::BinaryWrite((Index)(-1), file.solutionFile, bfs); //indicating last line with -1
+
+			ExuFile::BinaryWrite("simulation finished=", file.solutionFile, bfs);
+			ExuFile::BinaryWrite(EXUstd::GetDateTimeString(), file.solutionFile, bfs);
+
+			//write information as ArrayIndex, allows simpler change in size without adapting file structure:
+			ArrayIndex info({ (Index)conv.stepReductionFailed,
+				(Index)conv.discontinuousIterationSuccessful,
+				(Index)conv.newtonSolutionDiverged,
+				(Index)conv.massMatrixNotInvertible,
+				(Index)(it.currentStepIndex - 1),
+				(Index)it.newtonStepsCount,
+				(Index)it.newtonJacobiCount });
+			ExuFile::BinaryWrite(info, file.solutionFile, bfs);
+			ExuFile::BinaryWrite("EXUEND", file.solutionFile, bfs);
+		}
 	}
 
 	computationalSystem.GetPostProcessData()->simulationFinished = true; //signal that last step should be rendered
@@ -593,6 +644,8 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 	else { it.currentStepSize = it.maxStepSize; }//initial value for step size
 
 	it.currentStepIndex = 0;
+	output.lastVerboseStepIndex = 0;
+
 	conv.stepReductionFailed = false;
 	conv.jacobianUpdateRequested = true;	//for modified Newton, only request Newton at first step
 
@@ -647,9 +700,13 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 					}
 					else
 					{
-						if (IsVerboseCheck(1) && !it.automaticStepSize)
+						if (IsVerboseCheck(1) && (output.stepInformation & StepInfo::stepReductionWarn) && (!it.automaticStepSize || !(conv.newtonConverged && !conv.stopNewton)))
 						{
-							VerboseWrite(1, STDstring("  Solve steps: adaptive step reduction to size = ") + EXUstd::ToString(it.currentStepSize) + "\n");
+							//VerboseWrite(1, STDstring("  Solve steps: adaptive reduction to step size = ") + EXUstd::ToString(it.currentStepSize) + "\n");
+							STDstring str = STDstring("  Solve steps: adaptive reduction to step size = ") + EXUstd::ToString(it.currentStepSize);
+							if (IsStaticSolver()) { str += ", load factor = " + EXUstd::ToString(computationalSystem.GetSolverData().loadFactor); }
+							else { str += ", time = " + EXUstd::ToString(it.currentTime); }
+							VerboseWrite(1, str + "\n");
 						}
 						stepsSinceLastStepSizeReduction = 0;
 					}
@@ -667,11 +724,15 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 				//in case of good Newton convergence, increase step size
 				stepsSinceLastStepSizeReduction++;
 				Index recoverySteps = simulationSettings.timeIntegration.adaptiveStepRecoverySteps;
-				if (IsStaticSolver()) { recoverySteps = simulationSettings.staticSolver.adaptiveStepRecoverySteps; }
+				Index recoveryStepsMaxIt = simulationSettings.timeIntegration.adaptiveStepRecoveryIterations;
+				if (IsStaticSolver()) { 
+					recoverySteps = simulationSettings.staticSolver.adaptiveStepRecoverySteps;
+					recoveryStepsMaxIt = simulationSettings.staticSolver.adaptiveStepRecoveryIterations;
+				}
 
 				//OLD: if ((stepsSinceLastStepSizeReduction >= 10 || (IsStaticSolver() && stepsSinceLastStepSizeReduction > 3)) &&
 				if ((stepsSinceLastStepSizeReduction >= recoverySteps) &&
-						it.newtonSteps + it.discontinuousIteration < 6) //small iteration numbers needed to increase step ...
+						it.newtonSteps + it.discontinuousIteration <= recoveryStepsMaxIt) //previous: < 6 (2022-01-17); small iteration numbers needed to increase step ...
 				{
 					IncreaseStepSize(computationalSystem, simulationSettings);
 					stepsSinceLastStepSizeReduction = 0;
@@ -737,36 +798,55 @@ void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationS
 		}
 	}
 
-	if (!IsStaticSolver())
-	{
-		if (simulationSettings.timeIntegration.preStepPyExecute.size()) //if this string is not empty, execute the commands
-		{
-			if (!cSolverBaseInitializeStepPreStepFunctionWarned)
-			{
-				cSolverBaseInitializeStepPreStepFunctionWarned = true;
-				PyWarning("simulationSettings.timeIntegration.preStepPyExecute and simulationSettings.staticSolver.preStepPyExecute are deprecated! Use mbs.SetPreStepUserFunction(...) instead.");
-			}
+	//if (!IsStaticSolver())
+	//{
+	//	if (simulationSettings.timeIntegration.preStepPyExecute.size()) //if this string is not empty, execute the commands
+	//	{
+	//		if (!cSolverBaseInitializeStepPreStepFunctionWarned)
+	//		{
+	//			cSolverBaseInitializeStepPreStepFunctionWarned = true;
+	//			PyWarning("simulationSettings.timeIntegration.preStepPyExecute and simulationSettings.staticSolver.preStepPyExecute are deprecated! Use mbs.SetPreStepUserFunction(...) instead.");
+	//		}
 
-			py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
-			py::exec(simulationSettings.timeIntegration.preStepPyExecute.c_str(), scope);
-		}
-	}
-	else
-	{
-		if (simulationSettings.staticSolver.preStepPyExecute.size()) //if this string is not empty, execute the commands
-		{
-			if (!cSolverBaseInitializeStepPreStepFunctionWarned)
-			{
-				cSolverBaseInitializeStepPreStepFunctionWarned = true;
-				PyWarning("simulationSettings.timeIntegration.preStepPyExecute and simulationSettings.staticSolver.preStepPyExecute are deprecated! Use mbs.SetPreStepUserFunction(...) instead.");
-			}
-			py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
-			py::exec(simulationSettings.staticSolver.preStepPyExecute.c_str(), scope);
-		}
-	}
+	//		py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
+	//		py::exec(simulationSettings.timeIntegration.preStepPyExecute.c_str(), scope);
+	//	}
+	//}
+	//else
+	//{
+	//	if (simulationSettings.staticSolver.preStepPyExecute.size()) //if this string is not empty, execute the commands
+	//	{
+	//		if (!cSolverBaseInitializeStepPreStepFunctionWarned)
+	//		{
+	//			cSolverBaseInitializeStepPreStepFunctionWarned = true;
+	//			PyWarning("simulationSettings.timeIntegration.preStepPyExecute and simulationSettings.staticSolver.preStepPyExecute are deprecated! Use mbs.SetPreStepUserFunction(...) instead.");
+	//		}
+	//		py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
+	//		py::exec(simulationSettings.staticSolver.preStepPyExecute.c_str(), scope);
+	//	}
+	//}
 	DoIdleOperations(computationalSystem);
 	STOPTIMER(timer.python);
 }
+
+
+//! unique conversion of time into string (use seconds up to certain level, then hours, etc.)
+STDstring SolverTimeToString(double timeInSeconds)
+{
+	if (timeInSeconds < 3600)
+	{
+		return EXUstd::ToString(timeInSeconds) + "s";
+	}
+	else if (timeInSeconds < 3600 * 24)
+	{
+		return EXUstd::ToString(timeInSeconds / 3600.) + "h";
+	}
+	else
+	{
+		return EXUstd::ToString(timeInSeconds / (3600.*24)) + " days";
+	}
+}
+
 //! finish static step / time step; write output of results to file
 void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
@@ -777,9 +857,9 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 
 	//output step information to console and solverFile
 	bool printFile = ((output.verboseModeFile == 1) && ((tCPU - output.cpuLastTimePrinted >= timeDelay)
-		|| it.currentTime + 1e-10>=it.endTime )) || (output.verboseModeFile >= timeDelay);
+		|| it.currentTime + 1e-10>=it.endTime )) || (output.verboseModeFile >= 2 || ((output.stepInformation & StepInfo::everyStep) != 0));
 	bool printConsole = ((output.verboseMode == 1) && ((tCPU - output.cpuLastTimePrinted >= timeDelay)
-		|| it.currentTime + 1e-10 >= it.endTime)) || (output.verboseMode >= timeDelay);
+		|| it.currentTime + 1e-10 >= it.endTime)) || (output.verboseMode >= 2 || ((output.stepInformation & StepInfo::everyStep) != 0));
 
 	if (simulationSettings.timeIntegration.simulateInRealtime)
 	{
@@ -808,25 +888,46 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 		Real simTimeRemaining = it.endTime - t;
 		Real simTimeElapsed = t - it.startTime;
 
-		if (cpuTimeElapsed > 1e-1 && simTimeElapsed > 1e-3*simTotalTime && it.currentStepIndex != 0)
+		if (cpuTimeElapsed > 0.2 && simTimeElapsed > EXUstd::Minimum(it.initialStepSize*10,1e-5*simTotalTime) && it.currentStepIndex != 0)
 		{
 			timeToGo = simTimeRemaining * (cpuTimeElapsed / simTimeElapsed);
 			//old: based on steps: timeToGo = (double)(n - it.currentStepIndex) * timeToGo / (double)i;
 		}
 
 		STDstring str = "STEP" + EXUstd::ToString(it.currentStepIndex);
-		if (!IsStaticSolver()) { str += ", t = " + EXUstd::ToString(t) + " sec"; }
+		if (!IsStaticSolver()) { str += ", t = " + EXUstd::ToString(t) + "s"; }
 		else { str += ", factor = " + EXUstd::ToString(ComputeLoadFactor(simulationSettings)); }
 
-		if (output.stepInformation >= 1) {
-			str += ", timeToGo = " + EXUstd::ToString(timeToGo) + ", tCPU=" + EXUstd::ToString(tCPU);
+		//output.stepInformation: add up the following binary flags : 
+
+		if (output.stepInformation & StepInfo::stepSize) {
+			str += ", dt = " + SolverTimeToString(it.currentStepSize);
 		}
-		if (output.stepInformation >= 2 && it.currentStepIndex != 0) {
-			str += " sec, Nit/step = " + EXUstd::ToString(it.newtonStepsCount / (Real)(it.currentStepIndex));
+
+		if (output.stepInformation & StepInfo::timeToGo) {
+			str += ", timeToGo = " + SolverTimeToString(timeToGo);
 		}
-		if (output.stepInformation >= 3 && it.currentStepIndex != 0) {
-			str += " Dit/step = " + EXUstd::ToString(it.discontinuousIterationsCount / (Real)(it.currentStepIndex)) +
-				" jac/step = " + EXUstd::ToString(it.newtonJacobiCount / (Real)(it.currentStepIndex));
+		if (output.stepInformation & StepInfo::CPUtimeSpent) {
+			str += ", tCPU=" + SolverTimeToString(tCPU - output.cpuStartTime);
+		}
+		Index stepsSinceLastOutput = it.currentStepIndex - output.lastVerboseStepIndex;
+		Index newtonStepsSinceLastOutput = it.newtonStepsCount - output.lastNewtonStepsCount;
+		Index newtonJacobiSinceLastOutput = it.newtonJacobiCount - output.lastNewtonJacobiCount;
+		Index discItSinceLastOutput = it.discontinuousIterationsCount - output.lastDiscontinuousIterationsCount;
+
+		output.lastVerboseStepIndex = it.currentStepIndex;
+		output.lastNewtonStepsCount = it.newtonStepsCount;
+		output.lastNewtonJacobiCount = it.newtonJacobiCount;
+		output.lastDiscontinuousIterationsCount = it.discontinuousIterationsCount;
+
+		if ((output.stepInformation & StepInfo::newtonIterations) && stepsSinceLastOutput != 0) {
+			str += ", Nit/step = " + EXUstd::ToString(newtonStepsSinceLastOutput / (Real)(stepsSinceLastOutput));
+		}
+		if ((output.stepInformation & StepInfo::newtonJacobians) && stepsSinceLastOutput != 0) {
+			str += ", jac/step = " + EXUstd::ToString(newtonJacobiSinceLastOutput / (Real)(stepsSinceLastOutput));
+		}
+		if ((output.stepInformation & StepInfo::discIterations) && stepsSinceLastOutput != 0) {
+			str += ", Dit/step = " + EXUstd::ToString(discItSinceLastOutput / (Real)(stepsSinceLastOutput));
 		}
 		str += "\n";
 		if (printConsole) { pout << str; }
@@ -1061,13 +1162,16 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 	conv.contractivity = 0;							//contractivity = geometric decay of error in every step
 	bool modifiedNewtonRestarted = false;			//flag, which signals that modified Newton method has already been restarted
 	bool fullNewtonRequested = !newton.useModifiedNewton; //in every step, the modified Newton method can switch to full Newton's method
-	bool stopNewton = false;						//flag which tells that Newton shall be stopped (Jacobian singular, full Newton not converged, ?)
+	conv.stopNewton = false;						//flag which tells that Newton shall be stopped (Jacobian singular, full Newton not converged, ?)
 	//conv.errorCoordinateFactor = 1.;				//2021-02-06: removed, because is treated in InitializeSolverData(...)
+
+
+	bool addRestartNewtonStep = false; //request additional Newton step after restart (reduces disturbances due to algorithmic accelerations)
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//Newton iterations
 	while (!conv.linearSolverFailed && !conv.newtonConverged && 
-		!stopNewton && it.newtonSteps < newton.maxIterations)
+		!conv.stopNewton && it.newtonSteps < newton.maxIterations)
 	{
 		if (data.nSys > 200) { 	DoIdleOperations(computationalSystem); } //do this task regularly, specifically in large scale systems
 
@@ -1119,7 +1223,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 				conv.linearSolverFailed = true;
 				conv.linearSolverCausingRow = factorizeOutput;
 				SysError(s); //this error might not be recoverable
-				stopNewton = true;
+				conv.stopNewton = true;
 			}
 			//STOPGLOBALTIMER(TSfactorize);
 			STOPTIMER(timer.factorization);
@@ -1149,11 +1253,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 			//++++++++++++++++++++++++++++++++++++++++++
 			//compute residual from static step increment or from integration formula:
 			conv.residual = ComputeNewtonResidual(computationalSystem, simulationSettings); 
-			//2021-02-06: computation of residual norm moved computation of conv.residual to ComputeNewtonResidual(..); OLDE code:
-			//if (newton.newtonResidualMode == 0) 
-			//	{conv.residual = data.systemResidual.GetL2Norm() / conv.errorCoordinateFactor;}
-			//else
-			//	{conv.residual = newtonSolutionODE2.GetL2Norm() / conv.errorCoordinateFactor; } //increment of newton ODE2 coordinates used to determine error
+
 			if (newton.newtonResidualMode == 1) //special case, not treated in ComputeNewtonResidual
 			{
 				conv.residual = (newtonSolutionODE2.GetL2Norm() + newtonSolutionODE1.GetL2Norm()) / conv.errorCoordinateFactor; //increment of newton ODE2/ODE1 coordinates used to determine error
@@ -1206,8 +1306,14 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 				if (IsVerbose(2)) { Verbose(2, "  Newton convergence reached with absolute error = " + EXUstd::ToString(conv.residual) + "\n"); }
 			}
 
-			if (!conv.newtonConverged)
+			if (addRestartNewtonStep && conv.newtonConverged)
 			{
+				addRestartNewtonStep = false; //additional iteration done!
+				conv.newtonConverged = false; //do another iteration!
+			}
+			else if (!conv.newtonConverged)
+			{
+				addRestartNewtonStep = false;
 				Real normU = solutionODE2.GetL2NormSquared();
 				Real normV = 0;
 				if (!IsStaticSolver()) { normV = solutionODE2_t.GetL2NormSquared(); }
@@ -1221,7 +1327,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 				{
 					if (fullNewtonRequested)
 					{
-						stopNewton = true;
+						conv.stopNewton = true;
 						if (IsVerboseCheck(1)) { VerboseWrite(1, "  solution did not converge with full Newton\n"); }
 						if (IsVerbose(4))
 						{
@@ -1276,7 +1382,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 						if (IsVerbose(2)) { Verbose(2, "    ... switch to full Newton due to repeated bad contractivity\n"); }
 					}
 
-					if (!stopNewton && (conv.newtonSolutionDiverged || conv.contractivity > 2 || fullNewtonRequested))  //this might indicate divergence ==> restart Newton if modified newton is used
+					if (!conv.stopNewton && (conv.newtonSolutionDiverged || conv.contractivity > 2 || fullNewtonRequested))  //this might indicate divergence ==> restart Newton if modified newton is used
 					{
 						modifiedNewtonRestarted = true;
 						conv.jacobianUpdateRequested = true;
@@ -1311,6 +1417,8 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 						ComputeNewtonUpdate(computationalSystem, simulationSettings, true); //better initial guess for Newton
 						ComputeNewtonResidual(computationalSystem, simulationSettings);
 
+						addRestartNewtonStep = true; //request additional Newton step after restart (request update of jacobian or switch to full Newton)
+
 						if (IsVerbose(2) && !conv.newtonSolutionDiverged) { Verbose(2, "    ... Newton restarted due to bad contractivity, divergence or iterations count\n"); }
 					}
 				} //contractivity check
@@ -1319,9 +1427,9 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 	}//Newton iteration
 	//double duration = EXUstd::GetTimeInSeconds() - output.cpuStartTime;
 
-	if (stopNewton || !conv.newtonConverged)
+	if (conv.stopNewton || !conv.newtonConverged)
 	{
-		if (IsVerboseCheck(1)) {
+		if ((IsVerboseCheck(1) && (output.stepInformation&StepInfo::stepReductionWarn)) || IsVerboseCheck(2)) {
 			STDstring str = "  Newton (time/load step #" + EXUstd::ToString(it.currentStepIndex) +
 				"): convergence failed after " + EXUstd::ToString(it.newtonSteps) +
 				" iterations; relative error = " + EXUstd::ToString(conv.residual / initialResidual);
@@ -1337,7 +1445,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 			" steps; relative error = " + EXUstd::ToString(conv.residual / initialResidual) + "\n"); }
 	}
 
-	return !(stopNewton || !conv.newtonConverged); //return success (true) or fail (false)
+	return !(conv.stopNewton || !conv.newtonConverged); //return success (true) or fail (false)
 }
 
 
@@ -1345,9 +1453,9 @@ Real CSolverBase::PostNewton(CSystem& computationalSystem, const SimulationSetti
 {
 	Real discontinuousError = 0;	
 	it.recommendedStepSize = -1;
-	STARTTIMER(timer.python);
 	if (computationalSystem.GetPythonUserFunctions().postNewtonFunction)
 	{
+		STARTTIMER(timer.python);
 		StdVector2D rv = {0,0};
 		UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
@@ -1359,8 +1467,8 @@ Real CSolverBase::PostNewton(CSystem& computationalSystem, const SimulationSetti
 		{
 			it.recommendedStepSize = rv[1];
 		}
+		STOPTIMER(timer.python);
 	}
-	STOPTIMER(timer.python);
 
 	discontinuousError += computationalSystem.PostNewtonStep(data.tempCompDataArray, it.recommendedStepSize);
 
@@ -1374,6 +1482,30 @@ Real CSolverBase::PostNewton(CSystem& computationalSystem, const SimulationSetti
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+STDstring CSolverBase::GetSolutionFileName(const SimulationSettings& simulationSettings)
+{
+	STDstring filename = simulationSettings.solutionSettings.coordinatesSolutionFileName;
+
+	//check if file ending is provided (does not check if the dot appears somewhere in between!)
+	if (filename.find(".") == std::string::npos)
+	{
+		if (simulationSettings.solutionSettings.binarySolutionFile)
+		{
+			filename += ".sol";
+		}
+		else
+		{
+			filename += ".txt";
+		}
+	}
+
+	//Index len = filename.size();
+	//if (len > 3)
+	//{
+	//	STDstring ending = filename.substr((size_t)(len - 3), 3);
+	//}
+	return filename;
+}
 
 
 //! write solution file header commonly for static and dynamic solvers
@@ -1407,32 +1539,96 @@ void CSolverBase::WriteSolutionFileHeader(CSystem& computationalSystem, const Si
 
 	if (solutionSettings.writeFileHeader)
 	{
-		solFile << "#Exudyn " << GetSolverName() << " ";
-		if (isStatic) { solFile << "static "; }
-		solFile << "solver solution file\n";
-		solFile << "#simulation started=" << EXUstd::GetDateTimeString() << "\n";
-		solFile << "#columns contain: time, ODE2 displacements";
-		if (solutionSettings.exportVelocities) { solFile << ", ODE2 velocities"; }
-		if (solutionSettings.exportAccelerations) { solFile << ", ODE2 accelerations"; }
-		if (nODE1) { solFile << ", ODE1 coordinates"; } //currently not available, but for future solFile structure necessary!
-		if (nVel1) { solFile << ", ODE1 velocities"; }
-		if (solutionSettings.exportAlgebraicCoordinates) { solFile << ", AE coordinates"; }
-		if (solutionSettings.exportDataCoordinates) { solFile << ", ODE2 velocities"; }
-		solFile << "\n";
-
-		solFile << "#number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [" <<
-			nODE2 << "," << nODE1 << "," << nAE << "," << nData << "]\n"; //this will allow to know the system information, independently of coordinates written
-		solFile << "#number of written coordinates [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = [" << //these are the exported coordinates line-by-line
-			nODE2 << "," << nVel2 << "," << nAcc2 << "," << nODE1 << "," << nVel1 << "," << nAEexported << "," << nDataExported << "]\n"; //python convert line with v=eval(line.split('=')[1])
-
-		solFile << "#total columns exported  (excl. time) = " << nODE2 + nVel2 + nAcc2 + nODE1 + nVel1 + nAEexported + nDataExported << "\n";
-		if (!isStatic) { solFile << "#number of time steps (planned) = " << timeint.numberOfSteps << "\n"; }
-		else { solFile << "#number of load steps (planned) = " << staticSolver.numberOfLoadSteps << "\n"; }
-		solFile << "#\n"; //empty line for extension ...
-
-		if (solutionSettings.solutionInformation.length())
+		Index totalCoordinates = nODE2 + nVel2 + nAcc2 + nODE1 + nVel1 + nAEexported + nDataExported;
+		if (!solutionSettings.binarySolutionFile)
 		{
-			solFile << "#solution information = " << solutionSettings.solutionInformation << "\n";
+			solFile << "#Exudyn " << GetSolverName() << " ";
+			if (isStatic) { solFile << "static "; }
+			solFile << "solver solution file\n";
+			solFile << "#simulation started=" << EXUstd::GetDateTimeString() << "\n";
+			solFile << "#columns contain: time, ODE2 displacements";
+			if (solutionSettings.exportVelocities) { solFile << ", ODE2 velocities"; }
+			if (solutionSettings.exportAccelerations) { solFile << ", ODE2 accelerations"; }
+			if (nODE1) { solFile << ", ODE1 coordinates"; } //currently not available, but for future solFile structure necessary!
+			if (nVel1) { solFile << ", ODE1 velocities"; }
+			if (solutionSettings.exportAlgebraicCoordinates) { solFile << ", AE coordinates"; }
+			if (solutionSettings.exportDataCoordinates) { solFile << ", ODE2 velocities"; }
+			solFile << "\n";
+
+			solFile << "#number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [" <<
+				nODE2 << "," << nODE1 << "," << nAE << "," << nData << "]\n"; //this will allow to know the system information, independently of coordinates written
+			solFile << "#number of written coordinates [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = [" << //these are the exported coordinates line-by-line
+				nODE2 << "," << nVel2 << "," << nAcc2 << "," << nODE1 << "," << nVel1 << "," << nAEexported << "," << nDataExported << "]\n"; //python convert line with v=eval(line.split('=')[1])
+
+			solFile << "#total columns exported  (excl. time) = " << totalCoordinates << "\n";
+			if (!isStatic) { solFile << "#number of time steps (planned) = " << timeint.numberOfSteps << "\n"; }
+			else { solFile << "#number of load steps (planned) = " << staticSolver.numberOfLoadSteps << "\n"; }
+
+			solFile << "#Exudyn version = " << EXUstd::exudynVersion << "\n";
+			solFile << "#\n"; //empty line for extension ...
+
+			if (solutionSettings.solutionInformation.length())
+			{
+				solFile << "#solution information = " << solutionSettings.solutionInformation << "\n";
+			}
+		}
+		else
+		{
+			const ExuFile::BinaryFileSettings& bfs = file.binaryFileSettings;
+			ExuFile::BinaryWriteHeader(solFile, bfs);
+
+			//write version at beginning in order to determine if there is a change in solution files (order of data, ...)
+			ExuFile::BinaryWrite(EXUstd::exudynVersion, solFile, bfs);
+			ExuFile::BinaryWrite(STDstring("Mode0000"), solFile, bfs); //change this in future to add new features
+
+			STDstring str = "Exudyn " + GetSolverName() + " ";
+			if (isStatic) { str+="static "; }
+			str+="solver solution file";
+			ExuFile::BinaryWrite(str, solFile, bfs);
+
+			//solFile << "#simulation started=" << EXUstd::GetDateTimeString() << "\n";
+			ExuFile::BinaryWrite(EXUstd::GetDateTimeString(), solFile, bfs);
+
+			//not needed in binary format:
+			//solFile << "#columns contain: time, ODE2 displacements";
+			//if (solutionSettings.exportVelocities) { solFile << ", ODE2 velocities"; }
+			//if (solutionSettings.exportAccelerations) { solFile << ", ODE2 accelerations"; }
+			//if (nODE1) { solFile << ", ODE1 coordinates"; } //currently not available, but for future solFile structure necessary!
+			//if (nVel1) { solFile << ", ODE1 velocities"; }
+			//if (solutionSettings.exportAlgebraicCoordinates) { solFile << ", AE coordinates"; }
+			//if (solutionSettings.exportDataCoordinates) { solFile << ", ODE2 velocities"; }
+			//solFile << "\n";
+
+			//solFile << "#number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [" <<
+			//	nODE2 << "," << nODE1 << "," << nAE << "," << nData << "]\n"; //this will allow to know the system information, independently of coordinates written
+			ArrayIndex sysCoords({nODE2, nODE1, nAE, nData});
+			ExuFile::BinaryWrite(sysCoords, solFile, bfs);
+
+			//solFile << "#number of written coordinates [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = [" << //these are the exported coordinates line-by-line
+			//	nODE2 << "," << nVel2 << "," << nAcc2 << "," << nODE1 << "," << nVel1 << "," << nAEexported << "," << nDataExported << "]\n"; //python convert line with v=eval(line.split('=')[1])
+			ArrayIndex writtenCoords({ nODE2, nVel2, nAcc2, nODE1, nVel1, nAEexported, nDataExported });
+			ExuFile::BinaryWrite(writtenCoords, solFile, bfs);
+
+			//solFile << "#total columns exported  (excl. time) = " << totalCoordinates << "\n";
+			ExuFile::BinaryWrite(totalCoordinates, solFile, bfs);
+
+			Index numberOfSteps;
+			if (!isStatic) { numberOfSteps = timeint.numberOfSteps; }
+			else { numberOfSteps = staticSolver.numberOfLoadSteps; }
+			ExuFile::BinaryWrite(numberOfSteps, solFile, bfs);
+
+			//solFile << "#Exudyn version = " << EXUstd::exudynVersion << "\n";
+			//written at beginning
+
+			//solFile << "#\n"; //empty line for extension ...
+
+			//solution information: always export string, even if has zero length:
+			ExuFile::BinaryWrite(solutionSettings.solutionInformation, solFile, bfs);
+
+			//add some checksum ...
+			ExuFile::BinaryWrite(STDstring("EndOfHeader"), solFile, bfs);
+			//next byte starts with solution
+
 		}
 	}
 
@@ -1463,49 +1659,91 @@ void CSolverBase::WriteCoordinatesToFile(const CSystem& computationalSystem, con
 
 		output.lastSolutionWritten += solutionSettings.solutionWritePeriod;
 		output.lastSolutionWritten = EXUstd::Maximum(output.lastSolutionWritten, t); //never accept smaller values ==> for adaptive solver
-		solFile << t;
 
-		for (Index k = 0; k < solutionU.NumberOfItems(); k++) {
-			solFile << "," << solutionU[k];
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//precompute size for binary output (allows to swap through data faster line-by-line?)
+		Index nValues = solutionU.NumberOfItems() + solutionODE1.NumberOfItems();
+		Index nVectors = 2; //number of vectors, giving amount of ints added for vectors
+		if (solutionSettings.exportVelocities && !isStatic) { nValues += solutionV.NumberOfItems(); nVectors++; }
+		if (solutionSettings.exportAccelerations && !isStatic) {nValues += solutionA.NumberOfItems(); nVectors++; }
+		if (solutionSettings.exportODE1Velocities && !isStatic){nValues += solutionODE1_t.NumberOfItems(); nVectors++;}
+		if (solutionSettings.exportAlgebraicCoordinates){nValues += solutionLambda.NumberOfItems(); nVectors++; }
+		if (solutionSettings.exportDataCoordinates){nValues += solutionData.NumberOfItems(); nVectors++; }
+
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//write data (combined ASCII / binary mode):
+		bool isBinary = solutionSettings.binarySolutionFile;
+		const ExuFile::BinaryFileSettings& bfs = file.binaryFileSettings;
+
+		if (isBinary) //add size, only in binary mode
+		{
+			//including 1 real for time+1 Index for nVectors, but excluding bytes for this Index
+			//Index lineSizeBytes = nVectors * bfs.indexSize + nValues * bfs.realSize + bfs.indexSize + bfs.realSize;
+			//ExuFile::BinaryWrite(lineSizeBytes, solFile, bfs); //size of line, for fast skipping of solution line 
+			//ExuFile::BinaryWrite(nVectors, solFile, bfs); //number of vectors could vary if needed
+			ExuFile::BinaryWrite(nValues+1, solFile, bfs); //total number of values including time; indicating last line with -1
 		}
+
+
+		ExuFile::Write(t, solFile, bfs, isBinary);
+		//solFile << t;
+
+		ExuFile::Write(solutionU, solFile, bfs, isBinary, false);
+
 		if (solutionSettings.exportVelocities && !isStatic)
 		{
-			for (Index k = 0; k < solutionV.NumberOfItems(); k++) {
-				solFile << "," << solutionV[k];
-			}
+			ExuFile::Write(solutionV, solFile, bfs, isBinary, false);
+			//for (Index k = 0; k < solutionV.NumberOfItems(); k++) {
+			//	solFile << "," << solutionV[k];
+			//}
 		}
 		if (solutionSettings.exportAccelerations && !isStatic)
 		{
-			for (Index k = 0; k < solutionA.NumberOfItems(); k++) {
-				solFile << "," << solutionA[k];
-			}
+			ExuFile::Write(solutionA, solFile, bfs, isBinary, false);
+			//for (Index k = 0; k < solutionA.NumberOfItems(); k++) {
+			//	solFile << "," << solutionA[k];
+			//}
 		}
 		//++++++++++++++++++++++++++++++++++++
 		//newly added ODE1 coordinates:
-		for (Index k = 0; k < solutionODE1.NumberOfItems(); k++) {
-			solFile << "," << solutionODE1[k];
-		}
+		nValues += solutionODE1.NumberOfItems();
+		ExuFile::Write(solutionODE1, solFile, bfs, isBinary, false);
+		//for (Index k = 0; k < solutionODE1.NumberOfItems(); k++) {
+		//	solFile << "," << solutionODE1[k];
+		//}
 		if (solutionSettings.exportODE1Velocities && !isStatic)
 		{
-			for (Index k = 0; k < solutionODE1_t.NumberOfItems(); k++) {
-				solFile << "," << solutionODE1_t[k];
-			}
+			ExuFile::Write(solutionODE1_t, solFile, bfs, isBinary, false);
+			//for (Index k = 0; k < solutionODE1_t.NumberOfItems(); k++) {
+			//	solFile << "," << solutionODE1_t[k];
+			//}
 		}
 		//++++++++++++++++++++++++++++++++++++
 		//algebraic and data coordinates:
 		if (solutionSettings.exportAlgebraicCoordinates)
 		{
-			for (Index k = 0; k < solutionLambda.NumberOfItems(); k++) {
-				solFile << "," << solutionLambda[k];
-			}
+			ExuFile::Write(solutionLambda, solFile, bfs, isBinary, false);
+			//for (Index k = 0; k < solutionLambda.NumberOfItems(); k++) {
+			//	solFile << "," << solutionLambda[k];
+			//}
 		}
 		if (solutionSettings.exportDataCoordinates)
 		{
-			for (Index k = 0; k < solutionData.NumberOfItems(); k++) {
-				solFile << "," << solutionData[k];
-			}
+			ExuFile::Write(solutionData, solFile, bfs, isBinary, false);
+			//for (Index k = 0; k < solutionData.NumberOfItems(); k++) {
+			//	solFile << "," << solutionData[k];
+			//}
 		}
-		solFile << "\n";
+		if (!isBinary)
+		{
+			solFile << "\n";
+		}
+
+		//+++++++++++++++++++++++++++++
+		if (solutionSettings.flushFilesImmediately || nValues >= solutionSettings.flushFilesDOF)
+		{
+			solFile.flush();
+		}
 	}
 }
 
@@ -1540,6 +1778,7 @@ void CSolverBase::WriteSensorsFileHeader(CSystem& computationalSystem, const Sim
 			item->GetSensorValues(computationalSystem.GetSystemData(), output.sensorValuesTemp, ConfigurationType::Current); //only for checking size of sensor output, computed values not used
 
 			(*sFile) << "#number of sensor values = " << output.sensorValuesTemp.NumberOfItems() << "\n";
+			(*sFile) << "#Exudyn version = " << EXUstd::exudynVersion << "\n";
 			(*sFile) << "#\n";
 		}
 		else
@@ -1559,8 +1798,6 @@ void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const S
 
 	if (t == startTime || (t - output.lastSensorsWritten) >= -1e-10) //1e-10 because of roundoff errors
 	{
-
-		//std::ofstream& solFile = file.solutionFile;
 		const SolutionSettings& solutionSettings = simulationSettings.solutionSettings;
 
 		output.lastSensorsWritten += solutionSettings.sensorsWritePeriod;
@@ -1569,6 +1806,7 @@ void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const S
 		Index cnt = 0;
 		for (auto item : computationalSystem.GetSystemData().GetCSensors())
 		{
+			bool sensorValuesCalled = false;
 			if ((Index)file.sensorFileList.size() >= cnt && file.sensorFileList[cnt] != nullptr)
 			{
 				std::ofstream* sFile = file.sensorFileList[cnt];
@@ -1582,8 +1820,41 @@ void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const S
 					(*sFile) << "," << value;
 				}
 				(*sFile) << "\n";
+				if (solutionSettings.flushFilesImmediately)
+				{
+					sFile->flush();
+				}
+				sensorValuesCalled = true;
 			}
-			else
+			if (item->GetStoreInternalFlag())
+			{
+				if (!sensorValuesCalled) //avoid second call to computation of sensor values ...
+				{
+					item->GetSensorValues(computationalSystem.GetSystemData(), output.sensorValuesTemp, ConfigurationType::Current);
+				}
+				Index n = output.sensorValuesTemp.NumberOfItems();
+				output.sensorValuesTemp2.SetNumberOfItems(n + 1);
+				output.sensorValuesTemp2[0] = t;
+				for (Index i = 0; i < n; i++)
+				{
+					output.sensorValuesTemp2[i + 1] = output.sensorValuesTemp[i];
+				}
+				
+				//this marks that new data is stored ...
+				if (item->GetInternalStorage().NumberOfRows() != 0)
+				{
+					if (output.sensorValuesTemp2.NumberOfItems() != item->GetInternalStorage().NumberOfColumns())
+					{
+						STDstring msg = "CSolverBase::WriteSensorsToFile: storeInternal == True : seems that number of output values of sensor (sensor number ";
+						msg += EXUstd::ToString(cnt) + ") changed; consider storeInternal == False for this sensor and write to file";
+						PyError(msg, file.solverFile);
+					}
+				}
+				item->GetInternalStorage().AppendRow(output.sensorValuesTemp2);
+				sensorValuesCalled = true;
+
+			}
+			if (!sensorValuesCalled)
 			{
 				//evaluate sensors, especially for UserSensors, which may do some tricky (recording) things internally, but which are not written
 				item->GetSensorValues(computationalSystem.GetSystemData(), output.sensorValuesTemp, ConfigurationType::Current); //only for checking size of sensor output, computed values not used

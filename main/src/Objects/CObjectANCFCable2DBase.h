@@ -40,7 +40,10 @@ public:
 		CHECKandTHROWcond(false); }
 
 	//! access to parameters.useReducedOrderIntegration of derived class
-	virtual bool UseReducedOrderIntegration() const { return false; }
+	virtual Index UseReducedOrderIntegration() const { return 0; }
+
+	//! access to parameters.strainIsRelativeToReference of derived class
+	virtual Real StrainIsRelativeToReference() const { return 0.; }
 
 	//!  Computational function: compute mass matrix
 	virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const override;
@@ -108,10 +111,13 @@ public:
     //!  return the (global) position of "localPosition" according to configuration type
     virtual Vector3D GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //!  return the (global) velocity of "localPosition" according to configuration type
-    virtual Vector3D GetVelocity(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
+	//!  return the (global) velocity of "localPosition" according to configuration type
+	virtual Vector3D GetVelocity(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //!  return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
+	//!  return the (global) acceleration of "localPosition" according to configuration type
+	virtual Vector3D GetAcceleration(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const;
+
+	//!  return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
     virtual Matrix3D GetRotationMatrix(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
 	//!  return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
@@ -141,6 +147,53 @@ public:
 
     //!  get second derivative of compressed shape function vector \f$\frac{\partial^2 \Sm_v}{\partial^2 x}\f$, depending local position \f$x \in [0,L]\f$
     static Vector4D ComputeShapeFunctions_xx(Real x, Real L);
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//new functions needed for contact:
+
+	//! compute polynomial coefficients for 3rd order ANCF polynomial; store in Vector cx and cy
+	//! the position vector is then defined as: r(x) = Vector2D({ cx[0] + cx[1] * x + cx[2] * x^2 + cx[3] * x^3, cy[0] + cy[1] * x + cy[2] * x^2 + cy[3] * x^3 })
+	template<class TCoordinateVector>
+	static void ComputePolynomialCoeffs(const TCoordinateVector& q, Real L, ConstSizeVector<4>& cx, ConstSizeVector<4>& cy)
+	{
+		Real divL = 1 / L;
+		Real divL2 = EXUstd::Square(divL);
+		Real divL3 = divL * divL2;
+
+		cx[0] = q[0];
+		cx[1] = q[2];
+		cx[2] = -((3 * q[0] - 3 * q[4] + 2 * L* q[2] + L * q[6]) * divL2);
+		cx[3] = (2 * q[0] - 2 * q[4] + L * (q[2] + q[6])) * divL3;
+
+		cy[0] = q[1];
+		cy[1] = q[3];
+		cy[2] = -((3 * q[1] - 3 * q[5] + 2 * L* q[3] + L * q[7]) * divL2);
+		cy[3] = (2 * q[1] - 2 * q[5] + L * (q[3] + q[7])) * divL3;
+	}
+
+	//! compute derivative of polynomial coefficients for 3rd order ANCF polynomials; store in Vectors cx and cy
+	template<class TCoordinateVector>
+	static void ComputePolynomialCoeffs_x(const TCoordinateVector& q, Real L,
+		ConstSizeVector<3>& cx, ConstSizeVector<3>& cy)
+	{
+		Real divL = 1 / L;
+		Real divL2 = EXUstd::Square(divL);
+		Real divL3 = divL * divL2;
+
+		cx[0] = q[2];
+		cy[0] = q[3];
+
+		cx[1] = -((2 * (3 * q[0] - 3 * q[4] + L * (2 * q[2] + q[6]))) * divL2);
+		cy[1] = -((2 * (3 * q[1] - 3 * q[5] + L * (2 * q[3] + q[7]))) * divL2);
+
+		cx[2] = (6 * q[0] - 6 * q[4] + 3 * L* (q[2] + q[6])) * divL3;
+		cy[2] = (6 * q[1] - 6 * q[5] + 3 * L* (q[3] + q[7])) * divL3;
+
+	}
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//!  return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
+	virtual Vector3D GetAngularAcceleration(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const;
 
     //!  Compute node coordinates in current configuration including reference coordinates
     void ComputeCurrentNodeCoordinates(ConstSizeVector<4>& qNode0, ConstSizeVector<4>& qNode1) const;

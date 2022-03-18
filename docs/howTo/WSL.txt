@@ -53,6 +53,13 @@ wsl --setdefault Ubuntu-18.04
 #run unix command from powershell, runs in local (windows) directory:
 wsl python3 test.py
 
+#+++++++++++++++++++++++++++
+#PATH (set always when logged in):
+#extend  ~/.bashrc e.g. with  nano ~/.bashrc and at at the end:
+export PATH="$PATH:~johannes/additionalPath"
+#+press CTRL O, ENTER, CTRL X
+
+#+++++++++++++++++++++++++++
 #build linux wheel with WSL:
 sudo python3 setup.py bdist_wheel
 #==> if [Errno 13] Permission denied: 'build/bdist.linux-x86_64/wheel/exudyn... occures:

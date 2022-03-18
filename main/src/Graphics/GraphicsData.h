@@ -221,6 +221,38 @@ public:
 	}
 
 	//! create a triangle with local colors; normals not considered in this call!
+	Index AddTriangle(const std::array<Float3, 3>& points, const std::array<Float4, 3>& colors,
+		Index itemID)
+	{
+		GLTriangle trig;
+		trig.itemID = itemID;
+
+		for (Index i = 0; i < (Index)points.size(); i++)
+		{
+			trig.points[i] = points[i];
+			trig.normals[i] = Float3({ 0.,0.,0. });
+			trig.colors[i] = colors[i];
+		}
+		return glTriangles.Append(trig);
+	}
+
+	//! create a triangle with local colors; normals not considered in this call!
+	Index AddTriangle(const std::array<Float3, 3>& points, const std::array<Float3, 3>& normals, const std::array<Float4, 3>& colors,
+		Index itemID)
+	{
+		GLTriangle trig;
+		trig.itemID = itemID;
+
+		for (Index i = 0; i < (Index)points.size(); i++)
+		{
+			trig.points[i] = points[i];
+			trig.normals[i] = normals[i];
+			trig.colors[i] = colors[i];
+		}
+		return glTriangles.Append(trig);
+	}
+
+	//! create a triangle with local colors; normals not considered in this call!
 	Index AddTriangle(const std::array<Vector3D, 3>& points, const std::array<Float4, 3>& colors, 
 		Index itemID)
 	{

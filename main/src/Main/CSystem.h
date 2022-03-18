@@ -182,6 +182,9 @@ public:
 	//! build ltg-coordinate lists for objects (used to build global ODE2LHS, MassMatrix, etc. vectors and matrices)
 	void AssembleLTGLists(const MainSystem& mainSystem);
 
+	//! initialize some system data, e.g., generalContact objects (searchTree, etc.)
+	void AssembleSystemInitialize(const MainSystem& mainSystem);
+
 	//! precompute item lists (special lists for constraints, connectors, etc.)
 	void PreComputeItemLists();
 

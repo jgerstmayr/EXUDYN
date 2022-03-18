@@ -38,6 +38,15 @@ Index CObjectRigidBody::GetAlgebraicEquationsSize() const
 }
 
 
+bool CObjectRigidBody::HasConstantMassMatrix() const
+{
+	if (EXUstd::IsOfType(((CNodeRigidBody*)GetCNode(0))->GetType(), Node::RotationRotationVector) &&
+		(parameters.physicsCenterOfMass == 0.))
+	{
+		return true;
+	}
+	return false;
+}
 
 //! Computational function: compute mass matrix
 void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
@@ -268,7 +277,10 @@ void CObjectRigidBody::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Resizab
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
 AccessFunctionType CObjectRigidBody::GetAccessFunctionTypes() const
 {
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::DisplacementMassIntegral_q);
+	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + 
+		(Index)AccessFunctionType::AngularVelocity_qt +
+		(Index)AccessFunctionType::JacobianTtimesVector_q + 
+		(Index)AccessFunctionType::DisplacementMassIntegral_q);
 }
 
 //! provide Jacobian at localPosition in "value" according to object access
@@ -328,6 +340,77 @@ void CObjectRigidBody::GetAccessFunctionBody(AccessFunctionType accessType, cons
 		}
 		break;
 	}
+	case AccessFunctionType::JacobianTtimesVector_q: //jacobian w.r.t. global position and global orientation; HACK: Matrix value(0,0:6) contains 3D force + 3D torque
+	{
+		//value(0,0:6) must always be set prior to this call!
+		Vector3D force({ value(0,0), value(0,1), value(0,2) });
+		Vector3D torque({ value(0,3), value(0,4), value(0,5) }); 
+
+		value.SetNumberOfRowsAndColumns(GetODE2Size(), GetODE2Size()); //6x6 or 7x7
+		value.SetAll(0.);
+		//d(A*uLocal) = -A * uLocalTilde * Glocal = -A * uLocalTilde * A^T * G = -uTilde * G
+		//d(A^T*f) = A^T * fTilde * G
+
+		//v=[f,t] (force f/torque t)
+		//J^T*v = 
+		//[0_{3x3} -A*(\tilde uLocal)*Glocal]^T * [f] = [0_{3x3}                      0_{3x3}] * [f] = 
+		//[0_{3x3} G                        ]     [t] = [Glocal^T*(\tilde uLocal)*A^T   G^T    ] * [t]
+		//
+		//[0_{3} ]
+		//[Glocal^T*(\tilde uLocal)*A^T*f + G^T*t]
+		//
+		//d(J^T*v)/dq = 
+		//[0_{3x6} ]
+		//[0_{Rx3} Glocal^T*(\tilde uLocal)* A^T*fTilde*G +  dGlocalT{(\tilde uLocal)*A^T*f}dq                  + dGTtdq] //R=3 or 4
+		//
+
+		//Glocal^T*(\tilde uLocal)* A^T*fTilde*G:
+		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> G;
+		((CNodeRigidBody*)GetCNode(0))->GetG(G);
+		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
+		((CNodeRigidBody*)GetCNode(0))->GetGlocal(Glocal);
+		Matrix3D A = ((CNodeRigidBody*)GetCNode(0))->GetRotationMatrix();
+
+		ConstSizeMatrix<9> fTilde = RigidBodyMath::Vector2SkewMatrix(force);
+		ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix(localPosition);
+
+		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> temp; //temporary matrix during computation
+		EXUmath::MultMatrixMatrix(fTilde, G, temp);
+		EXUmath::MultMatrixMatrix(A.GetTransposed(), temp, G);
+		EXUmath::MultMatrixMatrix(uLocalTilde, G, temp);
+		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::maxRotationCoordinates> temp2; //temporary matrix during computation
+		EXUmath::MultMatrixTransposedMatrixTemplate< ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D>, 
+			ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D>, 
+			ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::maxRotationCoordinates>>(Glocal, temp, temp2);
+		//==>temp2 contains result, is always defined!
+
+
+		//dGlocalT{(\tilde uLocal)*A^T*f}dq:
+		Vector3D v = A.GetTransposed() * force;
+		v = localPosition.CrossProduct(v); //(\tilde uLocal)*A^T*f
+		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::maxRotationCoordinates> dGlocalTv_q;
+		((CNodeRigidBody*)GetCNode(0))->GetGlocalTv_q(v, dGlocalTv_q);
+
+		//dGTtdq:
+		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::maxRotationCoordinates> dGTv_q;
+		((CNodeRigidBody*)GetCNode(0))->GetGTv_q(torque, dGTv_q);
+
+		//pout << "  temp2      =" << temp2 << "\n";
+		//pout << "  dGlocalTv_q=" << dGlocalTv_q << "\n";
+		//pout << "  dGTv_q     =" << dGTv_q << "\n";
+
+		Index nRot = ((CNodeRigidBody*)GetCNode(0))->GetNumberOfRotationCoordinates();
+
+		for (Index i = 0; i < nRot; i++)
+		{
+			for (Index j = 0; j < nRot; j++)
+			{
+				value(nDisplacementCoordinates + i, nDisplacementCoordinates + j) = temp2(i, j) + dGlocalTv_q(i, j) + dGTv_q(i,j);
+			}
+		}
+
+		break;
+	}
 	case AccessFunctionType::DisplacementMassIntegral_q:
 	{
 
@@ -335,15 +418,6 @@ void CObjectRigidBody::GetAccessFunctionBody(AccessFunctionType accessType, cons
 
 		if (parameters.physicsCenterOfMass == 0.)
 		{
-			//value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
-			//for (Index i = 0; i < nDim3D; i++)
-			//{
-			//	for (Index j = 0; j < GetODE2Size(); j++)
-			//	{
-			//		if (i != j) { value(i, j) = 0.; }
-			//		else { value(i, j) = m; } //only diagonal 3x3 term!
-			//	}
-			//}
 			value.SetScalarMatrix(3, m); //no action on rotation parameters, not needed in CSystem.cpp implementation
 		}
 		else
@@ -394,6 +468,7 @@ void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, co
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(localPosition, configuration)); break;
 	case OutputVariableType::VelocityLocal: value.CopyFrom(GetRotationMatrix(localPosition, configuration).GetTransposed()*GetVelocity(localPosition, configuration)); break; //inefficient, but useful
 	case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(localPosition, configuration)); break;
+	case OutputVariableType::AccelerationLocal: value.CopyFrom(GetRotationMatrix(localPosition, configuration).GetTransposed()*GetAcceleration(localPosition, configuration)); break;
 
 	case OutputVariableType::Rotation: {
 		Matrix3D rotMat = GetRotationMatrix(localPosition, configuration);
@@ -404,6 +479,7 @@ void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, co
 	case OutputVariableType::AngularVelocity: value.CopyFrom(GetAngularVelocity(localPosition, configuration)); break;
 	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(GetAngularVelocityLocal(localPosition, configuration)); break;
 	case OutputVariableType::AngularAcceleration: value.CopyFrom(GetAngularAcceleration(localPosition, configuration)); break;
+	case OutputVariableType::AngularAccelerationLocal: value.CopyFrom(GetRotationMatrix(localPosition, configuration).GetTransposed()*GetAngularAcceleration(localPosition, configuration)); break;
 
 	case OutputVariableType::RotationMatrix: {
 		Matrix3D rot = GetRotationMatrix(localPosition, configuration);

@@ -12,8 +12,8 @@
 #
 # Notes: 	Some useful colors are defined, using RGBA (Red, Green, Blue and Alpha = opacity) channels
 #			in the range [0,1], e.g., red = [1,0,0,1].\\
-#			Available colors are: color4red, color4green, color4blue, color4cyan, color4magenta, color4yellow, color4lightred, color4lightgreen, color4steelblue, color4grey, color4darkgrey, color4lightgrey, color4white\\
-#			Additionally, a list of colors 'color4list' is available, which is intended to be used, e.g., for creating n bodies with different colors
+#			Available colors are: color4red, color4green, color4blue, color4cyan, color4magenta, color4yellow, color4orange, color4pink, color4lawngreen, color4violet, color4springgreen, color4dodgerblue, color4grey, color4darkgrey, color4lightgrey, color4lightred, color4lightgreen, color4steelblue, color4brown, color4black, color4darkgrey2, color4lightgrey2, color4white\\
+#			Additionally, a list of 16 colors 'color4list' is available, which is intended to be used, e.g., for creating n bodies with different colors
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 from exudyn.basicUtilities import *
@@ -25,31 +25,45 @@ import copy as copy #to be able to copy e.g. lists
 #import time        #AnimateSolution
 
 # color definitions
-color4red = [1,0,0,1]
-color4green = [0,1,0,1]
-color4blue = [0,0,1,1]
+color4red = [1.,0.,0.,1.]
+color4green = [0.,1.,0.,1.]
+color4blue = [0.,0.,1.,1.]
 
-color4cyan = [0,1,1,1]
-color4magenta = [1,0,1,1]
-color4yellow = [1,1,0,1]
+color4cyan = [0.,1.,1.,1.]
+color4magenta = [1.,0.,1.,1.]
+color4yellow = [1.,1.,0.,1.]
+
+color4orange = [1.,0.5,0.,1.]
+color4pink = [1.,0.,0.5,1.]
+color4lawngreen = [0.5,1.,0.,1.]
+
+color4springgreen = [0.,1.,0.5,1.]
+color4violet = [0.5,0.,1.,1.]
+color4dodgerblue = [0.,0.5,1.,1.]
+
 
 color4lightred = [0.9,0.4,0.4,1.]
-color4lightgreen = [0.3,0.9,0.3,1.]
+color4lightgreen = [0.4,0.9,0.4,1.]
 color4steelblue = [0.4,0.4,0.9,1.]
+color4brown = [0.65,0.2,0.2,1.]
 
-color4grey = [0.5,0.5,0.5,1.]
-
-color4darkgrey = [0.2,0.2,0.2,1.]
-color4darkgrey2 = [0.35,0.35,0.35,1.]
-color4lightgrey = [0.7,0.7,0.7,1.]
+color4black =      [0.,0.,0.,1.]
+color4darkgrey =   [0.2,0.2,0.2,1.]
+color4darkgrey2 =  [0.35,0.35,0.35,1.]
+color4grey =       [0.5,0.5,0.5,1.]
+color4lightgrey =  [0.7,0.7,0.7,1.]
 color4lightgrey2 = [0.85,0.85,0.85,1.]
-color4white = [1.,1.,1.,1.]
+color4white =      [1.,1.,1.,1.]
 
-#define a list of 4 colors for numbered colors
+#define a list of 16 colors for numbered colors
 color4list = [color4red, color4green, color4blue, 
               color4cyan, color4magenta, color4yellow,
-              color4lightred, color4lightgreen, color4steelblue, 
-              color4grey, color4darkgrey, color4lightgrey]
+              color4orange, color4pink, color4lawngreen,
+              color4violet, color4springgreen, color4dodgerblue,
+              color4grey, color4darkgrey, color4lightgrey,
+              #color4lightred, color4lightgreen, color4steelblue, 
+              color4brown]
+color4listSize = len(color4list) #maximum number of colors in color4list
 
 #**function: helper function to switch order of three items in a list; mostly used for reverting normals in triangles
 #**input: 3D vector as list or as np.array
@@ -60,6 +74,147 @@ def SwitchTripletOrder(vector):
     v[2] = v[1]
     v[1] = a
     return v
+
+#**function: compute normalized normal for 3 triangle points
+#**input: 3D vector as list or as np.array
+#**output: normal as np.array
+def ComputeTriangleNormal(p0,p1,p2):
+    v0 = np.array(p1) - np.array(p0)
+    v1 = np.array(p2) - np.array(p0)
+    # print(v0,v1)
+    n = np.cross(v0,v1)
+    ln = np.linalg.norm(n)
+    if ln != 0.:
+        n /= ln
+    return n
+
+#************************************************
+#**function: convert graphics data into list of points and list of triangle indices (triplets)
+#**input: g contains a GraphicsData with type TriangleList
+#**output: returns [points, triangles], with points as list of np.array with 3 floats per point and triangles as a list of np.array with 3 int per triangle (0-based indices to points)
+def GraphicsData2PointsAndTrigs(g):
+    if g['type'] == 'TriangleList':
+        nPoints=int(len(g['points'])/3)
+        points = [np.zeros(3)]*nPoints
+        for i in range(nPoints):
+            points[i] = np.array(g['points'][i*3:i*3+3])
+        
+        nTrigs=int(len(g['triangles'])/3)
+        triangles = [np.zeros(3, dtype=int)]*nTrigs
+        for i in range(nTrigs):
+            triangles[i] = np.array(g['triangles'][i*3:i*3+3], dtype=int)
+    else:
+        raise ValueError ('ERROR: GraphicsData2TrigsAndPoints(...) only takes GraphicsData of type TriangleList but found: '+gNew['type'] )
+
+    return [points, triangles]
+
+#**function: convert triangles and points as returned from GraphicsData2TrigsAndPoints(...) 
+#**input: 
+#  points: list of np.array with 3 floats per point 
+#  triangles: list of np.array with 3 int per triangle (0-based indices to triangles)
+#  color: provided as list of 4 RGBA values
+#**output: returns GraphicsData with type TriangleList
+def GraphicsDataFromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.]):
+    pointList = list(np.array(points).flatten())
+    triangleList = list(np.array(triangles).flatten())
+    colorList = color*int(len(pointList)/3)
+    data = {'type':'TriangleList', 
+            'colors': colorList, 
+            'points':pointList, 
+            'triangles':triangleList}
+    return data
+
+#************************************************
+#**function: refine triangle mesh; every triangle is subdivided into 4 triangles
+#**input:
+#  points: list of np.array with 3 floats per point 
+#  triangles: list of np.array with 3 int per triangle (0-based indices to triangles)
+#**output: returns [points2, triangles2] containing the refined mesh; if the original mesh is consistent, no points are duplicated; if the mesh is not consistent, some mesh points are duplicated!
+#**notes: becomes slow for meshes with more than 5000 points
+def RefineMesh(points, triangles):
+    # 2
+    # |\
+    # a c
+    # |  \
+    # 0-b-1
+    points2 = copy.deepcopy(points)
+    triangles2 = []
+    
+    #build point2trig list for efficiency, at most, per triangle 3 new points:
+    trigsPerPoint = [ [] for _ in range(len(points) + len(triangles)*3) ]
+    # for (ti, trig) in enumerate(triangles):
+    #     for i in trig:
+    #         trigsPerPoint[i] += [ti]
+
+    #print(trigsPerPoint)
+    pnew = [0,0,0] #a,b,c
+    for (ti, trig) in enumerate(triangles):
+        # print('process trig', ti)
+        for j in range(3):
+            pointNew = 0.5*(np.array(points[trig[j]])+np.array(points[trig[j-1]]))
+            found = -1
+            #search all points (SLOW):
+            # for (i, p) in enumerate(points2):
+            #     if np.linalg.norm(pointNew-p) <= 1e-12:
+            #         found = i
+            #go through all triangles at one point, if new (refined) trig exists, it contains the new point:
+            for (i, ti2) in enumerate(trigsPerPoint[trig[j]]):
+                # print('  i, ti2=', i, ti2)
+                for pi in triangles2[ti2]:
+                    if np.linalg.norm(pointNew-points2[pi]) <= 1e-12:
+                        found = pi
+
+            if found==-1:
+                pnew[j] = len(points2)
+                # print('add new point ', pnew[j])
+                points2 += [pointNew]
+            else:
+                pnew[j] = found
+        toff = len(triangles2)
+        triangles2 += [np.array([trig[0],pnew[1],pnew[0]],dtype=int)]
+        triangles2 += [np.array([trig[1],pnew[2],pnew[1]],dtype=int)]
+        triangles2 += [np.array([trig[2],pnew[0],pnew[2]],dtype=int)]
+        triangles2 += [np.array([pnew[0],pnew[1],pnew[2]],dtype=int)]
+        #add new triangles to trigsPerPoint:
+        for (ti, trig) in enumerate(triangles2[-4:]):
+            for i in trig:
+                trigsPerPoint[i] += [toff+ti]
+    # print('trigs per point=',trigsPerPoint)
+    return [points2, triangles2]
+
+#************************************************
+#**function: shrink mesh using triangle normals; every point is at least moved a distance 'distance' normal from boundary
+#**input:
+#  points: list of np.array with 3 floats per point 
+#  triangles: list of np.array with 3 int per triangle (0-based indices to triangles)
+#  distance: float value of minimum distance
+#**output: returns [points2, triangles2] containing the refined mesh; currently the points of the subdivided triangles are duplicated!
+#**notes: ONLY works for consistent meshes (no duplicated points!)
+def ShrinkMeshNormalToSurface(points, triangles, distance):
+    points2 = copy.deepcopy(points)
+    triangles2 = copy.deepcopy(triangles)
+    #disp = [np.zeros(3).copy()]*len(points2) #copy, otherwise linked!!!
+    disp = copy.deepcopy(points)
+    for i in range(len(points2)):
+        disp[i] *= 0.
+    
+    for trig in triangles:
+        n = ComputeTriangleNormal(points[trig[0]],points[trig[1]],points[trig[2]])
+        # print(n)
+        for i in range(3):
+            dn = -distance*n
+            # print('move',trig[i],'=',dn, ', disp=',disp[trig[i]])
+            for j in range(3):
+                if abs(dn[j]) > abs(disp[trig[i]][j]):
+                    disp[trig[i]][j] = dn[j]
+                    # print('==>disp',trig[i],'=',disp[trig[i]])
+
+    # print('disp=', disp)
+
+    for i in range(len(points2)):
+        points2[i] += disp[i]
+
+    return [points2, triangles2]
 
 
 #************************************************
@@ -103,18 +258,27 @@ def MoveGraphicsData(g, pOff, Aoff):
 #**output: one graphicsData dictionary with single triangle lists and compatible points and normals, to be used in visualization of EXUDYN objects
 def MergeGraphicsDataTriangleList(g1,g2):
     np = int(len(g1['points'])/3) #number of points
-    if np*3 != len(g1['normals']):
-        raise ValueError('MergeGraphicsDataTriangleList: incompatible normals and points in lists; MergeGraphicsDataTriangleList only works if both objects provide normals')
+    useNormals = False
+    if 'normals' in g1 and 'normals' in g2:
+        useNormals = True
+
     if np*4 != len(g1['colors']):
         raise ValueError('MergeGraphicsDataTriangleList: incompatible colors and points in lists')
 
-    #nt = len(g1['triangles'])
-    data = {'type':'TriangleList', 'colors':copy.copy(g1['colors']), 'normals':copy.copy(g1['normals']), 
-            'points': copy.copy(g1['points']), 'triangles': copy.copy(g1['triangles'])}
+    if useNormals:
+        if np*3 != len(g1['normals']):
+            raise ValueError('MergeGraphicsDataTriangleList: incompatible normals and points in lists')
+        data = {'type':'TriangleList', 'colors':copy.copy(g1['colors']), 'normals':copy.copy(g1['normals']), 
+                'points': copy.copy(g1['points']), 'triangles': copy.copy(g1['triangles'])}
 
-    data['normals'] += g2['normals']
+        data['normals'] += g2['normals']
+    else:
+        data = {'type':'TriangleList', 'colors':copy.copy(g1['colors']),
+                'points': copy.copy(g1['points']), 'triangles': copy.copy(g1['triangles'])}
+    
     data['colors'] += g2['colors']
     data['points'] += g2['points']
+
     for p in g2['triangles']:
         data['triangles'] += [int(p + np)] #add point offset for correct connectivity
 
@@ -147,16 +311,16 @@ def GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,
 #**function: generate graphics data for orthogonal 3D cube with min and max dimensions
 #**input: minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
-def GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.]): 
+def GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.], addNormals=False): 
     
     pList = [[xMin,yMin,zMin], [xMax,yMin,zMin], [xMax,yMax,zMin], [xMin,yMax,zMin],
              [xMin,yMin,zMax], [xMax,yMin,zMax], [xMax,yMax,zMax], [xMin,yMax,zMax]]
-    return GraphicsDataCube(pList, color)
+    return GraphicsDataCube(pList, color, addNormals=addNormals)
 
 #**function: generate graphics data forfor orthogonal 3D cube with center point and size
 #**input: center point and size of cube (as 3D list or np.array); color provided as list of 4 RGBA values
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
-def GraphicsDataOrthoCubePoint(centerPoint, size, color=[0.,0.,0.,1.]): 
+def GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0.,0.,0.,1.], addNormals=False): 
     
     xMin = centerPoint[0] - 0.5*size[0]
     yMin = centerPoint[1] - 0.5*size[1]
@@ -165,16 +329,17 @@ def GraphicsDataOrthoCubePoint(centerPoint, size, color=[0.,0.,0.,1.]):
     yMax = centerPoint[1] + 0.5*size[1]
     zMax = centerPoint[2] + 0.5*size[2]
 
-    return GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color)
+    return GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color, addNormals)
 
 #**function: generate graphics data for general cube with endpoints, according to given vertex definition
 #**input: 
 #  pList: is a list of points [[x0,y0,z0],[x1,y1,z1],...]
 #  color: provided as list of 4 RGBA values
 #  faces: includes the list of six binary values (0/1), denoting active faces (value=1); set index to zero to hide face
+#  addNormals: if True, normals are added and there are separate points for every triangle
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
-def GraphicsDataCube(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1]): 
-# bottom: (z goes upwards from node 1 to node 5)
+def GraphicsDataCube(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1], addNormals=False): 
+# bottom: (z goes upwards from node 0 to node 4)
 # ^y
 # |
 # 3---2
@@ -206,13 +371,38 @@ def GraphicsDataCube(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1]):
     #triangles = [0,2,1, 0,3,2, 6,4,5, 6,7,4, 0,1,4, 1,5,4, 1,2,5, 2,6,5, 2,3,6, 3,7,6, 3,0,7, 0,4,7]
 
 #    triangles = [0,1,2, 0,2,3, 6,5,4, 6,4,7, 0,4,1, 1,4,5, 1,5,2, 2,5,6, 2,6,3, 3,6,7, 3,7,0, 0,7,4]
-    trigList = [[0,1,2, 0,2,3], [6,5,4, 6,4,7], [0,4,1, 1,4,5], [1,5,2, 2,5,6], [2,6,3, 3,6,7], [3,7,0, 0,7,4]]
+#OLD    trigList = [[0,1,2], [0,2,3], [6,5,4], [6,4,7], [0,4,1], [1,4,5], [1,5,2], [2,5,6], [2,6,3], [3,6,7], [3,7,0], [0,7,4]]
+    trigList = [[0,2,1], [0,3,2], #
+                [6,4,5], [6,7,4], #
+                [0,1,4], [1,5,4], #
+                [1,2,5], [2,6,5], #
+                [2,3,6], [3,7,6], #
+                [3,0,7], [0,4,7]] #
     triangles = []
-    for i in range(6):
-        if faces[i]:
-            triangles += trigList[i]
-    
-    data = {'type':'TriangleList', 'colors': colors, 'points':points, 'triangles':triangles}
+    # print('addNormals=',addNormals)
+    if not addNormals:
+        for i in range(6):
+            if faces[i]:
+                for j in range(2):
+                    triangles += trigList[i*2+j]
+        data = {'type':'TriangleList', 'colors': colors, 'points':points, 'triangles':triangles}
+    else:
+        normals = []
+        points2 = []
+        
+        cnt = 0
+        for i in range(6):
+            if faces[i]:
+                for j in range(2):
+                    trig = trigList[i*2+j]
+                    normal = ComputeTriangleNormal(pList[trig[0]],pList[trig[1]],pList[trig[2]])
+                    normals+=list(normal)*3 #add normal for every point
+                    for k in range(3):
+                        triangles += [cnt] #new point for every triangle
+                        points2 += list(pList[trig[k]])
+                        cnt+=1
+        
+        data = {'type':'TriangleList', 'colors': color*cnt, 'normals':normals, 'points':points2, 'triangles':triangles}
 
     return data
 
@@ -223,7 +413,7 @@ def GraphicsDataCube(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1]):
 #  color: provided as list of 4 RGBA values
 #  nTiles: used to determine resolution of sphere >=3; use larger values for finer resolution
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
-def GraphicsDataSphere(point, radius, color=[0.,0.,0.,1.], nTiles = 8):
+def GraphicsDataSphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8):
     if nTiles < 3: print("WARNING: GraphicsDataSphere: nTiles < 3: set nTiles=3")
     
     p = copy.deepcopy(point)
@@ -284,7 +474,7 @@ def GraphicsDataSphere(point, radius, color=[0.,0.,0.,1.], nTiles = 8):
 #  cutPlain: only used for angleRange != [0,2*pi]; if True, a plane is cut through the part of the cylinder; if False, the cylinder becomes a cake shape ...
 #  alternatingColor: if given, optionally another color in order to see rotation of solid; only works, if angleRange=[0,2*pi]
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
-def GraphicsDataCylinder(pAxis, vAxis, radius, color=[0.,0.,0.,1.], nTiles = 16, 
+def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTiles = 16, 
                          angleRange=[0,2*np.pi], lastFace = True, cutPlain = True, **kwargs):  
 
     if nTiles < 3: print("WARNING: GraphicsDataCylinder: nTiles < 3: set nTiles=3")
@@ -567,13 +757,14 @@ def GraphicsDataFromSTLfileTxt(fileName, color=[0.,0.,0.,1.], verbose=False):
 #contour=[]
 #r = 0.2 #small radius of torus
 #R = 0.5 #big radius of torus
+#nc = 16 #discretization of torus
 #for i in range(nc+3): #+3 in order to remove boundary effects
 #    contour+=[[r*cos(i/nc*pi*2),R+r*sin(i/nc*pi*2)]]
 #
 ##use smoothContour to make torus looking smooth
 #rev2 = GraphicsDataSolidOfRevolution(pAxis=[0,0.5,0], vAxis=[1,0,0], 
 #                                     contour=contour, color=color4red, 
-#                                     nTiles = 32*2, smoothContour=True)
+#                                     nTiles = 64, smoothContour=True)
 def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nTiles = 16, smoothContour = False, **kwargs):  
 
     if len(contour) < 2: 

@@ -48,7 +48,9 @@ void CObjectMassPoint::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
 AccessFunctionType CObjectMassPoint::GetAccessFunctionTypes() const
 {
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::DisplacementMassIntegral_q);
+	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt +
+		(Index)AccessFunctionType::JacobianTtimesVector_q +
+		(Index)AccessFunctionType::DisplacementMassIntegral_q);
 }
 
 //! provide Jacobian at localPosition in "value" according to object access
@@ -59,6 +61,11 @@ void CObjectMassPoint::GetAccessFunctionBody(AccessFunctionType accessType, cons
 	case AccessFunctionType::TranslationalVelocity_qt:
 		value.SetScalarMatrix(3, 1.); //diagonal matrix
 		break;
+	case AccessFunctionType::JacobianTtimesVector_q: //jacobian w.r.t. global position and global orientation!!!
+	{
+		value.SetNumberOfRowsAndColumns(0, 0); //indicates that all entries are zero
+		break;
+	}
 	case AccessFunctionType::DisplacementMassIntegral_q:
 		value.SetScalarMatrix(3, parameters.physicsMass); //diagonal matrix
 		break;

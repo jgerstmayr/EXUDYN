@@ -323,9 +323,21 @@ public:
 		{
 			(*this)(j, j) = value;
 		}
+	}
 
+	//Set Matrix with diadic product of vectors vA . vB
+	template<class TVectorA, class TVectorB>
+	void SetWithDiadicProduct(const TVectorA& vectorA, const TVectorB& vectorB)
+	{
+		SetNumberOfRowsAndColumns(vectorA.NumberOfItems(), vectorB.NumberOfItems());
 
-
+		for (Index i = 0; i < NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < NumberOfColumns(); j++)
+			{
+				GetUnsafe(i, j) = vectorA.GetUnsafe(i) * vectorB.GetUnsafe(j);
+			}
+		}
 	}
 
 
@@ -794,7 +806,6 @@ public:
 		}
 	}
 
-#ifdef USE_NEW_CONSTSIZEMATRIX
 	//! Add submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'
 	template<class TMatrix>
 	void AddSubmatrix(const TMatrix& sm, Index row = 0, Index column = 0)
@@ -856,64 +867,6 @@ public:
 		}
 	}
 
-#else
-	//! Add submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'
-	void AddSubmatrix(const MatrixBase<T>& sm, Index row = 0, Index column = 0)
-	{
-#ifndef EXUDYN_RELEASE
-		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::AddSubmatrix size mismatch");
-#endif
-		for (Index i = 0; i < sm.NumberOfRows(); i++)
-		{
-			for (Index j = 0; j < sm.NumberOfColumns(); j++)
-			{
-				data[(i + row)*numberOfColumns + column + j] += sm.GetUnsafe(i, j);
-			}
-		}
-	}
-	//! Add submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'; multiply sm with factor
-	void AddSubmatrixWithFactor(const MatrixBase<T>& sm, Real factor, Index row = 0, Index column = 0)
-	{
-		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::AddSubmatrixWithFactor size mismatch");
-
-		for (Index i = 0; i < sm.numberOfRows; i++)
-		{
-			for (Index j = 0; j < sm.numberOfColumns; j++)
-			{
-				data[(i + row)*numberOfColumns + column + j] += factor * sm(i, j);
-			}
-		}
-	}
-
-	//! Add transposed submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'
-	void AddSubmatrixTransposed(const MatrixBase<T>& sm, Index row = 0, Index column = 0)
-	{
-		CHECKandTHROW(row + sm.NumberOfColumns() <= NumberOfRows() && column + sm.NumberOfRows() <= NumberOfColumns(), "Matrix::AddSubmatrixTransposed size mismatch");
-
-		for (Index i = 0; i < sm.numberOfRows; i++)
-		{
-			for (Index j = 0; j < sm.numberOfColumns; j++)
-			{
-				data[(j + row)*numberOfColumns + column + i] += sm(i, j);
-			}
-		}
-	}
-
-	//! Add transposed submatrix 'sm' with possibly smaller size than this at (*this) 'row' and 'column'; multiply sm with factor
-	void AddSubmatrixTransposedWithFactor(const MatrixBase<T>& sm, Real factor, Index row = 0, Index column = 0)
-	{
-		CHECKandTHROW(row + sm.NumberOfColumns() <= NumberOfRows() && column + sm.NumberOfRows() <= NumberOfColumns(), "Matrix::AddSubmatrixTransposedWithFactor size mismatch");
-
-		for (Index i = 0; i < sm.numberOfRows; i++)
-		{
-			for (Index j = 0; j < sm.numberOfColumns; j++)
-			{
-				data[(j + row)*numberOfColumns + column + i] += factor * sm(i, j);
-			}
-		}
-	}
-
-#endif
 
 
 	//! Add submatrix (factor * sm) with possibly smaller size than *this matrix
@@ -948,21 +901,6 @@ public:
 
 
 	//! Set submatrix 'sm'*factor with possibly smaller size than this at (*this) 'row' and 'column'
-#ifndef USE_NEW_CONSTSIZEMATRIX
-	void SetSubmatrix(const MatrixBase<T>& sm, Index row = 0, Index column = 0, Real factor = 1.)
-	{
-	#ifndef EXUDYN_RELEASE
-		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::SetSubmatrix size mismatch");
-	#endif
-		for (Index i = 0; i < sm.numberOfRows; i++)
-		{
-			for (Index j = 0; j < sm.numberOfColumns; j++)
-			{
-				data[(i + row)*numberOfColumns + column + j] = factor * sm.GetUnsafe(i, j);
-			}
-		}
-	}
-#else
 	//! Set submatrix 'sm'*factor with possibly smaller size than this at (*this) 'row' and 'column'
 	template <class TMatrix>
 	void SetSubmatrix(const TMatrix& sm, Index row = 0, Index column = 0, Real factor = 1.)
@@ -978,7 +916,6 @@ public:
 			}
 		}
 	}
-#endif
 
 	//! Get submatrix at certain row/column with numberOfRows/numberOfColumnsGet taken; performs COPY and may be SLOW
 	MatrixBase<T> GetSubmatrix(Index startRow, Index startColumn,
@@ -1075,7 +1012,7 @@ namespace EXUmath {
 
 		result.SetNumberOfItems(matrix.NumberOfColumns());
 
-		Real* mm = matrix.GetDataPointer();
+		const Real* mm = matrix.GetDataPointer();
 		const Real* vv = vector.GetDataPointer();
 		Index resultLength = result.NumberOfItems();
 		Index vectorLength = vector.NumberOfItems();
@@ -1083,7 +1020,7 @@ namespace EXUmath {
 		for (Index i = 0; i < resultLength; i++)
 		{
 			Real val = 0;
-			Real* mr = &mm[i];
+			const Real* mr = &mm[i];
 			for (Index j = 0; j < vectorLength; j++)
 			{
 				val += *mr * vv[j];
@@ -1184,7 +1121,7 @@ namespace EXUmath {
 		CHECKandTHROW(matrix.NumberOfRows() == result.NumberOfItems(),
 			"Hmath::MultMatrixVectorAddTemplate(matrix,vector,result): Size mismatch");
 
-		Real* mm = matrix.GetDataPointer();
+		const Real* mm = matrix.GetDataPointer();
 		const Real* vv = vector.GetDataPointer();
 		Index resultLength = result.NumberOfItems(); //numberOfRows
 		Index vectorLength = vector.NumberOfItems(); //numberOfColumns
@@ -1192,7 +1129,7 @@ namespace EXUmath {
 		for (Index i = 0; i < resultLength; i++)
 		{
 			Real val = 0;
-			Real* mr = &mm[i*vectorLength];
+			const Real* mr = &mm[i*vectorLength];
 			for (Index j = 0; j < vectorLength; j++)
 			{
 				val += mr[j] * vv[j];

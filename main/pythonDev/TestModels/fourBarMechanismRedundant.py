@@ -66,14 +66,14 @@ for i in range(len(listRef)):
     
     if addSensors: # and i==0:
         f=0 #set to 0 for energy computation, else 1
-        sPos = mbs.AddSensor(SensorBody(bodyNumber=oRigid, fileName='solution/bodyPos'+str(i)+'.txt',
-                                        localPosition=[f*0.5*L,0,0],
+        sPos = mbs.AddSensor(SensorBody(bodyNumber=oRigid, #fileName='solution/bodyPos'+str(i)+'.txt',
+                                        localPosition=[f*0.5*L,0,0],storeInternal=True,
                                         outputVariableType=exu.OutputVariableType.Position))
-        sVel = mbs.AddSensor(SensorBody(bodyNumber=oRigid, fileName='solution/bodyVel'+str(i)+'.txt',
-                                        localPosition=[f*0.5*L,0,0],
+        sVel = mbs.AddSensor(SensorBody(bodyNumber=oRigid, #fileName='solution/bodyVel'+str(i)+'.txt',
+                                        localPosition=[f*0.5*L,0,0],storeInternal=True,
                                         outputVariableType=exu.OutputVariableType.Velocity))
-        sAng = mbs.AddSensor(SensorBody(bodyNumber=oRigid, fileName='solution/bodyAngVel'+str(i)+'.txt',
-                                        localPosition=[f*0.5*L,0,0],
+        sAng = mbs.AddSensor(SensorBody(bodyNumber=oRigid, #fileName='solution/bodyAngVel'+str(i)+'.txt',
+                                        localPosition=[f*0.5*L,0,0],storeInternal=True,
                                         outputVariableType=exu.OutputVariableType.AngularVelocity))
         # sPos = mbs.AddSensor(SensorNode(nodeNumber=nRigid, fileName='solution/nodePos'+str(i)+'.txt',
         #                          outputVariableType=exu.OutputVariableType.Position))
@@ -114,10 +114,10 @@ if addSensors:
             T += 0.5*NormL2(v)**2 * mass + 0.5*J*omega**2 + h*(-g[1])*mass
         return [T - 3.5*mass*(-g[1]) - 1.5] #1.5 is initial kinetic energy
         
-    mbs.AddSensor(SensorUserFunction(sensorNumbers=listSensors,
+    sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=listSensors,
                                      sensorUserFunction=UFsensors,
-                                     factors=[0]*len(listSensors),
-                                     fileName='solution/energyDoubleFourBar.txt'))
+                                     factors=[0]*len(listSensors),storeInternal=True))
+                                     #fileName='solution/energyDoubleFourBar.txt'
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++
 #simulate:
@@ -202,8 +202,9 @@ if useGraphics:
     if addSensors:
         from exudyn.plot import PlotSensor
         PlotSensor(mbs, sensorNumbers=[listSensors[0],listSensors[1],], 
-                   components=[0,0])
+                   components=[0,0], closeAll=True)
         
 if addSensors:
-    x=np.loadtxt('solution/energyDoubleFourBar.txt',comments='#', delimiter=',')
+    #x=np.loadtxt('solution/energyDoubleFourBar.txt',comments='#', delimiter=',')
+    x=mbs.GetSensorStoredData(sUser)
     print("max energy error=",max(abs(x[:,1])))

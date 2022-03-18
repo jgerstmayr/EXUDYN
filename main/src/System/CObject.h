@@ -76,6 +76,7 @@ namespace JacobianType {
 //! temporary structure for computation of jacobian (e.g. temporary matrices or vectors)
 class JacobianTemp {
 public:
+	ResizableMatrix localJacobian;
 	ResizableMatrix matrix0;
 	ResizableMatrix matrix1;
 };

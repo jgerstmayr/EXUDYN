@@ -87,7 +87,6 @@ Vector3D CNodePoint2DSlope1::GetAngularVelocity(ConfigurationType configuration)
 	//SysError("CNodePoint2DSlope1::GetAngularVelocity: check if computation of angular velocity is correct!");
 	//Real diffX = -y / (x*x + y * y)*u_t[2];
 	//Real diffY =  x / (x*x + y * y)*u_t[3];
-	//return Vector3D({ 0., 0., atan2(diffY,diffX) }); //rotation ignored
 
 	return Vector3D({ 0., 0., (-y*u_t[2] + x*u_t[3]) / (x*x + y*y) }); 
 }
@@ -101,8 +100,55 @@ void CNodePoint2DSlope1::GetRotationJacobian(Matrix& value) const
 	Real x = u[2] + ref[2]; //x-slopex
 	Real y = u[3] + ref[3]; //y-slopex
 
-	value.SetMatrix(3, 4, { 0.,0.,0.,0., 0.,0.,0.,0., 0.,0.,-y / (x*x + y*y), x / (x*x + y*y) });
+	Real g = (x*x + y * y);
+	CHECKandTHROW(g != 0., "CNodePoint2DSlope1::GetRotationJacobian: slope vector has zero length; check initial values!");
+	value.SetMatrix(3, 4, { 0.,0.,0.,0., 
+							0.,0.,0.,0.,
+							0.,0.,-y / g, x / g });
 }
+
+//! provide derivative w.r.t. coordinates of rotation Jacobian times vector; for current configuration
+//! 4x4 matrix for all nodal coordinates
+void CNodePoint2DSlope1::GetRotationJacobianTTimesVector_q(const Vector3D& vector, Matrix& jacobian_q) const 
+{ 
+	//only in current configuration!
+	LinkedDataVector ref = GetCoordinateVector(ConfigurationType::Reference);
+	LinkedDataVector u = GetCurrentCoordinateVector();
+
+	Real x = u[2] + ref[2]; //x-slopex
+	Real y = u[3] + ref[3]; //y-slopex
+
+	//{ 0.,0.,0.,
+	//  0.,0.,0.,
+	//	0.,0.,-y / (x*x + y * y), 
+	//  0.,0., x / (x*x + y * y) }^T * v = 
+	// [0.                     ]
+	// [0.                     ]
+	// [v[2]*(-y / (x*x + y * y))]
+	// [v[2]*( x / (x*x + y * y))]
+	//
+	// [ v[2]*(-u'[3] * (x*x + y*y) + y*(2*x*u'[2] + 2*y*u'[3]) ) / (x*x + y*y)^2]   //(f'g-f*g')/g^2
+	// [ v[2]*(u'[2] * (x*x + y*y) - x*(2*x*u'[2] + 2*y*u'[3]) ) / (x*x + y*y)^2]
+	//
+	// g2 = (x*x + y*y)^2 //(f'g-f*g')/g^2
+	// d(J^T*v) / q =
+	// [0.,0.,0.,0.]
+	// [0.,0.,0.,0.]
+	// [0.,0.,               v[2]*(y*(2*x) ) / g2, v[2]*(-(x*x + y*y) + y*(2*y) ) / g2]   
+	// [0.,0., v[2]*((x*x + y*y) - x*(2*x) ) / g2, v[2]*( - x*(2*y) ) / g2            ]
+
+	jacobian_q.SetNumberOfRowsAndColumns(4, 4);
+	jacobian_q.SetAll(0.);
+	Real g2 = EXUstd::Square(x*x + y * y);
+	CHECKandTHROW(g2 != 0., "CNodePoint2DSlope1::GetRotationJacobianTTimesVector_q: slope vector has zero length; check initial values!");
+
+	Real divG2 = 1. / g2;
+	jacobian_q(2, 2) = vector[2] * (y*(2 * x)) * divG2;
+	jacobian_q(2, 3) = vector[2] * (-(x*x + y * y) + y * (2 * y)) * divG2;
+	jacobian_q(3, 2) = vector[2] * ((x*x + y * y) - x * (2 * x)) * divG2;
+	jacobian_q(3, 3) = vector[2] * (-x * (2 * y)) * divG2;
+}
+
 
 //! provide according output variable in "value"
 void CNodePoint2DSlope1::GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const

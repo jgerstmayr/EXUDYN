@@ -19,7 +19,6 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
-testError=1 #set default error, if failed
 exu.Print("start mini example for class ObjectGenericODE1")
 try: #puts example in safe environment
     #set up a 2-DOF system
@@ -50,5 +49,5 @@ try: #puts example in safe environment
 except BaseException as e:
     exu.Print("An error occured in test example for ObjectGenericODE1:", e)
 else:
-    exu.Print("example for ObjectGenericODE1 completed, test error =", testError)
+    exu.Print("example for ObjectGenericODE1 completed, test result =", exudynTestGlobals.testResult)
 

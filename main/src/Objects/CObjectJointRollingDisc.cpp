@@ -243,16 +243,6 @@ void CObjectJointRollingDisc::GetOutputVariableConnector(OutputVariableType vari
 
 	//compute trail velocity: point projected from pC to wheel axis:
 	//Real cosAlpha = p1[2] / r;
-	//Real lP = r / cosAlpha; //=r^2/p1[2]
-	////Real cosAlpha = -w3 * parameters.planeNormal; //alternative, without using z-coordinate
-	//if (cosAlpha > 1) { cosAlpha = 1.; }
-	//if (cosAlpha < -1) { cosAlpha = -1.; }
-	//Real alpha = acos(cosAlpha);
-	//Real axisOffsetX = r * tan(alpha); //this is the x-coordinate of the point on the disc axis exactly above trail point
-	//Real axisOffsetX_t = r * (1 + tan(alpha)*tan(alpha))*(omega1*w2); //this is the point on the disc axis exactly above trail point
-
-	//compute trail velocity: point projected from pC to wheel axis:
-	//Real cosAlpha = p1[2] / r;
 	//REWRITE IN TERMS OF SIN(...) !!! more stable
 	Real cosAlpha = -w3 * parameters.planeNormal; //alternative, without using z-coordinate; more accurate because z-drift
 	Real sign = 1.;
@@ -273,12 +263,21 @@ void CObjectJointRollingDisc::GetOutputVariableConnector(OutputVariableType vari
 	switch (variableType)
 	{
 	case OutputVariableType::Position: value.CopyFrom(pC); break;
-	case OutputVariableType::VelocityLocal: value.CopyFrom(vCG); break;
+	case OutputVariableType::Velocity: value.CopyFrom(vCG); break;
 	case OutputVariableType::ForceLocal:
 	{
 		Vector3D lambda3D({ -lambda[0], -lambda[1], -lambda[2]}); //negative sign, because of algebraic equations definition; lambda should be force acting on disc (marker1)
-		Vector3D force({ lambda3D*wLateral, lambda3D*w2, lambda3D*parameters.planeNormal }); //project forces into local coordinates
-		value.CopyFrom(force);
+		Vector3D forceLocal({ lambda3D*wLateral, lambda3D*w2, lambda3D*parameters.planeNormal }); //project forces into local coordinates
+		value.CopyFrom(forceLocal);
+		break;
+	}
+	case OutputVariableType::RotationMatrix: {
+		//special joint transformation matrix
+		Matrix3D AJ1(3, 3, {
+			wLateral[0], w2[0], parameters.planeNormal[0],
+			wLateral[1], w2[1], parameters.planeNormal[1],
+			wLateral[2], w2[2], parameters.planeNormal[2] });
+		value.SetVector(9, AJ1.GetDataPointer());
 		break;
 	}
 	default:

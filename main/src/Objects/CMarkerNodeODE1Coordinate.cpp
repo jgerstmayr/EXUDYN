@@ -51,7 +51,7 @@ void CMarkerNodeODE1Coordinate::ComputeMarkerData(const CSystemData& cSystemData
 }
 
 //! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(Jpos.T @ v)/dq
-void CMarkerNodeODE1Coordinate::ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector& v, MarkerData& markerData) const
+void CMarkerNodeODE1Coordinate::ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const
 {
-	markerData.positionJacobianDerivative.SetNumberOfRowsAndColumns(0, 0); //signals that there is no dependency!
+	markerData.jacobianDerivative.SetNumberOfRowsAndColumns(0, 0); //signals that there is no dependency!
 }

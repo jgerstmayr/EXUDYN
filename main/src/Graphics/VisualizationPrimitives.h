@@ -24,13 +24,8 @@
 class VisualizationSystem; //avoid including Visualization classes
 
 namespace EXUvis {
-	//! compute normalized normal from triangle points; Vector3D version
-	Vector3D ComputeTriangleNormal(const std::array<Vector3D, 3>& trigPoints);
-
-	//! compute normalized normal from triangle points; Float3 version
-	//void ComputeTriangleNormals(const std::array<Float3, 3>& trigPoints, std::array<Float3, 3>& normals);
 	
-	//! compute normalized normal from triangle points
+	//! compute normalized normal from triangle points; for function with single normal see Geometry.h
 	template<class TReal>
 	void ComputeTriangleNormals(const std::array<SlimVectorBase<TReal, 3>, 3>& trigPoints, std::array<SlimVectorBase<TReal, 3>, 3>& normals)
 	{
@@ -63,7 +58,8 @@ namespace EXUvis {
 	//void DrawItemNumber(const Vector3D& pos, VisualizationSystem* vSystem, Index itemNumber, const char* label = "", const Float4& color = Float4({ 0.f,0.f,0.f,1.f }));
 
 	//! draw cube with midpoint and size in x,y and z direction
-	void DrawOrthoCube(const Vector3D& midPoint, const Vector3D& size, const Float4& color, GraphicsData& graphicsData, Index itemID);
+	void DrawOrthoCube(const Vector3D& midPoint, const Vector3D& size, const Float4& color, GraphicsData& graphicsData, 
+		Index itemID, bool showFaces=true, bool showEdges=false);
 		
 	//! add a cylinder to graphicsData with reference point (pAxis0), axis vector (vAxis) and radius using triangle representation
 	//! angleRange is used to draw only part of the cylinder; 

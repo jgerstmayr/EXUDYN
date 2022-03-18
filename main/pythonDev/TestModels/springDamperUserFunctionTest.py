@@ -84,12 +84,14 @@ writeSensorFile = False
 if exudynTestGlobals.useGraphics:
     writeSensorFile = True
 
-mbs.AddSensor(SensorLoad(loadNumber=loadC, writeToFile = writeSensorFile, 
-                         fileName="solution/userFunctionLoad.txt"))
+sLoad=mbs.AddSensor(SensorLoad(loadNumber=loadC, writeToFile = writeSensorFile, 
+                         storeInternal=True,#fileName="solution/userFunctionLoad.txt"
+                         ))
 #mbs.AddSensor(SensorNode(nodeNumber=n1, writeToFile = writeSensorFile, fileName="solution/userFunctionNode.txt"))
-mbs.AddSensor(SensorNode(nodeNumber=n1, writeToFile = writeSensorFile, 
+sCoords=mbs.AddSensor(SensorNode(nodeNumber=n1, writeToFile = writeSensorFile, 
                          outputVariableType=exu.OutputVariableType.Coordinates, 
-                         fileName="solution/userFunctionNode.txt"))
+                         storeInternal=True,#fileName="solution/userFunctionNode.txt"
+                         ))
     
 #exu.Print(mbs)
 mbs.Assemble()
@@ -123,14 +125,7 @@ exudynTestGlobals.testResult = u[0]
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 if exudynTestGlobals.useGraphics:
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
-    data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
-    plt.plot(data[:,0], data[:,1], 'r-') #numerical solution
+    from exudyn.plot import PlotSensor
     
-    ax=plt.gca() # get current axes
-    ax.grid(True, 'major', 'both')
-    ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-    ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-    plt.tight_layout()
-    plt.show() 
+    PlotSensor(mbs, sCoords, components=[0], closeAll=True)
+

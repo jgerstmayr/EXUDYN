@@ -58,12 +58,19 @@ public:
 
 	//not needed
     //!default constructor: no initialization.
-    SlimArray() {}; 
+    //SlimArray() {}; 
 
-	//the following seems to be slower, even if no default constructor is supplied and it could be better?!
-	//SlimArray(EXUstd::Dummy init= EXUstd::Dummy()) {};
+	SlimArray() = default; //rule of 5
 
-    //! constructor with a single scalar value used for all vector components.
+	SlimArray(SlimArray<T, dataSize> const& other) = default;
+	SlimArray<T, dataSize>& operator=(SlimArray<T, dataSize> const& other) = default;
+
+	SlimArray<T, dataSize>(SlimArray<T, dataSize>&& other) = default;
+	SlimArray<T, dataSize>& operator=(SlimArray<T, dataSize>&& other) = default;
+
+	~SlimArray() = default; //rule of 5
+
+	//! constructor with a single scalar value used for all vector components.
     SlimArray(T scalarValue)
     {
         for (auto &item : *this) {
@@ -128,7 +135,10 @@ public:
 
     Index NumberOfItems() const { return dataSize; }	//!< number of ('T') items in vector ('SlimArray<3> v;' ==> NumberOfItems() returns 3).
     Index MaxNumberOfItems() const { return dataSize; }	//!< number of ('T') items in vector; for COMPATIBILITY with 'class ResizeableArray' ('SlimArray<3> v;' ==> Size() returns 3).
-    T* GetDataPointer() { return &data[0]; }			//!< return pointer to first data containing T* items.
+	bool IsValidIndex(Index index) const { return (index >= 0) && (index < NumberOfItems()); } 	//!< check if an index is in range of valid items
+
+
+	T* GetDataPointer() { return &data[0]; }			//!< return pointer to first data containing T* items.
 
     //! set all items in array to 'scalarValue'
     void SetAll(const T& scalarValue) {

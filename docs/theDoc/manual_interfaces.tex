@@ -13,25 +13,26 @@ These are the access functions to the \codeName\ module.
   StartRenderer(verbose = false) & Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of Spyder\\ \hline 
   StopRenderer() & Stop OpenGL rendering engine\\ \hline 
   DoRendererIdleTasks(waitSeconds = 0) & Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 to wait until window is closed\\ \hline 
-  SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(), updateInitialValues = False, storeSolver = True) & Static solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveStatic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
-  SolveDynamic(mbs, simulationSettings = exudyn.SimulationSettings(), solverType = exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues = False, storeSolver = True) & Dynamic solver function, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:SolveDynamic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
-  ComputeODE2Eigenvalues(mbs, simulationSettings = exudyn.SimulationSettings(), useSparseSolver = False, numberOfEigenvalues = -1, setInitialValues = True, convert2Frequencies = False) & Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the python interface see \refSection{sec:solver:ComputeODE2Eigenvalues}\\ \hline 
-  SetOutputPrecision(numberOfDigits) & Set the precision (integer) for floating point numbers written to console (reset when simulation is started!)\\ \hline 
-  SetLinalgOutputFormatPython(flagPythonFormat) & true: use python format for output of vectors and matrices; false: use matlab format\\ \hline 
-  SetWriteToConsole(flag) & set flag to write (true) or not write to console; default = true\\ \hline 
-  SetWriteToFile(filename, flagWriteToFile = true, flagAppend = false) & set flag to write (true) or not write to console; default value of flagWriteToFile = false; flagAppend appends output to file, if set true; in order to finalize the file, write exu.SetWriteToFile('', False) to close the output file\tabnewline 
+  SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(), updateInitialValues = False, storeSolver = True) & Static solver function, mapped from module \texttt{solver}; for details on the Python interface see \refSection{sec:solver:SolveStatic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
+  SolveDynamic(mbs, simulationSettings = exudyn.SimulationSettings(), solverType = exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues = False, storeSolver = True) & Dynamic solver function, mapped from module \texttt{solver}; for details on the Python interface see \refSection{sec:solver:SolveDynamic}; for background on solvers, see \refSection{sec:solvers}\\ \hline 
+  ComputeODE2Eigenvalues(mbs, simulationSettings = exudyn.SimulationSettings(), useSparseSolver = False, numberOfEigenvalues = -1, setInitialValues = True, convert2Frequencies = False) & Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the Python interface see \refSection{sec:solver:ComputeODE2Eigenvalues}\\ \hline 
+  SetOutputPrecision(numberOfDigits) & Set the precision (integer) for floating point numbers written to console (reset when simulation is started!); NOTE: this affects only floats converted to strings inside C++ exudyn; if you print a float from Python, it is usually printed with 16 digits; if printing numpy arrays, 8 digits are used as standard, to be changed with numpy.set\_printoptions(precision=16); alternatively convert into a list\\ \hline 
+  SetLinalgOutputFormatPython(flagPythonFormat) & True: use Python format for output of vectors and matrices; False: use matlab format\\ \hline 
+  SetWriteToConsole(flag) & set flag to write (True) or not write to console; default = True\\ \hline 
+  SetWriteToFile(filename, flagWriteToFile = true, flagAppend = false) & set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write exu.SetWriteToFile('', False) to close the output file\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{exu.SetWriteToConsole(False) \#no output to console\tabnewline
     exu.SetWriteToFile(filename={\textquotesingle}testOutput.log{\textquotesingle}, flagWriteToFile=True, flagAppend=False)\tabnewline
     exu.Print({\textquotesingle}print this to file{\textquotesingle})\tabnewline
     exu.SetWriteToFile({\textquotesingle}{\textquotesingle}, False) \#terminate writing to file which closes the file}}\\ \hline 
   SetPrintDelayMilliSeconds(delayMilliSeconds) & add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0\\ \hline 
-  Print() & this allows printing via exudyn with similar syntax as in python print(args) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...); does not output in case that SetWriteToConsole is set to false\\ \hline 
+  Print() & this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...); does not output in case that SetWriteToConsole is set to False\\ \hline 
+  SuppressWarnings(flag) & set flag to suppress (=True) or enable (=False) warnings\\ \hline 
   InfoStat(writeOutput = true) & Retrieve list of global information on memory allocation and other counts as list:[array\_new\_counts, array\_delete\_counts, vector\_new\_counts, vector\_delete\_counts, matrix\_new\_counts, matrix\_delete\_counts, linkedDataVectorCast\_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with \_\_FAST\_EXUDYN\_LINALG flag\\ \hline 
   Go() & Creates a SystemContainer SC and a main system mbs\\ \hline 
   InvalidIndex() & This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function\\ \hline 
-  variables & this dictionary may be used by the user to store exudyn-wide data in order to avoid global python variables; usage: exu.variables["myvar"] = 42 \\ \hline  
-  sys & this dictionary is used and reserved by the system, e.g. for testsuite, graphics or system function to store module-wide data in order to avoid global python variables; the variable exu.sys['renderState'] contains the last render state after exu.StopRenderer() and can be used for subsequent simulations \\ \hline  
+  variables & this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables["myvar"] = 42 \\ \hline  
+  sys & this dictionary is used and reserved by the system, e.g. for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys['renderState'] contains the last render state after exu.StopRenderer() and can be used for subsequent simulations \\ \hline  
 \end{longtable}
 \end{center}
 
@@ -73,23 +74,24 @@ The SystemContainer is the top level of structures in \codeName. The container h
 
 %++++++++++++++++++++
 \mysubsection{MainSystem}
-This is the structure which defines a (multibody) system. In C++, there is a MainSystem (links to python) and a System (computational part). For that reason, the name is MainSystem on the python side, but it is often just called 'system'. It can be created, visualized and computed. Use the following functions for system manipulation. \\ \\ Usage: \\ \\ \texttt{import exudyn as exu \\ SC = exu.SystemContainer() \\ mbs = SC.AddSystem()}
+This is the structure which defines a (multibody) system. In C++, there is a MainSystem (links to Python) and a System (computational part). For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. It can be created, visualized and computed. Use the following functions for system manipulation. \\ \\ Usage: \\ \\ \texttt{import exudyn as exu \\ SC = exu.SystemContainer() \\ mbs = SC.AddSystem()}
 
 \begin{center}
 \footnotesize
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  Assemble() & assemble items (nodes, bodies, markers, loads, ...); Calls CheckSystemIntegrity(...), AssembleCoordinates(), AssembleLTGLists(), and AssembleInitializeSystemCoordinates()\\ \hline 
+  Assemble() & assemble items (nodes, bodies, markers, loads, ...); Calls CheckSystemIntegrity(...), AssembleCoordinates(), AssembleLTGLists(), AssembleInitializeSystemCoordinates(), and AssembleSystemInitialize()\\ \hline 
   AssembleCoordinates() & assemble coordinates: assign computational coordinates to nodes and constraints (algebraic variables)\\ \hline 
   AssembleLTGLists() & build \ac{LTG} coordinate lists for objects (used to build global ODE2RHS, MassMatrix, etc. vectors and matrices) and store special object lists (body, connector, constraint, ...)\\ \hline 
   AssembleInitializeSystemCoordinates() & initialize all system-wide coordinates based on initial values given in nodes\\ \hline 
+  AssembleSystemInitialize() & initialize some system data, e.g., generalContact objects (searchTree, etc.)\\ \hline 
   Reset() & reset all lists of items (nodes, bodies, markers, loads, ...) and temporary vectors; deallocate memory\\ \hline 
   GetSystemContainer() & return the systemContainer where the mainSystem (mbs) was created\\ \hline 
   WaitForUserToContinue() & interrupt further computation until user input --> 'pause' function\\ \hline 
   SendRedrawSignal() & this function is used to send a signal to the renderer that the scene shall be redrawn because the visualization state has been updated\\ \hline 
-  GetRenderEngineStopFlag() & get the current stop simulation flag; true=user wants to stop simulation\\ \hline 
-  SetRenderEngineStopFlag() & set the current stop simulation flag; set to false, in order to continue a previously user-interrupted simulation\\ \hline 
+  GetRenderEngineStopFlag() & get the current stop simulation flag; True=user wants to stop simulation\\ \hline 
+  SetRenderEngineStopFlag() & set the current stop simulation flag; set to False, in order to continue a previously user-interrupted simulation\\ \hline 
   ActivateRendering(flag = true) & activate (flag=True) or deactivate (flag=False) rendering for this system\\ \hline 
   SetPreStepUserFunction() & Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
@@ -112,10 +114,10 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
   \_\_repr\_\_() & return the representation of the system, which can be, e.g., printed\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{print(mbs)}}\\ \hline 
-  systemIsConsistent & this flag is used by solvers to decide, whether the system is in a solvable state; this flag is set to false as long as Assemble() has not been called; any modification to the system, such as Add...(), Modify...(), etc. will set the flag to false again; this flag can be modified (set to true), if a change of e.g.~an object (change of stiffness) or load (change of force) keeps the system consistent, but would normally lead to systemIsConsistent=False  \\ \hline  
-  interactiveMode & set this flag to true in order to invoke a Assemble() command in every system modification, e.g. AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode. \\ \hline  
-  variables & this dictionary may be used by the user to store model-specific data, in order to avoid global python variables in complex models; mbs.variables["myvar"] = 42 \\ \hline  
-  sys & this dictionary is used by exudyn python libraries, e.g., solvers, to avoid global python variables \\ \hline 
+  systemIsConsistent & this flag is used by solvers to decide, whether the system is in a solvable state; this flag is set to False as long as Assemble() has not been called; any modification to the system, such as Add...(), Modify...(), etc. will set the flag to False again; this flag can be modified (set to True), if a change of e.g.~an object (change of stiffness) or load (change of force) keeps the system consistent, but would normally lead to systemIsConsistent=False  \\ \hline  
+  interactiveMode & set this flag to True in order to invoke a Assemble() command in every system modification, e.g. AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode. \\ \hline  
+  variables & this dictionary may be used by the user to store model-specific data, in order to avoid global Python variables in complex models; mbs.variables["myvar"] = 42 \\ \hline  
+  sys & this dictionary is used by exudyn Python libraries, e.g., solvers, to avoid global Python variables \\ \hline 
   solverSignalJacobianUpdate & this flag is used by solvers to decide, whether the jacobian should be updated; at beginning of simulation and after jacobian computation, this flag is set automatically to False; use this flag to indicate system changes, e.g. during time integration  \\ \hline  
   systemData & Access to SystemData structure; enables access to number of nodes, objects, ... and to (current, initial, reference, ...) state variables (ODE2, AE, Data,...)\\ \hline  
 \end{longtable}
@@ -159,8 +161,12 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
   GetNodeODE2Index(nodeNumber) & get index in the global ODE2 coordinate vector for the first node coordinate of the specified node\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.GetNodeODE2Index(nodeNumber=0)}}\\ \hline 
-  GetNodeParameter(nodeNumber, parameterName) & get nodes's parameter from node number (type NodeIndex) and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
-  SetNodeParameter(nodeNumber, parameterName, value) & set parameter 'parameterName' of node with node number (type NodeIndex) to value; parameter names can be found for the specific items in the reference manual\\ \hline 
+  GetNodeParameter(nodeNumber, parameterName) & get nodes's parameter from node number (type NodeIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{mbs.GetNodeParameter(0, {\textquotesingle}referenceCoordinates{\textquotesingle})}}\\ \hline 
+  SetNodeParameter(nodeNumber, parameterName, value) & set parameter 'parameterName' of node with node number (type NodeIndex) to value; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{mbs.SetNodeParameter(0, {\textquotesingle}Vshow{\textquotesingle}, True)}}\\ \hline 
 \end{longtable}
 \end{center}
 
@@ -186,10 +192,10 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
   GetObjectNumber(objectName) & get object's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{n = mbs.GetObjectNumber({\textquotesingle}heavy object{\textquotesingle})}}\\ \hline 
-  GetObject(objectNumber) & get object's dictionary by object number (type ObjectIndex)\tabnewline 
+  GetObject(objectNumber) & get object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{objectDict = mbs.GetObject(0)}}\\ \hline 
-  ModifyObject(objectNumber, objectDict) & modify object's dictionary by object number (type ObjectIndex)\tabnewline 
+  ModifyObject(objectNumber, objectDict) & modify object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.ModifyObject(objectNumber, objectDict)}}\\ \hline 
   GetObjectDefaults(typeName) & get object's default values for a certain objectType as (dictionary)\tabnewline 
@@ -203,8 +209,12 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
   GetObjectOutputSuperElement(objectNumber, variableType, meshNodeNumber, configuration = ConfigurationType.Current) & get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType; the meshNodeNumber is the object's local node number, not the global node number!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{u = mbs.GetObjectOutputSuperElement(objectNumber = 1, variableType = exu.OutputVariableType.Position, meshNodeNumber = 12, configuration = exu.ConfigurationType.Initial)}}\\ \hline 
-  GetObjectParameter(objectNumber, parameterName) & get objects's parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
-  SetObjectParameter(objectNumber, parameterName, value) & set parameter 'parameterName' of object with object number (type ObjectIndex) to value; parameter names can be found for the specific items in the reference manual\\ \hline 
+  GetObjectParameter(objectNumber, parameterName) & get objects's parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{mbs.GetObjectParameter(objectNumber = 0, parameterName = {\textquotesingle}nodeNumber{\textquotesingle})}}\\ \hline 
+  SetObjectParameter(objectNumber, parameterName, value) & set parameter 'parameterName' of object with object number (type ObjectIndex) to value;; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{mbs.SetObjectParameter(objectNumber = 0, parameterName = {\textquotesingle}Vshow{\textquotesingle}, value=True)}}\\ \hline 
 \end{longtable}
 \end{center}
 
@@ -315,6 +325,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
     \texttt{sensorType = {\textquotesingle}Node{\textquotesingle}\tabnewline
     sensorDict = mbs.GetSensorDefaults(sensorType)}}\\ \hline 
   GetSensorValues(sensorNumber, configuration = ConfigurationType.Current) & get sensors's values for configuration; can be a scalar or vector-valued return value!\\ \hline 
+  GetSensorStoredData(sensorNumber) & get sensors's internally stored data as matrix (all time points stored); rows are containing time and sensor values as obtained by sensor (e.g., time, and x, y, and z value of position)\\ \hline 
   GetSensorParameter(sensorNumber, parameterName) & get sensors's parameter from sensorNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
   SetSensorParameter(sensorNumber, parameterName, value) & set parameter 'parameterName' of sensor with sensorNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
 \end{longtable}
@@ -431,7 +442,7 @@ mbs.systemData.SetODE2Coordinates(coordinates=u,configurationType=exu.Configurat
 
 %++++++++++++++++++++
 \mysubsubsection{SystemData: Get object LTG coordinate mappings}
-This section provides access functions the \ac{LTG}-lists for every object (body, constraint, ...) in the system.
+\label{sec:systemData:ObjectLTG}This section provides access functions the \ac{LTG}-lists for every object (body, constraint, ...) in the system. For details on the \ac{LTG} mapping, see \refSection{sec:systemData:LTG}
 
 \begin{center}
 \footnotesize
@@ -459,7 +470,8 @@ The MatrixContainer is a versatile representation for dense and sparse matrices.
   \item Create empty \texttt{MatrixContainer} with \texttt{mc = MatrixContainer()} 
   \item Create \texttt{MatrixContainer} with dense matrix \texttt{mc = MatrixContainer(matrix)}, where matrix can be a list of lists of a numpy array 
   \item Set with dense \text{pyArray} (a numpy array): \texttt{mc.SetWithDenseMatrix(pyArray, bool useDenseMatrix = True)}
-  \item Set with sparse \text{pyArray} (a numpy array), which has 3 colums and according rows containing the sparse triplets \texttt{(row, col, value)} describing the sparse matrix 
+  \item Set with sparse \text{pyArray} (a numpy array), which has 3 colums and according rows containing the sparse triplets \texttt{(row, col, value)} describing the sparse matrix \ei
+
 
 \begin{center}
 \footnotesize
@@ -476,10 +488,10 @@ The MatrixContainer is a versatile representation for dense and sparse matrices.
 
 %++++++++++++++++++++
 \mysubsection{GeneralContact}
-[{\bf NOTE: For internal use only! GeneralContact is currently developed and must be used with care; interfaces may change significantly in upcoming versions}] Structure to define general and highly efficient contact functionality in multibody systems. \\ \\ Usage: \bi
+\label{sec:GeneralContact}Structure to define general and highly efficient contact functionality in multibody systems\footnote{Note that GeneralContact is still developed, use with care.}. For further explanations and theoretical backgrounds, see \refSection{secContactTheory}. \\ \\ Usage: \bi
   \item Add \texttt{GeneralContact} to mbs \texttt{gContact = mbs.AddGeneralContact()} 
   \item Add contact elements, e.g., \texttt{gContact.AddSphereWithMarker(...)}, using appropriate arguments 
-  \item After all contact elements have been added, call \texttt{gContact.FinalizeContact(...)} before assemble.
+  \item Call SetFrictionPairings(...) to set friction pairings and adjust searchTree if needed.
 \ei
 
 
@@ -493,8 +505,30 @@ The MatrixContainer is a versatile representation for dense and sparse matrices.
   isActive & default = True (compute contact); if isActive=False, no contact computation is performed for this contact set \\ \hline  
   verboseMode & default = 0; verboseMode = 1 or higher outputs useful information on the contact creation and computation \\ \hline  
   visualization & access visualization data structure \\ \hline  
-  FinalizeContact(mainSystem, searchTreeSize, frictionPairingsInit, searchTreeBoxMin = (std.vector<Real>)Vector3D( EXUstd.MAXREAL ), searchTreeBoxMax = (std.vector<Real>)Vector3D( EXUstd.LOWESTREAL )) & WILL CHANGE IN FUTURE: Call this function after mbs.Assemble(); precompute some contact arrays (mainSystem needed) and set up necessary parameters for contact: friction, SearchTree, etc.; done after all contacts have been added; function performs checks; empty box will autocompute size!\\ \hline 
-  AddSphereWithMarker(markerIndex, radius, contactStiffness, contactDamping, frictionMaterialIndex) & add contact object using a marker (Position or Rigid), radius and contact/friction parameters; contact is possible between spheres (circles in 2D) (if intraSphereContact = true) and between sphere (=circle) and ANCFCable2D\\ \hline 
+  sphereSphereContact & activate/deactivate contact between spheres \\ \hline  
+  sphereSphereFrictionRecycle & False: compute static friction force based on tangential velocity; True: recycle friction from previous PostNewton step, which greatly improves convergence, but may lead to unphysical artifacts; will be solved in future by step reduction \\ \hline  
+  minRelDistanceSpheresTriangles & (default=1e-10) tolerance (relative to sphere radiues) below which the contact between triangles and spheres is ignored; used for spheres directly attached to triangles \\ \hline  
+  frictionProportionalZone & (default=0.001) velocity $v_{\mu,reg}$ upon which the dry friction coefficient is interpolated linearly (regularized friction model); must be greater 0; very small values cause oscillations in friction force \\ \hline  
+  frictionVelocityPenalty & (default=1e3) regularization factor for friction [N/(m$^2 \cdot$m/s) ];$k_{\mu,reg}$, multiplied with tangential velocity to compute friciton force as long as it is smaller than $\mu$ times contact force; large values cause oscillations in friction force \\ \hline  
+  		excludeOverlappingTrigSphereContacts & (default=True) for consistent, closed meshes, we can exclude overlapping contact triangles (which would cause holes if mesh is overlapping and not consistent!!!) \\ \hline  
+  		excludeDuplicatedTrigSphereContactPoints & (default=False) run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts \\ \hline  
+  		ancfCableUseExactMethod & (default=True) if true, uses exact computation of intersection of 3rd order polynomials and contacting circles \\ \hline  
+  		ancfCableNumberOfContactSegments & (default=1) number of segments to be used in case that ancfCableUseExactMethod=False; maximum number of segments=3 \\ \hline  
+  SetFrictionPairings(frictionPairings) & set Coulomb friction coefficients for pairings of materials (e.g., use material 0,1, then the entries (0,1) and (1,0) define the friction coefficients for this pairing); matrix should be symmetric!\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{\#set 3 surface friction types, all being 0.1:\tabnewline
+    gContact.SetFrictionPairings(0.1*np.ones((3,3)));}}\\ \hline 
+  SetFrictionProportionalZone(frictionProportionalZone) & regularization for friction (m/s); used for all contacts\\ \hline 
+  SetSearchTreeCellSize(numberOfCells) & set number of cells of search tree (boxed search) in x, y and z direction\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{gContact.SetSearchTreeInitSize([10,10,10])}}\\ \hline 
+  SetSearchTreeBox(pMin, pMax) & set geometric dimensions of searchTreeBox (point with minimum coordinates and point with maximum coordinates); if this box becomes smaller than the effective contact objects, contact computations may slow down significantly\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{gContact.SetSearchTreeBox(pMin=[-1,-1,-1],\tabnewline
+       \phantom   pMax=[1,1,1])}}\\ \hline 
+  AddSphereWithMarker(markerIndex, radius, contactStiffness, contactDamping, frictionMaterialIndex) & add contact object using a marker (Position or Rigid), radius and contact/friction parameters; frictionMaterialIndex refers to frictionPairings in GeneralContact; contact is possible between spheres (circles in 2D) (if intraSphereContact = True), spheres and triangles and between sphere (=circle) and ANCFCable2D; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate)!\\ \hline 
+  AddANCFCable(objectIndex, halfHeight, contactStiffness, contactDamping, frictionMaterialIndex) & add contact object for an ANCF cable element, using the objectIndex of the cable element and the cable's half height as an additional distance to contacting objects (currently not causing additional torque in case of friction); currently only contact with spheres (circles in 2D) possible; contact computed using exact geometry of elements, finding max 3 intersecting contact regions\\ \hline 
+  AddTrianglesRigidBodyBased(rigidBodyMarkerIndex, contactStiffness, contactDamping, frictionMaterialIndex, pointList, triangleList) & add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; mesh can be produced with GraphicsData2TrigsAndPoints(...); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(...)\\ \hline 
   \_\_repr\_\_() & return the string representation of the GeneralContact, containing basic information and statistics\\ \hline 
 \end{longtable}
 \end{center}

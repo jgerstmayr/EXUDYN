@@ -253,50 +253,53 @@ sL+=sL1; #s+=s1;  #this function is defined in __init__.py ==> do not add to cpp
                                 description="Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 to wait until window is closed"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SolveStatic', cName='SolveDynamic', 
-                               description='Static solver function, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:SolveStatic}; for background on solvers, see \\refSection{sec:solvers}',
+                               description='Static solver function, mapped from module \\texttt{solver}; for details on the Python interface see \\refSection{sec:solver:SolveStatic}; for background on solvers, see \\refSection{sec:solvers}',
                                argList=['mbs', 'simulationSettings', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','False','True']
                                ); sL+=sL1
                 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SolveDynamic', cName='SolveDynamic', 
-                               description='Dynamic solver function, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:SolveDynamic}; for background on solvers, see \\refSection{sec:solvers}',
+                               description='Dynamic solver function, mapped from module \\texttt{solver}; for details on the Python interface see \\refSection{sec:solver:SolveDynamic}; for background on solvers, see \\refSection{sec:solvers}',
                                argList=['mbs', 'simulationSettings', 'solverType', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','exudyn.DynamicSolverType.GeneralizedAlpha','False','True']
                                ); sL+=sL1
                 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='ComputeODE2Eigenvalues', cName='ComputeODE2Eigenvalues', 
-                               description='Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \\texttt{solver}; for details on the python interface see \\refSection{sec:solver:ComputeODE2Eigenvalues}',
+                               description='Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \\texttt{solver}; for details on the Python interface see \\refSection{sec:solver:ComputeODE2Eigenvalues}',
                                argList=['mbs', 'simulationSettings', 'useSparseSolver', 'numberOfEigenvalues', 'setInitialValues', 'convert2Frequencies'],
                                defaultArgs=['','exudyn.SimulationSettings()','False','-1','True','False']); sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SetOutputPrecision', cName='PySetOutputPrecision', 
-                                description="Set the precision (integer) for floating point numbers written to console (reset when simulation is started!)",
+                                description="Set the precision (integer) for floating point numbers written to console (reset when simulation is started!); NOTE: this affects only floats converted to strings inside C++ exudyn; if you print a float from Python, it is usually printed with 16 digits; if printing numpy arrays, 8 digits are used as standard, to be changed with numpy.set_printoptions(precision=16); alternatively convert into a list",
                                 argList=['numberOfDigits']); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SetLinalgOutputFormatPython', cName='PySetLinalgOutputFormatPython', 
-                                description="true: use python format for output of vectors and matrices; false: use matlab format",
+                                description="True: use Python format for output of vectors and matrices; False: use matlab format",
                                 argList=['flagPythonFormat']); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SetWriteToConsole', cName='PySetWriteToConsole', 
-                            description="set flag to write (true) or not write to console; default = true",
+                            description="set flag to write (True) or not write to console; default = True",
                             argList=['flag']); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SetWriteToFile', cName='PySetWriteToFile', 
-                            description="set flag to write (true) or not write to console; default value of flagWriteToFile = false; flagAppend appends output to file, if set true; in order to finalize the file, write exu.SetWriteToFile('', False) to close the output file",
+                            description="set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write exu.SetWriteToFile('', False) to close the output file",
                             argList=['filename', 'flagWriteToFile', 'flagAppend'],
                             defaultArgs=['', 'true', 'false'],
                             example="exu.SetWriteToConsole(False) \\#no output to console\\\\exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=False)\\\\exu.Print('print this to file')\\\\exu.SetWriteToFile('', False) \\#terminate writing to file which closes the file"
                             ); s+=s1; sL+=sL1
-
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SetPrintDelayMilliSeconds', cName='PySetPrintDelayMilliSeconds', 
                             description="add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0",
                             argList=['delayMilliSeconds']); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='Print', cName='PyPrint', 
-                            description="this allows printing via exudyn with similar syntax as in python print(args) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...); does not output in case that SetWriteToConsole is set to false",
+                            description="this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...); does not output in case that SetWriteToConsole is set to False",
                             #argList=['pyObject'] #not compatible with py::args
                             ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SuppressWarnings', cName='PySuppressWarnings', 
+                            description="set flag to suppress (=True) or enable (=False) warnings",
+                            argList=['flag']); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='InfoStat', cName='PythonInfoStat', 
                                description='Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag',
@@ -311,10 +314,10 @@ sL+=sL1; #s+=s1;  #this function is defined in __init__.py ==> do not add to cpp
 #s += '        m.def_readwrite("variables", &exudynVariables, py::return_value_policy::reference)\n' 
 #variables in the module itself are exported with "m.attr(...)" !
 s += '        m.attr("variables") = exudynVariables;\n' 
-sL += '  variables & this dictionary may be used by the user to store exudyn-wide data in order to avoid global python variables; usage: exu.variables["myvar"] = 42 \\\\ \\hline  \n'
+sL += '  variables & this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables["myvar"] = 42 \\\\ \\hline  \n'
 
 s += '        m.attr("sys") = exudynSystemVariables;\n' 
-sL += "  sys & this dictionary is used and reserved by the system, e.g. for testsuite, graphics or system function to store module-wide data in order to avoid global python variables; the variable exu.sys['renderState'] contains the last render state after exu.StopRenderer() and can be used for subsequent simulations \\\\ \\hline  \n"
+sL += "  sys & this dictionary is used and reserved by the system, e.g. for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys['renderState'] contains the last render state after exu.StopRenderer() and can be used for subsequent simulations \\\\ \\hline  \n"
 
 [s1,sL1] = DefPyFinishClass('')
 s+=s1; sL+=sL1
@@ -421,7 +424,7 @@ sL += DefLatexFinishClass()#only finalize latex table
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 classStr = 'MainSystem'
-[s1,sL1] = DefPyStartClass(classStr, classStr, "This is the structure which defines a (multibody) system. In C++, there is a MainSystem (links to python) and a System (computational part). For that reason, the name is MainSystem on the python side, but it is often just called 'system'. It can be created, visualized and computed. " + "Use the following functions for system manipulation." +
+[s1,sL1] = DefPyStartClass(classStr, classStr, "This is the structure which defines a (multibody) system. In C++, there is a MainSystem (links to Python) and a System (computational part). For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. It can be created, visualized and computed. " + "Use the following functions for system manipulation." +
         ' \\\\ \\\\ Usage: \\\\ \\\\ \\texttt{import exudyn as exu \\\\ SC = exu.SystemContainer() \\\\ mbs = SC.AddSystem()}')
 s+=s1; sL+=sL1
 
@@ -429,7 +432,7 @@ s+=s1; sL+=sL1
 #GENERAL FUNCTIONS
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Assemble', cName='Assemble', 
-                                description="assemble items (nodes, bodies, markers, loads, ...); Calls CheckSystemIntegrity(...), AssembleCoordinates(), AssembleLTGLists(), and AssembleInitializeSystemCoordinates()"); s+=s1; sL+=sL1
+                                description="assemble items (nodes, bodies, markers, loads, ...); Calls CheckSystemIntegrity(...), AssembleCoordinates(), AssembleLTGLists(), AssembleInitializeSystemCoordinates(), and AssembleSystemInitialize()"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AssembleCoordinates', cName='AssembleCoordinates', 
                                 description="assemble coordinates: assign computational coordinates to nodes and constraints (algebraic variables)"); s+=s1; sL+=sL1
@@ -439,6 +442,9 @@ s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AssembleInitializeSystemCoordinates', cName='AssembleInitializeSystemCoordinates', 
                                 description="initialize all system-wide coordinates based on initial values given in nodes"); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AssembleSystemInitialize', cName='AssembleSystemInitialize', 
+                                description="initialize some system data, e.g., generalContact objects (searchTree, etc.)"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset', 
                                 description="reset all lists of items (nodes, bodies, markers, loads, ...) and temporary vectors; deallocate memory"); s+=s1; sL+=sL1
@@ -453,10 +459,10 @@ s+=s1; sL+=sL1
                                 description="this function is used to send a signal to the renderer that the scene shall be redrawn because the visualization state has been updated"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetRenderEngineStopFlag', cName='GetRenderEngineStopFlag', 
-                                description="get the current stop simulation flag; true=user wants to stop simulation"); s+=s1; sL+=sL1
+                                description="get the current stop simulation flag; True=user wants to stop simulation"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetRenderEngineStopFlag', cName='SetRenderEngineStopFlag', 
-                                description="set the current stop simulation flag; set to false, in order to continue a previously user-interrupted simulation"); s+=s1; sL+=sL1
+                                description="set the current stop simulation flag; set to False, in order to continue a previously user-interrupted simulation"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='ActivateRendering', cName='ActivateRendering', 
                                 argList=['flag'],
@@ -492,16 +498,16 @@ s+=s1; sL+=sL1
                                 example = 'print(mbs)'); s+=s1; sL+=sL1
 
 s += '        .def_property("systemIsConsistent", &MainSystem::GetFlagSystemIsConsistent, &MainSystem::SetFlagSystemIsConsistent)\n' 
-sL += '  systemIsConsistent & this flag is used by solvers to decide, whether the system is in a solvable state; this flag is set to false as long as Assemble() has not been called; any modification to the system, such as Add...(), Modify...(), etc. will set the flag to false again; this flag can be modified (set to true), if a change of e.g.~an object (change of stiffness) or load (change of force) keeps the system consistent, but would normally lead to systemIsConsistent=False  \\\\ \\hline  \n'
+sL += '  systemIsConsistent & this flag is used by solvers to decide, whether the system is in a solvable state; this flag is set to False as long as Assemble() has not been called; any modification to the system, such as Add...(), Modify...(), etc. will set the flag to False again; this flag can be modified (set to True), if a change of e.g.~an object (change of stiffness) or load (change of force) keeps the system consistent, but would normally lead to systemIsConsistent=False  \\\\ \\hline  \n'
 
 s += '        .def_property("interactiveMode", &MainSystem::GetInteractiveMode, &MainSystem::SetInteractiveMode)\n' 
-sL += '  interactiveMode & set this flag to true in order to invoke a Assemble() command in every system modification, e.g. AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode. \\\\ \\hline  \n'
+sL += '  interactiveMode & set this flag to True in order to invoke a Assemble() command in every system modification, e.g. AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode. \\\\ \\hline  \n'
 
 s += '        .def_readwrite("variables", &MainSystem::variables, py::return_value_policy::reference)\n' 
-sL += '  variables & this dictionary may be used by the user to store model-specific data, in order to avoid global python variables in complex models; mbs.variables["myvar"] = 42 \\\\ \\hline  \n'
+sL += '  variables & this dictionary may be used by the user to store model-specific data, in order to avoid global Python variables in complex models; mbs.variables["myvar"] = 42 \\\\ \\hline  \n'
 
 s += '        .def_readwrite("sys", &MainSystem::systemVariables, py::return_value_policy::reference)\n' 
-sL += '  sys & this dictionary is used by exudyn python libraries, e.g., solvers, to avoid global python variables \\\\ \\hline \n'
+sL += '  sys & this dictionary is used by exudyn Python libraries, e.g., solvers, to avoid global Python variables \\\\ \\hline \n'
 
 s += '        .def_property("solverSignalJacobianUpdate", &MainSystem::GetFlagSolverSignalJacobianUpdate, &MainSystem::SetFlagSolverSignalJacobianUpdate)\n' 
 sL += '  solverSignalJacobianUpdate & this flag is used by solvers to decide, whether the jacobian should be updated; at beginning of simulation and after jacobian computation, this flag is set automatically to False; use this flag to indicate system changes, e.g. during time integration  \\\\ \\hline  \n'
@@ -576,13 +582,15 @@ sL+=DefLatexStartClass(classStr+': Node', '\label{sec:mainsystem:node}\n This se
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetNodeParameter', cName='PyGetNodeParameter', 
-                                description="get nodes's parameter from node number (type NodeIndex) and parameterName; parameter names can be found for the specific items in the reference manual",
-                                argList=['nodeNumber', 'parameterName']
+                                description="get nodes's parameter from node number (type NodeIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix",
+                                argList=['nodeNumber', 'parameterName'],
+                                example = "mbs.GetNodeParameter(0, 'referenceCoordinates')",
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetNodeParameter', cName='PySetNodeParameter', 
-                                description="set parameter 'parameterName' of node with node number (type NodeIndex) to value; parameter names can be found for the specific items in the reference manual",
-                                argList=['nodeNumber', 'parameterName', 'value']
+                                description="set parameter 'parameterName' of node with node number (type NodeIndex) to value; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix",
+                                argList=['nodeNumber', 'parameterName', 'value'],
+                                example = "mbs.SetNodeParameter(0, 'Vshow', True)",
                                 ); s+=s1; sL+=sL1
 
 sL += DefLatexFinishClass()
@@ -612,13 +620,13 @@ sL += DefLatexStartClass(classStr+': Object', '\label{sec:mainsystem:object}\n T
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObject', cName='PyGetObject', 
-                                description="get object's dictionary by object number (type ObjectIndex)",
+                                description="get object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'",
                                 argList=['objectNumber'],
                                 example = "objectDict = mbs.GetObject(0)"
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='ModifyObject', cName='PyModifyObject', 
-                                description="modify object's dictionary by object number (type ObjectIndex)",
+                                description="modify object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'",
                                 argList=['objectNumber','objectDict'],
                                 example = "mbs.ModifyObject(objectNumber, objectDict)"
                                 ); s+=s1; sL+=sL1
@@ -655,13 +663,15 @@ sL += DefLatexStartClass(classStr+': Object', '\label{sec:mainsystem:object}\n T
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectParameter', cName='PyGetObjectParameter', 
-                                description="get objects's parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual",
-                                argList=['objectNumber', 'parameterName']
+                                description="get objects's parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix",
+                                argList=['objectNumber', 'parameterName'],
+                                example = "mbs.GetObjectParameter(objectNumber = 0, parameterName = 'nodeNumber')",
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetObjectParameter', cName='PySetObjectParameter', 
-                                description="set parameter 'parameterName' of object with object number (type ObjectIndex) to value; parameter names can be found for the specific items in the reference manual",
-                                argList=['objectNumber', 'parameterName', 'value']
+                                description="set parameter 'parameterName' of object with object number (type ObjectIndex) to value;; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix",
+                                argList=['objectNumber', 'parameterName', 'value'],
+                                example = "mbs.SetObjectParameter(objectNumber = 0, parameterName = 'Vshow', value=True)",
                                 ); s+=s1; sL+=sL1
 
 sL += DefLatexFinishClass()
@@ -829,6 +839,12 @@ sL += DefLatexStartClass(classStr+': Sensor', '\label{sec:mainsystem:sensor}\n T
                                 description="get sensors's values for configuration; can be a scalar or vector-valued return value!",
                                 defaultArgs=['','ConfigurationType::Current'],
                                 argList=['sensorNumber', 'configuration']
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSensorStoredData', cName='PyGetSensorStoredData',
+                                description="get sensors's internally stored data as matrix (all time points stored); rows are containing time and sensor values as obtained by sensor (e.g., time, and x, y, and z value of position)",
+                                defaultArgs=[''],
+                                argList=['sensorNumber']
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetSensorParameter', cName='PyGetSensorParameter', 
@@ -1071,7 +1087,7 @@ sL += DefLatexFinishClass()
 #+++++++++++++++++++++++++++++++++
 #LTG-functions:
 s += "\n//        LTG readout functions:\n"
-sL += DefLatexStartClass(pyClassStr+': Get object LTG coordinate mappings', 'This section provides access functions the \\ac{LTG}-lists for every object (body, constraint, ...) in the system.', subSection=True)
+sL += DefLatexStartClass(pyClassStr+': Get object LTG coordinate mappings', '\\label{sec:systemData:ObjectLTG}This section provides access functions the \\ac{LTG}-lists for every object (body, constraint, ...) in the system. For details on the \\ac{LTG} mapping, see \\refSection{sec:systemData:LTG}', subSection=True)
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectLTGODE2', cName='PyGetObjectLocalToGlobalODE2', 
                                 description="get local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()",
@@ -1113,7 +1129,8 @@ pyClassStr = 'MatrixContainer'
         '  \\item Create empty \\texttt{MatrixContainer} with \\texttt{mc = MatrixContainer()} \n'+
         '  \\item Create \\texttt{MatrixContainer} with dense matrix \\texttt{mc = MatrixContainer(matrix)}, where matrix can be a list of lists of a numpy array \n'+
         '  \\item Set with dense \\text{pyArray} (a numpy array): \\texttt{mc.SetWithDenseMatrix(pyArray, bool useDenseMatrix = True)}\n'+
-        '  \\item Set with sparse \\text{pyArray} (a numpy array), which has 3 colums and according rows containing the sparse triplets \\texttt{(row, col, value)} describing the sparse matrix ')
+        '  \\item Set with sparse \\text{pyArray} (a numpy array), which has 3 colums and according rows containing the sparse triplets \\texttt{(row, col, value)} describing the sparse matrix '+
+        '\\ei\n')
 s+=s1; sL+=sL1
 
 s+= '        .def(py::init<const py::object&>(), py::arg("matrix"))\n' #constructor with numpy array or list of lists
@@ -1147,12 +1164,13 @@ s+= '        .def(py::init<const py::object&>(), py::arg("matrix"))\n' #construc
 #documentation and pybindings for MatrixContainer
 classStr = 'PyGeneralContact'
 pyClassStr = 'GeneralContact'
-[s1,sL1] = DefPyStartClass(classStr, pyClassStr, "[{\\bf NOTE: For internal use only! GeneralContact is currently developed and must be used with care; interfaces may change significantly in upcoming versions}] Structure to define general and highly efficient contact functionality in multibody systems." +
+[s1,sL1] = DefPyStartClass(classStr, pyClassStr, "\\label{sec:GeneralContact}Structure to define general and highly efficient contact functionality in multibody systems\\footnote{Note that GeneralContact is still developed, use with care.}. For further explanations and theoretical backgrounds, see \\refSection{secContactTheory}." +
         ' \\\\ \\\\ Usage: \\bi\n'+
         '  \\item Add \\texttt{GeneralContact} to mbs \\texttt{gContact = mbs.AddGeneralContact()} \n'+
         '  \\item Add contact elements, e.g., \\texttt{gContact.AddSphereWithMarker(...)}, using appropriate arguments \n'+
-        '  \\item After all contact elements have been added, call \\texttt{gContact.FinalizeContact(...)} before assemble.\n'+
+        '  \\item Call SetFrictionPairings(...) to set friction pairings and adjust searchTree if needed.\n'+
         '\\ei\n')
+#{\\bf NOTE: For internal use only! GeneralContact is currently developed and must be used with care; interfaces may change significantly in upcoming versions}]
 s+=s1; sL+=sL1
 
 #already included: s+= '        .def(py::init<>())\n' #empty constructor 
@@ -1174,16 +1192,69 @@ sL += '  verboseMode & default = 0; verboseMode = 1 or higher outputs useful inf
 s +=  '        .def_readwrite("visualization", &PyGeneralContact::visualization, py::return_value_policy::reference)\n' 
 sL += '  visualization & access visualization data structure \\\\ \\hline  \n'
 
+#s +=  '        .def_readwrite("intraSpheresContact", &PyGeneralContact::settings.intraSpheresContact, py::return_value_policy::reference)\n' 
+s +=  '        .def_property("sphereSphereContact", &PyGeneralContact::GetSphereSphereContact, &PyGeneralContact::SetSphereSphereContact)\n' 
+sL += '  sphereSphereContact & activate/deactivate contact between spheres \\\\ \\hline  \n'
 
-[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='FinalizeContact', cName='PyFinalizeContact', 
-                                argList=['mainSystem','searchTreeSize','frictionPairingsInit','searchTreeBoxMin','searchTreeBoxMax'],
-                                defaultArgs=['','','', '(std::vector<Real>)Vector3D( EXUstd::MAXREAL )','(std::vector<Real>)Vector3D( EXUstd::LOWESTREAL )'],
-                                description="WILL CHANGE IN FUTURE: Call this function after mbs.Assemble(); precompute some contact arrays (mainSystem needed) and set up necessary parameters for contact: friction, SearchTree, etc.; done after all contacts have been added; function performs checks; empty box will autocompute size!"); s+=s1; sL+=sL1
+s +=  '        .def_property("sphereSphereFrictionRecycle", &PyGeneralContact::GetSphereSphereFrictionRecycle, &PyGeneralContact::SetSphereSphereFrictionRecycle)\n' 
+sL += '  sphereSphereFrictionRecycle & False: compute static friction force based on tangential velocity; True: recycle friction from previous PostNewton step, which greatly improves convergence, but may lead to unphysical artifacts; will be solved in future by step reduction \\\\ \\hline  \n'
+
+s +=  '        .def_property("minRelDistanceSpheresTriangles", &PyGeneralContact::GetMinRelDistanceSpheresTriangles, &PyGeneralContact::SetMinRelDistanceSpheresTriangles)\n' 
+sL += '  minRelDistanceSpheresTriangles & (default=1e-10) tolerance (relative to sphere radiues) below which the contact between triangles and spheres is ignored; used for spheres directly attached to triangles \\\\ \\hline  \n'
+
+s +=  '        .def_property("frictionProportionalZone", &PyGeneralContact::GetFrictionProportionalZone, &PyGeneralContact::SetFrictionProportionalZone)\n' 
+sL += '  frictionProportionalZone & (default=0.001) velocity $v_{\mu,reg}$ upon which the dry friction coefficient is interpolated linearly (regularized friction model); must be greater 0; very small values cause oscillations in friction force \\\\ \\hline  \n'
+
+s +=  '        .def_property("frictionVelocityPenalty", &PyGeneralContact::GetFrictionVelocityPenalty, &PyGeneralContact::SetFrictionVelocityPenalty)\n' 
+sL += '  frictionVelocityPenalty & (default=1e3) regularization factor for friction [N/(m$^2 \cdot$m/s) ];$k_{\mu,reg}$, multiplied with tangential velocity to compute friciton force as long as it is smaller than $\mu$ times contact force; large values cause oscillations in friction force \\\\ \\hline  \n'
+
+s +=  '        .def_property("excludeOverlappingTrigSphereContacts", &PyGeneralContact::GetExcludeOverlappingTrigSphereContacts, &PyGeneralContact::SetExcludeOverlappingTrigSphereContacts)\n' 
+sL += '  		excludeOverlappingTrigSphereContacts & (default=True) for consistent, closed meshes, we can exclude overlapping contact triangles (which would cause holes if mesh is overlapping and not consistent!!!) \\\\ \\hline  \n'
+
+s +=  '        .def_property("excludeDuplicatedTrigSphereContactPoints", &PyGeneralContact::GetExcludeDuplicatedTrigSphereContactPoints, &PyGeneralContact::SetExcludeDuplicatedTrigSphereContactPoints)\n' 
+sL += '  		excludeDuplicatedTrigSphereContactPoints & (default=False) run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts \\\\ \\hline  \n'
+
+s +=  '        .def_property("ancfCableUseExactMethod", &PyGeneralContact::GetAncfCableUseExactMethod, &PyGeneralContact::SetAncfCableUseExactMethod)\n' 
+sL += '  		ancfCableUseExactMethod & (default=True) if true, uses exact computation of intersection of 3rd order polynomials and contacting circles \\\\ \\hline  \n'
+
+s +=  '        .def_property("ancfCableNumberOfContactSegments", &PyGeneralContact::GetAncfCableNumberOfContactSegments, &PyGeneralContact::SetAncfCableNumberOfContactSegments)\n' 
+sL += '  		ancfCableNumberOfContactSegments & (default=1) number of segments to be used in case that ancfCableUseExactMethod=False; maximum number of segments=3 \\\\ \\hline  \n'
+
+
+# [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='FinalizeContact', cName='PyFinalizeContact', 
+#                                 argList=['mainSystem','searchTreeSize','frictionPairingsInit','searchTreeBoxMin','searchTreeBoxMax'],
+#                                 defaultArgs=['','','', '(std::vector<Real>)Vector3D( EXUstd::MAXREAL )','(std::vector<Real>)Vector3D( EXUstd::LOWESTREAL )'],
+#                                 description="WILL CHANGE IN FUTURE: Call this function after mbs.Assemble(); precompute some contact arrays (mainSystem needed) and set up necessary parameters for contact: friction, SearchTree, etc.; done after all contacts have been added; function performs checks; empty box will autocompute size!"); s+=s1; sL+=sL1
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetFrictionPairings', cName='SetFrictionPairings', 
+                               argList=['frictionPairings'],
+                               example='\\#set 3 surface friction types, all being 0.1:\\\\gContact.SetFrictionPairings(0.1*np.ones((3,3)));',
+                               description="set Coulomb friction coefficients for pairings of materials (e.g., use material 0,1, then the entries (0,1) and (1,0) define the friction coefficients for this pairing); matrix should be symmetric!"); s+=s1; sL+=sL1
+                
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetFrictionProportionalZone', cName='SetFrictionProportionalZone', 
+                               argList=['frictionProportionalZone'],
+                               description="regularization for friction (m/s); used for all contacts"); s+=s1; sL+=sL1
+                                      
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetSearchTreeCellSize', cName='SetSearchTreeCellSize', 
+                               argList=['numberOfCells'],
+                               example='gContact.SetSearchTreeInitSize([10,10,10])',
+                               description="set number of cells of search tree (boxed search) in x, y and z direction"); s+=s1; sL+=sL1
                                                       
-
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetSearchTreeBox', cName='SetSearchTreeBox', 
+                               argList=['pMin','pMax'],
+                               example='gContact.SetSearchTreeBox(pMin=[-1,-1,-1],\\\\   \\phantom   pMax=[1,1,1])',
+                               description="set geometric dimensions of searchTreeBox (point with minimum coordinates and point with maximum coordinates); if this box becomes smaller than the effective contact objects, contact computations may slow down significantly"); s+=s1; sL+=sL1
+                                                      
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSphereWithMarker', cName='AddSphereWithMarker', 
                                 argList=['markerIndex','radius','contactStiffness','contactDamping','frictionMaterialIndex'],
-                                description="add contact object using a marker (Position or Rigid), radius and contact/friction parameters; contact is possible between spheres (circles in 2D) (if intraSphereContact = true) and between sphere (=circle) and ANCFCable2D"); s+=s1; sL+=sL1
+                                description="add contact object using a marker (Position or Rigid), radius and contact/friction parameters; frictionMaterialIndex refers to frictionPairings in GeneralContact; contact is possible between spheres (circles in 2D) (if intraSphereContact = True), spheres and triangles and between sphere (=circle) and ANCFCable2D; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate)!"); s+=s1; sL+=sL1
+                                                      
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddANCFCable', cName='AddANCFCable', 
+                                argList=['objectIndex','halfHeight','contactStiffness','contactDamping','frictionMaterialIndex'],
+                                description="add contact object for an ANCF cable element, using the objectIndex of the cable element and the cable's half height as an additional distance to contacting objects (currently not causing additional torque in case of friction); currently only contact with spheres (circles in 2D) possible; contact computed using exact geometry of elements, finding max 3 intersecting contact regions"); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddTrianglesRigidBodyBased', cName='PyAddTrianglesRigidBodyBased', 
+                                argList=['rigidBodyMarkerIndex','contactStiffness','contactDamping','frictionMaterialIndex','pointList','triangleList'],
+                                description="add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; mesh can be produced with GraphicsData2TrigsAndPoints(...); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(...)"); s+=s1; sL+=sL1
                                                       
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const PyGeneralContact &item) {\n            return EXUstd::ToString(item); }', 
                                 description="return the string representation of the GeneralContact, containing basic information and statistics",

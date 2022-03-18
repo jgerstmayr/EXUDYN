@@ -41,7 +41,7 @@ void CObjectContactFrictionCircleCable2D::ComputeGap(const MarkerDataStructure& 
 	//position and radius of circle:
 	Vector2D circleCenter({ markerData0.position[0], markerData0.position[1] }); //center of the circle
 	const Real& r = parameters.circleRadius;
-	const Real& offset = parameters.offset;
+	//const Real& offset = parameters.offset;
 	Vector2D contactVector; //vector from contact point to circle midpoint; the contact force acts in opposite direction
 
 	Index nSeg = parameters.numberOfContactSegments;
@@ -62,7 +62,7 @@ void CObjectContactFrictionCircleCable2D::ComputeGap(const MarkerDataStructure& 
 		Real distance = HGeometry::ShortestDistanceEndPointsRelativePosition(p0, p1, circleCenter, referenceCoordinatePerSegment[i], contactVector);
 		if (distance != 0.) { contactVector *= 1. / distance; } //computes normal vector
 
-		gapPerSegment[i] = distance - r - offset;
+		gapPerSegment[i] = distance - r;// -offset;
 		xDirectionGap[i] = -contactVector[0]; //x-component of direction of force (global coordinates)
 		yDirectionGap[i] = -contactVector[1]; //y-component of direction of force (global coordinates)
 	}
@@ -103,35 +103,211 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> referenceCoordinatePerSegment;
 		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> xDirectionGap;
 		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> yDirectionGap;
-		ComputeGap(markerData, gapPerSegment, referenceCoordinatePerSegment, xDirectionGap, yDirectionGap);
+
+		const bool usePointWiseNormals = true; //with this flag, normal forces are applied in according circle normal direction at segment point, rather than using the segment normal)
 		const Index maxNumberOfPoints = CObjectContactFrictionCircleCable2DmaxNumberOfSegments + 1;
+		SlimArray<Vector2D, maxNumberOfPoints> pointNormals;
 
-		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//compute velocities:
-		//ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> gapVelocityPerSegment;
-		//ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> tangentialVelocityPerSegment;
-		//gapVelocityPerSegment.SetNumberOfItems(parameters.numberOfContactSegments);
-		//tangentialVelocityPerSegment.SetNumberOfItems(parameters.numberOfContactSegments);
-
-		//for (Index i = 0; i < parameters.numberOfContactSegments; i++)
-		//{
-		//	tangentialVelocityPerSegment[i] = vCircle * t;  //tangential velocity
-		//	gapVelocityPerSegment[i] = vCircle * n;			//gap velocity
-		//}
-
-
-
-
-		ConstSizeVector<maxNumberOfPoints * 2> forcePerPoint; //force (x/y) per contact point ==> used to apply forces
-		forcePerPoint.SetNumberOfItems((parameters.numberOfContactSegments + 1) * 2);
-		forcePerPoint.SetAll(0.);
-		Vector3D forceSum({ 0.,0.,0. }); //sum of all forces acting on circle
-		Vector3D torqueSum({ 0.,0.,0. }); //sum of all torques acting on circle (roll)
+		//precheck, if contact occurs
+		bool computeContact = false;
+		LinkedDataVector currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);
+		LinkedDataVector startOfStepState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::StartOfStep);
 
 		for (Index i = 0; i < parameters.numberOfContactSegments; i++)
 		{
-			//Real hasContact = 0; //1 for contact, 0 else
-			if (GetCNode(0)->GetCurrentCoordinate(i) <= 0)  //this is the contact state: <=0: contact/use contact force, >0: no contact
+			if (currentState[i] <= 0.) { computeContact = true; }
+		}
+		if (computeContact)
+		{
+			ComputeGap(markerData, gapPerSegment, referenceCoordinatePerSegment, xDirectionGap, yDirectionGap);
+
+			ConstSizeVector<maxNumberOfPoints * 2> forcePerPoint; //force (x/y) per contact point ==> used to apply forces
+			forcePerPoint.SetNumberOfItems((parameters.numberOfContactSegments + 1) * 2);
+			forcePerPoint.SetAll(0.);
+			Vector3D forceSum({ 0.,0.,0. }); //sum of all forces acting on circle
+			Vector3D torqueSum({ 0.,0.,0. }); //sum of all torques acting on circle (roll)
+
+			if (usePointWiseNormals)
+			{
+				Vector2D pCircle({ markerData0.position[0], markerData0.position[1] });
+				for (Index i = 0; i < parameters.numberOfContactSegments+1; i++)
+				{
+					pointNormals[i] = Vector2D({ markerData1.vectorValue[i * 2], markerData1.vectorValue[i * 2 + 1] }) - pCircle;
+					Real length = pointNormals[i].GetL2Norm();
+					if (length != 0.) { pointNormals[i] *= 1. / length; }
+				}
+			}
+
+			for (Index i = 0; i < parameters.numberOfContactSegments; i++)
+			{
+				//Real hasContact = 0; //1 for contact, 0 else
+				if (currentState[i] <= 0)  //this is the contact state: <=0: contact/use contact force, >0: no contact
+				{
+					//velocity terms:
+					Vector2D v0({ markerData1.vectorValue_t[i * 2], markerData1.vectorValue_t[i * 2 + 1] });	 //markerdata.value stores the x/y velocities of the contact points
+					Vector2D v1({ markerData1.vectorValue_t[i * 2 + 2], markerData1.vectorValue_t[i * 2 + 1 + 2] }); //markerdata.value stores the x/y velocities of the contact points
+
+					Vector2D cableContactVel = (1. - referenceCoordinatePerSegment[i])*v0 + referenceCoordinatePerSegment[i] * v1; //this is the velocity at the point of shortest distance (interpolated from the contact segment)
+					Vector2D n({ xDirectionGap[i], yDirectionGap[i] }); //contact normal vector;  already normalized vector!
+					Vector2D t({ -n[1], n[0] }); //contact tangent vector
+
+					Vector2D circleContactVel({ markerData0.velocity[0], markerData0.velocity[1] });
+					circleContactVel += parameters.circleRadius * markerData0.angularVelocityLocal[2] * t; //this is now the velocity of the contact point of the Circle/Rigid body
+
+					Real gapVel = (cableContactVel - circleContactVel)*n;
+
+					Real fNormal = gapPerSegment[i] * parameters.contactStiffness + gapVel * parameters.contactDamping;		//contact normal force of segment
+
+					//std::cout << "gap" << i << " = " << gapPerSegment[i] << ",nVel = " << gapVel << ", tVel = " << tangentialVel << "\n";
+					//std::cout << "  fN=" << fNormal << ", fT=" << fTangent << ", n=" << n << ", t=" << t << "\n";
+					//this is the most accurate and also quite robust way:
+					Index isSlipStick = (Index)currentState[parameters.numberOfContactSegments + i]; //-2 (invalid), -1=-slip, 1=+slip, 0=stick
+
+					Real tangentialVel = (cableContactVel - circleContactVel)*t;
+
+					//Real maxFrictionForce = parameters.frictionCoefficient*fabs(fNormal); //use this to switch tangential contact behavior
+
+					Real fTangent = tangentialVel * parameters.frictionVelocityPenalty;  //contact (friction) tangent force of segment
+					Real diffStickPos = tangentialVel;
+					if (abs((int)isSlipStick) != absValueSlipCase && parameters.frictionStiffness != 0.) //exclude step when first contact happens (no last sticking position exists!)
+					{
+						Real lastStickPos = currentState[2 * parameters.numberOfContactSegments + i];
+
+						//compute 
+						Vector3D nLocal = Vector3D({ n[0],n[1],0. })*markerData0.orientation; //compute n in local circle coordinates
+						//Real circlePos = parameters.circleRadius*atan2(markerData0.orientation(1, 0), markerData0.orientation(0, 0)); //atan2(e0y, e0x) = phi
+						Real circlePos = parameters.circleRadius*atan2(nLocal[1], nLocal[0]); //atan2(e0y, e0x) = phi
+						Vector2D p0({ markerData1.vectorValue[i * 2], markerData1.vectorValue[i * 2 + 1] });	 //markerdata.value stores the x/y positions of the contact points
+						Vector2D p1({ markerData1.vectorValue[i * 2 + 2], markerData1.vectorValue[i * 2 + 1 + 2] }); //markerdata.value stores the x/y positions of the contact points
+						Real segmentLength = (p1 - p0).GetL2Norm();
+						Real segmentPos = referenceCoordinatePerSegment[i] * segmentLength;
+						Real sign = 1.; //depends whether circle tangent has same direction as cable tangent
+						if (t*(p1 - p0) > 0.)
+						{
+							sign = -1.;//compare sign: tangentialVel = (cableContactVel - circleContactVel)*t
+						}
+						Real currentStickPos = circlePos + sign * segmentPos; //circlePos has always same sign; segmentPos depends, how ANCFCable contacts
+						diffStickPos = currentStickPos - lastStickPos;
+
+						//now remove additional complete rotations!
+						//general rule for angles, transform into -pi .. +pi: x - (floor(x / (2 * pi) + 0.5)) * 2 * pi
+						Real factRotation = parameters.circleRadius*2.*EXUstd::pi;
+						diffStickPos -= floor(diffStickPos/factRotation + 0.5) * factRotation;
+
+						CHECKandTHROW((diffStickPos < parameters.circleRadius*EXUstd::pi && diffStickPos > -parameters.circleRadius*EXUstd::pi),
+							"CObjectContactFrictionCircleCable2D::ComputeODE2LHS: sticking position out of range: " + EXUstd::ToString(diffStickPos));
+
+						//now it should be always between -pi*r and +pi*r
+						fTangent += diffStickPos * parameters.frictionStiffness;
+					}
+
+					if (abs((int)isSlipStick) == absValueSlipCase)
+					{
+						//Escalona (2017, Simulation of the rope–sheave interaction) uses Sgn(diffStickPos); seems pretty same as Sgn(fTangent)
+						fTangent = parameters.frictionCoefficient*fabs(fNormal)*(Real)isSlipStick; // EXUstd::Sgn(diffStickPos);
+						//fTangent = parameters.frictionCoefficient*fabs(fNormal)*EXUstd::Sgn(fTangent);
+					}
+
+
+					if (!usePointWiseNormals)
+					{
+						Vector2D contactForce = fNormal * n + fTangent * t; //now bring into global coordinate system
+							//as gap is negative in case of contact, the force needs to act in opposite direction
+						//force in global x-direction:
+						forcePerPoint[i * 2] += contactForce[0] * (1. - referenceCoordinatePerSegment[i]);
+						forcePerPoint[(i + 1) * 2] += contactForce[0] * referenceCoordinatePerSegment[i];
+						//force in global y-direction:
+						forcePerPoint[i * 2 + 1] += contactForce[1] * (1. - referenceCoordinatePerSegment[i]);
+						forcePerPoint[(i + 1) * 2 + 1] += contactForce[1] * referenceCoordinatePerSegment[i];
+
+						forceSum[0] += contactForce[0];
+						forceSum[1] += contactForce[1];
+					}
+					else
+					{
+						Vector2D& n0 = pointNormals[i]; //left
+						Vector2D& n1 = pointNormals[i + 1]; //right
+
+						Vector2D contactForce0 = fNormal * n0 + fTangent * Vector2D({ -n0[1], n0[0] });
+						Vector2D contactForce1 = fNormal * n1 + fTangent * Vector2D({ -n1[1], n1[0] });
+						//force in global x-direction:
+						forcePerPoint[i * 2] += contactForce0[0] * (1. - referenceCoordinatePerSegment[i]);
+						forcePerPoint[(i + 1) * 2] += contactForce1[0] * referenceCoordinatePerSegment[i];
+						//force in global y-direction:
+						forcePerPoint[i * 2 + 1] += contactForce0[1] * (1. - referenceCoordinatePerSegment[i]);
+						forcePerPoint[(i + 1) * 2 + 1] += contactForce1[1] * referenceCoordinatePerSegment[i];
+
+						//now add forces to circle/roll (accordingly with weighting, to keep equilibrium ...):
+						forceSum[0] += contactForce0[0] * (1. - referenceCoordinatePerSegment[i]) + contactForce1[0] * referenceCoordinatePerSegment[i];
+						forceSum[1] += contactForce0[1] * (1. - referenceCoordinatePerSegment[i]) + contactForce1[1] * referenceCoordinatePerSegment[i];
+					}
+
+					torqueSum[2] += fTangent * parameters.circleRadius;
+				}
+			}
+
+			//now link ode2Lhs Vector to partial result using the two jacobians
+			if (markerData.GetMarkerData(1).jacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
+			{
+				LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).jacobian.NumberOfColumns());
+
+				//positive force on marker1
+				EXUmath::MultMatrixTransposedVectorTemplate(markerData.GetMarkerData(1).jacobian, forcePerPoint, ldv1);
+			}
+
+			if (markerData.GetMarkerData(0).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
+			{
+				LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
+
+				forceSum *= -1; //negative force on marker0
+				torqueSum *= -1; //negative force on marker0
+				ConstSizeVector<CObjectContactFrictionCircleCable2DmaxObject0Coordinates> temp(ldv0.NumberOfItems()); //possible crash, if rigid body has more than 12 DOF --> check above
+				EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).positionJacobian, forceSum, ldv0);
+				EXUmath::MultMatrixTransposedVectorTemplate(markerData.GetMarkerData(0).rotationJacobian, torqueSum, temp);
+				ldv0 += temp;
+			}
+		}
+	}
+
+}
+
+//! function called after Newton method; returns a residual error (force); 
+//! done for two different computation states in order to estimate the correct time of contact
+Real CObjectContactFrictionCircleCable2D::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, 
+	PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+{
+	//return force-type error in case of contact: in case that the assumed contact state has been wrong, 
+	//  the contact force (also negative) is returned as measure of the error
+	Real discontinuousError = 0;
+	flags = PostNewtonFlags::_None;
+
+	if (parameters.activeConnector)
+	{
+		const MarkerData& markerData0 = markerDataCurrent.GetMarkerData(0); //Circle
+		const MarkerData& markerData1 = markerDataCurrent.GetMarkerData(1); //ANCFCable2DShape
+		LinkedDataVector currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);	//copy, but might change values ...
+		LinkedDataVector startOfStepState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::StartOfStep);
+		Real tCurrent = GetCNode(0)->GetCData()->GetCurrent().GetTime();
+		Real tStartOfStep = GetCNode(0)->GetCData()->GetStartOfStep().GetTime();
+
+		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> currentGapPerSegment;
+		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> referenceCoordinatePerSegment;
+		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> xDirectionGap;
+		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> yDirectionGap;
+		
+		ComputeGap(markerDataCurrent, currentGapPerSegment, referenceCoordinatePerSegment, xDirectionGap, yDirectionGap);
+
+		for (Index i = 0; i < parameters.numberOfContactSegments; i++)
+		{
+			//if (currentGapPerSegment[i] > 0 && currentState[i] <= 0 || currentGapPerSegment[i] <= 0 && currentState[i] > 0) //OLD: brackets missing!
+			if ((currentGapPerSegment[i] > 0 && currentState[i] <= 0) || (currentGapPerSegment[i] <= 0 && currentState[i] > 0))
+			{//action: state1=currentGapState, error = |currentGap*k|
+				discontinuousError += fabs((currentGapPerSegment[i] - currentState[i])* parameters.contactStiffness);
+			}
+			currentState[i] = currentGapPerSegment[i]; //always update contact forces ...
+
+
+			if (currentState[i] <= 0. && parameters.frictionVelocityPenalty != 0.)  //gap<=0 ==> contact
 			{
 				//velocity terms:
 				Vector2D v0({ markerData1.vectorValue_t[i * 2], markerData1.vectorValue_t[i * 2 + 1] });	 //markerdata.value stores the x/y velocities of the contact points
@@ -147,96 +323,90 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 				Real gapVel = (cableContactVel - circleContactVel)*n;
 				Real tangentialVel = (cableContactVel - circleContactVel)*t;
 
-				Real fNormal = gapPerSegment[i] * parameters.contactStiffness + gapVel * parameters.contactDamping;		//contact normal force of segment
+				Real fNormal = currentGapPerSegment[i] * parameters.contactStiffness + gapVel * parameters.contactDamping;		//contact normal force of segment
+
+				//Real maxFrictionForce = parameters.frictionCoefficient*fabs(fNormal); //use this to switch tangential contact behavior
+
 				Real fTangent = tangentialVel * parameters.frictionVelocityPenalty;  //contact (friction) tangent force of segment
+				Index isSlipStick = 0; //assume stick first, then switch to slip if necessary //-2 (invalid), -1=-slip, 1=+slip, 0=stick
 
-				//std::cout << "gap" << i << " = " << gapPerSegment[i] << ",nVel = " << gapVel << ", tVel = " << tangentialVel << "\n";
-				//std::cout << "  fN=" << fNormal << ", fT=" << fTangent << ", n=" << n << ", t=" << t << "\n";
+				Real lastStickPos = startOfStepState[2 * parameters.numberOfContactSegments + i];
+				Real currentStickPos = lastStickPos; //default, only used if parameters.frictionStiffness != 0.
+				Real diffStickPos = tangentialVel; //if parameters.frictionStiffness == 0. ==> used for decision
 
-				//WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING:
-				//WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING:
-				//WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING:
-				if (fabs(fTangent) > parameters.frictionCoefficient*fabs(fNormal)) { fTangent = parameters.frictionCoefficient*fabs(fNormal)*EXUstd::Sgn(fTangent); } //this should be changed with an according friction flag
+				if (parameters.frictionStiffness != 0.) //not used at initial step, because no previous consistent sticking position known
+				{
+					Vector3D nLocal = Vector3D({ n[0],n[1],0. })*markerData0.orientation; //compute n in local circle coordinates
+					//Real circlePos = parameters.circleRadius*atan2(markerData0.orientation(1, 0), markerData0.orientation(0, 0)); //atan2(e0y, e0x) = phi
+					Real circlePos = parameters.circleRadius*atan2(nLocal[1], nLocal[0]); //atan2(e0y, e0x) = phi
+					Vector2D p0({ markerData1.vectorValue[i * 2], markerData1.vectorValue[i * 2 + 1] });	 //markerdata.value stores the x/y positions of the contact points
+					Vector2D p1({ markerData1.vectorValue[i * 2 + 2], markerData1.vectorValue[i * 2 + 1 + 2] }); //markerdata.value stores the x/y positions of the contact points
+					Real segmentLength = (p1 - p0).GetL2Norm();
+					Real segmentPos = referenceCoordinatePerSegment[i] * segmentLength;
+					Real sign = 1.; //depends whether circle tangent has same direction as cable tangent
+					if (t*(p1 - p0) > 0.)
+					{
+						sign = -1.;//compare sign: tangentialVel = (cableContactVel - circleContactVel)*t
+					}
+					currentStickPos = circlePos + sign * segmentPos; //circlePos has always same sign; segmentPos depends, how ANCFCable contacts
+					if (startOfStepState[parameters.numberOfContactSegments + i] == isUndefinedCase)
+					{
+						lastStickPos = currentStickPos; //no sticking force, but will update stickPos for next step!
+					}
 
-				Vector2D contactForce = fNormal * n + fTangent * t; //now bring into global coordinate system
+					diffStickPos = currentStickPos - lastStickPos;
 
-				//as gap is negative in case of contact, the force needs to act in opposite direction
-				//force in global x-direction:
-				forcePerPoint[i * 2] += contactForce[0] * (1. - referenceCoordinatePerSegment[i]);
-				forcePerPoint[(i + 1) * 2] += contactForce[0] * referenceCoordinatePerSegment[i];
-				//force in global y-direction:
-				forcePerPoint[i * 2 + 1] += contactForce[1] * (1. - referenceCoordinatePerSegment[i]);
-				forcePerPoint[(i + 1) * 2 + 1] += contactForce[1] * referenceCoordinatePerSegment[i];
+					//general rule for angles, transform into -pi .. +pi: x - (floor(x / (2 * pi) + 0.5)) * 2 * pi
+					Real factRotation = parameters.circleRadius*2.*EXUstd::pi;
+					diffStickPos -= floor(diffStickPos / factRotation + 0.5) * factRotation;
 
-				forceSum[0] += contactForce[0];
-				forceSum[1] += contactForce[1];
-				torqueSum[2] += fTangent * parameters.circleRadius;
+					//now it should be always between -pi*r and +pi*r
+					//pout << "PN diffStickPos = " << diffStickPos <<  ", lastStickPos = " << lastStickPos << ", +fTangent = " << parameters.frictionStiffness*diffStickPos << "\n";
+					//pout << "  fTangentVel = " << fTangent << ", fTangentMax = " << parameters.frictionCoefficient*fabs(fNormal) << "\n";
+
+					//pout << "PN diffStickPos item " << itemIndex << ", seg " << i << " = " << diffStickPos << "\n";
+					fTangent += diffStickPos * parameters.frictionStiffness;
+
+				}
+
+				Real fTangentMax = parameters.frictionCoefficient*fabs(fNormal);
+				Real fTangentDiff = fabs(fTangent) - fTangentMax;
+				if (fTangentDiff > 0.) //switch to slip case
+				{ 
+					fTangent = fTangentMax * EXUstd::Sgn(diffStickPos); //practically no difference to  EXUstd::Sgn(fTangent)
+					//fTangent = fTangentMax * EXUstd::Sgn(fTangent); //better, if initial diffStickPos = 0
+					isSlipStick = EXUstd::Sgn(diffStickPos); //should not be zero anyway; if still zero, then stick is appropriate ...
+
+					Real newStickPos = currentStickPos;
+					if (parameters.frictionStiffness != 0.)
+					{
+						//minus leads to diffStickPos_k+1 = newStickPos_k if no slip occurs; 
+						newStickPos += -1*EXUstd::SignReal(diffStickPos) * fTangentMax / (parameters.frictionStiffness);
+						
+						//theoretically, position should be corrected by velocity term; dt is according to expected distance dx=v*dt
+						//however: this term shall be small and omitting it, it should keep the friction in a more stable sliding state ...
+						//Real dt = tCurrent - tStartOfStep;
+						//newStickPos += tangentialVel * (parameters.frictionVelocityPenalty / (parameters.frictionStiffness) + dt);
+					}
+
+					currentState[2 * parameters.numberOfContactSegments + i] = newStickPos; //sliding; always updates sticking position
+
+				} 
+				else //stick
+				{
+					currentState[2 * parameters.numberOfContactSegments + i] = lastStickPos; //sticking; use previous sticking position
+				}
+
+				if ((Index)currentState[parameters.numberOfContactSegments + i] != isSlipStick) //also works for undefined (initial) isSlipStick = -2
+				{
+					discontinuousError += fabs(fTangentDiff);
+				}
+				currentState[parameters.numberOfContactSegments + i] = (Real)isSlipStick;
+
 			}
-		}
-
-		//now link ode2Lhs Vector to partial result using the two jacobians
-		if (markerData.GetMarkerData(1).jacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).jacobian.NumberOfColumns());
-
-			//positive force on marker1
-			EXUmath::MultMatrixTransposedVectorTemplate(markerData.GetMarkerData(1).jacobian, forcePerPoint, ldv1);
-		}
-
-		if (markerData.GetMarkerData(0).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
-
-			forceSum *= -1; //negative force on marker0
-			torqueSum *= -1; //negative force on marker0
-			ConstSizeVector<CObjectContactFrictionCircleCable2DmaxObject0Coordinates> temp(ldv0.NumberOfItems()); //possible crash, if rigid body has more than 12 DOF --> check above
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).positionJacobian, forceSum, ldv0);
-			EXUmath::MultMatrixTransposedVectorTemplate(markerData.GetMarkerData(0).rotationJacobian, torqueSum, temp);
-			ldv0 += temp;
-		}
-	}
-
-}
-
-//! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-OutputVariableType CObjectContactFrictionCircleCable2D::GetOutputVariableTypes() const
-{
-	return OutputVariableType::Distance;
-}
-
-//! provide according output variable in "value"
-void CObjectContactFrictionCircleCable2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
-{
-	SysError("CObjectContactCoordinate::ObjectContactFrictionCircleCable2D not implemented");
-}
-
-
-//! function called after Newton method; returns a residual error (force); 
-//! done for two different computation states in order to estimate the correct time of contact
-Real CObjectContactFrictionCircleCable2D::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
-{
-	//return force-type error in case of contact: in case that the assumed contact state has been wrong, 
-	//  the contact force (also negative) is returned as measure of the error
-	Real discontinuousError = 0;
-	flags = PostNewtonFlags::_None;
-
-	if (parameters.activeConnector)
-	{
-		LinkedDataVector currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);	//copy, but might change values ...
-
-		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> currentGapPerSegment;
-		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> referenceCoordinatePerSegment;
-		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> xDirectionGap;
-		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> yDirectionGap;
-		ComputeGap(markerDataCurrent, currentGapPerSegment, referenceCoordinatePerSegment, xDirectionGap, yDirectionGap);
-
-		for (Index i = 0; i < parameters.numberOfContactSegments; i++)
-		{
-			//if (currentGapPerSegment[i] > 0 && currentState[i] <= 0 || currentGapPerSegment[i] <= 0 && currentState[i] > 0) //OLD: brackets missing!
-			if ((currentGapPerSegment[i] > 0 && currentState[i] <= 0) || (currentGapPerSegment[i] <= 0 && currentState[i] > 0))
-			{//action: state1=currentGapState, error = |currentGap*k|
-				discontinuousError += fabs((currentGapPerSegment[i] - currentState[i])* parameters.contactStiffness);
-				currentState[i] = currentGapPerSegment[i];
+			else
+			{
+				currentState[parameters.numberOfContactSegments + i] = isUndefinedCase; //no contact ==> undefined sticking state (-2) ==> undefined last sticking position
 			}
 		}
 	}
@@ -246,6 +416,131 @@ Real CObjectContactFrictionCircleCable2D::PostNewtonStep(const MarkerDataStructu
 //! function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
 void CObjectContactFrictionCircleCable2D::PostDiscontinuousIterationStep()
 {
+	if (parameters.activeConnector)
+	{
+		CHECKandTHROWstring("PostDiscontinuousIterationStep called without intention");
+
+		////This is anyway done at every SolveStep
+	}
 
 }
+
+//! provide according output variable in "value"
+void CObjectContactFrictionCircleCable2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+{
+	if (!(variableType == OutputVariableType::Coordinates ||
+		variableType == OutputVariableType::Coordinates_t ||
+		variableType == OutputVariableType::ForceLocal))
+	{
+		SysError("CObjectContactFrictionCircleCable2D::GetOutputVariable failed"); //error should not occur, because types are checked!
+	}
+
+	const MarkerData& markerData0 = markerData.GetMarkerData(0); //position based marker
+	const MarkerData& markerData1 = markerData.GetMarkerData(1); //ANCFCable2DShape
+	//gap>0: no contact, gap<0: contact
+	//Real gap = (markerData.GetMarkerData(1).value - markerData.GetMarkerData(0).value - parameters.offset);
+
+	ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> gapPerSegment;
+	ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> referenceCoordinatePerSegment;
+	ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> xDirectionGap;
+	ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> yDirectionGap;
+
+	value.SetNumberOfItems(parameters.numberOfContactSegments * 2);
+	value.SetAll(0.); //if no contact ==> zero forces, tangential velocities, ...
+		
+	bool computeContact = false;
+	LinkedDataVector currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);
+	//does not exist at initial step: LinkedDataVector startOfStepState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::StartOfStep);
+
+	for (Index i = 0; i < parameters.numberOfContactSegments; i++)
+	{
+		if (currentState[i] <= 0.) { computeContact = true; }
+	}
+	if (computeContact)
+	{
+		ComputeGap(markerData, gapPerSegment, referenceCoordinatePerSegment, xDirectionGap, yDirectionGap);
+
+
+		for (Index i = 0; i < parameters.numberOfContactSegments; i++)
+		{
+			if (currentState[i] <= 0)  //this is the contact state: <=0: contact/use contact force, >0: no contact
+			{
+
+				//velocity terms:
+				Vector2D v0({ markerData1.vectorValue_t[i * 2], markerData1.vectorValue_t[i * 2 + 1] });	 //markerdata.value stores the x/y velocities of the contact points
+				Vector2D v1({ markerData1.vectorValue_t[i * 2 + 2], markerData1.vectorValue_t[i * 2 + 1 + 2] }); //markerdata.value stores the x/y velocities of the contact points
+
+				Vector2D cableContactVel = (1. - referenceCoordinatePerSegment[i])*v0 + referenceCoordinatePerSegment[i] * v1; //this is the velocity at the point of shortest distance (interpolated from the contact segment)
+				Vector2D n({ xDirectionGap[i], yDirectionGap[i] }); //contact normal vector;  already normalized vector!
+				Vector2D t({ -n[1], n[0] }); //contact tangent vector
+
+				Vector2D circleContactVel({ markerData0.velocity[0], markerData0.velocity[1] });
+				circleContactVel += parameters.circleRadius * markerData0.angularVelocityLocal[2] * t; //this is now the velocity of the contact point of the Circle/Rigid body
+
+				Real gapVel = (cableContactVel - circleContactVel)*n;
+				Real tangentialVel = (cableContactVel - circleContactVel)*t;
+
+				if (variableType == OutputVariableType::Coordinates_t)
+				{
+					value[i * 2] = tangentialVel;
+					value[i * 2 + 1] = gapVel;
+				}
+
+				Real fNormal = gapPerSegment[i] * parameters.contactStiffness + gapVel * parameters.contactDamping;		//contact normal force of segment
+
+				Index isSlipStick = (Index)currentState[parameters.numberOfContactSegments + i]; //-2 (invalid), -1=-slip, 1=+slip, 0=stick
+
+				Real fTangent = tangentialVel * parameters.frictionVelocityPenalty;  //contact (friction) tangent force of segment
+				Real diffStickPos = tangentialVel;
+				if (abs((int)isSlipStick) != absValueSlipCase && parameters.frictionStiffness != 0.) //exclude step when first contact happens (no last sticking position exists!)
+				{
+					Real lastStickPos = currentState[2 * parameters.numberOfContactSegments + i];
+
+					//compute 
+					Vector3D nLocal = Vector3D({ n[0],n[1],0. })*markerData0.orientation; //compute n in local circle coordinates
+					//Real circlePos = parameters.circleRadius*atan2(markerData0.orientation(1, 0), markerData0.orientation(0, 0)); //atan2(e0y, e0x) = phi
+					Real circlePos = parameters.circleRadius*atan2(nLocal[1], nLocal[0]); //atan2(e0y, e0x) = phi
+					Vector2D p0({ markerData1.vectorValue[i * 2], markerData1.vectorValue[i * 2 + 1] });	 //markerdata.value stores the x/y positions of the contact points
+					Vector2D p1({ markerData1.vectorValue[i * 2 + 2], markerData1.vectorValue[i * 2 + 1 + 2] }); //markerdata.value stores the x/y positions of the contact points
+					Real segmentLength = (p1 - p0).GetL2Norm();
+					Real segmentPos = referenceCoordinatePerSegment[i] * segmentLength;
+					Real sign = 1.; //depends whether circle tangent has same direction as cable tangent
+					if (t*(p1 - p0) > 0.)
+					{
+						sign = -1.;//compare sign: tangentialVel = (cableContactVel - circleContactVel)*t
+					}
+					Real currentStickPos = circlePos + sign * segmentPos; //circlePos has always same sign; segmentPos depends, how ANCFCable contacts
+					diffStickPos = currentStickPos - lastStickPos;
+
+					//now remove additional complete rotations!
+					//general rule for angles, transform into -pi .. +pi: x - (floor(x / (2 * pi) + 0.5)) * 2 * pi
+					Real factRotation = parameters.circleRadius*2.*EXUstd::pi;
+					diffStickPos -= floor(diffStickPos / factRotation + 0.5) * factRotation;
+
+					//now it should be always between -pi*r and +pi*r
+					fTangent += diffStickPos * parameters.frictionStiffness;
+				}
+
+				if (abs((int)isSlipStick) == absValueSlipCase)
+				{
+					//Escalona (2017, Simulation of the rope–sheave interaction) uses Sgn(diffStickPos); seems pretty same as Sgn(fTangent)
+					fTangent = parameters.frictionCoefficient*fabs(fNormal)*(Real)isSlipStick; // EXUstd::Sgn(diffStickPos);
+				}
+				if (variableType == OutputVariableType::Coordinates)
+				{
+					if (isSlipStick != isStickCase) { diffStickPos = 0.; } //only if sticking!
+					value[i * 2] = diffStickPos; 
+					value[i * 2 + 1] = gapPerSegment[i];
+				}
+				else if (variableType == OutputVariableType::ForceLocal)
+				{
+					value[i * 2] = fTangent;
+					value[i * 2 + 1] = fNormal;
+				}
+			}
+		}
+	}
+}
+
+
 
