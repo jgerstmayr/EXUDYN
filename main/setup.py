@@ -352,6 +352,7 @@ class BuildExt(build_ext):
          '-Wno-comment', #deactivate multiline comment warning /* ... * * ...*/
          '-Wno-unknown-pragmas', #warning from ngs_core.hpp/taskmanager.hpp (NGsolve)
          '-Wno-sign-compare', #warning from taskmanager.hpp (NGsolve)
+         '-Wno-class-memaccess', #warning in SearchTree Box3D
  		 '-Wall',
          #'-std=c++17', #==>chosen automatic
          #'-fpermissive', #because of exceptions ==> allows compilation
@@ -423,7 +424,32 @@ class BuildExt(build_ext):
             ext.extra_link_args = link_opts
         build_ext.build_extensions(self)
 
+if exudynVersionString.find('.dev1') == -1:
+    developmentStatus = "Development Status :: 5 - Production/Stable"
+else:
+    developmentStatus = "Development Status :: 4 - Beta"
 
+long_description=''
+long_description += '**Exudyn** \n'
+long_description += '========== \n\n'
+long_description += 'A flexible multibody dynamics systems simulation code with Python and C++\n\n'
+long_description += 'Exudyn is hosted on `Github <https://github.com/jgerstmayr/EXUDYN>`_ which provides full documentation, tutorial, examples, etc.\n\n'
+long_description += 'See `License on github <https://github.com/jgerstmayr/EXUDYN/blob/master/LICENSE.txt>`_ .\n'
+long_description += 'Pre-compiled available for Windows / Python 3.6 - 3.9.\n\n'
+long_description += 'For more information, installation and tutorials see: \n\n'
+long_description += 'https://github.com/jgerstmayr/EXUDYN \n\n'
+long_description += 'Detailed documentation on theory, usage, reference manual on **600+** pages: \n\n'
+long_description += 'https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf\n\n'
+
+##this would work, but pypi does not read .rst files as properly as github does ...:
+# long_description = 'Exudyn is hosted on `Github <https://github.com/jgerstmayr/EXUDYN>`_ which provides full documentation, tutorial, examples, etc.\n'
+# long_description+= 'See `License on github <https://github.com/jgerstmayr/EXUDYN/blob/master/LICENSE.txt>`_ .\n'
+# long_description+= 'Pre-compiled available for Windows / Python 3.6 - 3.9.\n'
+# long_description+= 'The following description is copied from github, figures are missing!\n\n'
+# with open("../README.rst", "r") as fh:
+#     long_description += fh.read()
+
+    
 setup(
     name='exudyn',
     version=__version__,
@@ -431,13 +457,9 @@ setup(
     author_email='reply.exudyn@gmail.com',
     url='https://github.com/jgerstmayr/EXUDYN',
     description='EXUDYN flexible multibody dynamics simulation in C++ and Python',
-    long_description="""EXUDYN
-A flexible multibody dynamics systems simulation code with Python and C++
-For license information see LICENSE.txt
-For more information, installation and tutorials see
-https://github.com/jgerstmayr/EXUDYN
-and
-https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf""",
+    long_description = long_description,
+    long_description_content_type='text/x-rst',
+    #long_description_content_type='text/markdown', #standard is already text/x-rst
     package_dir={'':'pythonDev'},   #only add packages from that dir; must include a __init__.py file
     packages=['exudyn','exudyn/robotics'],            #adds all python files (=modules) in directories with __init__.py file; this is a subdirectory to the directory provided in package_dir
     ext_modules=ext_modules,
@@ -446,7 +468,7 @@ https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf""",
     zip_safe=False,
     license = 'BSD',
     classifiers=[
-        "Development Status :: 4 - Beta",
+        developmentStatus,
         "Programming Language :: Python :: 3",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: BSD License",

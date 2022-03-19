@@ -5,10 +5,10 @@ Exudyn **Version 1.2** is out! The documentation theDoc.pdf now reached > 600 pa
 
 If you like using Exudyn, please add a *star* on github, and send an email to \ ``reply.exudyn@gmail.com``\ such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** !
 
-| *A flexible multibody dynamics systems simulation code with Python and C++*
-| *free, open source and with plenty of documentation and examples*
-| *pre-compiled for Python 3.6, 3.7, 3.8 and 3.9 under Windows; Python 3.8 for MacOS available (for Linux, you need to build your wheels by yourself, see instructions in theDoc.pdf)* 
-| **NOTE**: for pure installation, use **pip install exudyn** (for older versions, go to \ ``main/dist``\  and install your preferred Microsoft installer (\ ``.msi``\ ) or wheel (\ ``.whl``\ ) in your according Python environment )
++  **A flexible multibody dynamics systems simulation code with Python and C++**
++  *free, open source* and with plenty of *documentation* and *examples*
++  **pre-built** for Python 3.6, 3.7, 3.8 and 3.9 under **Windows** ; Python 3.8 for **MacOS** available; some **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in theDoc.pdf )
++  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 
 .. |pic1| image:: docs/demo/screenshots/6pistonEngineStresses.jpg
    :width: 22%
@@ -157,21 +157,34 @@ For interaction (right-mouse-click, some key-board commands) you need the Python
 see also common blogs for your operating system.
 
 %+++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Install \codeName\ with PIP installer}
+\mysubsubsection{Install \codeName\ with PIP INSTALLER (pypi.org)}
+Pre-built versions of \codeName\ are hosted on \texttt{pypi.org}, see the project
+\bi
+ \item \exuUrl{https://pypi.org/project/exudyn}{https://pypi.org/project/exudyn}
+\ei
 As with most other packages, in the regular case (if your binary has been pre-built) you just need to do
 \bi
-  \item \texttt{pip install exudyn}
+  \item[] \texttt{pip install exudyn}
 \ei
-On linux use 
+On Linux (currently only pre-built for UBUNTU 18.04 and 20.04) use 
 \bi
-  \item \texttt{pip3 install exudyn}
+  \item[] \texttt{pip3 install exudyn}
 \ei
-In some cases, your pre-built binary will not work. Then you need to build from source as described in the Build and install sections, \refSection{sec:build:windows}.
+If the index of pypi is not updated, use
+\bi
+  \item[] \texttt{pip install -i https://pypi.org/project/ exudyn}
+\ei
+For pre-releases (use with care!), add '--pre' flag:
+\bi
+  \item[] \texttt{pip install exudyn --pre}
+\ei
+In some cases, your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the Build and install sections, \refSection{sec:build:windows}.
 
 %+++++++++++++++++++++++++++++++++++++
 \mysubsubsection{DEPRECATED: Install with Windows MSI installer}
-The simplest way to install \codeName\ on Windows 10 (and maybe also Windows 7) is to use the provided \texttt{.msi} installers in the \texttt{main/dist} directory\footnote{It works better \mybold{if you installed only one Python version} and if you installed Anaconda with the option \mybold{'Register Anaconda as my default Python 3.x'} or similar; in other cases you may to specify some installation directories, etc.}:
+A simple way to install \codeName\ on Windows 10 (and maybe also Windows 7) is to use \texttt{.msi} installers in the \texttt{main/dist} directory\footnote{It works better \mybold{if you installed only one Python version} and if you installed Anaconda with the option \mybold{'Register Anaconda as my default Python 3.x'} or similar; in other cases you may to specify some installation directories, etc.}:
 \bi
+  \item NOTE (2022-03-18): \texttt{.msi} installers are now only available for selected Python versions; however, wheels can be downloaded directly from \exuUrl{https://pypi.org/project/exudyn}{https://pypi.org/project/exudyn}, see below
   \item For the 64bits Python 3.7 version, double click on (version may differ):\ignoreRST{\\} \texttt{exudyn-1.0.248.win-amd64-py3.7.msi}
   \item Follow the instructions of the installer
   \item If Python / Anaconda is not found by the installer, provide the 'python directory' as the installation directory of Anaconda3, which usually is installed in:\\
@@ -179,8 +192,9 @@ The simplest way to install \codeName\ on Windows 10 (and maybe also Windows 7) 
 \ei
 
 %+++++++++++++++++++++++++++++++++++++
-\mysubsubsection{DEPRECATED: Install from Wheel (UBUNTU and Windows)}
-A way to install the Python package \codeName\ is to use the so-called 'wheels' (file ending \texttt{.whl}) provided at the directory wheels in the \codeName\ repository. 
+\mysubsubsection{Install from Wheel (UBUNTU and Windows)}
+A way to install the Python package \codeName\ is to use the so-called 'wheels' (file ending \texttt{.whl}).
+Wheels can be downloaded directly from \exuUrl{https://pypi.org/project/exudyn/#files}{https://pypi.org/project/exudyn/#files}, for many Python versions and architectures.
 \vspace{6pt}\\
 For UBUNTU18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):
 \bi
@@ -204,9 +218,9 @@ First, open an Anaconda prompt:
   \ei
   \item type \texttt{exit()} to close Python
 \ei
-
-\noindent \mybold{Go to the folder} \texttt{Exudyn\_git/main} (where \texttt{setup.py} lies) and choose the wheel in subdirectory \texttt{main/dist} according to your system (windows/UBUNTU), Python version (3.6 or 3.7) and 32 or 64 bits.
-
+%
+%\noindent \mybold{Go to the folder} \texttt{Exudyn\_git/main} (where \texttt{setup.py} lies) and choose the wheel in subdirectory \texttt{main/dist} according to your system (windows/UBUNTU), Python version (3.6 or 3.7) and 32 or 64 bits.
+%
 For Windows the installation commands may read (version number 1.0.20 may be different):
 \bi
   \item \texttt{Python 3.6, 32bit}: pip install dist$\backslash$exudyn-1.0.20-cp36-cp36m-win32.whl
@@ -235,13 +249,13 @@ Note that there are a couple of pre-requisites, depending on your system and ins
 \bi
   \item you need an appropriate compiler (tested with Microsoft Visual Studio; recommended: VS2017)
   \item install your Anaconda distribution including Spyder
-  \item close all Python programs (e.g. Spyder, Jupyter, ...)
+  \item close all Python programs (e.g. Spyder, Jupyter, ...) 
   \item run an Anaconda prompt (may need to be run as administrator)
   \item if you cannot run Anaconda prompt directly, do:
   \bi
-    \item open windows shell (cmd.exe) as administrator (START $\ra$ search for cmd.exe $\ra$ right click on app $\ra$ 'run as administrator' if necessary)
-    \item go to your Scripts folder inside the Anaconda folder (e.g. \texttt{C:$\backslash$ProgramData$\backslash$Anaconda$\backslash$Scripts})
-    \item run 'activate.bat'
+    \item open windows shell (cmd.exe) as administrator (START $\ra$ search for cmd.exe $\ra$ right click on app $\ra$ 'run as administrator' if necessary) [may not be necessary]
+    \item go to your Scripts folder inside the Anaconda folder (e.g. \texttt{C:$\backslash$ProgramData$\backslash$Anaconda$\backslash$Scripts}) [may not be necessary]
+    \item run 'activate.bat' [may not be necessary]
   \ei
   \item go to 'main' of your cloned github folder of \codeName\ 
   \item run: \texttt{python setup.py install}
@@ -278,7 +292,7 @@ Alternatively, we tested on:
   \item Mac OS 11.x 'Big Sur', Mac Mini (2021), Apple M1, 16GB Memory
   \item Anaconda (i368 based with Rosetta 2) with Python 3.8
   \item this configuration is currently evaluated but showed general compatibility
-  \item[] $\ra$ pre-compiled wheel: \texttt{exudyn-1.1.0-cp38-cp38-macosx\_11\_0\_x86\_64.whl}
+  \item[] $\ra$ pre-built wheel: \texttt{exudyn-1.1.0-cp38-cp38-macosx\_11\_0\_x86\_64.whl}
 \ei
 \vspace{9pt}
 \mybold{Compile from source}:\vspace{3pt}\\
@@ -311,7 +325,7 @@ in order to interact with the render window, as there is only a single-threaded 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Build and install \codeName\ under UBUNTU?}
 \label{sec:build:ubuntu}
-Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python \mybold{3.6} is already installed on UBUNTU18.04, otherwise use \texttt{sudo apt install python3})\footnote{see also the youtube video: \texttt{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg\_jtl6fx}}:
+Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python \mybold{3.6} is already installed on UBUNTU18.04, otherwise use \texttt{sudo apt install python3})\footnote{see also the youtube video: \exuUrl{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg\_jtl6fx}{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg\_jtl6fx}}:
 
 \noindent First update ...
 \plainlststyle

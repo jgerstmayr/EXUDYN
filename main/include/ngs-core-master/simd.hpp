@@ -8,7 +8,11 @@
 /* Date:   25. Mar. 16                                                    */
 /**************************************************************************/
 
-#include <immintrin.h>
+#if defined(__arm__) //RaspberryPi
+#include <arm_neon.h>
+#else
+#include <immintrin.h> // AVX/AVX2 intrinsic header
+#endif 
 
 #ifdef WIN32
 #ifndef AVX_OPERATORS_DEFINED

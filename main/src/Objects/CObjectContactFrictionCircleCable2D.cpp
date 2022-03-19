@@ -287,8 +287,8 @@ Real CObjectContactFrictionCircleCable2D::PostNewtonStep(const MarkerDataStructu
 		const MarkerData& markerData1 = markerDataCurrent.GetMarkerData(1); //ANCFCable2DShape
 		LinkedDataVector currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);	//copy, but might change values ...
 		LinkedDataVector startOfStepState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::StartOfStep);
-		Real tCurrent = GetCNode(0)->GetCData()->GetCurrent().GetTime();
-		Real tStartOfStep = GetCNode(0)->GetCData()->GetStartOfStep().GetTime();
+		//Real tCurrent = GetCNode(0)->GetCData()->GetCurrent().GetTime();
+		//Real tStartOfStep = GetCNode(0)->GetCData()->GetStartOfStep().GetTime();
 
 		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> currentGapPerSegment;
 		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> referenceCoordinatePerSegment;

@@ -2,17 +2,17 @@
 Exudyn
 ======
 
-| Exudyn version = 1.2.0 (Corea)
-| build date and time=2022-03-18  12:03
+| Exudyn version = 1.2.8 (Corea)
+| build date and time=2022-03-18  22:38
 
 Exudyn **Version 1.2** is out! The documentation theDoc.pdf now reached > 600 pages! Including now a contact module, improved solvers, sparse matrix support and multi-threading, creation of beams along curves, extended robotics modules, **PlotSensor** fully extended, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
 
 If you like using Exudyn, please add a *star* on github, and send an email to  ``reply.exudyn@gmail.com`` such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** !
 
-| *A flexible multibody dynamics systems simulation code with Python and C++*
-| *free, open source and with plenty of documentation and examples*
-| *pre-compiled for Python 3.6, 3.7, 3.8 and 3.9 under Windows; Python 3.8 for MacOS available (for Linux, you need to build your wheels by yourself, see instructions in theDoc.pdf)* 
-| **NOTE**: for pure installation, use **pip install exudyn** (for older versions, go to  ``main/dist``  and install your preferred Microsoft installer ( ``.msi`` ) or wheel ( ``.whl`` ) in your according Python environment )
++  **A flexible multibody dynamics systems simulation code with Python and C++**
++  *free, open source* and with plenty of *documentation* and *examples*
++  **pre-built** for Python 3.6, 3.7, 3.8 and 3.9 under **Windows** ; Python 3.8 for **MacOS** available; some **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in theDoc.pdf )
++  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 
 .. |pic1| image:: docs/demo/screenshots/6pistonEngineStresses.jpg
    :width: 22%
@@ -160,24 +160,37 @@ For interaction (right-mouse-click, some key-board commands) you need the Python
 
 see also common blogs for your operating system.
 
-Install Exudyn with PIP installer
-====================================
+Install Exudyn with PIP INSTALLER (pypi.org)
+===============================================
+
+Pre-built versions of Exudyn are hosted on \ ``pypi.org``\ , see the project
+
+ +  `https://pypi.org/project/exudyn <https://pypi.org/project/exudyn>`_
 
 As with most other packages, in the regular case (if your binary has been pre-built) you just need to do
 
-+  \ ``pip install exudyn``\ 
+   \ ``pip install exudyn``\ 
 
-On linux use 
+On Linux (currently only pre-built for UBUNTU 18.04 and 20.04) use 
 
-+  \ ``pip3 install exudyn``\ 
+   \ ``pip3 install exudyn``\ 
 
-In some cases, your pre-built binary will not work. Then you need to build from source as described in the Build and install sections, theDoc.pdf and theDoc.pdf.
+If the index of pypi is not updated, use
+
+   \ ``pip install -i https://pypi.org/project/ exudyn``\ 
+
+For pre-releases (use with care!), add '--pre' flag:
+
+   \ ``pip install exudyn --pre``\ 
+
+In some cases, your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the Build and install sections, theDoc.pdf.
 
 DEPRECATED: Install with Windows MSI installer
 ==============================================
 
-The simplest way to install Exudyn on Windows 10 (and maybe also Windows 7) is to use the provided \ ``.msi``\  installers in the \ ``main/dist``\  directory ('Register Anaconda as my default Python 3.x' or similar; in other cases you may to specify some installation directories, etc.):
+A simple way to install Exudyn on Windows 10 (and maybe also Windows 7) is to use \ ``.msi``\  installers in the \ ``main/dist``\  directory ('Register Anaconda as my default Python 3.x' or similar; in other cases you may to specify some installation directories, etc.):
 
++  NOTE (2022-03-18): \ ``.msi``\  installers are now only available for selected Python versions; however, wheels can be downloaded directly from `https://pypi.org/project/exudyn <https://pypi.org/project/exudyn>`_, see below
 +  For the 64bits Python 3.7 version, double click on (version may differ): \ ``exudyn-1.0.248.win-amd64-py3.7.msi``\ 
 +  Follow the instructions of the installer
 +  If Python / Anaconda is not found by the installer, provide the 'python directory' as the installation directory of Anaconda3, which usually is installed in:
@@ -186,10 +199,11 @@ The simplest way to install Exudyn on Windows 10 (and maybe also Windows 7) is t
   \ ``C:\ProgramData\Anaconda3``\ 
 
 
-DEPRECATED: Install from Wheel (UBUNTU and Windows)
-===================================================
+Install from Wheel (UBUNTU and Windows)
+=======================================
 
-A way to install the Python package Exudyn is to use the so-called 'wheels' (file ending \ ``.whl``\ ) provided at the directory wheels in the Exudyn repository. 
+A way to install the Python package Exudyn is to use the so-called 'wheels' (file ending \ ``.whl``\ ).
+Wheels can be downloaded directly from `https://pypi.org/project/exudyn <https://pypi.org/project/exudyn>`_, for any version.
 
 
 
@@ -237,13 +251,13 @@ Note that there are a couple of pre-requisites, depending on your system and ins
 
 +  you need an appropriate compiler (tested with Microsoft Visual Studio; recommended: VS2017)
 +  install your Anaconda distribution including Spyder
-+  close all Python programs (e.g. Spyder, Jupyter, ...)
++  close all Python programs (e.g. Spyder, Jupyter, ...) 
 +  run an Anaconda prompt (may need to be run as administrator)
 +  if you cannot run Anaconda prompt directly, do:
   
-+  open windows shell (cmd.exe) as administrator (START => search for cmd.exe => right click on app => 'run as administrator' if necessary)
-+  go to your Scripts folder inside the Anaconda folder (e.g. \ ``C:\ProgramData\Anaconda\Scripts``\ )
-+  run 'activate.bat'
++  open windows shell (cmd.exe) as administrator (START => search for cmd.exe => right click on app => 'run as administrator' if necessary) [may not be necessary]
++  go to your Scripts folder inside the Anaconda folder (e.g. \ ``C:\ProgramData\Anaconda\Scripts``\ ) [may not be necessary]
++  run 'activate.bat' [may not be necessary]
   
 +  go to 'main' of your cloned github folder of Exudyn 
 +  run: \ ``python setup.py install``\ 
@@ -275,7 +289,7 @@ Alternatively, we tested on:
 +  Mac OS 11.x 'Big Sur', Mac Mini (2021), Apple M1, 16GB Memory
 +  Anaconda (i368 based with Rosetta 2) with Python 3.8
 +  this configuration is currently evaluated but showed general compatibility
-   => pre-compiled wheel: \ ``exudyn-1.1.0-cp38-cp38-macosx_11_0_x86_64.whl``\ 
+   => pre-built wheel: \ ``exudyn-1.1.0-cp38-cp38-macosx_11_0_x86_64.whl``\ 
 
 
 \ **Compile from source**\ :
@@ -310,7 +324,7 @@ Build and install Exudyn under UBUNTU?
 =========================================
 
 
-Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python \ **3.6**\  is already installed on UBUNTU18.04, otherwise use \ ``sudo apt install python3``\ ) (see also the youtube video: \ ``https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx``\ ):
+Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python \ **3.6**\  is already installed on UBUNTU18.04, otherwise use \ ``sudo apt install python3``\ ) (https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx):
 
 First update ...
 
