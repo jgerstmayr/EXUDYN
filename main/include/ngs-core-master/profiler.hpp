@@ -28,8 +28,12 @@ inline void gettimeofday(struct timeval* t,void* timezone)
 }
 
 #else
-#include <sys/time.h>
-#include <x86intrin.h>   // for __rdtsc()  CPU time step counter
+	#include <sys/time.h>
+	#if defined(__EXUDYN__LINUX__ARM__) //RaspberryPi
+		#include <arm_neon.h>
+	#else
+		#include <x86intrin.h>   // for __rdtsc()  CPU time step counter
+	#endif 
 #endif
 
 #include <chrono>
@@ -156,13 +160,17 @@ namespace ngstd
 
     static void StartThreadTimer (size_t nr, size_t tid)
     {
-      thread_times[tid*SIZE+nr] -= __rdtsc();
+#ifndef __EXUDYN__LINUX__ARM__ //#JG2022-03-19; RaspberryPi
+		thread_times[tid*SIZE+nr] -= __rdtsc();
+#endif
     }
 
     static void StopThreadTimer (size_t nr, size_t tid)
     {
-      thread_times[tid*SIZE+nr] += __rdtsc();
-    }
+#ifndef __EXUDYN__LINUX__ARM__ //#JG2022-03-19; RaspberryPi
+		thread_times[tid*SIZE+nr] += __rdtsc();
+#endif
+	}
 #endif
 
 

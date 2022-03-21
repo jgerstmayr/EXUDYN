@@ -1095,7 +1095,7 @@ bool GlfwRenderer::SetupRenderer(bool verbose)
 		if (verboseRenderer) { pout << "Setup OpenGL renderer ...\n"; } //still thread-safe
 
 		useMultiThreadedRendering = visSettings->general.useMultiThreadedRendering;
-#if defined(__APPLE__)
+#if defined(__EXUDYN__APPLE__)
 		useMultiThreadedRendering = false;
 		visSettings->general.useMultiThreadedRendering = false; //make sure that this is also set in visualization settings
 #endif
@@ -1243,7 +1243,7 @@ void GlfwRenderer::InitCreateWindow()
 		}
 
 
-#ifndef __APPLE__
+#ifndef __EXUDYN__APPLE__
 		if (visSettings->openGL.multiSampling == 2 || visSettings->openGL.multiSampling == 4 || visSettings->openGL.multiSampling == 8 || visSettings->openGL.multiSampling == 16) //only 4 is possible right now ... otherwise no multisampling
 		{
 			glfwWindowHint(GLFW_SAMPLES, (int)visSettings->openGL.multiSampling); //multisampling=4, means 4 times larger buffers! but leads to smoother graphics
@@ -1327,7 +1327,7 @@ void GlfwRenderer::InitCreateWindow()
 
 		//+++++++++++++++++
 		//determine the windows scale; TODO: add callback to redraw if monitor is changed: glfwSetWindowContentScaleCallback(...)
-#ifdef __linux__
+#ifdef __EXUDYN__LINUX__
 		fontScale = 1; //glfwGetWindowContentScale() crashes on Ubuntu18.04 and 20.04 compilation
 #else
 		float xWindowScale, yWindowScale;

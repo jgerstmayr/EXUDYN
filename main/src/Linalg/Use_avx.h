@@ -13,7 +13,7 @@
 #ifndef USE_AVX__H
 #define USE_AVX__H
 
-#if defined(__arm__) //RaspberryPi
+#if defined(__EXUDYN__LINUX__ARM__) //RaspberryPi
 #include <arm_neon.h>
 #else
 #include <immintrin.h> // AVX/AVX2 intrinsic header

@@ -2,8 +2,9 @@
 Exudyn
 ======
 
-| Exudyn version = 1.2.8 (Corea)
-| build date and time=2022-03-18  22:38
++  Exudyn version = 1.2.10 (Corea)
++  build date and time=2022-03-21  13:45
++  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn **Version 1.2** is out! The documentation theDoc.pdf now reached > 600 pages! Including now a contact module, improved solvers, sparse matrix support and multi-threading, creation of beams along curves, extended robotics modules, **PlotSensor** fully extended, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
 
@@ -203,7 +204,7 @@ Install from Wheel (UBUNTU and Windows)
 =======================================
 
 A way to install the Python package Exudyn is to use the so-called 'wheels' (file ending \ ``.whl``\ ).
-Wheels can be downloaded directly from `https://pypi.org/project/exudyn <https://pypi.org/project/exudyn>`_, for any version.
+Wheels can be downloaded directly from `https://pypi.org/project/exudyn/\#files <https://pypi.org/project/exudyn/\#files>`_, for many Python versions and architectures.
 
 
 
@@ -230,9 +231,6 @@ First, open an Anaconda prompt:
    ...
   
 +  type \ ``exit()``\  to close Python
-
-
-\ **Go to the folder**\  \ ``Exudyn_git/main``\  (where \ ``setup.py``\  lies) and choose the wheel in subdirectory \ ``main/dist``\  according to your system (windows/UBUNTU), Python version (3.6 or 3.7) and 32 or 64 bits.
 
 For Windows the installation commands may read (version number 1.0.20 may be different):
 
@@ -473,7 +471,7 @@ In order to start, run the Python interpreter Spyder (or any preferred Python en
 For the following example, 
 
 
-+  open \ ``myFirstExample.py``\  from your \ ``EXUDYN32bitsPython36``\  (or any other directory according to your Python version) directory
++  open \ ``myFirstExample.py``\  from your \ ``Examples``\  folder.
 
 Hereafter, press the play button or \ ``F5``\  in Spyder.
 
@@ -482,10 +480,10 @@ If successful, the IPython Console of Spyder will print something like:
 
 .. code-block::
 
-  runfile('C:/DATA/cpp/EXUDYN_git/main/bin/EXUDYN32bitsPython36/myFirstExample.py', 
-    wdir='C:/DATA/cpp/EXUDYN_git/main/bin/EXUDYN32bitsPython36')
+  runfile('C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples/myFirstExample.py', 
+    wdir='C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples')
   +++++++++++++++++++++++++++++++
-  EXUDYN V1.0.1 solver: implicit second order time integration
+  EXUDYN V1.2.9 solver: implicit second order time integration
   STEP100, t = 1 sec, timeToGo = 0 sec, Nit/step = 1
   solver finished after 0.0007824 seconds.
 

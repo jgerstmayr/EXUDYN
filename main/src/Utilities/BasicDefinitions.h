@@ -18,7 +18,40 @@
 #define BASICDEFINITIONS__H
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//this part contains important definition of flags to set up hte compiled module
+//this part contains important definition of flags to setup the compiled module
+#if defined(__linux) || defined(__linux__) || defined(__unix__)
+#define __EXUDYN__LINUX__ //with any processor
+#endif
+
+#if defined(__GNUC__) //this is for the compiler - but most probably, all non-windows and non-apple compiler behave similar
+#define __EXUDYN__GNUC__
+#endif
+
+//in case of _WIN32 we also assume _x86 ...; __i386__ not shown on VS2017:
+#if defined(__x86_64) || defined(__x86_64__) || defined(__amd64__) || defined(__x86) || defined(__i386__) || defined(_WIN32) 
+#define __EXUDYN__x86__ //Intel or AMD processor //tested also on gcc/linux/64bits!
+#endif
+
+//32bit/64 bit should be checked with length of void
+
+//check some platform / architecture or compiler specific things at which is compiled and define globally used flags:
+#if defined(__APPLE__)
+#define __EXUDYN__APPLE__
+#elif defined(_WIN32) || defined(_WIN64)
+#define __EXUDYN__WINDOWS__
+#elif defined(__arm__) || defined(__aarch64__) || defined(__ARM_ARCH) //ARM architecture: RaspberryPi on UbuntuMate 20.04 (64bits): gcc shows __aarch64__ but not __arm__
+#define __EXUDYN__LINUX__ARM__
+#elif defined(__EXUDYN__LINUX__) && defined(__EXUDYN__x86__)
+#define __EXUDYN__LINUX__x86__ //linux with any x86 type CPU (AMD, Intel)
+#else
+#pragma message("WARNING: no architecture identified for compilation; check BasicDefinitions.h!!!")
+#endif
+
+
+//unused so far:
+//#if defined(__GNUC__)
+//#define __EXUDYN__GNUC__
+//#endif
 
 //#define EXUDYN_RELEASE			//!< defined in preprocessor flags, in setup.py (for all versions), set this flag to exclude experimental parts of the code
 #define _USE_MATH_DEFINES		//!< this must be included very first before any cmath is included; needed for M_PI and other constants ==> but not used anymore
@@ -93,7 +126,7 @@ typedef std::string STDstring;	//!< decouple std::string for future extensions, 
 #ifdef USE_INDEX_AS_INT
 	typedef int Index;
 	typedef int SignedIndex;
-	#if defined(__APPLE__)
+	#if defined(__EXUDYN__APPLE__)
 		typedef unsigned long UnsignedIndex;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
 	#elif defined(__x86_64__) || defined(__ppc64__) || defined(_WIN64)
 		typedef uint64_t UnsignedIndex;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
@@ -102,7 +135,7 @@ typedef std::string STDstring;	//!< decouple std::string for future extensions, 
 	#endif
 #else
 	//not that Index will become 'int' in future (but python interface Index will represent only positive indices ...)!
-	#if defined(__APPLE__)
+	#if defined(__EXUDYN__APPLE__)
 		typedef unsigned long Index;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
 		typedef unsigned long UnsignedIndex;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
 		typedef long SignedIndex;	//!< for indices which need a sign (e.g. in linear solver); try to avoid!

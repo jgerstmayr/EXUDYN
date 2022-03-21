@@ -43,7 +43,7 @@ typedef ConstSizeMatrixBase<float,4> Matrix2DF; //will be changed to SlimMatrix<
 
 namespace EXUmath {
 
-#ifndef __APPLE__
+#ifndef __EXUDYN__APPLE__
 	inline static const Matrix3DF unitMatrix3DF(3, 3, { 1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f });
 	inline static const Matrix3D unitMatrix3D(3, 3, { 1.,0.,0., 0.,1.,0., 0.,0.,1. });
 	inline static const Matrix3D zeroMatrix3D(3, 3, 0.);
@@ -207,7 +207,7 @@ namespace EXUmath {
 
 	//numerically integrate a function in interval [a,b]
 	//inline does not work on older MacOS
-#ifndef __APPLE__
+#ifndef __EXUDYN__APPLE__
 	inline auto NumIntegrate = [](Real(*function)(Real), auto& points, auto& weights, Real a, Real b)
 	{ 
 		Index cnt = 0; Real value = 0.;  

@@ -96,7 +96,7 @@ private:
 	//static RenderState state;
 	static bool rendererActive;			//!< signal that shows that renderer is active
 	static bool stopRenderer;			//!< signal that shows that renderer should quit
-	static bool useMultiThreadedRendering;		//!< according to visualizationSettings.general; always false for MACOS (__APPLE__)
+	static bool useMultiThreadedRendering;		//!< according to visualizationSettings.general; always false for MACOS (__EXUDYN__APPLE__)
 	static Real lastGraphicsUpdate;		//!< time of last graphics update
 	static Real lastEventUpdate;		//!< time of last event polling
 	static bool callBackSignal;			//!< for single threaded applications, react if callback is sent=> update graphics immediately

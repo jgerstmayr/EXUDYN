@@ -8,7 +8,7 @@
 /* Date:   25. Mar. 16                                                    */
 /**************************************************************************/
 
-#if defined(__arm__) //RaspberryPi
+#if defined(__EXUDYN__LINUX__ARM__) //#JG2022-03-19; RaspberryPi
 #include <arm_neon.h>
 #else
 #include <immintrin.h> // AVX/AVX2 intrinsic header

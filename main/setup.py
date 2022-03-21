@@ -462,20 +462,30 @@ setup(
     #long_description_content_type='text/markdown', #standard is already text/x-rst
     package_dir={'':'pythonDev'},   #only add packages from that dir; must include a __init__.py file
     packages=['exudyn','exudyn/robotics'],            #adds all python files (=modules) in directories with __init__.py file; this is a subdirectory to the directory provided in package_dir
+    #package_data={'tests': ['pythonDev/TestModels/*.py'],}, #include additional data, but do we want that?
+    include_package_data=True, #not sure, if this is necessary!
     ext_modules=ext_modules,
     setup_requires=['pybind11==2.6.0'], #replaced previous require>=2.5.0, because compilation with VS2017 fails with pybind11 2.7.0 version of 2021-10-04: setup_requires=['pybind11>=2.5.0'],
     cmdclass={'build_ext': BuildExt},
     zip_safe=False,
     license = 'BSD',
+    platforms='any', #2022-03-20: used in numpy - may improve behavior in pypi.org?
     classifiers=[
         developmentStatus,
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: BSD License",
-        "Operating System :: Microsoft :: Windows :: Windows 10",
+        #"Operating System :: Microsoft :: Windows :: Windows 10",
+        "Operating System :: Microsoft :: Windows", #allow Windows 11
         "Operating System :: POSIX :: Linux",
         "Operating System :: MacOS",
         "Topic :: Scientific/Engineering",
     ],
-    python_requires='=='+pyVersionString+'.*', #'.*' required on UBUNTU/Windows in order to accept any Python minor Version (e.g. 3.6.x) during installation
+    #OLD: '==' makes problems with pypi? python_requires='=='+pyVersionString+'.*', #'.*' required on UBUNTU/Windows in order to accept any Python minor Version (e.g. 3.6.x) during installation
+    #python_requires='>='+pyVersionString, #'.*' required on UBUNTU/Windows in order to accept any Python minor Version (e.g. 3.6.x) during installation
+    python_requires='>=3.6', #for pypi.org, do only specify the minimum Python version which is needed for this exudyn version
 )

@@ -6590,6 +6590,7 @@ A very specialized penalty-based contact/friction condition between a 2D circle 
     frictionStiffness &     UReal &      &     0. &     tangential displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area\\ \hline
     frictionCoefficient &     UReal &      &     0. &     friction coefficient [SI: 1]; tangential specific friction forces (per length) $f_t$ must fulfill the condition $f_t \le \mu f_n$\\ \hline
     circleRadius &     UReal &      &     0. &     radius [SI:m] of contact circle\\ \hline
+    usePointWiseNormals &     Bool &      &     True &     True: use normals at segment points according to vector to circle center; this is more consistent for short segments, as forces are only applied in beam tangent and normal direction; False: use normal and tangent according to linear segment; this is appropriate for very long segments (compared to circle)\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     visualization & VObjectContactFrictionCircleCable2D & & & parameters for visualization of item \\ \hline
 	  \end{longtable}

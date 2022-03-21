@@ -1,1 +1,5 @@
-for detailed information on installation see docs/theDoc/theDoc.pdf
+for installation use:
+  pip install exudyn
+pre-compiled binaries are available via pypi.org
+For building instructions and detailed information on installation see docs/theDoc/theDoc.pdf
+
