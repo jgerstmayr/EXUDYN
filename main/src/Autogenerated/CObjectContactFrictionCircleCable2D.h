@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-03-14  12:31:55 (last modified)
+* @date         2022-03-21  10:11:41 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,6 +38,7 @@ public: // AUTO:
     Real frictionStiffness;                       //!< AUTO: tangential displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area
     Real frictionCoefficient;                     //!< AUTO: friction coefficient [SI: 1]; tangential specific friction forces (per length) \f$f_t\f$ must fulfill the condition \f$f_t \le \mu f_n\f$
     Real circleRadius;                            //!< AUTO: radius [SI:m] of contact circle
+    bool usePointWiseNormals;                     //!< AUTO: True: use normals at segment points according to vector to circle center; this is more consistent for short segments, as forces are only applied in beam tangent and normal direction; False: use normal and tangent according to linear segment; this is appropriate for very long segments (compared to circle)
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectContactFrictionCircleCable2DParameters()
@@ -51,6 +52,7 @@ public: // AUTO:
         frictionStiffness = 0.;
         frictionCoefficient = 0.;
         circleRadius = 0.;
+        usePointWiseNormals = true;
         activeConnector = true;
     };
 };

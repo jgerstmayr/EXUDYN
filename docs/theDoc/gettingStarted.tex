@@ -1,5 +1,6 @@
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \onlyRST{
++  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn **Version 1.2** is out! The documentation theDoc.pdf now reached > 600 pages! Including now a contact module, improved solvers, sparse matrix support and multi-threading, creation of beams along curves, extended robotics modules, **PlotSensor** fully extended, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
 
@@ -174,9 +175,9 @@ If the index of pypi is not updated, use
 \bi
   \item[] \texttt{pip install -i https://pypi.org/project/ exudyn}
 \ei
-For pre-releases (use with care!), add '--pre' flag:
+For pre-releases (use with care!), add '$--$pre' flag:
 \bi
-  \item[] \texttt{pip install exudyn --pre}
+  \item[] \texttt{pip install exudyn $--$pre}
 \ei
 In some cases, your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the Build and install sections, \refSection{sec:build:windows}.
 
@@ -194,7 +195,7 @@ A simple way to install \codeName\ on Windows 10 (and maybe also Windows 7) is t
 %+++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Install from Wheel (UBUNTU and Windows)}
 A way to install the Python package \codeName\ is to use the so-called 'wheels' (file ending \texttt{.whl}).
-Wheels can be downloaded directly from \exuUrl{https://pypi.org/project/exudyn/#files}{https://pypi.org/project/exudyn/#files}, for many Python versions and architectures.
+Wheels can be downloaded directly from \exuUrl{https://pypi.org/project/exudyn/\#files}{https://pypi.org/project/exudyn/\#files}, for many Python versions and architectures.
 \vspace{6pt}\\
 For UBUNTU18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):
 \bi
@@ -454,7 +455,7 @@ For the following example,
 \bi
 \ignoreRST{
 \item open Spyder and copy the example provided in Listing \ref{lst:firstexample} into a new file, or}
-\item open \texttt{myFirstExample.py} from your \texttt{EXUDYN32bitsPython36}\footnote{or any other directory according to your Python version} directory
+\item open \texttt{myFirstExample.py} from your \texttt{Examples} folder.
 \ei
 Hereafter, press the play button or \texttt{F5} in Spyder.
 %\lstinputlisting[language=Python]{../../main/bin/WorkingRelease/myFirstExample.py}
@@ -464,10 +465,10 @@ Hereafter, press the play button or \texttt{F5} in Spyder.
 
 If successful, the IPython Console of Spyder will print something like:
 \begin{lstlisting}
-  runfile('C:/DATA/cpp/EXUDYN_git/main/bin/EXUDYN32bitsPython36/myFirstExample.py', 
-    wdir='C:/DATA/cpp/EXUDYN_git/main/bin/EXUDYN32bitsPython36')
+  runfile('C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples/myFirstExample.py', 
+    wdir='C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples')
   +++++++++++++++++++++++++++++++
-  EXUDYN V1.0.1 solver: implicit second order time integration
+  EXUDYN V1.2.9 solver: implicit second order time integration
   STEP100, t = 1 sec, timeToGo = 0 sec, Nit/step = 1
   solver finished after 0.0007824 seconds.
 \end{lstlisting}

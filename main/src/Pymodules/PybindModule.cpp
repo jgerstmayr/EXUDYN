@@ -110,6 +110,25 @@ extern Index linkedDataVectorCast_counts; //global counter for unwanted type con
 #pragma message("** compiled without AVX **")
 #endif
 
+//check some platform / architecture or compiler specific things at which is compiled and define globally used flags:
+#if defined(__EXUDYN__APPLE__)
+#pragma message("*** compiled for MacOS ***")
+#elif defined(__EXUDYN__WINDOWS__)
+	#if defined(_WIN32) && !defined(_WIN64) //_WIN32 also defined in 64 bits mode!
+	#pragma message("*** compiled for Windows _x86 (32bits) ***") //this works for VS2017
+    #elif defined(_WIN64)
+	#pragma message("*** compiled for Windows _x86 (64bits) ***") //this works for VS2017
+	#else
+	#pragma message("*** compiled for Windows _x86 ***")
+	#endif
+#elif defined(__EXUDYN__LINUX__ARM__)
+#pragma message("*** compiled for linux / ARM CPU ***")
+#elif defined(__EXUDYN__LINUX__x86__)
+#pragma message("*** compiled for linux / x86 CPU ***")
+#else
+#pragma message("*** WARNING: NO KNOWN PLATFORM DETECTED!!! ***")
+#endif
+
 ////test verified with numpy:
 //Matrix3D M(3, 3, { 0.1,2,0.3,-0.2,2,0.7,0.1,0.11,-3 });
 //pout << "M=" << M << "\n";

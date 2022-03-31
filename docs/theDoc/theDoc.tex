@@ -56,6 +56,9 @@
 
 \usepackage{enumitem} %for adjustable indentation in itemize (leftmargin=...)
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\usepackage{todonotes} % use \todo{WP2Leader: xyz} \todo{ESRz: xyz} or \todo[inline]{} for simple notes.
+\newcommand{\todoInline}[1]{\todo[inline,caption={}]{#1}} %
+\newcommand{\mytodo}[1]{\todo[inline,caption={}]{\textbf{TODO}: #1} } %highlight
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %define standard 3-column tables with python name, symbol and description

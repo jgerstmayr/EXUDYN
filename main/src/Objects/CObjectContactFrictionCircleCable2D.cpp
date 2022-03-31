@@ -394,7 +394,7 @@ Real CObjectContactFrictionCircleCable2D::PostNewtonStep(const MarkerDataStructu
 				} 
 				else //stick
 				{
-					currentState[2 * parameters.numberOfContactSegments + i] = lastStickPos; //sticking; use previous sticking position
+					currentState[2 * parameters.numberOfContactSegments + i] = lastStickPos; //sticking; use previous sticking position / or updated when switching from undefined case!
 				}
 
 				if ((Index)currentState[parameters.numberOfContactSegments + i] != isSlipStick) //also works for undefined (initial) isSlipStick = -2

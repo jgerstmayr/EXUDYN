@@ -252,9 +252,11 @@ for fileName in filesParsed:
     
     #print(sFile)
     if fileName == 'version.tex':
-        sRST += '\n| '
+        # sRST += '\n| '
+        sRST += '\n+  '
     if fileName == 'buildDate.tex':
-        sRST += '| '
+        # sRST += '| '
+        sRST += '+  '
     sRST += ConvertFile(sFile)
     
 sRST += '\n\n\ **FOR FURTHER INFORMATION GO TO theDoc.pdf !!!**\ \n\n'

@@ -1160,7 +1160,7 @@ public: // AUTO:
     os << "  facesTransparent = " << facesTransparent << "\n";
     os << "  initialCenterPoint = " << initialCenterPoint << "\n";
     os << "  initialMaxSceneSize = " << initialMaxSceneSize << "\n";
-#ifndef __APPLE__
+#ifndef __EXUDYN__APPLE__
     os << "  initialModelRotation = " << Matrix3DF(initialModelRotation) << "\n";
 #endif
     os << "  initialZoom = " << initialZoom << "\n";
