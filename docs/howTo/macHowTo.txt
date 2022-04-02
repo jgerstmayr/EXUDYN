@@ -25,7 +25,7 @@ basicLinalg.h:
 python setup.py bdist_wheel
 ==>gives some clang errors, like error: unknown argument '-framework Cocoa', etc.
 
-copy g++ ... output and paste it into bach again
+copy g++ ... output and paste it into terminal window again
 ==> links again with warnings, but now works and creates the objects
 
 type again:

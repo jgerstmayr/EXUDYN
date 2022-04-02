@@ -597,6 +597,12 @@ void CSolverExplicitTimeInt::IncreaseStepSize(CSystem& computationalSystem, cons
 	}
 }
 
+//! return true, if solver supports automatic stepsize control
+bool CSolverExplicitTimeInt::HasAutomaticStepSizeControl() const
+{
+	return rk.hasStepSizeControl;
+}
+
 
 //! initialize static step / time step: do some outputs, checks, etc.
 void CSolverExplicitTimeInt::UpdateCurrentTime(CSystem& computationalSystem, const SimulationSettings& simulationSettings)

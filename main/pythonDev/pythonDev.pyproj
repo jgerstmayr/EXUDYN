@@ -51,8 +51,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <InterpreterReference Include="CondaEnv|CondaEnv|venvP36" />
     <InterpreterReference Include="Global|PythonCore|3.7" />
-    <InterpreterReference Include="Global|PythonCore|3.8" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />

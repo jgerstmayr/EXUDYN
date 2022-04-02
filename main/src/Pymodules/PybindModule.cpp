@@ -88,8 +88,6 @@ using namespace pybind11::literals; //brings in the '_a' literals; e.g. for shor
 
 #include "Pymodules/PybindTests.h"
 
-//#include "../../include/ngs-core-master/autodiff.hpp" //for testing
-
 
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 extern Index array_new_counts;		//global counter of item allocations; is increased every time a new is called

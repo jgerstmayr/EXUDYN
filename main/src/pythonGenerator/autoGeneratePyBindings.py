@@ -160,7 +160,7 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
                             description=descriptionStr, 
                             subSection=True, labelName=pyClass)
 #keep this list synchronized with the accoring enum structure in C++!!!
-[s1,sL1] = AddEnumValue(pyClass, 'GeneralizedAlpha', 'an implicit solver for index 3 problems; allows to set variables also for Newmark and trapezoidal implicit index 2 solvers'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'GeneralizedAlpha', 'an implicit solver for index 3 problems; intended to be used for solving directly the index 3 constraints using the spectralRadius sufficiently small (usually 0.5 .. 1)'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'TrapezoidalIndex2', 'an implicit solver for index 3 problems with index2 reduction; uses generalized alpha solver with settings for Newmark with index2 reduction'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'ExplicitEuler',    'an explicit 1st order solver (generally not compatible with constraints)'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'ExplicitMidpoint', 'an explicit 2nd order solver (generally not compatible with constraints)'); s+=s1; sLenum+=sL1

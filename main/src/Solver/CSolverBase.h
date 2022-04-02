@@ -87,6 +87,12 @@ public:
 	virtual void IncreaseStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings,
 		Real suggestedStepSize = -1.) {	}
 
+	//! return true, if solver supports automatic stepsize control
+	virtual bool HasAutomaticStepSizeControl() const
+	{
+		return false; 
+	}
+
 	//! for static solver, this is a factor in interval [0,1]; MUST be overwritten
 	virtual Real ComputeLoadFactor(const SimulationSettings& simulationSettings) const { CHECKandTHROWstring("CSolverBase::illegal call to ComputeLoadFactor"); return 0; }
 

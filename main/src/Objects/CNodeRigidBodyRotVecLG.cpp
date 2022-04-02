@@ -26,11 +26,9 @@
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //autodiff for jacobian of rotationJacobian
-#include<ostream> //for autodiff
-#include "../ngs-core-master/ngs_core.hpp"
-#include "../ngs-core-master/autodiff.hpp"
+#include "Utilities/AutomaticDifferentiation.h"
 
-typedef ngstd::AutoDiff<3, Real> DReal3;
+typedef EXUmath::AutoDiff<3, Real> DReal3;
 
 
 //! compute (G^T*v) for rotation vector (Glocal = I, G = RotationMatrix)

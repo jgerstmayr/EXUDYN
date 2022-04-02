@@ -13,13 +13,14 @@
 
 #include "Graphics/GlfwClient.h"
 #include "Utilities/SlimArray.h"
-//#include <string>
 
-//void testtest()
-//{
-//	std::cout << "test";
-//}
-//
+#define GlfwRendererUsePNG //deactivate this flag for compatibility; switches to .TGA image output
+
+#ifdef GlfwRendererUsePNG
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "deps/stb_image_write.h" //for save image as .PNG
+#endif
+
 #ifdef USE_GLFW_GRAPHICS
 using namespace std::string_literals; // enables s-suffix for std::string literals
 
@@ -564,7 +565,7 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
 			ShowMessage("View 6: 3-2-plane mirrored about vertical axis", timeoutShowItem);
 		}
-
+		
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		
 		if (!hasShift && key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[1] -= transStep; }
@@ -803,6 +804,7 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 
 }
 
+Index cnt = 0;
 void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	if (PyGetRendererCallbackLock()) { return; }
@@ -810,6 +812,11 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 	//rendererOut << "mouse cursor: x=" << xpos << ", y=" << ypos << "\n";
 	stateMachine.mousePositionX = xpos;
 	stateMachine.mousePositionY = ypos;
+
+	////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	ShowMessage("cnt ="+EXUstd::ToString(cnt++), 5);
+	////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 	float height = (float)state->currentWindowSize[1];
 	float factor = 2.f*state->zoom / height;
@@ -884,9 +891,109 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 		}
 		else { stateMachine.mode = RendererMode::_None; } //finish move operation if button is released!
 	}
-
-
 }
+
+//! return true, if joystick available and updated values are available; if joystickNumber==-1, chose a joystick; 
+//! if joystickNumber!=-1, it uses the fixed joystick until end of Renderer
+bool GlfwRenderer::GetJoystickValues(Vector3D& position, Vector3D& rotation, Index& joystickNumber)
+{
+	const bool printJoyMessage = true;
+	bool initFirst = false; //if initialized first, also reset stateMachine
+	if (joystickNumber == -1)
+	{
+		//check if joystick available
+		for (Index i = 0; i <= GLFW_JOYSTICK_LAST - GLFW_JOYSTICK_1; i++)
+		{
+			if (glfwJoystickPresent(GLFW_JOYSTICK_1 + i))
+			{
+				int count;
+				const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1 + i, &count);
+				if (count == 6)
+				{
+					initFirst = true;
+					joystickNumber = i;
+					ShowMessage("found 6-axis joystick with ID " + EXUstd::ToString(i)+"; using for translation/rotation input", 5);
+					break;
+				}
+			}
+		}
+	}
+
+	if (joystickNumber >= 0)
+	{
+		int count;
+		const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1 + joystickNumber, &count);
+		if (count == 6) //ignore all other joysticks!
+		{
+			for (Index j = 0; j < 3; j++)
+			{
+				position[j] = axes[j];
+				rotation[j] = axes[j + 3];
+			}
+		}
+		if (initFirst)
+		{
+			stateMachine.storedJoystickPosition = position;
+			stateMachine.storedJoystickRotation = rotation;
+		}
+		return true;
+	}
+	return false;
+}
+
+//! read joystick values; if changed, send refresh signal for graphics
+void GlfwRenderer::ProcessJoystick()
+{
+	if (visSettings->interactive.useJoystickInput && 
+		stateMachine.mode == RendererMode::_None && //only if no other move/zoom action ongoing!
+		GetJoystickValues(state->joystickPosition, state->joystickRotation, state->joystickAvailable))
+	{
+		//for debugging ...
+		//ShowMessage("joystick =" + EXUstd::ToString(state->joystickPosition) + EXUstd::ToString(state->joystickRotation));
+
+		Vector3D diffPos = state->joystickPosition - stateMachine.storedJoystickPosition;
+		Vector3D diffRot = state->joystickRotation - stateMachine.storedJoystickRotation;
+		stateMachine.storedJoystickPosition = state->joystickPosition;
+		stateMachine.storedJoystickRotation = state->joystickRotation;
+
+		//ShowMessage("joystick =" + EXUstd::ToString(diffPos) + EXUstd::ToString(diffRot));
+		if (!(diffPos == 0. && diffRot == 0.))
+		{
+			SetCallBackSignal();
+		}
+		if (!(diffPos == 0.))
+		{
+			float fact = 2.f*state->zoom * visSettings->interactive.joystickScaleTranslation; //add more weight to translation in plane
+			state->centerPoint[0] -= fact * (float)diffPos[0];
+			state->centerPoint[1] += fact * (float)diffPos[1];
+
+			state->zoom *= (1.f + visSettings->interactive.joystickScaleTranslation*(float)diffPos[2]);
+			//ShowMessage("move: " + EXUstd::ToString(state->centerPoint[0]) +"," + EXUstd::ToString(state->centerPoint[1]));
+		}
+		if (!(diffRot == 0.))
+		{
+			diffRot *= visSettings->interactive.joystickScaleRotation;
+			//local rotations:
+			//glMatrixMode(GL_MODELVIEW);
+			////glLoadIdentity();	//start with identity
+			//glLoadMatrixf(state->modelRotation.GetDataPointer()); //load previous rotation
+			//glRotatef((float)diffRot[0], 1.f, 0.f, 0.f); //apply "incremental" rotation around x
+			//glRotatef((float)diffRot[1], 0.f, 1.f, 0.f); //apply "incremental" rotation around y
+			//glRotatef(-(float)diffRot[2], 0.f, 0.f, 1.f); //apply "incremental" rotation around z
+			//glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();	//start with identity
+			glRotatef((float)diffRot[0], 1.f, 0.f, 0.f); //apply "incremental" rotation around x
+			glRotatef(-(float)diffRot[1], 0.f, 1.f, 0.f); //apply "incremental" rotation around y
+			glRotatef(-(float)diffRot[2], 0.f, 0.f, 1.f); //apply "incremental" rotation around z
+			glMultMatrixf(state->modelRotation.GetDataPointer());
+			glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
+		}
+	}
+}
+
+
 
 //! zoom in to mouse position (x,y), used to render that area lateron (replacement for gluPickMatrix(...)
 void GlfwRenderer::SetViewOnMouseCursor(GLdouble x, GLdouble y, GLdouble delX, GLdouble delY, GLint viewport[4])
@@ -1317,6 +1424,10 @@ void GlfwRenderer::InitCreateWindow()
 		glfwMakeContextCurrent(window);
 		if (verboseRenderer) { PrintDelayed("glfwMakeContextCurrent(...) successful"); }
 
+		//+++++++++++++++++++++++++++++++++
+		//joystick
+		state->joystickAvailable = -1; //this causes to search for new joystick and, if fourn, initialize stateMachine!
+
 		//+++++++++++++++++
 		//initialize opengl
 		glClearDepth(1.0f);
@@ -1431,8 +1542,10 @@ void GlfwRenderer::DoRendererTasks()
 			glfwPollEvents(); //do not wait, just do tasks if they are there
 			lastEventUpdate = time;
 			PyProcessExecuteQueue(); //if still some elements open in queue; MAY ONLY BE DONE IN SINGLE-THREADED MODE
+			ProcessJoystick();
 		}
 	}
+
 
 	if (useMultiThreadedRendering || (time >= lastGraphicsUpdate + updateInterval) || GetCallBackSignal())
 	{
@@ -1447,6 +1560,7 @@ void GlfwRenderer::DoRendererTasks()
 	if (useMultiThreadedRendering)
 	{
 		glfwWaitEventsTimeout((double)updateInterval); //wait x seconds for next event
+		ProcessJoystick();
 	}
 
 }
@@ -1648,7 +1762,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 
 			//+++++++++++++++++++
 			//print version:
-			Float2 pInfo3 = PixelToVertexCoordinates((float)(width-fontSize*fontSmallFactor*13), 5.f); //fixed position, very bottom right window position
+			Float2 pInfo3 = PixelToVertexCoordinates((float)(width-fontSize*fontSmallFactor*15), 5.f); //fixed position, very bottom right window position
 			Float3 poff3({ pInfo3[0], pInfo3[1], hOff });
 			DrawString((STDstring("version ")+EXUstd::exudynVersion).c_str(), fontSize*fontSmallFactor, poff3, textColor);
 		}
@@ -1921,7 +2035,20 @@ void GlfwRenderer::SaveImage()
 			filename += num;
 			visSettings->exportImages.saveImageFileCounter++; //this changes the settings, because it should always contain the current value for consecutive simulations
 		}
-		filename += ".tga"; //image format ending
+
+		if (visSettings->exportImages.saveImageFormat == "PNG")
+		{
+			filename += ".png"; //image format ending
+		}
+		else if (visSettings->exportImages.saveImageFormat == "TGA")
+		{
+			filename += ".tga"; //image format ending
+		}
+		else
+		{
+			PrintDelayed("SaveImage ERROR: illegal format; no file written");
+			//SaveSceneToFile will do nothing
+		}
 
 		SaveSceneToFile(filename);
 
@@ -1931,37 +2058,95 @@ void GlfwRenderer::SaveImage()
 
 void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 {
-	Index windowWidth = state->currentWindowSize[0];
-	Index windowHeight = state->currentWindowSize[1];
-
-	Index numberOfPixels = windowWidth * windowHeight * 3;
-	ResizableArray<char> pixelBuffer(numberOfPixels);
-	pixelBuffer.SetNumberOfItems(numberOfPixels);
-
-	glPixelStorei(GL_PACK_ALIGNMENT, 1);
-	glReadBuffer(GL_FRONT);
-	glReadPixels(0, 0, (GLsizei)windowWidth, (GLsizei)windowHeight, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixelBuffer.GetDataPointer());
-
-	std::ofstream imageFile;
-	CheckPathAndCreateDirectories(filename);
-	imageFile.open(filename, std::ofstream::out | std::ofstream::binary);
-	if (!imageFile.is_open()) //failed to open file ...  e.g. invalid file name
+	if (visSettings->exportImages.saveImageFormat == "PNG")
 	{
-		//not thread/Python safe: PyWarning(STDstring("GlfwRenderer::SaveSceneToFile: Failed to open image file '") + filename + "'");
-		PrintDelayed("GlfwRenderer::SaveSceneToFile: Failed to open image file <" + filename + ">");
+		Index windowWidth = state->currentWindowSize[0]; //this is the size at which the renderer created buffer last time ...
+		Index windowHeight = state->currentWindowSize[1];
+
+		Index widthAlignment = visSettings->exportImages.widthAlignment; //width widthAlignment: 1,2,4 or 8
+		Index heightAlignment = visSettings->exportImages.heightAlignment; //width widthAlignment: 1,2,4 or 8
+		if (widthAlignment != 1 && widthAlignment != 2 && widthAlignment != 4 && widthAlignment != 8)
+		{
+			widthAlignment = 4;
+			PrintDelayed("SaveImage ERROR: exportImages.widthAlignment illegal: must be 1, 2, 4 or 8; defaulting to 4");
+		}
+		if (heightAlignment != 1 && heightAlignment != 2 && heightAlignment != 4 && heightAlignment != 8)
+		{
+			heightAlignment = 2;
+			PrintDelayed("SaveImage ERROR: exportImages.heightAlignment illegal: must be 1, 2, 4 or 8; defaulting to 2");
+		}
+
+		windowWidth = widthAlignment * (Index)(windowWidth / widthAlignment); //make multiple of 4 to align with most animation converter ...
+
+		Index nrChannels = 3;
+		const Index strideAlignment = 1; //safer to use 1; otherwise, uncomment line below next! seems not to affect performance!
+		Index stride = nrChannels * windowWidth; //must be div by strideAlignment!
+		//stride += (stride % strideAlignment) ? (strideAlignment - stride % strideAlignment) : 0; 
+
+		Index numberOfPixels = windowHeight * stride;
+		ResizableArray<char> pixelBuffer(numberOfPixels);
+		pixelBuffer.SetNumberOfItems(numberOfPixels);
+
+
+		glPixelStorei(GL_PACK_ALIGNMENT, strideAlignment);
+		glReadBuffer(GL_FRONT);
+		glReadPixels(0, 0, (GLsizei)windowWidth, (GLsizei)windowHeight, GL_RGB, GL_UNSIGNED_BYTE, pixelBuffer.GetDataPointer());
+		//glReadPixels(0, 0, (GLsizei)windowWidth, (GLsizei)windowHeight, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixelBuffer.GetDataPointer());
+
+		ResizableArray<char> pixelBufferFlip(numberOfPixels);
+		pixelBufferFlip.SetNumberOfItems(numberOfPixels);
+
+		//FLIP
+		//not available in GLFW:
+		//stbi_flip_vertically_on_write(true); //as otherwise would be upside-down!
+		for (Index i = 0; i < windowHeight; i++)
+		{
+			for (Index j = 0; j < stride; j++)
+			{
+				pixelBufferFlip[(windowHeight - i - 1)*stride + j] = pixelBuffer[i*stride + j];
+			}
+		}
+
+		std::ofstream imageFile;
+		CheckPathAndCreateDirectories(filename);
+
+		windowHeight = heightAlignment * (Index)(windowHeight / heightAlignment);
+		stbi_write_png(filename.c_str(), windowWidth, windowHeight, nrChannels, pixelBufferFlip.GetDataPointer(), stride);
 	}
-	else
+	else if (visSettings->exportImages.saveImageFormat == "TGA")
 	{
-		short header[] = { 0, 2, 0, 0, 0, 0, (short)windowWidth, (short)windowHeight, 24 }; //file header for .tga (targa) images
-		char* charHeader = (char*)(&header);
+		Index windowWidth = state->currentWindowSize[0];
+		Index windowHeight = state->currentWindowSize[1];
+		windowWidth = 4 * (int)(windowWidth / 4); //make multiple of 4 to align with most animation converter ...
 
-		imageFile.write(charHeader, sizeof(header));
-		imageFile.write(pixelBuffer.GetDataPointer(), numberOfPixels);
+		Index numberOfPixels = windowWidth * windowHeight * 3;
+		ResizableArray<char> pixelBuffer(numberOfPixels);
+		pixelBuffer.SetNumberOfItems(numberOfPixels);
 
-		imageFile.close();
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		glReadBuffer(GL_FRONT);
+		glReadPixels(0, 0, (GLsizei)windowWidth, (GLsizei)windowHeight, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixelBuffer.GetDataPointer());
+
+		std::ofstream imageFile;
+		CheckPathAndCreateDirectories(filename);
+		imageFile.open(filename, std::ofstream::out | std::ofstream::binary);
+		if (!imageFile.is_open()) //failed to open file ...  e.g. invalid file name
+		{
+			//not thread/Python safe: PyWarning(STDstring("GlfwRenderer::SaveSceneToFile: Failed to open image file '") + filename + "'");
+			PrintDelayed("GlfwRenderer::SaveSceneToFile: Failed to open image file <" + filename + ">");
+		}
+		else
+		{
+			short header[] = { 0, 2, 0, 0, 0, 0, (short)windowWidth, (short)windowHeight, 24 }; //file header for .tga (targa) images
+			char* charHeader = (char*)(&header);
+
+			imageFile.write(charHeader, sizeof(header));
+			imageFile.write(pixelBuffer.GetDataPointer(), numberOfPixels);
+
+			imageFile.close();
+		}
 	}
-
-
+	//else : ignored
 }
 
 
@@ -1987,9 +2172,9 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 		Index highlightMbsNumber = visSettings->interactive.highlightMbsNumber;
 
 		Index highlightID = Index2ItemID(highlightIndex, highlightType, highlightMbsNumber);
-		if (highlightIndex >= 0 && highlightType != ItemType::_None) 
-		{ 
-			highlight = true; 
+		if (highlightIndex >= 0 && highlightType != ItemType::_None)
+		{
+			highlight = true;
 			highlightColor2 = Float4({ EXUstd::Minimum(1.f,highlightColor[0] * 1.2f),
 				EXUstd::Minimum(1.f,highlightColor[1] * 1.2f),
 				EXUstd::Minimum(1.f,highlightColor[2] * 1.2f),

@@ -126,6 +126,7 @@ if useCircleContact:
         mbs.AddObject(ObjectContactFrictionCircleCable2D(markerNumbers=[mRigid, mCable], nodeNumber = nodeDataContactCable, 
                                                  numberOfContactSegments=nSegments, contactStiffness = cStiffness, contactDamping=cDamping, 
                                                  frictionVelocityPenalty = 10, frictionCoefficient=2,
+                                                 useSegmentNormals=False, #for this test
                                                  circleRadius = r2))
 
 

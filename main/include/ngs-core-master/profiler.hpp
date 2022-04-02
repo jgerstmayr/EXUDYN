@@ -31,6 +31,8 @@ inline void gettimeofday(struct timeval* t,void* timezone)
 	#include <sys/time.h>
 	#if defined(__EXUDYN__LINUX__ARM__) //RaspberryPi
 		#include <arm_neon.h>
+	#elif defined(__EXUDYN__APPLE__)
+		#include "sse2neon.h"
 	#else
 		#include <x86intrin.h>   // for __rdtsc()  CPU time step counter
 	#endif 

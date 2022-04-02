@@ -19,49 +19,52 @@ from exudyn.processing import ParameterVariation
 
 import numpy as np #for postprocessing
 
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
 #this is the function which is repeatedly called from ParameterVariation
 #parameterSet contains dictinary with varied parameters
 def ParameterFunction(parameterSet):
-    SC = exu.SystemContainer()
-    mbs = SC.AddSystem()
+    global mbs
+    mbs.Reset()
+    
+    #++++++++++++++++++++++++++++++++++++++++++++++
+    #++++++++++++++++++++++++++++++++++++++++++++++
+    #store default parameters in structure (all these parameters can be varied!)
+    class P: pass #create emtpy structure for parameters; simplifies way to update parameters
 
     #default values
-    mass = 1.6          #mass in kg
-    spring = 4000       #stiffness of spring-damper in N/m
-    damper = 8          #damping constant in N/(m/s)
-    u0=-0.08            #initial displacement
-    v0=1                #initial velocity
-    f =80               #force applied to mass
-
-    #process parameters
-    if 'mass' in parameterSet:
-        mass = parameterSet['mass']
-        
-    if 'spring' in parameterSet:
-        spring = parameterSet['spring']
-
-    iCalc = 'Ref' #needed for parallel computation ==> output files are different for every computation
-    if 'computationIndex' in parameterSet:
-        iCalc = str(parameterSet['computationIndex'])
-
-    #mass-spring-damper system
-    L=0.5               #spring length (for drawing)
+    P.mass = 1.6          #mass in kg
+    P.spring = 4000       #stiffness of spring-damper in N/m
+    P.damper = 8          #damping constant in N/(m/s)
+    P.u0=-0.08            #initial displacement
+    P.v0=1                #initial velocity
+    P.f =80               #force applied to mass
+    P.L=0.5               #spring length (for drawing)
+    P.computationIndex = 'Ref'
     
-    x0=f/spring         #static displacement
+    # #now update parameters with parameterSet (will work with any parameters in structure P)
+    for key,value in parameterSet.items():
+        setattr(P,key,value)
+
+    #++++++++++++++++++++++++++++++++++++++++++++++
+    #++++++++++++++++++++++++++++++++++++++++++++++
+    #START HERE: create parameterized model, using structure P, which is updated in every computation
+    
+    x0=P.f/P.spring         #static displacement
     
     # print('resonance frequency = '+str(np.sqrt(spring/mass)))
     # print('static displacement = '+str(x0))
     
     #node for 3D mass point:
-    n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], 
-                         initialCoordinates = [u0,0,0], 
-                         initialVelocities= [v0,0,0]))
+    n1=mbs.AddNode(Point(referenceCoordinates = [P.L,0,0], 
+                         initialCoordinates = [P.u0,0,0], 
+                         initialVelocities= [P.v0,0,0]))
     
     #ground node
     nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
     
     #add mass point (this is a 3D object with 3 coordinates):
-    massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1))
+    massPoint = mbs.AddObject(MassPoint(physicsMass = P.mass, nodeNumber = n1))
     
     #marker for ground (=fixed):
     groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
@@ -70,14 +73,18 @@ def ParameterFunction(parameterSet):
     
     #spring-damper between two marker coordinates
     nC = mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker], 
-                                              stiffness = spring, damping = damper)) 
+                                              stiffness = P.spring, damping = P.damper)) 
     
     #add load:
     mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
-                                             load = f))
+                                             load = P.f))
     #add sensor:
-    fileName = 'solution/paramVarDisplacement'+iCalc+'.txt'
-    mbs.AddSensor(SensorObject(objectNumber=nC, fileName=fileName, 
+    #not needed, if file not written: 
+    fileName = ''
+    if P.computationIndex == 'Ref':
+        fileName = 'solution/paramVarDisplacementRef.txt'
+    sForce = mbs.AddSensor(SensorObject(objectNumber=nC, fileName=fileName, 
+                               storeInternal = True,
                                outputVariableType=exu.OutputVariableType.Force))
     
     #print(mbs)
@@ -104,15 +111,12 @@ def ParameterFunction(parameterSet):
     #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
     #exu.StopRenderer()               #safely close rendering window!
     
-    # #evaluate final (=current) output values
-    # u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
-    # print('displacement=',u)
-
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #evaluate difference between reference and optimized solution
     #reference solution:
     dataRef = np.loadtxt('solution/paramVarDisplacementRef.txt', comments='#', delimiter=',')
-    data = np.loadtxt(fileName, comments='#', delimiter=',')
+    #data = np.loadtxt(fileName, comments='#', delimiter=',')
+    data = mbs.GetSensorStoredData(sForce)
     diff = data[:,1]-dataRef[:,1]
     
     errorNorm = np.sqrt(np.dot(diff,diff))/steps*tEnd
@@ -132,13 +136,6 @@ def ParameterFunction(parameterSet):
         plt.legend() #show labels as legend
         plt.tight_layout()
         plt.show() 
-
-    import os
-    if iCalc != 'Ref':
-        os.remove(fileName) #remove files in order to clean up
-        
-    del mbs
-    del SC
     
     return errorNorm
 
@@ -149,7 +146,7 @@ if __name__ == '__main__': #include this to enable parallel processing
     import time
 
     refval = ParameterFunction({}) # compute reference solution
-    print("refval =", refval)
+    #print("refval =", refval)
     
     n = 16
     start_time = time.time()
@@ -165,6 +162,7 @@ if __name__ == '__main__': #include this to enable parallel processing
                                          )
 
     print("--- %s seconds ---" % (time.time() - start_time))
+    print('values[-1]=', values[-1]) # values[-1] = 3.8418270115351496
 
     from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
     import matplotlib.pyplot as plt
@@ -200,6 +198,7 @@ if __name__ == '__main__': #include this to enable parallel processing
                                          showProgress=True,
                                          )
 
+    print('values2[-1]=', values2[-1]) # values2[-1]=1.8943208246113492
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     

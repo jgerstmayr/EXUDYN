@@ -10,15 +10,124 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.2.10, 
-  \item last change =  2022-03-21, 
-  \item Number of issues = 1005, 
-  \item Number of resolved issues = 852 (10 in current version), 
+  \item Exudyn version = 1.2.25.dev1, 
+  \item last change =  2022-04-02, 
+  \item Number of issues = 1026, 
+  \item Number of resolved issues = 867 (25 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.2.25}:  resolved Issue 1025: {\bf build venv}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: switch to building windows purely on virtual conda environments, allowing to build all windows and linux versions in parallel}
+    \item   date resolved: {\bf 2022-04-02 00:28},
+date raised: 2022-04-02 
+  \ei
+  \item {\bf Version 1.2.24}:  resolved Issue 1022: {\bf virtual environments}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: switch to virtual environments in anaconda for compilation on different platforms}
+    \item   date resolved: {\bf 2022-04-02 00:28},
+date raised: 2022-03-31 
+  \ei
+  \item {\bf Version 1.2.23}:  resolved Issue 1023: {\bf remove /Zi in MSVC}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: remove compilation flag /Zi in setup.py which prevents from parallel runs of MSVC cl.exe}
+    \item   date resolved: {\bf 2022-03-31 11:28},
+date raised: 2022-03-31 
+  \ei
+  \item {\bf Version 1.2.22}:  resolved Issue 1020: {\bf robotics links}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: links to github are not resolved correctly for robotics module}
+    \item   date resolved: {\bf 2022-03-30 10:47},
+date raised: 2022-03-30 
+  \ei
+  \item {\bf Version 1.2.21}:  resolved Issue 1019: {\bf SpaceMouse}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add functionality for 3D mouse / spacemouse by reading joystick inputs and interpret as 3D position and rotation data; add visualization flag interactive.useJoystickInput (default=True); deactivate this flag if your external device makes problems}
+    \item   date resolved: {\bf 2022-03-29 14:37},
+date raised: 2022-03-29 
+  \ei
+  \item {\bf Version 1.2.20}:  resolved Issue 1017: {\bf ContactFrictionCircleCable2D}
+(testing)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: check and test computation of sticking position segment length: undeformed versus deformed}
+    \item {\bf notes: switched to reference length in computation of relative sticking position as given in theDoc; leads to improved results}
+    \item   date resolved: {\bf 2022-03-28 20:33},
+date raised: 2022-03-28 
+  \ei
+  \item {\bf Version 1.2.19}:  resolved Issue 1014: {\bf SaveImage}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: make window height divisible by 2 (skip one line if necessary)}
+    \item {\bf notes: added alignment option for width and height; default options work well for ffmpeg conversion}
+    \item   date resolved: {\bf 2022-03-28 14:25},
+date raised: 2022-03-28 
+  \ei
+  \item {\bf Version 1.2.18}:  resolved Issue 1013: {\bf TGA output}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: switch from TGA to .png output using stb\_image\_write.h in GLFW}
+    \item {\bf notes: added mode exportImages.saveImageFormat to chose between PNG and TGA - PNG with much smaller files!}
+    \item   date resolved: {\bf 2022-03-28 14:24},
+date raised: 2022-03-28 
+  \ei
+  \item {\bf Version 1.2.17}:  resolved Issue 1012: {\bf GLFW}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: switch to GLFW3.3.6 includes in order to be in line with AppleM1 version}
+    \item   date resolved: {\bf 2022-03-28 12:03},
+date raised: 2022-03-28 
+  \ei
+  \item {\bf Version 1.2.16}:  resolved Issue 1011: {\bf Apple M1}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: use universal glfw libs for both Apple x86 and Apple arm M1}
+    \item   date resolved: {\bf 2022-03-28 12:03},
+date raised: 2022-03-28 
+  \ei
+  \item {\bf Version 1.2.15}:  resolved Issue 1010: {\bf autodiff}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extract autodiff as separate module}
+    \item {\bf notes: now using AutomaticDifferentiation.h in Utilities}
+    \item   date resolved: {\bf 2022-03-28 11:56},
+date raised: 2022-03-28 
+  \ei
+  \item {\bf Version 1.2.14}: {\bf \color{warningRed}  resolved BUG 1009}: {\bf solutionViewer}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: does not load automatically due to change of coordinatesSolution filename ending}
+    \item {\bf notes: changed loading of default file in SolutionViewer}
+    \item   date resolved: {\bf 2022-03-28 09:11},
+date raised: 2022-03-28 
+  \ei
+  \item {\bf Version 1.2.13}: {\bf \color{warningRed}  resolved BUG 1007}: {\bf sensor double values}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: sensor outputs two times for a single time step}
+    \item {\bf notes: error occured due to automaticStepSize activated and call to ReduceStepSize even in case adaptiveStep=0; automaticStepSize now deactivated for solvers without step size control}
+    \item   date resolved: {\bf 2022-03-27 19:31},
+date raised: 2022-03-24 
+  \ei
+  \item {\bf Version 1.2.12}:  resolved Issue 1006: {\bf ContactFrictionCircleCable2D}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: LHS computation: exclude undefined state from sticking position computation}
+    \item   date resolved: {\bf 2022-03-22 12:43},
+date raised: 2022-03-22 
+  \ei
+  \item {\bf Version 1.2.11}:  resolved Issue 1005: {\bf PostNewton timer}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: remove timer from timer structures and activate as special timer}
+    \item   date resolved: {\bf 2022-03-22 12:30},
+date raised: 2022-03-22 
+  \ei
   \item {\bf Version 1.2.10}:  resolved Issue 1004: {\bf ContactFrictionCircleCable2D}
 (extension)
   \begin{itemize}[label=$\bullet$]

@@ -56,6 +56,27 @@ bool CSolverImplicitSecondOrderTimeInt::ReduceStepSize(CSystem& computationalSys
 	return false;
 }
 
+//! increase step size if convergence is good; if suggestedStepSize == -1, a solver-specific factor will be used
+void CSolverImplicitSecondOrderTimeInt::IncreaseStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings,
+	Real suggestedStepSize)
+{
+	if ((it.currentStepSize != it.maxStepSize))
+	{
+		it.currentStepSize = EXUstd::Minimum(it.maxStepSize, simulationSettings.timeIntegration.adaptiveStepIncrease*it.currentStepSize);
+
+		if ((IsVerboseCheck(1) && (output.stepInformation & StepInfo::stepIncreaseInfo)) || IsVerboseCheck(2))
+		{
+			if (it.currentTime != it.endTime)
+			{
+				STDstring str = STDstring("  Solve steps: adaptive increase to step size = ") + EXUstd::ToString(it.currentStepSize) + " due to fast convergence";
+				if (IsStaticSolver()) { str += ", load factor = " + EXUstd::ToString(computationalSystem.GetSolverData().loadFactor); }
+				else { str += ", time = " + EXUstd::ToString(it.currentTime); }
+				VerboseWrite(1, str + "\n");
+			}
+		}
+	}
+}
+
 //! set/compute initial conditions (solver-specific!); called from InitializeSolver()
 void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {

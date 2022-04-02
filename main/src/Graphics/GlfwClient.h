@@ -77,6 +77,9 @@ public:
 
 	Float16 storedModelRotation;//!< stored rotation matrix before right mouse button pressed
 
+	Vector3D storedJoystickPosition;    //!< stored position of joystick, if available
+	Vector3D storedJoystickRotation;	//!< stored rotation of joystick, if available
+
 	//++++++++++++++++++++++++++++++++++++
 	//selection:
 	//DELETE: selectionMode;					//!< true, if in selection mode
@@ -180,7 +183,7 @@ public:
 			state->mouseLeftPressed = false;
 			state->mouseRightPressed = false;
 			state->mouseMiddlePressed = false;
-
+			state->joystickAvailable = -1;
 			return true;
 		}
 		else { return false; }
@@ -283,6 +286,13 @@ private: //to be called internally only!
 	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 	static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 	static void window_close_callback(GLFWwindow* window);
+
+	//! return true, if joystick available and updated values are available; if joystickNumber==-1, chose a joystick; 
+	//! if joystickNumber!=-1, it uses the fixed joystick until end of Renderer
+	static bool GetJoystickValues(Vector3D& position, Vector3D& rotation, Index& joystickNumber);
+	
+	//! read joystick values; if changed, send refresh signal for graphics
+	static void ProcessJoystick();
 
 	//! if callback function like mousemove is called, immediately refresh graphics independently of graphicsUpdateInterval
 	static void SetCallBackSignal(bool flag = true) { callBackSignal = flag; }

@@ -394,7 +394,7 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 		}
 
 		it.adaptiveStep = timeint.adaptiveStep;
-		it.automaticStepSize = timeint.automaticStepSize;
+		it.automaticStepSize = timeint.automaticStepSize && HasAutomaticStepSizeControl();
 		it.automaticStepSizeError = 0;			//initialize stored step size error
 		it.rejectedAutomaticStepSizeSteps = 0;	//initialize counter for rejected steps
 	}

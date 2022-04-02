@@ -92,6 +92,10 @@ public:
 	bool mouseRightPressed;    //!current right mouse button as obtained from GLFW
 	bool mouseMiddlePressed;   //!current middle mouse button as obtained from GLFW
 
+	//for space mouse (3D position + 3D rotation):
+	Vector3D joystickPosition;    //!< stored position of joystick, if available
+	Vector3D joystickRotation;	//!< stored rotation of joystick, if available
+	Index joystickAvailable;			//!< -1 if no joystick available, otherwise the index of the available joystick
 };
 
 #endif

@@ -1315,6 +1315,10 @@ TimerStructureRegistrator TSRcomputeConnectorsMarkerData("connectorsMarkerData",
 Index TScomputeAlgebraicEquations;
 TimerStructureRegistrator TSRcomputeAlgebraicEquations("computeAlgebraicEquations", TScomputeAlgebraicEquations, globalTimers);
 
+
+Index TSpostNewtonStep;
+TimerStructureRegistrator TSRpostNewtonStep("PostNewtonStep", TSpostNewtonStep, globalTimers, true); //true=this timer should always be considered
+
 Index TScomputeGeneralContact;
 TimerStructureRegistrator TSRcomputeGeneralContact("Contact:overall", TScomputeGeneralContact, globalTimers);
 //Index TScomputeMarkerDataODE2;
@@ -1928,6 +1932,8 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 	//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
 	TemporaryComputationData& temp = tempArray[0]; //always exists
 
+	if (cSystemData.listDiscontinuousIteration.NumberOfItems() != 0) { STARTGLOBALTIMER(TSpostNewtonStep); }
+
 	//for (Index objectIndex = 0; objectIndex < cSystemData.GetCObjects().NumberOfItems(); objectIndex++)
 	for (Index j : cSystemData.listDiscontinuousIteration)
 	{
@@ -1955,6 +1961,7 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 			}
 		}
 	}
+	if (cSystemData.listDiscontinuousIteration.NumberOfItems() != 0) { STOPGLOBALTIMER(TSpostNewtonStep); }
 
 	//this part is anyway done in parallel:
 	for (GeneralContact* gc : generalContacts) //usually only 1

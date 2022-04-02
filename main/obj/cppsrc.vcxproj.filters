@@ -1400,6 +1400,9 @@
     <ClInclude Include="..\include\ngs-core-master\ngs_core.hpp">
       <Filter>CPPparallel</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Utilities\AutomaticDifferentiation.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

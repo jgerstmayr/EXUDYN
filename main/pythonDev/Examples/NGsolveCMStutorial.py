@@ -73,7 +73,6 @@ if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https:
     import sys
     #adjust path to your ngsolve installation (if not added to global path)
     sys.path.append('C:/ProgramData/ngsolve/lib/site-packages') 
-
     import ngsolve as ngs
     import netgen
     from netgen.meshing import *

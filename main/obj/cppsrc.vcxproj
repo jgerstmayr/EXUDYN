@@ -276,7 +276,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11local;C:\ProgramData\Anaconda3_64b37\include;$(SolutionDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11local;C:\ProgramData\Anaconda3_64b37\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -737,6 +737,7 @@
     <ClInclude Include="..\src\tests\TemplatedVectorArrayUnitTests.h" />
     <ClInclude Include="..\src\tests\UnitTestBase.h" />
     <ClInclude Include="..\src\Utilities\AdvancedMath.h" />
+    <ClInclude Include="..\src\Utilities\AutomaticDifferentiation.h" />
     <ClInclude Include="..\src\utilities\BasicDefinitions.h" />
     <ClInclude Include="..\src\utilities\BasicFunctions.h" />
     <ClInclude Include="..\src\utilities\BasicTraits.h" />

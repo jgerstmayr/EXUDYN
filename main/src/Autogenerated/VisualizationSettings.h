@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -185,7 +185,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -271,7 +271,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -362,7 +362,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -386,8 +386,8 @@ public: // AUTO:
   Float4 drawVerticalColor;                       //!< AUTO: color for outputVariable to be drawn along cross seciton (vertically)
   float drawVerticalFactor;                       //!< AUTO: factor for outputVariable to be drawn along cross seciton (vertically)
   bool drawVerticalLines;                         //!< AUTO: draw additional vertical lines for better visibility
-  bool drawVerticalNumbers;                       //!< AUTO: show numbers at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point!
   float drawVerticalOffset;                       //!< AUTO: offset for vertical drawn lines; offset is added before multiplication with drawVerticalFactor
+  bool drawVerticalValues;                        //!< AUTO: show values at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point!
   bool reducedAxialInterploation;                 //!< AUTO: if True, the interpolation along the beam axis may be lower than the beam element order; this may be, however, show more consistent values than a full interpolation, e.g. for strains or forces
 
 
@@ -401,8 +401,8 @@ public: // AUTO:
     drawVerticalColor = Float4({0.2f,0.2f,0.2f,1.f});
     drawVerticalFactor = 1.f;
     drawVerticalLines = true;
-    drawVerticalNumbers = false;
     drawVerticalOffset = 0.f;
+    drawVerticalValues = false;
     reducedAxialInterploation = true;
   };
 
@@ -432,8 +432,8 @@ public: // AUTO:
     os << "  drawVerticalColor = " << drawVerticalColor << "\n";
     os << "  drawVerticalFactor = " << drawVerticalFactor << "\n";
     os << "  drawVerticalLines = " << drawVerticalLines << "\n";
-    os << "  drawVerticalNumbers = " << drawVerticalNumbers << "\n";
     os << "  drawVerticalOffset = " << drawVerticalOffset << "\n";
+    os << "  drawVerticalValues = " << drawVerticalValues << "\n";
     os << "  reducedAxialInterploation = " << reducedAxialInterploation << "\n";
     os << "\n";
   }
@@ -453,7 +453,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -529,7 +529,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -618,7 +618,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -687,7 +687,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -765,7 +765,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -834,7 +834,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -920,7 +920,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1007,7 +1007,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1160,7 +1160,7 @@ public: // AUTO:
     os << "  facesTransparent = " << facesTransparent << "\n";
     os << "  initialCenterPoint = " << initialCenterPoint << "\n";
     os << "  initialMaxSceneSize = " << initialMaxSceneSize << "\n";
-#ifndef __EXUDYN__APPLE__
+#ifndef __APPLE__
     os << "  initialModelRotation = " << Matrix3DF(initialModelRotation) << "\n";
 #endif
     os << "  initialZoom = " << initialZoom << "\n";
@@ -1206,11 +1206,11 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        VSettingsExportImages
-* @brief        Functionality to export images to files (.tga format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.
+* @brief        Functionality to export images to files (PNG or TGA format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1228,23 +1228,34 @@ public: // AUTO:
 class VSettingsExportImages // AUTO: 
 {
 public: // AUTO: 
+  Index heightAlignment;                          //!< AUTO: alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)
   Index saveImageFileCounter;                     //!< AUTO: current value of the counter which is used to consecutively save frames (images) with consecutive numbers
-  std::string saveImageFileName;                  //!< AUTO: filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); ; directory will be created if it does not exist
+  std::string saveImageFileName;                  //!< AUTO: filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.png, frame0001.png,...); ; directory will be created if it does not exist
+  std::string saveImageFormat;                    //!< AUTO: format for exporting figures: currently only PNG and TGA available; use TGA has highest compatibility with all platforms
   bool saveImageSingleFile;                       //!< AUTO: True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName
   Index saveImageTimeOut;                         //!< AUTO: timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes
+  Index widthAlignment;                           //!< AUTO: alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)
 
 
 public: // AUTO: 
   //! AUTO: default constructor with parameter initialization
   VSettingsExportImages()
   {
+    heightAlignment = 2;
     saveImageFileCounter = 0;
     saveImageFileName = "images/frame";
+    saveImageFormat = "PNG";
     saveImageSingleFile = false;
     saveImageTimeOut = 5000;
+    widthAlignment = 4;
   };
 
   // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)
+  void PySetHeightAlignment(const Index& heightAlignmentInit) { heightAlignment = EXUstd::GetSafelyPInt(heightAlignmentInit,"heightAlignment"); }
+  //! AUTO: Read (Copy) access to: alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)
+  Index PyGetHeightAlignment() const { return (Index)(heightAlignment); }
+
   //! AUTO: Set function (needed in pybind) for: current value of the counter which is used to consecutively save frames (images) with consecutive numbers
   void PySetSaveImageFileCounter(const Index& saveImageFileCounterInit) { saveImageFileCounter = EXUstd::GetSafelyUInt(saveImageFileCounterInit,"saveImageFileCounter"); }
   //! AUTO: Read (Copy) access to: current value of the counter which is used to consecutively save frames (images) with consecutive numbers
@@ -1255,14 +1266,22 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes
   Index PyGetSaveImageTimeOut() const { return (Index)(saveImageTimeOut); }
 
+  //! AUTO: Set function (needed in pybind) for: alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)
+  void PySetWidthAlignment(const Index& widthAlignmentInit) { widthAlignment = EXUstd::GetSafelyPInt(widthAlignmentInit,"widthAlignment"); }
+  //! AUTO: Read (Copy) access to: alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)
+  Index PyGetWidthAlignment() const { return (Index)(widthAlignment); }
+
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
     os << "VSettingsExportImages" << ":\n";
+    os << "  heightAlignment = " << heightAlignment << "\n";
     os << "  saveImageFileCounter = " << saveImageFileCounter << "\n";
     os << "  saveImageFileName = " << saveImageFileName << "\n";
+    os << "  saveImageFormat = " << saveImageFormat << "\n";
     os << "  saveImageSingleFile = " << saveImageSingleFile << "\n";
     os << "  saveImageTimeOut = " << saveImageTimeOut << "\n";
+    os << "  widthAlignment = " << widthAlignment << "\n";
     os << "\n";
   }
 
@@ -1281,7 +1300,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1304,11 +1323,14 @@ public: // AUTO:
   ItemType highlightItemType;                     //!< AUTO: item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)
   Index highlightMbsNumber;                       //!< AUTO: index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
   Float4 highlightOtherColor;                     //!< AUTO: cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
+  float joystickScaleRotation;                    //!< AUTO: rotation scaling factor for joystick input
+  float joystickScaleTranslation;                 //!< AUTO: translation scaling factor for joystick input
   float keypressRotationStep;                     //!< AUTO: rotation increment per keypress in degree (full rotation = 360 degree)
   float keypressTranslationStep;                  //!< AUTO: translation increment per keypress relative to window size
   float mouseMoveRotationFactor;                  //!< AUTO: rotation increment per 1 pixel mouse movement in degree
   bool selectionLeftMouse;                        //!< AUTO: True: left mouse click on items and show basic information
   bool selectionRightMouse;                       //!< AUTO: True: right mouse click on items and show dictionary (read only!)
+  bool useJoystickInput;                          //!< AUTO: True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ...
   float zoomStepFactor;                           //!< AUTO: change of zoom per keypress (keypad +/-) or mouse wheel increment
 
 
@@ -1321,11 +1343,14 @@ public: // AUTO:
     highlightItemType = ItemType::_None;
     highlightMbsNumber = 0;
     highlightOtherColor = Float4({0.5f,0.5f,0.5f,0.4f});
+    joystickScaleRotation = 200.f;
+    joystickScaleTranslation = 6.f;
     keypressRotationStep = 5.f;
     keypressTranslationStep = 0.1f;
     mouseMoveRotationFactor = 1.f;
     selectionLeftMouse = true;
     selectionRightMouse = true;
+    useJoystickInput = true;
     zoomStepFactor = 1.15f;
   };
 
@@ -1354,11 +1379,14 @@ public: // AUTO:
     os << "  highlightItemType = " << highlightItemType << "\n";
     os << "  highlightMbsNumber = " << highlightMbsNumber << "\n";
     os << "  highlightOtherColor = " << highlightOtherColor << "\n";
+    os << "  joystickScaleRotation = " << joystickScaleRotation << "\n";
+    os << "  joystickScaleTranslation = " << joystickScaleTranslation << "\n";
     os << "  keypressRotationStep = " << keypressRotationStep << "\n";
     os << "  keypressTranslationStep = " << keypressTranslationStep << "\n";
     os << "  mouseMoveRotationFactor = " << mouseMoveRotationFactor << "\n";
     os << "  selectionLeftMouse = " << selectionLeftMouse << "\n";
     os << "  selectionRightMouse = " << selectionRightMouse << "\n";
+    os << "  useJoystickInput = " << useJoystickInput << "\n";
     os << "  zoomStepFactor = " << zoomStepFactor << "\n";
     os << "\n";
   }
@@ -1378,7 +1406,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

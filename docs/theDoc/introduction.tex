@@ -28,7 +28,7 @@ Currently, the module structure is simple:
     \item[--] \texttt{exudyn.itemInterface}: contains the interface, which transfers python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
     \item[--] \texttt{exudyn.basicUtilities}: contains basic helper classes, without importing numpy
     \item[--] \texttt{exudyn.rigidBodyUtilities}: contains important helper classes for creation of rigid body inertia, rigid bodies, and rigid body joints; includes helper functions for rotation parameterization, rotation matrices, homogeneous transformations, etc.
-    \item[--] \texttt{exudyn.graphicsDataUtilities}: provides some basic drawing utilities, definition of colors and basic drawing objects (including \sc{STL} import); rotation/translation of graphicsData objects
+    \item[--] \texttt{exudyn.graphicsDataUtilities}: provides some basic drawing utilities, definition of colors and basic drawing objects (including \acs{STL} import); rotation/translation of graphicsData objects
     \item[--] \texttt{exudyn.plot}: containing helper functions, which are physics related such as friction
     \item[--] \texttt{exudyn.processing}: methods for optimization, parameter variation, sensitivity analysis, etc.
     \item[--] \texttt{exudyn.FEM}: everything related to finite element import and creation of model order reduction flexible bodies
@@ -245,7 +245,7 @@ As an example, the initial configuration of a \texttt{NodePoint} is given by \te
 
 \mysubsection{Mapping between local and global coordinates} \label{sec:systemData:LTG}
 %
-The \ac{LTG}-mappings between local coordinates, on node or object level, and global (=system) coordinates follows the following rules:
+The \ac{LTG}-mappings\footnote{local-to-global coordinate mappings containing transformation from local object coordinate indices to global (system) coordinate indices} between local coordinates, on node or object level, and global (=system) coordinates follows the following rules:
 \bi
 \item \ac{LTG}-mappings are computed during \texttt{mbs.Assemble()} and are not available before.
 \item Nodes own a global index which relates the local coordinates to global (system) coordinate. E.g., for a \ac{ODE2} node with node number \texttt{i}, this index can be obtained via the function \texttt{mbs.GetNodeODE2Index(i)}.
@@ -378,7 +378,7 @@ note that \texttt{visualizationSettings.general.autoFitScene} should be set Fals
   #store model view for next run:
   StopRenderer() #stores render state in exu.sys['renderState']
 \end{lstlisting}
-\horizontalRuler
+\horizontalRuler \\
 %
 Alternatively, you can obtain the current model view from the console after a simulation, e.g.,
 \pythonstyle\begin{lstlisting}
@@ -434,7 +434,7 @@ The openGL graphics thread (=separate thread) runs the following loop:
 \mysubsubsection{Graphics user Python functions}
 There are some user functions in order to customize drawing:
 \bi
-  \item You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from STL files (\texttt{GraphicsDataFromSTLfileTxt}).
+  \item You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (\texttt{GraphicsDataFromSTLfileTxt}) using the established format \ac{STL}\footnote{STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems}.
   \item Some objects, e.g., \texttt{ObjectGenericODE2} or \texttt{ObjectRigidBody}, provide customized a function \texttt{graphicsDataUserFunction}. This user function just returns a list of GraphicsData, see \refSection{sec:graphicsData}. With this function you can change the shape of the body in every step of the computation.
   \item Specifically, the \texttt{graphicsDataUserFunction} in \texttt{ObjectGround} can be used to draw any moving background in the scene.
 \ei
@@ -521,7 +521,7 @@ which means, that after every 0.01 seconds of simulation time, an image of the c
 \bi
   \item \texttt{SC.visualizationSettings.exportImages.saveImageFileName = "myFolder/frame"}
 \ei
-By default, a consecutive numbering is generated for the image, e.g., 'frame0000.tga, frame0001.tga,...'. Note that '.tga' files contain raw image data and therefore can become very large.
+By default, a consecutive numbering is generated for the image, e.g., 'frame0000.png, frame0001.png,...'. Note that the standard file format PNG with ending '.png' uses compression libraries included in glfw, while the alternative TGA format produces '.tga' files which contain raw image data and therefore can become very large.
 
 To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation.
 \onlyRST{$\ra$ see theDoc.pdf !}
@@ -531,7 +531,7 @@ In windows, simple DOS batch files can do the job to convert frames given in the
 \lstinputlisting[breaklines=true, basicstyle=\ttm]{../userTools/makeAnimations/convertToVideo.bat}
 After the video has been created, you should delete the single images:
 \plainlststyle
-\lstinputlisting[breaklines=true, basicstyle=\ttm]{../userTools/makeAnimations/deleteTGAimages.bat}
+\lstinputlisting[breaklines=true, basicstyle=\ttm]{../userTools/makeAnimations/deletePNGimages.bat}
 }
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -783,7 +783,7 @@ In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer(
     \item \ac{RHS}
     \item \ac{LHS}
     \item \ac{EP}
-    \item \ac{Rxyz}: consecutive rotations around x, y and z-axis (Tait-Bryan rotations);
+    \item \ac{Rxyz}%: consecutive rotations around x, y and z-axis (Tait-Bryan rotations);
     \item \ac{coeffs}
     \item \ac{pos}
     \item write time derivatives with underscore: \_t, \_tt; example: Position\_t, Position\_tt, ...

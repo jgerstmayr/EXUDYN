@@ -74,6 +74,8 @@ void CMarkerBodyCable2DShape::ComputeMarkerData(const CSystemData& cSystemData, 
 	Vector4D SVx(0.);
 	CHECKandTHROW(!(isALE && verticalOffset != 0.), "CMarkerBodyCable2DShape::ComputeMarkerData: for ALEANCFCable2D elements, the verticalOffset must be zero");
 
+	markerData.GetHelper() = L; //store reference length of element in helper
+
 	for (Index i = 0; i < nPoints; i++) //iterate over nPoints, including endpoints!
 	{
 		Real x = (Real)i*L / nSegments;

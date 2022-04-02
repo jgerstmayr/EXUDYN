@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-03-21  10:09:10 (last modified)
+* @date         2022-03-23  07:24:51 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -123,7 +123,7 @@ public: // AUTO:
         cObjectContactFrictionCircleCable2D->GetParameters().frictionStiffness = py::cast<Real>(d["frictionStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectContactFrictionCircleCable2D->GetParameters().frictionCoefficient = py::cast<Real>(d["frictionCoefficient"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectContactFrictionCircleCable2D->GetParameters().circleRadius = py::cast<Real>(d["circleRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactFrictionCircleCable2D->GetParameters().usePointWiseNormals = py::cast<bool>(d["usePointWiseNormals"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectContactFrictionCircleCable2D->GetParameters().useSegmentNormals = py::cast<bool>(d["useSegmentNormals"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectContactFrictionCircleCable2D->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectContactFrictionCircleCable2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -147,7 +147,7 @@ public: // AUTO:
         d["frictionStiffness"] = (Real)cObjectContactFrictionCircleCable2D->GetParameters().frictionStiffness; //! AUTO: cast variables into python (not needed for standard types) 
         d["frictionCoefficient"] = (Real)cObjectContactFrictionCircleCable2D->GetParameters().frictionCoefficient; //! AUTO: cast variables into python (not needed for standard types) 
         d["circleRadius"] = (Real)cObjectContactFrictionCircleCable2D->GetParameters().circleRadius; //! AUTO: cast variables into python (not needed for standard types) 
-        d["usePointWiseNormals"] = (bool)cObjectContactFrictionCircleCable2D->GetParameters().usePointWiseNormals; //! AUTO: cast variables into python (not needed for standard types) 
+        d["useSegmentNormals"] = (bool)cObjectContactFrictionCircleCable2D->GetParameters().useSegmentNormals; //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectContactFrictionCircleCable2D->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectContactFrictionCircleCable2D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -170,7 +170,7 @@ public: // AUTO:
         else if (parameterName.compare("frictionStiffness") == 0) { return py::cast((Real)cObjectContactFrictionCircleCable2D->GetParameters().frictionStiffness);} //! AUTO: get parameter
         else if (parameterName.compare("frictionCoefficient") == 0) { return py::cast((Real)cObjectContactFrictionCircleCable2D->GetParameters().frictionCoefficient);} //! AUTO: get parameter
         else if (parameterName.compare("circleRadius") == 0) { return py::cast((Real)cObjectContactFrictionCircleCable2D->GetParameters().circleRadius);} //! AUTO: get parameter
-        else if (parameterName.compare("usePointWiseNormals") == 0) { return py::cast((bool)cObjectContactFrictionCircleCable2D->GetParameters().usePointWiseNormals);} //! AUTO: get parameter
+        else if (parameterName.compare("useSegmentNormals") == 0) { return py::cast((bool)cObjectContactFrictionCircleCable2D->GetParameters().useSegmentNormals);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectContactFrictionCircleCable2D->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectContactFrictionCircleCable2D->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VshowContactCircle") == 0) { return py::cast((bool)visualizationObjectContactFrictionCircleCable2D->GetShowContactCircle());} //! AUTO: get parameter
@@ -194,7 +194,7 @@ public: // AUTO:
         else if (parameterName.compare("frictionStiffness") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().frictionStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("frictionCoefficient") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().frictionCoefficient = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("circleRadius") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().circleRadius = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("usePointWiseNormals") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().usePointWiseNormals = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("useSegmentNormals") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().useSegmentNormals = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectContactFrictionCircleCable2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VshowContactCircle") == 0) { visualizationObjectContactFrictionCircleCable2D->GetShowContactCircle() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

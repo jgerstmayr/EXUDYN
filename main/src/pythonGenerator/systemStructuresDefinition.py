@@ -384,7 +384,7 @@ V,      drawVertical,               ,                  ,     bool,          fals
 V,      drawVerticalFactor,         ,                  ,     float,         "1.f",                    , P,       "factor for outputVariable to be drawn along cross seciton (vertically)"
 V,      drawVerticalColor,          ,                  4,    Float4,        "Float4({0.2f,0.2f,0.2f,1.f})", , P, "color for outputVariable to be drawn along cross seciton (vertically)"
 V,      drawVerticalLines,          ,                  ,     bool,          true,                     , P,       "draw additional vertical lines for better visibility"
-V,      drawVerticalNumbers,        ,                  ,     bool,          false,                    , P,       "show numbers at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point!"
+V,      drawVerticalValues,         ,                  ,     bool,          false,                    , P,       "show values at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point!"
 V,      drawVerticalOffset,         ,                  ,     float,         "0.f",                    , P,       "offset for vertical drawn lines; offset is added before multiplication with drawVerticalFactor"
 #
 writeFile=VisualizationSettings.h
@@ -570,12 +570,15 @@ writeFile=VisualizationSettings.h
 class = VSettingsExportImages
 appendToFile=True
 writePybindIncludes = True
-classDescription = "Functionality to export images to files (.tga format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly."
+classDescription = "Functionality to export images to files (PNG or TGA format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 V,      saveImageTimeOut,               ,                  ,     PInt,         "5000",                 , P,      "timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes"
-V,      saveImageFileName,              ,                  ,     FileName,     "images/frame",         , P,      "filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.tga, frame0001.tga,...); ; directory will be created if it does not exist"
+V,      saveImageFileName,              ,                  ,     FileName,     "images/frame",         , P,      "filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.png, frame0001.png,...); ; directory will be created if it does not exist"
 V,      saveImageFileCounter,           ,                  ,     UInt,         0,                      , P,      "current value of the counter which is used to consecutively save frames (images) with consecutive numbers"
 V,      saveImageSingleFile,            ,                  ,     bool,         false,                  , P,      "True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName"
+V,      saveImageFormat,                ,                  ,     String,       "PNG",                  , P,      "format for exporting figures: currently only PNG and TGA available; use TGA has highest compatibility with all platforms"
+V,      widthAlignment,                 ,                  ,     PInt,         4,                      , P,      "alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)"
+V,      heightAlignment,                ,                  ,     PInt,         2,                      , P,      "alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)"
 #
 writeFile=VisualizationSettings.h
 
@@ -600,6 +603,9 @@ V,      highlightOtherColor,            ,                  4,    Float4,       "
 #
 V,      selectionLeftMouse,             ,                  ,     bool,         true,                  , P,      "True: left mouse click on items and show basic information"
 V,      selectionRightMouse,            ,                  ,     bool,         true,                  , P,      "True: right mouse click on items and show dictionary (read only!)"
+V,      useJoystickInput,               ,                  ,     bool,         true,                  , P,      "True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ..."
+V,      joystickScaleTranslation,       ,                  ,     float,        "6.f",                 , P,      "translation scaling factor for joystick input"
+V,      joystickScaleRotation,          ,                  ,     float,        "200.f",               , P,      "rotation scaling factor for joystick input"
 writeFile=VisualizationSettings.h
 
 
@@ -661,7 +667,7 @@ V,      jacobianODE2_t,             ,                  ,     Real,         0.,  
 V,      jacobianAE,                 ,                  ,     Real,         0.,                     ,   P,    "jacobian of algebraic equations (not counted in sum)"
 V,      massMatrix,                 ,                  ,     Real,         0.,                     ,   P,    "mass matrix computation"
 V,      reactionForces,             ,                  ,     Real,         0.,                     ,   P,    "CqT * lambda"
-V,      postNewton,                 ,                  ,     Real,         0.,                     ,   P,    "post newton step"
+#not used, for efficiency (added as special/global timer): V,      postNewton,                 ,                  ,     Real,         0.,                     ,   P,    "post newton step"
 V,      errorEstimator,             ,                  ,     Real,         0.,                     ,   P,    "for explicit solvers, additional evaluation"
 V,      writeSolution,              ,                  ,     Real,         0.,                     ,   P,    "time for writing solution"
 V,      overhead,                   ,                  ,     Real,         0.,                     ,   P,    "overhead, such as initialization, copying and some matrix-vector multiplication"
@@ -877,6 +883,7 @@ FvL,    IsStaticSolver,              ,                ,    bool,        ,       
 FvL,    GetSimulationEndTime,        ,                ,    Real,        ,                       "const SimulationSettings& simulationSettings",   CGPV,    "compute simulation end time (depends on static or time integration solver)"
 FvL,    ReduceStepSize,              ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings, Index severity",   GPV,    "reduce step size (1..normal, 2..severe problems); return true, if reduction was successful"
 FvL,    IncreaseStepSize,            ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "increase step size if convergence is good"
+FvL,    HasAutomaticStepSizeControl, ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "return true, if solver supports automatic stepsize control, otherwise false"
 #initialization functions:
 FvL,    InitializeSolver,            ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   DGPV,    "initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files"
 FvL,    PreInitializeSolverSpecific, ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset"
@@ -1010,6 +1017,7 @@ FvL,    IsStaticSolver,              ,                ,    bool,        ,       
 FvL,    GetSimulationEndTime,        ,                ,    Real,        ,                       "const SimulationSettings& simulationSettings",   CGPV,    "compute simulation end time (depends on static or time integration solver)"
 FvL,    ReduceStepSize,              ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings, Index severity",   GPV,    "reduce step size (1..normal, 2..severe problems); return true, if reduction was successful"
 FvL,    IncreaseStepSize,            ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "increase step size if convergence is good"
+FvL,    HasAutomaticStepSizeControl, ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "return true, if solver supports automatic stepsize control, otherwise false"
 #initialization functions:
 FvL,    InitializeSolver,            ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   DGPV,    "initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files"
 FvL,    PreInitializeSolverSpecific, ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset"
@@ -1106,6 +1114,7 @@ FvL,    IsStaticSolver,              ,                ,    bool,        ,       
 FvL,    GetSimulationEndTime,        ,                ,    Real,        ,                       "const SimulationSettings& simulationSettings",   CGPV,    "compute simulation end time (depends on static or time integration solver)"
 FvL,    ReduceStepSize,              ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings, Index severity",   GPV,    "reduce step size (1..normal, 2..severe problems); return true, if reduction was successful"
 FvL,    IncreaseStepSize,            ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "increase step size if convergence is good"
+FvL,    HasAutomaticStepSizeControl, ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "return true, if solver supports automatic stepsize control, otherwise false"
 #initialization functions:
 FvL,    InitializeSolver,            ,                ,    bool,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   DGPV,    "initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files"
 FvL,    PreInitializeSolverSpecific, ,                ,    void,        ,                       "MainSystem& mainSystem, const SimulationSettings& simulationSettings",   GPV,    "pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset"

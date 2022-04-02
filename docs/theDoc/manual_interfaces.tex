@@ -690,7 +690,7 @@ This section shows the DynamicSolverType structure, which is used for selecting 
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  GeneralizedAlpha & an implicit solver for index 3 problems; allows to set variables also for Newmark and trapezoidal implicit index 2 solvers\\ \hline 
+  GeneralizedAlpha & an implicit solver for index 3 problems; intended to be used for solving directly the index 3 constraints using the spectralRadius sufficiently small (usually 0.5 .. 1)\\ \hline 
   TrapezoidalIndex2 & an implicit solver for index 3 problems with index2 reduction; uses generalized alpha solver with settings for Newmark with index2 reduction\\ \hline 
   ExplicitEuler & an explicit 1st order solver (generally not compatible with constraints)\\ \hline 
   ExplicitMidpoint & an explicit 2nd order solver (generally not compatible with constraints)\\ \hline 

@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,7 +39,6 @@ public: // AUTO:
   Real ODE1RHS;                                   //!< AUTO: time for residual evaluation of \hac{ODE1} right-hand-side
   Real ODE2RHS;                                   //!< AUTO: time for residual evaluation of \hac{ODE2} right-hand-side
   Real overhead;                                  //!< AUTO: overhead, such as initialization, copying and some matrix-vector multiplication
-  Real postNewton;                                //!< AUTO: post newton step
   Real python;                                    //!< AUTO: time spent for Python functions
   Real reactionForces;                            //!< AUTO: CqT * lambda
   Real total;                                     //!< AUTO: total time measured between start and end of computation (static/dynamics)
@@ -66,7 +65,6 @@ public: // AUTO:
     ODE1RHS = 0.;
     ODE2RHS = 0.;
     overhead = 0.;
-    postNewton = 0.;
     python = 0.;
     reactionForces = 0.;
     total = 0.;
@@ -113,7 +111,6 @@ public: // AUTO:
     os << "  ODE1RHS = " << ODE1RHS << "\n";
     os << "  ODE2RHS = " << ODE2RHS << "\n";
     os << "  overhead = " << overhead << "\n";
-    os << "  postNewton = " << postNewton << "\n";
     os << "  python = " << python << "\n";
     os << "  reactionForces = " << reactionForces << "\n";
     os << "  total = " << total << "\n";
@@ -139,7 +136,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -263,7 +260,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -377,7 +374,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -473,7 +470,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -576,7 +573,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-03-15 (last modfied)
+* @date         AUTO: 2022-03-30 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

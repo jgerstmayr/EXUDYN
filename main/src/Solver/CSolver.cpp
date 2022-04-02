@@ -32,7 +32,7 @@
 Real CSolverTimer::Sum() const
 {
 	return factorization + newtonIncrement + integrationFormula + ODE2RHS + ODE1RHS + AERHS + totalJacobian + massMatrix + reactionForces +
-		postNewton + errorEstimator + writeSolution + overhead + python + visualization;
+		/*postNewton +*/ errorEstimator + writeSolution + overhead + python + visualization;
 }
 
 STDstring CSolverTimer::ToString() const
@@ -62,7 +62,7 @@ STDstring CSolverTimer::ToString() const
 		if (jacobianAE / sum > limit) ostr << "  __jacobianAE      = " << jacobianAE / sum << "%\n";
 		if (massMatrix / sum > limit) ostr << "  massMatrix        = " << massMatrix / sum << "%\n";
 		if (reactionForces / sum > limit) ostr << "  reactionForces    = " << reactionForces / sum << "%\n";
-		if (postNewton / sum > limit) ostr << "  postNewtonStep    = " << postNewton / sum << "%\n";
+		//not computed, implemented as special timer: if (postNewton / sum > limit) ostr << "  postNewtonStep    = " << postNewton / sum << "%\n";
 		if (errorEstimator / sum > limit) ostr << "  errorEstimator    = " << errorEstimator / sum << "%\n";
 		if (writeSolution / sum > limit) ostr << "  writeSolution     = " << writeSolution / sum << "%\n";
 		if (overhead / sum > limit) ostr << "  overhead          = " << overhead / sum << "%\n";

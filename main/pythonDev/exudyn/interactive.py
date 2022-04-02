@@ -676,7 +676,14 @@ def SolutionViewer(mainSystem, solution=[], rowIncrement = 1, timeout=0.04, runO
         sims = mbs.sys['simulationSettings']
         if not sims.solutionSettings.writeSolutionToFile:
             raise ValueError('SolutionViewer: previous simulation has writeSolutionToFile==False; no solution file available!')
-        solution = LoadSolutionFile(sims.solutionSettings.coordinatesSolutionFileName) #load solution file of previous simulation
+        filename = sims.solutionSettings.coordinatesSolutionFileName
+        if filename.find('.')==-1:
+            if sims.solutionSettings.binarySolutionFile:
+                filename+='.sol' #this is the default ending for binary file
+            else:
+                filename+='.txt' #this is the default ending for text
+                
+        solution = LoadSolutionFile(filename) #load solution file of previous simulation
 
     nRows = solution['nRows']
     if nRows == 0:

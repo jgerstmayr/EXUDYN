@@ -327,7 +327,7 @@ class BuildExt(build_ext):
 				'/MP', '/GS', '/Qpar',
 				'/GL', '/W3', '/Gy', 
 				'/Zc:wchar_t',
-				'/Zi', 
+				#'/Zi',  #removed as it creates the .pdb file which is not needed and prevents parallel python setup.py bdist_wheel runs
 				'/Gm-', 
 				'/O2', 
 				'/sdl',
@@ -352,7 +352,6 @@ class BuildExt(build_ext):
          '-Wno-comment', #deactivate multiline comment warning /* ... * * ...*/
          '-Wno-unknown-pragmas', #warning from ngs_core.hpp/taskmanager.hpp (NGsolve)
          '-Wno-sign-compare', #warning from taskmanager.hpp (NGsolve)
-         '-Wno-class-memaccess', #warning in SearchTree Box3D
  		 '-Wall',
          #'-std=c++17', #==>chosen automatic
          #'-fpermissive', #because of exceptions ==> allows compilation
@@ -365,7 +364,6 @@ class BuildExt(build_ext):
 #		'-Wno-non-template-friend', #deactivate warning for several vector/array templates
 #		'-Wno-comment', #deactivate multiline comment warning /* ... * * ...*/
 #		'-Wall',
-#		'-Wno-class-memaccess', #avoid warnings on gcc-8 regarding memory access in class
         ]+unixCppGLFWflag+commonCopts,
     }
     if not is32bits: #for 32bits, we assume that processors may not support avx
@@ -405,9 +403,10 @@ class BuildExt(build_ext):
             '-lstdc++fs', #for autocreate directories, using std::filesystem from c++17 std
             ]        
         #warnings not available in clang:
-        c_opts['unix'] += ['-Wno-non-template-friend', #deactivate warning for several vector/array templates
-                 		 #'-Wno-class-memaccess', #removed: does not work on older gcc; avoid warnings on gcc-8 regarding memory access in class
-                          ]
+        c_opts['unix'] += [
+        '-Wno-non-template-friend', #deactivate warning for several vector/array templates
+        '-Wno-class-memaccess', #warning in SearchTree Box3D; BUT: does not work on older gcc; avoid warnings on gcc-8 regarding memory access in class
+        ]
 
     def build_extensions(self):
         ct = self.compiler.compiler_type

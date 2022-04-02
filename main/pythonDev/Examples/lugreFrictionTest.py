@@ -35,11 +35,11 @@ Fc=1
 Fs=1.5
 Vs=0.001
 
-useLugre = False
-useLugreRef = False
-useLugrePos = True
-useLugreFast = False #with higher stiffness, but shorter time; shows good agreement, but requires extremely small time steps
-doImplicit = True
+useLugre = False        #compute ODE1 Lugre model
+useLugreRef = False     #store as reference solution (with small step size)
+useLugrePos = True      #alternative: uses a position level approach, being much more efficient for implicit solvers
+useLugreFast = False    #with higher stiffness, but shorter time; shows good agreement, but requires extremely small time steps
+doImplicit = True       #use implicit time integration
 
 #faster version with higher spring stiffness and "friction" stiffness sigma0 ==> gives closer results to idealized case:
 if useLugreFast:

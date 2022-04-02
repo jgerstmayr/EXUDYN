@@ -9,9 +9,11 @@
 /**************************************************************************/
 
 #if defined(__EXUDYN__LINUX__ARM__) //#JG2022-03-19; RaspberryPi
-#include <arm_neon.h>
+	#include <arm_neon.h>
+#elif defined(__EXUDYN__APPLE__)
+	#include "sse2neon.h"
 #else
-#include <immintrin.h> // AVX/AVX2 intrinsic header
+	#include <immintrin.h> // AVX/AVX2 intrinsic header
 #endif 
 
 #ifdef WIN32

@@ -14,8 +14,8 @@
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import sys, platform
 
-if sys.version_info.major != 3 or sys.version_info.minor < 6 or sys.version_info.minor > 9:
-    raise ImportError("EXUDYN only supports python versions >= 3.6 and <= 3.9")
+if sys.version_info.major != 3 or sys.version_info.minor < 6:# or sys.version_info.minor > 9:
+    raise ImportError("EXUDYN only supports python versions >= 3.6")
 isMacOS = (sys.platform == 'darwin')
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

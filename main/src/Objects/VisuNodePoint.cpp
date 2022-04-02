@@ -956,7 +956,7 @@ void VisualizationObjectANCFCable2DBaseUpdateGraphics(const VisualizationSetting
 							//itemVertical.point2 = p1[j] + Float3({ factVertical*val2*n0[1][0], factVertical*val2*n0[1][1], (float)0. });
 							vSystem->graphicsData.glLines.Append(itemVertical);
 						}
-						if (visualizationSettings.bodies.beams.drawVerticalNumbers)
+						if (visualizationSettings.bodies.beams.drawVerticalValues)
 						{
 							float showValue = (float)EXUstd::LinearInterpolate(interpValues[0], interpValues[1], 0, (float)L, (float)(x - deltaX));
 							Vector3D posValue({ 1.1*(Real)(factVertical*val1*n0[0][0]) + (Real)p0[j][0],

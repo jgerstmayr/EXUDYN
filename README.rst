@@ -2,8 +2,8 @@
 Exudyn
 ======
 
-+  Exudyn version = 1.2.10 (Corea)
-+  build date and time=2022-03-21  13:45
++  Exudyn version = 1.2.23.dev1 (Corea)
++  build date and time=2022-04-02  00:14
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn **Version 1.2** is out! The documentation theDoc.pdf now reached > 600 pages! Including now a contact module, improved solvers, sparse matrix support and multi-threading, creation of beams along curves, extended robotics modules, **PlotSensor** fully extended, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
@@ -12,7 +12,7 @@ If you like using Exudyn, please add a *star* on github, and send an email to  `
 
 +  **A flexible multibody dynamics systems simulation code with Python and C++**
 +  *free, open source* and with plenty of *documentation* and *examples*
-+  **pre-built** for Python 3.6, 3.7, 3.8 and 3.9 under **Windows** ; Python 3.8 for **MacOS** available; some **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in theDoc.pdf )
++  **pre-built** for Python 3.6, 3.7, 3.8 and 3.9 under **Windows** ; Python 3.8 for **MacOS** available; some **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 
 .. |pic1| image:: docs/demo/screenshots/6pistonEngineStresses.jpg
@@ -109,7 +109,7 @@ The following people have contributed to Python and C++ library implementations:
 
 +  Joachim Schöberl (Providing specialized NGsolve core library with \ ``taskmanager``\  for \ **multithreaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
 +  Stefan Holzinger (Lie group solvers in Python, Lie group node)
-+  Peter Manzl (ConvexRoll Python / C++ implementation)
++  Peter Manzl (ConvexRoll Python and C++ implementation / pip install on linux / wsl with graphics)
 +  Martin Sereinig (special robotics functionality)
 
 The following people have contributed to examples and other parts:
@@ -168,23 +168,19 @@ Pre-built versions of Exudyn are hosted on \ ``pypi.org``\ , see the project
 
  +  `https://pypi.org/project/exudyn <https://pypi.org/project/exudyn>`_
 
-As with most other packages, in the regular case (if your binary has been pre-built) you just need to do
+As with most other packages, in the regular case (if your binary has been pre-built) you just need to do (If the index of pypi is not updated, it may help to use \ ``pip install -i https://pypi.org/project/ exudyn``\  )
 
    \ ``pip install exudyn``\ 
 
-On Linux (currently only pre-built for UBUNTU 18.04 and 20.04) use 
+On Linux (currently only pre-built for UBUNTU 18.04 and 20.04), \bf update pip to at least 20.3 and use 
 
    \ ``pip3 install exudyn``\ 
-
-If the index of pypi is not updated, use
-
-   \ ``pip install -i https://pypi.org/project/ exudyn``\ 
 
 For pre-releases (use with care!), add '--pre' flag:
 
    \ ``pip install exudyn --pre``\ 
 
-In some cases, your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the Build and install sections, theDoc.pdf.
+In some cases (e.g. for AppleM1), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the 'Build and install' sections, theDoc.pdf.
 
 DEPRECATED: Install with Windows MSI installer
 ==============================================
@@ -274,21 +270,21 @@ Build and install Exudyn under Mac OS X?
 Installation and building on Mac OS X is rarely tested, but first successful compilation including GLFW has been achieved.
 Requirements are an according Anaconda installation.
 
-\ **Tested configuration**\ :
-
-+  Mac OS X 10.11.6 'El Capitan', Mac Pro (2010), 3.33GHz 6-Core Intel Xeon, 4GB Memory
-+  Anaconda Navigator 1.9.7
-+  Python 3.7.0
-+  Spyder 3.3.6
-
-For a compatible Mac OS X system some pre-built wheels are available via pypi.org. 
-Alternatively, we tested on:
+\ **Tested configurations**\ :
 
 +  Mac OS 11.x 'Big Sur', Mac Mini (2021), Apple M1, 16GB Memory
 +  Anaconda (i368 based with Rosetta 2) with Python 3.8
 +  this configuration is currently evaluated but showed general compatibility
-   => pre-built wheel: \ ``exudyn-1.1.0-cp38-cp38-macosx_11_0_x86_64.whl``\ 
+   => some wheels are already available on pypi (you may need to download them manually)!
 
+Alternatively, we tested on:
+
++  Mac OS X 10.11.6 'El Capitan', Mac Pro (2010), 3.33GHz 6-Core Intel Xeon, 4GB Memory, Anaconda Navigator 1.9.7, Python 3.7.0, Spyder 3.3.6
+
+Note, that in all cases tkinter does not yet run properly (help appreciated), while otherwise we produced a stable version. The AppleM1 native version is approx.~10x faster
+than the Rosetta version!
+
+For a compatible Mac OS X system some pre-built wheels will be available via pypi.org. Note that these my be built on an emulated AppleM1, thus being much slower than the Windows or Linux compliant.
 
 \ **Compile from source**\ :
 
@@ -308,7 +304,6 @@ Then just go to the \ ``pythonDev/Examples``\  folder and run an example:
 
    \ ``python springDamperUserFunctionTest.py``\ 
 
-If you have a new system, try to adapt \ ``setup.py``\  accordingly, e.g., activating the \ ``-std=c++17``\  support.
 If there are other issues, we are happy to receive your detailed bug reports. 
 
 Note that you need to run 
@@ -387,6 +382,20 @@ You can also create a UBUNTU wheel which can be easily installed on the same mac
    \ ``sudo python3 setup.py bdist_wheel``\ 
 
 
+\ **Exudyn under Ubuntu / WSL**\ :
+
++  Note that Exudyn also nicely works under WSL (Windows subsystem for linux; tested for Ubuntu18.04) and an according xserver (VcXsrv).
++  Just set the display variable in your .bashrc file accordingly and you can enjoy the OpenGL windows and settings.
++  It shall be noted that WSL + xserver works better than on MacOS, even for tkinter, multitasking, etc.! So, if you have troubles with your Mac, use a virtual machine with ubuntu and a xserver, that may do better
+
+
+\ **Exudyn under Raspberry Pi 4b**\ :
+
++  Exudyn also compiles under RaspberryPi 4b, Ubuntu Mate 20.04, Python 3.8; current version should compile out of the box using \ ``python3 setup.py install``\  command.
++  Performance is quite ok and it is even capable to use all cores (but you should add a fan!)
++  => this could lead to a nice cluster project!
+
+
 \ **KNOWN issues for linux builds**\ :
 
 +  Using \ **WSL2**\  (Windows subsystem for linux), there occur some conflicts during build because of incompatible windows and linux file systems and builds will not be copied to the dist folder; workaround: go to explorer, right click on 'build' directory and set all rights for authenticated user to 'full access'
@@ -454,7 +463,10 @@ Future goals are:
 
 +  add more multi-threaded parallel computing techniques (first parts implemented, improvements planned during 2022),
 +  add vectorization,
-+  add specific and advanced connectors/constraints (3D revolute joint and prismatic joint instead of generic joint, extended wheels, contact, control connector)
++  add specific and advanced connectors/constraints (extended wheels, contact, control connector)
++  kinematical trees (with minimum coordinates),
++  automatic step size selection for second order solvers,
++  deeper integration of Lie groups,
 +  more interfaces for robotics,
 +  add 3D beams.
 
@@ -763,7 +775,7 @@ FAQ
 
 +  How to add graphics?
 
-  |  =>  Graphics (lines, text, 3D triangular / STL mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object. Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time. Furthermore, ObjectGround allows to add fully user defined graphics.
+  |  =>  Graphics (lines, text, 3D triangular / sSTL mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object. Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time. Furthermore, ObjectGround allows to add fully user defined graphics.
 
 +  In \ ``GenerateStraightLineANCFCable2D``\  
 
@@ -839,7 +851,7 @@ Currently, the module structure is simple:
  -  \ ``exudyn.itemInterface``\ : contains the interface, which transfers python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
  -  \ ``exudyn.basicUtilities``\ : contains basic helper classes, without importing numpy
  -  \ ``exudyn.rigidBodyUtilities``\ : contains important helper classes for creation of rigid body inertia, rigid bodies, and rigid body joints; includes helper functions for rotation parameterization, rotation matrices, homogeneous transformations, etc.
- -  \ ``exudyn.graphicsDataUtilities``\ : provides some basic drawing utilities, definition of colors and basic drawing objects (including \scSTL import); rotation/translation of graphicsData objects
+ -  \ ``exudyn.graphicsDataUtilities``\ : provides some basic drawing utilities, definition of colors and basic drawing objects (including sSTL import); rotation/translation of graphicsData objects
  -  \ ``exudyn.plot``\ : containing helper functions, which are physics related such as friction
  -  \ ``exudyn.processing``\ : methods for optimization, parameter variation, sensitivity analysis, etc.
  -  \ ``exudyn.FEM``\ : everything related to finite element import and creation of model order reduction flexible bodies
@@ -964,7 +976,7 @@ As an example, the initial configuration of a \ ``NodePoint``\  is given by \ ``
 Mapping between local and global coordinates
 --------------------------------------------
  
-The LTG-mappings between local coordinates, on node or object level, and global (=system) coordinates follows the following rules:
+The LTG-mappings (local-to-global coordinate mappings containing transformation from local object coordinate indices to global (system) coordinate indices) between local coordinates, on node or object level, and global (=system) coordinates follows the following rules:
 
 +  LTG-mappings are computed during \ ``mbs.Assemble()``\  and are not available before.
 +  Nodes own a global index which relates the local coordinates to global (system) coordinate. E.g., for a ODE2 node with node number \ ``i``\ , this index can be obtained via the function \ ``mbs.GetNodeODE2Index(i)``\ .
@@ -1124,6 +1136,8 @@ note that \ ``visualizationSettings.general.autoFitScene``\  should be set False
   StopRenderer() #stores render state in exu.sys['renderState']
 
 
+ 
+
 
 Alternatively, you can obtain the current model view from the console after a simulation, e.g.,
 
@@ -1185,7 +1199,7 @@ Graphics user Python functions
 
 There are some user functions in order to customize drawing:
 
-+  You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from STL files (\ ``GraphicsDataFromSTLfileTxt``\ ).
++  You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (\ ``GraphicsDataFromSTLfileTxt``\ ) using the established format STL (STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems).
 +  Some objects, e.g., \ ``ObjectGenericODE2``\  or \ ``ObjectRigidBody``\ , provide customized a function \ ``graphicsDataUserFunction``\ . This user function just returns a list of GraphicsData, see theDoc.pdf. With this function you can change the shape of the body in every step of the computation.
 +  Specifically, the \ ``graphicsDataUserFunction``\  in \ ``ObjectGround``\  can be used to draw any moving background in the scene.
 
@@ -1286,7 +1300,7 @@ which means, that after every 0.01 seconds of simulation time, an image of the c
 
 +  \ ``SC.visualizationSettings.exportImages.saveImageFileName = "myFolder/frame"``\ 
 
-By default, a consecutive numbering is generated for the image, e.g., 'frame0000.tga, frame0001.tga,...'. Note that '.tga' files contain raw image data and therefore can become very large.
+By default, a consecutive numbering is generated for the image, e.g., 'frame0000.png, frame0001.png,...'. Note that the standard file format PNG with ending '.png' uses compression libraries included in glfw, while the alternative TGA format produces '.tga' files which contain raw image data and therefore can become very large.
 
 To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation.
 => see theDoc.pdf !
@@ -1544,7 +1558,7 @@ In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer(
 +  RHS
 +  LHS
 +  EP
-+  Rxyz: consecutive rotations around x, y and z-axis (Tait-Bryan rotations);
++  Rxyz%: consecutive rotations around x, y and z-axis (Tait-Bryan rotations);
 +  coeffs
 +  pos
 +  write time derivatives with underscore: _t, _tt; example: Position_t, Position_tt, ...

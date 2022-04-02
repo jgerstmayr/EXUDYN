@@ -76,7 +76,7 @@ bool CObjectContactFrictionCircleCable2D::IsContactActive() const
 	}
 	return false;
 }
-
+#define CObjectContactFrictionCircleCable2DuseL
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //  MODEL: f
 void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
@@ -104,7 +104,7 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> xDirectionGap;
 		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> yDirectionGap;
 
-		const bool usePointWiseNormals = true; //with this flag, normal forces are applied in according circle normal direction at segment point, rather than using the segment normal)
+		//delete: const bool usePointWiseNormals = true; //with this flag, normal forces are applied in according circle normal direction at segment point, rather than using the segment normal)
 		const Index maxNumberOfPoints = CObjectContactFrictionCircleCable2DmaxNumberOfSegments + 1;
 		SlimArray<Vector2D, maxNumberOfPoints> pointNormals;
 
@@ -127,7 +127,7 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 			Vector3D forceSum({ 0.,0.,0. }); //sum of all forces acting on circle
 			Vector3D torqueSum({ 0.,0.,0. }); //sum of all torques acting on circle (roll)
 
-			if (usePointWiseNormals)
+			if (!parameters.useSegmentNormals)
 			{
 				Vector2D pCircle({ markerData0.position[0], markerData0.position[1] });
 				for (Index i = 0; i < parameters.numberOfContactSegments+1; i++)
@@ -169,8 +169,9 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 
 					Real fTangent = tangentialVel * parameters.frictionVelocityPenalty;  //contact (friction) tangent force of segment
 					Real diffStickPos = tangentialVel;
-					if (abs((int)isSlipStick) != absValueSlipCase && parameters.frictionStiffness != 0.) //exclude step when first contact happens (no last sticking position exists!)
-					{
+					//2022-03-22: why? if (abs((int)isSlipStick) != absValueSlipCase && parameters.frictionStiffness != 0.) //exclude step when first contact happens (no last sticking position exists!)
+					if ((int)isSlipStick == isStickCase && parameters.frictionStiffness != 0.) //exclude step when first contact happens (no last sticking position exists!)
+						{
 						Real lastStickPos = currentState[2 * parameters.numberOfContactSegments + i];
 
 						//compute 
@@ -179,7 +180,13 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 						Real circlePos = parameters.circleRadius*atan2(nLocal[1], nLocal[0]); //atan2(e0y, e0x) = phi
 						Vector2D p0({ markerData1.vectorValue[i * 2], markerData1.vectorValue[i * 2 + 1] });	 //markerdata.value stores the x/y positions of the contact points
 						Vector2D p1({ markerData1.vectorValue[i * 2 + 2], markerData1.vectorValue[i * 2 + 1 + 2] }); //markerdata.value stores the x/y positions of the contact points
+						
+#ifdef CObjectContactFrictionCircleCable2DuseL
+						Real segmentLength = markerData1.GetHelper(); //stored in marker special variable
+#else
 						Real segmentLength = (p1 - p0).GetL2Norm();
+#endif
+						
 						Real segmentPos = referenceCoordinatePerSegment[i] * segmentLength;
 						Real sign = 1.; //depends whether circle tangent has same direction as cable tangent
 						if (t*(p1 - p0) > 0.)
@@ -209,8 +216,10 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 					}
 
 
-					if (!usePointWiseNormals)
+					if (parameters.useSegmentNormals)
 					{
+						//normals from segments:
+
 						Vector2D contactForce = fNormal * n + fTangent * t; //now bring into global coordinate system
 							//as gap is negative in case of contact, the force needs to act in opposite direction
 						//force in global x-direction:
@@ -225,6 +234,8 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 					}
 					else
 					{
+						//normals at segment points:
+
 						Vector2D& n0 = pointNormals[i]; //left
 						Vector2D& n1 = pointNormals[i + 1]; //right
 
@@ -307,7 +318,7 @@ Real CObjectContactFrictionCircleCable2D::PostNewtonStep(const MarkerDataStructu
 			currentState[i] = currentGapPerSegment[i]; //always update contact forces ...
 
 
-			if (currentState[i] <= 0. && parameters.frictionVelocityPenalty != 0.)  //gap<=0 ==> contact
+			if (currentState[i] <= 0. && (parameters.frictionStiffness != 0. || parameters.frictionVelocityPenalty != 0.))  //gap<=0 ==> contact
 			{
 				//velocity terms:
 				Vector2D v0({ markerData1.vectorValue_t[i * 2], markerData1.vectorValue_t[i * 2 + 1] });	 //markerdata.value stores the x/y velocities of the contact points
@@ -341,7 +352,11 @@ Real CObjectContactFrictionCircleCable2D::PostNewtonStep(const MarkerDataStructu
 					Real circlePos = parameters.circleRadius*atan2(nLocal[1], nLocal[0]); //atan2(e0y, e0x) = phi
 					Vector2D p0({ markerData1.vectorValue[i * 2], markerData1.vectorValue[i * 2 + 1] });	 //markerdata.value stores the x/y positions of the contact points
 					Vector2D p1({ markerData1.vectorValue[i * 2 + 2], markerData1.vectorValue[i * 2 + 1 + 2] }); //markerdata.value stores the x/y positions of the contact points
+#ifdef CObjectContactFrictionCircleCable2DuseL
+					Real segmentLength = markerData1.GetHelper(); //stored in marker special variable
+#else
 					Real segmentLength = (p1 - p0).GetL2Norm();
+#endif
 					Real segmentPos = referenceCoordinatePerSegment[i] * segmentLength;
 					Real sign = 1.; //depends whether circle tangent has same direction as cable tangent
 					if (t*(p1 - p0) > 0.)
@@ -502,7 +517,11 @@ void CObjectContactFrictionCircleCable2D::GetOutputVariableConnector(OutputVaria
 					Real circlePos = parameters.circleRadius*atan2(nLocal[1], nLocal[0]); //atan2(e0y, e0x) = phi
 					Vector2D p0({ markerData1.vectorValue[i * 2], markerData1.vectorValue[i * 2 + 1] });	 //markerdata.value stores the x/y positions of the contact points
 					Vector2D p1({ markerData1.vectorValue[i * 2 + 2], markerData1.vectorValue[i * 2 + 1 + 2] }); //markerdata.value stores the x/y positions of the contact points
+#ifdef CObjectContactFrictionCircleCable2DuseL
+					Real segmentLength = markerData1.GetHelper(); //stored in marker special variable
+#else
 					Real segmentLength = (p1 - p0).GetL2Norm();
+#endif
 					Real segmentPos = referenceCoordinatePerSegment[i] * segmentLength;
 					Real sign = 1.; //depends whether circle tangent has same direction as cable tangent
 					if (t*(p1 - p0) > 0.)

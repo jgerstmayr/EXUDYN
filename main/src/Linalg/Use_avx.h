@@ -13,16 +13,19 @@
 #ifndef USE_AVX__H
 #define USE_AVX__H
 
-#if defined(__EXUDYN__LINUX__ARM__) //RaspberryPi
-#include <arm_neon.h>
-#else
-#include <immintrin.h> // AVX/AVX2 intrinsic header
-#endif 
 
-#include "Utilities/BasicDefinitions.h"
-
-
+//#include "Utilities/BasicDefinitions.h" //must be included before!
 //#define use_AVX2		//defined in BasicDefinitions.h
+
+#if defined(use_AVX2) || defined(use_AVX512)
+	#if defined(__EXUDYN__LINUX__ARM__) //#JG2022-03-19; RaspberryPi
+	#include <arm_neon.h>
+	#elif defined(__EXUDYN__APPLE__)
+	#include "sse2neon.h"
+	#else
+	#include <immintrin.h> // AVX/AVX2 intrinsic header
+	#endif 
+#endif
 
 #ifdef use_AVX512
 #include <zmmintrin.h> // AVX512 header for VS2017 compiler

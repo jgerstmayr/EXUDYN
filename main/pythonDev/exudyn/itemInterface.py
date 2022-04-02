@@ -1668,7 +1668,7 @@ class VObjectContactFrictionCircleCable2D:
     def __repr__(self):
         return str(dict(self))
 class ObjectContactFrictionCircleCable2D:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), numberOfContactSegments = 3, contactStiffness = 0., contactDamping = 0., frictionVelocityPenalty = 0., frictionStiffness = 0., frictionCoefficient = 0., circleRadius = 0., usePointWiseNormals = True, activeConnector = True, visualization = {'show': True, 'showContactCircle': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), numberOfContactSegments = 3, contactStiffness = 0., contactDamping = 0., frictionVelocityPenalty = 0., frictionStiffness = 0., frictionCoefficient = 0., circleRadius = 0., useSegmentNormals = True, activeConnector = True, visualization = {'show': True, 'showContactCircle': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.nodeNumber = nodeNumber
@@ -1679,7 +1679,7 @@ class ObjectContactFrictionCircleCable2D:
         self.frictionStiffness = CheckForValidUReal(frictionStiffness,"frictionStiffness","ObjectContactFrictionCircleCable2D")
         self.frictionCoefficient = CheckForValidUReal(frictionCoefficient,"frictionCoefficient","ObjectContactFrictionCircleCable2D")
         self.circleRadius = CheckForValidUReal(circleRadius,"circleRadius","ObjectContactFrictionCircleCable2D")
-        self.usePointWiseNormals = usePointWiseNormals
+        self.useSegmentNormals = useSegmentNormals
         self.activeConnector = activeConnector
         self.visualization = visualization
 
@@ -1695,7 +1695,7 @@ class ObjectContactFrictionCircleCable2D:
         yield 'frictionStiffness', self.frictionStiffness
         yield 'frictionCoefficient', self.frictionCoefficient
         yield 'circleRadius', self.circleRadius
-        yield 'usePointWiseNormals', self.usePointWiseNormals
+        yield 'useSegmentNormals', self.useSegmentNormals
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VshowContactCircle', dict(self.visualization)["showContactCircle"]

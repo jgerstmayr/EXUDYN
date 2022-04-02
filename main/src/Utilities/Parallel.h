@@ -18,11 +18,11 @@
 #define PARALLEL__H
 
 #include "Utilities/BasicDefinitions.h"
-#include "Linalg/Use_avx.h" //include after NGsolve includes!!
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //multithreaded support
 #ifdef USE_NGSOLVE_TASKMANAGER
+	#include "Linalg/Use_avx.h" //include before NGsolve includes!!
 	typedef size_t NGSsizeType;
 	#include "ngs-core-master/ngs_core.hpp"
 #else

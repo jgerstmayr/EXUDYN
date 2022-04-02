@@ -380,7 +380,7 @@ def DictToItemsText(functionDict, tagList, addStr):
 
 #*****************************************************
 #write single function description into latex code
-def WriteFunctionDescription2Latex(functionDict, moduleNamePython, isClassFunction = False, className=''):
+def WriteFunctionDescription2Latex(functionDict, moduleNamePython, pythonFileName, isClassFunction = False, className=''):
     sLatex = ''
     argList = functionDict['argumentsList']
     argDefault = functionDict['defaultArgumentsList']
@@ -399,7 +399,7 @@ def WriteFunctionDescription2Latex(functionDict, moduleNamePython, isClassFuncti
         lineNumberStr = '\#L'+str(functionDict['lineNumber']+1)
     sLatex += '\\begin{flushleft}\n'
     #github link:
-    sLatex += '\\noindent '+addStr+'{def {\\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/' + moduleNamePython +'.py'+lineNumberStr+'}{' + functionName +'}{' '}}}'
+    sLatex += '\\noindent '+addStr+'{def {\\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/' + pythonFileName +lineNumberStr+'}{' + functionName +'}{' '}}}'
     #relative file link:
     #sLatex += '\\noindent '+addStr+'{def {\\bf \exuUrl{file:../../main/pythonDev/exudyn/' + moduleNamePython +'.py'+'}{' + functionName +'}{' '}}}'
     sLatex += '\\label{sec:'+ moduleNamePython + ':' + classLabelStr + functionName.replace('\_','_') + '}\n'
@@ -469,7 +469,7 @@ for fileName in filesParsed:
         if not isFirstFunction:
             sLatex += "\\noindent\\rule{8cm}{0.75pt}\\vspace{1pt} \\\\ \n"
             #sLatex += "\\hline\\vspace{3pt}\\\\ \n"
-        sLatex += WriteFunctionDescription2Latex(funcDict, moduleNamePython)
+        sLatex += WriteFunctionDescription2Latex(funcDict, moduleNamePython, fileName)
         
         #++++++++++++++++++++++++++++++++++++
         #add example references for function
@@ -502,7 +502,7 @@ for fileName in filesParsed:
             if not isFirstFunction:
                 sLatex += "\\noindent\\rule{8cm}{0.75pt}\\vspace{1pt} \\\\ \n"
                 #sLatex += "\\hline\\vspace{3pt}\\\\ \n"
-            sLatex += WriteFunctionDescription2Latex(funcDict, moduleNamePython, isClassFunction=True, className=classDict['className'])
+            sLatex += WriteFunctionDescription2Latex(funcDict, moduleNamePython, fileName, isClassFunction=True, className=classDict['className'])
             isFirstFunction=False
 
         #use split in class, for derived classes like InertiaCylinder(RigidBodyInertia)

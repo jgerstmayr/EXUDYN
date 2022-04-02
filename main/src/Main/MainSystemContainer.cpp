@@ -63,9 +63,10 @@ py::dict MainSystemContainer::RenderState2PyDict(const RenderState& state)
 	d["mouseCoordinates"] = (std::array<Real, 2>)(state.mouseCoordinates);
 	d["openGLcoordinates"] = (std::array<Real, 2>)(state.openGLcoordinates);
 
-	//now in stateMachine:
-	//d["selectionMouseCoordinates"] = (std::array<Real, 2>)(state.selectionMouseCoordinates);
-	//d["selectionModeOn"] = state.selectMode;
+	//for space mouse (3D position + 3D rotation); read ONLY!
+	d["joystickPosition"] = (std::array<Real, 3>)(state.joystickPosition);
+	d["joystickRotation"] = (std::array<Real, 3>)(state.joystickRotation);
+	d["joystickAvailable"] = state.joystickAvailable;
 
 	return d;
 }

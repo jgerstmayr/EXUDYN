@@ -320,7 +320,7 @@ Johannes Gerstmayr\vspace{1cm}
 \acro{FFRF}{floating frame of reference formulation}
 \acro{HT}{homogeneous transformation}
 \acro{LHS}{Left-Hand-Side (of equation)}
-\acro{LTG}{local-to-global coordinate mappings (containing transformation from local object coordinate indices to global (system) coordinate indices)}
+\acro{LTG}{local-to-global}% 
 \acro{min}{minimum}
 \acro{max}{maximum}
 \acro{ODE}{ordinary differential equation}
@@ -332,8 +332,8 @@ Johannes Gerstmayr\vspace{1cm}
 \acro{rel}{relative (e.g., relative error)}
 \acro{RHS}{Right-Hand-Side (of equation)}
 \acro{Rot}{rotation}
-\acro{Rxyz}{rotation parameterization: consecutive rotations around x, y and z-axis (Tait-Bryan rotations)}
-\acro{STL}{STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems}
+\acro{Rxyz}{rotation parameterization: consecutive rotations around x, y and z-axis (Tait-Bryan)}
+\acro{STL}{STereoLithography}
 \acro{T66}{Pl\"ucker transformation}
 \acro{trig}{triangle (in graphics)}
 \end{acronym}
@@ -416,6 +416,7 @@ For example, the command \texttt{mbs.AddNode(...)} returns a \texttt{NodeIndex}.
 {
 \input{manual_interfaces}
 }
+
 %+++++++++++++++++++++++++++++++++++++
 \mysection{Python utility functions}
 \label{sec:pythonUtilityFunctions}
@@ -480,6 +481,7 @@ For description of types (e.g., the meaning of \texttt{Vector3D} or \texttt{Nump
 {
 \input{itemDefinition}
 }
+
 \mysection{\codeName\ Settings and Solver Structures}\label{sec:settingsStructures}
 This section includes the reference manual for settings which are available in the python interface, e.g.\ simulation settings, visualization settings, and structures for solvers. The data is auto-generated from the according interfaces in order to keep fully 
 up-to-date with changes.
@@ -489,12 +491,14 @@ up-to-date with changes.
 {
 \input{interfaces}
 }
+
 %+++++++++++++++++++++++++++++++++++++
 %mouse, keys, GraphicsData & 3D visualization
 \iftoggle{compileAll}
 {
 \input{gui}
 }
+
 %+++++++++++++++++++++++++++++++++++++
 %equations of motion and solver
 \iftoggle{compileAll}
@@ -516,10 +520,10 @@ up-to-date with changes.
 %++++++++++++++++++++++++
 %temporary things:
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\iftoggle{compileDrafts}
-{
-%+++++++++++
-}
+%\iftoggle{compileDrafts}
+%{
+%%+++++++++++
+%}
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

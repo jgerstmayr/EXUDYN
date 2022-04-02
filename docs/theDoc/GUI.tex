@@ -2,7 +2,7 @@
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %everything belong to gui: 3D visualization, mouse, keys, ...
 %
-\mysection{3D Graphics Visualization}
+\mysection{3D graphics visualization}
 %
 The 3D graphics visualization window is kept simple, but useful to see the animated results of the multibody system.
 The graphics output is restricted to a 3D window (renderwindow) into which the renderer draws the visualization state of the \texttt{MainSystem} \texttt{mbs}.
@@ -25,8 +25,14 @@ The following table includes the mouse functions.
   \bf mouse wheel & zoom & use mouse wheel to zoom (on touch screens 'pinch-to-zoom' might work as well) \\ \hline
   \end{longtable}
 \end{center}
-Note that current mouse coordinates can be obtained via 
-\texttt{SystemContainer.GetCurrentMouseCoordinates()}.
+Note that current mouse coordinates can be obtained via \texttt{SystemContainer.GetCurrentMouseCoordinates()}.
+%
+\mysubsubsection{6D mouse}
+Graphics engines, especially in CAD and finite elements allow input of special 3D or 6D mouse devices.
+There is a basic interface for so-called 3D mouse / 6D mouse or space mouse, allowing to map the 6D joystick to translation and rotation,
+see \texttt{visualizationSettings.interactive.useJoystickInput} and similar options.
+The interface only works, if the device maps 6 coordinates to the joystick input of GLFW (tested with 3DCONNEXION mouse).
+
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsection{Keyboard input}
@@ -106,7 +112,7 @@ Special keys:
 All graphics objects are defined by a \texttt{GraphicsData} structure.%, see \refSection{sec:graphicsData}.
 Note that currently the visualization is based on a very simple and ancient OpenGL implementation, as there is currently no simple platform independent alternative. However, most of the heavy load triangle-based operations are implemented in C++ and are realized by very efficient OpenGL commands. However, note that the number of triangles to represent the object should be kept in a feasible range ($<1000000$) in order to obtain a fast response of the renderer.
 
-Many objects include a \texttt{GraphicsData} dictionary structure for definition of attached visualization of the object. Typically, you can use primitives (cube, sphere, ...) or STL-data to define the objects appearance.
+Many objects include a \texttt{GraphicsData} dictionary structure for definition of attached visualization of the object. Typically, you can use primitives (cube, sphere, ...) or \ac{STL} data to define the objects appearance.
 \texttt{GraphicsData} dictionaries can be created with functions provided in the utilities module \texttt{exudyn.graphicsDataUtilities.py}, see \refSection{sec:module:graphicsDataUtilities}.
 
 \texttt{GraphicsData} can be transformed into points and triangles (mesh) and can be used for contact computation, as well.

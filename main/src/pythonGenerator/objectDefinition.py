@@ -5275,29 +5275,23 @@ classType = Object
 objectType = Connector
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
+  \newcommand{\pluseq}{\mathrel{+}=} %for some algorithms ...
+
     \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{represents current global position of the circle's centerpoint}
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
     \rowTable{marker m1}{}{represents the 2D ANCF cable}
     \rowTable{data node}{$\xv=[x_{i},\; \ldots,\; x_{3 n_{cs} -1}]\tp$}{coordinates of node with node number $n_{GD}$}
-    \rowTable{data coordinate with previous gap for segment $i$}{$x_i$, with $i \in [0,n_{cs}-1]$}{This data coordinate holds the gap of the last converged Newton iterations
-                                                                        used for active set strategy. If this $x_i < 0$, then
-                                                                        contact is used in the current Newton iteration.}
-    \rowTable{data coordinate with previous tangent force for segment $i$}{$x_{n_{cs}+i}$, with $i \in [0,n_{cs}-1]$}{
-                           This data coordinate holds the tangent (friction) force of the last converged Newton iterations
-                           used for active set strategy. Currently not implemented.}
-    \rowTable{data coordinate with previous point of contact $i$}{$x_{2n_{cs}+i}$, with $i \in [0,n_{cs}-1]$}{
-                           This data coordinate holds relative point of contact of the last converged Newton iterations
-                           used for active set strategy for static computation of friction. Currently not implemented.}
-    \rowTable{shortest distance to segment $s_i$}{$\dv_{g,i}$}{shortest distance of center of circle to contact segment, considering the 
-                                                               endpoint of the segment}
+    \rowTable{data coordinates for segment $i$}{$[x_i,\, x_{n_{cs}+ i},\, x_{2\cdot n_{cs}+ i}]\tp = [x_{gap},\, x_{isSlipStick},\, x_{lastStick}]\tp$, with $i \in [0,n_{cs}-1]$}
+    {The data coordinates include the gap $x_{gap}$, the stick-slip state $x_{isSlipStick}$ and the previous sticking position $x_{lastStick}$ as computed in the PostNewtonStep, see description below. }
+    \rowTable{shortest distance to segment $s_i$}{$\dv_{g,i}$}{shortest distance of center of circle to contact segment, considering the endpoint of the segment}
     %\rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{}
     \finishTable
     %++++++++++++++++++++++++
     \begin{figure}[tbph]
       \begin{center}
-      \includegraphics[width=16cm]{figures/ContactFrictionCircleCable2D.pdf}
+      \includegraphics[width=12cm]{figures/ContactFrictionCircleCable2D.pdf}
       \end{center}
       \caption{Sketch of cable, contact segments and circle; case A shows contact with $|\dv_{g1}| > r$, 
                while case B shows contact with $|\dv_{g1}| \le r$; the shortest distance vector $\dv_{g1}$
@@ -5306,16 +5300,18 @@ equations =
                perpendicular.}
     	\label{fig:ObjectContactFrictionCircleCable2D:sketch}
     \end{figure}
+    %+++++++++++++++++++++++++++++++++++++++++++++++
+    \mysubsubsubsection{Connector forces: contact geometry}
     %
-    %++++++++++++++++++++++++
-    \mysubsubsubsection{Connector forces}
-    %
-    The cable is discretized by separating into segments $s_i$, located between points $p_i$ and $p_{i+1}$.
+    The connector represents a force element between a 'circle' (or cylinder) represented by a marker $m0$, which has position and orientation,
+    and an \texttt{ANCFCable2D} beam element (denoted as 'cable') represented by a \texttt{MarkerBodyCable2DShape} $m1$.
+    The cable with reference length $L$ is discretized by splitting into $n_{cs}$ straight segments $s_i$, located between points $p_i$ and $p_{i+1}$.
+    Note that these points can be placed with an offset from the cable centerline, see \texttt{verticalOffset} defined in \texttt{MarkerBodyCable2DShape}.
     In order to compute the gap function for a line segment, the shortest distance of one line segment with
     points $\pv_i$, $\pv_{i+1}$, the circle centerpoint given by the marker $\pv_{m0}$ are computed, all in 
     the global coordinates system (0), including edge points of every segment.
 
-    With the intermediate quantities
+    With the intermediate quantities (all of them related to segment $s_i$)\footnote{we omit $s_i$ in some terms for brevity!},
     \be
       \vv_s = \pv_{i+1} - \pv_i, \quad
       \vv_p = \pv_{m0} - \pv_i, \quad
@@ -5342,7 +5338,7 @@ equations =
           d_g = |\pv_{m0} - \pv_{i+1}| \quad (\rho \ge 1)
         \ee
         \item Finally, if $0 < \rho < 1$, then the shortest distance has a projected point somewhere
-        in between with the projected point
+        on the segment with the point (projected on the segment)
         \be
           \pv_p = \pv_i + \rho \cdot \vv_s
         \ee
@@ -5351,68 +5347,266 @@ equations =
           d_g = |\dv_g| = \sqrt{\vv_p\tp \vv_p - (n^2)/d}
         \ee
     \en
-    The contact gap for a specific point is in general defined as
-    \be
-      g = d_g - r - h_o \eqDot
-    \ee
-    in which $d_g = |\dv_g|$ is the shortest distance from the circle's center point
-    to the cable.
-    
-    The shortest distance vector for every segment results from the projected point $\pv_p$ 
+    Here, the shortest distance vector for every segment results from the projected point $\pv_p$ 
     of the above mentioned cases, see also \fig{fig:ObjectContactFrictionCircleCable2D:sketch},
     with the relation
     \be
-      \dv_g = \pv_{m0} - \pv_p \eqDot
+      \dv_g = \dv_{g,s_i}= \pv_{m0} - \pv_p \eqDot
     \ee
-    We define the contact normal vector $\nv$ and tangential vector $\tv$ as
+    The contact gap for a specific point for segment $s_i$ is in general defined as
+    \be \label{ObjectContactFrictionCircleCable2D:gap}
+      g = g_{s_i} = d_g - r \eqDot
+    \ee
+    using $d_g = |\dv_g|$.
+    
+    %++++++++++++++++++++++++++++++++++++++++++++++
+    \mysubsubsubsection{Contact frame and relative motion}
+    %FRAME
+    Irrespective of the choice of \texttt{useSegmentNormals}, the contact normal vector $\nv_{s_i}$ and tangential vector $\tv_{s_i}$ are defined per segment as
     \be
-      \nv = \frac{1}{|\dv_g|} \dv_g, \quad \tv = [-n_1, n_0]\tp
+      \nv_{s_i} = \nv = [n_0, n_1]\tp = \frac{1}{|\dv_{g,s_i}|} \dv_{g,s_i}, \quad \tv_{s_i} = \tv = [-n_1, n_0]\tp
     \ee
-    With that help, we can also define a gap velocity $v_n$ ($\neq \dot g$) using the formula
+    The vectors $\tv_{s_i}$ and $\nv_{s_i}$ define the local (contact) frame for further computations.
+    
+    The velocity at the closest point of the segment $s_i$ is interpolated using $\rho$ and computed as
+    \be
+      \dot \pv_p = (1-\rho) \cdot \vv_i + \rho \cdot \vv_{i+1}
+    \ee
+    Alternatively, $\dot \pv_p$ could be computed from the cable element by evaluating the velocity at the contact points, but we feel that
+    this choice is more consistent with the computations at position level.
+    
+    The gap velocity $v_n$ ($\neq \dot g$) thus reads
     \be
       v_n = \left( \dot \pv_p - \dot \pv_{m0} \right) \nv
     \ee
-    In a similar, we may compute a tangential velocity, reading
-    \be
+    In a similar, the tangential velocity reads
+    \be \label{ObjectContactFrictionCircleCable2D:vTangent}
       v_t = \left( \dot \pv_p - \dot \pv_{m0} \right) \tv
     \ee
-
-    The contact force $f_n$ is zero for $g > 0$ and otherwise computed from 
+    In case of \texttt{frictionStiffness != 0}, we continuously track the sticking position at which the cable element (or segment) and the circle 
+    previously sticked together, similar as proposed by Lugr{\'i}s et al.~\cite{LugrisEscalonaDC2011}. 
+    The difference here to the latter reference, is that we explicitly exclude switching from Newton's method and that Lugr{\'i}s et al.~used
+    contact points, while we use linear segments.
+    For a simple 1D example using this position based approach for friction, see \texttt{Examples/lugreFrictionText.py}, 
+    which compares the traditional LuGre friction model \cite{CanudasDeWitEtAl1993} with the position based model with tangential stiffness. 
+    %++++++++++++++++++++++++
+    \begin{figure}[tbph]
+      \begin{center}
+      \includegraphics[width=8cm]{figures/ContactFrictionCircleCable2DstickingPos.pdf}
+      \end{center}
+      \caption{Calculation of last sticking position; blue parts mark the sticking position calculated as $x^*_{curStick}$.}
+    	\label{fig:ObjectContactFrictionCircleCable2D:stickingPos}
+    \end{figure}
+    %++++++++++++++++++++++++
+    
+    Because there is the chance to wind/unwind relative to the (last) sticking position without slipping,
+    the following strategy is used.
+    In case of sliding (which could be the last time sliding before sticking), 
+    we compute the {\bf current sticking position}, see \fig{fig:ObjectContactFrictionCircleCable2D:stickingPos}, as the sum of the relative position at the segment $s$
     \be
+      x_{s,curStick} = \rho \cdot L_{seg}
+    \ee
+    in which $\rho \in [0,1]$ denotes the relative position of contact at the segment with reference length $L_{seg}=\frac{L}{n_{cs}}$.
+    The relative position at the circle $c$ is
+    \be
+      x_{c,curStick} = \alpha \cdot r
+    \ee
+    We immediately see, that under pure rolling\footnote{neglecting the effects of small penetration, usually much smaller than shown for visibility in \fig{fig:ObjectContactFrictionCircleCable2D:stickingPos}.},
+    \be
+      x_{s,curStick} + x_{c,curStick}  = \mathrm{const}.
+    \ee
+    Note that the \texttt{verticalOffset} from the cable center line, as defined in the related \texttt{MarkerBodyCable2DShape},
+    influences the behavior significantly, which is why we recommend to use \texttt{verticalOffset=0} whenever this is an 
+    appropriate assumption.
+    Thus, the current sticking position $x_{curStick}$ is computed per segment as
+    \be  \label{ObjectContactFrictionCircleCable2D:lastCurStick}
+      x^*_{curStick} = x_{s,curStick} + x_{c,curStick}, \quad
+    \ee
+    %
+    Due to the possibility of switching of $\alpha+\phi$ between $-pi$ and $\pi$, the result is normalized to
+    \be \label{ObjectContactFrictionCircleCable2D:curStick}
+      x_{curStick} = x^*_{curStick} - \mathrm{floor}\left(\frac{x^*_{curStick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r, \quad
+    \ee
+    which gives $\bar x_{curStick} \in [-\pi \cdot r,\pi \cdot r]$ is stored in the 3rd data variable (per segment).
+    The function floor() is a standardized version of rounding, available in C and Python programming languages.
+    In the \texttt{PostNewtonStep}, the last sticking position is computed, $x_{lastStick} = x_{curStick}$, and it is also available in the \texttt{startOfStep} state.
+
+    %++++++++++++++++++++++++++++++++++++++++++++++
+    \mysubsubsubsection{Contact forces: definition}
+    %FORCES
+    The contact force $f_n$ is zero for $g > 0$ and otherwise computed from 
+    \be \label{ObjectContactFrictionCircleCable2D:contactForce}
       f_n = k_c \cdot g + d_c \cdot v_n
     \ee
     NOTE that currently, there is only a linear spring-damper model available, assuming that the impact dynamics 
     is not dominating (such as in belt drives or reeving systems).
 
-    Friction forces are computed with similar approaches and will be added here soon.
-    %
-    %The linear friction force reads
-    %\be
-    %  f_t^{(lin)} = \mu_v \cdot v_t \eqComma
-    %\ee
-    %which leads to the friction force due to limitation by the friction coefficient,
-    %\be
-    %  f_t = \begin{cases} f_t^{(lin)}, \quad \quad \quad \quad \quad \quad \quad \mathrm{if} \quad 
-    %      |f_t^{(lin)}| \le \mu \cdot |f_n| \\ 
-    %      \mu \cdot |f_n| \cdot \mathrm{Sign}(f_t^{(lin)}), \quad \mathrm{else}
-    %      \end{cases}
-    %\ee
-    %The contact force vector for one segment $s_i$ then reads
-    %\be
-    %  \fv_{s_i} = f_n \cdot \nv + f_t \cdot \tv
-    %\ee
-    \vspace{12pt}\\
+    Friction forces are primarily based on relative (tangential) velocity at each segment.
+    The 'linear' friction force, based on the velocity penalty parameter $\mu_v$ reads
+    \be
+      f_t^{(lin)} = \mu_v \cdot v_t \eqComma
+    \ee    
+    %++++++++++++++++++++++++++++++++++++++++++++++
+    \mysubsubsubsection{PostNewtonStep}
+    In general, see the solver flow chart for the \texttt{DiscontinuousIteration}, see \fig{fig_solver_discontinuous_iteration}, should be considered when reading this description. Every step is started with values \texttt{startOfStep}, while current values are iterated and updated in the Newton or \texttt{DiscontinuousIteration}.
+    
+    The \texttt{PostNewtonStep} computes 3 values per segment, which are used for computation of contact forces, irrespectively of the 
+    current geometryof the contact. 
+    The \texttt{PostNewtonStep} is called after every full Newton method and evaluates the current state w.r.t. the assumed data variables.
+    If the assumptions do not fit, new data variables are computed.
+    This is necessary in order to avoid discontinuities in the equations, while otherwise the Newton iterations would not 
+    (or only slowly) converge.
+
+    The data variables per segment are
+    \be
+      [x_{gap},\, x_{isSlipStick},\, x_{lastStick}]
+    \ee
+    Here, $x_{gap}$ contains the gap of the segment ($\le 0$ means contact), $x_{lastStick}$ is described in 
+    \eq{ObjectContactFrictionCircleCable2D:curStick}, and 
+    $x_{isSlipStick}$ defines the stick or slip case,
+    \bi
+      \item $x_{isSlipStick} = -2$: undefined, used for initialization
+      \item $x_{isSlipStick} = 0$: sticking
+      \item $x_{isSlipStick} = \pm 1$: slipping, sign defines slipping direction
+    \ei
+    
+    The basic algorithm in the \texttt{PostNewtonStep}, with all operations given for any segment $s_i$, can be summarized as follows:
+    \bi
+      \item [I.] Evaluated gap per segment $g$ using \eq{ObjectContactFrictionCircleCable2D:gap} and store in data variable: 
+            $x_{gap} = g$
+      \item [II.] If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$):
+      \bn
+        \item Compute contact force $f_n$ according to \eq{ObjectContactFrictionCircleCable2D:contactForce}
+        \item Compute current sticking position $x_{curStick}$ according to \eq{ObjectContactFrictionCircleCable2D:lastCurStick}\footnote{terms are only evaluated if $\mu_k \neq 0$}
+        \item Retrieve \texttt{startOfStep} sticking position\footnote{Importantly, the \texttt{PostNewtonStep} always refers to the \texttt{startOfStep} state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step} in $x^{startOfStep}_{lastStick}$ and compute and normalize
+        difference in sticking position\footnote{in case that $x_{isSlipStick} = -2$, meaning that there is no stored sticking position, we set $\Delta x_{stick} = 0$}:
+        \be
+          \Delta x^*_{stick} = x_{curStick} - x^{startOfStep}_{lastStick}, \quad
+          \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
+        \ee
+        \item Compute linear tangential force for friction stiffness and velocity penalty: 
+          \be 
+            f_{t,lin} = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
+          \ee
+        \item Compute tangential force according to Coulomb friction model \footnote{note that the sign of $\Delta x_{stick}$ is used here, but
+        alternatively we may also use the sign of $f_{t,lin}$}:
+        \be
+            f_t = 
+                \begin{cases} f_t^{(lin)}, \quad \quad \quad \quad \quad \quad \quad \mathrm{if} \quad 
+                  |f_t^{(lin)}| \le \mu \cdot |f_n| \\ 
+                  \mu \cdot |f_n| \cdot \mathrm{Sign}(\Delta x_{stick}), \quad \mathrm{else}
+                \end{cases}          
+        \ee
+        \item In the case of slipping, given by $|f_t^{(lin)}| > \mu \cdot |f_n|$, we update the last sticking position in the data variable, 
+        such that the spring is pre-tensioned already,
+        \be
+          x_{lastStick} = x_{curStick} - \mathrm{Sign}(\Delta x_{stick}) \frac{\mu \cdot |f_n|}{\mu_k}, \quad 
+          x_{isSlipStick} = \mathrm{Sign}(\Delta x_{stick})
+        \ee
+        \item In the case of sticking, given by $|f_t^{(lin)}| \le \mu \cdot |f_n|$: Set $x_{isSlipStick} = 0$ and, 
+        if $x^{startOfStep}_{isSlipStick} = -2$ (undefined), we update $x_{lastStick} = x_{curStick}$, while otherwise, $x_{lastStick}$ is unchanged.
+      \en
+      \item [III. ] If $x_{gap} > 0$ or ($\mu_v == 0$ and $\mu_k == 0$), we set $x_{isSlipStick} = -2$ (undefined); this means that in the next step (if this step is accepted), there is no stored sticking position.
+      \item [IV.] Compute an error $\varepsilon_{PNS} = \varepsilon^n_{PNS}+\varepsilon^t_{PNS}$,
+                  with physical units forces (per segment point), for \texttt{PostNewtonStep}:
+      \bn
+        \item if gap $x_{gap,lastPNS}$ of previous \texttt{PostNewtonStep} had different sign to current gap, set
+        \be
+          \varepsilon^n_{PNS} = k_c \cdot \Vert x_{gap} - x_{gap,lastPNS}\Vert
+        \ee
+        \item[] while otherwise $\varepsilon^n_{PNS}=0$.
+        \item if stick-slip-state $x_{isSlipStick,lastPNS}$ of previous \texttt{PostNewtonStep} is different from current $x_{isSlipStick}$, set
+        \be
+          \varepsilon^t_{PNS} = \Vert \left(\Vert f_t^{(lin)} \Vert  - \mu \cdot |f_n| \right)\Vert 
+        \ee
+        while otherwise $\varepsilon^t_{PNS}=0$.
+      \en
+    \ei
+    Note that the \texttt{PostNewtonStep} is iterated and the data variables are updated continuously until convergence, or until a max.\ number of iterations is reached. If \texttt{ignoreMaxIterations} == 0, computation will continue even if no convergence is reached after the given number of iterations. This will lead so larger errors in such steps, but may have less influence on the overall solution if such cases are rare. 
+
+    %++++++++++++++++++++++++++++++++++++++++++++++
+    \mysubsubsubsection{Computation of connector forces in Newton}
+    The computation of LHS terms, the action of forces produced by the contact-friction element, is done during Newton iterations and may not have
+    discontinuous behavior, thus relating computations to data variables computed in the \texttt{PostNewtonStep}.
+    For efficiency, the LHS computation is only performed, if the \texttt{PostNewtonStep} determined contact in any segment.
+
+    The algorithm reads is similar to the previous subsection. The following operations are performed for each segment $s_i$, if 
+    $x_{gap, s_i} <= 0$:
+    \bi
+      \item[I.] Compute contact force $f_n$, \eq{ObjectContactFrictionCircleCable2D:contactForce}.
+      \item[II.] In case of sticking:
+      \bi
+        \item [II.1] the current sticking position $x_{curStick}$ is computed from \eq{ObjectContactFrictionCircleCable2D:lastCurStick}, and the difference of current and last sticking position reads\footnote{see the difference to the \texttt{PostNewtonStep}: we use $x_{lastStick}$ here, not the \texttt{startOfStep} variant.}:
+        \be
+          \Delta x^*_{stick} = x_{curStick} - x_{lastStick}
+          \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
+        \ee
+        \item [II.2] however, if the friction stiffness is $\mu_k==0$ or if $x_{isSlipStick} == -2$, we also set $\Delta x_{stick}=0$
+        \item [II.3] using the tangential velocity from \eq{ObjectContactFrictionCircleCable2D:vTangent}, the linear tangent force follows as
+        \be
+          f_{t,lin} = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
+        \ee
+        \item [II.4] the tangential firction force then results in\footnote{see again difference to \texttt{PostNewtonStep}!},
+        \be
+            f_t = 
+                \begin{cases} f_t^{(lin)}, \quad \quad \quad \quad \quad \quad \quad \mathrm{if} \quad 
+                  \Vert x_{isSlipStick} \Vert \neq 1 \\ 
+                  \mu \cdot |f_n| \cdot x_{isSlipStick}, \quad \mathrm{else}
+                \end{cases}
+        \ee 
+      \ei
+    \ei
+    %++++++++++++++++++++++++++++++++++++++++++++++
+    \mysubsubsubsection{Computation of LHS terms for circle and circle}
     If {\bf \texttt{activeConnector = True}}, 
-    contact forces $\fv_i$ with $i \in [0,n_{cs}]$ are applied at the points $p_i$, and they are computed
-    for every contact segments (i.e., two segments may contribute to contact forces of one point).
-    For every contact computation, first all contact forces  are set to zero. 
-    If a single segment $s_i$ shows a gap $g < 0$, see \fig{fig:ObjectContactFrictionCircleCable2D:sketch}(right),
-    contact forces  are summed up according to
-    \bea
-      \fv_i &+=& (1-\rho) \cdot \fv_{s_i}      \\ \nonumber
-      \fv_{i+1} &+=& \rho \cdot \fv_{s_i}
-    \eea
-    These forces are then applied to the \texttt{ObjectANCFCable2D} element as point loads via a position jacobian
+    contact forces $\fv_i$ with $i \in [0,n_{cs}]$ -- these are $(n_{cs}+1)$ forces -- are applied at the points $p_i$, and they are computed for every contact segments (i.e., two segments may contribute to contact forces of one point).
+    For every contact computation, first all contact forces at segment points are set to zero. 
+    We distinguish two cases SN and PWN. If \texttt{useSegmentNormals==True}, we use the SN case, while otherwise the PWN case is used, 
+    compare \fig{fig:ObjectContactFrictionCircleCable2D:normals}.
+    %++++++++++++++++++++++++
+    \begin{figure}[tbph]
+      \begin{center}
+      \includegraphics[width=16cm]{figures/ContactFrictionCircleCable2Dnormals.pdf}
+      \end{center}
+      \caption{Choice of normals and tangent vectors for calculation of normal contact forces and tangential (friction) forces; 
+      note that the \texttt{useSegmentNormals=False} is not appropriate for this setup and would produce highly erroneous forces.}
+    	\label{fig:ObjectContactFrictionCircleCable2D:normals}
+    \end{figure}
+    %++++++++++++++++++++++++
+    
+    Segment normals (=SN) lead to always good approximations for normal directions, irrespectively of short or extremely long segments as compared to the circle. However, in case of segments that are short as compared to the circle radius, normals computed from the center of the circle to the segment points (=PWN) are more consistent and produce tangents only in circumferential direction, which may improve behavior in some applications. The equations for the two cases read:
+    \bi
+    \item[] \mybold{CASE SN}: use \mybold{S}egment \mybold{N}ormals\\
+    If there is contact in a segment $s_i$, i.e., gap state $x_{gap} \le 0$, see \fig{fig:ObjectContactFrictionCircleCable2D:sketch}(right), contact forces $\fv_{s_i}$ are computed per segment,
+    \be
+      \fv_{s_i} = f_n \cdot \nv_{s_i} + f_t \tv_{s_i}
+    \ee
+    and added to every force at segment points according to
+      \bea
+        \fv_i &\pluseq& (1-\rho) \cdot \fv_{s_i}      \\ \nonumber
+        \fv_{i+1} &\pluseq& \rho \cdot \fv_{s_i}
+      \eea
+    while in case $x_{gap}  > 0$ nothing is added.
+%     
+    \item[] \mybold{CASE PWN}: use \mybold{P}oint \mybold{W}ise \mybold{N}ormals (at segment points)\\
+    If there is contact in a segment $s_i$, i.e., gap $x_{gap} \le 0$, 
+    see \fig{fig:ObjectContactFrictionCircleCable2D:sketch}(right), 
+    intermediate contact forces $\fv^{l,r}_{i}$ are computed per segment point,
+      \be
+        \fv^l = f_n \cdot \nv_{l,s_i} + f_t \tv_{l,s_i}, \quad
+        \fv^r = f_n \cdot \nv_{r,s_i} + f_t \tv_{r,s_i}
+      \ee
+      in which $\nv_{l,s_i}$ is the vector from circle center to the left point ($i$) of the segment $s_i$,
+      and $\nv_{l,s_i}$ to the right point ($i+1$). The tangent vectors are perpendicular to the normals.
+%
+      The forces are then applied to the contact forces $\fv_i$ using the parameter $\rho$, which takes into account the distance of contact to the left or right side of the segment,
+      \bea
+        \fv_i &\pluseq& (1-\rho) \cdot \fv^l      \\ \nonumber
+        \fv_{i+1} &\pluseq& \rho \cdot \fv^r
+      \eea
+    while in case $x_{gap}  > 0$ nothing is added.
+    \ei
+    The forces $\fv_i$ are then applied through the marker to the \texttt{ObjectANCFCable2D} element as point loads via a position jacobian
     (using the according access function), for details see the C++ implementation.
     
     The forces on the circle marker $m0$ are computed as the total sum of all
@@ -5437,7 +5631,7 @@ equations =
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "connector's unique name"
-V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$markers define contact gap"
+V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$a marker $m0$ with position and orientation  and a marker $m1$ of type BodyCable2DShape; together defining the contact geometry"
 V,      CP,     nodeNumber,                     ,               ,       NodeIndex,      "EXUstd::InvalidIndex",  ,       I,      "$n_g$node number of a NodeGenericData with 3 $\times n_{cs}$  dataCoordinates (used for active set strategy $\ra$ hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*$n_{cs}$+[-2]*$n_{cs}$+[0.]*$n_{cs}$, meaning that there is no initial contact with undefined slip/stick"
 V,      CP,     numberOfContactSegments,        ,               ,       PInt,       "3",                         ,       I,      "$n_{cs}$number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker"
 V,      CP,     contactStiffness,               ,               ,       UReal,      0.,                          ,       I,      "$k_c$contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_n$ act in contact normal direction only upon penetration"
@@ -5446,7 +5640,7 @@ V,      CP,     frictionVelocityPenalty,        ,               ,       UReal,  
 V,      CP,     frictionStiffness,              ,               ,       UReal,      0.,                          ,       I,      "$\mu_k$tangential displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area"
 V,      CP,     frictionCoefficient,            ,               ,       UReal,      0.,                          ,       I,      "$\mu$friction coefficient [SI: 1]; tangential specific friction forces (per length) $f_t$ must fulfill the condition $f_t \le \mu f_n$"
 V,      CP,     circleRadius,                   ,               ,       UReal,      0.,                          ,       I,      "$r$radius [SI:m] of contact circle"
-V,      CP,     usePointWiseNormals,            ,               ,       Bool,       "true",                      ,       I,      "True: use normals at segment points according to vector to circle center; this is more consistent for short segments, as forces are only applied in beam tangent and normal direction; False: use normal and tangent according to linear segment; this is appropriate for very long segments (compared to circle)"
+V,      CP,     useSegmentNormals,              ,               ,       Bool,       "true",                      ,       I,      " True: use normal and tangent according to linear segment; this is appropriate for very long (compared to circle) segments; False: use normals at segment points according to vector to circle center; this is more consistent for short segments, as forces are only applied in beam tangent and normal direction"
 #delete: this is done by position marker! V,      CP,     circleMidpoint,                 ,               ,       Vector2D,   "Vector2D({0.,0.})",         ,       I,      "2D point [SI:m] of contact circle"
 #now moved to MarkerBodyCable2DShape: #V,      CP,     offset,                         ,               ,       Real,       0.,                          ,       I,      "$h_o$offset [SI:m] of contact, e.g. to include thickness of cable element"
 V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"

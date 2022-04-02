@@ -367,8 +367,8 @@ public:
 
 	inline Index IndexRegularizedFriction2ActiveContact(Index index, bool frictionRegularizedRegion)
 	{
-		if (frictionRegularizedRegion) return {index};
-		return -index;
+		if (frictionRegularizedRegion) {return index;}
+		else { return -index; }
 	}
 
 	//! perform operations in case that number of threads have been changed or initialize arrays

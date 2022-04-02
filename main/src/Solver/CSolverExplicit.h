@@ -112,6 +112,9 @@ public:
 	virtual void IncreaseStepSize(CSystem& computationalSystem, const SimulationSettings& simulationSettings,
 		Real suggestedStepSize = -1.) override;
 
+	//! return true, if solver supports automatic stepsize control
+	virtual bool HasAutomaticStepSizeControl() const;
+
 	//! update currentTime (and load factor); MUST be overwritten in special solver class
 	virtual void UpdateCurrentTime(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 

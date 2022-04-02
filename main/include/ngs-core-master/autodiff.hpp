@@ -10,6 +10,10 @@
 
 #pragma once
 
+#ifndef INLINE
+#define INLINE inline
+#endif
+
 namespace ngstd
 {
 

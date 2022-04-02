@@ -73,6 +73,31 @@ sudo python3 setup.py bdist_wheel
 for Authenticated Users->Edit-> set "Full control"
 
 #+++++++++++++++++++++++++++++++++++++++
+#wsl and Ubuntu18.04
+#install https://sourceforge.net/projects/vcxsrv/
+#add to export to (last line of) .bashrc
+nano ~/.bashrc
+
+export DISPLAY=:0
+
+#start VcXsrv under Windows Start and configure:
+#disable firewall (first two options, leave public deactivated)
+[X] Disable access control
+==>everything else left as default
+
+==> this already is sufficient to run xserver
+
+install nedit (to test xserver):
+sudo apt-get install nedit
+
+==> start exudyn example (works also for tkinter!)
+
+
+
+
+
+#+++++++++++++++++++++++++++++++++++++++
+#OLDER TRIALS for xserver (did not work):
 #xserver for WSL (see also https://skeptric.com/wsl2-xserver/):
 #first allow xserver to pass local firewall (even everything runs on local PC...):
 ->open Firewall & Network Protection
@@ -102,3 +127,7 @@ export LIBGL_ALWAYS_INDIRECT=1
 
 #check for advanced wsl options:
 https://www.sitepoint.com/wsl2/
+
+
+
+

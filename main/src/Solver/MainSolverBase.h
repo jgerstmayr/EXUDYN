@@ -146,6 +146,13 @@ public: //
 		CheckInitialized(mainSystem); GetCSolver().IncreaseStepSize(*(mainSystem.cSystem), simulationSettings);
 	}
 
+	//! increase step size if convergence is good
+	virtual bool HasAutomaticStepSizeControl(MainSystem& mainSystem, const SimulationSettings& simulationSettings) const
+	{
+		CheckInitialized(mainSystem); 
+		return GetCSolver().HasAutomaticStepSizeControl();
+	}
+
 	//only for static solver:
 	////! for static solver, this is a factor in interval [0,1]; MUST be overwritten
 	//virtual Real ComputeLoadFactor(const SimulationSettings& simulationSettings) {
