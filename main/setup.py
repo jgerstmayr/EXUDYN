@@ -76,6 +76,9 @@ print("python version =",platform.python_version())
 #detect python version:
 pyVersionString = str(sys.version_info.major) + '.' + str(sys.version_info.minor)
 
+#create macro variable for C++ compilation, knowing Python version
+exudynPythonMacro = '__EXUDYN__PYTHON'+str(sys.version_info.major)+str(sys.version_info.minor)
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #set some platform-specific linker and include options
 if USEGLFW:
@@ -345,14 +348,16 @@ class BuildExt(build_ext):
 				'/openmp',
 				'/std:c++17',
 				'/FC',
-            '/Ot', #favor faster code
+                '/Ot', #favor faster code
 				'/Zc:twoPhase-',
+                '/D', exudynPythonMacro,
             ]+msvcCppGLFWflag+commonCopts,
         'unix': [
          '-Wno-comment', #deactivate multiline comment warning /* ... * * ...*/
          '-Wno-unknown-pragmas', #warning from ngs_core.hpp/taskmanager.hpp (NGsolve)
          '-Wno-sign-compare', #warning from taskmanager.hpp (NGsolve)
  		 '-Wall',
+         '-D'+exudynPythonMacro,
          #'-std=c++17', #==>chosen automatic
          #'-fpermissive', #because of exceptions ==> allows compilation
          #'-fopenmp',

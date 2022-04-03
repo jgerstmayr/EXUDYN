@@ -614,7 +614,7 @@ VSettingsExportImages has the following items:
     heightAlignment &     PInt &      &     2 &     alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)\\ \hline
     saveImageFileCounter &     UInt &      &     0 &     current value of the counter which is used to consecutively save frames (images) with consecutive numbers\\ \hline
     saveImageFileName &     FileName &      &     'images/frame' &     filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.png, frame0001.png,...); ; directory will be created if it does not exist\\ \hline
-    saveImageFormat &     String &      &     'PNG' &     format for exporting figures: currently only PNG and TGA available; use TGA has highest compatibility with all platforms\\ \hline
+    saveImageFormat &     String &      &     'PNG' &     format for exporting figures: currently only PNG and TGA available; PNG is not available for Ubuntu18.04 (check  use TGA has highest compatibility with all platforms\\ \hline
     saveImageSingleFile &     bool &      &     False &     True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName\\ \hline
     saveImageTimeOut &     PInt &      &     5000 &     timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes\\ \hline
     widthAlignment &     PInt &      &     4 &     alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)\\ \hline

@@ -470,7 +470,7 @@ bool MainNodeRigidBodyEP::CheckPreAssembleConsistency(const MainSystem& mainSyst
 	if (fabs(ep.GetL2Norm() - 1.) > 1e-10) //[1,0,0,1e-5] gives an error of 5e-11
 	{
 		errorString = "MainNodeRigidBodyEP: reference values for Euler Parameters have a norm which differs considerable from unity (" +
-			EXUstd::ToString(cNode->GetReferenceCoordinateVector().GetL2Norm()) + ")";
+			EXUstd::ToString(ep.GetL2Norm()) + ")";
 		return false;
 	}
 

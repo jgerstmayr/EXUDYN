@@ -16,6 +16,16 @@
 
 #define GlfwRendererUsePNG //deactivate this flag for compatibility; switches to .TGA image output
 
+//needs to be tested!!!
+//#if defined(__EXUDYN__APPLE__)
+//#undef GlfwRendererUsePNG 
+//#endif 
+
+//we need to exclude Python36 (in fact Ubuntu18.04, where glfw is not available with stb_image_write.h
+#if defined(__EXUDYN__LINUX__) && defined(__EXUDYN__PYTHON36)
+#undef GlfwRendererUsePNG 
+#endif
+
 #ifdef GlfwRendererUsePNG
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "deps/stb_image_write.h" //for save image as .PNG
@@ -897,7 +907,6 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 //! if joystickNumber!=-1, it uses the fixed joystick until end of Renderer
 bool GlfwRenderer::GetJoystickValues(Vector3D& position, Vector3D& rotation, Index& joystickNumber)
 {
-	const bool printJoyMessage = true;
 	bool initFirst = false; //if initialized first, also reset stateMachine
 	if (joystickNumber == -1)
 	{
@@ -907,7 +916,8 @@ bool GlfwRenderer::GetJoystickValues(Vector3D& position, Vector3D& rotation, Ind
 			if (glfwJoystickPresent(GLFW_JOYSTICK_1 + i))
 			{
 				int count;
-				const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1 + i, &count);
+				//const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1 + i, &count);
+				glfwGetJoystickAxes(GLFW_JOYSTICK_1 + i, &count);
 				if (count == 6)
 				{
 					initFirst = true;
@@ -2036,17 +2046,22 @@ void GlfwRenderer::SaveImage()
 			visSettings->exportImages.saveImageFileCounter++; //this changes the settings, because it should always contain the current value for consecutive simulations
 		}
 
-		if (visSettings->exportImages.saveImageFormat == "PNG")
+#ifdef GlfwRendererUsePNG
+		bool pngAvailable = true;
+#else
+		bool pngAvailable = false;
+#endif
+		if (visSettings->exportImages.saveImageFormat == "PNG" && pngAvailable)
 		{
 			filename += ".png"; //image format ending
 		}
-		else if (visSettings->exportImages.saveImageFormat == "TGA")
+		else if (visSettings->exportImages.saveImageFormat == "TGA" || !pngAvailable)
 		{
 			filename += ".tga"; //image format ending
 		}
 		else
 		{
-			PrintDelayed("SaveImage ERROR: illegal format; no file written");
+			PrintDelayed("SaveImage ERROR: illegal format; check documentation for exportImages; no file written");
 			//SaveSceneToFile will do nothing
 		}
 
@@ -2058,8 +2073,15 @@ void GlfwRenderer::SaveImage()
 
 void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 {
-	if (visSettings->exportImages.saveImageFormat == "PNG")
+#ifdef GlfwRendererUsePNG
+	bool pngAvailable = true;
+#else
+	bool pngAvailable = false;
+#endif
+
+	if (visSettings->exportImages.saveImageFormat == "PNG" && pngAvailable)
 	{
+#ifdef GlfwRendererUsePNG
 		Index windowWidth = state->currentWindowSize[0]; //this is the size at which the renderer created buffer last time ...
 		Index windowHeight = state->currentWindowSize[1];
 
@@ -2112,8 +2134,9 @@ void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 
 		windowHeight = heightAlignment * (Index)(windowHeight / heightAlignment);
 		stbi_write_png(filename.c_str(), windowWidth, windowHeight, nrChannels, pixelBufferFlip.GetDataPointer(), stride);
+#endif
 	}
-	else if (visSettings->exportImages.saveImageFormat == "TGA")
+	else if (visSettings->exportImages.saveImageFormat == "TGA" || !pngAvailable)
 	{
 		Index windowWidth = state->currentWindowSize[0];
 		Index windowHeight = state->currentWindowSize[1];

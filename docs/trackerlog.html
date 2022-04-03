@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1026, 
-Number of resolved issues = 867 (25 in current minor version), 
-Exudyn version = 1.2.25.dev1, 
-last change =  2022-04-02
+Number of issues = 1028, 
+Number of resolved issues = 868 (26 in current minor version), 
+Exudyn version = 1.2.26, 
+last change =  2022-04-03
 
 
 <table style = "width:100%">
@@ -38,6 +38,22 @@ last change =  2022-04-02
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1026</td>
+    <td>Save as PNG         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check MacOS implementation if glfw works with saving PNG files</td>
+    <td>TESTING</td>
+    <td></td>
+    <td>2022-04-02</td>
+    <td>2022-06-01</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>1024</td>
     <td>PERFORM_UNIT_TESTS  </td>
@@ -406,7 +422,7 @@ last change =  2022-04-02
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0917</td>
     <td>mbs.ComputeObjectLHSJacobian</td>
     <td>JG</td>
@@ -422,7 +438,7 @@ last change =  2022-04-02
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0916</td>
     <td>mbs.ComputeObjectAccessFunction</td>
     <td>JG</td>
@@ -438,7 +454,7 @@ last change =  2022-04-02
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0915</td>
     <td>mbs.ComputeObject...</td>
     <td>JG</td>
@@ -454,7 +470,7 @@ last change =  2022-04-02
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0914</td>
     <td>mbs.ComputeNode...  </td>
     <td>JG</td>
@@ -470,7 +486,7 @@ last change =  2022-04-02
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0913</td>
     <td>KinematicTree       </td>
     <td>JG</td>
@@ -486,7 +502,7 @@ last change =  2022-04-02
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0912</td>
     <td>GeneralContact      </td>
     <td>JG</td>
@@ -502,7 +518,7 @@ last change =  2022-04-02
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0911</td>
     <td>GeneralContact      </td>
     <td>JG</td>
@@ -518,7 +534,7 @@ last change =  2022-04-02
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0910</td>
     <td>GeneralContact      </td>
     <td>JG</td>
@@ -534,7 +550,7 @@ last change =  2022-04-02
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0909</td>
     <td>GeneralContact      </td>
     <td>JG</td>
@@ -550,7 +566,7 @@ last change =  2022-04-02
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0908</td>
     <td>MarkerData          </td>
     <td>JG</td>
@@ -566,7 +582,7 @@ last change =  2022-04-02
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0907</td>
     <td>GeneralContact      </td>
     <td>JG</td>
@@ -2578,6 +2594,22 @@ last change =  2022-04-02
     <td>2019-07-01</td>
     <td></td>
     <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1027</td>
+    <td>RotationMatrix2EulerParameters</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> RotationMatrix2EulerParameters computes Euler parameters with large deviations from unit norm in case of inaccurate rotation matrices; this may lead to failure of CheckPreAssembleConsistencies; resolved by adding normalization before returning Euler parameters</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-04-03</td>
+    <td>2022-06-02</td>
+    <td>2022-04-03 00:24</td>
+    <td>JG</td>
     <td></td>
     <td></td>
     <td></td>

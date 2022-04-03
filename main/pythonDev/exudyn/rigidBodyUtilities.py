@@ -188,7 +188,12 @@ def RotationMatrix2EulerParameters(rotationMatrix):
             ep3 = 0.25 * s
             ep0 = (A[0][1] - A[1][0]) / s
 
-    return np.array([ep0,ep1,ep2,ep3])
+    ep=np.array([ep0,ep1,ep2,ep3])
+    #normalize Euler parameters, if rotation matrix is inaccurate; otherwise, may lead to errors in checkPreAssemble
+    epNorm = np.linalg.norm(ep)
+    if epNorm != 0.:
+        ep *= 1./epNorm
+    return ep
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: compute time derivative of Euler parameters from (global) angular velocity vector
