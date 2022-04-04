@@ -814,7 +814,7 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 
 }
 
-Index cnt = 0;
+//Index cnt = 0;
 void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	if (PyGetRendererCallbackLock()) { return; }
@@ -824,7 +824,7 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 	stateMachine.mousePositionY = ypos;
 
 	////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	ShowMessage("cnt ="+EXUstd::ToString(cnt++), 5);
+	//ShowMessage("cnt ="+EXUstd::ToString(cnt++), 5);
 	////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

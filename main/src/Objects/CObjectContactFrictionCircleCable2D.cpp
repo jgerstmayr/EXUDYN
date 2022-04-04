@@ -182,7 +182,7 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 						Vector2D p1({ markerData1.vectorValue[i * 2 + 2], markerData1.vectorValue[i * 2 + 1 + 2] }); //markerdata.value stores the x/y positions of the contact points
 						
 #ifdef CObjectContactFrictionCircleCable2DuseL
-						Real segmentLength = markerData1.GetHelper(); //stored in marker special variable
+						Real segmentLength = markerData1.GetHelper()/ parameters.numberOfContactSegments; //stored in marker special variable
 #else
 						Real segmentLength = (p1 - p0).GetL2Norm();
 #endif
@@ -353,7 +353,7 @@ Real CObjectContactFrictionCircleCable2D::PostNewtonStep(const MarkerDataStructu
 					Vector2D p0({ markerData1.vectorValue[i * 2], markerData1.vectorValue[i * 2 + 1] });	 //markerdata.value stores the x/y positions of the contact points
 					Vector2D p1({ markerData1.vectorValue[i * 2 + 2], markerData1.vectorValue[i * 2 + 1 + 2] }); //markerdata.value stores the x/y positions of the contact points
 #ifdef CObjectContactFrictionCircleCable2DuseL
-					Real segmentLength = markerData1.GetHelper(); //stored in marker special variable
+					Real segmentLength = markerData1.GetHelper()/ parameters.numberOfContactSegments; //stored in marker special variable
 #else
 					Real segmentLength = (p1 - p0).GetL2Norm();
 #endif
@@ -518,7 +518,7 @@ void CObjectContactFrictionCircleCable2D::GetOutputVariableConnector(OutputVaria
 					Vector2D p0({ markerData1.vectorValue[i * 2], markerData1.vectorValue[i * 2 + 1] });	 //markerdata.value stores the x/y positions of the contact points
 					Vector2D p1({ markerData1.vectorValue[i * 2 + 2], markerData1.vectorValue[i * 2 + 1 + 2] }); //markerdata.value stores the x/y positions of the contact points
 #ifdef CObjectContactFrictionCircleCable2DuseL
-					Real segmentLength = markerData1.GetHelper(); //stored in marker special variable
+					Real segmentLength = markerData1.GetHelper()/ parameters.numberOfContactSegments; //stored in marker special variable
 #else
 					Real segmentLength = (p1 - p0).GetL2Norm();
 #endif

@@ -2,8 +2,8 @@
 Exudyn
 ======
 
-+  Exudyn version = 1.2.26 (Corea)
-+  build date and time=2022-04-03  00:05
++  Exudyn version = 1.2.28 (Corea)
++  build date and time=2022-04-04  12:09
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn **Version 1.2** is out! The documentation theDoc.pdf now reached > 600 pages! Including now a contact module, improved solvers, sparse matrix support and multi-threading, creation of beams along curves, extended robotics modules, **PlotSensor** fully extended, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
