@@ -13,9 +13,18 @@
 import exudyn as exu
 from exudyn.itemInterface import *
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+    exudynTestGlobals.isPerformanceTest = False
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -65,7 +74,7 @@ simulationSettings.displayComputationTime = True
 
 simulationSettings.solutionSettings.solutionInformation = "Rigid pendulum"
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
 
 
@@ -78,7 +87,7 @@ exu.Print('solution of perfRigidPendulum=',result)
 exudynTestGlobals.testResult = result
 exudynTestGlobals.testTolFact = 1e5 #larger error due to many implicit steps?
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 

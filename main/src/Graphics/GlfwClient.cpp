@@ -340,47 +340,78 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 		{
 			//OLD: visSettings->openGL.facesTransparent = !visSettings->openGL.facesTransparent;
 			//switch between faces transparent + edges / faces transparent / only face edges / full faces with edges / only faces
-			if (!visSettings->openGL.facesTransparent && visSettings->openGL.showFaces && !visSettings->openGL.showFaceEdges)
+			if (!visSettings->openGL.facesTransparent && visSettings->openGL.showFaces && !visSettings->openGL.showFaceEdges && visSettings->openGL.showMeshFaces && visSettings->openGL.showMeshEdges)
+			{
+				visSettings->openGL.facesTransparent = false;
+				visSettings->openGL.showFaces = true;
+				visSettings->openGL.showFaceEdges = false;
+				visSettings->openGL.showMeshFaces = true;
+				visSettings->openGL.showMeshEdges = false;
+			}
+			else if (!visSettings->openGL.facesTransparent && visSettings->openGL.showFaces && !visSettings->openGL.showFaceEdges && visSettings->openGL.showMeshFaces && !visSettings->openGL.showMeshEdges)
 			{
 				visSettings->openGL.facesTransparent = true;
 				visSettings->openGL.showFaces = true;
 				visSettings->openGL.showFaceEdges = true;
+				visSettings->openGL.showMeshFaces = true;
+				visSettings->openGL.showMeshEdges = true;
 			}
-			else if (visSettings->openGL.facesTransparent && visSettings->openGL.showFaces && visSettings->openGL.showFaceEdges)
+			else if (visSettings->openGL.facesTransparent && visSettings->openGL.showFaces && visSettings->openGL.showFaceEdges && visSettings->openGL.showMeshFaces && visSettings->openGL.showMeshEdges)
 			{
 				visSettings->openGL.facesTransparent = true;
 				visSettings->openGL.showFaces = true;
 				visSettings->openGL.showFaceEdges = false;
+				visSettings->openGL.showMeshFaces = true;
+				visSettings->openGL.showMeshEdges = true;
 			}
-			else if (visSettings->openGL.facesTransparent && visSettings->openGL.showFaces && !visSettings->openGL.showFaceEdges)
+			else if (visSettings->openGL.facesTransparent && visSettings->openGL.showFaces && !visSettings->openGL.showFaceEdges && visSettings->openGL.showMeshFaces && visSettings->openGL.showMeshEdges)
 			{
 				visSettings->openGL.facesTransparent = false;
 				visSettings->openGL.showFaces = true;
 				visSettings->openGL.showFaceEdges = true;
+				visSettings->openGL.showMeshFaces = true;
+				visSettings->openGL.showMeshEdges = true;
 			}
-			else if (!visSettings->openGL.facesTransparent && visSettings->openGL.showFaces && visSettings->openGL.showFaceEdges)
+			else if (!visSettings->openGL.facesTransparent && visSettings->openGL.showFaces && visSettings->openGL.showFaceEdges && visSettings->openGL.showMeshFaces && visSettings->openGL.showMeshEdges)
 			{
 				visSettings->openGL.facesTransparent = false;
 				visSettings->openGL.showFaces = false;
 				visSettings->openGL.showFaceEdges = true;
+				visSettings->openGL.showMeshFaces = false;
+				visSettings->openGL.showMeshEdges = true;
 			}
-			else if (!visSettings->openGL.facesTransparent && !visSettings->openGL.showFaces && visSettings->openGL.showFaceEdges)
+			else if (!visSettings->openGL.facesTransparent && !visSettings->openGL.showFaces && visSettings->openGL.showFaceEdges && !visSettings->openGL.showMeshFaces && visSettings->openGL.showMeshEdges)
 			{
 				visSettings->openGL.facesTransparent = false;
-				visSettings->openGL.showFaces = true;
-				visSettings->openGL.showFaceEdges = false;
+				visSettings->openGL.showFaces = false;
+				visSettings->openGL.showFaceEdges = true;
+				visSettings->openGL.showMeshFaces = true;
+				visSettings->openGL.showMeshEdges = true;
 			}
+			//else if (!visSettings->openGL.facesTransparent && !visSettings->openGL.showFaces && visSettings->openGL.showFaceEdges && visSettings->openGL.showMeshEdges && visSettings->openGL.showMeshFaces)
+			//{
+			//	visSettings->openGL.facesTransparent = false;
+			//	visSettings->openGL.showFaces = true;
+			//	visSettings->openGL.showFaceEdges = false;
+			//	visSettings->openGL.showMeshFaces = true;
+			//	visSettings->openGL.showMeshEdges = true;
+			//}
 			else
 			{
 				visSettings->openGL.facesTransparent = false;
 				visSettings->openGL.showFaces = true;
 				visSettings->openGL.showFaceEdges = false;
+				visSettings->openGL.showMeshFaces = true;
+				visSettings->openGL.showMeshEdges = true;
 			}
 			
 			UpdateGraphicsDataNow();
-			ShowMessage("faces transparent = " + OnOffFromBool(visSettings->openGL.facesTransparent) +
-				", faces = " + OnOffFromBool(visSettings->openGL.showFaces) +
-				", face edges = " + OnOffFromBool(visSettings->openGL.showFaceEdges), timeoutShowItem);
+			ShowMessage("faces transparent=" + OnOffFromBool(visSettings->openGL.facesTransparent) +
+				", faces=" + OnOffFromBool(visSettings->openGL.showFaces) +
+				", face edges=" + OnOffFromBool(visSettings->openGL.showFaceEdges) +
+				", mesh faces=" + OnOffFromBool(visSettings->openGL.showMeshFaces) +
+				", mesh edges=" + OnOffFromBool(visSettings->openGL.showMeshEdges)
+				, timeoutShowItem);
 		}
 		if (key == GLFW_KEY_X && action == GLFW_PRESS)
 		{
@@ -2338,31 +2369,35 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//DRAW TRIANGLES
-			if (visSettings->openGL.showFaceEdges)
+			if (visSettings->openGL.showFaceEdges || visSettings->openGL.showMeshEdges)
 			{
 				for (const GLTriangle& trig : data->glTriangles)
 				{ //draw lines
 					if (selectionMode) { if (trig.itemID != lastItemID) { glLoadName(trig.itemID); lastItemID = trig.itemID; } }
-					if (!highlight)
+					if ((visSettings->openGL.showFaceEdges && !trig.isFiniteElement)
+						|| (visSettings->openGL.showMeshEdges && trig.isFiniteElement))
 					{
-						glColor4f(0.2f, 0.2f, 0.2f, 1.f);
-					}
-					else
-					{
-						if (trig.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
-						else { glColor4fv(highlightColor2.GetDataPointer()); }
-					}
-					for (Index i = 0; i < 3; i++)
-					{
-						Index j = i + 1;
-						if (j >= 3) { j = 0; }
-						glBegin(GL_LINES);
-						const Float3& p = trig.points[i];
-						glVertex3f(p[0], p[1], p[2]);
+						if (!highlight)
+						{
+							glColor4f(0.2f, 0.2f, 0.2f, 1.f);
+						}
+						else
+						{
+							if (trig.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
+							else { glColor4fv(highlightColor2.GetDataPointer()); }
+						}
+						for (Index i = 0; i < 3; i++)
+						{
+							Index j = i + 1;
+							if (j >= 3) { j = 0; }
+							glBegin(GL_LINES);
+							const Float3& p = trig.points[i];
+							glVertex3f(p[0], p[1], p[2]);
 
-						const Float3& p1 = trig.points[j];
-						glVertex3f(p1[0], p1[1], p1[2]);
-						glEnd();
+							const Float3& p1 = trig.points[j];
+							glVertex3f(p1[0], p1[1], p1[2]);
+							glEnd();
+						}
 					}
 				}
 			}
@@ -2417,7 +2452,7 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//DRAW TRIANGLES
-			if (visSettings->openGL.showFaces)
+			if (visSettings->openGL.showFaces || visSettings->openGL.showMeshFaces)
 			{
 				if (visSettings->openGL.enableLighting) { glEnable(GL_LIGHTING); } //only enabled when drawing triangle faces
 				glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
@@ -2426,15 +2461,19 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 					for (const GLTriangle& trig : data->glTriangles)
 					{ //draw faces
 						if (selectionMode) { if (trig.itemID != lastItemID) { glLoadName(trig.itemID); lastItemID = trig.itemID; } }
-						glBegin(GL_TRIANGLES);
-						for (Index i = 0; i < 3; i++)
+						if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
+							|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
 						{
-							if (trig.itemID != highlightID) { glColor4fv(otherColor.GetDataPointer()); }
-							else { glColor4fv(highlightColor.GetDataPointer()); }
-							glNormal3fv(trig.normals[i].GetDataPointer());
-							glVertex3fv(trig.points[i].GetDataPointer());
+							glBegin(GL_TRIANGLES);
+							for (Index i = 0; i < 3; i++)
+							{
+								if (trig.itemID != highlightID) { glColor4fv(otherColor.GetDataPointer()); }
+								else { glColor4fv(highlightColor.GetDataPointer()); }
+								glNormal3fv(trig.normals[i].GetDataPointer());
+								glVertex3fv(trig.points[i].GetDataPointer());
+							}
+							glEnd();
 						}
-						glEnd();
 					}
 				}
 				else if (!visSettings->openGL.facesTransparent)
@@ -2442,14 +2481,18 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 					for (const GLTriangle& trig : data->glTriangles)
 					{ //draw faces
 						if (selectionMode) { if (trig.itemID != lastItemID) { glLoadName(trig.itemID); lastItemID = trig.itemID; } }
-						glBegin(GL_TRIANGLES);
-						for (Index i = 0; i < 3; i++)
+						if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
+							|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
 						{
-							glColor4fv(trig.colors[i].GetDataPointer());
-							glNormal3fv(trig.normals[i].GetDataPointer());
-							glVertex3fv(trig.points[i].GetDataPointer());
+							glBegin(GL_TRIANGLES);
+							for (Index i = 0; i < 3; i++)
+							{
+								glColor4fv(trig.colors[i].GetDataPointer());
+								glNormal3fv(trig.normals[i].GetDataPointer());
+								glVertex3fv(trig.points[i].GetDataPointer());
+							}
+							glEnd();
 						}
-						glEnd();
 					}
 				}
 				else //for global transparency of faces; slower
@@ -2458,16 +2501,20 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 					for (const GLTriangle& trig : data->glTriangles)
 					{ //draw faces
 						if (selectionMode) { if (trig.itemID != lastItemID) { glLoadName(trig.itemID); lastItemID = trig.itemID; } }
-						glBegin(GL_TRIANGLES);
-						for (Index i = 0; i < 3; i++)
+						if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
+							|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
 						{
-							Float4 col = trig.colors[i];
-							if (col[3] > transparencyLimit) { col[3] = transparencyLimit; }
-							glColor4fv(col.GetDataPointer());
-							glNormal3fv(trig.normals[i].GetDataPointer());
-							glVertex3fv(trig.points[i].GetDataPointer());
+							glBegin(GL_TRIANGLES);
+							for (Index i = 0; i < 3; i++)
+							{
+								Float4 col = trig.colors[i];
+								if (col[3] > transparencyLimit) { col[3] = transparencyLimit; }
+								glColor4fv(col.GetDataPointer());
+								glNormal3fv(trig.normals[i].GetDataPointer());
+								glVertex3fv(trig.points[i].GetDataPointer());
+							}
+							glEnd();
 						}
-						glEnd();
 					}
 				}
 				if (visSettings->openGL.enableLighting) { glDisable(GL_LIGHTING); } //only enabled when drawing triangle faces

@@ -11,21 +11,23 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-#sys.path.append('../exudyn') 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
-
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
-from exudyn.rigidBodyUtilities import *
-#from exudyn.lieGroupBasics import *
 from exudyn.lieGroupIntegration import *
 
 import numpy as np
 
-#exu.SetWriteToFile('testOutput.log', flagWriteToFile=False, flagAppend=True) #done in TestSuite
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 #mbs = exu.MainSystem()
@@ -99,7 +101,7 @@ mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC0]))
 mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC1]))
 mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC2]))
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     #mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True,#fileName='solution/sensorRotation.txt', outputVariableType=exu.OutputVariableType.Rotation))
     sAngVelLoc=mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True))#fileName='solution/sensorAngVelLocal.txt', outputVariableType=exu.OutputVariableType.AngularVelocityLocal
     #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVel.txt', outputVariableType=exu.OutputVariableType.AngularVelocity))
@@ -123,7 +125,7 @@ dSize=0.01
 SC.visualizationSettings.bodies.defaultSize = [dSize, dSize, dSize]
 
 
-if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+if useGraphics: #only start graphics once, but after background is set
     exu.StartRenderer()
     #mbs.WaitForUserToContinue()
 
@@ -179,11 +181,11 @@ exudynTestGlobals.testError = omegay - (149.8473939540758) #2020-02-11: 149.8473
 exudynTestGlobals.testResult = omegay
 
 
-if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+if useGraphics: #only start graphics once, but after background is set
     #SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
 
     from exudyn.plot import PlotSensor
 

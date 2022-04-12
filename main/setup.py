@@ -371,11 +371,13 @@ class BuildExt(build_ext):
 #		'-Wall',
         ]+unixCppGLFWflag+commonCopts,
     }
-    if not is32bits: #for 32bits, we assume that processors may not support avx
+    #if not is32bits: #for 32bits, we assume that processors may not support avx
+    if not (sys.version_info.major == 3 and sys.version_info.minor == 6):  #since V1.2.29
         c_opts['msvc'] += ['/arch:AVX2']
 
     #perform C++ unit tests: for 64bits, Python 3.6
-    if not is32bits and sys.version_info.major == 3 and sys.version_info.minor == 6: 
+    #if not is32bits and sys.version_info.major == 3 and sys.version_info.minor == 6: 
+    if sys.version_info.major == 3 and sys.version_info.minor == 7: #since V1.2.29
         print('***************************\nadd flag PERFORM_UNIT_TESTS\n***************************\n')
         c_opts['msvc'] += ['/D', 'PERFORM_UNIT_TESTS']
 	
@@ -434,15 +436,16 @@ else:
     developmentStatus = "Development Status :: 4 - Beta"
 
 long_description=''
-long_description += '**Exudyn** \n'
-long_description += '========== \n\n'
+long_description += '==========\n'
+long_description += '**Exudyn**\n'
+long_description += '==========\n\n'
 long_description += 'A flexible multibody dynamics systems simulation code with Python and C++\n\n'
 long_description += 'Exudyn is hosted on `Github <https://github.com/jgerstmayr/EXUDYN>`_ which provides full documentation, tutorial, examples, etc.\n\n'
 long_description += 'See `License on github <https://github.com/jgerstmayr/EXUDYN/blob/master/LICENSE.txt>`_ .\n'
-long_description += 'Pre-compiled available for Windows / Python 3.6 - 3.9.\n\n'
+long_description += 'Pre-compiled available for Windows / Python 3.6 - 3.10.\n\n'
 long_description += 'For more information, installation and tutorials see: \n\n'
 long_description += 'https://github.com/jgerstmayr/EXUDYN \n\n'
-long_description += 'Detailed documentation on theory, usage, reference manual on **600+** pages: \n\n'
+long_description += 'For CHANGES (section Issues and Bugs), detailed DOCUMENTATION on theory, usage, and REFERENCE MANUAL on **600+** pages: \n\n'
 long_description += 'https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf\n\n'
 
 ##this would work, but pypi does not read .rst files as properly as github does ...:

@@ -637,6 +637,7 @@ bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data)
 										Index n = (Index)stdGList.size() / 3;
 										Index np = points.NumberOfItems();
 										GLTriangle trig;
+										trig.isFiniteElement = false;
 										for (Index i = 0; i < n; i++)
 										{
 											Index3 pointInd = Index3({ stdGList[i * 3], stdGList[i * 3 + 1], stdGList[i * 3 + 2] });

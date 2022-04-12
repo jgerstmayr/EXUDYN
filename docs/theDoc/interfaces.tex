@@ -344,9 +344,11 @@ VSettingsContour has the following items:
     colorBarTiling &     PInt &     1 &     12 &     number of tiles (segements) shown in the colorbar for the contour plot\\ \hline
     maxValue &     float &     1 &     1 &     maximum value for contour plot; set manually, if automaticRange == False\\ \hline
     minValue &     float &     1 &     0 &     minimum value for contour plot; set manually, if automaticRange == False\\ \hline
+    nodesColored &     bool &      &     True &     if true, the contour color is also applied to nodes (except mesh nodes), otherwise node drawing is not influenced by contour settings\\ \hline
     outputVariable &     OutputVariableType &      &     OutputVariableType::\_None &     \tabnewline selected contour plot output variable type; select OutputVariableType.\_None to deactivate contour plotting.\\ \hline
     outputVariableComponent &     Int &     1 &     0 &     select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; for stresses, 6 components are available, see OutputVariableType description; to draw the norm of a outputVariable, set component to -1; if a certain component is not available by certain objects or nodes, no value is drawn (using default color)\\ \hline
     reduceRange &     bool &      &     True &     if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)\\ \hline
+    rigidBodiesColored &     bool &      &     True &     if true, the contour color is also applied to triangular faces of rigid bodies and mass points, otherwise the rigid body drawing are not influenced by contour settings; for general rigid bodies (except for ObjectGround), Position, Displacement, DisplacementLocal(=0), Velocity, VelocityLocal, AngularVelocity, and AngularVelocityLocal are available; may slow down visualization!\\ \hline
     showColorBar &     bool &      &     True &     show the colour bar with minimum and maximum values for the contour plot\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -595,6 +597,8 @@ VSettingsOpenGL has the following items:
     shadeModelSmooth &     bool &     1 &     True &     True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces\\ \hline
     showFaceEdges &     bool &     1 &     False &     show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
     showFaces &     bool &     1 &     True &     show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
+    showMeshEdges &     bool &     1 &     True &     show edges of finite elements; independent of showFaceEdges\\ \hline
+    showMeshFaces &     bool &     1 &     True &     show faces of finite elements; independent of showFaces\\ \hline
     textLineSmooth &     bool &     1 &     False &     draw lines for representation of text smooth\\ \hline
     textLineWidth &     float &     1 &     1. &     width of lines used for representation of text\\ \hline
 	  \end{longtable}

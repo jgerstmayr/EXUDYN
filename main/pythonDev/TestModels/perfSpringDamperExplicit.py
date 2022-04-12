@@ -15,6 +15,19 @@ from exudyn.itemInterface import *
 
 import numpy as np #for postprocessing
 
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+    exudynTestGlobals.isPerformanceTest = False
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 

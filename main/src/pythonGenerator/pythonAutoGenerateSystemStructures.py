@@ -12,7 +12,7 @@ from autoGenerateHelper import RemoveSpacesTabs, CountLines, TypeConversion, Gen
 
 sortStructures = True
 
-typeCasts = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 'UReal':'Real',  'PReal':'Real', 
+typeCasts = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 'UReal':'Real',  'PReal':'Real', 
              'Vector':'std::vector<Real>', 'Vector3D':'std::vector<Real>', #'Matrix':'Matrix', 'SymmetricMatrix':'Matrix', 
              'ArrayIndex':'std::vector<Index>', 'String':'std::string', 'FileName':'std::string',
              'Float2': 'std::array<float,2>', 'Float3': 'std::array<float,3>', 'Float4': 'std::array<float,4>',  #e.g. for OpenGL vectors
@@ -658,7 +658,7 @@ try: #still close file if crashes
     
     fileLines = file.readlines()
     
-    typeConversion = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 'UReal':'Real', 'PReal':'Real', 'Vector':'Vector', 
+    typeConversion = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 'UReal':'Real', 'PReal':'Real', 'Vector':'Vector', 
                       'Matrix':'Matrix', 'SymmetricMatrix':'Vector', 
                       'NumpyMatrix':'py::array_t<Real>', 'NumpyVector':'py::array_t<Real>', 
                       'String':'std::string', 'FileName':'std::string',

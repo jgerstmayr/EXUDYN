@@ -11,18 +11,24 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
-from exudyn.graphicsDataUtilities import *
 from exudyn.lieGroupIntegration import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
 from numpy import linalg as LA
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -147,7 +153,7 @@ mbs.AddObject(GenericJoint(markerNumbers=[markerCrankB, markerConrodB], constrai
 mbs.AddObject(GenericJoint(markerNumbers=[markerSlider, markerConrodC], constrainedAxes=[1,1,1,0,0,1], # xAxisMarker0=free, yAxisMarker1=free
                             visualization=VObjectJointGeneric(axesRadius=0.005, axesLength=0.02)))
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     sCrankAngle=mbs.AddSensor(SensorNode(nodeNumber = n0, storeInternal=True,#fileName='solution/crankAngle.txt',
                              outputVariableType=exu.OutputVariableType.Rotation))
     sCrankAngVel=mbs.AddSensor(SensorNode(nodeNumber = n0, storeInternal=True,#fileName='solution/crankAngularVelocity.txt',
@@ -177,7 +183,7 @@ simulationSettings.timeIntegration.numberOfSteps = 1*fact
 simulationSettings.timeIntegration.endTime = 0.2 #0.2 for testing
 simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/outputFact
 simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/outputFact
-simulationSettings.solutionSettings.writeSolutionToFile = exudynTestGlobals.useGraphics
+simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
@@ -190,7 +196,7 @@ SC.visualizationSettings.connectors.showJointAxes = True
 SC.visualizationSettings.connectors.jointAxesLength = 0.02
 SC.visualizationSettings.connectors.jointAxesRadius = 0.002
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
 #    simulationSettings.timeIntegration.numberOfSteps = 4*5000
 #    simulationSettings.timeIntegration.endTime = 5 #0.2 for testing
     
@@ -229,11 +235,11 @@ exudynTestGlobals.testError = u - (3.36427617809219) #2020-04-22(corrected Gener
 exudynTestGlobals.testResult = u
 
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     #SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     plt.close("all")

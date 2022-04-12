@@ -10,13 +10,20 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu           #c++ bibliothek, liest Dictionaries
 from exudyn.itemInterface import *     # conversion of data to exudyn dictionaries C interface
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -67,7 +74,7 @@ mbs.Assemble()
 #exu.Print(mbs)
 
 #useGraphics = True
-if exudynTestGlobals.useGraphics: 
+if useGraphics: 
     exu.StartRenderer()
 
 simulationSettings = exu.SimulationSettings()
@@ -106,7 +113,7 @@ exu.Print('static tip displacement (y)=', u[1])
 exudynTestGlobals.testError = 1e-2*(u[1]-(-6.779862983766792)) #72 x 6 bodies; CPUtime surface: 0.029 seconds
 exudynTestGlobals.testResult = 1e-2*u[1]
 
-if exudynTestGlobals.useGraphics: 
+if useGraphics: 
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() 
 

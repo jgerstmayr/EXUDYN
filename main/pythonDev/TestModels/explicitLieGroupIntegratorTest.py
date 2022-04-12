@@ -11,24 +11,26 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
-
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
-from exudyn.rigidBodyUtilities import *
-#from exudyn.lieGroupIntegration import *
 
 import numpy as np
 
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-#useGraphics = exudynTestGlobals.useGraphics
-useGraphics = False
 useConstraints = False
 drawResults = True
 

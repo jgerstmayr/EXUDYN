@@ -24,6 +24,7 @@
 #include <array>						//std::array
 
 typedef SlimArray<float, 16> hMatrix4f; //introduce this typedef to enable switch to other matrix representations
+typedef bool GLisFiniteElement; //may be changed in future to enum, if needed
 
 //! convert tiling (e.g., 100) for circles or spheres into bit-based tiling using i interpreted as 2^i numbers for tiling
 inline Index TilingToBitResolution(Index tiling)
@@ -99,10 +100,11 @@ public:
 class GLTriangle
 {
 public:
-	Index itemID;			//!< itemID according to ItemType and index, see Index2ItemID(...)
+	Index itemID;					//!< itemID according to ItemType and index, see Index2ItemID(...)
 	std::array< Float3, 3> points;	//!< 3D point coordinates
 	std::array< Float3, 3> normals;	//!< 3D normal coordinates, pointing outwards; [0,0,0] if unused
 	std::array< Float4, 3> colors;	//!< RGBA color in range 0.f - 1.f; A ... alpha
+	GLisFiniteElement isFiniteElement;			//!< true, if finite element with different handling of edge drawing, etc.
 };
 
 //!interface for system graphics data
@@ -222,10 +224,11 @@ public:
 
 	//! create a triangle with local colors; normals not considered in this call!
 	Index AddTriangle(const std::array<Float3, 3>& points, const std::array<Float4, 3>& colors,
-		Index itemID)
+		Index itemID, GLisFiniteElement isFiniteElement=false)
 	{
 		GLTriangle trig;
 		trig.itemID = itemID;
+		trig.isFiniteElement = isFiniteElement;
 
 		for (Index i = 0; i < (Index)points.size(); i++)
 		{
@@ -238,10 +241,11 @@ public:
 
 	//! create a triangle with local colors; normals not considered in this call!
 	Index AddTriangle(const std::array<Float3, 3>& points, const std::array<Float3, 3>& normals, const std::array<Float4, 3>& colors,
-		Index itemID)
+		Index itemID, GLisFiniteElement isFiniteElement = false)
 	{
 		GLTriangle trig;
 		trig.itemID = itemID;
+		trig.isFiniteElement = isFiniteElement;
 
 		for (Index i = 0; i < (Index)points.size(); i++)
 		{
@@ -254,10 +258,11 @@ public:
 
 	//! create a triangle with local colors; normals not considered in this call!
 	Index AddTriangle(const std::array<Vector3D, 3>& points, const std::array<Float4, 3>& colors, 
-		Index itemID)
+		Index itemID, GLisFiniteElement isFiniteElement = false)
 	{
 		GLTriangle trig;
 		trig.itemID = itemID;
+		trig.isFiniteElement = isFiniteElement;
 
 		for (Index i = 0; i < (Index)points.size(); i++)
 		{
@@ -270,10 +275,11 @@ public:
 
 	//! create a triangle with local colors; normals not considered in this call!
 	Index AddTriangle(const std::array<Vector3D, 3>& points, const std::array<Vector3D, 3>& normals, const std::array<Float4, 3>& colors, 
-		Index itemID)
+		Index itemID, GLisFiniteElement isFiniteElement = false)
 	{
 		GLTriangle trig;
 		trig.itemID = itemID;
+		trig.isFiniteElement = isFiniteElement;
 
 		for (Index i = 0; i < (Index)points.size(); i++)
 		{
@@ -289,10 +295,18 @@ public:
 	Index AddText(const Vector3D& point, const Float4& color, const STDstring& text, float size, float offsetX, float offsetY, 
 		Index itemID)
 	{
+		AddText(Float3({ (float)point[0],(float)point[1],(float)point[2] }), color, text, size, offsetX, offsetY, itemID);
+	}
+
+	//! create text from string with 3D-point, color and size (0 ... use default text size)
+	//Index AddText(const Vector3D& point, const Float4& color, const STDstring& text, float size = 0.f, float offsetX = 0.f, float offsetY = 0.f, Index index, ItemType itemType)
+	Index AddText(const Float3& point, const Float4& color, const STDstring& text, float size, float offsetX, float offsetY, 
+		Index itemID)
+	{
 		GLText glText;
 		glText.itemID = itemID;
 
-		glText.point = Float3({ (float)point[0],(float)point[1],(float)point[2] });
+		glText.point = point;
 		glText.color = color;
 		glText.size = size;
 		glText.offsetX = offsetX;

@@ -167,39 +167,6 @@
 #include <pybind11/stl_bind.h>
 #include <pybind11/numpy.h> //accept numpy arrays: numpy array automatically converted to std::vector<Real,...> ==> accepts np.array([1,0,0]) and [1,0,0] as return value!
 
-template<class TVector>
-void ComputeContourColor(const TVector& value, OutputVariableType outputVariableType, SignedIndex outputVariableComponent, Float4& contourColor)
-{
-	if (outputVariableComponent == VisualizationSystem::GetContourPlotNormFlag())
-	{
-		if (!(outputVariableType == OutputVariableType::RotationMatrix || outputVariableType == OutputVariableType::StrainLocal))
-		{
-			Real contourValue = 0;
-			if ((outputVariableType == OutputVariableType::StressLocal) && value.NumberOfItems() == 6)
-			{
-				Real Sx = value[0];
-				Real Sy = value[1];
-				Real Sz = value[2];
-				Real Syz = value[3];
-				Real Sxz = value[4];
-				Real Sxy = value[5];
-				//add fabs, if there are small roundoff errors which may lead to negative values in sqrt
-				contourValue = sqrt(fabs(Sx*Sx + Sy * Sy + Sz * Sz - Sx * Sy - Sx * Sz - Sy * Sz + 3.*(Sxy*Sxy + Sxz * Sxz + Syz * Syz)));
-			}
-			else
-			{
-				contourValue = value.GetL2Norm();
-			}
-			contourColor = Float4({ (float)contourValue, 0.,0., VisualizationSystem::GetContourPlotFlag() });
-		}
-	}
-	else if (outputVariableComponent >= 0 && outputVariableComponent < value.NumberOfItems())
-	{
-		float contourValue = (float)value[outputVariableComponent];
-		contourColor = Float4({ contourValue, 0.,0., VisualizationSystem::GetContourPlotFlag() });
-	}
-}
-
 
 
 //! Update visualizationSystem -> graphicsData for item
@@ -220,16 +187,11 @@ void VisualizationNodePoint::UpdateGraphics(const VisualizationSettings& visuali
 
 
 	//add contour plot values to color:
-	if ((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes())
+	if (((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes()) && visualizationSettings.contour.nodesColored)
 	{
 		Vector& value = vSystem->tempVector;
 		cNode->GetOutputVariable(visualizationSettings.contour.outputVariable, ConfigurationType::Visualization, value);
-		ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
-		//if (visualizationSettings.contour.outputVariableComponent < value.NumberOfItems())
-		//{
-		//	float contourValue = (float)value[visualizationSettings.contour.outputVariableComponent];
-		//	currentColor = Float4({ contourValue, 0.,0.,vSystem->contourPlotFlag }); //transparency of -2. indicates a contour value ... hack!
-		//}
+		EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
 	}
 
 	Vector3D pos(cNode->GetPosition(ConfigurationType::Visualization));
@@ -263,11 +225,11 @@ void VisualizationNodePointGround::UpdateGraphics(const VisualizationSettings& v
 	Vector3D pos(cNode->GetPosition(ConfigurationType::Visualization));
 
 	//add contour plot values to color:
-	if ((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes())
+	if (((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes()) && visualizationSettings.contour.nodesColored)
 	{
 		Vector& value = vSystem->tempVector;
 		cNode->GetOutputVariable(visualizationSettings.contour.outputVariable, ConfigurationType::Visualization, value);
-		ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
+		EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
 	}
 
 	Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 2 * visualizationSettings.nodes.tiling;
@@ -295,11 +257,11 @@ void VisualizationNodePoint2D::UpdateGraphics(const VisualizationSettings& visua
 
 	Vector3D pos(cNode->GetPosition(ConfigurationType::Visualization));
 
-	if ((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes())
+	if (((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes()) && visualizationSettings.contour.nodesColored)
 	{
 		Vector& value = vSystem->tempVector;
 		cNode->GetOutputVariable(visualizationSettings.contour.outputVariable, ConfigurationType::Visualization, value);
-		ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
+		EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
 	}
 	if (visualizationSettings.nodes.drawNodesAsPoint) { vSystem->graphicsData.AddSphere(pos, currentColor, itemID); }
 	else { vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 2 * visualizationSettings.nodes.tiling, itemID); }
@@ -327,17 +289,11 @@ void VisualizationNodeRigidBodyEP::UpdateGraphics(const VisualizationSettings& v
 	Matrix3D A(cNode->GetRotationMatrix(ConfigurationType::Visualization));
 
 	//add contour plot values to color:
-	if ((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes())
+	if (((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes()) && visualizationSettings.contour.nodesColored)
 	{
 		Vector& value = vSystem->tempVector;
 		cNode->GetOutputVariable(visualizationSettings.contour.outputVariable, ConfigurationType::Visualization, value);
-		ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
-		//const Index maxSize = 9; //max. 9 components rotation matrix, 7+1 coordinates per node ...
-		//ConstSizeVector<maxSize> value;
-		//LinkedDataVector linkedValue(value);
-		////Vector value;
-		//cNode->GetOutputVariable(visualizationSettings.contour.outputVariable, ConfigurationType::Visualization, linkedValue);
-		//ComputeContourColor<LinkedDataVector>(linkedValue, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
+		EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
 	}
 
 
@@ -376,11 +332,11 @@ void VisualizationNodeRigidBodyRxyz::UpdateGraphics(const VisualizationSettings&
 	Matrix3D A(cNode->GetRotationMatrix(ConfigurationType::Visualization));
 
 	//add contour plot values to color:
-	if ((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes())
+	if (((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes()) && visualizationSettings.contour.nodesColored)
 	{
 		Vector& value = vSystem->tempVector;
 		cNode->GetOutputVariable(visualizationSettings.contour.outputVariable, ConfigurationType::Visualization, value);
-		ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
+		EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
 	}
 
 	Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 2 * visualizationSettings.nodes.tiling;
@@ -419,11 +375,11 @@ void VisualizationNodeRigidBodyRotVecLG::UpdateGraphics(const VisualizationSetti
 	Matrix3D A(cNode->GetRotationMatrix(ConfigurationType::Visualization));
 
 	//add contour plot values to color:
-	if ((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes())
+	if (((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes()) && visualizationSettings.contour.nodesColored)
 	{
 		Vector& value = vSystem->tempVector;
 		cNode->GetOutputVariable(visualizationSettings.contour.outputVariable, ConfigurationType::Visualization, value);
-		ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
+		EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
 	}
 
 	Index tiling = visualizationSettings.openGL.showFaces ? visualizationSettings.nodes.tiling : 2 * visualizationSettings.nodes.tiling;
@@ -462,11 +418,11 @@ void VisualizationNodeRigidBody2D::UpdateGraphics(const VisualizationSettings& v
 	Matrix3D A(cNode->GetRotationMatrix(ConfigurationType::Visualization));
 
 	//add contour plot values to color:
-	if ((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes())
+	if (((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes()) && visualizationSettings.contour.nodesColored)
 	{
 		Vector& value = vSystem->tempVector;
 		cNode->GetOutputVariable(visualizationSettings.contour.outputVariable, ConfigurationType::Visualization, value);
-		ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
+		EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
 	}
 
 
@@ -505,11 +461,11 @@ void VisualizationNodePoint2DSlope1::UpdateGraphics(const VisualizationSettings&
 	Matrix3D A(cNode->GetRotationMatrix(ConfigurationType::Visualization));
 
 	//add contour plot values to color:
-	if ((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes())
+	if (((Index)visualizationSettings.contour.outputVariable & (Index)cNode->GetOutputVariableTypes()) && visualizationSettings.contour.nodesColored)
 	{
 		Vector& value = vSystem->tempVector;
 		cNode->GetOutputVariable(visualizationSettings.contour.outputVariable, ConfigurationType::Visualization, value);
-		ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
+		EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, currentColor);
 	}
 
 	vSystem->graphicsData.AddCircleXY(pos, radius, currentColor, 2 * visualizationSettings.nodes.tiling, itemID);
@@ -545,16 +501,32 @@ void VisualizationObjectMassPoint::UpdateGraphics(const VisualizationSettings& v
 
 	CObjectMassPoint* cObject = (CObjectMassPoint*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	Vector3D refPos3D = cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization);
-	//Float3 pos({ (float)pos3D[0], (float)pos3D[1], (float)pos3D[2] });
+	Float3 pos3DF;
+	pos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization));
+	bool useContourColor = ((Index)visualizationSettings.contour.outputVariable & (Index)cObject->GetOutputVariableTypes()) && visualizationSettings.contour.rigidBodiesColored;
+	if (useContourColor)
+	{
+		Float3 refPos3DF;
+		refPos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Reference));
 
-	Float3 refPos3DF; refPos3DF.CopyFrom(refPos3D);
+		Float3 vel3DF;		//global
+		Float3 angVel3DF(0.f);	//global
+		if (visualizationSettings.contour.outputVariable == OutputVariableType::Velocity ||
+			visualizationSettings.contour.outputVariable == OutputVariableType::VelocityLocal)
+		{
+			vel3DF.CopyFrom(cObject->GetVelocity(Vector3D(0.), ConfigurationType::Visualization));
+		}
+		//transform graphics data with rigid body transformation (includes lines, triangles, points, ...) AND set contour color
+		EXUvis::AddBodyGraphicsDataColored(graphicsData, vSystem->graphicsData, pos3DF, EXUmath::unitMatrix3DF, refPos3DF, EXUmath::unitMatrix3DF, 
+			vel3DF, angVel3DF, itemID, visualizationSettings, useContourColor);
+	}
+	else //fast track
+	{
+		EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, pos3DF, EXUmath::unitMatrix3DF, itemID);
+	}
 
-	//transform graphics data with rigid body transformation (includes lines, triangles, points, ...)
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemID);
-
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "", currentColor); }
-
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(pos3DF, vSystem, itemID, "", currentColor); }
+	 
 }
 
 void VisualizationObjectMassPoint2D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
@@ -564,13 +536,33 @@ void VisualizationObjectMassPoint2D::UpdateGraphics(const VisualizationSettings&
 
 	CObjectMassPoint2D* cObject = (CObjectMassPoint2D*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	Vector3D refPos3D = cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization);
-	Float3 refPos3DF; refPos3DF.CopyFrom(refPos3D);
+	Float3 pos3DF;
+	pos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization));
+	Float3 refPos3DF;
+	refPos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Reference));
+	bool useContourColor = ((Index)visualizationSettings.contour.outputVariable & (Index)cObject->GetOutputVariableTypes()) && visualizationSettings.contour.rigidBodiesColored;
+	if (useContourColor)
+	{
+		Float3 refPos3DF;
+		refPos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Reference));
 
-	//transform graphics data with rigid body transformation (includes lines, triangles, points, ...)
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemID);
+		Float3 vel3DF;		//global
+		Float3 angVel3DF(0.f);	//global
+		if (visualizationSettings.contour.outputVariable == OutputVariableType::Velocity ||
+			visualizationSettings.contour.outputVariable == OutputVariableType::VelocityLocal)
+		{
+			vel3DF.CopyFrom(cObject->GetVelocity(Vector3D(0.), ConfigurationType::Visualization));
+		}
+		//transform graphics data with rigid body transformation (includes lines, triangles, points, ...) AND set contour color
+		EXUvis::AddBodyGraphicsDataColored(graphicsData, vSystem->graphicsData, pos3DF, EXUmath::unitMatrix3DF, refPos3DF, EXUmath::unitMatrix3DF,
+			vel3DF, angVel3DF, itemID, visualizationSettings, useContourColor);
+	}
+	else //fast track
+	{
+		EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, pos3DF, EXUmath::unitMatrix3DF, itemID);
+	}
 
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "", currentColor); }
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(pos3DF, vSystem, itemID, "", currentColor); }
 }
 
 void VisualizationObjectMass1D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
@@ -580,13 +572,34 @@ void VisualizationObjectMass1D::UpdateGraphics(const VisualizationSettings& visu
 
 	CObjectMass1D* cObject = (CObjectMass1D*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	Vector3D refPos3D = cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization);
-	Float3 refPos3DF; refPos3DF.CopyFrom(refPos3D);
+	Float3 pos3DF;
+	pos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization));
+	Float3 refPos3DF;
+	refPos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Reference));
+	bool useContourColor = ((Index)visualizationSettings.contour.outputVariable & (Index)cObject->GetOutputVariableTypes()) && visualizationSettings.contour.rigidBodiesColored;
+	if (useContourColor)
+	{
+		Float3 refPos3DF;
+		refPos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Reference));
 
-	//transform graphics data with rigid body transformation (includes lines, triangles, points, ...)
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemID);
+		Float3 vel3DF;		//global
+		Float3 angVel3DF(0.f);	//global
+		if (visualizationSettings.contour.outputVariable == OutputVariableType::Velocity ||
+			visualizationSettings.contour.outputVariable == OutputVariableType::VelocityLocal)
+		{
+			vel3DF.CopyFrom(cObject->GetVelocity(Vector3D(0.), ConfigurationType::Visualization));
+			//angVel3DF.CopyFrom(cObject->GetAngularVelocity(Vector3D(0.), ConfigurationType::Visualization));
+		}
+		//transform graphics data with rigid body transformation (includes lines, triangles, points, ...) AND set contour color
+		EXUvis::AddBodyGraphicsDataColored(graphicsData, vSystem->graphicsData, pos3DF, EXUmath::unitMatrix3DF, refPos3DF, EXUmath::unitMatrix3DF,
+			vel3DF, angVel3DF, itemID, visualizationSettings, useContourColor);
+	}
+	else //fast track
+	{
+		EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, pos3DF, EXUmath::unitMatrix3DF, itemID);
+	}
 
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "", currentColor); }
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(pos3DF, vSystem, itemID, "", currentColor); }
 }
 
 void VisualizationObjectRotationalMass1D::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
@@ -596,14 +609,38 @@ void VisualizationObjectRotationalMass1D::UpdateGraphics(const VisualizationSett
 
 	CObjectRotationalMass1D* cObject = (CObjectRotationalMass1D*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	Vector3D refPos3D = cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization);
-	Float3 refPos3DF; refPos3DF.CopyFrom(refPos3D);
-	Matrix3DF A; A.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
+	Float3 pos3DF; //=refPos3DF in CObjectRotationalMass1D!
+	pos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization));
+	Float3 refPos3DF;
+	refPos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Reference));
+	Matrix3DF Rot3DF;
+	Rot3DF.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
+	Matrix3DF RefRot3DF;
+	RefRot3DF.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Reference));
 
-	//transform graphics data with rigid body transformation (includes lines, triangles, points, ...)
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, A, itemID);
+	bool useContourColor = ((Index)visualizationSettings.contour.outputVariable & (Index)cObject->GetOutputVariableTypes()) && visualizationSettings.contour.rigidBodiesColored;
+	if (useContourColor)
+	{
+		Float3 refPos3DF;
+		refPos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Reference));
 
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "", currentColor); }
+		Float3 vel3DF(0.f);		//global
+		Float3 angVel3DF;	//global
+		if (visualizationSettings.contour.outputVariable == OutputVariableType::AngularVelocity ||
+			visualizationSettings.contour.outputVariable == OutputVariableType::AngularVelocityLocal)
+		{
+			angVel3DF.CopyFrom(cObject->GetAngularVelocity(Vector3D(0.), ConfigurationType::Visualization));
+		}
+		//transform graphics data with rigid body transformation (includes lines, triangles, points, ...) AND set contour color
+		EXUvis::AddBodyGraphicsDataColored(graphicsData, vSystem->graphicsData, pos3DF, Rot3DF, refPos3DF, RefRot3DF,
+			vel3DF, angVel3DF, itemID, visualizationSettings, useContourColor);
+	}
+	else //fast track
+	{
+		EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, pos3DF, Rot3DF, itemID);
+	}
+
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(pos3DF, vSystem, itemID, "", currentColor); }
 }
 
 //! Update visualizationSystem -> graphicsData for item
@@ -614,14 +651,41 @@ void VisualizationObjectRigidBody::UpdateGraphics(const VisualizationSettings& v
 
 	CObjectRigidBody* cObject = (CObjectRigidBody*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	Vector3D refPos3D = cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization);
-	Float3 refPos3DF; refPos3DF.CopyFrom(refPos3D);
-	Matrix3DF A; A.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
+	Float3 pos3DF;
+	pos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization));
+	Float3 refPos3DF;
+	refPos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Reference));
+	Matrix3DF Rot3DF;
+	Rot3DF.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
+	Matrix3DF RefRot3DF;
+	RefRot3DF.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Reference));
 
-	//transform graphics data with rigid body transformation (includes lines, triangles, points, ...)
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, A, itemID);
+	bool useContourColor = ((Index)visualizationSettings.contour.outputVariable & (Index)cObject->GetOutputVariableTypes()) && visualizationSettings.contour.rigidBodiesColored;
+	if (useContourColor)
+	{
+		Float3 refPos3DF;
+		refPos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Reference));
 
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "", currentColor); }
+		Float3 vel3DF;		//global
+		Float3 angVel3DF;	//global
+		if (visualizationSettings.contour.outputVariable == OutputVariableType::Velocity ||
+			visualizationSettings.contour.outputVariable == OutputVariableType::VelocityLocal ||
+			visualizationSettings.contour.outputVariable == OutputVariableType::AngularVelocity ||
+			visualizationSettings.contour.outputVariable == OutputVariableType::AngularVelocityLocal)
+		{
+			vel3DF.CopyFrom(cObject->GetVelocity(Vector3D(0.), ConfigurationType::Visualization));
+			angVel3DF.CopyFrom(cObject->GetAngularVelocity(Vector3D(0.), ConfigurationType::Visualization));
+		}
+		//transform graphics data with rigid body transformation (includes lines, triangles, points, ...) AND set contour color
+		EXUvis::AddBodyGraphicsDataColored(graphicsData, vSystem->graphicsData, pos3DF, Rot3DF, refPos3DF, RefRot3DF,
+			vel3DF, angVel3DF, itemID, visualizationSettings, useContourColor);
+	}
+	else //fast track
+	{
+		EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, pos3DF, Rot3DF, itemID);
+	}
+
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(pos3DF, vSystem, itemID, "", currentColor); }
 
 }
 
@@ -633,17 +697,41 @@ void VisualizationObjectRigidBody2D::UpdateGraphics(const VisualizationSettings&
 
 	CObjectRigidBody2D* cObject = (CObjectRigidBody2D*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	Vector3D refPos3D = cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization);
+	Float3 pos3DF;
+	pos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization));
 	Float3 refPos3DF;
-	refPos3DF.CopyFrom(refPos3D);
+	refPos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Reference));
+	Matrix3DF Rot3DF;
+	Rot3DF.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
+	Matrix3DF RefRot3DF;
+	RefRot3DF.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Reference));
 
-	Matrix3DF A;
-	A.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
+	bool useContourColor = ((Index)visualizationSettings.contour.outputVariable & (Index)cObject->GetOutputVariableTypes()) && visualizationSettings.contour.rigidBodiesColored;
+	if (useContourColor)
+	{
+		Float3 refPos3DF;
+		refPos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Reference));
 
-	//transform graphics data with rigid body transformation (includes lines, triangles, points, ...)
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, A, itemID);
+		Float3 vel3DF;		//global
+		Float3 angVel3DF;	//global
+		if (visualizationSettings.contour.outputVariable == OutputVariableType::Velocity ||
+			visualizationSettings.contour.outputVariable == OutputVariableType::VelocityLocal ||
+			visualizationSettings.contour.outputVariable == OutputVariableType::AngularVelocity ||
+			visualizationSettings.contour.outputVariable == OutputVariableType::AngularVelocityLocal)
+		{
+			vel3DF.CopyFrom(cObject->GetVelocity(Vector3D(0.), ConfigurationType::Visualization));
+			angVel3DF.CopyFrom(cObject->GetAngularVelocity(Vector3D(0.), ConfigurationType::Visualization));
+		}
+		//transform graphics data with rigid body transformation (includes lines, triangles, points, ...) AND set contour color
+		EXUvis::AddBodyGraphicsDataColored(graphicsData, vSystem->graphicsData, pos3DF, Rot3DF, refPos3DF, RefRot3DF,
+			vel3DF, angVel3DF, itemID, visualizationSettings, useContourColor);
+	}
+	else //fast track
+	{
+		EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, pos3DF, Rot3DF, itemID);
+	}
 
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "", currentColor); }
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(pos3DF, vSystem, itemID, "", currentColor); }
 
 }
 
@@ -743,7 +831,7 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 				if (EXUstd::IsOfTypeAndNotNone(cObject->GetOutputVariableTypesSuperElement(meshNodeIndex), visualizationSettings.contour.outputVariable))
 				{
 					cObject->GetOutputVariableSuperElement(visualizationSettings.contour.outputVariable, meshNodeIndex, ConfigurationType::Visualization, contourValue); //memory allocation!
-					ComputeContourColor< Vector>(contourValue, visualizationSettings.contour.outputVariable, 
+					EXUvis::ComputeContourColor< Vector>(contourValue, visualizationSettings.contour.outputVariable, 
 						visualizationSettings.contour.outputVariableComponent, colors[j]);
 				}
 
@@ -758,7 +846,7 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 			normals[1] = n;
 			normals[2] = n;
 
-			vSystem->graphicsData.AddTriangle(nodes, normals, colors, itemID);
+			vSystem->graphicsData.AddTriangle(nodes, normals, colors, itemID, true);
 		}
 	}
 
@@ -788,13 +876,12 @@ void VisualizationObjectGround::UpdateGraphics(const VisualizationSettings& visu
 
 	CObjectGround* cObject = (CObjectGround*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	Vector3D refPos3D = cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization);
-	Float3 refPos3DF;
-	refPos3DF.CopyFrom(refPos3D); // ({ (float)pos3D[0], (float)pos3D[1], (float)pos3D[2] });
+	Float3 pos3DF;
+	pos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization)); 
 
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemID);
+	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, pos3DF, EXUmath::unitMatrix3DF, itemID);
 
-	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(refPos3D, vSystem, itemID, "", currentColor); }
+	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(pos3DF, vSystem, itemID, "", currentColor); }
 }
 
 
@@ -832,29 +919,29 @@ void VisualizationObjectANCFCable2DBaseUpdateGraphics(const VisualizationSetting
 		{
 			if (drawHeight == 0. || drawVertical)
 			{
-				ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
+				EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
 				interpValues[0] = item.color1[0]; //store this contour plot value
 
 				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
-				ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
+				EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 				interpValues[1] = item.color2[0]; //store this contour plot value
 			}
 			else
 			{
 				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.,-0.5*drawHeight,0. }), ConfigurationType::Visualization, value, itemNumber);
-				ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
+				EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
 				interpValues[0] = item.color1[0]; //store this contour plot value
 
 				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,-0.5*drawHeight,0. }), ConfigurationType::Visualization, value, itemNumber);
-				ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
+				EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 				interpValues[1] = item.color2[0]; //store this contour plot value
 
 				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.,0.5*drawHeight,0. }), ConfigurationType::Visualization, value, itemNumber);
-				ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
+				EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
 				interpValues[2] = item.color1[0]; //store this contour plot value
 
 				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,0.5*drawHeight,0. }), ConfigurationType::Visualization, value, itemNumber);
-				ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
+				EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 				interpValues[3] = item.color2[0]; //store this contour plot value
 
 			}
@@ -920,9 +1007,9 @@ void VisualizationObjectANCFCable2DBaseUpdateGraphics(const VisualizationSetting
 					else
 					{
 						cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, pLoc0, ConfigurationType::Visualization, value, itemNumber);
-						ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
+						EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
 						cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, pLoc1, ConfigurationType::Visualization, value, itemNumber);
-						ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
+						EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 						val1 = item.color1[0];
 						val2 = item.color2[0];
 					}
@@ -1101,12 +1188,12 @@ void VisualizationObjectBeamGeometricallyExact2D::UpdateGraphics(const Visualiza
 		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
 		if (visualizationSettings.contour.outputVariableComponent < value.NumberOfItems())
 		{
-			ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
+			EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
 			//value1 = (float)value[visualizationSettings.contour.outputVariableComponent]; //value at x=0
 			//item.color1 = Float4({ 0.,0.,0.,vSystem->contourPlotFlag }); //transparency of -2. indicates a contour value ... hack!
 
 			cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
-			ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
+			EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 
 			//value2 = (float)value[visualizationSettings.contour.outputVariableComponent]; //value at x=L
 			//item.color2 = Float4({ 0.,0.,0.,vSystem->contourPlotFlag }); //transparency of -2. indicates a contour value ... hack!

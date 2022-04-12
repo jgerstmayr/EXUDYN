@@ -11,12 +11,20 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+    exudynTestGlobals.isPerformanceTest = False
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 from math import sin, cos, pi
@@ -129,7 +137,7 @@ SC.visualizationSettings.general.drawCoordinateSystem=False
 SC.visualizationSettings.general.drawWorldBasis=True
 
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
     if 'renderState' in exu.sys:
         SC.SetRenderState(exu.sys[ 'renderState' ])
@@ -152,7 +160,7 @@ exudynTestGlobals.testResult = result
 
 
 #%%+++++++++++++++++++++++++++++
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 

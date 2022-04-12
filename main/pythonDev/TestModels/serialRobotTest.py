@@ -11,28 +11,32 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.rigidBodyUtilities import *
-from exudyn.graphicsDataUtilities import *
 from exudyn.robotics import *
 from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration
-
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
-
 
 import numpy as np
 from numpy import linalg as LA
 
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-#exudynTestGlobals.useGraphics = False
-if exudynTestGlobals.useGraphics:
+#useGraphics = False
+if useGraphics:
     sensorWriteToFile = True
 else:
     sensorWriteToFile = False
@@ -223,7 +227,7 @@ SC.visualizationSettings.openGL.multiSampling=4
 tEnd = 0.2 #0.2 for testing
 h = 0.001
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     tEnd = 0.2
     # tEnd = 1.2
 
@@ -234,7 +238,7 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.solutionSettings.solutionWritePeriod = h
 simulationSettings.solutionSettings.sensorsWritePeriod = h
-simulationSettings.solutionSettings.writeSolutionToFile = exudynTestGlobals.useGraphics
+simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
 # simulationSettings.timeIntegration.simulateInRealtime = True
 # simulationSettings.timeIntegration.realtimeFactor = 0.25
 
@@ -252,7 +256,7 @@ simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=
 
 exu.SolveDynamic(mbs, simulationSettings)
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
     if 'renderState' in exu.sys:
         SC.SetRenderState(exu.sys['renderState'])
@@ -275,7 +279,7 @@ exudynTestGlobals.testResult = VSum(measuredTorques)
 
 #exu.Print('error=', exudynTestGlobals.testError)
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     from exudyn.plot import PlotSensor
     
     PlotSensor(mbs, sJointTorque, components=2, closeAll=True, yLabel='joint torques (Nm)', title='joint torques')

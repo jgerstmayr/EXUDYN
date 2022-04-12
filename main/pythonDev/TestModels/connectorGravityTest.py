@@ -15,9 +15,19 @@ sys.path.append('../TestModels')
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
-
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #create an environment for mini example
 SC = exu.SystemContainer()
@@ -79,7 +89,7 @@ simulationSettings.timeIntegration.verboseMode = 1
 
 # SC.visualizationSettings.nodes.drawNodesAsPoint = False
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()              #start graphics visualization
     mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
 
@@ -88,7 +98,7 @@ if exudynTestGlobals.useGraphics:
 #gives 7 digits of accuracy for tEnd=1e6, h=1e3:
 exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.RK67)
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
     exu.StopRenderer()               #safely close rendering window!
 

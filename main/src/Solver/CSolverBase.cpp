@@ -34,6 +34,10 @@
 #include <fstream>
 #include "Main/rendererPythonInterface.h" //for regular call to PyExecuteQueue(...)
 
+extern STDstring GetExudynPythonVersionString(); //for sensor/solution file headers
+extern STDstring GetExudynBuildVersionString(bool addDetails); //for sensor/solution file headers
+
+
 namespace py = pybind11;	//for py::object
 
 #ifdef USE_NGSOLVE_TASKMANAGER
@@ -518,7 +522,7 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 		{
 			Real t = computationalSystem.GetSystemData().GetCData().GetCurrent().GetTime();
 			Real tCPU = EXUstd::GetTimeInSeconds();
-			STDstring str = "STEP " + EXUstd::ToString(it.currentStepIndex) + " (stopped)";
+			STDstring str = "STEP" + EXUstd::ToString(it.currentStepIndex) + " (stopped)";
 			if (!IsStaticSolver()) { str += ", t = " + EXUstd::ToString(t) + "s"; }
 			else { str += ", factor = " + EXUstd::ToString(ComputeLoadFactor(simulationSettings)); }
 
@@ -1546,13 +1550,14 @@ void CSolverBase::WriteSolutionFileHeader(CSystem& computationalSystem, const Si
 			if (isStatic) { solFile << "static "; }
 			solFile << "solver solution file\n";
 			solFile << "#simulation started=" << EXUstd::GetDateTimeString() << "\n";
-			solFile << "#columns contain: time, ODE2 displacements";
-			if (solutionSettings.exportVelocities) { solFile << ", ODE2 velocities"; }
-			if (solutionSettings.exportAccelerations) { solFile << ", ODE2 accelerations"; }
+			solFile << "#columns contain: time";
+			if (nODE2) { solFile << ", ODE2 displacements"; }
+			if (solutionSettings.exportVelocities && nODE2) { solFile << ", ODE2 velocities"; }
+			if (solutionSettings.exportAccelerations && nODE2) { solFile << ", ODE2 accelerations"; }
 			if (nODE1) { solFile << ", ODE1 coordinates"; } //currently not available, but for future solFile structure necessary!
 			if (nVel1) { solFile << ", ODE1 velocities"; }
-			if (solutionSettings.exportAlgebraicCoordinates) { solFile << ", AE coordinates"; }
-			if (solutionSettings.exportDataCoordinates) { solFile << ", ODE2 velocities"; }
+			if (solutionSettings.exportAlgebraicCoordinates && nAE) { solFile << ", AE coordinates"; }
+			if (solutionSettings.exportDataCoordinates && nData) { solFile << ", Data coordinates"; }
 			solFile << "\n";
 
 			solFile << "#number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [" <<
@@ -1564,7 +1569,8 @@ void CSolverBase::WriteSolutionFileHeader(CSystem& computationalSystem, const Si
 			if (!isStatic) { solFile << "#number of time steps (planned) = " << timeint.numberOfSteps << "\n"; }
 			else { solFile << "#number of load steps (planned) = " << staticSolver.numberOfLoadSteps << "\n"; }
 
-			solFile << "#Exudyn version = " << EXUstd::exudynVersion << "\n";
+			//solFile << "#Exudyn version = " << EXUstd::exudynVersion << "\n";
+			solFile << "#Exudyn version = " << GetExudynBuildVersionString(true) << "\n";
 			solFile << "#\n"; //empty line for extension ...
 
 			if (solutionSettings.solutionInformation.length())
@@ -1778,7 +1784,8 @@ void CSolverBase::WriteSensorsFileHeader(CSystem& computationalSystem, const Sim
 			item->GetSensorValues(computationalSystem.GetSystemData(), output.sensorValuesTemp, ConfigurationType::Current); //only for checking size of sensor output, computed values not used
 
 			(*sFile) << "#number of sensor values = " << output.sensorValuesTemp.NumberOfItems() << "\n";
-			(*sFile) << "#Exudyn version = " << EXUstd::exudynVersion << "\n";
+			//(*sFile) << "#Exudyn version = " << EXUstd::exudynVersion << "\n";
+			(*sFile) << "#Exudyn version = " << GetExudynBuildVersionString(true) << "\n";
 			(*sFile) << "#\n";
 		}
 		else

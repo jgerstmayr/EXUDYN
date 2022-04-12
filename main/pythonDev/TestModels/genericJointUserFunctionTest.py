@@ -9,17 +9,24 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.FEM import *
-from exudyn.graphicsDataUtilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -113,7 +120,7 @@ simulationSettings.displayComputationTime = False
 
 
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
@@ -134,7 +141,7 @@ exudynTestGlobals.testError = u - (1.1878327690760586) #2020-04-22: 1.1878327690
 exudynTestGlobals.testResult = u
 
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     #SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 

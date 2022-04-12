@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1030, 
-Number of resolved issues = 870 (28 in current minor version), 
-Exudyn version = 1.2.28, 
-last change =  2022-04-04
+Number of issues = 1041, 
+Number of resolved issues = 879 (37 in current minor version), 
+Exudyn version = 1.2.37, 
+last change =  2022-04-12
 
 
 <table style = "width:100%">
@@ -39,6 +39,70 @@ last change =  2022-04-04
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
+    <td>1038</td>
+    <td>simulateInRealtime  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> put waitMicroSeconds into settings</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-07</td>
+    <td>2022-06-06</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1037</td>
+    <td>sensor files        </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add file footer information same as in coordinatesSolutionFile including CPUtimeElapsed with 3 digits</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-07</td>
+    <td>2022-06-06</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1035</td>
+    <td>TestModels          </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> change modelUnitTests imports in TestModels such that they also work in case that example is run outside TestModels directory</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-04-07</td>
+    <td>2022-06-06</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1032</td>
+    <td>ObjectConnectorCoordinateVector</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> cleanup, consider better UF and check implementation with theory (jac?)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-04</td>
+    <td>2022-06-03</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
     <td>1026</td>
     <td>Save as PNG         </td>
     <td>JG</td>
@@ -48,38 +112,6 @@ last change =  2022-04-04
     <td></td>
     <td>2022-04-02</td>
     <td>2022-06-01</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1024</td>
-    <td>PERFORM_UNIT_TESTS  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> set PERFORM_UNIT_TESTS for P3.7, compile P3.6 32/64bits without AVX</td>
-    <td>CHANGE</td>
-    <td></td>
-    <td>2022-03-31</td>
-    <td>2022-05-30</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1021</td>
-    <td>twitter             </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add twitter account for exudyn</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-03-31</td>
-    <td>2022-05-30</td>
     <td></td>
     <td></td>
     <td></td>
@@ -326,7 +358,7 @@ last change =  2022-04-04
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0937</td>
     <td>GeneralContact      </td>
     <td>JG</td>
@@ -342,7 +374,7 @@ last change =  2022-04-04
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0936</td>
     <td>GeneralContact      </td>
     <td>JG</td>
@@ -358,7 +390,7 @@ last change =  2022-04-04
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0935</td>
     <td>GeneralContact      </td>
     <td>JG</td>
@@ -374,7 +406,7 @@ last change =  2022-04-04
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0927</td>
     <td>GeneralContact ANCF </td>
     <td>JG</td>
@@ -2599,6 +2631,118 @@ last change =  2022-04-04
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1040</td>
+    <td>contour bodies      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> show contour colors for GraphicsData added to bodies</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-10</td>
+    <td>2022-06-09</td>
+    <td>2022-04-10 17:21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>option turned on by default, but may slow down visualization for larger models; turn off in case of problems...</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1039</td>
+    <td>mesh edges          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> show mesh edges independently of visualization mode (edges on/off) - allowing to show mesh edges but not other graphics edges</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-10</td>
+    <td>2022-06-09</td>
+    <td>2022-04-10 11:42</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1036</td>
+    <td>solution file       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fixed inconsistent information in line 3 of coordinatesSolutionFile: ODE2 coordinates</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-04-07</td>
+    <td>2022-06-06</td>
+    <td>2022-04-07 20:30</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1034</td>
+    <td>solution and sensor files</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add Python version to e.g. Exudyn version = 1.x.y Python3.9 / Python3.6(32bits) in coordinatesSolutionFile and sensor output files to identify exactly the versions and platform used for computation; check also Parameter and optimization output files for updated information</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-07</td>
+    <td>2022-06-06</td>
+    <td>2022-04-07 12:02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1033</td>
+    <td>InteractiveDialog   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> also add tkInter DoubleVar for sliders to make bi-directional interaction simpler (but not needed)</td>
+    <td>EXTENISON</td>
+    <td></td>
+    <td>2022-04-04</td>
+    <td>2022-06-03</td>
+    <td>2022-04-04 21:26</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1031</td>
+    <td>InteractiveDialog   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extended with option addLabelStringVariables to be able to modify strings in text labels</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-04</td>
+    <td>2022-06-03</td>
+    <td>2022-04-04 17:20</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1030</td>
+    <td>AVX2                </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change both Python 3.6 32bit/46bit versions to compilation without AVX</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-04-04</td>
+    <td>2022-06-03</td>
+    <td>2022-04-04 15:39</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1029</td>
     <td>ContactFrictionCircleCable2D</td>
     <td>JG</td>
@@ -2663,6 +2807,22 @@ last change =  2022-04-04
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1024</td>
+    <td>PERFORM_UNIT_TESTS  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> set PERFORM_UNIT_TESTS for P3.7 instead of P3.6</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-03-31</td>
+    <td>2022-05-30</td>
+    <td>2022-04-04 15:38</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1023</td>
     <td>remove /Zi in MSVC  </td>
     <td>JG</td>
@@ -2693,6 +2853,22 @@ last change =  2022-04-04
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1021</td>
+    <td>twitter             </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add twitter account for exudyn: https://twitter.com/RExudyn</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-31</td>
+    <td>2022-05-30</td>
+    <td>2022-04-12 16:28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>Follow me!</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1020</td>

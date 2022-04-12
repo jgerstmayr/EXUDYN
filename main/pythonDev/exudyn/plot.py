@@ -443,7 +443,12 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
         yLabel = ''
         if allVariablesSame:
             yLabel = checkStr
-        
+        else:
+            for (i, tt) in enumerate(sensorTypes):
+                yLabel += tt
+                if i < len(sensorTypes)-1:
+                    yLabel += ', '
+    
     #+++++++++++++++++++++++++++++++++++++++++++
     #finally plot:
     for i in range(nSensors):
@@ -530,13 +535,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
                 markerSize = markerSizes[i]
             else:
                 raise ValueError('PlotSensor: markerSizes must be either a single float for all sensor or list of marker sizes with length >= number of sensors / components')
-        
-        #extract additional paramters
-        if not 'yLabel' in kwargs and not allVariablesSame:
-            yLabel += variableStr
-            if i < nSensors-1:
-                yLabel += ', '
-        
+                
         #+++++++++++++++++++++++++++++++++++        
         #add factor and offset if defined:
         if factorOffsetUsed:

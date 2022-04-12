@@ -10,7 +10,7 @@
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #import is necessary, otherwise the solvers cannot be called
 import exudyn

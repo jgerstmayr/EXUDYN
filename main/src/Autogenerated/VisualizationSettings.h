@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -185,7 +185,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -208,9 +208,11 @@ public: // AUTO:
   Index colorBarTiling;                           //!< AUTO: number of tiles (segements) shown in the colorbar for the contour plot
   float maxValue;                                 //!< AUTO: maximum value for contour plot; set manually, if automaticRange == False
   float minValue;                                 //!< AUTO: minimum value for contour plot; set manually, if automaticRange == False
+  bool nodesColored;                              //!< AUTO: if true, the contour color is also applied to nodes (except mesh nodes), otherwise node drawing is not influenced by contour settings
   OutputVariableType outputVariable;              //!< AUTO: selected contour plot output variable type; select OutputVariableType.\_None to deactivate contour plotting.
-  int outputVariableComponent;                    //!< AUTO: select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; for stresses, 6 components are available, see OutputVariableType description; to draw the norm of a outputVariable, set component to -1; if a certain component is not available by certain objects or nodes, no value is drawn (using default color)
+  Index outputVariableComponent;                  //!< AUTO: select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; for stresses, 6 components are available, see OutputVariableType description; to draw the norm of a outputVariable, set component to -1; if a certain component is not available by certain objects or nodes, no value is drawn (using default color)
   bool reduceRange;                               //!< AUTO: if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)
+  bool rigidBodiesColored;                        //!< AUTO: if true, the contour color is also applied to triangular faces of rigid bodies and mass points, otherwise the rigid body drawing are not influenced by contour settings; for general rigid bodies (except for ObjectGround), Position, Displacement, DisplacementLocal(=0), Velocity, VelocityLocal, AngularVelocity, and AngularVelocityLocal are available; may slow down visualization!
   bool showColorBar;                              //!< AUTO: show the colour bar with minimum and maximum values for the contour plot
 
 
@@ -223,9 +225,11 @@ public: // AUTO:
     colorBarTiling = 12;
     maxValue = 1;
     minValue = 0;
+    nodesColored = true;
     outputVariable = OutputVariableType::_None;
     outputVariableComponent = 0;
     reduceRange = true;
+    rigidBodiesColored = true;
     showColorBar = true;
   };
 
@@ -249,9 +253,11 @@ public: // AUTO:
     os << "  colorBarTiling = " << colorBarTiling << "\n";
     os << "  maxValue = " << maxValue << "\n";
     os << "  minValue = " << minValue << "\n";
+    os << "  nodesColored = " << nodesColored << "\n";
     os << "  outputVariable = " << GetOutputVariableTypeString(outputVariable) << "\n";
     os << "  outputVariableComponent = " << outputVariableComponent << "\n";
     os << "  reduceRange = " << reduceRange << "\n";
+    os << "  rigidBodiesColored = " << rigidBodiesColored << "\n";
     os << "  showColorBar = " << showColorBar << "\n";
     os << "\n";
   }
@@ -271,7 +277,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -362,7 +368,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -453,7 +459,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -529,7 +535,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -618,7 +624,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -687,7 +693,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -765,7 +771,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -834,7 +840,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -920,7 +926,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1007,7 +1013,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1062,6 +1068,8 @@ public: // AUTO:
   bool shadeModelSmooth;                          //!< AUTO: True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces
   bool showFaceEdges;                             //!< AUTO: show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation
   bool showFaces;                                 //!< AUTO: show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation
+  bool showMeshEdges;                             //!< AUTO: show edges of finite elements; independent of showFaceEdges
+  bool showMeshFaces;                             //!< AUTO: show faces of finite elements; independent of showFaces
   bool textLineSmooth;                            //!< AUTO: draw lines for representation of text smooth
   float textLineWidth;                            //!< AUTO: width of lines used for representation of text
 
@@ -1107,6 +1115,8 @@ public: // AUTO:
     shadeModelSmooth = true;
     showFaceEdges = false;
     showFaces = true;
+    showMeshEdges = true;
+    showMeshFaces = true;
     textLineSmooth = false;
     textLineWidth = 1.f;
   };
@@ -1190,6 +1200,8 @@ public: // AUTO:
     os << "  shadeModelSmooth = " << shadeModelSmooth << "\n";
     os << "  showFaceEdges = " << showFaceEdges << "\n";
     os << "  showFaces = " << showFaces << "\n";
+    os << "  showMeshEdges = " << showMeshEdges << "\n";
+    os << "  showMeshFaces = " << showMeshFaces << "\n";
     os << "  textLineSmooth = " << textLineSmooth << "\n";
     os << "  textLineWidth = " << textLineWidth << "\n";
     os << "\n";
@@ -1210,7 +1222,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1300,7 +1312,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1319,7 +1331,7 @@ class VSettingsInteractive // AUTO:
 {
 public: // AUTO: 
   Float4 highlightColor;                          //!< AUTO: cRGB color for highlighted item; 4th value is alpha-transparency
-  int highlightItemIndex;                         //!< AUTO: index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted
+  Index highlightItemIndex;                       //!< AUTO: index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted
   ItemType highlightItemType;                     //!< AUTO: item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)
   Index highlightMbsNumber;                       //!< AUTO: index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
   Float4 highlightOtherColor;                     //!< AUTO: cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
@@ -1406,7 +1418,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-02 (last modfied)
+* @date         AUTO: 2022-04-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

@@ -13,17 +13,24 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
 
-if exudynTestGlobals.useGraphics: 
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+if useGraphics: 
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
 
@@ -223,12 +230,12 @@ for testCases in rangeTests:
     SC.visualizationSettings.general.autoFitScene = False
     #mbs.WaitForUserToContinue()
     
-    if exudynTestGlobals.useGraphics: 
+    if useGraphics: 
         exu.StartRenderer()
    
     exu.SolveDynamic(mbs, simulationSettings)
         
-    if exudynTestGlobals.useGraphics: 
+    if useGraphics: 
         #+++++++++++++++++++++++++++++++++++++
         #animate solution
 #        mbs.WaitForUserToContinue
@@ -251,7 +258,7 @@ exudynTestGlobals.testResult = solutionSliderCrankIndex2
 
 
 #plotResults = True#constrainGroundBody #comparison only works in case of fixed ground
-plotResults = exudynTestGlobals.useGraphics#constrainGroundBody #comparison only works in case of fixed ground
+plotResults = useGraphics#constrainGroundBody #comparison only works in case of fixed ground
 if plotResults:
     dataIndex2 = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
     #dataMatlab = np.loadtxt('slidercrankRefSolM0.1_tol1e-4.txt', comments='#', delimiter=',') #this is quite inaccurate

@@ -10,17 +10,25 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
 from exudyn.itemInterface import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
 
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 #plots
-if exudynTestGlobals.useGraphics: 
+if useGraphics: 
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
 
@@ -485,7 +493,7 @@ SC.visualizationSettings.window.renderWindowSize=[1600,1024]
 ##requires a subfolder 'images'
 #simulationSettings.solutionSettings.recordImagesInterval=endTime/200
 
-if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+if useGraphics: #only start graphics once, but after background is set
     exu.StartRenderer()
     
     if displaySimulation:
@@ -520,7 +528,7 @@ if computeDynamic:
     exu.SolveDynamic(mbs, simulationSettings)
 
     
-if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+if useGraphics: #only start graphics once, but after background is set
     if displaySimulation:
         SC.WaitForRenderEngineStopFlag()
         

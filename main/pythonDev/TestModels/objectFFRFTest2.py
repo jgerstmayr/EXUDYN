@@ -9,30 +9,36 @@
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
-
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.FEM import *
-from exudyn.graphicsDataUtilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+import numpy as np
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-import numpy as np
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
 fem = FEMinterface()
 inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
-#if exudynTestGlobals.useGraphics:
+#if useGraphics:
 #    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
 
 nodes=fem.ImportFromAbaqusInputFile(inputFileName+'.inp', typeName='Instance', name='rotor-1')
@@ -163,7 +169,7 @@ simulationSettings.solutionSettings.writeSolutionToFile=False
 
 h=1e-4
 tEnd = 0.0025
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     tEnd = 0.0025
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -185,7 +191,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD
 #simulationSettings.solutionSettings.recordImagesInterval = 0.0002
 #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
     if 'lastRenderState' in vars():
         SC.SetRenderState(lastRenderState) #load last model view
@@ -204,14 +210,14 @@ exu.Print('solution of ObjectFFRFtest2=',result)
 exudynTestGlobals.testError = result - (0.03552188069017914) #2022-02-20: changed to internal sensor storage; 2020-05-26 (tEnd=0.0025, h=1e-4): 0.03553746369388042 
 exudynTestGlobals.testResult = result
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
     lastRenderState = SC.GetRenderState() #store model view for next simulation
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     from exudyn.plot import PlotSensor
     
     PlotSensor(mbs, [fileDir+'nMidDisplacementCMS8.txt',sDisp], components=1, closeAll=True)

@@ -10,15 +10,21 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 import numpy as np
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -148,10 +154,10 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
 
-# exudynTestGlobals.useGraphics=False
+# useGraphics=False
 tEnd = 1
 h = 1e-3
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     tEnd = 1
     simulationSettings.timeIntegration.simulateInRealtime = True
     simulationSettings.timeIntegration.realtimeFactor = 3
@@ -167,7 +173,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8 #SHOULD
 
 SC.visualizationSettings.nodes.showBasis=True
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
@@ -183,7 +189,7 @@ exudynTestGlobals.testError = u - (-1.0825265797698322)
 exudynTestGlobals.testResult = u
 
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 

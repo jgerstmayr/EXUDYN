@@ -14,17 +14,23 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.FEM import *
-from exudyn.graphicsDataUtilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -282,7 +288,7 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 
 tEnd = 0.1
 h=1e-4
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     tEnd = 2
     
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -309,7 +315,7 @@ SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.window.renderWindowSize = [1920,1080]
 SC.visualizationSettings.openGL.multiSampling = 4
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
     if 'lastRenderState' in vars():
         SC.SetRenderState(lastRenderState) #load last model view
@@ -328,14 +334,14 @@ exu.Print("solution of driveTrainTest=", u)
 exudynTestGlobals.testError = u - (0.8813172426357362 - 0.8813173353288565) #2020-05-28: 0.8813172426357362 - 0.8813173353288565
 exudynTestGlobals.testResult = u
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
     lastRenderState = SC.GetRenderState() #store model view for next simulation
 
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     from exudyn.plot import PlotSensor
     
     PlotSensor(mbs, sensorNumbers=[sCrankPos, sCrankAngVel, sCrankAngle, sFlyWheelAngVel, sFlyWheelAngle], 

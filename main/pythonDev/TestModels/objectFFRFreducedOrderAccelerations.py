@@ -8,23 +8,28 @@
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
-
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.FEM import *
-from exudyn.graphicsDataUtilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+import numpy as np
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
-
-import numpy as np
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -32,7 +37,7 @@ import numpy as np
 fem = FEMinterface()
 #inputFileName = 'C:/DATA/cpp/EXUDYN_git/main/pythonDev/TestModels/testData/rotorDiscTest' #runTestSuite.py is at another directory
 inputFileName = 'testData/rotorDiscTest' #runTestSuite.py is at another directory
-#if exudynTestGlobals.useGraphics:
+#if useGraphics:
 #    inputFileName = 'testData/rotorDiscTest'        #if executed in current directory
 
 nodes=fem.ImportFromAbaqusInputFile(inputFileName+'.inp', typeName='Instance', name='rotor-1')
@@ -186,10 +191,10 @@ simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrde
 
 h=1e-4
 tEnd = 0.001
-#exudynTestGlobals.useGraphics = False
-if exudynTestGlobals.useGraphics:
+#useGraphics = False
+if useGraphics:
     tEnd = 0.1
-    #if exudynTestGlobals.useGraphics:
+    #if useGraphics:
 #    tEnd = 0.1
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -211,7 +216,7 @@ simulationSettings.solutionSettings.writeSolutionToFile = False
 #simulationSettings.solutionSettings.recordImagesInterval = 0.0002
 #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
     if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
 
@@ -229,14 +234,14 @@ exudynTestGlobals.testError = (result - (61576.266114362006 ))/(2*result) #2021-
 exudynTestGlobals.testResult = result/(2*61576.266114362006)
 exu.Print('ObjectFFRFreducedOrderAccelerations test result=',exudynTestGlobals.testResult)
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     #SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #plot results
-if exudynTestGlobals.useGraphics:
+if useGraphics:
         
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker

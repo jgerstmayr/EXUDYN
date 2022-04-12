@@ -238,11 +238,9 @@ if False:
     #C:\DATA\cpp\EXUDYN_git\main\bin\WorkingRelease64P37
     sys.path.append('C:/DATA/cpp/EXUDYN_git/main/bin/WorkingRelease64P37') #for exudyn, itemInterface and from exudyn.utilities import *
     import exudyn as exu
-    
-    from exudyn.itemInterface import *
     from exudyn.utilities import *
-    from exudyn.rigidBodyUtilities import *
     from exudyn.FEM import *
+
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
 

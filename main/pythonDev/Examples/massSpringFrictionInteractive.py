@@ -135,7 +135,7 @@ nodeCoordinateMarker2  = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, c
 useStaticFriction = True
 if useStaticFriction:
     reg = 1e-4
-    def UFspring(mbs, t, u, v, k, d, offset, frictionForce, frictionProportionalZone):
+    def UFspring(mbs, t, itemNumber, u, v, k, d, offset, frictionForce, frictionProportionalZone):
         return RegularizedFriction(vel=v, 
                                 muDynamic=mbs.variables['dynamicFriction'], muStaticOffset=mbs.variables['staticFrictionOffset'], 
                                 velStatic=frictionProportionalZone, velDynamic=k, muViscous=0)

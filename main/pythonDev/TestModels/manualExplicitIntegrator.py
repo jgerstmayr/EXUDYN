@@ -9,13 +9,21 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
 import exudyn as exu
 from exudyn.itemInterface import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -97,12 +105,13 @@ SC.visualizationSettings.bodies.defaultSize = [dSize, dSize, dSize]
 #simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-9
 simulationSettings.staticSolver.verboseMode = 1
 simulationSettings.staticSolver.verboseModeFile = 2
+simulationSettings.solutionSettings.solverInformationFileName = 'solution/solverInformation.txt'
 
 #simulationSettings.staticSolver.newton.absoluteTolerance = 1e-8
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-6 #1e-5 works for 64 elements
 simulationSettings.staticSolver.newton.maxIterations = 20 #50 for bending into circle
     
-if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+if useGraphics: #only start graphics once, but after background is set
     exu.StartRenderer()
 
 simulationSettings.staticSolver.numberOfLoadSteps = 10
@@ -198,7 +207,7 @@ exu.Print("testResult=", testRefVal + uy)
 exudynTestGlobals.testError = testRefVal + uy - (2.280183538481952-0.2204849087896498) #2020-01-16: 2.280183538481952-0.2204849087896498
 exudynTestGlobals.testResult = testRefVal + uy
 
-if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+if useGraphics: #only start graphics once, but after background is set
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 

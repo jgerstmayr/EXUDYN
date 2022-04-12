@@ -10,15 +10,23 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -95,7 +103,7 @@ for nodeType in nodeTypeList:
     mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC1]))
     mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC2]))
     
-    if exudynTestGlobals.useGraphics:
+    if useGraphics:
         sAdd = ''
         if nodeType == exu.NodeType.RotationRxyz:
             sAdd = 'Rxyz' #avoid that both sensor file names are identical
@@ -127,13 +135,13 @@ simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 #simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
 exu.SolveDynamic(mbs, simulationSettings)
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
@@ -163,7 +171,7 @@ exudynTestGlobals.testResult = u
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #compute exact solution:
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     from exudyn.plot import PlotSensor
     fileRef = '../../../docs/verification/HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt'
     PlotSensor(mbs, sCoords[0], components=[3,4,5,6], labels=['theta 0','theta 1','theta 2','theta 3'], 

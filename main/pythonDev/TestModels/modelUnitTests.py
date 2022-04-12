@@ -11,7 +11,6 @@
 
 
 from exudyn.utilities import * 
-from exudyn.itemInterface import * 
 
 #general test class for test of functions; 
 #exudyn ... must contain the exudyn module (exu)

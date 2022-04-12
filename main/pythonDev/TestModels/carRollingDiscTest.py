@@ -10,17 +10,22 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
-from exudyn.graphicsDataUtilities import *
-
-#exudynTestGlobals.useGraphics=False
 import numpy as np
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -173,7 +178,7 @@ for iWheel in range(nWheels):
     oRollingDiscs += [oRolling]
 
     strNum = str(iWheel)
-    if exudynTestGlobals.useGraphics:
+    if useGraphics:
         sAngVels+=[mbs.AddSensor(SensorBody(bodyNumber=b0, #fileName='solution/rollingDiscAngVelLocal'+strNum+'.txt', 
                                  storeInternal=True,
                                  outputVariableType = exu.OutputVariableType.AngularVelocityLocal))]
@@ -209,7 +214,7 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 tEnd = 0.5 #40#1.2
 h=0.002 #no visual differences for step sizes smaller than 0.0005
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     tEnd = 4
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
@@ -229,7 +234,7 @@ SC.visualizationSettings.nodes.basisSize = 0.015
 
 exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
@@ -242,7 +247,7 @@ exudynTestGlobals.testResult = u
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     from exudyn.plot import PlotSensor
     
     PlotSensor(mbs,sensorNumbers=sCarVel, components=[0,1,2], title='car velocitiy', closeAll=True)

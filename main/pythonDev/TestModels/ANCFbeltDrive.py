@@ -9,17 +9,23 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.beams import *
-import numpy as np
 from math import sin, cos, sqrt, pi
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -31,13 +37,6 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
                                    visualization=VObjectGround(graphicsData= [background0])))
 nGround = mbs.AddNode(NodePointGround())
 mCoordinateGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
-
-#make copy in examples
-#use 2-wheel model for TestSuite (Torque-driven, measure special node (in free span?))
-
-
-
-
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

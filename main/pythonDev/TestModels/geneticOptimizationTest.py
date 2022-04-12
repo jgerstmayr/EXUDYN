@@ -17,10 +17,21 @@ import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.processing import GeneticOptimization, ParameterVariation, PlotOptimizationResults2D
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np #for postprocessing
 import os
 from time import sleep
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 dataRef = None
 #this is the function which is repeatedly called from ParameterVariation
@@ -134,6 +145,7 @@ if __name__ == '__main__': #include this to enable parallel processing
                                          debugMode=False,
                                          useMultiProcessing=False, #may be problematic for test
                                          showProgress=False,
+                                         resultsFile = 'solution/geneticOptimizationTest.txt',
                                          )
     exu.Print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -143,7 +155,7 @@ if __name__ == '__main__': #include this to enable parallel processing
     exudynTestGlobals.testError = u - 0.0030262381366063158 #until 2022-02-20(changed to storeInternal): (0.0030262381385228617) #2020-12-18: (nElements=32) -2.7613614363986017e-05
     exudynTestGlobals.testResult = u
 
-    if exudynTestGlobals.useGraphics and False:
+    if useGraphics and False:
         # from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
         import matplotlib.pyplot as plt
 

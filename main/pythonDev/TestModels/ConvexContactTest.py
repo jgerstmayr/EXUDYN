@@ -10,13 +10,21 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
-# from exudyn.graphicsDataUtilities import *
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
@@ -79,13 +87,13 @@ sims.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolutio
 # sims.timeIntegration.newton.absoluteTolerance = 1e-8
 # sims.timeIntegration.newton.relativeTolerance = 1e-6
 
-if exudynTestGlobals.useGraphics: 
+if useGraphics: 
     sims.timeIntegration.verboseMode = 1
     sims.timeIntegration.stepInformation = 3+128+256
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 exu.SolveDynamic(mbs, sims)
-if exudynTestGlobals.useGraphics: 
+if useGraphics: 
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
@@ -93,7 +101,7 @@ sol = mbs.systemData.GetODE2Coordinates()
 exudynTestGlobals.testResult = np.sum(sol[:2])
 exu.Print('result of ConvexContactTest=',exudynTestGlobals.testResult)
 # %% 
-if exudynTestGlobals.useGraphics: 
+if useGraphics: 
     #pos = np.loadtxt('PosRoller.txt', delimiter=',', comments='#')
     pos = mbs.GetSensorStoredData(sBody)
     exu.Print('End Pos: {}'.format(pos[-1,:]))
@@ -102,7 +110,7 @@ if exudynTestGlobals.useGraphics:
     PlotSensor(mbs,sBody,[0,1,2])
     
     
-if exudynTestGlobals.useGraphics and False:
+if useGraphics and False:
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.02
     from exudyn.interactive import SolutionViewer

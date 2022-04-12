@@ -15,16 +15,22 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
-from exudyn.graphicsDataUtilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -77,7 +83,7 @@ oRolling=mbs.AddObject(ObjectConnectorRollingDiscPenalty(markerNumbers=[markerGr
 
 
 #sensor for trace of contact point:
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     sTrail=mbs.AddSensor(SensorObject(objectNumber=oRolling, storeInternal=True,#fileName='solution/rollingDiscTrail.txt', 
                                outputVariableType = exu.OutputVariableType.Position))
     
@@ -99,7 +105,7 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
 tEnd = 0.5
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     tEnd = 0.5
 
 h=0.0001 
@@ -122,7 +128,7 @@ SC.visualizationSettings.nodes.drawNodesAsPoint  = False
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.015
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
@@ -135,7 +141,7 @@ exudynTestGlobals.testError = p0[0] - (0.03489603106769764) #2020-06-20: 0.03489
 exudynTestGlobals.testResult = p0[0]
 
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 

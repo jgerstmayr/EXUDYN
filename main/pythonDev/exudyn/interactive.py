@@ -8,7 +8,7 @@
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Utility functions and structures for Exudyn
 
 import numpy as np #LoadSolutionFile
@@ -90,13 +90,15 @@ class InteractiveDialog:
     #  fontSize: adjust font size for all dialog items
     #  doTimeIntegration: performs internal time integration with given parameters
     #  runOnStart: immediately activate 'Run' button on start
+    #  addLabelStringVariables: True: adds a list labelStringVariables containing the (modifiable) list of string variables for label (text) widgets
+    #  addSliderVariables: True: adds a list sliderVariables containing the (modifiable) list of variables for slider (=tkinter scale) widgets; this is not necessarily needed for changing slider values, as they can also be modified with dialog.widgets[..].set(...) method
     #**notes: detailed description of dialogItems and plots list/dictionary is given in commented the example below
     def __init__(self, mbs, simulationSettings, simulationFunction, 
                  dialogItems, plots = [], period = 0.04, 
                  realtimeFactor = 1, userStartSimulation=False,
                  title='',  showTime=False, fontSize = 12,
-                 doTimeIntegration = True,
-                 runOnStart = False):
+                 doTimeIntegration = True, runOnStart = False, 
+                 addLabelStringVariables=False, addSliderVariables=False):
         #store init arguments
         self.mbs = mbs
         self.simulationFunction = simulationFunction
@@ -138,6 +140,8 @@ class InteractiveDialog:
         tkinterNESW = tkinter.N+tkinter.E+tkinter.S+tkinter.W
         
         self.widgets = [] #store tk widgets as list, for later access
+        self.labelStringVariables = [] #store string variables to modify widget text hereafter
+        self.sliderVariables = [] #store string variables to modify widget text hereafter
         firstItem = True
         for item in dialogItems:
             callFunction = 0
@@ -154,9 +158,19 @@ class InteractiveDialog:
             #++++++++++++++++++++++++++++++++++
             if item['type'] == 'label':
                 setGrid = True
-                widget = tkinter.Label(root, text = text, 
-                                       borderwidth = self.itemBorder, 
-                                       font=defaultFont)
+                if addLabelStringVariables:
+                    stringVar = tkinter.StringVar()
+                    widget = tkinter.Label(root, textvariable = stringVar, 
+                                           borderwidth = self.itemBorder, 
+                                           #justify=tkinter.LEFT, #needed?
+                                           font=defaultFont)
+                    stringVar.set(text)
+                    self.labelStringVariables += [stringVar] #store in list
+                else:
+                    widget = tkinter.Label(root, text = text, 
+                                           borderwidth = self.itemBorder, 
+                                           font=defaultFont)
+
             #++++++++++++++++++++++++++++++++++
             elif item['type'] == 'button':
                 setGrid = True
@@ -188,11 +202,25 @@ class InteractiveDialog:
                 nDigits = 4
                 if maxValue-minValue == steps-1:
                     nDigits = 0
-                widget = tkinter.Scale(root, from_=minValue, to=maxValue,
-                                       length = steps, digits=nDigits, resolution=resolutionItem,
-                                       orient=tkinter.HORIZONTAL,
-                                       font=defaultFont)
-                widget.set(initialValue)
+                
+                if not addSliderVariables:
+                    widget = tkinter.Scale(root, from_=minValue, to=maxValue,
+                                           length = steps, digits=nDigits, resolution=resolutionItem,
+                                           orient=tkinter.HORIZONTAL,
+                                           font=defaultFont)
+                    widget.set(initialValue)
+                else:
+                    #add option to modify scale from outside
+                    tkVariable = tkinter.DoubleVar()
+                    tkVariable.set(initialValue)
+                    widget = tkinter.Scale(root, from_=minValue, to=maxValue,
+                                           length = steps, digits=nDigits, resolution=resolutionItem,
+                                           orient=tkinter.HORIZONTAL,
+                                           variable=tkVariable,
+                                           font=defaultFont)
+                    self.sliderVariables += [tkVariable]
+                    #but using widget.set(..) also allows to adjust widget from external function!
+                    
                 if 'callFunction' in item:
                     widget['command'] = self.item['callFunction']
                 if 'variable' in item:

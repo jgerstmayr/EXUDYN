@@ -230,7 +230,11 @@ sLenum += DefLatexFinishClass()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 [s1,sL1] = DefPyStartClass('','', 'These are the access functions to the \\codeName\\ module.'); s+=s1; sL+=sL1
 
-[s1,sL1] = DefPyFunctionAccess('', 'GetVersionString', 'PyGetVersionString', 'Get Exudyn module version as string'); s+=s1; sL+=sL1
+[s1,sL1] = DefPyFunctionAccess('', 'GetVersionString', 'PyGetVersionString', 
+                               argList=['addDetails'],
+                               defaultArgs=['false'],
+                               description='Get Exudyn built version as string (if addDetails=True, adds more information on Python version, platform, etc.)',
+                               ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess('', 'RequireVersion', '', 
                                argList=['requiredVersionString'],

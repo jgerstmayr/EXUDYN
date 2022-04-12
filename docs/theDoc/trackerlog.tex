@@ -10,15 +10,80 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.2.28, 
-  \item last change =  2022-04-04, 
-  \item Number of issues = 1030, 
-  \item Number of resolved issues = 870 (28 in current version), 
+  \item Exudyn version = 1.2.37, 
+  \item last change =  2022-04-12, 
+  \item Number of issues = 1041, 
+  \item Number of resolved issues = 879 (37 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.2.37}:  resolved Issue 1021: {\bf twitter}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add twitter account for exudyn: https://twitter.com/RExudyn}
+    \item {\bf notes: Follow me!}
+    \item   date resolved: {\bf 2022-04-12 16:28},
+date raised: 2022-03-31 
+  \ei
+  \item {\bf Version 1.2.36}:  resolved Issue 1040: {\bf contour bodies}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: show contour colors for GraphicsData added to bodies}
+    \item {\bf notes: option turned on by default, but may slow down visualization for larger models; turn off in case of problems...}
+    \item   date resolved: {\bf 2022-04-10 17:21},
+date raised: 2022-04-10 
+  \ei
+  \item {\bf Version 1.2.35}:  resolved Issue 1039: {\bf mesh edges}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: show mesh edges independently of visualization mode (edges on/off) - allowing to show mesh edges but not other graphics edges}
+    \item   date resolved: {\bf 2022-04-10 11:42},
+date raised: 2022-04-10 
+  \ei
+  \item {\bf Version 1.2.34}:  resolved Issue 1036: {\bf solution file}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: fixed inconsistent information in line 3 of coordinatesSolutionFile: ODE2 coordinates}
+    \item   date resolved: {\bf 2022-04-07 20:30},
+date raised: 2022-04-07 
+  \ei
+  \item {\bf Version 1.2.33}:  resolved Issue 1034: {\bf solution and sensor files}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add Python version to e.g. Exudyn version = 1.x.y Python3.9 / Python3.6(32bits) in coordinatesSolutionFile and sensor output files to identify exactly the versions and platform used for computation; check also Parameter and optimization output files for updated information}
+    \item   date resolved: {\bf 2022-04-07 12:02},
+date raised: 2022-04-07 
+  \ei
+  \item {\bf Version 1.2.32}:  resolved Issue 1033: {\bf InteractiveDialog}
+(extenison)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: also add tkInter DoubleVar for sliders to make bi-directional interaction simpler (but not needed)}
+    \item   date resolved: {\bf 2022-04-04 21:26},
+date raised: 2022-04-04 
+  \ei
+  \item {\bf Version 1.2.31}:  resolved Issue 1031: {\bf InteractiveDialog}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extended with option addLabelStringVariables to be able to modify strings in text labels}
+    \item   date resolved: {\bf 2022-04-04 17:20},
+date raised: 2022-04-04 
+  \ei
+  \item {\bf Version 1.2.30}:  resolved Issue 1030: {\bf AVX2}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: change both Python 3.6 32bit/46bit versions to compilation without AVX}
+    \item   date resolved: {\bf 2022-04-04 15:39},
+date raised: 2022-04-04 
+  \ei
+  \item {\bf Version 1.2.29}:  resolved Issue 1024: {\bf PERFORM\_UNIT\_TESTS}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: set PERFORM\_UNIT\_TESTS for P3.7 instead of P3.6}
+    \item   date resolved: {\bf 2022-04-04 15:38},
+date raised: 2022-03-31 
+  \ei
   \item {\bf Version 1.2.28}: {\bf \color{warningRed}  resolved BUG 1029}: {\bf ContactFrictionCircleCable2D}
   \begin{itemize}[label=$\bullet$]
     \item {description: computes wrong segment length internally, leading to wrong sticking position}

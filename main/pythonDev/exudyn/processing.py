@@ -18,16 +18,46 @@ import sys
 import time
 from copy import deepcopy #, copy 
 
+#%%+++++++++++++++++++++++++++++++++++++++++++
+#**function: internal function to return Exudyn version string, which allows to identify how results have been obtained
+#            writes something like 'Exudyn version = 1.2.33.dev1; Python3.9.11; Windows AVX2 FLOAT64; Windows10 V10.0.19044; AMD64; Intel64 Family 6 Model 142 Stepping 10, GenuineIntel'
+#**notes: If exudyn C++ module is not available, it outpurs the Python version
+def GetVersionPlatformString():
+    sReturn = ''
+    try:
+        import exudyn
+        sReturn += 'Exudyn version = '
+        sReturn += exudyn.GetVersionString(True)
+    except:
+        import sys
+        #the micro version may be different!
+        sReturn += '(no exudyn) Python'+str(sys.version_info.major)+'.'+str(sys.version_info.minor)+'.'+str(sys.version_info.micro)
+        
+    try: #put into try except block to avoid problems with new machines ...
+        import platform
+        sReturn += '; ' + platform.uname().system + platform.uname().release
+        if platform.uname().version != '':
+            sReturn += ' V' + platform.uname().version
+        sReturn += '; ' + platform.uname().machine + '; ' + platform.uname().processor
+    except:
+        pass
+
+    return sReturn
+
+#%%+++++++++++++++++++++++++++++++++++++++++++
 #function: internal output function for ParameterVariation and GeneticOptimization
 # write header or values to output file and increase counter
-def WriteToFile(resultsFile, parameters, currentGeneration, values, globalCnt, writeHeader = False, fileType='genetic optimization'):
+def WriteToFile(resultsFile, parameters, currentGeneration, values, globalCnt, writeHeader = False, fileType='genetic optimization', multiProcessingMode=''):
     if resultsFile != '':
         #print('write to file')
         if writeHeader:
             file = open(resultsFile, 'w')
             file.write('#EXUDYN '+fileType+' results file:'+resultsFile+'\n')
             file.write('#results stored columnwise for every parameter and individual\n')
-            file.write('#\n')
+            sVersion = GetVersionPlatformString()
+            if multiProcessingMode != '':
+                sVersion += '(processing='+multiProcessingMode+')'
+            file.write('#'+sVersion+'\n')
             file.write('#\n')
             file.write('#columns:\n') #'globalIndex, parameters, computationIndex:\n')
             s = '#globalIndex,value'
@@ -98,7 +128,8 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
             if resultsFile != '':
                 resultsFileCnt = WriteToFile(resultsFile, parameters, [parameterList[resultsFileCnt]], 
                                           [v], resultsFileCnt, writeHeader = (resultsFileCnt == 0), 
-                                          fileType='parameter variation')
+                                          fileType='parameter variation',
+                                          multiProcessingMode='serial')
         if showProgress:
             print("", flush=True) #newline after tqdm progress bar output....
     else:
@@ -131,7 +162,8 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
                     if resultsFile != '':
                         resultsFileCnt = WriteToFile(resultsFile, parameters, [parameterList[resultsFileCnt]], 
                                                   [v], resultsFileCnt, writeHeader = (resultsFileCnt == 0), 
-                                                  fileType='parameter variation')
+                                                  fileType='parameter variation',
+                                                  multiProcessingMode='multiprocessing.Pool, numberOfThreads='+str(numberOfThreads))
             print("", flush=True) #newline after tqdm progress bar output....
         else:
             #simpler approach without tqdm:
@@ -143,7 +175,8 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
                     if resultsFile != '':
                         resultsFileCnt = WriteToFile(resultsFile, parameters, [parameterList[resultsFileCnt]], 
                                                   [v], resultsFileCnt, writeHeader = (resultsFileCnt == 0), 
-                                                  fileType='parameter variation')
+                                                  fileType='parameter variation',
+                                                  multiProcessingMode='multiprocessing.Pool, numberOfThreads='+str(numberOfThreads))
                         #print("value=",i)
                 
     return values
@@ -452,7 +485,12 @@ def GeneticOptimization(objectiveFunction, parameters,
         values = ProcessParameterList(objectiveFunction, currentGeneration, addComputationIndex, useMultiProcessing, showProgress = showProgress, numberOfThreads=numberOfThreads)
         if (showProgress and useMultiProcessing and popCnt < numberOfGenerations-1): print("            #"+str(popCnt+1), end='')
         #print("values=",values)
-        resultsFileCnt = WriteToFile(resultsFile, parameters, currentGeneration, values, resultsFileCnt, writeHeader = (popCnt == 0))
+        multiProcessingMode = ''
+        if useMultiProcessing:
+            multiProcessingMode = 'multiprocessing.Pool, numberOfThreads='+str(numberOfThreads)
+        resultsFileCnt = WriteToFile(resultsFile, parameters, currentGeneration, values, resultsFileCnt, 
+                                     writeHeader = (popCnt == 0),
+                                     multiProcessingMode=multiProcessingMode)
 
         #remove computationIndex from new generation
         for item in currentGeneration:
@@ -740,7 +778,8 @@ def Minimize(objectiveFunction, parameters, initialGuess=[], method='Nelder-Mead
                                          [objFunVal], # objective function values
                                          resFileCnt, # line counter --> write data to file at this line
                                          writeHeader = (resFileCnt == 0), 
-                                         fileType='optimization using scipy.optimize.minimize(method='+method+')')       
+                                         fileType='optimization using scipy.optimize.minimize(method='+method+')',
+                                         )
         return resultsFileCntTemp
 
     startTime = time.time()  #for calculating time to go

@@ -349,6 +349,8 @@ V,      reduceRange,                    ,                  ,     bool,         t
 V,      showColorBar,                   ,                  ,     bool,         true,                   , P,      "show the colour bar with minimum and maximum values for the contour plot"
 V,      colorBarPrecision,              ,                  ,     PInt,         "4",                    , P,      "precision of floating point values shown in color bar; total number of digits used (max. 16)"
 V,      colorBarTiling,                 ,                  1,    PInt,         "12",                   , P,      "number of tiles (segements) shown in the colorbar for the contour plot"
+V,      rigidBodiesColored,             ,                  ,     bool,         true,                   , P,      "if true, the contour color is also applied to triangular faces of rigid bodies and mass points, otherwise the rigid body drawing are not influenced by contour settings; for general rigid bodies (except for ObjectGround), Position, Displacement, DisplacementLocal(=0), Velocity, VelocityLocal, AngularVelocity, and AngularVelocityLocal are available; may slow down visualization!"
+V,      nodesColored,                   ,                  ,     bool,         true,                   , P,      "if true, the contour color is also applied to nodes (except mesh nodes), otherwise node drawing is not influenced by contour settings"
 #
 writeFile=VisualizationSettings.h
 
@@ -381,8 +383,8 @@ V,      axialTiling,                ,                  ,     PInt,          "8",
 V,      reducedAxialInterploation,  ,                  ,     bool,          true,                     , P,       "if True, the interpolation along the beam axis may be lower than the beam element order; this may be, however, show more consistent values than a full interpolation, e.g. for strains or forces"
 V,      crossSectionTiling,         ,                  ,     PInt,          "4",                      , P,       "number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing"
 V,      drawVertical,               ,                  ,     bool,          false,                    , P,       "draw contour plot outputVariables 'vertical' along beam height; contour.outputVariable must be set accordingly"
-V,      drawVerticalFactor,         ,                  ,     float,         "1.f",                    , P,       "factor for outputVariable to be drawn along cross seciton (vertically)"
-V,      drawVerticalColor,          ,                  4,    Float4,        "Float4({0.2f,0.2f,0.2f,1.f})", , P, "color for outputVariable to be drawn along cross seciton (vertically)"
+V,      drawVerticalFactor,         ,                  ,     float,         "1.f",                    , P,       "factor for outputVariable to be drawn along cross section (vertically)"
+V,      drawVerticalColor,          ,                  4,    Float4,        "Float4({0.2f,0.2f,0.2f,1.f})", , P, "color for outputVariable to be drawn along cross section (vertically)"
 V,      drawVerticalLines,          ,                  ,     bool,          true,                     , P,       "draw additional vertical lines for better visibility"
 V,      drawVerticalValues,         ,                  ,     bool,          false,                    , P,       "show values at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point!"
 V,      drawVerticalOffset,         ,                  ,     float,         "0.f",                    , P,       "offset for vertical drawn lines; offset is added before multiplication with drawVerticalFactor"
@@ -527,9 +529,11 @@ V,      lineWidth,                      ,                  1,    float,        "
 V,      lineSmooth,                     ,                  1,    bool,         true,                   , P,      "draw lines smooth"
 V,      textLineWidth,                  ,                  1,    float,        "1.f",                  , P,      "width of lines used for representation of text"
 V,      textLineSmooth,                 ,                  1,    bool,         false,                  , P,      "draw lines for representation of text smooth"
-V,      showFaces,                      ,                  1,    bool,         true,                   , P,      "show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation"
 V,      facesTransparent,               ,                  1,    bool,         false,                  , P,      "True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers"
+V,      showFaces,                      ,                  1,    bool,         true,                   , P,      "show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation"
 V,      showFaceEdges,                  ,                  1,    bool,         false,                  , P,      "show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation"
+V,      showMeshFaces,                  ,                  1,    bool,         true,                   , P,      "show faces of finite elements; independent of showFaces"
+V,      showMeshEdges,                  ,                  1,    bool,         true,                   , P,      "show edges of finite elements; independent of showFaceEdges"
 #
 V,      shadeModelSmooth,               ,                  1,    bool,         true,                   , P,      "True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces"
 V,      materialAmbientAndDiffuse,      ,                  4,    Float4,       "Float4({0.6f,0.6f,0.6f,1.f})",, P,"4f ambient color of material"

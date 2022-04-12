@@ -47,7 +47,6 @@
 #pragma message("WARNING: no architecture identified for compilation; check BasicDefinitions.h!!!")
 #endif
 
-
 //unused so far:
 //#if defined(__GNUC__)
 //#define __EXUDYN__GNUC__
@@ -189,6 +188,39 @@ namespace EXUstd {
 	class Dummy
 	{
 	};
+
+	inline STDstring GetPlatformString()
+	{
+		STDstring s;
+	#if defined(__EXUDYN__WINDOWS__)
+			s += "Windows";
+		#if !defined(_WIN64)
+			s += "(32bit)";
+		#endif
+	#endif
+	#if defined(__EXUDYN__APPLE__)
+		s += "MacOS";
+	#endif
+		#if defined(__EXUDYN__LINUX__)
+			s += "Linux";
+		#if defined(__EXUDYN__LINUX__ARM__)
+			s += "(ARM)";
+		#endif
+	#endif
+	#if defined(use_AVX512)
+		s += " AVX512";
+	#elif defined(use_AVX2)
+		s += " AVX2";
+	#endif
+	#ifdef DoublePrecision
+		s += " FLOAT64";
+	#else 
+		s += " FLOAT32";
+	#endif 
+
+		return s;
+	}
+
 
 } //EXUstd
 

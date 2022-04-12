@@ -49,6 +49,199 @@ namespace EXUvis {
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! copy bodyGraphicsData (of body) into global graphicsData (of system)
+	void AddBodyGraphicsDataColored(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, 
+		const Float3& position, const Matrix3DF& rotation, const Float3& refPosition, const Matrix3DF& refRotation, const Float3& velocity, const Float3& angularVelocity,
+		Index itemID, const VisualizationSettings& visualizationSettings, bool contourColor)
+	{
+		bool applyRotation = true;
+		if (rotation(0, 0) == 1.f && rotation(1, 1) == 1.f && rotation(2, 2) == 1.f) { applyRotation = false; }
+
+		for (GLLine item : bodyGraphicsData.glLines) //copy objects, because we also need the transformed objects
+		{
+			item.itemID = itemID;
+			if (applyRotation)
+			{
+				EXUmath::RigidBodyTransformation(rotation, position, item.point1, item.point1);
+				EXUmath::RigidBodyTransformation(rotation, position, item.point2, item.point2);
+			}
+			else
+			{
+				item.point1 += position;
+				item.point2 += position;
+			}
+			graphicsData.glLines.Append(item);
+		}
+
+		for (GLCircleXY item : bodyGraphicsData.glCirclesXY) //copy objects
+		{
+			item.itemID = itemID;
+			if (applyRotation)
+			{
+				EXUmath::RigidBodyTransformation(rotation, position, item.point, item.point);
+			}
+			else
+			{
+				item.point += position;
+			}
+			graphicsData.glCirclesXY.Append(item);
+		}
+
+		for (GLText item : bodyGraphicsData.glTexts) //copy objects, but string pointers are just assigned!
+		{
+			item.itemID = itemID;
+			if (applyRotation)
+			{
+				EXUmath::RigidBodyTransformation(rotation, position, item.point, item.point);
+			}
+			else
+			{
+				item.point += position;
+			}
+
+			UnsignedIndex len = strlen(item.text);
+			//int i = (int)strlen("x");
+			char* temp = new char[len + 1]; //needs to be copied, because string is destroyed everytime it is updated! ==> SLOW for large number of texts (node numbers ...)
+			//strcpy_s(temp, len + 1, item.text); //not working with gcc
+			strcpy(temp, item.text); //item.text will be destroyed upon deletion of BodyGraphicsData!
+			item.text = temp;
+			graphicsData.glTexts.Append(item);
+		}
+
+		if (!contourColor)
+		{
+			for (GLTriangle item : bodyGraphicsData.glTriangles) //copy objects
+			{
+				item.itemID = itemID;
+				if (applyRotation)
+				{
+					for (Index i = 0; i < 3; i++)
+					{
+						EXUmath::RigidBodyTransformation(rotation, position, item.points[i], item.points[i]);
+						item.normals[i] = rotation * item.normals[i];
+					}
+				}
+				else
+				{
+					for (Index i = 0; i < 3; i++)
+					{
+						item.points[i] += position;
+					}
+				}
+				graphicsData.glTriangles.Append(item);
+			}
+		}
+		else
+		{
+			OutputVariableType outputVariable = visualizationSettings.contour.outputVariable;
+			Index outputVariableComponent = visualizationSettings.contour.outputVariableComponent;
+			//Float4 currentColor(defaultColorBlue4);
+			Float3 value; //this is the computed value per triangle vertex (node)
+			Float3 pRef;
+
+			for (Index iItem = 0; iItem < bodyGraphicsData.glTriangles.NumberOfItems(); iItem++)
+			{
+				GLTriangle  item = bodyGraphicsData.glTriangles[iItem]; //copy objects, then modify some data
+				item.itemID = itemID;
+				if (applyRotation)
+				{
+					for (Index i = 0; i < 3; i++)
+					{
+						Float3 locPoint = item.points[i];
+						EXUmath::RigidBodyTransformation(rotation, position, locPoint, item.points[i]);
+						item.normals[i] = rotation * item.normals[i];
+
+						switch (outputVariable)
+						{
+						case OutputVariableType::Position:
+							value = item.points[i];
+							break;
+						case OutputVariableType::Displacement:
+						{
+							//reference rotation may be different from zero!
+							EXUmath::RigidBodyTransformation(refRotation, refPosition, locPoint, pRef);
+							value = item.points[i] - pRef;
+							break;
+						}
+						case OutputVariableType::DisplacementLocal:
+						{
+							value.SetAll(0);
+							break;
+						}
+						case OutputVariableType::Velocity:
+						{
+							//reference rotation may be different from zero!
+							value = velocity + angularVelocity.CrossProduct(rotation*locPoint);
+							break;
+						}
+						case OutputVariableType::VelocityLocal:
+						{
+							//reference rotation may be different from zero!
+							value = (velocity + (angularVelocity).CrossProduct(rotation*locPoint))*rotation; //this is (A^T * v)
+							break;
+						}
+						case OutputVariableType::AngularVelocity:
+						{
+							value = angularVelocity;
+							break;
+						}
+						case OutputVariableType::AngularVelocityLocal:
+						{
+							value = angularVelocity * rotation;
+							break;
+						}
+						default:
+							value.SetAll(0);
+							break;
+						}
+						EXUvis::ComputeContourColor(value, outputVariable, outputVariableComponent, item.colors[i]);
+					}
+				}
+				else //without rotation
+				{
+					for (Index i = 0; i < 3; i++)
+					{
+						item.points[i] += position;
+						switch (outputVariable)
+						{
+						case OutputVariableType::Position:
+							value = item.points[i];
+							break;
+						case OutputVariableType::Displacement:
+							value = item.points[i] - refPosition;
+							break;
+						case OutputVariableType::DisplacementLocal:
+							value.SetAll(0);
+							break;
+						case OutputVariableType::Velocity:
+						{
+							value = velocity; //no rotation
+							break;
+						}
+						case OutputVariableType::VelocityLocal:
+						{
+							value = velocity; //no rotation
+							break;
+						}
+						case OutputVariableType::AngularVelocity:
+							value.SetAll(0);
+							break;
+						case OutputVariableType::AngularVelocityLocal:
+							value.SetAll(0);
+							break;
+						default:
+							value.SetAll(0);
+							break;
+						}
+						EXUvis::ComputeContourColor(value, outputVariable, outputVariableComponent, item.colors[i]);
+					}
+				}
+				graphicsData.glTriangles.Append(item);
+			}
+		}
+
+	}
+
+	//! copy bodyGraphicsData (of body) into global graphicsData (of system)
 	void AddBodyGraphicsData(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, const Float3& position,
 		const Matrix3DF& rotation, Index itemID)
 	{
@@ -126,9 +319,7 @@ namespace EXUvis {
 			}
 			graphicsData.glTriangles.Append(item);
 		}
-
 	}
-
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! draw a simple spring in 2D with given endpoints p0,p1 a width, a (normalized) normal vector for the width drawing and number of spring points numberOfPoints
@@ -192,17 +383,17 @@ namespace EXUvis {
 
 	}
 
-	//! draw number for item at selected position and with label, such as 'N' for nodes, etc.
-	void DrawItemNumberWithoutID(const Vector3D& pos, VisualizationSystem* vSystem, Index itemNumber, const char* label, const Float4& color)
-	{
-		float offx = 0.25f; //in text coordinates, relative to textsize
-		float offy = 0.25f; //in text coordinates, relative to textsize
-		float textSize = 0.f; //use default value
-		vSystem->graphicsData.AddText(pos, color, label + EXUstd::ToString(itemNumber), textSize, offx, offy, Index2ItemID(-1, ItemType::_None, 0));
-	}
+	////! draw number for item at selected position and with label, such as 'N' for nodes, etc.
+	//void DrawItemNumberWithoutID(const Float3& pos, VisualizationSystem* vSystem, Index itemNumber, const char* label, const Float4& color)
+	//{
+	//	float offx = 0.25f; //in text coordinates, relative to textsize
+	//	float offy = 0.25f; //in text coordinates, relative to textsize
+	//	float textSize = 0.f; //use default value
+	//	vSystem->graphicsData.AddText(pos, color, label + EXUstd::ToString(itemNumber), textSize, offx, offy, Index2ItemID(-1, ItemType::_None, 0));
+	//}
 
 	//! draw number for item at selected position and with label, such as 'N' for nodes, etc.
-	void DrawItemNumber(const Vector3D& pos, VisualizationSystem* vSystem, Index itemID, const char* label, const Float4& color)
+	void DrawItemNumber(const Float3& pos, VisualizationSystem* vSystem, Index itemID, const char* label, const Float4& color)
 	{
 		float offx = 0.25f; //in text coordinates, relative to textsize
 		float offy = 0.25f; //in text coordinates, relative to textsize

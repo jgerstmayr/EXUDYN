@@ -11,14 +11,20 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -80,7 +86,7 @@ simulationSettings.displayComputationTime = False
 simulationSettings.displayStatistics = True
 
 
-if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+if useGraphics: #only start graphics once, but after background is set
 #    SC.visualizationSettings.window.alwaysOnTop = True #must be done before exu.StartRenderer() called
 #    SC.visualizationSettings.window.maximize = True
 #    SC.visualizationSettings.window.showWindow = False
@@ -184,7 +190,7 @@ for case in range(2):
     mbs.Assemble()
     SC.RenderEngineZoomAll()
     
-    if exudynTestGlobals.useGraphics:
+    if useGraphics:
         mbs.WaitForUserToContinue()
     #solve
     #exu.InfoStat()
@@ -208,7 +214,7 @@ for case in range(2):
 
 
 #stop 3D visualization
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 

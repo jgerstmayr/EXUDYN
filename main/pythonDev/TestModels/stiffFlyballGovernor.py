@@ -11,19 +11,25 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
-from exudyn.graphicsDataUtilities import *
 from exudyn.lieGroupBasics import *
 from exudyn.lieGroupIntegration import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
 from numpy import linalg as LA
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -291,14 +297,14 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
 
-if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+if useGraphics: #only start graphics once, but after background is set
     exu.StartRenderer()
     #mbs.WaitForUserToContinue()
     
 dynamicSolver = exu.MainSolverImplicitSecondOrder()
 
 fact = 20 #200000
-if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+if useGraphics: #only start graphics once, but after background is set
     fact = 20
 
 simulationSettings.timeIntegration.numberOfSteps = fact #1000 steps for test suite/error
@@ -331,7 +337,7 @@ if True:
 dynamicSolver.SolveSystem(mbs, simulationSettings)
 #exu.SolveDynamic(mbs, simulationSettings)
 
-if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+if useGraphics: #only start graphics once, but after background is set
     #SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
@@ -381,7 +387,7 @@ exu.ConfigurationType.Current)]
 #v 2 = [-1.91975841e-16  5.60155553e+00 -4.90500111e-10]
 #v 3 = [ 1.91975841e-16 -5.60155553e+00 -4.90500111e-10]
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     from exudyn.plot import PlotSensor
     
     PlotSensor(mbs, sPos, components=[0,1,2], closeAll=True)

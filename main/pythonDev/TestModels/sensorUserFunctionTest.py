@@ -10,16 +10,22 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-        
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
 from exudyn.itemInterface import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
-
 from math import pi, atan2
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -30,7 +36,7 @@ mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
 
 sNode = mbs.AddSensor(SensorNode(nodeNumber=node,
                                  fileName='solution/sensorTestPos.txt',
-                                 writeToFile = exudynTestGlobals.useGraphics, #no output needed
+                                 writeToFile = useGraphics, #no output needed
                                  outputVariableType=exu.OutputVariableType.Position))
 
 def UFsensor(mbs, t, sensorNumbers, factors, configuration):
@@ -42,7 +48,7 @@ def UFsensor(mbs, t, sensorNumbers, factors, configuration):
 
 sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=[sNode], factors=[180/pi], 
                                  storeInternal=True,#fileName='solution/sensorTestPhi.txt',
-                                 writeToFile = exudynTestGlobals.useGraphics,
+                                 writeToFile = useGraphics,
                                  sensorUserFunction=UFsensor))
 
 #assemble and solve system for default parameters
@@ -60,6 +66,6 @@ exu.Print('sensor=',u)
 exudynTestGlobals.testResult = u #should be 45 degree finally
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     from exudyn.plot import PlotSensor
     PlotSensor(mbs, [sNode, sNode, sUser], [0, 1, 0])

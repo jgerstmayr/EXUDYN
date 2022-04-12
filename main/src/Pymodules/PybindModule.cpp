@@ -137,9 +137,16 @@ extern Index linkedDataVectorCast_counts; //global counter for unwanted type con
 //some low level functions linked to exudyn
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+//! this function returns the Python version for which Exudyn is compiled (even micro version, which may be different from Python interpreter!)
+//! returns e.g. "3.9.0"
+STDstring GetExudynPythonVersionString()
+{
+	STDstring str = EXUstd::ToString(PY_MAJOR_VERSION) + '.' + EXUstd::ToString(PY_MINOR_VERSION) + '.' + EXUstd::ToString(PY_MICRO_VERSION);
+	return str;
+}
 
-//! retrieve current version as m.attr is not passed trough package
-py::str PyGetVersionString()
+//! this function is available outside PybindModule.cpp and returns version + additional information
+STDstring GetExudynBuildVersionString(bool addDetails)
 {
 	STDstring str = STDstring(EXUstd::exudynVersion);
 #ifndef EXUDYN_RELEASE
@@ -148,12 +155,27 @@ py::str PyGetVersionString()
 #pragma message("EXUDYN not compiled in release mode!")
 #pragma message("====================================")
 #endif
+	if (addDetails)
+	{
+		str += "; Python" + GetExudynPythonVersionString();
+		str += "; " + EXUstd::GetPlatformString();
+	}
 #ifdef __FAST_EXUDYN_LINALG
+	if (addDetails)
+	{
+		str += "[NO RANGE CHECKS]";
+	}
 #pragma message("====================================")
 #pragma message("EXUDYN using __FAST_EXUDYN_LINALG without range checks!")
 #pragma message("====================================")
 #endif
 	return str;
+}
+
+//! retrieve current version as m.attr is not passed trough package
+py::str PyGetVersionString(bool addDetails = false)
+{
+	return GetExudynBuildVersionString(addDetails);
 }
 
 //! Definition of Invalid Index; to be used in Python to check whether a function returned a valid index (e.g. AddObject(...))

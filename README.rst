@@ -2,13 +2,14 @@
 Exudyn
 ======
 
-+  Exudyn version = 1.2.28 (Corea)
-+  build date and time=2022-04-04  12:09
++  Exudyn version = 1.2.37 (Corea)
++  build date and time=2022-04-10  18:55
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn **Version 1.2** is out! The documentation theDoc.pdf now reached > 600 pages! Including now a contact module, improved solvers, sparse matrix support and multi-threading, creation of beams along curves, extended robotics modules, **PlotSensor** fully extended, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
 
-If you like using Exudyn, please add a *star* on github, and send an email to  ``reply.exudyn@gmail.com`` such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** !
+If you like using Exudyn, please add a *star* on github, and send an email to  ``reply.exudyn@gmail.com`` such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** and follow us on 
+`Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
 
 +  **A flexible multibody dynamics systems simulation code with Python and C++**
 +  *free, open source* and with plenty of *documentation* and *examples*
@@ -136,7 +137,7 @@ So far (2021-07), we tested
 
 Many alternative options exist:
 
-+  In case that you have an older CPU, which does not support AVX2, use: Anaconda, 32bit, Python 3.6.5, or compile without AVX flags. (Anaconda 32bit with Python3.6 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-5.2.0-Windows-x86.exe``\ .)
++  In case that you have an older CPU, which does not support AVX2, use: Exudyn with Python 3.6.5, or compile without AVX flags for your machine. (e.g. Anaconda 32bit with Python3.6 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-5.2.0-Windows-x86.exe``\ .)
 +  Users report successful use of Exudyn with \ **Visual Studio Code**\ . \ **Jupyter**\  has been tested with some examples; both environments should work with default settings.
 +  Anaconda 2020-11 with \ **Python 3.8**\  and Spyder 4.1.5: no problems up to now (2021-07), TestSuite runs without problems since Exudyn version 1.0.182.
 +  Anaconda 2021-11 with \ **Python 3.9**\  and Spyder 5.1.5: Tested with current version (1.1.99), TestSuite runs without problems.
@@ -508,15 +509,17 @@ The beginning and end of the file should look like:
 
 .. code-block::
 
-  #Exudyn generalized alpha solver solution file
-  #simulation started=2019-11-14,20:35:12
-  #columns contain: time, ODE2 displacements, ODE2 velocities, ODE2 accelerations, AE coordinates, ODE2 velocities
+  #Exudyn implicit second order time integration solver solution file
+  #simulation started=2022-04-07,19:02:19
+  #columns contain: time, ODE2 displacements, ODE2 velocities, ODE2 accelerations
   #number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [2,0,0,0]
   #number of written coordinates [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = [2,2,2,0,0,0,0]
   #total columns exported  (excl. time) = 6
   #number of time steps (planned) = 100
+  #Exudyn version = 1.2.33.dev1; Python3.9.11; Windows AVX2 FLOAT64
   #
   0,0,0,0,0,0.0001,0
+  0.01,5e-09,0,1e-06,0,0.0001,0
   0.02,2e-08,0,2e-06,0,0.0001,0
   0.03,4.5e-08,0,3e-06,0,0.0001,0
   0.04,8e-08,0,4e-06,0,0.0001,0
@@ -529,11 +532,15 @@ The beginning and end of the file should look like:
   0.98,4.802e-05,0,9.8e-05,0,0.0001,0
   0.99,4.9005e-05,0,9.9e-05,0,0.0001,0
   1,5e-05,0,0.0001,0,0.0001,0
-  #simulation finished=2019-11-14,20:35:12
-  #Solver Info: errorOccurred=0,converged=1,solutionDiverged=0,total time steps=100,total Newton iterations=100,total Newton jacobians=100
+  #simulation finished=2022-04-07,19:02:19
+  #Solver Info: stepReductionFailed(or step failed)=0,discontinuousIterationSuccessful=1,newtonSolutionDiverged=0,massMatrixNotInvertible=1,total time steps=100,total Newton iterations=100,total Newton jacobians=100
 
 
 Within this file, the first column shows the simulation time and the following columns provide coordinates, their derivatives and Lagrange multipliers on system level. For relation of local to global coordinates, see theDoc.pdf. As expected, the x-coordinate of the point mass has constant acceleration a=f/m=0.001/10=0.0001, the velocity grows up to 0.0001 after 1 second and the point mass moves 0.00005 along the x-axis.
+
+Note that line 8 contains the Exudyn and Python versions (as well as some other specific information on the platform and compilation settings (which may help you identify with which computer, etc., you created results)) provided in the solution file are the versions at which Exudyn has been compiled with.
+The Python micro version (last digit) may be different from the Python version from which you were running Exudyn.
+This information is also provided in the sensor output files.
 
 
 ------------------------
@@ -585,7 +592,7 @@ Trouble shooting
 
 
   |  =>  A known reason is that your CPU \ **does not support AVX2**\ , while Exudyn is compiled with the AVX2 option (not support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this).
-  |  =>  \ **workaround**\  to solve the AVX problem: use the Python 3.6 32bits version, which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \ ``setup.py``\  file in the \ ``main``\  folder.
+  |  =>  \ **workaround**\  to solve the AVX problem: use the Python 3.6 version (up to Exudyn V1.2.28 only the 32bit version), which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \ ``setup.py``\  file in the \ ``main``\  folder.
   |  =>  The \ ``ModuleNotFoundError``\  may also happen if something went wrong during installation (paths, problems with Anaconda, ..) => very often a new installation of Anaconda and Exudyn helps.
 
 

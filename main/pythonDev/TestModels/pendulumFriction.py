@@ -11,17 +11,23 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.FEM import *
-from exudyn.graphicsDataUtilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -79,12 +85,12 @@ mbs.AddObject(CartesianSpringDamper(markerNumbers=[mGround0, mTip0],
                                     offset=[zeroZoneFriction, fFriction, 0], 
                                     springForceUserFunction=UserFunctionSpringDamper))
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     sRot1 = mbs.AddSensor(SensorBody(bodyNumber = oR0, fileName='solution/pendulumFrictionRotation0.txt',
                              outputVariableType=exu.OutputVariableType.Rotation))
 
     sRot2 = mbs.AddSensor(SensorMarker(markerNumber = mR0COM, fileName='solution/pendulumFrictionRotation0marker.txt',
-                               writeToFile = exudynTestGlobals.useGraphics,
+                               writeToFile = useGraphics,
                                outputVariableType=exu.OutputVariableType.Rotation))
 
 sPos = mbs.AddSensor(SensorMarker(markerNumber = mR0COM, writeToFile = False,
@@ -115,7 +121,7 @@ simulationSettings.solutionSettings.writeSolutionToFile=False
 
 SC.visualizationSettings.nodes.defaultSize = 0.05
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
@@ -133,7 +139,7 @@ exudynTestGlobals.testError = u - (0.3999999877698205) #2020-04-22: 0.3999999877
 exudynTestGlobals.testResult = u
 
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 

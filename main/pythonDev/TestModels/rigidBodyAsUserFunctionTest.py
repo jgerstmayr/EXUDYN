@@ -12,19 +12,26 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
+import numpy as np
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-import numpy as np
 
 
 zz = 1 #max size
@@ -148,10 +155,10 @@ exu.Print(mbs)
 
 simulationSettings = exu.SimulationSettings()
 
-#exudynTestGlobals.useGraphics=False
+#useGraphics=False
 tEnd = 0.05
 h = 1e-3
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     tEnd = 1
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -164,7 +171,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8 #SHOULD
 
 SC.visualizationSettings.nodes.showBasis=True
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
 
 exu.SolveDynamic(mbs, simulationSettings)
@@ -184,7 +191,7 @@ exu.Print('solution of rigidBodyAsUserFunctionTest=',result)
 exudynTestGlobals.testError = result - (8.950865271552146) #2020-06-28: 8.950865271552146
 exudynTestGlobals.testResult = result
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 

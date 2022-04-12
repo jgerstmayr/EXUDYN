@@ -11,16 +11,23 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
-from exudyn.graphicsDataUtilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -92,7 +99,7 @@ gGround = GraphicsDataOrthoCubePoint(centerPoint=[4,4,-0.001],size=[12,12,0.002]
 oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
 markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 
-if exudynTestGlobals.useGraphics and True:
+if useGraphics:
     sCarVel = mbs.AddSensor(SensorBody(bodyNumber=bCar, storeInternal=True, #fileName='solution/rollingDiscCarVel.txt', 
                                 outputVariableType = exu.OutputVariableType.Velocity))
 
@@ -179,7 +186,7 @@ for iWheel in range(nWheels):
     sAngularVelWheels += [mbs.AddSensor(SensorBody(bodyNumber=b0, storeInternal=True,#fileName='solution/rollingDiscAngVelLocal'+strNum+'.txt', 
                                outputVariableType = exu.OutputVariableType.AngularVelocityLocal))]
 
-    if exudynTestGlobals.useGraphics and True:
+    if useGraphics:
         sPos+=[mbs.AddSensor(SensorBody(bodyNumber=b0, storeInternal=True,#fileName='solution/rollingDiscPos'+strNum+'.txt', 
                                    outputVariableType = exu.OutputVariableType.Position))]
     
@@ -264,7 +271,7 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
 tEnd = 0.5
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     tEnd = 0.5 #24
 
 h=0.002
@@ -292,14 +299,14 @@ SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.015
 
 #create animation:
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.visualizationSettings.window.renderWindowSize=[1920,1080]
     SC.visualizationSettings.openGL.multiSampling = 4
     if False:
         simulationSettings.solutionSettings.recordImagesInterval = 0.05
         SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
@@ -312,13 +319,13 @@ exudynTestGlobals.testError = p0[0] - (0.2714267238324345) #2020-06-20: 0.271426
 exudynTestGlobals.testResult = p0[0]
 
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     from exudyn.plot import PlotSensor
     
     PlotSensor(mbs, sTrail, componentsX=[0]*4, components=[1]*4, title='wheel trails', closeAll=True,

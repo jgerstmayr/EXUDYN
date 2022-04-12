@@ -10,14 +10,22 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
 from exudyn.itemInterface import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
 import numpy as np
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -81,7 +89,7 @@ loadC = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker,
                            load = load0, loadUserFunction=userLoad))
 
 writeSensorFile = False
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     writeSensorFile = True
 
 sLoad=mbs.AddSensor(SensorLoad(loadNumber=loadC, writeToFile = writeSensorFile, 
@@ -124,7 +132,7 @@ exudynTestGlobals.testResult = u[0]
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     from exudyn.plot import PlotSensor
     
     PlotSensor(mbs, sCoords, components=[0], closeAll=True)

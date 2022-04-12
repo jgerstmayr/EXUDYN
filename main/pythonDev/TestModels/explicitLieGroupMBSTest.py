@@ -3,22 +3,30 @@
 #
 # Details:  Lie group integration with RK1 and RK4 for multibody system using rotation vector formulation
 #
-# Author:   Johannes Gerstmayr
+# Author:   Johannes Gerstmayr, Stefan Holzinger
 # Date:     2020-01-08
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
 
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.lieGroupIntegration import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
 import numpy as np
+
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -126,7 +134,7 @@ if useBody2:
     mbs.AddObject(CartesianSpringDamper(markerNumbers=[mMassRB, mMassRB2], stiffness=[k,k,k]))
 
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorRotation.txt', outputVariableType=exu.OutputVariableType.Rotation))
     mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVelLocal.txt', outputVariableType=exu.OutputVariableType.AngularVelocityLocal))
     #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVel.txt', outputVariableType=exu.OutputVariableType.AngularVelocity))
@@ -146,7 +154,7 @@ dSize=0.01
 SC.visualizationSettings.bodies.defaultSize = [dSize, dSize, dSize]
 
 
-if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+if useGraphics: #only start graphics once, but after background is set
     exu.StartRenderer()
     #mbs.WaitForUserToContinue()
 
@@ -251,11 +259,11 @@ exu.Print("omegay=", omegay)
 exudynTestGlobals.testError = omegay - (0) #2020-02-11: 
 exudynTestGlobals.testResult = omegay
 
-if exudynTestGlobals.useGraphics: #only start graphics once, but after background is set
+if useGraphics: #only start graphics once, but after background is set
     #SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     plt.close("all")

@@ -11,15 +11,20 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
-
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals #for testing
-#import numpy as np
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -136,7 +141,7 @@ loadC = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker,
                            load = load0))
 
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     sPos = mbs.AddSensor(SensorNode(nodeNumber=n1, storeInternal=True,#fileName="solution/sensorPos.txt"
                              outputVariableType=exu.OutputVariableType.Position))
     sVel = mbs.AddSensor(SensorNode(nodeNumber=n1, storeInternal=True,#fileName="solution/sensorVel.txt"
@@ -180,7 +185,7 @@ simulationSettings.displayStatistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.timeIntegration.simulateInRealtime = True
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()              #start graphics visualization
     #mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
 
@@ -188,7 +193,7 @@ if exudynTestGlobals.useGraphics:
 exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.TrapezoidalIndex2, simulationSettings=simulationSettings)
 #exu.SolveDynamic(mbs, solverType=exu.DynamicSolverType.RK67, simulationSettings=simulationSettings)
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
     exu.StopRenderer()               #safely close rendering window!
 
@@ -199,7 +204,7 @@ exudynTestGlobals.testError = u[1] - (0.057286638346409235)
 exudynTestGlobals.testResult = u[1]
 
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     from exudyn.plot import PlotSensor
     import matplotlib.pyplot as plt
     plt.close('all')

@@ -8,24 +8,28 @@
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++import sys
-
-import sys
-sys.path.append('../TestModels')            #for modelUnitTest as this example may be used also as a unit test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.FEM import *
-from exudyn.graphicsDataUtilities import *
-
-from modelUnitTests import ExudynTestStructure, exudynTestGlobals
-
-SC = exu.SystemContainer()
-mbs = SC.AddSystem()
 
 import numpy as np
 
+useGraphics = True #without test
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Use FEMinterface to import FEM model and create FFRFreducedOrder object
@@ -214,7 +218,7 @@ simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrde
 
 h=1e-3
 tEnd = 0.005 #standard:0.005
-if not exudynTestGlobals.useGraphics:
+if not useGraphics:
     #test suite:
     simulationSettings.solutionSettings.writeSolutionToFile = False
     tEnd = 0.005
@@ -242,7 +246,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD
 #simulationSettings.solutionSettings.recordImagesInterval = 0.0002
 #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     exu.StartRenderer()
     if 'lastRenderState' in vars():
         SC.SetRenderState(lastRenderState) #load last model view
@@ -251,7 +255,7 @@ if exudynTestGlobals.useGraphics:
 
 exu.SolveDynamic(mbs, simulationSettings)
     
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
     lastRenderState = SC.GetRenderState() #store model view for next simulation
@@ -268,7 +272,7 @@ exudynTestGlobals.testResult = result
 
 ##++++++++++++++++++++++++++++++++++++++++++++++q+++++++
 #plot results
-if exudynTestGlobals.useGraphics:
+if useGraphics:
     from exudyn.plot import PlotSensor
     
     PlotSensor(mbs, sDisp, components=1, closeAll=True, labels=['uMid,linear'])
