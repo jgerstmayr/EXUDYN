@@ -62,7 +62,7 @@ def TestExamplesReferenceSolution():
             'rollingCoinTest.py':0.0020040999273379673,
             'rollingCoinPenaltyTest.py':0.034896031067866894,
             'scissorPrismaticRevolute2D.py':27.202556489044145, #added JacobianODE2, but example computed with numDiff forODE2connectors, 2022-01-18: 27.202556489044145,
-            'serialRobotTest.py':0.7680031232063571,
+            'serialRobotTest.py':0.7681856909852399,  #until 2022-04-21: 0.7680031232063571 wrong static torque compensation
             'sliderCrank3Dbenchmark.py':3.3642761780921897,
             'sliderCrankFloatingTest.py':0.591649163378833,
             'solverExplicitODE1ODE2test.py':3.3767933275918964,

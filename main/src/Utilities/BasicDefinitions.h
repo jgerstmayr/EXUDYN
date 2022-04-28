@@ -32,6 +32,13 @@
 #define __EXUDYN__x86__ //Intel or AMD processor //tested also on gcc/linux/64bits!
 #endif
 
+//detect ARM for AppleM1 or raspberry Pi
+//AppleM1 gcc has activated  __aarch64__ and __ARM_ARCH flags
+#if defined(__arm__) || defined(__aarch64__) || defined(__ARM_ARCH) //ARM architecture: RaspberryPi on UbuntuMate 20.04 (64bits): gcc shows __aarch64__ but not __arm__
+#define __EXUDYN__ARM__
+#endif
+
+
 //32bit/64 bit should be checked with length of void
 
 //check some platform / architecture or compiler specific things at which is compiled and define globally used flags:
@@ -105,7 +112,9 @@
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //MULTITHREADED computation using ngsolve taskmanager; thanks to Joachim Schöberl
+#if !defined(__APPLE__) //currently simd makes problems on different Apple platforms - needs sse2neon.h
 #define USE_NGSOLVE_TASKMANAGER //!< for multithreaded computation
+#endif
 //#undef USE_NGSOLVE_TASKMANAGER //!< for multithreaded computation
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

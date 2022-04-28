@@ -1133,7 +1133,7 @@ pyClassStr = 'MatrixContainer'
         '  \\item Create empty \\texttt{MatrixContainer} with \\texttt{mc = MatrixContainer()} \n'+
         '  \\item Create \\texttt{MatrixContainer} with dense matrix \\texttt{mc = MatrixContainer(matrix)}, where matrix can be a list of lists of a numpy array \n'+
         '  \\item Set with dense \\text{pyArray} (a numpy array): \\texttt{mc.SetWithDenseMatrix(pyArray, bool useDenseMatrix = True)}\n'+
-        '  \\item Set with sparse \\text{pyArray} (a numpy array), which has 3 colums and according rows containing the sparse triplets \\texttt{(row, col, value)} describing the sparse matrix '+
+        '  \\item Set with sparse \\text{pyArray} (a numpy array), which has 3 colums and according rows containing the sparse triplets \\texttt{(row, col, value)} describing the sparse matrix\n'+
         '\\ei\n')
 s+=s1; sL+=sL1
 
@@ -1158,9 +1158,78 @@ s+= '        .def(py::init<const py::object&>(), py::arg("matrix"))\n' #construc
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='UseDenseMatrix', cName='UseDenseMatrix', 
                                 description="returns True if dense matrix is used, otherwise False"); s+=s1; sL+=sL1
 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const PyMatrixContainer &item) {\n            return EXUstd::ToString(item.GetPythonObject()); }', 
+                                description="return the string representation of the MatrixContainer",
+                                isLambdaFunction = True); s+=s1; sL+=sL1
 
 #++++++++++++++++
 [s1,sL1] = DefPyFinishClass('MatrixContainer'); s+=s1; sL+=sL1
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#documentation and pybindings for PyVector3DList
+classStr = 'PyVector3DList'
+pyClassStr = 'Vector3DList'
+[s1,sL1] = DefPyStartClass(classStr, pyClassStr, "The Vector3DList is used to represent lists of 3D vectors." +
+        ' \\\\ \\\\ Usage: \\bi\n'+
+        '  \\item Create empty \\texttt{Vector3DList} with \\texttt{x = Vector3DList()} \n'+
+        '  \\item Create \\texttt{Vector3DList} with list of numpy arras \\texttt{x = Vector3DList([numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.])] )}\n'+
+        '  \\item Create \\texttt{Vector3DList} with list of lists \\texttt{x = Vector3DList([[1.,2.,3.], [4.,5.,6.]])}\n'+
+        '  \\item Append item: \\texttt{x.Append([0.,2.,4.])}\n'+
+        '  \\item Convert into list of numpy arrays: \\texttt{x.GetPythonObject()}\n'+
+        '\\ei\n')
+s+=s1; sL+=sL1
+
+s+= '        .def(py::init<const py::object&>(), py::arg("listOfArrays"))\n' #constructor with numpy array or list of lists
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Append', cName='PyAppend', 
+                                argList=['pyArray'],
+                                description="add single array or list to VectorList; array or list must have appropriate dimension!"); s+=s1; sL+=sL1
+                                                                                                            
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetPythonObject', cName='GetPythonObject', 
+                                description="convert VectorList list of numpy arrays"); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__repr__', 
+                               cName='[](const PyVector3DList &item) {\n            return EXUstd::ToString(item.GetPythonObject()); }', 
+                                description="return the string representation of the VectorList",
+                                isLambdaFunction = True); s+=s1; sL+=sL1
+
+#++++++++++++++++
+[s1,sL1] = DefPyFinishClass('PyVector3DList'); s+=s1; sL+=sL1
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#documentation and pybindings for PyMatrix3DList
+# classStr = 'PyMatrix3DList'
+# pyClassStr = 'Matrix3DList'
+# [s1,sL1] = DefPyStartClass(classStr, pyClassStr, "The Matrix3DList is used to represent lists of 3D vectors." +
+#         ' \\\\ \\\\ Usage: \\bi\n'+
+#         '  \\item Create empty \\texttt{Matrix3DList} with \\texttt{x = Matrix3DList()} \n'+
+#         '  \\item Create \\texttt{Matrix3DList} with list of numpy arras \\texttt{x = Matrix3DList(numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]))}\n'+
+#         '  \\item Create \\texttt{Matrix3DList} with list of lists \\texttt{x = Matrix3DList([[1.,2.,3.], [4.,5.,6.]])}\n'+
+#         '  \\item Append item: \\texttt{x.Append([0.,2.,4.])}\n'+
+#         '  \\item Convert into list of numpy arrays: \\texttt{x.GetPythonObject()}\n'+
+#         '\\ei\n')
+# s+=s1; sL+=sL1
+
+# s+= '        .def(py::init<const py::object&>(), py::arg("listOfArrays"))\n' #constructor with numpy array or list of lists
+
+# [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Append', cName='PyAppend', 
+#                                 argList=['pyArray'],
+#                                 description="add single array or list to VectorList; array or list must have appropriate dimension!"); s+=s1; sL+=sL1
+                                                                                                            
+# [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetPythonObject', cName='GetPythonObject', 
+#                                 description="convert VectorList list of numpy arrays"); s+=s1; sL+=sL1
+
+# [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__repr__', 
+#                                cName='[](const PyMatrix3DList &item) {\n            return EXUstd::ToString(item.GetPythonObject()); }', 
+#                                 description="return the string representation of the VectorList",
+#                                 isLambdaFunction = True); s+=s1; sL+=sL1
+
+# #++++++++++++++++
+# [s1,sL1] = DefPyFinishClass('PyMatrix3DList'); s+=s1; sL+=sL1
+
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

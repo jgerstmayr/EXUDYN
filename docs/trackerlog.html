@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1041, 
-Number of resolved issues = 879 (37 in current minor version), 
-Exudyn version = 1.2.37, 
-last change =  2022-04-12
+Number of issues = 1060, 
+Number of resolved issues = 898 (56 in current minor version), 
+Exudyn version = 1.2.56.dev1, 
+last change =  2022-04-28
 
 
 <table style = "width:100%">
@@ -38,6 +38,54 @@ last change =  2022-04-12
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1049</td>
+    <td>MacOS               </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check if flag -mmacosx-version-min=11.0 is needed in setup.py and if this causes problems on older pre-AppleM1 which needs wheel version 10.9</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-04-25</td>
+    <td>2022-06-24</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1048</td>
+    <td>sse2neon.h          </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> on Apple, sse2neon.h is missing (include from github) and compilation fails; check if this only happens on M1 and change include modes of sse2neon.h; add this file to python setup.py for other cases</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-04-25</td>
+    <td>2022-06-24</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1047</td>
+    <td>Matrix3DList        </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add new structure Matrix3DList; used to create list of 3D matrices and transfer into MainSystem mbs, e.g. in KinematicTree</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-25</td>
+    <td>2022-06-24</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>1038</td>
     <td>simulateInRealtime  </td>
@@ -141,22 +189,6 @@ last change =  2022-04-12
     <td>RAISED  </td>
     <td> add example of reeving system</td>
     <td>TESTING</td>
-    <td></td>
-    <td>2022-03-28</td>
-    <td>2022-05-27</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1015</td>
-    <td>TestSuite           </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add notes in Exudyn on testsuite (add remark: in many cases for tracking of changes, not for validation)</td>
-    <td>DOCU</td>
     <td></td>
     <td>2022-03-28</td>
     <td>2022-05-27</td>
@@ -326,7 +358,7 @@ last change =  2022-04-12
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0954</td>
     <td>ObjectContactFrictionCircleCable2D</td>
     <td>JG</td>
@@ -342,7 +374,7 @@ last change =  2022-04-12
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0948</td>
     <td>update mecanumWheelRollingDiscTest</td>
     <td>JG</td>
@@ -624,22 +656,6 @@ last change =  2022-04-12
     <td></td>
     <td>2022-02-02</td>
     <td>2022-04-03</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0905</td>
-    <td>Add description of Pybind11 interaction</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add some description of C++-Python interaction and entry points into C++</td>
-    <td>DOCU</td>
-    <td></td>
-    <td>2022-02-01</td>
-    <td>2022-04-02</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1360,22 +1376,6 @@ last change =  2022-04-12
     <td></td>
     <td>2021-09-03</td>
     <td>2021-11-02</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0744</td>
-    <td>SerialRobot2MBS     </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> interchange joint markers, affecting the sign of the measured joint rotation angle, being now consistent with minimum coordinate formulations / kinematicTree</td>
-    <td>CHANGE</td>
-    <td></td>
-    <td>2021-09-01</td>
-    <td>2021-10-31</td>
     <td></td>
     <td></td>
     <td></td>
@@ -2631,6 +2631,262 @@ last change =  2022-04-12
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1059</td>
+    <td>MacOS compile       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> sse2neon.h not found</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-04-28</td>
+    <td>2022-06-27</td>
+    <td>2022-04-28 11:58</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>exclude parallel threads from MacOS version until resolving compilation problem</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1058</td>
+    <td>ClearWorkspace      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> also close open matplotlib figures before they are lost</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-04-27</td>
+    <td>2022-06-26</td>
+    <td>2022-04-27 19:47</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1057</td>
+    <td>solutionInformation </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> replace new lines in solutionInformation when writing into coordinatesSolution file in order to preserve readable file structure</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-27</td>
+    <td>2022-06-26</td>
+    <td>2022-04-27 10:22</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1056</td>
+    <td>MarkerSuperElementRigid</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add check for node sizes used in marker</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-26</td>
+    <td>2022-06-25</td>
+    <td>2022-04-26 22:29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1055</td>
+    <td>NodeGenericODE2 error</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> NodeGenericODE2 raises system error CNodeODE2::GetVelocity: call illegal during solver initialize</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-04-26</td>
+    <td>2022-06-25</td>
+    <td>2022-04-26 22:29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added GetVelocity and GetAcceleration to NodeGenericODE2, with risk that these functions are used unintended</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1054</td>
+    <td>NodeIndex, ...     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add possibility to allow simple arithmetic operations +,-,*,-() for NodeIndex, MarkerIndex, etc.</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-26</td>
+    <td>2022-06-25</td>
+    <td>2022-04-26 22:29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1053</td>
+    <td>coordinatesSolution </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> coordinatesSolutionFile is corrupted for ACF test in text mode</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-04-26</td>
+    <td>2022-06-25</td>
+    <td>2022-04-27 10:29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>not repeatable; may have been caused by iPython crash</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1052</td>
+    <td>ClearWorkspace      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> has no effect on global variables</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-04-25</td>
+    <td>2022-06-24</td>
+    <td>2022-04-27 19:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>NOTE: matplotlib looses figures which cannot be closed with closeAll in PlotSensor</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1051</td>
+    <td>CreateNonlinearFEMObjectGenericODE2NGsolve</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> test FEM.CreateNonlinearFEMObjectGenericODE2NGsolve with simple example</td>
+    <td>TESTING</td>
+    <td></td>
+    <td>2022-04-25</td>
+    <td>2022-06-24</td>
+    <td>2022-04-27 10:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>included in ACFtest.py</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1050</td>
+    <td>CreateLinearFEMObjectGenericODE2</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> FEM.CreateLinearFEMObjectGenericODE2 not working</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-04-25</td>
+    <td>2022-06-24</td>
+    <td>2022-04-25 17:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1046</td>
+    <td>Vector3DList        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add new structure Vector3DList; used to create list of 3D vectors and transfer into MainSystem mbs, e.g. in KinematicTree</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-25</td>
+    <td>2022-06-24</td>
+    <td>2022-04-25 08:40</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1045</td>
+    <td>dispy cluster       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fixed some bugs in ProcessParameterList (http_server) ; added some checks (if dispy is installed); cluster is used now iff clusterHostNames != []) and useMultiProcessing==True</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-23</td>
+    <td>2022-06-22</td>
+    <td>2022-04-23 17:09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1044</td>
+    <td>GetNodesOnLine      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> FEM.GetNodesOnLine raises exception</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-04-22</td>
+    <td>2022-06-21</td>
+    <td>2022-04-22 18:28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1043</td>
+    <td>serialRobotTest.py  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> class robotics.Robot computes wrong static torque compensation in function StaticTorques(HT)</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-04-21</td>
+    <td>2022-06-20</td>
+    <td>2022-04-21 15:15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>due to #0744 this bug has been magically resolved!</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1042</td>
+    <td>multithreaded compilation</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> enable setup.py with multithreaded compilation, using Monkey patch for compiler with multithreading library; enable parallel build with: python setup.py install --parallel</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-21</td>
+    <td>2022-06-20</td>
+    <td>2022-04-21 02:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1041</td>
+    <td>Pluecker transforms </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> correct Pluecker transform T66 functions, such as RotationTranslation2T66, etc. and introduce inverse functions for usage in Featherstone algorithm</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-04-19</td>
+    <td>2022-06-18</td>
+    <td>2022-04-19 16:16</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>note that rotations in RotationX2T66, RotationY2T66, RotationZ2T66 are transposed/CHANGED as compared to previous version; T66toRotationTranslation is corrected/CHANGED and now is consistent with the backtransformation; InverseT66toRotationTranslation does the inverse operation (but also for rotation); RotationTranslation2T66 corrected/CHANGED; HT2T66 is corrected/CHANGED with inverse version HT2T66Inverse; rotations in Exudyn now consistent between T66, HT and other rotation matrices</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1040</td>
     <td>contour bodies      </td>
     <td>JG</td>
@@ -2917,6 +3173,22 @@ last change =  2022-04-12
     <td></td>
     <td></td>
     <td>switched to reference length in computation of relative sticking position as given in theDoc; leads to improved results</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1015</td>
+    <td>TestSuite           </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add notes in Exudyn on testsuite (add remark: in many cases for tracking of changes, not for validation)</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-03-28</td>
+    <td>2022-05-27</td>
+    <td>2022-04-27 20:21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1014</td>
@@ -4193,6 +4465,22 @@ last change =  2022-04-12
     <td>2022-02-01</td>
     <td>2022-04-02</td>
     <td>2022-02-01 18:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0905</td>
+    <td>Add description of Pybind11 interaction</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add some description of C++-Python interaction and entry points into C++</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-02-01</td>
+    <td>2022-04-02</td>
+    <td>2022-04-27 20:37</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -6037,6 +6325,22 @@ last change =  2022-04-12
     <td></td>
     <td></td>
     <td>see processing.ComputeSensitivities(...)</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0744</td>
+    <td>CreateRedundantCoordinateMBS</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> interchange joint markers, affecting the sign of the measured joint rotation angle, being now consistent with minimum coordinate formulations / kinematicTree; also interchange jointTorque0List/1List to be consistent with marker list </td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2021-09-01</td>
+    <td>2021-10-31</td>
+    <td>2022-04-20 00:37</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>adapted SerialRobotTestDH2.py and SerialRobotTSD.py in Example folders for corrected signs</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0742</td>

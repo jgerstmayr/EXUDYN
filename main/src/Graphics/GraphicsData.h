@@ -295,7 +295,7 @@ public:
 	Index AddText(const Vector3D& point, const Float4& color, const STDstring& text, float size, float offsetX, float offsetY, 
 		Index itemID)
 	{
-		AddText(Float3({ (float)point[0],(float)point[1],(float)point[2] }), color, text, size, offsetX, offsetY, itemID);
+		return AddText(Float3({ (float)point[0],(float)point[1],(float)point[2] }), color, text, size, offsetX, offsetY, itemID);
 	}
 
 	//! create text from string with 3D-point, color and size (0 ... use default text size)

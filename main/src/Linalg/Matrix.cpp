@@ -89,7 +89,7 @@
 template<typename T>
 bool MatrixBase<T>::Invert()
 {
-	if (numberOfRows*numberOfColumns == 0) return true; //no need to invert; but this is no error!
+	if (numberOfRows*numberOfColumns == 0) {return true; }//no need to invert; but this is no error!
 
 	//throw EXUexception("MatrixBase::Invert(): only valid for quadratic matrices");
 	CHECKandTHROW(numberOfColumns == numberOfRows && data != NULL, "MatrixBase::Invert(): only valid for quadratic matrices");
@@ -162,7 +162,6 @@ bool MatrixBase<T>::Invert()
 
 	return true;
 }
-
 
 
 //if used, this should be put into Matrix.h, otherwise it will give a linker error:

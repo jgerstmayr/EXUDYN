@@ -102,10 +102,11 @@ The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training
 
 The following people have contributed to Python and C++ library implementations:
 \bi
-  \item Joachim Sch{\"o}berl (Providing specialized NGsolve core library with \texttt{taskmanager} for \mybold{multithreaded parallelization}; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
-  \item Stefan Holzinger (Lie group solvers in Python, Lie group node)
-  \item Peter Manzl (ConvexRoll Python and C++ implementation / pip install on linux / wsl with graphics)
-  \item Martin Sereinig (special robotics functionality)
+  \item Joachim Sch{\"o}berl, TU Vienna (Providing specialized NGsolve core library with \texttt{taskmanager} for \mybold{multithreaded parallelization}; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
+  \item Stefan Holzinger, University of Innsbruck (Lie group solvers in Python, Lie group node)
+  \item Andreas Zw{\"o}lfer, Technical University Munich (FFRF and CMS formulation)
+  \item Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation / pip install on linux / wsl with graphics)
+  \item Martin Sereinig, University of Innsbruck (special robotics functionality)
 \ei
 The following people have contributed to examples and other parts:
 \bi
@@ -185,7 +186,7 @@ A simple way to install \codeName\ on Windows 10 (and maybe also Windows 7) is t
   \item NOTE (2022-03-18): \texttt{.msi} installers are now only available for selected Python versions; however, wheels can be downloaded directly from \exuUrl{https://pypi.org/project/exudyn}{https://pypi.org/project/exudyn}, see below
   \item For the 64bits Python 3.7 version, double click on (version may differ):\ignoreRST{\\} \texttt{exudyn-1.0.248.win-amd64-py3.7.msi}
   \item Follow the instructions of the installer
-  \item If Python / Anaconda is not found by the installer, provide the 'python directory' as the installation directory of Anaconda3, which usually is installed in:\\
+  \item If Python / Anaconda is not found by the installer, provide the 'Python directory' as the installation directory of Anaconda3, which usually is installed in:\\
   \texttt{C:$\backslash$ProgramData$\backslash$Anaconda3}
 \ei
 
@@ -296,12 +297,12 @@ For a compatible Mac OS X system some pre-built wheels will be available via pyp
 \mybold{Compile from source}:\vspace{3pt}\\
 If you would like to compile from source, just use a bash terminal on your Mac, and do the following steps inside the \texttt{main} directory of your repository and type
 \bi
+  \item uninstall if old version exists (may need to repeat this!): \texttt{pip uninstall exudyn}
   \item \texttt{python setup.py bdist\_wheel}
   \item[] $\ra$ this compiles and takes approx.~5 minutes, depending on your machine
   \item[] $\ra$ it may produce some errors, depending on your version; if there are some liker errors (saying that there is no '\texttt{-framework Cocoa' and '-framework OpenGL}', just go back in the terminal and copy everything from '\texttt{g++ ...}' until the end of the last command '\texttt{-mmacosx-verion-min...}' and paste it into the terminal. Calling that again will finalize linking; then run again
   \item[] \texttt{python setup.py bdist\_wheel}
-  \item[] $\ra$ this now creates the wheel (if you want to distribute) in the \texttt{dist} folder
-  \item[] alternatively just call
+  \item[] $\ra$ this now creates the wheel (if you want to distribute) in the \texttt{dist} folder; note that this wheel has a wrong version number (11.0) while it may need to be changed to 10.9 manually in order that it can be installed
   \item \texttt{python setup.py install}
   \item[] to install exudyn
 \ei
@@ -684,7 +685,7 @@ which draws the according object in red and others gray/transparent (but sometim
 \begin{lstlisting}
   =========================================
   SYSTEM ERROR [file 'C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py', line 214]: 
-  Error in python USER FUNCTION 'LoadCoordinate::loadVectorUserFunction' (referred line number my be wrong!):
+  Error in Python USER FUNCTION 'LoadCoordinate::loadVectorUserFunction' (referred line number my be wrong!):
   NameError: name 'sin' is not defined
 
   At:
@@ -698,7 +699,7 @@ which draws the according object in red and others gray/transparent (but sometim
     C:\ProgramData\Anaconda3_64b37\lib\site-packages\IPython\core\interactiveshell.py(3331): run_code
   ...
   ...
-  ; check your python code!
+  ; check your Python code!
   =========================================
 
   Solver stopped! use showHints=True to show helpful information

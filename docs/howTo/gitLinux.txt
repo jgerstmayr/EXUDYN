@@ -18,7 +18,7 @@ git config --global user.email "your@email"
 
 #go into some local, empty folder (e.g. exudyn_git)
 #clone downloads the whole repo and may take some time depending on your internet connection (>300MB)
-git clone https://github.com/jgerstmayr/EXUDYN
+git clone https://github.com/jgerstmayr/EXUDYN --depth 1
 
 
 #+++++++++++

@@ -20,7 +20,7 @@
 #if defined(use_AVX2) || defined(use_AVX512)
 	#if defined(__EXUDYN__LINUX__ARM__) //#JG2022-03-19; RaspberryPi
 	#include <arm_neon.h>
-	#elif defined(__EXUDYN__APPLE__)
+	#elif defined(__EXUDYN__APPLEM1__)
 	#include "sse2neon.h"
 	#else
 	#include <immintrin.h> // AVX/AVX2 intrinsic header

@@ -107,9 +107,10 @@ if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https:
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #Use fem to import FEM model and create FFRFreducedOrder object
-    fem.ImportMeshFromNGsolve(mesh, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
+    [bfM, bfK, fes] = fem.ImportMeshFromNGsolve(mesh, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
     meshCreated = True
     if (meshH==0.01): fem.SaveToFile(fileName)
+
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #compute Hurty-Craig-Bampton modes
@@ -136,7 +137,11 @@ if True: #now import mesh as mechanical model to EXUDYN
     if True: #pure eigenmodes
         print("compute eigen modes... ")
         start_time = time.time()
-        fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)
+        
+        if False: #faster but not so accurate
+            fem.ComputeEigenmodesNGsolve(bfM, bfK, nModes, excludeRigidBodyModes = 6)
+        else:
+            fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)
         print("eigen modes computation needed %.3f seconds" % (time.time() - start_time))
         print("eigen freq.=", fem.GetEigenFrequenciesHz())
 
@@ -165,8 +170,13 @@ if True: #now import mesh as mechanical model to EXUDYN
         #varType = exu.OutputVariableType.StrainLocal
         print("ComputePostProcessingModes ... (may take a while)")
         start_time = time.time()
-        fem.ComputePostProcessingModes(material=mat, 
-                                       outputVariableType=varType)
+        #without NGsolve:
+        if True: #faster with ngsolve
+            fem.ComputePostProcessingModesNGsolve(fes, material=mat,
+                                           outputVariableType=varType)
+        else:
+            fem.ComputePostProcessingModes(material=mat, 
+                                            outputVariableType=varType)
         print("   ... needed %.3f seconds" % (time.time() - start_time))
         SC.visualizationSettings.contour.reduceRange=True
         SC.visualizationSettings.contour.outputVariable = varType

@@ -805,6 +805,14 @@ void CObjectFFRF::GetOutputVariableSuperElement(OutputVariableType variableType,
 	}
 }
 
+//! return the mesh node pointer; for consistency checks
+CNodeODE2* CObjectFFRF::GetMeshNode(Index meshNodeNumber) const
+{
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRF::GetMeshNode: meshNodeNumber out of range");
+
+	return (CNodeODE2*)(GetCNode(meshNodeNumber+1));
+}
+
 //! return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh
 Vector3D CObjectFFRF::GetMeshNodeLocalPosition(Index meshNodeNumber, ConfigurationType configuration) const
 {

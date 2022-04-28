@@ -1,6 +1,46 @@
 % definition of structures
 
 %++++++++++++++++++++++++++++++++++++++
+\mysubsection{Structures for structural elements}
+This section includes data structures for structural elements, surch as beams (and plates in future). These classes are used as interface between Python libraries for structural elements and Exudyn internal classes.
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{BeamSection} \label{sec:BeamSection}
+Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which $X$ represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t.\ bending; $Y$ and $Z$ are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero.\\ 
+%
+BeamSection has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    length &     PReal &      &     0. &     $l_b$ [SI:m] length of beam element\\ \hline
+    massPerLength &     UReal &      &     0. &     $\rho A\,$ [SI:kg/m] mass per unit length of the beam\\ \hline
+    sectionalDampingMatrix &     Matrix6D &      &     Matrix6D[0.] &     $\LU{c}{\Dm} \in \Rcal^{6 \times 6}\,$ [SI:Nsm$^2$, Nsm and Ns (mixed)] sectional linear damping matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Dm} \vp{\LU{c}{\tepsDot}}{\LU{c}{\tkappaDot}}$; note that this damping models is highly simplified and usually, it cannot be derived from material parameters; however, it can be used to adjust model damping to observed damping behavior.\\ \hline
+    sectionalStiffnessMatrix &     Matrix6D &      &     Matrix6D[0.] &     $\LU{c}{\Cm} \in \Rcal^{6 \times 6}\,$ [SI:Nm$^2$, Nm and N (mixed)] sectional stiffness matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Cm} \vp{\LU{c}{\teps}}{\LU{c}{\tkappa}}$ with sectional normal force $\LU{c}{\nv}$, torque $\LU{c}{\mv}$, strain $\LU{c}{\teps}$ and curvature $\LU{c}{\tkappa}$, all quantities expressed in the cross section frame $c$.\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{BeamSectionGeometry} \label{sec:BeamSectionGeometry}
+Data structure for definition of 2D and 3D beam (cross) section geometrical properties. Used for visualization and contact.\\ 
+%
+BeamSectionGeometry has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    crossSectionRadiusY &     UReal &      &     0. &     $c_Y\,$ [SI:m] $Y$ radius for circular cross section\\ \hline
+    crossSectionRadiusZ &     UReal &      &     0. &     $c_Z\,$ [SI:m] $Z$ radius for circular cross section\\ \hline
+    crossSectionType &     CrossSectionType &      &     CrossSectionType::Polygon &     \tabnewline Type of cross section: Polygon, Circular, etc.\\ \hline
+    polygonalPoints &     std::vector<Vector2D> &      &      &     $\pv_{pg}\,$ [SI: (m,m) ] list of polygonal ($Y,Z$) points in local beam cross section coordinates, defined in positive rotation direction\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%++++++++++++++++++++++++++++++++++++++
 \mysubsection{Simulation settings}
 This section includes hierarchical structures for simulation settings, e.g., time integration, static solver, Newton iteration and solution file export.
 
@@ -390,8 +430,8 @@ VSettingsBeams has the following items:
     axialTiling &     PInt &      &     8 &     number of segments to discretise the beams axis\\ \hline
     crossSectionTiling &     PInt &      &     4 &     number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing\\ \hline
     drawVertical &     bool &      &     False &     draw contour plot outputVariables 'vertical' along beam height; contour.outputVariable must be set accordingly\\ \hline
-    drawVerticalColor &     Float4 &     4 &     [0.2,0.2,0.2,1.] &     \tabnewline color for outputVariable to be drawn along cross seciton (vertically)\\ \hline
-    drawVerticalFactor &     float &      &     1. &     factor for outputVariable to be drawn along cross seciton (vertically)\\ \hline
+    drawVerticalColor &     Float4 &     4 &     [0.2,0.2,0.2,1.] &     \tabnewline color for outputVariable to be drawn along cross section (vertically)\\ \hline
+    drawVerticalFactor &     float &      &     1. &     factor for outputVariable to be drawn along cross section (vertically)\\ \hline
     drawVerticalLines &     bool &      &     True &     draw additional vertical lines for better visibility\\ \hline
     drawVerticalOffset &     float &      &     0. &     offset for vertical drawn lines; offset is added before multiplication with drawVerticalFactor\\ \hline
     drawVerticalValues &     bool &      &     False &     show values at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point!\\ \hline

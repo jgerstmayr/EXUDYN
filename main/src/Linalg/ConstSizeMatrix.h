@@ -551,6 +551,72 @@ public:
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// EXTENDED FUNCTIONS
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//Adds row factor*'fromRow' to row 'toRow'
+	void AddRowToRowWithFactor(SignedIndex fromRow, SignedIndex toRow, T factor)
+	{
+		CHECKandTHROW((toRow < (SignedIndex)numberOfRows) && (fromRow < (SignedIndex)numberOfRows), "ConstSizeMatrixBase::AddRowToRowWithFactor(SignedIndex,SignedIndex, T): invalid toRow");
+
+		SignedIndex j = (fromRow - toRow)*(SignedIndex)numberOfColumns;  //offset
+		SignedIndex end = (toRow + 1) * (SignedIndex)numberOfColumns - 1;
+		for (SignedIndex i = toRow * (SignedIndex)numberOfColumns; i <= end; i++)
+		{
+			data[i] += factor * data[j + i];
+		}
+	}
+
+	//Adds row factor*'fromRow' to row 'toRow'; consider only columns 'fromCol' ... 'toCol'
+	void AddRowToRowWithFactor(SignedIndex fromRow, SignedIndex toRow, T factor, SignedIndex fromCol, SignedIndex toCol)
+	{
+		CHECKandTHROW((toRow < (SignedIndex)numberOfRows) && (fromRow < (SignedIndex)numberOfRows), "ConstSizeMatrixBase::AddRowToRowWithFactor: invalid toRow");
+
+		SignedIndex j = (fromRow - toRow)*(SignedIndex)numberOfColumns; //offset
+		SignedIndex end = toRow * (SignedIndex)numberOfColumns + toCol;
+		for (SignedIndex i = toRow * (SignedIndex)numberOfColumns + fromCol; i <= end; i++)
+		{
+			data[i] += factor * data[j + i];
+		}
+	}
+
+	//Multiplies the row 'row' with 'value'
+	void MultiplyRow(Index row, T value)
+	{
+		CHECKandTHROW(row < numberOfRows, "ConstSizeMatrixBase::MultiplyRow: invalid row");
+
+		for (Index i = row * numberOfColumns; i < (row + 1) * numberOfColumns; i++) { data[i] *= value; }
+	}
+
+	//Multiplies the column 'column' with 'value'
+	void MultiplyColumn(Index column, T value)
+	{
+		CHECKandTHROW(column < numberOfColumns, "ConstSizeMatrixBase::MultiplyColumn: invalid column");
+
+		for (Index i = column; i < numberOfRows*numberOfColumns; i += numberOfColumns) { data[i] *= value; }
+	}
+
+	//! Swaps the rows 'row1' and 'row2'
+	void SwapRows(Index row1, Index row2)
+	{
+		if (row1 == row2) { return; }
+		CHECKandTHROW((row1 < numberOfRows) && (row2 < numberOfRows), "ConstSizeMatrixBase::SwapRows: invalid row");
+
+		for (Index i = 0; i < numberOfColumns; i++)
+		{
+			EXUstd::Swap((*this)(row1, i), (*this)(row2, i));
+		}
+	}
+
+	//! Swaps the columns 'column1' and 'column2'
+	void SwapColumns(Index columns1, Index columns2)
+	{
+		if (columns1 == columns2) { return; }
+		CHECKandTHROW((columns1 < numberOfColumns) && (columns2 < numberOfColumns), "ConstSizeMatrixBase::SwapColumns: invalid column");
+
+		for (Index i = 0; i < numberOfRows; i++)
+		{
+			EXUstd::Swap((*this)(i, columns1), (*this)(i, columns2));
+		}
+	}
+
 
 	//! computes and returns the transposed of *this (does not change *this)
 	ConstSizeMatrixBase<T, dataSize> GetTransposed() const
@@ -565,60 +631,82 @@ public:
 		return result;
 	}
 
+	//! use Gaussian elimination to invert matrix (slow, old school approach); store inverse in mInverse; modifies *this !; return true, if successful
+	bool ComputeInverse(ConstSizeMatrixBase<T, dataSize>& mInverse);
+
+	//! use Gaussian elimination to invert matrix (slow, old school approach); return true, if successful
+	bool Invert()
+	{
+		ConstSizeMatrixBase<T, dataSize> mInverse;
+		bool rv = ComputeInverse(mInverse);
+		if (rv)
+		{
+			*this = mInverse;
+		}
+		return rv;
+	}
+
 	//! get fast inverse for 1D, 2D and 3D case
 	ConstSizeMatrixBase<T, dataSize> GetInverse() const
 	{
-		CHECKandTHROW(this->numberOfColumns <= 3 && this->numberOfColumns == this->numberOfRows, "ConstSizeMatrixBase::GetInverse(): only implemented for dimensions (1x1, 2x2 and 3x3)");
+		//delete: (now implemented for general case ...)
+		//CHECKandTHROW(this->numberOfColumns <= 3 && this->numberOfColumns == this->numberOfRows, "ConstSizeMatrixBase::GetInverse(): only implemented for dimensions (1x1, 2x2 and 3x3)");
 
 		switch (this->numberOfColumns)
 		{
-		case 1:
-		{
-			T x = (*this)(0, 0);
-			CHECKandTHROW(x != 0, "Matrix1D::Invert: matrix is singular");
-			return ConstSizeMatrixBase<T, dataSize>(1, 1, { (T)1. / x });
-			break;
-		}
-		case 2:
-		{
-			//m=[a b; c d]
-			//minv = 1/(ad-bc)[d -b; -c a]
-			ConstSizeMatrixBase<T, dataSize> result(2, 2);
-			T det = ((*this)(0, 0)*(*this)(1, 1) - (*this)(0, 1)*(*this)(1, 0));
-			CHECKandTHROW(det != 0, "Matrix2D::Invert: matrix is singular");
+			case 1:
+			{
+				T x = (*this)(0, 0);
+				CHECKandTHROW(x != 0, "Matrix1D::GetInverse: matrix is singular");
+				return ConstSizeMatrixBase<T, dataSize>(1, 1, { (T)1. / x });
+				break;
+			}
+			case 2:
+			{
+				//m=[a b; c d]
+				//minv = 1/(ad-bc)[d -b; -c a]
+				ConstSizeMatrixBase<T, dataSize> result(2, 2);
+				T det = ((*this)(0, 0)*(*this)(1, 1) - (*this)(0, 1)*(*this)(1, 0));
+				CHECKandTHROW(det != 0, "Matrix2D::GetInverse: matrix is singular");
 
-			T invdet = (T)1 / det;
+				T invdet = (T)1 / det;
 
-			result(0, 0) = invdet * (*this)(1, 1);
-			result(0, 1) = -invdet * (*this)(0, 1);
-			result(1, 0) = -invdet * (*this)(1, 0);
-			result(1, 1) = invdet * (*this)(0, 0);
-			return result;
-			break;
-		}
-		case 3:
-		{
-			const ConstSizeMatrixBase<T, dataSize>& m = *this;
-			T det = m(0, 0) * (m(1, 1) * m(2, 2) - m(2, 1) * m(1, 2)) - m(0, 1) * (m(1, 0) * m(2, 2) - m(1, 2) * m(2, 0)) + m(0, 2) * (m(1, 0) * m(2, 1) - m(1, 1) * m(2, 0));
-			CHECKandTHROW(det != 0, "Matrix3D::Invert: matrix is singular");
+				result(0, 0) = invdet * (*this)(1, 1);
+				result(0, 1) = -invdet * (*this)(0, 1);
+				result(1, 0) = -invdet * (*this)(1, 0);
+				result(1, 1) = invdet * (*this)(0, 0);
+				return result;
+				break;
+			}
+			case 3:
+			{
+				const ConstSizeMatrixBase<T, dataSize>& m = *this;
+				T det = m(0, 0) * (m(1, 1) * m(2, 2) - m(2, 1) * m(1, 2)) - m(0, 1) * (m(1, 0) * m(2, 2) - m(1, 2) * m(2, 0)) + m(0, 2) * (m(1, 0) * m(2, 1) - m(1, 1) * m(2, 0));
+				CHECKandTHROW(det != 0, "Matrix3D::GetInverse: matrix is singular");
 
-			T invdet = (T)1 / det;
+				T invdet = (T)1 / det;
 
-			ConstSizeMatrixBase<T, dataSize> result(3, 3); // inverse of matrix m
-			result(0, 0) = invdet * (m(1, 1) * m(2, 2) - m(2, 1) * m(1, 2));
-			result(0, 1) = invdet * (m(0, 2) * m(2, 1) - m(0, 1) * m(2, 2));
-			result(0, 2) = invdet * (m(0, 1) * m(1, 2) - m(0, 2) * m(1, 1));
-			result(1, 0) = invdet * (m(1, 2) * m(2, 0) - m(1, 0) * m(2, 2));
-			result(1, 1) = invdet * (m(0, 0) * m(2, 2) - m(0, 2) * m(2, 0));
-			result(1, 2) = invdet * (m(1, 0) * m(0, 2) - m(0, 0) * m(1, 2));
-			result(2, 0) = invdet * (m(1, 0) * m(2, 1) - m(2, 0) * m(1, 1));
-			result(2, 1) = invdet * (m(2, 0) * m(0, 1) - m(0, 0) * m(2, 1));
-			result(2, 2) = invdet * (m(0, 0) * m(1, 1) - m(1, 0) * m(0, 1));
-			return result;
-			break;
-		}
-		default: //may not occur due to static assertion
-			return *this;
+				ConstSizeMatrixBase<T, dataSize> result(3, 3); // inverse of matrix m
+				result(0, 0) = invdet * (m(1, 1) * m(2, 2) - m(2, 1) * m(1, 2));
+				result(0, 1) = invdet * (m(0, 2) * m(2, 1) - m(0, 1) * m(2, 2));
+				result(0, 2) = invdet * (m(0, 1) * m(1, 2) - m(0, 2) * m(1, 1));
+				result(1, 0) = invdet * (m(1, 2) * m(2, 0) - m(1, 0) * m(2, 2));
+				result(1, 1) = invdet * (m(0, 0) * m(2, 2) - m(0, 2) * m(2, 0));
+				result(1, 2) = invdet * (m(1, 0) * m(0, 2) - m(0, 0) * m(1, 2));
+				result(2, 0) = invdet * (m(1, 0) * m(2, 1) - m(2, 0) * m(1, 1));
+				result(2, 1) = invdet * (m(2, 0) * m(0, 1) - m(0, 0) * m(2, 1));
+				result(2, 2) = invdet * (m(0, 0) * m(1, 1) - m(1, 0) * m(0, 1));
+				return result;
+				break;
+			}
+			default: //may not occur due to static assertion
+			{
+				ConstSizeMatrixBase<T, dataSize> result(false);
+				ConstSizeMatrixBase<T, dataSize> copyMatrix(*this);
+				bool rv = copyMatrix.ComputeInverse(result);
+				CHECKandTHROW(rv, "ConstSizeMatrixBase::GetInverse: matrix is singular");
+				return result;
+			}
 		}
 	}
 
@@ -826,6 +914,79 @@ SlimVectorBase<T, 2> operator*(const SlimVectorBase<T, 2>& vector, const ConstSi
 	}
 	return result;
 }
+
+//! use Gaussian elimination to invert matrix (slow, old school approach); store in mInverse; modifies *this matrix! return true, if successful
+template <typename T, Index dataSize>
+bool ConstSizeMatrixBase<T, dataSize>::ComputeInverse(ConstSizeMatrixBase<T, dataSize>& mInverse)
+{
+	if (numberOfRows*numberOfColumns == 0) {return true; }//no need to invert; but this is no error!
+
+	//throw EXUexception("MatrixBase::Invert(): only valid for quadratic matrices");
+	CHECKandTHROW(numberOfColumns == numberOfRows, "ConstSizeMatrixBase::Invert(): only valid for quadratic matrices");
+
+	//Insert identity-matrix on left-hand-side
+	mInverse.SetScalarMatrix(numberOfRows, 1.); //set unit matrix
+
+	T mij;
+	Index i, j, k;
+	Index maxj = 0;
+
+	// Solve lower triangular Matrix
+	for (j = 0; j < numberOfRows; j++)
+	{
+		//pout << "j=" << j << ":\n";
+		T pivot = fabs(GetItem(j, j));
+		Index pivotpos = j;
+		for (k = j + 1; k < numberOfRows; k++)
+		{
+			if (fabs(GetItem(k, j)) > pivot) { pivotpos = k; pivot = fabs(GetItem(k, j)); }
+		}
+		if (pivot == 0)
+		{
+			//SysError(STDstring("Matrix::Invert: problems with column ") + EXUstd::ToString(j) + "\n");
+			return false;
+		}
+		//pout << "  pivot = " << pivotpos << "\n";
+
+		maxj = EXUstd::Maximum(pivotpos, maxj);
+
+		mInverse.SwapRows(pivotpos, j);
+		SwapRows(pivotpos, j);
+		mInverse.MultiplyRow(j, 1. / GetItem(j, j));
+		MultiplyRow(j, 1. / GetItem(j, j));
+
+		//pout << "  minv=" << mInverse << "\n";
+		//pout << "  mInverse=   " << *this << "\n";
+
+		for (i = j + 1; i < numberOfColumns; i++)
+		{
+			mij = GetItem(i, j);
+			if (mij != 0.)
+			{
+				AddRowToRowWithFactor(j, i, -mij, j, numberOfColumns - 1); //j..numberOfRows
+				mInverse.AddRowToRowWithFactor(j, i, -mij, 0, maxj); //1..j
+			}
+		}
+
+	}
+
+	//backsubstitution ==> for inverse, this takes most of the time
+	for (j = numberOfRows - 1; j > 0; j--)
+	{
+		for (i = 0; i <= j - 1; i++)
+		{
+			mij = GetItem(i, j);
+			if (mij != 0)
+			{
+				mInverse.AddRowToRowWithFactor(j, i, -mij); //1..numberOfRows
+			}
+		}
+	}
+
+	return true;
+}
+
+
 
 
 template<Index dataSize>

@@ -2248,7 +2248,7 @@ class FEMinterface:
 
     #**classFunction: get node numbers lying on line defined by points p1 and p2 and tolerance, which is accepted for points slightly outside the surface
     def GetNodesOnLine(self, p1, p2, tolerance=1e-5):
-        return self.GetNodesOnCylinder(self, p1, p2, radius=0, tolerance=1e-5)
+        return self.GetNodesOnCylinder(p1, p2, radius=0, tolerance=1e-5)
 
     #**classFunction: get node numbers lying on cylinder surface; cylinder defined by cylinder axes (points p1 and p2), 
     #  cylinder radius and tolerance, which is accepted for points slightly outside the surface
@@ -2285,7 +2285,7 @@ class FEMinterface:
         cnt = 0
         nodeList=[]
         if len(self.nodes) != 1 or 'Position' not in self.nodes:
-            raise ValueError('FEMinterface.GetNodesOnCylinder: only Position type nodes allowed')
+            raise ValueError('FEMinterface.GetNodesOnCircle: only Position type nodes allowed')
         for nodeTypeName in self.nodes:
             for nodePoint in self.nodes[nodeTypeName]:
                 if abs(np.dot(nodePoint - point, normal)) <= tolerance:
@@ -2511,20 +2511,18 @@ class FEMinterface:
     #**output: return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
     def CreateLinearFEMObjectGenericODE2(self, mbs, color=[0.9,0.4,0.4,1.]):
         import exudyn as exu
-        femNodes = fem.GetNodePositionsAsArray()
+        femNodes = self.GetNodePositionsAsArray()
         
         #add nodes:
         allNodeList = [] #create node list
         for node in femNodes:
             allNodeList += [mbs.AddNode(NodePoint(referenceCoordinates=node))]
         
-        nRows = fem.NumberOfCoordinates()
+        nRows = self.NumberOfCoordinates()
         Mcsr = exu.MatrixContainer()
-        Mcsr.SetWithSparseMatrixCSR(nRows,nRows,fem.GetMassMatrix(sparse=True), useDenseMatrix=False)
-        # Mcsr.SetWithDenseMatrix(fem.GetMassMatrix(sparse=False), useDenseMatrix=True)
+        Mcsr.SetWithSparseMatrixCSR(nRows,nRows,self.GetMassMatrix(sparse=True), useDenseMatrix=False)
         Kcsr = exu.MatrixContainer()
-        Kcsr.SetWithSparseMatrixCSR(nRows,nRows,fem.GetStiffnessMatrix(sparse=True), useDenseMatrix=False)
-        # Kcsr.SetWithDenseMatrix(fem.GetStiffnessMatrix(sparse=False), useDenseMatrix=True)
+        Kcsr.SetWithSparseMatrixCSR(nRows,nRows,self.GetStiffnessMatrix(sparse=True), useDenseMatrix=False)
         
         #now add generic body built from FEM model with mass and stiffness matrix (optional damping could be added):
         oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers = allNodeList, 
@@ -2532,7 +2530,8 @@ class FEMinterface:
                                                         stiffnessMatrix=Kcsr,
                                                         #forceVector=np.zeros(nRows), 
                                                         #forceUserFunction=UFforce,
-                                                        visualization=VObjectGenericODE2(triangleMesh = fem.GetSurfaceTriangles(), color=color)
+                                                        visualization=VObjectGenericODE2(triangleMesh = self.GetSurfaceTriangles(), 
+                                                                                         color=color)
                                                         ))
         return [oGenericODE2, allNodeList]
         

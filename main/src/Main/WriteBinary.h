@@ -64,6 +64,18 @@ namespace ExuFile {
 			pointerSize = sizeof(&a);
 			bigEndian = (!SystemIsLittleEndian());
 		}
+
+		//! output operator for printing of settings
+		friend std::ostream& operator<<(std::ostream& os, const BinaryFileSettings& bfs)
+		{
+			os << "BinaryFileSettings:\n";
+			os << "  indexSize = " << bfs.indexSize << "\n";
+			os << "  realSize = " << bfs.realSize << "\n";
+			os << "  pointerSize = " << bfs.pointerSize << "\n";
+			os << "  bigEndian = " << bfs.bigEndian << "\n";
+			return os;
+		}
+
 	};
 
 

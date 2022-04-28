@@ -425,8 +425,8 @@ def WriteFunctionDescription2Latex(functionDict, moduleNamePython, pythonFileNam
 
 #*****************************************************
 #process files:
-print('create documentation for exudyn utilities ...')
-
+print('*****************************************')
+print('create documentation for exudyn utilities')
 
 #parse all files:
 sLatex = ''

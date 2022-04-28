@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:58 (last modified)
+* @date         2022-04-26  22:42:39 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,6 +86,18 @@ public: // AUTO:
 
     //! AUTO:  return configuration dependent position of node; returns always a 3D Vector; this makes no sense for NodeGenericODE2, but necessary for consistency; FUTURE: add 'drawable' flag to nodes in order to exclude drawing
     virtual Vector3D GetPosition(ConfigurationType configuration = ConfigurationType::Current) const override
+    {
+        return Vector3D({0.,0.,0.});
+    }
+
+    //! AUTO:  dummy function to avoid problems with markers, etc.
+    virtual Vector3D GetVelocity(ConfigurationType configuration = ConfigurationType::Current) const override
+    {
+        return Vector3D({0.,0.,0.});
+    }
+
+    //! AUTO:  dummy function to avoid problems with markers, etc.
+    virtual Vector3D GetAcceleration(ConfigurationType configuration = ConfigurationType::Current) const override
     {
         return Vector3D({0.,0.,0.});
     }

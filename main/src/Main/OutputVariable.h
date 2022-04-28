@@ -533,6 +533,15 @@ enum class DynamicSolverType {
 	DVERK6 = 10				//an explicit Runge Kutta method of 6th order with 5th order error estimation; includes adaptive step selection
 };
 
+//only used in Python and for explicit solver:
+enum class CrossSectionType {
+	_None = 0, //marks that no type is used
+	//bits to determine cases
+	Polygon = 1 << 0,	//!< Polygon defines profile
+	Circular = 1 << 1	//!< cross section is circle or elliptic
+};
+
+
 //! ostream operator for printing of enum class
 inline std::ostream& operator<<(std::ostream& os, DynamicSolverType value)
 {

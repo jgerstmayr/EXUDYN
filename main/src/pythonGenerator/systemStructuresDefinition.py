@@ -30,6 +30,46 @@
 # name2, , 0,Real, 12, , "this is a Real"
 # writeFile=test.h
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#property classes for structural elements
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = BeamSection
+#appendToFile=True #not done in first class
+writePybindIncludes = True
+latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Structures for structural elements}\nThis section includes data structures for structural elements, surch as beams (and plates in future). These classes are used as interface between Python libraries for structural elements and Exudyn internal classes.\n"
+classDescription = "Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which $X$ represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t.\ bending; $Y$ and $Z$ are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero."
+#V|F, pythonName,          cplusplusName,   size, type,                     defaultValue,args,  cFlags, parameterDescription
+#
+#see Bauchau, 2010, page 620
+V,  length,                             ,       , PReal,                    0.,             ,  P      , "$l_b$ [SI:m] length of beam element"
+V,  sectionalStiffnessMatrix,           ,       , Matrix6D,                 "Matrix6D(0.)", ,  P      , "$\LU{c}{\Cm} \in \Rcal^{6 \times 6}\,$ [SI:Nm$^2$, Nm and N (mixed)] sectional stiffness matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Cm} \vp{\LU{c}{\teps}}{\LU{c}{\tkappa}}$ with sectional normal force $\LU{c}{\nv}$, torque $\LU{c}{\mv}$, strain $\LU{c}{\teps}$ and curvature $\LU{c}{\tkappa}$, all quantities expressed in the cross section frame $c$."
+V,  sectionalDampingMatrix,             ,       , Matrix6D,                 "Matrix6D(0.)", ,  P      , "$\LU{c}{\Dm} \in \Rcal^{6 \times 6}\,$ [SI:Nsm$^2$, Nsm and Ns (mixed)] sectional linear damping matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Dm} \vp{\LU{c}{\tepsDot}}{\LU{c}{\tkappaDot}}$; note that this damping models is highly simplified and usually, it cannot be derived from material parameters; however, it can be used to adjust model damping to observed damping behavior."
+V,  massPerLength,                      ,       , UReal,                    0.,             ,  P      , "$\rho A\,$ [SI:kg/m] mass per unit length of the beam"
+# V,  bendingStiffnessY,                  ,       , UReal,                    0.,         ,      P      , "$EI_Y\,$ [SI:Nm$^2$] bending stiffness w.r.t.\ local $Y$-axis"
+# V,  bendingStiffnessZ,                  ,       , UReal,                    0.,         ,      P      , "$EI_Z\,$ [SI:Nm$^2$] bending stiffness w.r.t.\ local $Z$-axis; used in planar (2D) beam elements"
+# V,  bendingStiffnessY,                  ,       , UReal,                    0.,         ,      P      , "$EI_{YZ}\,$ [SI:Nm$^2$] bending stiffness coupling term; only used in special 3D beam elements"
+# V,  shearStiffnessY,                    ,       , UReal,                    0.,         ,      P      , "$GA_Y\,$ [SI:N] effective shear stiffness w.r.t.\ local $Y$-axis; including shear correction factors"
+# V,  shearStiffnessZ,                    ,       , UReal,                    0.,         ,      P      , "$GA_Z\,$ [SI:N] effective shear stiffness w.r.t.\ local $Z$-axis; including shear correction factors"
+# V,  torsionalStiffness,                 ,       , UReal,                    0.,         ,      P      , "$GI_X\,$ [SI:Nm$^2$] effective torsional stiffness; including shear correction factors"
+# V,  axialStiffness,                     ,       , UReal,                    0.,         ,      P      , "$EA\,$ [SI:N] axial stiffness"
+#
+writeFile=StructuralElementsDataStructures.h
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = BeamSectionGeometry
+appendToFile=True
+writePybindIncludes = True
+classDescription = "Data structure for definition of 2D and 3D beam (cross) section geometrical properties. Used for visualization and contact."
+#V|F, pythonName,          cplusplusName,   size, type,                     defaultValue,args,  cFlags, parameterDescription
+#
+V,  crossSectionType,                   ,       , CrossSectionType,         "CrossSectionType::Polygon", , P , "Type of cross section: Polygon, Circular, etc."
+V,  crossSectionRadiusY,                ,       , UReal,                    0.,         ,      P      , "$c_Y\,$ [SI:m] $Y$ radius for circular cross section"
+V,  crossSectionRadiusZ,                ,       , UReal,                    0.,         ,      P      , "$c_Z\,$ [SI:m] $Z$ radius for circular cross section"
+V,  polygonalPoints,                    ,       , std::vector<Vector2D>,      "",         ,      P      , "$\pv_{pg}\,$ [SI: (m,m) ] list of polygonal ($Y,Z$) points in local beam cross section coordinates, defined in positive rotation direction"
+#
+writeFile=StructuralElementsDataStructures.h
+
     
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = SolutionSettings
@@ -300,7 +340,7 @@ appendToFile=False
 latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Visualization settings}\nThis section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options.\n"
 writePybindIncludes = True
 classDescription = "General settings for visualization."
-#V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
+#V|F,   pythonName,                     cplusplusName,     size, type,          defaultValue,args,      cFlags, parameterDescription
 V,      graphicsUpdateInterval,         ,                  ,     float,        "0.1f",                 , P,      "interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed"
 V,      autoFitScene,                   ,                  ,     bool,         true,                   , P,      "automatically fit scene within first second after StartRenderer()"
 V,      textSize,                       ,                  ,     float,        "12.f",                 , P,      "general text size (font size) in pixels if not overwritten; if useWindowsMonitorScaleFactor=True, the the textSize is multplied with the windows monitor scaling factor for larger texts on on high resolution monitors; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)"

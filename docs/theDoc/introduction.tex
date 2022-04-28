@@ -25,7 +25,7 @@ Currently, the module structure is simple:
   \item \mybold{Python parts} (this list is continuously extended, see \refSection{sec:pythonUtilityFunctions}), sorted by importance:
   \bi
     \item[--] \texttt{exudyn.utilities}: constains helper classes in Python and includes \codeName\ modules \texttt{basicUtilities}, \texttt{rigidBodyUtilities}, \texttt{graphicsDataUtilities}, and \texttt{itemInterface}, which is recommended to be loaded at beginning of your model file
-    \item[--] \texttt{exudyn.itemInterface}: contains the interface, which transfers python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
+    \item[--] \texttt{exudyn.itemInterface}: contains the interface, which transfers Python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
     \item[--] \texttt{exudyn.basicUtilities}: contains basic helper classes, without importing numpy
     \item[--] \texttt{exudyn.rigidBodyUtilities}: contains important helper classes for creation of rigid body inertia, rigid bodies, and rigid body joints; includes helper functions for rotation parameterization, rotation matrices, homogeneous transformations, etc.
     \item[--] \texttt{exudyn.graphicsDataUtilities}: provides some basic drawing utilities, definition of colors and basic drawing objects (including \acs{STL} import); rotation/translation of graphicsData objects
@@ -144,7 +144,7 @@ As an example, consider a \texttt{NodePoint2D}:
   \item measuring the current position of \texttt{NodePoint2D} gives a 3D vector
   \item when attaching a \texttt{MarkerNodePosition} and a \texttt{LoadForceVector}, the force will be still a 3D vector
 \ei
-Furthermore, the local position in 2D objects is provided by a 3D vector. Usually, the dimensionality is given in the reference manual. User errors in the dimensionality will be usually detected either by the python interface (i.e., at the time the item is created) or by the system-preprocessor
+Furthermore, the local position in 2D objects is provided by a 3D vector. Usually, the dimensionality is given in the reference manual. User errors in the dimensionality will be usually detected either by the Python interface (i.e., at the time the item is created) or by the system-preprocessor
 
 \mysubsection{Items: Nodes, Objects, Loads, Markers, Sensors, ...} \label{sec:items}
 %
@@ -535,6 +535,35 @@ After the video has been created, you should delete the single images:
 }
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Examples, test models and test suite}
+\label{secExamplesTestModels}
+
+The main collection of examples and models is available under
+\bi
+  \item \texttt{main/pythonDev/Examples}
+  \item \texttt{main/pythonDev/TestModels}
+\ei
+You can use these examples to build up your own realistic models of multibody systems.
+Very often, these models show the way which already works. Alternative ways may exist, but
+sometimes there are limitations in the underlying C++ code, such that they won't work as you expect.
+
+We would like to note that, even that some examples and test models contain comparison to 
+papers of the literature or analytical solutions, there are many models which may not contain real
+mechanical values and these models may not be converged in space or time 
+(in order to keep running our test suite in less than a minute).
+
+Finally, note that the \texttt{main/pythonDev/TestModels} are often only intended to preserve functionality
+in the Python and C++ code (e.g., if global methods are changed), but they should not be misinterpreted as validation of the 
+implemented methods. The \texttt{TestModels} are used in the \codeName\ \mybold{TestSuite} \texttt{TestModels/runTestSuite.py}
+which is run after a full build of Python versions. Output for very version is written
+to \texttt{main/pythonDev/TestSuiteLogs} containing the \codeName\ version and Python version. At the end of these
+files, a summary is included to show if all models completed successfully (which means that a certain error level is achieved, which is rather small and different for the models).
+There are also performance tests (e.g., if a certain implementation leads to a significant drop of performance).
+However, the output of the performance tests is not stored on github.
+
+We are trying hard to achieve error-free algorithms of physically correct models, but there may always be some errors in the code.
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Contact problems}
 %
 Since Q4 2021 a contact module is available in \codeName. 
@@ -616,6 +645,9 @@ In general, to see where CPU time is lost, use the option turn on \texttt{simula
   \item try to avoid Python function or try to speed up Python functions
   \item instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in \texttt{mbs.SetPreStepUserFunction(...)}
   \item for \mybold{discontinuous problems}, try to adjust solver parameters; especially the discontinuous.iterationTolerance which may be too tight and cause many iterations; iterations may be limited by discontinuous.maxIterations, which at larger values solely multiplies the computation time with a factor if all iterations are performed
+  \item For multiple computations / multiple runs of Exudyn (parameter variation, optimization, compute sensitivities), you can use the processing sub module of \codeName\ to parallelize computations and achieve speedups proporional to the number of cores/threads of your computer; specifically using the \texttt{multiThreading} option or even using a cluster (using \texttt{dispy}, see \texttt{ParameterVariation(...)} function)
+  \item In case of multiprocessing and cluster computing, you may see a very high CPU usage of "Antimalware Service Executable", which is the Microsoft Defender Antivirus; you can turn off such problems by excluding \texttt{python.exe} from the defender (on your own risk!) in your settings:\\
+  Settings $\ra$ Update \& Security $\ra$ Windows Security $\ra$ Virus \& threat protection settings $\ra$ Manage settings $\ra$ Exclusions $\ra$ Add or remove exclusions 
 \ei
 \mybold{Possible speed ups for dynamic simulations}:
 \bi
@@ -675,33 +707,43 @@ The focus is therefore on:
 \ei
 
 \mysubsubsection{C++ Code structure}
-The functionality of the code is based on systems (MainSystem/CSystem) representing the multibody system or similar physical systems to be simulated. Parts of the core structure of Exudyn are:
+%
+The following \mybold{entry points} into the C++ code can be found:
+\bi
+  \item Python -- C++: the creation of the module \texttt{exudyn} is found in:\\
+    \texttt{main/src/Pymodules/PybindModule.cpp}\\
+  it includes large header files, which are automatically created for binding C++ code with Python.
+  \item The object factory for creation of items (calling \texttt{mbs.AddNode(...)} and similar): \\
+    \texttt{main/src/Main/MainObjectFactory.h / .cpp}
+  \item Using the VisualStudio \texttt{.sln} file and using the Debug mode allows you to smoothly walk from Python to C++ code (though that this takes 
+  some time to start up and it does not work always; and it does not work for graphics if it runs in a separate thread).
+\ei
+
+The functionality of the code is mainly based on systems (MainSystem and CSystem), items and solvers representing the multibody system or similar physical systems to be simulated. Parts of the core structure of Exudyn are:
 \bi
   \item CSystem / MainSystem: a multibody system which consists of nodes, objects, markers, loads, etc.
   \item SystemContainer: holds a set of systems; connects to visualization (container)
-  \item node: used to hold coordinates (unknowns)
-  \item (computational) object: leads to equations, using nodes
-  \item marker: defines a consistent interface to objects (bodies) and nodes; write access ('AccessFunction') -- provides jacobian and read access ('OutputVariable')
-  \item load: acts on an object or node via a marker
+  \item items: node, (computational) object, marker, load, sensor
   \item computational objects: efficient objects for computation = bodies, connectors, connectors, loads, nodes, ...
   \item visualization objects: interface between computational objects and 3D graphics
-  \item main (manager) objects: do all tasks (e.g. interface to visualization objects, GUI, python, ...) which are not needed during computation
+  \item main (manager) objects: do all tasks (e.g. interface to visualization objects, GUI, Python, ...) which are not needed during computation
   \item static solver, kinematic solver, time integration
-  \item python interface via pybind11; items are accessed with a dictionary interface; system structures and settings read/written by direct access to the structure (e.g. SimulationSettings, VisualizationSettings)
-  \item interfaces to linear solvers; future: optimizer, eigenvalue solver, ... (mostly external or in python)
+  \item Python interface via pybind11; items are accessed with a dictionary interface; system structures and settings read/written by direct access to the structure (e.g. SimulationSettings, VisualizationSettings)
+  \item interfaces to linear solvers; future: optimizer, eigenvalue solver, ... (mostly external or in Python)
+  \item \mybold{autogenerated}: this folder in \texttt{main/src} contains many item definitions as well as other interface files; they are all automatically generated by some Python code and should not be changed manually as they will be overwritten.
 \ei
 
 
 \mysubsubsection{C++ Code: Modules}
 The following internal modules are used, which are represented by directories in \texttt{main/src}:
 \bi
-  \item Autogenerated: item (nodes, objects, markers and loads) classes split into main (management, python connection), visualization and computation
+  \item Autogenerated: item (nodes, objects, markers and loads) classes split into main (management, Python connection), visualization and computation
   \item Graphics: a general data structure for 2D and 3D graphical objects and a tiny openGL visualization; linkage to GLFW
     \item Linalg: Linear algebra with vectors and matrices; separate classes for small vectors (SlimVector), large vectors (Vector and ResizableVector), vectors without copying data (LinkedDataVector), and vectors with constant size (ConstVector)
   \item Main: mainly contains SystemContainer, System and ObjectFactory
   \item Objects: contains the implementation part of the autogenerated items
-  \item Pymodules: manually created libraries for linkage to python via pybind; remaining linking to python is located in autogenerated folder
-  \item pythonGenerator: contains python files for automatic generation of C++ interfaces and python interfaces of items;
+  \item Pymodules: manually created libraries for linkage to Python via pybind; remaining linking to Python is located in autogenerated folder
+  \item pythonGenerator: contains Python files for automatic generation of C++ interfaces and Python interfaces of items;
   \item Solver: contains all solvers for solving a CSystem
   \item System: contains core item files (e.g., MainNode, CNode, MainObject, CObject, ...)
   \item Tests: files for testing of internal linalg (vector/matrix), data structure libraries (array, etc.) and functions
@@ -713,12 +755,12 @@ The following main external libraries are linked to Exudyn:
   \item LEST: for testing of internal functions (e.g. linalg)
   \item GLFW: 3D graphics with openGL; cross-platform capabilities
   \item Eigen: linear algebra for large matrices, linear solvers, sparse matrices and link to special solvers
-  \item pybind11: linking of C++ to python
+  \item pybind11: linking of C++ to Python
 \ei
 
 \mysubsubsection{Code style and conventions}
 %
-This section provides general coding rules and conventions, partly applicable to the C++ and python parts of the code. Many rules follow common conventions (e.g., google code style, but not always -- see notation):
+This section provides general coding rules and conventions, partly applicable to the C++ and Python parts of the code. Many rules follow common conventions (e.g., google code style, but not always -- see notation):
 \bi
     \item write simple code (no complicated structures or uncommon coding)
     \item write readable code (e.g., variables and functions with names that represent the content or functionality; AVOID abbreviations)
@@ -803,7 +845,7 @@ In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer(
 For continuous tracking of changes, see \refSection{sec:issueTracker}.
 }
 %
-%The following list covers changes in the python interface and functionality:
+%The following list covers changes in the Python interface and functionality:
 %\bi \small
   %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %%\item \mybold{Version 0.1.2xx $\ra$ Version 0.1.2yy}
@@ -811,7 +853,7 @@ For continuous tracking of changes, see \refSection{sec:issueTracker}.
   %%\bi
     %%\item \mybold{xxxx}: 
   %%\ei
-  %%\item[] Changes in the python interface:
+  %%\item[] Changes in the Python interface:
   %%\bi \ttfamily
     %%\item $\ra$ 
   %%\ei
@@ -914,7 +956,7 @@ For continuous tracking of changes, see \refSection{sec:issueTracker}.
   %\ei
   %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %\item \mybold{Version 0.1.368 $\ra$ Version 1.0.0}
-  %\item[] \mybold{Major changes} in the python interface, as the utilities moved into the exudyn package:
+  %\item[] \mybold{Major changes} in the Python interface, as the utilities moved into the exudyn package:
   %\bi \ttfamily
     %\item \texttt{from itemInterface import *} $\ra$ \texttt{from exudyn.itemInterface import *}
     %\item \texttt{from exudynUtilities import *} $\ra$ \texttt{from exudyn.utilities import *}
@@ -928,7 +970,7 @@ For continuous tracking of changes, see \refSection{sec:issueTracker}.
   %\ei
   %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %\item \mybold{Version 0.1.360 $\ra$ Version 0.1.361}
-  %\item[] Changes in the python interface:
+  %\item[] Changes in the Python interface:
   %\bi \ttfamily
     %\item \texttt{simulationSettings.timeIntegration.preStepPyExecute} and \\
     %\texttt{simulationSettings.staticSolver.preStepPyExecute}
@@ -947,25 +989,25 @@ For continuous tracking of changes, see \refSection{sec:issueTracker}.
 %
   %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %\item \mybold{Version 0.1.288 $\ra$ Version 0.1.289}
-  %\item[] Changes in the python interface \mybold{(ESSENTIAL!)}:
+  %\item[] Changes in the Python interface \mybold{(ESSENTIAL!)}:
   %\bi \ttfamily
     %\item Added time 't' as additional first argument in user functions: ObjectCoordinateSpringDamper, ObjectConnectorCoordinateSpringDamper, ObjectConnectorCartesianSpringDamper
   %\ei
   %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %\item \mybold{Version 0.1.287 $\ra$ Version 0.1.288}
-  %\item[] Changes in the python interface \mybold{(ESSENTIAL!)}:
+  %\item[] Changes in the Python interface \mybold{(ESSENTIAL!)}:
   %\bi \ttfamily
     %\item changed the name of \mybold{initialDisplacements} to {initialCoordinates} in all Nodes for consistency reasons with rotation parameters!
   %\ei
   %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %\item \mybold{Version 0.1.282 $\ra$ Version 0.1.284}
-  %\item[] Changes in the python interface:
+  %\item[] Changes in the Python interface:
   %\bi \ttfamily
     %\item all bodyFixed parameters in MarkerRigidBody, which were inactive so far, have been eliminated
   %\ei
   %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   %\item \mybold{Version 0.1.260 $\ra$ Version 0.1.263}
-  %\item[] Changes in the python interface:
+  %\item[] Changes in the Python interface:
   %\bi \ttfamily
     %\item mbs.systemData.GetCurrentTime() $\ra$ mbs.systemData.GetTime()
     %\item mbs.systemData.GetVisualizationTime() $\ra$ mbs.systemData.GetTime(configurationType=exu.ConfigurationType.Visualization)
@@ -976,14 +1018,14 @@ For continuous tracking of changes, see \refSection{sec:issueTracker}.
   %\bi
     %\item \mybold{Solvers updated}: static solver and time integration have been updated; old solvers are still available with the 'OldSolver' extension
   %\ei
-  %\item[] Changes in the python interface (new functions / interface to call the old solvers):
+  %\item[] Changes in the Python interface (new functions / interface to call the old solvers):
   %\bi \ttfamily
     %\item SC.SolveStaticOldSolver(...)
     %\item SC.TimeIntegrationSolve(mbs, 'GeneralizedAlphaOldSolver', simulationSettings) 
   %\ei
   %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    %\item \mybold{Version 0.1.243 $\ra$ Version 0.1.244}
-  %\item[] Changes in the python interface:
+  %\item[] Changes in the Python interface:
   %\bi \ttfamily
     %\item simulationSettings.staticSolver.pauseAfterEachStep \\$\ra$ simulationSettings.pauseAfterEachStep (merged with timeIntegration.pauseAfterEachStep)
   %\ei
@@ -994,7 +1036,7 @@ For continuous tracking of changes, see \refSection{sec:issueTracker}.
     %\item \mybold{generalizedAlpha}: corrected initialization of algorithmic acceleration for discontinuous iteration
     %\item \mybold{time integration}: corrected time $t$ for evaluation of RHS from beginning to end of time step (improves accuracy for time-dependent loads significantly)
   %\ei
-  %\item[] Changes in the python interface:
+  %\item[] Changes in the Python interface:
   %\bi \ttfamily
     %\item simulationSettings.timeIntegration.pauseAfterEachStep \\$\ra$ simulationSettings.pauseAfterEachStep 
     %\item ADDED: simulationSettings.timeIntegration.verboseModeFile

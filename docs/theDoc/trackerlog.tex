@@ -10,15 +10,149 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.2.37, 
-  \item last change =  2022-04-12, 
-  \item Number of issues = 1041, 
-  \item Number of resolved issues = 879 (37 in current version), 
+  \item Exudyn version = 1.2.56.dev1, 
+  \item last change =  2022-04-28, 
+  \item Number of issues = 1060, 
+  \item Number of resolved issues = 898 (56 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.2.56}: {\bf \color{warningRed}  resolved BUG 1059}: {\bf MacOS compile}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: sse2neon.h not found}
+    \item {\bf notes: exclude parallel threads from MacOS version until resolving compilation problem}
+    \item   date resolved: {\bf 2022-04-28 11:58},
+date raised: 2022-04-28 
+  \ei
+  \item {\bf Version 1.2.55}:  resolved Issue 0905: {\bf Add description of Pybind11 interaction}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add some description of C++-Python interaction and entry points into C++}
+    \item   date resolved: {\bf 2022-04-27 20:37},
+date raised: 2022-02-01 
+  \ei
+  \item {\bf Version 1.2.54}:  resolved Issue 1015: {\bf TestSuite}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add notes in Exudyn on testsuite (add remark: in many cases for tracking of changes, not for validation)}
+    \item   date resolved: {\bf 2022-04-27 20:21},
+date raised: 2022-03-28 
+  \ei
+  \item {\bf Version 1.2.53}:  resolved Issue 1058: {\bf ClearWorkspace}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: also close open matplotlib figures before they are lost}
+    \item   date resolved: {\bf 2022-04-27 19:47},
+date raised: 2022-04-27 
+  \ei
+  \item {\bf Version 1.2.52}: {\bf \color{warningRed}  resolved BUG 1052}: {\bf ClearWorkspace}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: has no effect on global variables}
+    \item {\bf notes: NOTE: matplotlib looses figures which cannot be closed with closeAll in PlotSensor}
+    \item   date resolved: {\bf 2022-04-27 19:03},
+date raised: 2022-04-25 
+  \ei
+  \item {\bf Version 1.2.51}: {\bf \color{warningRed}  resolved BUG 1053}: {\bf coordinatesSolution}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: coordinatesSolutionFile is corrupted for ACF test in text mode}
+    \item {\bf notes: not repeatable; may have been caused by iPython crash}
+    \item   date resolved: {\bf 2022-04-27 10:29},
+date raised: 2022-04-26 
+  \ei
+  \item {\bf Version 1.2.50}:  resolved Issue 1051: {\bf CreateNonlinearFEMObjectGenericODE2NGsolve}
+(testing)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: test FEM.CreateNonlinearFEMObjectGenericODE2NGsolve with simple example}
+    \item {\bf notes: included in ACFtest.py}
+    \item   date resolved: {\bf 2022-04-27 10:23},
+date raised: 2022-04-25 
+  \ei
+  \item {\bf Version 1.2.49}:  resolved Issue 1057: {\bf solutionInformation}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: replace new lines in solutionInformation when writing into coordinatesSolution file in order to preserve readable file structure}
+    \item   date resolved: {\bf 2022-04-27 10:22},
+date raised: 2022-04-27 
+  \ei
+  \item {\bf Version 1.2.48}:  resolved Issue 1056: {\bf MarkerSuperElementRigid}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add check for node sizes used in marker}
+    \item   date resolved: {\bf 2022-04-26 22:29},
+date raised: 2022-04-26 
+  \ei
+  \item {\bf Version 1.2.47}: {\bf \color{warningRed}  resolved BUG 1055}: {\bf NodeGenericODE2 error}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: NodeGenericODE2 raises system error CNodeODE2::GetVelocity: call illegal during solver initialize}
+    \item {\bf notes: added GetVelocity and GetAcceleration to NodeGenericODE2, with risk that these functions are used unintended}
+    \item   date resolved: {\bf 2022-04-26 22:29},
+date raised: 2022-04-26 
+  \ei
+  \item {\bf Version 1.2.46}:  resolved Issue 1054: {\bf NodeIndex, ...}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add possibility to allow simple arithmetic operations +,-,*,-() for NodeIndex, MarkerIndex, etc.}
+    \item   date resolved: {\bf 2022-04-26 22:29},
+date raised: 2022-04-26 
+  \ei
+  \item {\bf Version 1.2.45}: {\bf \color{warningRed}  resolved BUG 1050}: {\bf CreateLinearFEMObjectGenericODE2}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: FEM.CreateLinearFEMObjectGenericODE2 not working}
+    \item   date resolved: {\bf 2022-04-25 17:34},
+date raised: 2022-04-25 
+  \ei
+  \item {\bf Version 1.2.44}:  resolved Issue 1046: {\bf Vector3DList}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add new structure Vector3DList; used to create list of 3D vectors and transfer into MainSystem mbs, e.g. in KinematicTree}
+    \item   date resolved: {\bf 2022-04-25 08:40},
+date raised: 2022-04-25 
+  \ei
+  \item {\bf Version 1.2.43}:  resolved Issue 1045: {\bf dispy cluster}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: fixed some bugs in ProcessParameterList (http\_server) ; added some checks (if dispy is installed); cluster is used now iff clusterHostNames != []) and useMultiProcessing==True}
+    \item   date resolved: {\bf 2022-04-23 17:09},
+date raised: 2022-04-23 
+  \ei
+  \item {\bf Version 1.2.42}: {\bf \color{warningRed}  resolved BUG 1044}: {\bf GetNodesOnLine}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: FEM.GetNodesOnLine raises exception}
+    \item   date resolved: {\bf 2022-04-22 18:28},
+date raised: 2022-04-22 
+  \ei
+  \item {\bf Version 1.2.41}: {\bf \color{warningRed}  resolved BUG 1043}: {\bf serialRobotTest.py}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: class robotics.Robot computes wrong static torque compensation in function StaticTorques(HT)}
+    \item {\bf notes: due to \#0744 this bug has been magically resolved!}
+    \item   date resolved: {\bf 2022-04-21 15:15},
+date raised: 2022-04-21 
+  \ei
+  \item {\bf Version 1.2.40}:  resolved Issue 1042: {\bf multithreaded compilation}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: enable setup.py with multithreaded compilation, using Monkey patch for compiler with multithreading library; enable parallel build with: python setup.py install --parallel}
+    \item   date resolved: {\bf 2022-04-21 02:00},
+date raised: 2022-04-21 
+  \ei
+  \item {\bf Version 1.2.39}:  resolved Issue 0744: {\bf CreateRedundantCoordinateMBS}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: interchange joint markers, affecting the sign of the measured joint rotation angle, being now consistent with minimum coordinate formulations / kinematicTree; also interchange jointTorque0List/1List to be consistent with marker list }
+    \item {\bf notes: adapted SerialRobotTestDH2.py and SerialRobotTSD.py in Example folders for corrected signs}
+    \item   date resolved: {\bf 2022-04-20 00:37},
+date raised: 2021-09-01 
+  \ei
+  \item {\bf Version 1.2.38}:  resolved Issue 1041: {\bf Pluecker transforms}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: correct Pluecker transform T66 functions, such as RotationTranslation2T66, etc. and introduce inverse functions for usage in Featherstone algorithm}
+    \item {\bf notes: note that rotations in RotationX2T66, RotationY2T66, RotationZ2T66 are transposed/CHANGED as compared to previous version; T66toRotationTranslation is corrected/CHANGED and now is consistent with the backtransformation; InverseT66toRotationTranslation does the inverse operation (but also for rotation); RotationTranslation2T66 corrected/CHANGED; HT2T66 is corrected/CHANGED with inverse version HT2T66Inverse; rotations in Exudyn now consistent between T66, HT and other rotation matrices}
+    \item   date resolved: {\bf 2022-04-19 16:16},
+date raised: 2022-04-19 
+  \ei
   \item {\bf Version 1.2.37}:  resolved Issue 1021: {\bf twitter}
 (extension)
   \begin{itemize}[label=$\bullet$]
@@ -3636,6 +3770,11 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 1048}:  {\bf sse2neon.h}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: on Apple, sse2neon.h is missing (include from github) and compilation fails; check if this only happens on M1 and change include modes of sse2neon.h; add this file to python setup.py for other cases}
+    \item date raised: 2022-04-25 
+  \ei
   \item open {\bf BUG 0830}:  {\bf PostNewton}
   \begin{itemize}[label=$\bullet$]
     \item {description: PostNewton missing in explicit solvers; add warning or add after single steps (but exclude in contact computation!)}

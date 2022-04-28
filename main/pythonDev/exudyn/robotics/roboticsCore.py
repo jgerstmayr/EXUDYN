@@ -330,6 +330,10 @@ class Robot:
         lastMarkerRotation = np.identity(3) #base rotation included in marker
         if 'rotationMarkerBase' in kwargs:
             lastMarkerRotation = kwargs['rotationMarkerBase']  
+
+        # invertJoints = False #set True to be compatible with earlier versions
+        # if 'invertJoints' in kwargs:
+        #     invertJoints = kwargs['invertJoints']  
             
         qRef = self.referenceConfiguration
         
@@ -451,44 +455,76 @@ class Robot:
             wJ = link.visualization.jointWidth
             showMBSjoint = link.visualization.showMBSjoint
 
+            loadSize = 1
+            
+            # marker0 = mLink0
+            # marker1 = lastMarker
+            # rotationMarker0 = AthisT
+            # rotationMarker1 = lastMarkerRotation
+            marker0 = lastMarker
+            marker1 = mLink0
+            rotationMarker0 = lastMarkerRotation
+            rotationMarker1 = AthisT
 
-            #change order of markers, to get other definition of joint angles (kinematicTree has different sign!)
-            # jointLink = mbs.AddObject(GenericJoint(markerNumbers=[lastMarker, mLink0],
-            #                                        constrainedAxes=[1,1,1,1,1,0],
-            #                                        rotationMarker0=lastMarkerRotation,
-            #                                        rotationMarker1=AthisT,
-            #                                        visualization=VObjectJointGeneric(show=showMBSjoint, 
-            #                                                                          axesRadius = 0.25*r, 
-            #                                                      axesLength=1.2*wJ, color=color4red)))
-            jointLink = mbs.AddObject(GenericJoint(markerNumbers=[mLink0, lastMarker],
+            jointLink = mbs.AddObject(GenericJoint(markerNumbers=[marker0, marker1],
                                                     constrainedAxes=[1,1,1,1,1,0],
-                                                    rotationMarker0=AthisT,
-                                                    rotationMarker1=lastMarkerRotation,
+                                                    rotationMarker0=rotationMarker0,
+                                                    rotationMarker1=rotationMarker1,
                                                     visualization=VObjectJointGeneric(show=showMBSjoint, axesRadius = 0.25*r, 
                                                                   axesLength=1.2*wJ, color=color4red)))
 
                     
             #load on previous body, negative sign
-            loadSize = 1
-            torque0 = lastMarkerRotation @ (-loadSize*jointAxis) #np.array([0,0, -loadSize])
-            torque1 = AthisT @ (loadSize*jointAxis) #rotated negative torque vector for current link, it is not the z-axis
+            torque0 = rotationMarker0 @ (-loadSize*jointAxis) #np.array([0,0, -loadSize])
+            torque1 = rotationMarker1 @ (loadSize*jointAxis) #rotated negative torque vector for current link, it is not the z-axis
             unitTorque0List += [torque0]
             unitTorque1List += [torque1]
 
             if i < len(jointLoadUserFunctionList):
-                load0 = mbs.AddLoad(LoadTorqueVector(markerNumber=lastMarker, loadVector=torque0,
+                load0 = mbs.AddLoad(LoadTorqueVector(markerNumber=marker0, loadVector=torque0,
                                                                 bodyFixed=True, loadVectorUserFunction=jointLoadUserFunctionList[i]))
-                load1 = mbs.AddLoad(LoadTorqueVector(markerNumber=mLink0, loadVector=torque1, 
+                load1 = mbs.AddLoad(LoadTorqueVector(markerNumber=marker1, loadVector=torque1, 
                                                                 bodyFixed=True, loadVectorUserFunction=jointLoadUserFunctionList[i]))
                 jointTorque0List += [load0]
                 jointTorque1List += [load1]
             elif createJointTorqueLoads: #loads then must be updated in, e.g., mbs.SetPreStepUserFunction(...)
-                load0 = mbs.AddLoad(LoadTorqueVector(markerNumber=lastMarker, loadVector=[0,0,0], 
+                load0 = mbs.AddLoad(LoadTorqueVector(markerNumber=marker0, loadVector=[0,0,0], 
                                                                 bodyFixed=True))
-                load1 = mbs.AddLoad(LoadTorqueVector(markerNumber=mLink0, loadVector=[0,0,0],
+                load1 = mbs.AddLoad(LoadTorqueVector(markerNumber=marker1, loadVector=[0,0,0],
                                                                 bodyFixed=True))
                 jointTorque0List += [load0]
                 jointTorque1List += [load1]
+            
+            
+            # jointLink = mbs.AddObject(GenericJoint(markerNumbers=[mLink0, lastMarker],
+            #                                         constrainedAxes=[1,1,1,1,1,0],
+            #                                         rotationMarker0=AthisT,
+            #                                         rotationMarker1=lastMarkerRotation,
+            #                                         visualization=VObjectJointGeneric(show=showMBSjoint, axesRadius = 0.25*r, 
+            #                                                       axesLength=1.2*wJ, color=color4red)))
+
+                    
+            # #load on previous body, negative sign
+            # torque0 = lastMarkerRotation @ (-loadSize*jointAxis) #np.array([0,0, -loadSize])
+            # torque1 = AthisT @ (loadSize*jointAxis) #rotated negative torque vector for current link, it is not the z-axis
+            # unitTorque0List += [torque0]
+            # unitTorque1List += [torque1]
+
+            # if i < len(jointLoadUserFunctionList):
+            #     load0 = mbs.AddLoad(LoadTorqueVector(markerNumber=lastMarker, loadVector=torque0,
+            #                                                     bodyFixed=True, loadVectorUserFunction=jointLoadUserFunctionList[i]))
+            #     load1 = mbs.AddLoad(LoadTorqueVector(markerNumber=mLink0, loadVector=torque1, 
+            #                                                     bodyFixed=True, loadVectorUserFunction=jointLoadUserFunctionList[i]))
+            #     jointTorque0List += [load0]
+            #     jointTorque1List += [load1]
+            # elif createJointTorqueLoads: #loads then must be updated in, e.g., mbs.SetPreStepUserFunction(...)
+            #     load0 = mbs.AddLoad(LoadTorqueVector(markerNumber=lastMarker, loadVector=[0,0,0], 
+            #                                                     bodyFixed=True))
+            #     load1 = mbs.AddLoad(LoadTorqueVector(markerNumber=mLink0, loadVector=[0,0,0],
+            #                                                     bodyFixed=True))
+            #     jointTorque0List += [load0]
+            #     jointTorque1List += [load1]
+        
         
             jointList+=[jointLink]
     
@@ -522,11 +558,11 @@ class Robot:
         for i in range(n):
             link = self.links[i]
             jointTypes += [link.jointType]
-            #X=RotationTranslation2T66(A=Amat[i].T, v=vVec[i])
+            
             preHT = link.preHT
-            Amat = HT2rotationMatrix(preHT).T #.T because of Featherstone coordinate system transformation
+            Amat = HT2rotationMatrix(preHT) 
             vVec = HT2translation(preHT)
-            X=RotationTranslation2T66(A=Amat, v=vVec)
+            X=RotationTranslation2T66Inverse(A=Amat, v=vVec)
             if np.linalg.norm(link.localHT - HT0()) > 1e-15:
                 raise ValueError('GetKinematicTree66(): not implemented for links with localHT != HT0()')
             

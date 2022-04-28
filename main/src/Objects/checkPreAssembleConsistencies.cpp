@@ -251,10 +251,23 @@ bool MainMarkerSuperElementPosition::CheckPreAssembleConsistency(const MainSyste
 	{
 		if (i >= nn)
 		{
-			errorString = "MarkerSuperElementPosition: local node index " + EXUstd::ToString(i) +
+			errorString = "MarkerSuperElementPosition: mesh node index " + EXUstd::ToString(i) +
 				" is larger than the number of nodes in the generic body " + mainSystem.GetMainSystemData().GetMainObjects()[bodyNumber]->GetName() +
 				" (number of nodes = " + EXUstd::ToString(nn) + ")";
 			return false;
+		}
+		else
+		{
+			CNodeODE2* cNode = cObjectSuperElement.GetMeshNode(i);
+			if (cNode != nullptr)
+			{
+				if (cNode->GetNumberOfODE2Coordinates() != 3)
+				{
+					errorString = "MarkerSuperElementPosition: mesh node " + EXUstd::ToString(i) +
+						" should have 3 coordinates but has " + EXUstd::ToString(cNode->GetNumberOfODE2Coordinates()) + " coordinates";
+					return false;
+				}
+			}
 		}
 	}
 
@@ -310,10 +323,23 @@ bool MainMarkerSuperElementRigid::CheckPreAssembleConsistency(const MainSystem& 
 	{
 		if (i >= nn)
 		{
-			errorString = "MarkerSuperElementRigid: local node index " + EXUstd::ToString(i) +
+			errorString = "MarkerSuperElementRigid: mesh node index " + EXUstd::ToString(i) +
 				" is larger than the number of nodes in the generic body " + mainSystem.GetMainSystemData().GetMainObjects()[bodyNumber]->GetName() +
 				" (number of nodes = " + EXUstd::ToString(nn) + ")";
 			return false;
+		}
+		else
+		{
+			CNodeODE2* cNode = cObjectSuperElement.GetMeshNode(i);
+			if (cNode != nullptr)
+			{
+				if (cNode->GetNumberOfODE2Coordinates() != 3)
+				{
+					errorString = "MarkerSuperElementRigid: mesh node " + EXUstd::ToString(i) +
+						" should have 3 coordinates but has " + EXUstd::ToString(cNode->GetNumberOfODE2Coordinates()) + " coordinates";
+					return false;
+				}
+			}
 		}
 	}
 

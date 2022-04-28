@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-03-01  20:14:20 (last modified)
+* @date         2022-04-26  22:11:40 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -234,6 +234,9 @@ public: // AUTO:
     {
         return GetNumberOfNodes();
     }
+
+    //! AUTO:  return the mesh node pointer; for consistency checks
+    virtual CNodeODE2* GetMeshNode(Index meshNodeNumber) const override;
 
     //! AUTO:  return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh
     virtual Vector3D GetMeshNodeLocalPosition(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const override;

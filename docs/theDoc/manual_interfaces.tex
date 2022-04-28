@@ -470,7 +470,8 @@ The MatrixContainer is a versatile representation for dense and sparse matrices.
   \item Create empty \texttt{MatrixContainer} with \texttt{mc = MatrixContainer()} 
   \item Create \texttt{MatrixContainer} with dense matrix \texttt{mc = MatrixContainer(matrix)}, where matrix can be a list of lists of a numpy array 
   \item Set with dense \text{pyArray} (a numpy array): \texttt{mc.SetWithDenseMatrix(pyArray, bool useDenseMatrix = True)}
-  \item Set with sparse \text{pyArray} (a numpy array), which has 3 colums and according rows containing the sparse triplets \texttt{(row, col, value)} describing the sparse matrix \ei
+  \item Set with sparse \text{pyArray} (a numpy array), which has 3 colums and according rows containing the sparse triplets \texttt{(row, col, value)} describing the sparse matrix
+\ei
 
 
 \begin{center}
@@ -483,6 +484,29 @@ The MatrixContainer is a versatile representation for dense and sparse matrices.
   GetPythonObject() & convert MatrixContainer to numpy array (dense) or dictionary (sparse): containing nr. of rows, nr. of columns, numpy matrix with sparse triplets\\ \hline 
   Convert2DenseMatrix() & convert MatrixContainer to dense numpy array (SLOW and may fail for too large sparse matrices)\\ \hline 
   UseDenseMatrix() & returns True if dense matrix is used, otherwise False\\ \hline 
+  \_\_repr\_\_() & return the string representation of the MatrixContainer\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsection{Vector3DList}
+The Vector3DList is used to represent lists of 3D vectors. \\ \\ Usage: \bi
+  \item Create empty \texttt{Vector3DList} with \texttt{x = Vector3DList()} 
+  \item Create \texttt{Vector3DList} with list of numpy arras \texttt{x = Vector3DList(numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]))}
+  \item Create \texttt{Vector3DList} with list of lists \texttt{x = Vector3DList([[1.,2.,3.], [4.,5.,6.]])}
+  \item Append item: \texttt{x.Append([0.,2.,4.])}
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+\ei
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  Append(pyArray) & add single array or list to VectorList; array or list must have appropriate dimension!\\ \hline 
+  GetPythonObject() & convert VectorList list of numpy arrays\\ \hline 
+  \_\_repr\_\_() & return the string representation of the VectorList\\ \hline 
 \end{longtable}
 \end{center}
 

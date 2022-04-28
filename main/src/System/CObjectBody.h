@@ -222,6 +222,13 @@ public:
 		return 0;
 	}
 
+	//! return the number of mesh nodes, which may be different from number of nodes
+	virtual CNodeODE2* GetMeshNode(Index meshNodeNumber) const
+	{
+		CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetMeshNode");
+		return nullptr;
+	}
+
 	//does not make sense, because inconsistent with node functions (only position, but no displacements)
 	//basic access function to reference (body-fixed) mesh position of a node, which is available in every superelement; meshNodeNumber is the local node number of the (underlying) mesh
 	//virtual Vector3D GetMeshNodeReferencePosition(Index meshNodeNumber) const {

@@ -7,6 +7,7 @@ import os
 import sys
 import platform
 import setuptools
+import time
 
 #from src.pythonGenerator.exudynVersion import exudynVersionString #does not run under MacOS
 file='src/pythonGenerator/exudynVersion.py'
@@ -16,6 +17,9 @@ exec(open(file).read(), globals())
 #os.environ["CC"] = "gcc-8" #use gcc-8.4 on linux; does not work on windows
 #os.environ["CXX"] = "gcc-8"
 
+startTime = time.time()
+#print('setup.py: START time:', startTime)
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #check GLFW
 USEGLFW = True
@@ -23,6 +27,14 @@ if '--noglfw' in sys.argv:
     USEGLFW = False
     print("setup.py: *** compiling without graphics (OpenGL and GLFW) ***")
     sys.argv.remove('--noglfw')
+
+compileParallel = False
+if '--parallel' in sys.argv:
+    compileParallel = True
+    print("setup.py: *** trying to compile in parallel ***")
+    print("          in case that parallel compile fails, remove the --parallel option")
+    sys.argv.remove('--parallel')
+
 
 glfwIncludeDirs=[]
 msvcGLFWlibs =[] #add only if flag set
@@ -325,18 +337,19 @@ class BuildExt(build_ext):
     #platform-specific s_opts:
     c_opts = {
         #'msvc': ['/EHsc'],
-        'msvc': ['/EHsc',
+        'msvc': [
+                '/EHsc',
+                '/cgthreads8', #specify number of threads for cl.exe, affects mainly linker time
 				'/permissive-',
 				'/MP', '/GS', '/Qpar',
 				'/GL', '/W3', '/Gy', 
 				'/Zc:wchar_t',
-				#'/Zi',  #removed as it creates the .pdb file which is not needed and prevents parallel python setup.py bdist_wheel runs
 				'/Gm-', 
 				'/O2', 
 				'/sdl',
 				'/Zc:inline',
 				'/fp:precise',
-			   '/D', '_MBCS', 
+			    '/D', '_MBCS', 
 				'/D', '_WINDLL',
 				'/D','_CRT_SECURE_NO_WARNINGS', #/D and _CRT_SECURE_NO_WARNINGS must be consecutive==>WORKS!
 				'/errorReport:prompt', 
@@ -430,6 +443,116 @@ class BuildExt(build_ext):
             ext.extra_link_args = link_opts
         build_ext.build_extensions(self)
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++
+#parallel compile, works for linux:
+# http://stackoverflow.com/a/13176803
+# monkey-patch for parallel compilation
+# reduces compile time on 4-core machine by factor >2
+if compileParallel:
+    try:
+        import multiprocessing
+        import multiprocessing.pool
+        if isLinux:
+            def parallelCCompile(self, sources, output_dir=None, macros=None,
+                    include_dirs=None, debug=0, extra_preargs=None, extra_postargs=None,
+                    depends=None):
+                print('************ PARALLEL COMPILE ************\n')
+                # those lines are copied from distutils.ccompiler.CCompiler directly
+                macros, objects, extra_postargs, pp_opts, build =                         self._setup_compile(output_dir, macros, include_dirs, sources,
+                                depends, extra_postargs)
+                cc_args = self._get_cc_args(pp_opts, debug, extra_preargs)
+                # parallel code
+                def _single_compile(obj):
+                    try: src, ext = build[obj]
+                    except KeyError: return
+                    self._compile(obj, src, ext, cc_args, extra_postargs, pp_opts)
+                # convert to list, imap is evaluated on-demand
+                N_cores = multiprocessing.cpu_count() #better to use all threads, not only cpus
+                list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,objects))
+                return objects
+        
+            import distutils.ccompiler
+            distutils.ccompiler.CCompiler.compile=parallelCCompile
+    
+        elif isWindows:
+            def parallelCCompile(self, sources, output_dir=None, macros=None,
+                    include_dirs=None, debug=0, extra_preargs=None, extra_postargs=None,
+                    depends=None):
+                print('************ PARALLEL COMPILE ************\n')
+                #*** copied from _msvccompiler, excluding special cases for .rc and .mc files
+                if not self.initialized:
+                    self.initialize()
+                compile_info = self._setup_compile(output_dir, macros, include_dirs,
+                                                   sources, depends, extra_postargs)
+                macros, objects, extra_postargs, pp_opts, build = compile_info
+            
+                compile_opts = extra_preargs or []
+                compile_opts.append('/c')
+                if debug:
+                    compile_opts.extend(self.compile_options_debug)
+                else:
+                    compile_opts.extend(self.compile_options)
+
+                #this function is called in a for loop in the original version:                    
+                def _single_compile(obj):
+                    add_cpp_opts = False
+                    try:
+                        src, ext = build[obj]
+                    except KeyError:
+                        return
+                    if debug:
+                        # pass the full pathname to MSVC in debug mode,
+                        # this allows the debugger to find the source file
+                        # without asking the user to browse for it
+                        src = os.path.abspath(src)
+            
+                    if ext in self._c_extensions:
+                        input_opt = "/Tc" + src
+                    elif ext in self._cpp_extensions:
+                        input_opt = "/Tp" + src
+                        add_cpp_opts = True
+                    else:
+                        # how to handle this file?
+                        raise ValueError("Don't know how to compile {} to {}"
+                                           .format(src, obj))
+            
+                    args = [self.cc] + compile_opts + pp_opts
+                    if add_cpp_opts:
+                        args.append('/EHsc')
+                    args.append(input_opt)
+                    args.append("/Fo" + obj)
+                    args.extend(extra_postargs)
+            
+                    try:
+                        self.spawn(args)
+                    except:
+                        raise ValueError('failed to exucute: '+str(args))
+            
+                N_cores = multiprocessing.cpu_count() #better to use all threads, not only cpus
+                # convert to list, imap is evaluated on-demand
+                list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,objects))
+    
+                #serial:
+                # for obj in objects:
+                #     _single_compile(obj)
+            
+                return objects
+            #*** end copy from _msvccompiler
+            
+            import distutils._msvccompiler 
+            distutils._msvccompiler.MSVCCompiler.compile = parallelCCompile #for newer MSVC, the same way as with linux does not work!
+            #distutils.msvc9compiler.MSVCCompiler.compile = parallelCCompile
+            #distutils.msvccompiler.MSVCCompiler.compile = parallelCCompile
+    except:
+        print('************************************************')
+        print('parallel compile FAILED; remove --parallel flag!')
+        print('... trying serial compilation')
+        print('************************************************')
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
 if exudynVersionString.find('.dev1') == -1:
     developmentStatus = "Development Status :: 5 - Production/Stable"
 else:
@@ -496,3 +619,7 @@ setup(
     #python_requires='>='+pyVersionString, #'.*' required on UBUNTU/Windows in order to accept any Python minor Version (e.g. 3.6.x) during installation
     python_requires='>=3.6', #for pypi.org, do only specify the minimum Python version which is needed for this exudyn version
 )
+
+#print('*** setup.py: END time:', time.time())
+print('*** setup.py: DURATION =', round(time.time()-startTime,2), 'seconds')
+

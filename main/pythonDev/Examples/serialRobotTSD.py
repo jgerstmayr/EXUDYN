@@ -112,9 +112,15 @@ for link in newRobot.links:
 #configurations and trajectory
 q0 = [0,0,0,0,0,0] #zero angle configuration
 
-q1 = [0, pi/8, pi*0.75, 0,pi/8,0] #configuration 1
-q2 = [pi,-pi, -pi*0.5,1.5*pi,-pi*2,pi*2] #configuration 2
-q3 = [3*pi,0,-0.25*pi,0,0,0] #zero angle configuration
+#this set of coordinates only works with TSD, not with old fashion load control:
+# q1 = [0, pi/8, pi*0.75, 0,pi/8,0] #configuration 1
+# q2 = [pi,-pi, -pi*0.5,1.5*pi,-pi*2,pi*2] #configuration 2
+# q3 = [3*pi,0,-0.25*pi,0,0,0] #zero angle configuration
+
+#this set also works with load control:
+q1 = [0, pi/8, pi*0.5, 0,pi/8,0] #configuration 1
+q2 = [0.8*pi,-0.8*pi, -pi*0.5,0.75*pi,-pi*0.4,pi*0.4] #configuration 2
+q3 = [0.5*pi,0,-0.25*pi,0,0,0] #zero angle configuration
 
 #trajectory generated with optimal acceleration profiles:
 trajectory = Trajectory(initialCoordinates=q0, initialTime=0)
@@ -137,8 +143,8 @@ Dcontrol = np.array([400,   400,   100,   1,   1,   0.1])
 Pcontrol = fc*Pcontrol
 Dcontrol = fc*Dcontrol
 #soft:
-#Pcontrol = [4000, 4000, 4000, 100, 100, 10]
-#Dcontrol = [40,   40,   10,   1,   1,   0.1]
+# Pcontrol = [4000, 4000, 4000, 100, 100, 10]
+# Dcontrol = [40,   40,   10,   1,   1,   0.1]
 
 #desired angles:
 qE = q0
@@ -183,7 +189,7 @@ loadList1 = robotDict['jointTorque1List'] #(right body)
 #print(loadList0, loadList1)
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #control robot
-compensateStaticTorques = False 
+compensateStaticTorques = True
 useTSD = True
 torsionalSDlist = []
 
@@ -195,7 +201,6 @@ if useTSD:
         rot0 = mbs.GetObject(joint)['rotationMarker0']
         rot1 = mbs.GetObject(joint)['rotationMarker1']
         markers = mbs.GetObject(joint)['markerNumbers']
-        
         nGeneric=mbs.AddNode(NodeGenericData(initialCoordinates=[0], 
                                              numberOfDataCoordinates=1)) #for infinite rotations
         tsd = mbs.AddObject(TorsionalSpringDamper(markerNumbers=markers,
@@ -229,10 +234,12 @@ def PreStepUF(mbs, t):
         v1 = v[i]
         if useTSD:
             tsd = torsionalSDlist[i]
-            mbs.SetObjectParameter(tsd, 'offset', -u1)
-            mbs.SetObjectParameter(tsd, 'torque', Dcontrol[i]*v1 - staticTorques[i]) #additional torque from given velocity 
+            mbs.SetObjectParameter(tsd, 'offset', u1)
+            mbs.SetObjectParameter(tsd, 'velocityOffset', v1)
+            #mbs.SetObjectParameter(tsd, 'torque', Dcontrol[i]*v1 + staticTorques[i]) #additional torque from given velocity without velocityOffset
+            mbs.SetObjectParameter(tsd, 'torque', staticTorques[i]) #additional torque from given velocity 
         else:
-            torque = 1*(Pcontrol[i]*(phi+u1) + Dcontrol[i]*(omega+v1))
+            torque = -1*(Pcontrol[i]*(phi-u1) + Dcontrol[i]*(omega-v1)) #negative sign for feedback control!
             torque -= staticTorques[i] #add static torque compensation
             
             load0 = torque * unitTorques0[i] #includes sign and correct unit-torque vector
@@ -252,8 +259,8 @@ mbs.SetPreStepUserFunction(PreStepUF)
 cnt = 0
 for i in range(len(jointList)):
     jointLink = jointList[i]
-    tsd = torsionalSDlist[i]
     if useTSD:
+        tsd = torsionalSDlist[i]
         #using TSD:
         sJointRot = mbs.AddSensor(SensorObject(objectNumber=tsd, 
                                    fileName="solution/joint" + str(cnt) + "Rot.txt",
@@ -382,6 +389,7 @@ if True:
         
         for i in range(6):
             data = np.loadtxt("solution/joint" + str(i) + "Rot.txt", comments='#', delimiter=',')
+            # data = np.loadtxt("solution/joint" + str(i) + "AngVel.txt", comments='#', delimiter=',')
             plt.plot(data[:,0], data[:,3-2*int(useTSD)], PlotLineCode(i), label="joint"+str(i)) #z-rotation
             
         plt.xlabel("time (s)")

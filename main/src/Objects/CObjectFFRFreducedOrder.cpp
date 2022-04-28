@@ -1104,6 +1104,14 @@ void CObjectFFRFreducedOrder::GetOutputVariableSuperElement(OutputVariableType v
 
 }
 
+//! return the mesh node pointer; for consistency checks
+CNodeODE2* CObjectFFRFreducedOrder::GetMeshNode(Index meshNodeNumber) const
+{
+	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetMeshNode: meshNodeNumber out of range");
+
+	return nullptr; //there is no meshnode, its only virtual ...
+}
+
 //! return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh
 Vector3D CObjectFFRFreducedOrder::GetMeshNodeLocalPosition(Index meshNodeNumber, ConfigurationType configuration) const
 {

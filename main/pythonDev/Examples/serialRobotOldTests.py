@@ -200,7 +200,7 @@ qE = [np.pi*0.5,-np.pi*0.25,np.pi*0.75, 0,0,0]
 tStart = [0,0,0, 0,0,0]
 duration = 0.1
 
-compensateStaticTorques = False #false for test case
+compensateStaticTorques = True #false for test case
 
 jointList = [0]*len(myRobot['links']) #this list must be filled with the joint numbers in the mbs!
 
@@ -219,7 +219,7 @@ def ComputeJointLoad(t, load, joint):
     [u,v,a] = MotionInterpolator(t, robotTrajectory, joint)
 
     #[u,v,a] = ConstantAccelerationProfile(t, tStart[joint], 0, duration, qE[joint])
-    torque = (Pcontrol[joint]*(phi+u) + Dcontrol[joint]*(omega+v))
+    torque = -(Pcontrol[joint]*(phi-u) + Dcontrol[joint]*(omega-v))
     if compensateStaticTorques:
         torque -= ComputeMBSstaticRobotTorques(myRobot)[joint] #add static torque compensation
     return torque * np.array(load) #includes sign in both torques
@@ -400,7 +400,7 @@ if useGraphics:
     plt.show() 
     plt.savefig("solution/robotJointTorques.pdf")
 
-    doJointAngles = False
+    doJointAngles = True
     if doJointAngles:
         plt.close("all")
         

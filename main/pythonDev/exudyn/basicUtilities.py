@@ -25,28 +25,62 @@ g = 9.81 #gravity constant
 
 
 #**function: clear all workspace variables except for system variables with '\_' at beginning, 
-#           'func' or 'module' in name
-#**notes:   It is recommended to call ClearWorkspace() at the very beginning of your models
+#           'func' or 'module' in name; it also deletes all items in exudyn.sys and exudyn.variables, 
+#           EXCEPT from exudyn.sys['renderState'] for pertaining the previous view of the renderer
+#**notes:   Use this function with CARE! In Spyder, it is certainly safer to add the preference Run$\ra$'remove all variables before execution'. It is recommended to call ClearWorkspace() at the very beginning of your models, to avoid that variables still exist from previous computations which may destroy repeatability of results
 #**example:
-##do this at the very beginning!
-#from exudyn.utilities import ClearWorkspace
-#ClearWorkspace()       #clear old SC and mbs variables
-#
-##now import modules
 #import exudyn as exu
+#import exudyn.utilities
+##clear workspace at the very beginning, before loading other modules and potentially destroying unwanted things ...
+#ClearWorkspace()       #cleanup
+#
+##now continue with other code
 #from exudyn.itemInterface import *
 #SC = exu.SystemContainer()
 #mbs = SC.AddSystem()
+#...
 def ClearWorkspace():
-    if __name__ == "__main__":  #run only in main thread
-        gl = globals().copy()
-        for var in gl:
-            if var[0] == '_': continue
-            if 'func' in str(globals()[var]): continue
-            if 'module' in str(globals()[var]): continue
-    
-            del globals()[var]
-    
+    #if __name__ == "__main__":  #this won't work as the function is not running in __main__, but in exudyn.basicUtilities
+    gl = globals().copy()
+    #print(globals())
+
+    for var in gl:
+        if var[0] == '_': continue
+        if 'func' in str(globals()[var]): continue
+        if 'module' in str(globals()[var]): continue
+        #print('delete var=', var)
+        del globals()[var]
+
+    import inspect
+    fglobals = inspect.stack()[1][0].f_globals
+    gl2 = fglobals.copy() #these are the globals of the caller
+    for var in gl2:
+        if var[0] == '_': continue
+        if 'func' in str(fglobals[var]): continue
+        if 'module' in str(fglobals[var]): continue
+        #print('delete caller file var=', var)
+        del fglobals[var]
+
+
+    import sys
+    if 'exudyn' in sys.modules:
+        import exudyn #previously, it may have been loaded under another name (e.g., exu)
+        # print('cleanup exudyn')
+        sysCopy = exudyn.sys.copy()
+        for (key,value) in sysCopy.items():
+            if (#key != 'currentRendererSystemContainer' and
+                key != 'renderState'):
+                # print('key=', key)
+                del exudyn.sys[key]
+        variablesCopy = exudyn.variables.copy()
+        for (key,value) in variablesCopy.items():
+            del exudyn.variables[key]
+
+    if 'matplotlib' in sys.modules: #if already imported, we check if there are open figures (which would be lost otherwise)
+        import matplotlib.pyplot as plt
+        plt.close('all')
+
+
 
 #**function: create a diagonal or identity matrix; used for interface.py, avoiding the need for numpy
 #**input: 

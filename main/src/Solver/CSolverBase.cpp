@@ -1575,7 +1575,23 @@ void CSolverBase::WriteSolutionFileHeader(CSystem& computationalSystem, const Si
 
 			if (solutionSettings.solutionInformation.length())
 			{
-				solFile << "#solution information = " << solutionSettings.solutionInformation << "\n";
+				//remove line breaks, this would corrupt the file structure!
+				STDstring solInfo = solutionSettings.solutionInformation;
+				bool foundString = true;
+				STDstring endLine = "\n";
+				size_t len = endLine.length();
+				std::size_t found = 0;
+				while (foundString)
+				{
+					found = solInfo.find(endLine,found);
+					if (found != std::string::npos)
+					{
+						solInfo.replace(found, endLine.length(), "_");
+					}
+					else { foundString = false; }
+					found++; //start at next character
+				}
+				solFile << "#solution information = " << solInfo << "\n";
 			}
 		}
 		else

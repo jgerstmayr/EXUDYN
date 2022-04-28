@@ -99,9 +99,11 @@ def WriteToFile(resultsFile, parameters, currentGeneration, values, globalCnt, w
 #    useMultiProcessing: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
 #    numberOfThreads: default: same as number of cpus (threads); used for multiprocessing lib;
 #    resultsFile: if provided, output is immediately written to resultsFile during processing
+#    clusterHostNames: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
+#    useDispyWebMonitor: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
 #**output: returns values containing the results according to parameterList
 #**notes: options are passed from Parametervariation
-def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, useMultiProcessing, **kwargs):
+def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, useMultiProcessing, clusterHostNames=[], **kwargs):
     values = [] #create empty list
     nVariations = len(parameterList)
     #print("pl=",parameterList)
@@ -117,69 +119,149 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
     if 'parameters' in kwargs: 
         parameters = kwargs['parameters']
 
-    resultsFileCnt = 0 #counter for results file
-    if not useMultiProcessing:
-        for i in range(nVariations):
-            parameters = parameterList[i]
-            v = parameterFunction(parameters)
-            values += [v]
-            if showProgress:
-                print("\rrun ", i+1, "/", nVariations, ": parameters=", parameters, "value =",v, end='', flush=True)
-            if resultsFile != '':
-                resultsFileCnt = WriteToFile(resultsFile, parameters, [parameterList[resultsFileCnt]], 
-                                          [v], resultsFileCnt, writeHeader = (resultsFileCnt == 0), 
-                                          fileType='parameter variation',
-                                          multiProcessingMode='serial')
-        if showProgress:
-            print("", flush=True) #newline after tqdm progress bar output....
-    else:
-        from multiprocessing import Pool, cpu_count #parallelization of computation
-       
-        numberOfThreads = cpu_count() #cpu_count in fact gives number of threads ...
-        if 'numberOfThreads' in kwargs: 
-            numberOfThreads = kwargs['numberOfThreads']
-        
-        vInput = np.array(parameterList)
+    useCluster = (clusterHostNames != []) and useMultiProcessing
+    if useCluster:
+        try:
+            import dispy
+        except:
+            print('ProcessParameterList: dispy is not installed (try: pip install dispy); switching to multiprocessing mode instead')
+            useCluster = False
 
-        useTQDM = False
-        if showProgress:
-            try:
-                import tqdm #progress bar
-                try: #_instances only available after first run!
-                    tqdm.tqdm._instances.clear() #if open instances of tqdm, which leads to nasty newline
+    if not useCluster: 
+        
+        resultsFileCnt = 0 #counter for results file
+        if not useMultiProcessing:
+            for i in range(nVariations):
+                parameters = parameterList[i]
+                v = parameterFunction(parameters)
+                values += [v]
+                if showProgress:
+                    printStr = ''
+                    if (type(v) == float) or (type(v) == int):
+                        printStr = ', value = '+str(v)
+                    if 'functionData' in parameters: #functionData may be large, DO not print!
+                        copyParameters = {}
+                        for key, value in parameters.items():
+                            if key != 'functionData':
+                                copyParameters[key] = value
+                        printStr += ": parameters=" + str(copyParameters)
+                    else:
+                        printStr += ": parameters=" + str(parameters)
+                    
+                    print("\rrun ", i+1, "/", nVariations, printStr, '                ', end='', flush=True)
+                if resultsFile != '':
+                    resultsFileCnt = WriteToFile(resultsFile, parameters, [parameterList[resultsFileCnt]], 
+                                              [v], resultsFileCnt, writeHeader = (resultsFileCnt == 0), 
+                                              fileType='parameter variation',
+                                              multiProcessingMode='serial')
+            if showProgress:
+                print("", flush=True) #newline after tqdm progress bar output....
+        else:
+            from multiprocessing import Pool, cpu_count #parallelization of computation
+           
+            numberOfThreads = cpu_count() #cpu_count in fact gives number of threads ...
+            if 'numberOfThreads' in kwargs: 
+                numberOfThreads = kwargs['numberOfThreads']
+            
+            vInput = np.array(parameterList)
+    
+            useTQDM = False
+            if showProgress:
+                try:
+                    import tqdm #progress bar
+                    try: #_instances only available after first run!
+                        tqdm.tqdm._instances.clear() #if open instances of tqdm, which leads to nasty newline
+                    except:
+                        pass
+                    useTQDM = True
                 except:
                     pass
-                useTQDM = True
-            except:
-                pass
-                #print("module 'tqdm' not available (use pip to install); progress bar not shown")
+                    #print("module 'tqdm' not available (use pip to install); progress bar not shown")
+            
+            if useTQDM:
+                with Pool(processes=numberOfThreads) as p:
+                    #values = list(tqdm.tqdm(p.imap(parameterFunction, vInput), total=nVariations))
+                    for v in (tqdm.tqdm(p.imap(parameterFunction, vInput), total=nVariations)):
+                        values+=[v]
+                        if resultsFile != '':
+                            resultsFileCnt = WriteToFile(resultsFile, parameters, [parameterList[resultsFileCnt]], 
+                                                      [v], resultsFileCnt, writeHeader = (resultsFileCnt == 0), 
+                                                      fileType='parameter variation',
+                                                      multiProcessingMode='multiprocessing.Pool, numberOfThreads='+str(numberOfThreads))
+                print("", flush=True) #newline after tqdm progress bar output....
+            else:
+                #simpler approach without tqdm:
+                # with Pool(processes=numberOfThreads) as p:
+                #     values = p.map(parameterFunction, vInput)
+                with Pool(processes=numberOfThreads) as p:
+                    for v in p.imap(parameterFunction, vInput):
+                        values+=[v]
+                        if resultsFile != '':
+                            resultsFileCnt = WriteToFile(resultsFile, parameters, [parameterList[resultsFileCnt]], 
+                                                      [v], resultsFileCnt, writeHeader = (resultsFileCnt == 0), 
+                                                      fileType='parameter variation',
+                                                      multiProcessingMode='multiprocessing.Pool, numberOfThreads='+str(numberOfThreads))
+                            #print("value=",i)
+    else: # use cluster
         
-        if useTQDM:
-            with Pool(processes=numberOfThreads) as p:
-                #values = list(tqdm.tqdm(p.imap(parameterFunction, vInput), total=nVariations))
-                for v in (tqdm.tqdm(p.imap(parameterFunction, vInput), total=nVariations)):
-                    values+=[v]
-                    if resultsFile != '':
-                        resultsFileCnt = WriteToFile(resultsFile, parameters, [parameterList[resultsFileCnt]], 
-                                                  [v], resultsFileCnt, writeHeader = (resultsFileCnt == 0), 
-                                                  fileType='parameter variation',
-                                                  multiProcessingMode='multiprocessing.Pool, numberOfThreads='+str(numberOfThreads))
-            print("", flush=True) #newline after tqdm progress bar output....
-        else:
-            #simpler approach without tqdm:
-            # with Pool(processes=numberOfThreads) as p:
-            #     values = p.map(parameterFunction, vInput)
-            with Pool(processes=numberOfThreads) as p:
-                for v in p.imap(parameterFunction, vInput):
-                    values+=[v]
-                    if resultsFile != '':
-                        resultsFileCnt = WriteToFile(resultsFile, parameters, [parameterList[resultsFileCnt]], 
-                                                  [v], resultsFileCnt, writeHeader = (resultsFileCnt == 0), 
-                                                  fileType='parameter variation',
-                                                  multiProcessingMode='multiprocessing.Pool, numberOfThreads='+str(numberOfThreads))
-                        #print("value=",i)
-                
+        # form cluster and submit jobs
+        cluster = dispy.JobCluster(parameterFunction, nodes=clusterHostNames, host=clusterHostNames, cleanup=True, dispy_port=9700) 
+        
+        # import dispy's httpd module, create http server for this cluster
+        # monitor allows to monitor and manage clusters with a web browser; it works with common web browsers, including in iOS and Android devices.
+        http_server = None
+        if 'useDispyWebMonitor' in kwargs: #showProgress: #True:
+            if showProgress:
+                print('open http monitor')
+            import dispy.httpd
+            import socket
+            clientHostname = socket.gethostname()
+            http_server = dispy.httpd.DispyHTTPServer(cluster, host=clientHostname, port=8181, poll_sec=5) 
+            import webbrowser
+            clientIPv4Address = socket.gethostbyname(clientHostname)
+            webbrowser.open("http://"+clientIPv4Address+":8181/monitor.html")
+        
+        # perform computations
+        nVariations = len(parameterList)
+        jobs = [None]*nVariations
+        for i in range(nVariations):
+            
+            # submit job to cluster
+            job = cluster.submit(parameterList[i]) #, refSol=referenceSolution) 
+            jobs[i] = job
+            job.id = i+1
+
+        #cluster.wait() # waits until all jobs finish
+        
+        # collect return value of each job      
+        values = [None]*len(jobs)  
+        
+        jobCtr = 0        
+        for job in jobs:     
+            #host, val = job()
+            val = job()
+            values[jobCtr] = val
+            jobCtr += 1
+            if showProgress:
+                #show return values only in case that they are of float type
+                if (type(job.result) == float) or (type(job.result) == int):
+                    print('executed job '+str(job.id) + ' / ' + str(nVariations) +
+                          ' with return value ' + str(job.result))
+                else:
+                    print('executed job ' + str(job.id) + ' / ' + str(nVariations))
+        
+        # close cluster
+        cluster.wait()
+        if showProgress:
+            cluster.print_status()
+        
+        if http_server != None:
+            http_server.shutdown() # this waits until browser gets all updates
+        cluster.close()
+                        
     return values
+
+
 
 #**function: calls successively the function parameterFunction(parameterDict) with variation of parameters in given range; parameterDict is a dictionary, containing the current values of parameters,
 #  e.g., parameterDict=['mass':13, 'stiffness':12000] to be computed and returns a value or a list of values which is then stored for each parameter
@@ -194,6 +276,8 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
 #    resultsFile: if provided, output is immediately written to resultsFile during processing
 #    numberOfThreads: default: same as number of cpus (threads); used for multiprocessing lib;
 #    parameterFunctionData: dictionary containing additional data passed to the parameterFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
+#    clusterHostNames: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
+#    useDispyWebMonitor: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
 #**output:
 #    returns [parameterList, values], containing, e.g., parameterList={'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]} and the result values of the parameter variation accoring to the parameterList, 
 #           values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
@@ -201,34 +285,17 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
 #   ParameterVariation(parameters={'mass':(1,10,10), 'stiffness':(1000,10000,10)}, parameterFunction=Test, useMultiProcessing=True)
 def ParameterVariation(parameterFunction, parameters, 
                        useLogSpace=False, debugMode=False, addComputationIndex=False,
-                       useMultiProcessing=False, showProgress = True, parameterFunctionData={},
+                       useMultiProcessing=False, showProgress = True, parameterFunctionData={}, clusterHostNames=[],
                        **kwargs):
     
-    # debugMode = False
-    # if 'debugMode' in kwargs:
-    #     debugMode = kwargs['debugMode']
-
-    # useLogSpace = False
-    # if 'useLogSpace' in kwargs and kwargs['useLogSpace']==True:
-    #     useLogSpace = True
-    
-    # addComputationIndex = False
-    # if 'addComputationIndex' in kwargs and kwargs['addComputationIndex']==True:
-    #     addComputationIndex = True
-    
-    # useMultiProcessing = False
-    # if 'useMultiProcessing' in kwargs and kwargs['useMultiProcessing']==True:
-    #     useMultiProcessing = True
-
-    # showProgress = True #for larger variations very nice to have
-    # if 'showProgress' in kwargs: 
-    #     showProgress = kwargs['showProgress']
-
     if 'multiprocessing' in sys.modules:
         from multiprocessing import cpu_count
         numberOfThreads = cpu_count() #cpu_count in fact gives number of threads ...
         if debugMode:
-            print("using", numberOfThreads, "cpus")
+            if clusterHostNames == []:
+                print("using", numberOfThreads, "cpus")
+            else:
+                print("using cluster")
     else:
         numberOfThreads = 8
     if 'numberOfThreads' in kwargs: 
@@ -309,11 +376,8 @@ def ParameterVariation(parameterFunction, parameters,
 
     values = ProcessParameterList(parameterFunction, parameterList, addComputationIndex, useMultiProcessing, 
                                   showProgress = showProgress, numberOfThreads=numberOfThreads,
-                                  resultsFile = resultsFile, parameters=parameters)
-
-
-    # if debugMode:
-    #print("values =", values)
+                                  resultsFile = resultsFile, parameters=parameters, 
+                                  clusterHostNames=clusterHostNames, **kwargs)
     
     return [parameterDict, values]
     
@@ -343,8 +407,8 @@ def ParameterVariation(parameterFunction, parameters,
 #    showProgress: if True, shows for every iteration the progress bar (requires tqdm library)
 #    numberOfThreads: default: same as number of cpus (threads); used for multiprocessing lib;
 #    resultsFile: if provided, the results are stored columnwise into the given file and written after every generation; use resultsMonitor.py to track results in realtime
-#    numberOfChildren: (DEPRECATED, UNUSED) number childrens of surviving population
-#    survivingIndividuals: (DEPRECATED) number of surviving individuals after children are born
+#    clusterHostNames: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
+#    useDispyWebMonitor: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
 #**output:
 #    returns [optimumParameter, optimumValue, parameterList, valueList], containing the optimum parameter set 'optimumParameter', optimum value 'optimumValue', the whole list of parameters parameterList with according objective values 'valueList'
 #           values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
@@ -365,6 +429,7 @@ def GeneticOptimization(objectiveFunction, parameters,
                         addComputationIndex=False,
                         useMultiProcessing=False, 
                         showProgress = True,
+                        clusterHostNames = [],
                         **kwargs):
 
     def RandomNumber(distribution, rangeBegin, rangeEnd, vMin, vMax):
@@ -392,7 +457,15 @@ def GeneticOptimization(objectiveFunction, parameters,
         numberOfThreads = kwargs['numberOfThreads']
 
     if useMultiProcessing:
-        print("number of threads used =", numberOfThreads,flush=True) #very useful information
+        if clusterHostNames==[]:
+            print("number of threads used =", numberOfThreads,flush=True) #very useful information
+        else:
+            print("using cluster",flush=True) 
+            
+
+    useDispyWebMonitor = False
+    if 'useDispyWebMonitor' in kwargs: 
+        useDispyWebMonitor = kwargs['useDispyWebMonitor']
 
     initialPopulationSize = populationSize
     if 'initialPopulationSize' in kwargs: 
@@ -482,7 +555,9 @@ def GeneticOptimization(objectiveFunction, parameters,
             print("===============\nevaluate population", popCnt, ":")
 
         totalEvaluations += len(currentGeneration)
-        values = ProcessParameterList(objectiveFunction, currentGeneration, addComputationIndex, useMultiProcessing, showProgress = showProgress, numberOfThreads=numberOfThreads)
+        values = ProcessParameterList(objectiveFunction, currentGeneration, addComputationIndex, useMultiProcessing, showProgress = showProgress, numberOfThreads=numberOfThreads,
+                                      clusterHostNames=clusterHostNames, useDispyWebMonitor=useDispyWebMonitor)
+
         if (showProgress and useMultiProcessing and popCnt < numberOfGenerations-1): print("            #"+str(popCnt+1), end='')
         #print("values=",values)
         multiProcessingMode = ''

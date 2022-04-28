@@ -2,8 +2,8 @@
 Exudyn
 ======
 
-+  Exudyn version = 1.2.37 (Corea)
-+  build date and time=2022-04-10  18:55
++  Exudyn version = 1.2.55.dev1 (Corea)
++  build date and time=2022-04-27  09:55
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn **Version 1.2** is out! The documentation theDoc.pdf now reached > 600 pages! Including now a contact module, improved solvers, sparse matrix support and multi-threading, creation of beams along curves, extended robotics modules, **PlotSensor** fully extended, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
@@ -108,10 +108,11 @@ The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training
 
 The following people have contributed to Python and C++ library implementations:
 
-+  Joachim Schöberl (Providing specialized NGsolve core library with \ ``taskmanager``\  for \ **multithreaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
-+  Stefan Holzinger (Lie group solvers in Python, Lie group node)
-+  Peter Manzl (ConvexRoll Python and C++ implementation / pip install on linux / wsl with graphics)
-+  Martin Sereinig (special robotics functionality)
++  Joachim Schöberl, TU Vienna (Providing specialized NGsolve core library with \ ``taskmanager``\  for \ **multithreaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
++  Stefan Holzinger, University of Innsbruck (Lie group solvers in Python, Lie group node)
++  Andreas Zwölfer, Technical University Munich (FFRF and CMS formulation)
++  Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation / pip install on linux / wsl with graphics)
++  Martin Sereinig, University of Innsbruck (special robotics functionality)
 
 The following people have contributed to examples and other parts:
 
@@ -191,7 +192,7 @@ A simple way to install Exudyn on Windows 10 (and maybe also Windows 7) is to us
 +  NOTE (2022-03-18): \ ``.msi``\  installers are now only available for selected Python versions; however, wheels can be downloaded directly from `https://pypi.org/project/exudyn <https://pypi.org/project/exudyn>`_, see below
 +  For the 64bits Python 3.7 version, double click on (version may differ): \ ``exudyn-1.0.248.win-amd64-py3.7.msi``\ 
 +  Follow the instructions of the installer
-+  If Python / Anaconda is not found by the installer, provide the 'python directory' as the installation directory of Anaconda3, which usually is installed in:
++  If Python / Anaconda is not found by the installer, provide the 'Python directory' as the installation directory of Anaconda3, which usually is installed in:
 
 
   \ ``C:\ProgramData\Anaconda3``\ 
@@ -292,12 +293,12 @@ For a compatible Mac OS X system some pre-built wheels will be available via pyp
 
 If you would like to compile from source, just use a bash terminal on your Mac, and do the following steps inside the \ ``main``\  directory of your repository and type
 
++  uninstall if old version exists (may need to repeat this!): \ ``pip uninstall exudyn``\ 
 +  \ ``python setup.py bdist_wheel``\ 
    => this compiles and takes approx.~5 minutes, depending on your machine
    => it may produce some errors, depending on your version; if there are some liker errors (saying that there is no '\ ``-framework Cocoa' and '-framework OpenGL``\ ', just go back in the terminal and copy everything from '\ ``g++ ...``\ ' until the end of the last command '\ ``-mmacosx-verion-min...``\ ' and paste it into the terminal. Calling that again will finalize linking; then run again
    \ ``python setup.py bdist_wheel``\ 
-   => this now creates the wheel (if you want to distribute) in the \ ``dist``\  folder
-   alternatively just call
+   => this now creates the wheel (if you want to distribute) in the \ ``dist``\  folder; note that this wheel has a wrong version number (11.0) while it may need to be changed to 10.9 manually in order that it can be installed
 +  \ ``python setup.py install``\ 
    to install exudyn
 
@@ -718,7 +719,7 @@ which draws the according object in red and others gray/transparent (but sometim
 
   =========================================
   SYSTEM ERROR [file 'C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py', line 214]: 
-  Error in python USER FUNCTION 'LoadCoordinate::loadVectorUserFunction' (referred line number my be wrong!):
+  Error in Python USER FUNCTION 'LoadCoordinate::loadVectorUserFunction' (referred line number my be wrong!):
   NameError: name 'sin' is not defined
 
   At:
@@ -732,7 +733,7 @@ which draws the according object in red and others gray/transparent (but sometim
     C:\ProgramData\Anaconda3_64b37\lib\site-packages\IPython\core\interactiveshell.py(3331): run_code
   ...
   ...
-  ; check your python code!
+  ; check your Python code!
   =========================================
 
   Solver stopped! use showHints=True to show helpful information
@@ -855,7 +856,7 @@ Currently, the module structure is simple:
 +  \ **Python parts**\  (this list is continuously extended, see theDoc.pdf), sorted by importance:
   
  -  \ ``exudyn.utilities``\ : constains helper classes in Python and includes Exudyn modules \ ``basicUtilities``\ , \ ``rigidBodyUtilities``\ , \ ``graphicsDataUtilities``\ , and \ ``itemInterface``\ , which is recommended to be loaded at beginning of your model file
- -  \ ``exudyn.itemInterface``\ : contains the interface, which transfers python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
+ -  \ ``exudyn.itemInterface``\ : contains the interface, which transfers Python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
  -  \ ``exudyn.basicUtilities``\ : contains basic helper classes, without importing numpy
  -  \ ``exudyn.rigidBodyUtilities``\ : contains important helper classes for creation of rigid body inertia, rigid bodies, and rigid body joints; includes helper functions for rotation parameterization, rotation matrices, homogeneous transformations, etc.
  -  \ ``exudyn.graphicsDataUtilities``\ : provides some basic drawing utilities, definition of colors and basic drawing objects (including sSTL import); rotation/translation of graphicsData objects
@@ -903,7 +904,7 @@ As an example, consider a \ ``NodePoint2D``\ :
 +  measuring the current position of \ ``NodePoint2D``\  gives a 3D vector
 +  when attaching a \ ``MarkerNodePosition``\  and a \ ``LoadForceVector``\ , the force will be still a 3D vector
 
-Furthermore, the local position in 2D objects is provided by a 3D vector. Usually, the dimensionality is given in the reference manual. User errors in the dimensionality will be usually detected either by the python interface (i.e., at the time the item is created) or by the system-preprocessor
+Furthermore, the local position in 2D objects is provided by a 3D vector. Usually, the dimensionality is given in the reference manual. User errors in the dimensionality will be usually detected either by the Python interface (i.e., at the time the item is created) or by the system-preprocessor
 
 
 ---------------------------------------------------
@@ -1313,6 +1314,36 @@ To create animation files, an external tool FFMPEG is used to efficiently conver
 => see theDoc.pdf !
 
 
+Examples, test models and test suite
+====================================
+
+
+
+The main collection of examples and models is available under
+
++  \ ``main/pythonDev/Examples``\ 
++  \ ``main/pythonDev/TestModels``\ 
+
+You can use these examples to build up your own realistic models of multibody systems.
+Very often, these models show the way which already works. Alternative ways may exist, but
+sometimes there are limitations in the underlying C++ code, such that they won't work as you expect.
+
+We would like to note that, even that some examples and test models contain comparison to 
+papers of the literature or analytical solutions, there are many models which may not contain real
+mechanical values and these models may not be converged in space or time 
+(in order to keep running our test suite in less than a minute).
+
+Finally, note that the \ ``main/pythonDev/TestModels``\  are often only intended to preserve functionality
+in the Python and C++ code (e.g., if global methods are changed), but they should not be misinterpreted as validation of the 
+implemented methods. The \ ``TestModels``\  are used in the Exudyn \ **TestSuite**\  \ ``TestModels/runTestSuite.py``\ 
+which is run after a full build of Python versions. Output for very version is written
+to \ ``main/pythonDev/TestSuiteLogs``\  containing the Exudyn version and Python version. At the end of these
+files, a summary is included to show if all models completed successfully (which means that a certain error level is achieved, which is rather small and different for the models).
+There are also performance tests (e.g., if a certain implementation leads to a significant drop of performance).
+However, the output of the performance tests is not stored on github.
+
+We are trying hard to achieve error-free algorithms of physically correct models, but there may always be some errors in the code.
+
 Contact problems
 ================
 
@@ -1387,6 +1418,11 @@ In general, to see where CPU time is lost, use the option turn on \ ``simulation
 +  try to avoid Python function or try to speed up Python functions
 +  instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in \ ``mbs.SetPreStepUserFunction(...)``\ 
 +  for \ **discontinuous problems**\ , try to adjust solver parameters; especially the discontinuous.iterationTolerance which may be too tight and cause many iterations; iterations may be limited by discontinuous.maxIterations, which at larger values solely multiplies the computation time with a factor if all iterations are performed
++  For multiple computations / multiple runs of Exudyn (parameter variation, optimization, compute sensitivities), you can use the processing sub module of Exudyn to parallelize computations and achieve speedups proporional to the number of cores/threads of your computer; specifically using the \ ``multiThreading``\  option or even using a cluster (using \ ``dispy``\ , see \ ``ParameterVariation(...)``\  function)
++  In case of multiprocessing and cluster computing, you may see a very high CPU usage of "Antimalware Service Executable", which is the Microsoft Defender Antivirus; you can turn off such problems by excluding \ ``python.exe``\  from the defender (on your own risk!) in your settings:
+
+
+  Settings => Update \& Security => Windows Security => Virus \& threat protection settings => Manage settings => Exclusions => Add or remove exclusions 
 
 \ **Possible speed ups for dynamic simulations**\ :
 
@@ -1452,20 +1488,35 @@ The focus is therefore on:
 C++ Code structure
 ==================
 
-The functionality of the code is based on systems (MainSystem/CSystem) representing the multibody system or similar physical systems to be simulated. Parts of the core structure of Exudyn are:
+The following \ **entry points**\  into the C++ code can be found:
+
++  Python -- C++: the creation of the module \ ``exudyn``\  is found in:
+
+
+    \ ``main/src/Pymodules/PybindModule.cpp``\ 
+
+
+  it includes large header files, which are automatically created for binding C++ code with Python.
++  The object factory for creation of items (calling \ ``mbs.AddNode(...)``\  and similar): 
+
+
+    \ ``main/src/Main/MainObjectFactory.h / .cpp``\ 
++  Using the VisualStudio \ ``.sln``\  file and using the Debug mode allows you to smoothly walk from Python to C++ code (though that this takes 
+  some time to start up and it does not work always; and it does not work for graphics if it runs in a separate thread).
+
+
+The functionality of the code is mainly based on systems (MainSystem and CSystem), items and solvers representing the multibody system or similar physical systems to be simulated. Parts of the core structure of Exudyn are:
 
 +  CSystem / MainSystem: a multibody system which consists of nodes, objects, markers, loads, etc.
 +  SystemContainer: holds a set of systems; connects to visualization (container)
-+  node: used to hold coordinates (unknowns)
-+  (computational) object: leads to equations, using nodes
-+  marker: defines a consistent interface to objects (bodies) and nodes; write access ('AccessFunction') -- provides jacobian and read access ('OutputVariable')
-+  load: acts on an object or node via a marker
++  items: node, (computational) object, marker, load, sensor
 +  computational objects: efficient objects for computation = bodies, connectors, connectors, loads, nodes, ...
 +  visualization objects: interface between computational objects and 3D graphics
-+  main (manager) objects: do all tasks (e.g. interface to visualization objects, GUI, python, ...) which are not needed during computation
++  main (manager) objects: do all tasks (e.g. interface to visualization objects, GUI, Python, ...) which are not needed during computation
 +  static solver, kinematic solver, time integration
-+  python interface via pybind11; items are accessed with a dictionary interface; system structures and settings read/written by direct access to the structure (e.g. SimulationSettings, VisualizationSettings)
-+  interfaces to linear solvers; future: optimizer, eigenvalue solver, ... (mostly external or in python)
++  Python interface via pybind11; items are accessed with a dictionary interface; system structures and settings read/written by direct access to the structure (e.g. SimulationSettings, VisualizationSettings)
++  interfaces to linear solvers; future: optimizer, eigenvalue solver, ... (mostly external or in Python)
++  \ **autogenerated**\ : this folder in \ ``main/src``\  contains many item definitions as well as other interface files; they are all automatically generated by some Python code and should not be changed manually as they will be overwritten.
 
 
 
@@ -1474,13 +1525,13 @@ C++ Code: Modules
 
 The following internal modules are used, which are represented by directories in \ ``main/src``\ :
 
-+  Autogenerated: item (nodes, objects, markers and loads) classes split into main (management, python connection), visualization and computation
++  Autogenerated: item (nodes, objects, markers and loads) classes split into main (management, Python connection), visualization and computation
 +  Graphics: a general data structure for 2D and 3D graphical objects and a tiny openGL visualization; linkage to GLFW
 +  Linalg: Linear algebra with vectors and matrices; separate classes for small vectors (SlimVector), large vectors (Vector and ResizableVector), vectors without copying data (LinkedDataVector), and vectors with constant size (ConstVector)
 +  Main: mainly contains SystemContainer, System and ObjectFactory
 +  Objects: contains the implementation part of the autogenerated items
-+  Pymodules: manually created libraries for linkage to python via pybind; remaining linking to python is located in autogenerated folder
-+  pythonGenerator: contains python files for automatic generation of C++ interfaces and python interfaces of items;
++  Pymodules: manually created libraries for linkage to Python via pybind; remaining linking to Python is located in autogenerated folder
++  pythonGenerator: contains Python files for automatic generation of C++ interfaces and Python interfaces of items;
 +  Solver: contains all solvers for solving a CSystem
 +  System: contains core item files (e.g., MainNode, CNode, MainObject, CObject, ...)
 +  Tests: files for testing of internal linalg (vector/matrix), data structure libraries (array, etc.) and functions
@@ -1492,13 +1543,13 @@ The following main external libraries are linked to Exudyn:
 +  LEST: for testing of internal functions (e.g. linalg)
 +  GLFW: 3D graphics with openGL; cross-platform capabilities
 +  Eigen: linear algebra for large matrices, linear solvers, sparse matrices and link to special solvers
-+  pybind11: linking of C++ to python
++  pybind11: linking of C++ to Python
 
 
 Code style and conventions
 ==========================
 
-This section provides general coding rules and conventions, partly applicable to the C++ and python parts of the code. Many rules follow common conventions (e.g., google code style, but not always -- see notation):
+This section provides general coding rules and conventions, partly applicable to the C++ and Python parts of the code. Many rules follow common conventions (e.g., google code style, but not always -- see notation):
 
 +  write simple code (no complicated structures or uncommon coding)
 +  write readable code (e.g., variables and functions with names that represent the content or functionality; AVOID abbreviations)

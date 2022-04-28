@@ -49,6 +49,37 @@ public:
 	{
 		return STDstring("NodeIndex");
 	}
+
+	//! operators for computation with index, e.g., when used in FEM or other modules
+	friend Index operator+(Index a, const NodeIndex& b)
+	{
+		return a + b.index;
+	}
+	friend Index operator+(const NodeIndex& a, Index b)
+	{
+		return a.index + b;
+	}
+	friend Index operator-(Index a, const NodeIndex& b)
+	{
+		return a - b.index;
+	}
+	friend Index operator-(const NodeIndex& a, Index b)
+	{
+		return a.index - b;
+	}
+	friend Index operator*(Index a, const NodeIndex& b)
+	{
+		return a*b.index;
+	}
+	friend Index operator*(const NodeIndex& a, Index b)
+	{
+		return a.index*b;
+	}
+	friend Index operator-(const NodeIndex& a)
+	{
+		return -a.index;
+	}
+
 };
 
 //! class which contains index which can only be used for object numbers (avoids mixing different indices ...)
@@ -77,6 +108,35 @@ public:
 	{
 		return STDstring("ObjectIndex");
 	}
+	//! operators for computation with index, e.g., when used in FEM or other modules
+	friend Index operator+(Index a, const ObjectIndex& b)
+	{
+		return a + b.index;
+	}
+	friend Index operator+(const ObjectIndex& a, Index b)
+	{
+		return a.index + b;
+	}
+	friend Index operator-(Index a, const ObjectIndex& b)
+	{
+		return a - b.index;
+	}
+	friend Index operator-(const ObjectIndex& a, Index b)
+	{
+		return a.index - b;
+	}
+	friend Index operator*(Index a, const ObjectIndex& b)
+	{
+		return a * b.index;
+	}
+	friend Index operator*(const ObjectIndex& a, Index b)
+	{
+		return a.index*b;
+	}
+	friend Index operator-(const ObjectIndex& a)
+	{
+		return -a.index;
+	}
 };
 
 //! class which contains index which can only be used for marker numbers (avoids mixing different indices ...)
@@ -103,6 +163,35 @@ public:
 	STDstring GetTypeString() const
 	{
 		return STDstring("MarkerIndex");
+	}
+	//! operators for computation with index, e.g., when used in FEM or other modules
+	friend Index operator+(Index a, const MarkerIndex& b)
+	{
+		return a + b.index;
+	}
+	friend Index operator+(const MarkerIndex& a, Index b)
+	{
+		return a.index + b;
+	}
+	friend Index operator-(Index a, const MarkerIndex& b)
+	{
+		return a - b.index;
+	}
+	friend Index operator-(const MarkerIndex& a, Index b)
+	{
+		return a.index - b;
+	}
+	friend Index operator*(Index a, const MarkerIndex& b)
+	{
+		return a * b.index;
+	}
+	friend Index operator*(const MarkerIndex& a, Index b)
+	{
+		return a.index*b;
+	}
+	friend Index operator-(const MarkerIndex& a)
+	{
+		return -a.index;
 	}
 };
 
@@ -131,6 +220,35 @@ public:
 	{
 		return STDstring("LoadIndex");
 	}
+	//! operators for computation with index, e.g., when used in FEM or other modules
+	friend Index operator+(Index a, const LoadIndex& b)
+	{
+		return a + b.index;
+	}
+	friend Index operator+(const LoadIndex& a, Index b)
+	{
+		return a.index + b;
+	}
+	friend Index operator-(Index a, const LoadIndex& b)
+	{
+		return a - b.index;
+	}
+	friend Index operator-(const LoadIndex& a, Index b)
+	{
+		return a.index - b;
+	}
+	friend Index operator*(Index a, const LoadIndex& b)
+	{
+		return a * b.index;
+	}
+	friend Index operator*(const LoadIndex& a, Index b)
+	{
+		return a.index*b;
+	}
+	friend Index operator-(const LoadIndex& a)
+	{
+		return -a.index;
+	}
 };
 
 //! class which contains index which can only be used for sensor numbers (avoids mixing different indices ...)
@@ -157,6 +275,35 @@ public:
 	STDstring GetTypeString() const
 	{
 		return STDstring("SensorIndex");
+	}
+	//! operators for computation with index, e.g., when used in FEM or other modules
+	friend Index operator+(Index a, const SensorIndex& b)
+	{
+		return a + b.index;
+	}
+	friend Index operator+(const SensorIndex& a, Index b)
+	{
+		return a.index + b;
+	}
+	friend Index operator-(Index a, const SensorIndex& b)
+	{
+		return a - b.index;
+	}
+	friend Index operator-(const SensorIndex& a, Index b)
+	{
+		return a.index - b;
+	}
+	friend Index operator*(Index a, const SensorIndex& b)
+	{
+		return a * b.index;
+	}
+	friend Index operator*(const SensorIndex& a, Index b)
+	{
+		return a.index*b;
+	}
+	friend Index operator-(const SensorIndex& a)
+	{
+		return -a.index;
 	}
 };
 

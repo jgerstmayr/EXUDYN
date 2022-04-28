@@ -32,6 +32,7 @@
 #include "Linalg/LinkedDataMatrix.h"	
 
 typedef ConstSizeMatrix<9> Matrix3D; //will be changed to SlimMatrix<...>
+typedef ConstSizeMatrix<16> Matrix4D; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrix<4> Matrix2D; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrix<6*6> Matrix6D;//will be changed to SlimMatrix<...>
 

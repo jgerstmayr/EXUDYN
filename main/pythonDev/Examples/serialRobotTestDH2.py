@@ -39,7 +39,7 @@ else:
 
 #mode='old'
 mode='newDH'
-# mode='newModDH'
+#mode='newModDH'#this does not work, not compatible with COM and inertia definition
 
 graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.15], [0.4,0.4,0.1], color4grey)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
@@ -114,19 +114,21 @@ if mode=='old':
             } 
     newRobot.BuildFromDictionary(myRobot) #this allows conversion from old structure
 elif mode=='newDH':
-    for link in linkList:
-        newRobot.AddLink(RobotLink(mass=link['mass'], 
-                                   COM=link['COM'], 
-                                   inertia=link['inertia'], 
-                                   localHT=StdDH2HT(link['stdDH']),
-                                   ))
-    # newRobot.AddLink(RobotLink(mass=20, COM=[0,0,0], inertia=np.diag([1e-8,0.35,1e-8]), localHT = StdDH2HT([0,0,0,pi/2])))
-    # newRobot.AddLink(RobotLink(mass=17.4, COM=[-0.3638, 0.006, 0.2275], inertia=np.diag([0.13,0.524,0.539]), localHT = StdDH2HT([0,0,0.4318,0])))
-    # newRobot.AddLink(RobotLink(mass=4.8, COM=[-0.0203,-0.0141,0.07], inertia=np.diag([0.066,0.086,0.0125]), localHT = StdDH2HT([0,0.15,0.0203,-pi/2])))
-    # newRobot.AddLink(RobotLink(mass=0.82, COM=[0,0.019,0], inertia=np.diag([0.0018,0.0013,0.0018]), localHT = StdDH2HT([0,0.4318,0,pi/2])))
-    # newRobot.AddLink(RobotLink(mass=0.34, COM=[0,0,0], inertia=np.diag([0.0003,0.0004,0.0003]), localHT = StdDH2HT([0,0,0,-pi/2])))
-    # newRobot.AddLink(RobotLink(mass=0.09, COM=[0,0,0.032], inertia=np.diag([0.00015,0.00015,4e-5]), localHT = StdDH2HT([0,0,0,0])))
-elif mode=='newModDH':
+    if True:
+        for link in linkList:
+            newRobot.AddLink(RobotLink(mass=link['mass'], 
+                                        COM=link['COM'], 
+                                        inertia=link['inertia'], 
+                                        localHT=StdDH2HT(link['stdDH']),
+                                        ))
+    else: #gives same results:
+        newRobot.AddLink(RobotLink(mass=20, COM=[0,0,0], inertia=np.diag([1e-8,0.35,1e-8]), localHT = StdDH2HT([0,0,0,pi/2])))
+        newRobot.AddLink(RobotLink(mass=17.4, COM=[-0.3638, 0.006, 0.2275], inertia=np.diag([0.13,0.524,0.539]), localHT = StdDH2HT([0,0,0.4318,0])))
+        newRobot.AddLink(RobotLink(mass=4.8, COM=[-0.0203,-0.0141,0.07], inertia=np.diag([0.066,0.086,0.0125]), localHT = StdDH2HT([0,0.15,0.0203,-pi/2])))
+        newRobot.AddLink(RobotLink(mass=0.82, COM=[0,0.019,0], inertia=np.diag([0.0018,0.0013,0.0018]), localHT = StdDH2HT([0,0.4318,0,pi/2])))
+        newRobot.AddLink(RobotLink(mass=0.34, COM=[0,0,0], inertia=np.diag([0.0003,0.0004,0.0003]), localHT = StdDH2HT([0,0,0,-pi/2])))
+        newRobot.AddLink(RobotLink(mass=0.09, COM=[0,0,0.032], inertia=np.diag([0.00015,0.00015,4e-5]), localHT = StdDH2HT([0,0,0,0])))
+elif mode=='newModDH': #this does not work, not compatible with COM and inertia definition
     for link in linkList:
         [preHT, localHT] =  ModDHKK2HT(link['modKKDH'])
         stdLocalHT =  StdDH2HT(link['stdDH'])
@@ -176,6 +178,7 @@ q0 = [0,0,0,0,0,0] #zero angle configuration
 
 q1 = [0,       pi/8, pi*0.25, 0,pi/8,0] #configuration 1
 q2 = [pi/2,-pi/8,-pi*0.125,0,pi/4,pi/2] #configuration 2
+q2 = [np.pi*0.45,-np.pi*0.35,-np.pi*0.25, np.pi*0.10,np.pi*0.2,np.pi*0.3] #configuration 2
 
 #trajectory points structure:
 point0={'q':q0, #use any initial configuration!
@@ -192,14 +195,14 @@ pointList +=[{'q':q2, #q2
         #'q_t':q0,
         'type':'linearVelocity',
         'time':0.5}]
-pointList +=[{'q':q0, #q2
+pointList +=[{'q':q2, #q0
         #'q_t':q0,
         'type':'linearVelocity',
         'time':1}]
 pointList +=[{'q':q0, #q2
         #'q_t':q0,
         'type':'linearVelocity',
-        'time':1}]
+        'time':1.5}]
 pointList +=[{'q':q0, #q2, forever
         #'q_t':q0,
         'type':'linearVelocity',
@@ -213,7 +216,7 @@ robotTrajectory={'PTP':pointList}
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #control parameters, per joint:
 Pcontrol = [40000, 40000, 40000, 100, 100, 10]
-Dcontrol = [400,   400,   100,   1,   1,   0.1]
+Dcontrol = [400,   400,   100,   1,   1,   0.1*0.5]
 #soft:
 #Pcontrol = [4000, 4000, 4000, 100, 100, 10]
 #Dcontrol = [40,   40,   10,   1,   1,   0.1]
@@ -320,7 +323,7 @@ def PreStepUF(mbs, t):
         omega = mbs.GetObjectOutput(jointList[joint], exu.OutputVariableType.AngularVelocityLocal)[2] #z-angular velocity
         [u,v,a] = MotionInterpolator(t, robotTrajectory, joint)
     
-        torque = 1*(Pcontrol[joint]*(phi+u) + Dcontrol[joint]*(omega+v))
+        torque = -1*(Pcontrol[joint]*(phi-u) + Dcontrol[joint]*(omega-v)) #negative sign in feedback control!
         torque -= staticTorques[joint] #add static torque compensation
         
         load0 = torque * unitTorques0[i] #includes sign and correct unit-torque vector
@@ -338,11 +341,13 @@ mbs.SetPreStepUserFunction(PreStepUF)
 
 #add sensors:
 cnt = 0
+sJointRotList = []
 for jointLink in jointList:
     sJointRot = mbs.AddSensor(SensorObject(objectNumber=jointLink, 
                                fileName="solution/joint" + str(cnt) + "Rot.txt",
                                outputVariableType=exu.OutputVariableType.Rotation,
                                writeToFile = sensorWriteToFile))
+    sJointRotList += [sJointRot]
     sJointAngVel = mbs.AddSensor(SensorObject(objectNumber=jointLink, 
                                fileName="solution/joint" + str(cnt) + "AngVel.txt",
                                outputVariableType=exu.OutputVariableType.AngularVelocityLocal,
@@ -376,7 +381,7 @@ tEnd = 0.2 #0.2 for testing
 h = 0.001
 
 if useGraphics:
-    tEnd = 0.5#1.2
+    tEnd = 0.5*2#1.2
 
 #mbs.WaitForUserToContinue()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -395,7 +400,7 @@ simulationSettings.displayStatistics = False
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 
 #simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
+simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #0.6 works well 
 
@@ -420,16 +425,20 @@ lastRenderState = SC.GetRenderState() #store model view
 
 #compute final torques:
 measuredTorques=[]
-for sensorNumber in jointTorque0List:
+for cnt, sensorNumber in enumerate(jointTorque0List):
+    print('sensor torque',cnt, '=', mbs.GetSensorValues(sensorNumber))
     measuredTorques += [mbs.GetSensorValues(sensorNumber)[2]]
 exu.Print("torques at tEnd=", VSum(measuredTorques))
+
+for cnt, sensorNumber in enumerate(sJointRotList):
+    print('sensor rot ',cnt, '=', mbs.GetSensorValues(sensorNumber))
 
 #add larger test tolerance for 32/64bits difference
 # exudynTestGlobals.testError = 1e-2*(VSum(measuredTorques) - 76.80031232091771 )  #old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
 # exudynTestGlobals.testResult = 1e-2*VSum(measuredTorques)   
 
 
-if useGraphics and False:
+if useGraphics and True:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
     plt.rcParams.update({'font.size': 14})
@@ -450,10 +459,10 @@ if useGraphics and False:
     plt.show() 
     plt.savefig("solution/robotJointTorques.pdf")
 
-    doJointAngles = False
+    doJointAngles = True
     if doJointAngles:
-        plt.close("all")
-        
+        #plt.close("all")
+        plt.figure('joint angles')
         for i in range(6):
             data = np.loadtxt("solution/joint" + str(i) + "Rot.txt", comments='#', delimiter=',')
             plt.plot(data[:,0], data[:,3], PlotLineCode(i), label="joint"+str(i)) #z-rotation

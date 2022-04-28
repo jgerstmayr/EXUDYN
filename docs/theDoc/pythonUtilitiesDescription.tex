@@ -20,7 +20,7 @@
 \ei
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L40}{ClearWorkspace}{}}}\label{sec:basicUtilities:ClearWorkspace}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L42}{ClearWorkspace}{}}}\label{sec:basicUtilities:ClearWorkspace}
 ({\it })
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -29,21 +29,29 @@
   \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
     \item[] clear all workspace variables except for system variables with '\_' at beginning,
-    \item[]            'func' or 'module' in name
+    \item[]            'func' or 'module' in name; it also deletes all items in exudyn.sys and exudyn.variables,
+    \item[]            EXCEPT from exudyn.sys['renderState'] for pertaining the previous view of the renderer
   \end{itemize}
-  \item[--]  {\bf notes}: It is recommended to call ClearWorkspace() at the very beginning of your models  \item[--]  {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
-#do this at the very beginning!
-from exudyn.utilities import ClearWorkspace
-ClearWorkspace()       #clear old SC and mbs variables
-#now import modules
+  \item[--]  {\bf notes}: Use this function with CARE! In Spyder, it is certainly safer to add the preference Run$\ra$'remove all variables before execution'. It is recommended to call ClearWorkspace() at the very beginning of your models, to avoid that variables still exist from previous computations which may destroy repeatability of results  \item[--]  {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
 import exudyn as exu
+import exudyn.utilities
+#clear workspace at the very beginning, before loading other modules and potentially destroying unwanted things ...
+ClearWorkspace()       #cleanup
+#now continue with other code
 from exudyn.itemInterface import *
 SC = exu.SystemContainer()
-mbs = SC.AddSystem()\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
+mbs = SC.AddSystem()
+...\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
+%
+%
+\noindent For examples on ClearWorkspace see Examples (Ex) and TestModels (TM):
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM)\ei
+
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L56}{DiagonalMatrix}{}}}\label{sec:basicUtilities:DiagonalMatrix}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L90}{DiagonalMatrix}{}}}\label{sec:basicUtilities:DiagonalMatrix}
 ({\it rowsColumns}, {\it value}= 1)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -58,7 +66,7 @@ mbs = SC.AddSystem()\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspac
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L70}{NormL2}{}}}\label{sec:basicUtilities:NormL2}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L104}{NormL2}{}}}\label{sec:basicUtilities:NormL2}
 ({\it vector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -82,7 +90,7 @@ mbs = SC.AddSystem()\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspac
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L79}{VSum}{}}}\label{sec:basicUtilities:VSum}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L113}{VSum}{}}}\label{sec:basicUtilities:VSum}
 ({\it vector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -100,7 +108,7 @@ mbs = SC.AddSystem()\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspac
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L88}{VAdd}{}}}\label{sec:basicUtilities:VAdd}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L122}{VAdd}{}}}\label{sec:basicUtilities:VAdd}
 ({\it v0}, {\it v1})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -120,7 +128,7 @@ mbs = SC.AddSystem()\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspac
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L99}{VSub}{}}}\label{sec:basicUtilities:VSub}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L133}{VSub}{}}}\label{sec:basicUtilities:VSub}
 ({\it v0}, {\it v1})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -139,7 +147,7 @@ mbs = SC.AddSystem()\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspac
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L110}{VMult}{}}}\label{sec:basicUtilities:VMult}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L144}{VMult}{}}}\label{sec:basicUtilities:VMult}
 ({\it v0}, {\it v1})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -148,7 +156,7 @@ mbs = SC.AddSystem()\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspac
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L120}{ScalarMult}{}}}\label{sec:basicUtilities:ScalarMult}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L154}{ScalarMult}{}}}\label{sec:basicUtilities:ScalarMult}
 ({\it scalar}, {\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -164,7 +172,7 @@ mbs = SC.AddSystem()\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspac
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L129}{Normalize}{}}}\label{sec:basicUtilities:Normalize}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L163}{Normalize}{}}}\label{sec:basicUtilities:Normalize}
 ({\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -182,7 +190,7 @@ mbs = SC.AddSystem()\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspac
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L144}{Vec2Tilde}{}}}\label{sec:basicUtilities:Vec2Tilde}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L178}{Vec2Tilde}{}}}\label{sec:basicUtilities:Vec2Tilde}
 ({\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -197,7 +205,7 @@ mbs = SC.AddSystem()\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspac
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L151}{Tilde2Vec}{}}}\label{sec:basicUtilities:Tilde2Vec}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L185}{Tilde2Vec}{}}}\label{sec:basicUtilities:Tilde2Vec}
 ({\it m})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -206,7 +214,7 @@ mbs = SC.AddSystem()\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspac
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L178}{GaussIntegrate}{}}}\label{sec:basicUtilities:GaussIntegrate}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L212}{GaussIntegrate}{}}}\label{sec:basicUtilities:GaussIntegrate}
 ({\it functionOfX}, {\it integrationOrder}, {\it a}, {\it b})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -223,7 +231,7 @@ mbs = SC.AddSystem()\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspac
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L214}{LobattoIntegrate}{}}}\label{sec:basicUtilities:LobattoIntegrate}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L248}{LobattoIntegrate}{}}}\label{sec:basicUtilities:LobattoIntegrate}
 ({\it functionOfX}, {\it integrationOrder}, {\it a}, {\it b})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -503,6 +511,12 @@ see Examples/ANCF_cantilever_test.py\end{lstlisting}\vspace{-24pt}\bi\item[]\vsp
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
   \item[--]  {\bf function description}: convert internal compressed CSR to scipy.sparse csr matrix\vspace{12pt}\end{itemize}
+%
+%
+\noindent For examples on CSRtoScipySparseCSR see Examples (Ex) and TestModels (TM):
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM)\ei
+
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
@@ -1337,7 +1351,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2556}{CreateNonlinearFEMObjectGenericODE2NGsolve}{}}}\label{sec:FEM:FEMinterface:CreateNonlinearFEMObjectGenericODE2NGsolve}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2555}{CreateNonlinearFEMObjectGenericODE2NGsolve}{}}}\label{sec:FEM:FEMinterface:CreateNonlinearFEMObjectGenericODE2NGsolve}
 ({\it self}, {\it mbs}, {\it mesh}, {\it density}, {\it youngsModulus}, {\it poissonsRatio}, {\it meshOrder}= 1, {\it color}= [0.9,0.4,0.4,1.])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1365,7 +1379,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2662}{ComputeEigenmodes}{}}}\label{sec:FEM:FEMinterface:ComputeEigenmodes}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2661}{ComputeEigenmodes}{}}}\label{sec:FEM:FEMinterface:ComputeEigenmodes}
 ({\it self}, {\it nModes}, {\it excludeRigidBodyModes}= 0, {\it useSparseSolver}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1381,7 +1395,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2706}{ComputeEigenModesWithBoundaryNodes}{}}}\label{sec:FEM:FEMinterface:ComputeEigenModesWithBoundaryNodes}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2705}{ComputeEigenModesWithBoundaryNodes}{}}}\label{sec:FEM:FEMinterface:ComputeEigenModesWithBoundaryNodes}
 ({\it self}, {\it boundaryNodes}, {\it nEigenModes}, {\it useSparseSolver}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1397,7 +1411,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2786}{ComputeHurtyCraigBamptonModes}{}}}\label{sec:FEM:FEMinterface:ComputeHurtyCraigBamptonModes}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2785}{ComputeHurtyCraigBamptonModes}{}}}\label{sec:FEM:FEMinterface:ComputeHurtyCraigBamptonModes}
 ({\it self}, {\it boundaryNodesList}, {\it nEigenModes}, {\it useSparseSolver}= True, {\it computationMode}= HCBstaticModeSelection.RBE2)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1414,7 +1428,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2977}{GetEigenFrequenciesHz}{}}}\label{sec:FEM:FEMinterface:GetEigenFrequenciesHz}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2976}{GetEigenFrequenciesHz}{}}}\label{sec:FEM:FEMinterface:GetEigenFrequenciesHz}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1423,7 +1437,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3042}{ComputePostProcessingModes}{}}}\label{sec:FEM:FEMinterface:ComputePostProcessingModes}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3041}{ComputePostProcessingModes}{}}}\label{sec:FEM:FEMinterface:ComputePostProcessingModes}
 ({\it self}, {\it material}= 0, {\it outputVariableType}= 'OutputVariableType.StressLocal', {\it numberOfThreads}= 1)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1439,7 +1453,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3160}{ComputeCampbellDiagram}{}}}\label{sec:FEM:FEMinterface:ComputeCampbellDiagram}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3159}{ComputeCampbellDiagram}{}}}\label{sec:FEM:FEMinterface:ComputeCampbellDiagram}
 ({\it self}, {\it terminalFrequency}, {\it nEigenfrequencies}= 10, {\it frequencySteps}= 25, {\it rotationAxis}= 2, {\it plotDiagram}= False, {\it verbose}= False, {\it useCorotationalFrame}= False, {\it useSparseSolver}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1475,7 +1489,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3322}{CheckConsistency}{}}}\label{sec:FEM:FEMinterface:CheckConsistency}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3321}{CheckConsistency}{}}}\label{sec:FEM:FEMinterface:CheckConsistency}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1484,7 +1498,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3346}{ReadMassMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadMassMatrixFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3345}{ReadMassMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadMassMatrixFromAnsys}
 ({\it self}, {\it fileName}, {\it dofMappingVectorFile}, {\it sparse}= True, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1493,7 +1507,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3360}{ReadStiffnessMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadStiffnessMatrixFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3359}{ReadStiffnessMatrixFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadStiffnessMatrixFromAnsys}
 ({\it self}, {\it fileName}, {\it dofMappingVectorFile}, {\it sparse}= True, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1502,7 +1516,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3374}{ReadNodalCoordinatesFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadNodalCoordinatesFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3373}{ReadNodalCoordinatesFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadNodalCoordinatesFromAnsys}
 ({\it self}, {\it fileName}, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1511,7 +1525,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3379}{ReadElementsFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadElementsFromAnsys}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3378}{ReadElementsFromAnsys}{}}}\label{sec:FEM:FEMinterface:ReadElementsFromAnsys}
 ({\it self}, {\it fileName}, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1524,13 +1538,13 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py}{\texttt{CMSexampleCourse.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py}{\texttt{NGsolveCMStutorial.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py}{\texttt{NGsolveCraigBampton.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePostProcessingStresses.py}{\texttt{NGsolvePostProcessingStresses.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveLinearFEM.py}{\texttt{NGsolveLinearFEM.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Ex), 
  ...
 , 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/compareAbaqusAnsysRotorEigenfrequencies.py}{\texttt{compareAbaqusAnsysRotorEigenfrequencies.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py}{\texttt{NGsolveCrankShaftTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}} (TM), 
  ...
 \ei
 
@@ -1992,8 +2006,9 @@ rev2 = GraphicsDataSolidOfRevolution(pAxis=[0,0.5,0], vAxis=[1,0,0],
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py}{\texttt{beltDriveReevingSystem.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystem.py}{\texttt{reevingSystem.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TM)\ei
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TM)\ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -2278,9 +2293,9 @@ SolutionViewer(mbs, sol)\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\v
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py}{\texttt{fourBarMechanism3D.py}} (Ex), 
  ...
 , 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ConvexContactTest.py}{\texttt{ConvexContactTest.py}} (TM), 
  ...
 \ei
 
@@ -2469,7 +2484,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \item[]Date:      2021-06-22
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L35}{MassCOMinertia2T66}{}}}\label{sec:kinematicTree:MassCOMinertia2T66}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L51}{MassCOMinertia2T66}{}}}\label{sec:kinematicTree:MassCOMinertia2T66}
 ({\it mass}, {\it centerOfMass}, {\it inertia})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2485,16 +2500,16 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L44}{Inertia2T66}{}}}\label{sec:kinematicTree:Inertia2T66}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L60}{Inertia2T66}{}}}\label{sec:kinematicTree:Inertia2T66}
 ({\it inertia})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-  \item[--]  {\bf function description}: convert inertia as produced with RigidBodyInertia class into 6x6 inertia matrix (as used in KinematicTree, Featherstone / Handbook of robotics \cite{Siciliano2016})  \item[--]  {\bf output}: 6x6 numpy array for further use in minimum coordinates formulation  \item[--]  {\bf notes}: within the 6x6 matrix, the inertia tensor is defined w.r.t.\ the center of mass, while RigidBodyInertia defines the inertia tensor w.r.t.\ the reference point; however, this function correctly transforms all quantities of inertia.\vspace{12pt}\end{itemize}
+  \item[--]  {\bf function description}: convert inertia as produced with RigidBodyInertia class into 6x6 inertia matrix (as used in KinematicTree66, Featherstone / Handbook of robotics \cite{Siciliano2016})  \item[--]  {\bf output}: 6x6 numpy array for further use in minimum coordinates formulation  \item[--]  {\bf notes}: within the 6x6 matrix, the inertia tensor is defined w.r.t.\ the center of mass, while RigidBodyInertia defines the inertia tensor w.r.t.\ the reference point; however, this function correctly transforms all quantities of inertia.\vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L58}{Inertia66toMassCOMinertia}{}}}\label{sec:kinematicTree:Inertia66toMassCOMinertia}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L74}{Inertia66toMassCOMinertia}{}}}\label{sec:kinematicTree:Inertia66toMassCOMinertia}
 ({\it inertia66})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2511,7 +2526,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L79}{JointTransformMotionSubspace66}{}}}\label{sec:kinematicTree:JointTransformMotionSubspace66}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L95}{JointTransformMotionSubspace66}{}}}\label{sec:kinematicTree:JointTransformMotionSubspace66}
 ({\it jointType}, {\it q})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2520,7 +2535,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L100}{JointTransformMotionSubspace}{}}}\label{sec:kinematicTree:JointTransformMotionSubspace}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L116}{JointTransformMotionSubspace}{}}}\label{sec:kinematicTree:JointTransformMotionSubspace}
 ({\it jointType}, {\it q})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2529,7 +2544,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L380}{CRM}{}}}\label{sec:kinematicTree:CRM}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L396}{CRM}{}}}\label{sec:kinematicTree:CRM}
 ({\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2538,22 +2553,22 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L389}{CRF}{}}}\label{sec:kinematicTree:CRF}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L405}{CRF}{}}}\label{sec:kinematicTree:CRF}
 ({\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
   \item[--]  {\bf function description}: computes cross product operator for force from 6D vector v; CRF(v) @ f computes the cross product of v and force f\vspace{12pt}\end{itemize}
 %
-\mysubsubsection{CLASS KinematicTree (in module kinematicTree)}
-\noindent\textcolor{steelblue}{{\bf class description}}:  class to define a kinematic tree, which can be used for building serial or tree-structured multibody systems
-         (or robots) with a minimum coordinates formulation, using efficient rotation matrices and 3D offsets
+\mysubsubsection{CLASS KinematicTree33 (in module kinematicTree)}
+\noindent\textcolor{steelblue}{{\bf class description}}:  class to define a kinematic tree in Python, which can be used for building serial or tree-structured multibody systems
+         (or robots) with a minimum coordinates formulation, using rotation matrices and 3D offsets
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-  \item[--]  {\bf notes}: The formulation and structures widely follows the more efficient formulas with 3D vectors and rotation matrices as proposed in Handbook of robotics \cite{Siciliano2016}, Chapter 3, but with the rotation matrices (\texttt{listOfRotations}) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Pl\"ucker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing\vspace{24pt}\end{itemize}
+  \item[--]  {\bf notes}: The formulation and structures widely follows the more efficient formulas (but still implemented in Python!) with 3D vectors and rotation matrices as proposed in Handbook of robotics \cite{Siciliano2016}, Chapter 3, but with the rotation matrices (\texttt{listOfRotations}) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Pl\"ucker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing\vspace{24pt}\end{itemize}
 %
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L126}{\_\_init\_\_}{}}}\label{sec:kinematicTree:KinematicTree:__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L142}{\_\_init\_\_}{}}}\label{sec:kinematicTree:KinematicTree33:__init__}
 ({\it self}, {\it listOfJointTypes}, {\it listOfRotations}, {\it listOfOffsets}, {\it listOfInertia3D}, {\it listOfCOM}, {\it listOfMass}, {\it listOfParents}= [], {\it gravity}= [0,0,-9.81], {\it })
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2574,7 +2589,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L167}{Size}{}}}\label{sec:kinematicTree:KinematicTree:Size}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L183}{Size}{}}}\label{sec:kinematicTree:KinematicTree33:Size}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2583,7 +2598,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L173}{XL}{}}}\label{sec:kinematicTree:KinematicTree:XL}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L189}{XL}{}}}\label{sec:kinematicTree:KinematicTree33:XL}
 ({\it self}, {\it i})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2592,7 +2607,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L184}{ForwardDynamicsCRB}{}}}\label{sec:kinematicTree:KinematicTree:ForwardDynamicsCRB}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L200}{ForwardDynamicsCRB}{}}}\label{sec:kinematicTree:KinematicTree33:ForwardDynamicsCRB}
 ({\it self}, {\it q}= [], {\it q\_t}= [], {\it torques}= [], {\it forces}= [])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2609,7 +2624,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L205}{ComputeMassMatrixAndForceTerms}{}}}\label{sec:kinematicTree:KinematicTree:ComputeMassMatrixAndForceTerms}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L221}{ComputeMassMatrixAndForceTerms}{}}}\label{sec:kinematicTree:KinematicTree33:ComputeMassMatrixAndForceTerms}
 ({\it self}, {\it q}, {\it q\_t}, {\it externalForces}= [])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2639,7 +2654,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
   \item[--]  {\bf notes}: The formulation and structures widely follow Roy Featherstone (http://royfeatherstone.org/) / Handbook of robotics \cite{Siciliano2016}\vspace{24pt}\end{itemize}
 %
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L408}{\_\_init\_\_}{}}}\label{sec:kinematicTree:KinematicTree66:__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L424}{\_\_init\_\_}{}}}\label{sec:kinematicTree:KinematicTree66:__init__}
 ({\it self}, {\it listOfJointTypes}, {\it listOfTransformations}, {\it listOfInertias}, {\it listOfParents}= [], {\it gravity}= [0,0,-9.81], {\it })
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2657,7 +2672,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L437}{Size}{}}}\label{sec:kinematicTree:KinematicTree66:Size}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L453}{Size}{}}}\label{sec:kinematicTree:KinematicTree66:Size}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2666,7 +2681,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L441}{XL}{}}}\label{sec:kinematicTree:KinematicTree66:XL}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L457}{XL}{}}}\label{sec:kinematicTree:KinematicTree66:XL}
 ({\it self}, {\it i})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2675,7 +2690,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L452}{ForwardDynamicsCRB}{}}}\label{sec:kinematicTree:KinematicTree66:ForwardDynamicsCRB}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L468}{ForwardDynamicsCRB}{}}}\label{sec:kinematicTree:KinematicTree66:ForwardDynamicsCRB}
 ({\it self}, {\it q}= [], {\it q\_t}= [], {\it torques}= [], {\it forces}= [])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2692,7 +2707,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L473}{ComputeMassMatrixAndForceTerms}{}}}\label{sec:kinematicTree:KinematicTree66:ComputeMassMatrixAndForceTerms}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L489}{ComputeMassMatrixAndForceTerms}{}}}\label{sec:kinematicTree:KinematicTree66:ComputeMassMatrixAndForceTerms}
 ({\it self}, {\it q}, {\it q\_t}, {\it externalForces}= [])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2716,7 +2731,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L552}{AddExternalForces}{}}}\label{sec:kinematicTree:KinematicTree66:AddExternalForces}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L568}{AddExternalForces}{}}}\label{sec:kinematicTree:KinematicTree66:AddExternalForces}
 ({\it self}, {\it Xup}, {\it fvp}, {\it externalForces}= [])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3293,12 +3308,12 @@ PlotSensor(mbs, sensorNumbers=s0, componentsX=[0], components=[1], xLabel='x-Pos
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py}{\texttt{beltDriveReevingSystem.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Ex), 
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py}{\texttt{CMSexampleCourse.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/finiteSegmentMethod.py}{\texttt{finiteSegmentMethod.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/dispyParameterVariationExample.py}{\texttt{dispyParameterVariationExample.py}} (Ex), 
  ...
 , 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFoutputTest.py}{\texttt{ANCFoutputTest.py}} (TM), 
  ...
 \ei
 
@@ -3387,8 +3402,8 @@ PlotSensor(mbs, sensorNumbers=s0, componentsX=[0], components=[1], xLabel='x-Pos
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L104}{ProcessParameterList}{}}}\label{sec:processing:ProcessParameterList}
-({\it parameterFunction}, {\it parameterList}, {\it addComputationIndex}, {\it useMultiProcessing}, {\it **kwargs})
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L106}{ProcessParameterList}{}}}\label{sec:processing:ProcessParameterList}
+({\it parameterFunction}, {\it parameterList}, {\it addComputationIndex}, {\it useMultiProcessing}, {\it clusterHostNames}= [], {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -3401,13 +3416,15 @@ PlotSensor(mbs, sensorNumbers=s0, componentsX=[0], components=[1], xLabel='x-Pos
     \item[] {\it     useMultiProcessing}: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
     \item[] {\it     numberOfThreads}: default: same as number of cpus (threads); used for multiprocessing lib;
     \item[] {\it     resultsFile}: if provided, output is immediately written to resultsFile during processing
+    \item[] {\it     clusterHostNames}: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
+    \item[] {\it     useDispyWebMonitor}: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
   \end{itemize}
   \item[--]  {\bf output}: returns values containing the results according to parameterList  \item[--]  {\bf notes}: options are passed from Parametervariation\vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L202}{ParameterVariation}{}}}\label{sec:processing:ParameterVariation}
-({\it parameterFunction}, {\it parameters}, {\it useLogSpace}= False, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it parameterFunctionData}= {}, {\it **kwargs})
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L286}{ParameterVariation}{}}}\label{sec:processing:ParameterVariation}
+({\it parameterFunction}, {\it parameters}, {\it useLogSpace}= False, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it parameterFunctionData}= {}, {\it clusterHostNames}= [], {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -3430,6 +3447,8 @@ PlotSensor(mbs, sensorNumbers=s0, componentsX=[0], components=[1], xLabel='x-Pos
     \item[] {\it     resultsFile}: if provided, output is immediately written to resultsFile during processing
     \item[] {\it     numberOfThreads}: default: same as number of cpus (threads); used for multiprocessing lib;
     \item[] {\it     parameterFunctionData}: dictionary containing additional data passed to the parameterFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
+    \item[] {\it     clusterHostNames}: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
+    \item[] {\it     useDispyWebMonitor}: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
   \end{itemize}
   \item[--]  {\bf output}: \vspace{-6pt}
   \begin{itemize}[leftmargin=1.2cm]
@@ -3443,14 +3462,15 @@ ParameterVariation(parameters={'mass':(1,10,10), 'stiffness':(1000,10000,10)}, p
 %
 \noindent For examples on ParameterVariation see Examples (Ex) and TestModels (TM):
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py}{\texttt{parameterVariationExample.py}} (Ex), 
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/dispyParameterVariationExample.py}{\texttt{dispyParameterVariationExample.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py}{\texttt{parameterVariationExample.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}} (TM)\ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L354}{GeneticOptimization}{}}}\label{sec:processing:GeneticOptimization}
-({\it objectiveFunction}, {\it parameters}, {\it populationSize}= 100, {\it numberOfGenerations}= 10, {\it elitistRatio}= 0.1, {\it crossoverProbability}= 0.25, {\it crossoverAmount}= 0.5, {\it rangeReductionFactor}= 0.7, {\it distanceFactor}= 0.1, {\it childDistribution}= "uniform", {\it distanceFactorGenerations}= -1, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it **kwargs})
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L418}{GeneticOptimization}{}}}\label{sec:processing:GeneticOptimization}
+({\it objectiveFunction}, {\it parameters}, {\it populationSize}= 100, {\it numberOfGenerations}= 10, {\it elitistRatio}= 0.1, {\it crossoverProbability}= 0.25, {\it crossoverAmount}= 0.5, {\it rangeReductionFactor}= 0.7, {\it distanceFactor}= 0.1, {\it childDistribution}= "uniform", {\it distanceFactorGenerations}= -1, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it clusterHostNames}= [], {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -3476,8 +3496,8 @@ ParameterVariation(parameters={'mass':(1,10,10), 'stiffness':(1000,10000,10)}, p
     \item[] {\it     showProgress}: if True, shows for every iteration the progress bar (requires tqdm library)
     \item[] {\it     numberOfThreads}: default: same as number of cpus (threads); used for multiprocessing lib;
     \item[] {\it     resultsFile}: if provided, the results are stored columnwise into the given file and written after every generation; use resultsMonitor.py to track results in realtime
-    \item[] {\it     numberOfChildren}: (DEPRECATED, UNUSED) number childrens of surviving population
-    \item[] {\it     survivingIndividuals}: (DEPRECATED) number of surviving individuals after children are born
+    \item[] {\it     clusterHostNames}: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
+    \item[] {\it     useDispyWebMonitor}: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
   \end{itemize}
   \item[--]  {\bf output}: \vspace{-6pt}
   \begin{itemize}[leftmargin=1.2cm]
@@ -3497,7 +3517,7 @@ GeneticOptimization(objectiveFunction = fOpt, parameters={'mass':(1,10), 'stiffn
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L702}{Minimize}{}}}\label{sec:processing:Minimize}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L777}{Minimize}{}}}\label{sec:processing:Minimize}
 ({\it objectiveFunction}, {\it parameters}, {\it initialGuess}= [], {\it method}= 'Nelder-Mead', {\it tol}= 1e-4, {\it options}= {}, {\it enforceBounds}= True, {\it debugMode}= False, {\it showProgress}= True, {\it addComputationIndex}= False, {\it storeFunctionValues}= True, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3534,7 +3554,7 @@ GeneticOptimization(objectiveFunction = fOpt, parameters={'mass':(1,10), 'stiffn
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L902}{ComputeSensitivities}{}}}\label{sec:processing:ComputeSensitivities}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L977}{ComputeSensitivities}{}}}\label{sec:processing:ComputeSensitivities}
 ({\it parameterFunction}, {\it parameters}, {\it scaledByReference}= False, {\it debugMode}= False, {\it addComputationIndex}= False, {\it useMultiProcessing}= False, {\it showProgress}= True, {\it parameterFunctionData}= dict(), {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3570,7 +3590,7 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1012}{PlotOptimizationResults2D}{}}}\label{sec:processing:PlotOptimizationResults2D}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1087}{PlotOptimizationResults2D}{}}}\label{sec:processing:PlotOptimizationResults2D}
 ({\it parameterList}, {\it valueList}, {\it xLogScale}= False, {\it yLogScale}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3595,7 +3615,7 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1068}{PlotSensitivityResults}{}}}\label{sec:processing:PlotSensitivityResults}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1143}{PlotSensitivityResults}{}}}\label{sec:processing:PlotSensitivityResults}
 ({\it valRef}, {\it valuesSorted}, {\it sensitivity}, {\it fVar}= None, {\it strYAxis}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -3656,7 +3676,8 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 %
 \noindent For examples on GramSchmidt see Examples (Ex) and TestModels (TM):
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py}{\texttt{sliderCrank3Dbenchmark.py}} (TM)\ei
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py}{\texttt{sliderCrank3Dbenchmark.py}} (TM)\ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -4186,7 +4207,7 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-  \item[--]  {\bf function description}: compute 6x6 coordinate transformation matrix for rotation around X axis; output: first 3 components for rotation, second 3 components for translation! See Featherstone / Handbook of robotics \cite{Siciliano2016}; note that \ac{T66} represents coordinate transforms, which is the transposed of rotation matrices used in Exudyn\vspace{12pt}\end{itemize}
+  \item[--]  {\bf function description}: compute 6x6 coordinate transformation matrix for rotation around X axis; output: first 3 components for rotation, second 3 components for translation! See Featherstone / Handbook of robotics \cite{Siciliano2016}\vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
@@ -4195,7 +4216,7 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-  \item[--]  {\bf function description}: compute 6x6 transformation matrix for rotation around Y axis; output: first 3 components for rotation, second 3 components for translation; note that T66 represents coordinate transforms, which is the transposed of rotation matrices used in Exudyn\vspace{12pt}\end{itemize}
+  \item[--]  {\bf function description}: compute 6x6 transformation matrix for rotation around Y axis; output: first 3 components for rotation, second 3 components for translation\vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
@@ -4204,7 +4225,7 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-  \item[--]  {\bf function description}: compute 6x6 transformation matrix for rotation around Z axis; output: first 3 components for rotation, second 3 components for translation; note that T66 represents coordinate transforms, which is the transposed of rotation matrices used in Exudyn\vspace{12pt}\end{itemize}
+  \item[--]  {\bf function description}: compute 6x6 transformation matrix for rotation around Z axis; output: first 3 components for rotation, second 3 components for translation\vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
@@ -4253,12 +4274,21 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L655}{RotationTranslation2T66}{}}}\label{sec:rigidBodyUtilities:RotationTranslation2T66}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L652}{InverseT66toRotationTranslation}{}}}\label{sec:rigidBodyUtilities:InverseT66toRotationTranslation}
+({\it T66})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+  \item[--]  {\bf function description}: convert inverse 6x6 coordinate transformation (Pl\"ucker transform) into rotation and translation  \item[--]  {\bf input}: inverse T66 given as  6x6 numpy array  \item[--]  {\bf output}: [A, v] with 3x3 rotation matrix A and 3D translation vector v\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L662}{RotationTranslation2T66}{}}}\label{sec:rigidBodyUtilities:RotationTranslation2T66}
 ({\it A}, {\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-  \item[--]  {\bf function description}: convert rotation and translation int 6x6 coordinate transformation (Pl\"ucker transform)  \item[--]  {\bf input}: \vspace{-6pt}
+  \item[--]  {\bf function description}: convert rotation and translation into 6x6 coordinate transformation (Pl\"ucker transform)  \item[--]  {\bf input}: \vspace{-6pt}
   \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
     \item[] {\it A}: 3x3 rotation matrix A
@@ -4268,7 +4298,22 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L675}{T66toHT}{}}}\label{sec:rigidBodyUtilities:T66toHT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L672}{RotationTranslation2T66Inverse}{}}}\label{sec:rigidBodyUtilities:RotationTranslation2T66Inverse}
+({\it A}, {\it v})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+  \item[--]  {\bf function description}: convert rotation and translation into INVERSE 6x6 coordinate transformation (Pl\"ucker transform)  \item[--]  {\bf input}: \vspace{-6pt}
+  \begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+    \item[] {\it A}: 3x3 rotation matrix A
+    \item[] {\it   v}: 3D translation vector v
+  \end{itemize}
+  \item[--]  {\bf output}: return 6x6 transformation matrix 'T66'\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L700}{T66toHT}{}}}\label{sec:rigidBodyUtilities:T66toHT}
 ({\it T66})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4277,7 +4322,7 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L686}{HT2T66}{}}}\label{sec:rigidBodyUtilities:HT2T66}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L711}{HT2T66Inverse}{}}}\label{sec:rigidBodyUtilities:HT2T66Inverse}
 ({\it T})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4286,7 +4331,7 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L697}{InertiaTensor2Inertia6D}{}}}\label{sec:rigidBodyUtilities:InertiaTensor2Inertia6D}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L722}{InertiaTensor2Inertia6D}{}}}\label{sec:rigidBodyUtilities:InertiaTensor2Inertia6D}
 ({\it inertiaTensor})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4301,7 +4346,7 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L702}{Inertia6D2InertiaTensor}{}}}\label{sec:rigidBodyUtilities:Inertia6D2InertiaTensor}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L727}{Inertia6D2InertiaTensor}{}}}\label{sec:rigidBodyUtilities:Inertia6D2InertiaTensor}
 ({\it inertia6D})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4317,7 +4362,7 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L878}{GetRigidBodyNode}{}}}\label{sec:rigidBodyUtilities:GetRigidBodyNode}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L903}{GetRigidBodyNode}{}}}\label{sec:rigidBodyUtilities:GetRigidBodyNode}
 ({\it nodeType}, {\it position}= [0,0,0], {\it velocity}= [0,0,0], {\it rotationMatrix}= [], {\it rotationParameters}= [], {\it angularVelocity}= [0,0,0])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4336,7 +4381,7 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L941}{AddRigidBody}{}}}\label{sec:rigidBodyUtilities:AddRigidBody}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L966}{AddRigidBody}{}}}\label{sec:rigidBodyUtilities:AddRigidBody}
 ({\it mainSys}, {\it inertia}, {\it nodeType}, {\it position}= [0,0,0], {\it velocity}= [0,0,0], {\it rotationMatrix}= [], {\it rotationParameters}= [], {\it angularVelocity}= [0,0,0], {\it gravity}= [0,0,0], {\it graphicsDataList}= [])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4375,7 +4420,7 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L978}{AddRevoluteJoint}{}}}\label{sec:rigidBodyUtilities:AddRevoluteJoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1003}{AddRevoluteJoint}{}}}\label{sec:rigidBodyUtilities:AddRevoluteJoint}
 ({\it mbs}, {\it body0}, {\it body1}, {\it point}, {\it axis}, {\it useGlobalFrame}= True, {\it showJoint}= True, {\it axisRadius}= 0.1, {\it axisLength}= 0.4)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4404,7 +4449,7 @@ ComputeSensitivities(parameterFunction=ParameterFunction, parameters = {'mass': 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1038}{AddPrismaticJoint}{}}}\label{sec:rigidBodyUtilities:AddPrismaticJoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1063}{AddPrismaticJoint}{}}}\label{sec:rigidBodyUtilities:AddPrismaticJoint}
 ({\it mbs}, {\it body0}, {\it body1}, {\it point}, {\it axis}, {\it useGlobalFrame}= True, {\it showJoint}= True, {\it axisRadius}= 0.1, {\it axisLength}= 0.4)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4439,7 +4484,7 @@ i1 = i0.Rotated(RotationMatrixX(np.pi/2))
 i2 = i1.Translated([1,0,0])\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{24pt}\end{itemize}
 %
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L720}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L745}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:__init__}
 ({\it self}, {\it mass}= 0, {\it inertiaTensor}= np.zeros([3,3]), {\it com}= np.zeros(3))
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4448,7 +4493,7 @@ i2 = i1.Translated([1,0,0])\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L732}{\_\_add\_\_}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:__add__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L757}{\_\_add\_\_}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:__add__}
 ({\it self}, {\it otherBodyInertia})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4464,7 +4509,7 @@ J = InertiaSphere(2,0.1) + InertiaRodX(1,2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L739}{Translated}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Translated}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L764}{Translated}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Translated}
 ({\it self}, {\it vec})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4473,7 +4518,7 @@ J = InertiaSphere(2,0.1) + InertiaRodX(1,2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L752}{Inertia}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Inertia}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L777}{Inertia}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Inertia}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4482,7 +4527,7 @@ J = InertiaSphere(2,0.1) + InertiaRodX(1,2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L756}{InertiaCOM}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:InertiaCOM}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L781}{InertiaCOM}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:InertiaCOM}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4491,7 +4536,7 @@ J = InertiaSphere(2,0.1) + InertiaRodX(1,2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L760}{COM}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:COM}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L785}{COM}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:COM}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4500,7 +4545,7 @@ J = InertiaSphere(2,0.1) + InertiaRodX(1,2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L764}{Mass}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Mass}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L789}{Mass}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Mass}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4509,7 +4554,7 @@ J = InertiaSphere(2,0.1) + InertiaRodX(1,2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L769}{Rotated}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Rotated}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L794}{Rotated}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Rotated}
 ({\it self}, {\it rot})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4518,7 +4563,7 @@ J = InertiaSphere(2,0.1) + InertiaRodX(1,2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L782}{GetInertia6D}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:GetInertia6D}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L807}{GetInertia6D}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:GetInertia6D}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4544,7 +4589,7 @@ J = InertiaSphere(2,0.1) + InertiaRodX(1,2)\end{lstlisting}\vspace{-24pt}\bi\ite
 InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{24pt}\end{itemize}
 %
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L800}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaCuboid(RigidBodyInertia):__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L825}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaCuboid(RigidBodyInertia):__init__}
 ({\it self}, {\it density}, {\it sideLengths})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4572,7 +4617,7 @@ InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt
 \noindent\textcolor{steelblue}{{\bf class description}}:  create RigidBodyInertia with moment of inertia and mass of a rod with mass m and length L in local 1-direction (x-direction); inertia w.r.t. center of mass, com=[0,0,0]
 \vspace{3pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L812}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaRodX(RigidBodyInertia):__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L837}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaRodX(RigidBodyInertia):__init__}
 ({\it self}, {\it mass}, {\it length})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4589,7 +4634,7 @@ InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt
 \noindent\textcolor{steelblue}{{\bf class description}}:  create RigidBodyInertia with moment of inertia and mass of mass point with 'mass'; inertia w.r.t. center of mass, com=[0,0,0]
 \vspace{3pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L820}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaMassPoint(RigidBodyInertia):__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L845}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaMassPoint(RigidBodyInertia):__init__}
 ({\it self}, {\it mass})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4607,7 +4652,7 @@ InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt
 \noindent\textcolor{steelblue}{{\bf class description}}:  create RigidBodyInertia with moment of inertia and mass of sphere with mass and radius; inertia w.r.t. center of mass, com=[0,0,0]
 \vspace{3pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L828}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaSphere(RigidBodyInertia):__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L853}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaSphere(RigidBodyInertia):__init__}
 ({\it self}, {\it mass}, {\it radius})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4626,7 +4671,7 @@ InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt
 \noindent\textcolor{steelblue}{{\bf class description}}:  create RigidBodyInertia with moment of inertia and mass of hollow sphere with mass (concentrated at circumference) and radius; inertia w.r.t. center of mass, com=0
 \vspace{3pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L837}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaHollowSphere(RigidBodyInertia):__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L862}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaHollowSphere(RigidBodyInertia):__init__}
 ({\it self}, {\it mass}, {\it radius})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4637,7 +4682,7 @@ InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt
 \noindent\textcolor{steelblue}{{\bf class description}}:  create RigidBodyInertia with moment of inertia and mass of cylinder with density, length and outerRadius; axis defines the orientation of the cylinder axis (0=x-axis, 1=y-axis, 2=z-axis); for hollow cylinder use innerRadius != 0; inertia w.r.t. center of mass, com=[0,0,0]
 \vspace{3pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L846}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaCylinder(RigidBodyInertia):__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L871}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaCylinder(RigidBodyInertia):__init__}
 ({\it self}, {\it density}, {\it length}, {\it outerRadius}, {\it axis}, {\it innerRadius}= 0)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4672,7 +4717,7 @@ InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt
 \item[]Example: 	New robot model uses the class Robot with class RobotLink; the old dictionary structure is defined in the example in ComputeJointHT for the definition of the 'robot' dictionary.
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L640}{StdDH2HT}{}}}\label{sec:roboticsCore:StdDH2HT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L676}{StdDH2HT}{}}}\label{sec:roboticsCore:StdDH2HT}
 ({\it DHparameters})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4689,7 +4734,7 @@ InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L662}{ModDHKK2HT}{}}}\label{sec:roboticsCore:ModDHKK2HT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L698}{ModDHKK2HT}{}}}\label{sec:roboticsCore:ModDHKK2HT}
 ({\it DHparameters})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4704,7 +4749,7 @@ InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L676}{ConstantAccelerationParameters}{}}}\label{sec:roboticsCore:ConstantAccelerationParameters}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L712}{ConstantAccelerationParameters}{}}}\label{sec:roboticsCore:ConstantAccelerationParameters}
 ({\it duration}, {\it distance})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4713,7 +4758,7 @@ InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L690}{ConstantAccelerationProfile}{}}}\label{sec:roboticsCore:ConstantAccelerationProfile}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L726}{ConstantAccelerationProfile}{}}}\label{sec:roboticsCore:ConstantAccelerationProfile}
 ({\it t}, {\it tStart}, {\it sStart}, {\it duration}, {\it distance})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4737,7 +4782,7 @@ InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L733}{MotionInterpolator}{}}}\label{sec:roboticsCore:MotionInterpolator}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L769}{MotionInterpolator}{}}}\label{sec:roboticsCore:MotionInterpolator}
 ({\it t}, {\it robotTrajectory}, {\it joint})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4773,7 +4818,7 @@ q0 = [0,0,0,0,0,0] #initial configuration
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L781}{SerialRobot2MBS}{}}}\label{sec:roboticsCore:SerialRobot2MBS}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L817}{SerialRobot2MBS}{}}}\label{sec:roboticsCore:SerialRobot2MBS}
 ({\it mbs}, {\it robot}, {\it jointLoadUserFunctionList}, {\it baseMarker}, {\it *args}, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4804,13 +4849,12 @@ q0 = [0,0,0,0,0,0] #initial configuration
 \noindent For examples on SerialRobot2MBS see Examples (Ex) and TestModels (TM):
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotOldTests.py}{\texttt{serialRobotOldTests.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py}{\texttt{serialRobotTestDH2.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py}{\texttt{serialRobotTest.py}} (TM)\ei
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py}{\texttt{serialRobotTestDH2.py}} (Ex)\ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L984}{ComputeJointHT}{}}}\label{sec:roboticsCore:ComputeJointHT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1020}{ComputeJointHT}{}}}\label{sec:roboticsCore:ComputeJointHT}
 ({\it robot}, {\it configuration})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4841,7 +4885,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1012}{ComputeCOMHT}{}}}\label{sec:roboticsCore:ComputeCOMHT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1048}{ComputeCOMHT}{}}}\label{sec:roboticsCore:ComputeCOMHT}
 ({\it robot}, {\it HT})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4856,7 +4900,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1029}{ComputeStaticTorques}{}}}\label{sec:roboticsCore:ComputeStaticTorques}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1065}{ComputeStaticTorques}{}}}\label{sec:roboticsCore:ComputeStaticTorques}
 ({\it robot}, {\it HT})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -4871,7 +4915,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1058}{Jacobian}{}}}\label{sec:roboticsCore:Jacobian}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1094}{Jacobian}{}}}\label{sec:roboticsCore:Jacobian}
 ({\it robot}, {\it HT}, {\it toolPosition}= [], {\it mode}= 'all')
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5161,7 +5205,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L515}{GetKinematicTree66}{}}}\label{sec:roboticsCore:Robot:GetKinematicTree66}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L551}{GetKinematicTree66}{}}}\label{sec:roboticsCore:Robot:GetKinematicTree66}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5170,7 +5214,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L545}{GetLinkGraphicsData}{}}}\label{sec:roboticsCore:Robot:GetLinkGraphicsData}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L581}{GetLinkGraphicsData}{}}}\label{sec:roboticsCore:Robot:GetLinkGraphicsData}
 ({\it self}, {\it i}, {\it p0}, {\it p1}, {\it axis0}, {\it axis1}, {\it linkVisualization})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5179,7 +5223,7 @@ HTlist = ComputeJointHT(robot, [np.pi/8]*2)\end{lstlisting}\vspace{-24pt}\bi\ite
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L588}{BuildFromDictionary}{}}}\label{sec:roboticsCore:Robot:BuildFromDictionary}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L624}{BuildFromDictionary}{}}}\label{sec:roboticsCore:Robot:BuildFromDictionary}
 ({\it self}, {\it robotDict})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -5640,13 +5684,13 @@ traj.Add(ProfilePTP([1,1],syncAccTimes=False, maxVelocities=[1,1], maxAccelerati
 \noindent For examples on MassMatrix see Examples (Ex) and TestModels (TM):
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solverFunctionsTestEigenvalues.py}{\texttt{solverFunctionsTestEigenvalues.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py}{\texttt{manualExplicitIntegrator.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py}{\texttt{objectFFRFreducedOrderShowModes.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py}{\texttt{objectFFRFreducedOrderAccelerations.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py}{\texttt{objectFFRFreducedOrderShowModes.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py}{\texttt{objectFFRFreducedOrderStressModesTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py}{\texttt{objectFFRFreducedOrderTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py}{\texttt{objectFFRFTest2.py}} (TM), 
  ...
 \ei
 
@@ -5971,9 +6015,9 @@ import exudyn as exu
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py}{\texttt{ANCFALEtest.py}} (Ex), 
  ...
 , 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}} (TM), 
  ...
 \ei
 
@@ -6067,8 +6111,7 @@ import exudyn as exu
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotOldTests.py}{\texttt{serialRobotOldTests.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py}{\texttt{serialRobotTestDH2.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py}{\texttt{serialRobotTSD.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py}{\texttt{serialRobotTest.py}} (TM)\ei
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py}{\texttt{serialRobotTSD.py}} (Ex)\ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -6399,9 +6442,9 @@ FindObjectIndex(2, locals() )  #usually sufficient
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Ex), 
  ...
 , 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ConvexContactTest.py}{\texttt{ConvexContactTest.py}} (TM), 
  ...
 \ei
 

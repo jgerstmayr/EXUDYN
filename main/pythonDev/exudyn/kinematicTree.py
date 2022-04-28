@@ -26,6 +26,22 @@ from exudyn.robotics import *
 # https://github.com/petercorke/spatialmath-python
 # https://github.com/petercorke/robotics-toolbox-python
 
+
+#the following functions are defined here to fit into the original Featherstone algorithm
+#rotations are transposed / inverse
+def RotationX2T66Inverse(angle):
+    return RotationX2T66(angle).T
+
+#the following functions are defined here to fit into the original Featherstone algorithm
+#rotations are transposed / inverse
+def RotationY2T66Inverse(angle):
+    return RotationY2T66(angle).T
+
+#the following functions are defined here to fit into the original Featherstone algorithm
+#rotations are transposed / inverse
+def RotationZ2T66Inverse(angle):
+    return RotationZ2T66(angle).T
+
 #**function: convert mass, COM and inertia into 6x6 inertia matrix
 #**input:
 #  mass: scalar mass
@@ -38,7 +54,7 @@ def MassCOMinertia2T66(mass, centerOfMass, inertia):
         [inertia + mass*(C @ C.T), mass*C],
         [mass*C.T, mass*np.eye(3) ]])
 
-#**function: convert inertia as produced with RigidBodyInertia class into 6x6 inertia matrix (as used in KinematicTree, Featherstone / Handbook of robotics \cite{Siciliano2016})
+#**function: convert inertia as produced with RigidBodyInertia class into 6x6 inertia matrix (as used in KinematicTree66, Featherstone / Handbook of robotics \cite{Siciliano2016})
 #**notes: within the 6x6 matrix, the inertia tensor is defined w.r.t.\ the center of mass, while RigidBodyInertia defines the inertia tensor w.r.t.\ the reference point; however, this function correctly transforms all quantities of inertia.
 #**output: 6x6 numpy array for further use in minimum coordinates formulation
 def Inertia2T66(inertia):
@@ -66,9 +82,9 @@ def Inertia66toMassCOMinertia(inertia66):
 
 #define dictionary for joint transformations, as there is no switch case statement in Python
 dictOfJointTransformMotionSubspace66 = {
-    'Rx':[RotationX2T66,   np.array([1,0,0,0,0,0])], #revolute joint for local X axis
-    'Ry':[RotationY2T66,   np.array([0,1,0,0,0,0])], #revolute joint for local Y axis
-    'Rz':[RotationZ2T66,   np.array([0,0,1,0,0,0])], #revolute joint for local Z axis
+    'Rx':[RotationX2T66Inverse,   np.array([1,0,0,0,0,0])], #revolute joint for local X axis
+    'Ry':[RotationY2T66Inverse,   np.array([0,1,0,0,0,0])], #revolute joint for local Y axis
+    'Rz':[RotationZ2T66Inverse,   np.array([0,0,1,0,0,0])], #revolute joint for local Z axis
     'Px':[TranslationX2T66, np.array([0,0,0,1,0,0])], #prismatic joint for local X axis
     'Py':[TranslationY2T66, np.array([0,0,0,0,1,0])], #prismatic joint for local Y axis
     'Pz':[TranslationZ2T66, np.array([0,0,0,0,0,1])], #prismatic joint for local Z axis
@@ -108,11 +124,11 @@ def JointTransformMotionSubspace(jointType, q):
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #definition of a kinematic tree
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**class: class to define a kinematic tree, which can be used for building serial or tree-structured multibody systems 
-#         (or robots) with a minimum coordinates formulation, using efficient rotation matrices and 3D offsets
+#**class: class to define a kinematic tree in Python, which can be used for building serial or tree-structured multibody systems 
+#         (or robots) with a minimum coordinates formulation, using rotation matrices and 3D offsets
 #**notes:
-#   The formulation and structures widely follows the more efficient formulas with 3D vectors and rotation matrices as proposed in Handbook of robotics \cite{Siciliano2016}, Chapter 3, but with the rotation matrices (\texttt{listOfRotations}) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Pl\"ucker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing
-class KinematicTree:
+#   The formulation and structures widely follows the more efficient formulas (but still implemented in Python!) with 3D vectors and rotation matrices as proposed in Handbook of robotics \cite{Siciliano2016}, Chapter 3, but with the rotation matrices (\texttt{listOfRotations}) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Pl\"ucker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing
+class KinematicTree33:
     #**classFunction: initialize kinematic tree
     #**input:
     #  listOfJointTypes: mandatory list of joint types 'Rx', 'Ry', 'Rz' denoting revolute joints; 'Px', 'Py', 'Pz', denoting prismatic joints
@@ -148,21 +164,21 @@ class KinematicTree:
             self.listOfParents = np.array(self.listOfParents)
 
         if len(self.listOfJointTypes) != len(self.listOfRotations):
-            raise ValueError('KinematicTree: length of listOfJointTypes must agree with length of listOfRotations')
+            raise ValueError('KinematicTree33: length of listOfJointTypes must agree with length of listOfRotations')
         if len(self.listOfJointTypes) != len(self.listOfOffsets):
-            raise ValueError('KinematicTree: length of listOfJointTypes must agree with length of listOfOffsets')
+            raise ValueError('KinematicTree33: length of listOfJointTypes must agree with length of listOfOffsets')
         if len(self.listOfJointTypes) != len(self.listOfParents):
-            raise ValueError('KinematicTree: length of listOfJointTypes must agree with length of parents (or parents may be empty)')
+            raise ValueError('KinematicTree33: length of listOfJointTypes must agree with length of parents (or parents may be empty)')
         if len(self.listOfJointTypes) != len(self.listOfInertia3D):
-            raise ValueError('KinematicTree: length of listOfJointTypes must agree with length of listOfInertia3D')
+            raise ValueError('KinematicTree33: length of listOfJointTypes must agree with length of listOfInertia3D')
         if len(self.listOfJointTypes) != len(self.listOfMass):
-            raise ValueError('KinematicTree: length of listOfJointTypes must agree with length of listOfMass')
+            raise ValueError('KinematicTree33: length of listOfJointTypes must agree with length of listOfMass')
         if len(self.listOfJointTypes) != len(self.listOfCOM):
-            raise ValueError('KinematicTree: length of listOfJointTypes must agree with length of listOfCOM')
+            raise ValueError('KinematicTree33: length of listOfJointTypes must agree with length of listOfCOM')
 
         for i in range(len(listOfParents)):
             if listOfParents[i] >= i:
-                raise ValueError('KinematicTree: link / parent indices must be sorted such that parent indices always refer to a link with an index smaller than the current link (parent[i] < i)')
+                raise ValueError('KinematicTree33: link / parent indices must be sorted such that parent indices always refer to a link with an index smaller than the current link (parent[i] < i)')
     #**classFunction: return number of joints, defined by size of jointTypes
     def Size(self):
         return len(self.listOfJointTypes)
@@ -354,7 +370,7 @@ class KinematicTree:
     #             if len(externalForces[i].shape) == 1:
     #                 fvpOut[i] += np.linalg.solve(Xa[i].T, externalForces[i])
     #             else:
-    #                 raise ValueError('KinematicTree.AddExternalForces: unchecked code for multiple forces')
+    #                 raise ValueError('KinematicTree33.AddExternalForces: unchecked code for multiple forces')
     #                 for j in range(len(externalForces[i].shape[1])): #loop over several vectors
     #                     fvpOut[i] += np.linalg.solve(Xa[i].T, externalForces[i][:,j])
     
@@ -424,15 +440,15 @@ class KinematicTree66:
             self.parents = np.array(self.parents)
 
         if len(self.jointTypes) != len(self.transformations):
-            raise ValueError('KinematicTree: length of jointTypes must agree with length of transformations')
+            raise ValueError('KinematicTree66: length of jointTypes must agree with length of transformations')
         if len(self.jointTypes) != len(self.parents):
-            raise ValueError('KinematicTree: length of jointTypes must agree with length of parents (or parents may be empty)')
+            raise ValueError('KinematicTree66: length of jointTypes must agree with length of parents (or parents may be empty)')
         if len(self.jointTypes) != len(self.inertias):
-            raise ValueError('KinematicTree: length of jointTypes must agree with length of inertias')
+            raise ValueError('KinematicTree66: length of jointTypes must agree with length of inertias')
 
         for i in range(len(listOfParents)):
             if listOfParents[i] >= i:
-                raise ValueError('KinematicTree: link / parent indices must be sorted such that parent indices always refer to a link with an index smaller than the current link (parent[i] < i)')
+                raise ValueError('KinematicTree66: link / parent indices must be sorted such that parent indices always refer to a link with an index smaller than the current link (parent[i] < i)')
     #**classFunction: return number of joints, defined by size of jointTypes
     def Size(self):
         return len(self.jointTypes)
@@ -562,7 +578,7 @@ class KinematicTree66:
                 if len(externalForces[i].shape) == 1:
                     fvpOut[i] += np.linalg.solve(Xa[i].T, externalForces[i])
                 else:
-                    raise ValueError('KinematicTree.AddExternalForces: unchecked code for multiple forces')
+                    raise ValueError('KinematicTree66.AddExternalForces: unchecked code for multiple forces')
                     for j in range(len(externalForces[i].shape[1])): #loop over several vectors
                         fvpOut[i] += np.linalg.solve(Xa[i].T, externalForces[i][:,j])
     

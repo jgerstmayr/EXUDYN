@@ -769,6 +769,59 @@ class ObjectGenericODE1:
 
     def __repr__(self):
         return str(dict(self))
+class VObjectKinematicTree:
+    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False, graphicsDataUserFunction = 0):
+        self.show = show
+        self.color = color
+        self.triangleMesh = triangleMesh
+        self.showNodes = showNodes
+        self.graphicsDataUserFunction = graphicsDataUserFunction
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+        yield 'triangleMesh', self.triangleMesh
+        yield 'showNodes', self.showNodes
+        yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
+
+    def __repr__(self):
+        return str(dict(self))
+class ObjectKinematicTree:
+    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, jacobianUserFunction = 0, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False, 'graphicsDataUserFunction': 0}):
+        self.name = name
+        self.nodeNumbers = nodeNumbers
+        self.massMatrix = massMatrix
+        self.stiffnessMatrix = stiffnessMatrix
+        self.dampingMatrix = dampingMatrix
+        self.forceVector = forceVector
+        self.forceUserFunction = forceUserFunction
+        self.massMatrixUserFunction = massMatrixUserFunction
+        self.jacobianUserFunction = jacobianUserFunction
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'KinematicTree'
+        yield 'name', self.name
+        yield 'nodeNumbers', self.nodeNumbers
+        yield 'massMatrix', self.massMatrix
+        yield 'stiffnessMatrix', self.stiffnessMatrix
+        yield 'dampingMatrix', self.dampingMatrix
+        yield 'forceVector', self.forceVector
+        yield 'forceUserFunction', self.forceUserFunction
+        yield 'massMatrixUserFunction', self.massMatrixUserFunction
+        yield 'jacobianUserFunction', self.jacobianUserFunction
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+        yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
+        yield 'VshowNodes', dict(self.visualization)["showNodes"]
+        yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
+
+    def __repr__(self):
+        return str(dict(self))
+#add typedef for short usage:
+KinematicTree = ObjectKinematicTree
+VKinematicTree = VObjectKinematicTree
+
 class VObjectFFRF:
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False):
         self.show = show
