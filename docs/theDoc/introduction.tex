@@ -243,14 +243,14 @@ Nodes usually have separated reference and initial quantities. Here,
 Initial displacement (or rotation) values are provided separately, in order to start a system from a configuration different from the reference configuration.
 As an example, the initial configuration of a \texttt{NodePoint} is given by \texttt{referenceCoordinates + initialCoordinates}, while the initial state of a dynamic system additionally needs \texttt{initialVelocities}.
 
-\mysubsection{Mapping between local and global coordinates} \label{sec:systemData:LTG}
+\mysubsection{Mapping between local and global coordinate indices} \label{sec:systemData:LTG}
 %
-The \ac{LTG}-mappings\footnote{local-to-global coordinate mappings containing transformation from local object coordinate indices to global (system) coordinate indices} between local coordinates, on node or object level, and global (=system) coordinates follows the following rules:
+The \ac{LTG}-index-mappings\footnote{local-to-global coordinate index mappings containing transformation from local object coordinate indices to global (system) coordinate indices; this is different for \mybold{coordinate transformations}!} between local coordinate \mybold{indices}, on node or object level, and global (=system) coordinate \mybold{indices} follows the following rules:
 \bi
-\item \ac{LTG}-mappings are computed during \texttt{mbs.Assemble()} and are not available before.
+\item \ac{LTG}-index-mappings are computed during \texttt{mbs.Assemble()} and are not available before.
 \item Nodes own a global index which relates the local coordinates to global (system) coordinate. E.g., for a \ac{ODE2} node with node number \texttt{i}, this index can be obtained via the function \texttt{mbs.GetNodeODE2Index(i)}.
 \item The order of global coordinates is simply following the node numbering. If we add three nodes \texttt{NodePoint}, the system will contain 9 coordinates, where the first triple (starting index 0) belongs to node 0, the second triple (starting index 3) belongs to node 1 and the third triple (starting index 6) belongs to node 2. After \texttt{mbs.Assemble()}, you can access the system coordinates via \texttt{mbs.systemData.GetODE2Coordinates()}, which returns a numpy array with 9 coordinates, containing the initial values provided in \texttt{NodePoint} (default: zero).
-\item Objects have their own \ac{LTG}-mappings for their respective coordinate types. The \ac{ODE2} coordinates of an object \texttt{j} can be retrieved via \texttt{mbs.systemData.GetObjectLTGODE2(j)}. For a body, these are the global \ac{ODE2} coordinates representing the body; for a connector, these are the coordinates to which the connector is linked (usually coordinates of two bodies); for a ground object, the \ac{LTG}-mapping is empty; see also \refSection{sec:systemData:ObjectLTG}.
+\item Objects have their own \ac{LTG}-index-mappings for their respective coordinate types. The \ac{ODE2} coordinates of an object \texttt{j} can be retrieved via \texttt{mbs.systemData.GetObjectLTGODE2(j)}. For a body, these are the global \ac{ODE2} coordinates representing the body; for a connector, these are the coordinates to which the connector is linked (usually coordinates of two bodies); for a ground object, the \ac{LTG}-index-mapping is empty; see also \refSection{sec:systemData:ObjectLTG}.
 \item Constraints create algebraic variables (Lagrange multipliers) automatically. For a constraint with object number \texttt{k}, the global index to algebraic variables (of \ac{AE}-type) can be accessed via \texttt{mbs.systemData.GetObjectLTGAE(k)}.
 \ei
 
@@ -438,7 +438,7 @@ There are some user functions in order to customize drawing:
   \item Some objects, e.g., \texttt{ObjectGenericODE2} or \texttt{ObjectRigidBody}, provide customized a function \texttt{graphicsDataUserFunction}. This user function just returns a list of GraphicsData, see \refSection{sec:graphicsData}. With this function you can change the shape of the body in every step of the computation.
   \item Specifically, the \texttt{graphicsDataUserFunction} in \texttt{ObjectGround} can be used to draw any moving background in the scene.
 \ei
-Note that all kinds of graphicsUserPythonFunctions need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the \texttt{graphicsDataUserFunction} between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.
+Note that all kinds of \texttt{graphicsDataUserFunction}s need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the \texttt{graphicsDataUserFunction} between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.
 
 \mysubsubsection{Color and RGBA}
 Many functions and objects include color information. In order to allow transparency, all colors contain a list of 4 RGBA values, all values being in the range [0..1]:

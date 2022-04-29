@@ -2,8 +2,8 @@
 Exudyn
 ======
 
-+  Exudyn version = 1.2.55.dev1 (Corea)
-+  build date and time=2022-04-27  09:55
++  Exudyn version = 1.2.57.dev1 (Corea)
++  build date and time=2022-04-29  08:56
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn **Version 1.2** is out! The documentation theDoc.pdf now reached > 600 pages! Including now a contact module, improved solvers, sparse matrix support and multi-threading, creation of beams along curves, extended robotics modules, **PlotSensor** fully extended, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
@@ -980,16 +980,16 @@ Initial displacement (or rotation) values are provided separately, in order to s
 As an example, the initial configuration of a \ ``NodePoint``\  is given by \ ``referenceCoordinates + initialCoordinates``\ , while the initial state of a dynamic system additionally needs \ ``initialVelocities``\ .
 
 
---------------------------------------------
-Mapping between local and global coordinates
---------------------------------------------
+---------------------------------------------------
+Mapping between local and global coordinate indices
+---------------------------------------------------
  
-The LTG-mappings (local-to-global coordinate mappings containing transformation from local object coordinate indices to global (system) coordinate indices) between local coordinates, on node or object level, and global (=system) coordinates follows the following rules:
+The LTG-index-mappings (coordinate transformations!) between local coordinate \ **indices**\ , on node or object level, and global (=system) coordinate \ **indices**\  follows the following rules:
 
-+  LTG-mappings are computed during \ ``mbs.Assemble()``\  and are not available before.
++  LTG-index-mappings are computed during \ ``mbs.Assemble()``\  and are not available before.
 +  Nodes own a global index which relates the local coordinates to global (system) coordinate. E.g., for a ODE2 node with node number \ ``i``\ , this index can be obtained via the function \ ``mbs.GetNodeODE2Index(i)``\ .
 +  The order of global coordinates is simply following the node numbering. If we add three nodes \ ``NodePoint``\ , the system will contain 9 coordinates, where the first triple (starting index 0) belongs to node 0, the second triple (starting index 3) belongs to node 1 and the third triple (starting index 6) belongs to node 2. After \ ``mbs.Assemble()``\ , you can access the system coordinates via \ ``mbs.systemData.GetODE2Coordinates()``\ , which returns a numpy array with 9 coordinates, containing the initial values provided in \ ``NodePoint``\  (default: zero).
-+  Objects have their own LTG-mappings for their respective coordinate types. The ODE2 coordinates of an object \ ``j``\  can be retrieved via \ ``mbs.systemData.GetObjectLTGODE2(j)``\ . For a body, these are the global ODE2 coordinates representing the body; for a connector, these are the coordinates to which the connector is linked (usually coordinates of two bodies); for a ground object, the LTG-mapping is empty; see also theDoc.pdf.
++  Objects have their own LTG-index-mappings for their respective coordinate types. The ODE2 coordinates of an object \ ``j``\  can be retrieved via \ ``mbs.systemData.GetObjectLTGODE2(j)``\ . For a body, these are the global ODE2 coordinates representing the body; for a connector, these are the coordinates to which the connector is linked (usually coordinates of two bodies); for a ground object, the LTG-index-mapping is empty; see also theDoc.pdf.
 +  Constraints create algebraic variables (Lagrange multipliers) automatically. For a constraint with object number \ ``k``\ , the global index to algebraic variables (of AE-type) can be accessed via \ ``mbs.systemData.GetObjectLTGAE(k)``\ .
 
 
@@ -1211,7 +1211,7 @@ There are some user functions in order to customize drawing:
 +  Some objects, e.g., \ ``ObjectGenericODE2``\  or \ ``ObjectRigidBody``\ , provide customized a function \ ``graphicsDataUserFunction``\ . This user function just returns a list of GraphicsData, see theDoc.pdf. With this function you can change the shape of the body in every step of the computation.
 +  Specifically, the \ ``graphicsDataUserFunction``\  in \ ``ObjectGround``\  can be used to draw any moving background in the scene.
 
-Note that all kinds of graphicsUserPythonFunctions need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the \ ``graphicsDataUserFunction``\  between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.
+Note that all kinds of \ ``graphicsDataUserFunction``\ s need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the \ ``graphicsDataUserFunction``\  between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.
 
 Color and RGBA
 ==============

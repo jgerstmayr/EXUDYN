@@ -120,20 +120,7 @@ print('build Exudyn version',exudynVersionString)
 
 
 #++++++++++++++++++++++++++++++++++++++++++
-#add date and time into latex and .rst file
-def NumTo2digits(n):
-    return '0'*(n<10)+str(n)
 
-import datetime
-
-now=datetime.datetime.now()
-buildDateString = str(now.year) + '-' + NumTo2digits(now.month) + '-' + NumTo2digits(now.day)
-buildDateString += '  ' + NumTo2digits(now.hour) + ':' + NumTo2digits(now.minute)# + ':' + NumTo2digits(now.second)
-buildDateString = 'build date and time='+buildDateString
-fileDate =open('../docs/theDoc/buildDate.tex','w')  #clear file by one write access
-fileDate.write(buildDateString)
-fileDate.close()
-#++++++++++++++++++++++++++++++++++++++++++
 
 
 class get_pybind_include(object):
