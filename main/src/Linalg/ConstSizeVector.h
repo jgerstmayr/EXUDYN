@@ -554,7 +554,18 @@ public:
 			data[i] += scalar * v.data[i];
 		}
 	}
-	
+
+	//! multiply components of this vector with components of other vector
+	template<class Tvector>
+	void MultComponentWise(const Tvector& v)
+	{
+		CHECKandTHROW((v.NumberOfItems() == NumberOfItems()), "ConstSizeVectorBase::MultComponentWise: incompatible size of vectors");
+		for (Index i = 0; i < NumberOfItems(); i++)
+		{
+			data[i] *= v[i];
+		}
+	}
+
 	//! returns the sum of squared components (v[0]^2 + v[1]^2 + v[2]^2 ....)
 	T GetL2NormSquared() const
 	{
@@ -572,10 +583,10 @@ public:
 	//! normalizes the vector; divide each component by vector square norm
 	void Normalize()
 	{
-		T norm = GetL2Norm();
-		CHECKandTHROW(norm != 0., "ConstSizeVectorBase::Normalized() called with GetL2Norm() == 0.");
-
-		for (auto &item : *this) { item /= norm; }
+		T normInv = GetL2Norm();
+		CHECKandTHROW(normInv != 0., "ConstSizeVectorBase::Normalized() called with GetL2Norm() == 0.");
+		normInv = 1 / normInv;
+		for (auto &item : *this) { item *= normInv; }
 	}
 
 	//! copy numberOfCopiedItems items of a vector at vectorPosition to ConstSizeVectorBase(*this) at thisPosition, does not initialize!
@@ -641,6 +652,7 @@ typedef ConstSizeVector<3> CSVector3D;
 typedef ConstSizeVector<4> CSVector4D;
 typedef ConstSizeVector<6> CSVector6D; //geometrically exact beam2D
 typedef ConstSizeVector<8> CSVector8D; //ANCF
+typedef ConstSizeVector<9> CSVector9D; //NodePoint3DSlope23
 
 template<Index dataSize>
 using ConstSizeVectorF = ConstSizeVectorBase<float, dataSize>;

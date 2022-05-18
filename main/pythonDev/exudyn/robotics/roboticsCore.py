@@ -18,6 +18,7 @@
 #constants and fixed structures:
 import numpy as np
 
+import exudyn
 from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.rigidBodyUtilities import *
@@ -28,6 +29,16 @@ from copy import copy, deepcopy
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++  Define robot link +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#define convert text named joint types to exudyn joint types
+dictJointTypeText2Exudyn = {
+    'Rx':exudyn.JointType.RevoluteX, #revolute joint for local X axis
+    'Ry':exudyn.JointType.RevoluteY, #revolute joint for local Y axis
+    'Rz':exudyn.JointType.RevoluteZ, #revolute joint for local Z axis
+    'Px':exudyn.JointType.PrismaticX, #prismatic joint for local X axis
+    'Py':exudyn.JointType.PrismaticY, #prismatic joint for local Y axis
+    'Pz':exudyn.JointType.PrismaticZ, #prismatic joint for local Z axis
+    }
+
 #define dictionary for joint transformations as homogeneous transformations, replacement for switch/case
 dictJointType2HT = {
     'Rx':HTrotateX, #revolute joint for local X axis
@@ -160,6 +171,15 @@ class Robot:
     #**classFunction: return Link object of link i
     def GetLink(self, i):
         return self.links[i]
+
+    #**classFunction: True if link has parent, False if not
+    def HasParent(self, i):
+        return i > 0
+
+    #**classFunction: Get index of parent link; for serial robot this is simple, but for general trees, there is a index list
+    def GetParentIndex(self, i):
+        return i - 1
+
     
     #**classFunction: return number of links
     def NumberOfLinks(self):
@@ -301,6 +321,7 @@ class Robot:
     
         return J
 
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #**classFunction: add items to existing mbs from the robot structure inside this robot class, a baseMarker (can be ground object or body), 
     #                 an optional user function list for joint loads; there are options that can be passed as args / kwargs, which can contains options as described below. For details, see the python file and \texttt{serialRobotTest.py} in TestModels;
     #                 the robot is built as rigid bodies (containing rigid body nodes), bodies represent the links which are connected by joints; joint torques need to be applied to bodies, applying a torque always with opposite direction to previous (=left) and next (=right) links (=bodies)
@@ -547,6 +568,146 @@ class Robot:
              'baseObject':baseObject}
         return d
     
+        
+    
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #**classFunction: Add a ObjectKinematicTree to existing mbs from the robot structure inside this robot class.
+    #                 Joints defined by the kinematics as well as links (and inertia) are transferred to the kinematic tree object.
+    #                 Current implementation only works for serial robots.
+    #                 Note that the ObjectKinematicTree is still under development and interfaces may change.
+    #**input: 
+    #   mbs: the multibody system, which will be extended
+    #   name: object name in KinematicTree; transferred to KinematicTree, default = ''
+    #   forceUserFunction: defines the user function for computation of forces in KinematicTree; transferred to KinematicTree, default = 0
+    #   jointForceVector: a constant vector on joint coordinates, transferred to KinematicTree, default = []
+    #   jointPositionOffsetVector: a vector defining the prescribed value for joint coordinates if PD control is used; transferred to KinematicTree, default = []
+    #   jointVelocityOffsetVector: a vector defining the prescribed velocity value for joint coordinates if PD control is used; transferred to KinematicTree, default = []
+    #   jointPControlVector: a vector defining the P control value per joint coordinate; if this vector is defined, P control is activated; transferred to KinematicTree, default = []
+    #   jointDControlVector: a vector defining the D control value per joint coordinate; if this vector is defined, D control is activated; transferred to KinematicTree, default = []
+    #**output: the function returns a dictionary containing GenericODE2 node, KinematicTree object, baseObject; baseObject=-1 if it is not created; further values will be added in future
+    def CreateKinematicTree(self, mbs, name = '', jointForceVector = [], jointPositionOffsetVector = [], jointVelocityOffsetVector = [], 
+                            jointPControlVector = [], jointDControlVector = [], forceUserFunction = 0
+                            ):
+
+        #add graphics for base:
+        baseObject = -1 #if it does not exist
+        baseOffset = HT2translation(self.base.HT)
+
+        if self.base.visualization.graphicsData != []:
+            #add a ground object at base position
+            graphicsDataBase = []
+            pOff = baseOffset
+            Aoff = HT2rotationMatrix(self.base.HT)
+            for data in self.base.visualization.graphicsData:
+                graphicsDataBase += [MoveGraphicsData(data, [0,0,0], Aoff)] #only rotated, translation is in ground
+
+            baseObject = mbs.AddObject(ObjectGround(referencePosition=pOff, 
+                                                    visualization=VObjectGround(graphicsData=graphicsDataBase)))
+
+        #+++++++++++++++++++++++
+        Tcurrent = self.GetBaseHT()
+        qRef = self.referenceConfiguration
+        
+        nLinks = len(self.links)
+        graphicsDataList = []   #list of graphicsData per link
+        jointTypesList = []     #exudyn joint types
+        linkParents = []
+
+        jointTransformations=[]
+        jointOffsets=[]
+        linkInertiasCOM=[] 
+        linkCOMs=[]
+        linkMasses=[]
+
+        #create robot nodes and bodies:
+        for i in range(nLinks):
+            link = self.links[i]
+            linkParents += [self.GetParentIndex(i)]
+
+            if np.linalg.norm(link.localHT - HT0()) >= 1e-14:
+                raise ValueError('CreateKinematicTree: can only convert robots with localHT = identity')
+
+            axis = dictJointType2Axis[link.jointType]
+            
+            # com = link.COM
+            #++++++++++++++++++++++++++++++++++
+            jointTypesList += [dictJointTypeText2Exudyn[link.jointType]]
+            linkInertiasCOM += [link.inertia] #is already w.r.t. COM
+            linkCOMs += [link.COM]
+            linkMasses += [link.mass]
+            jointTransformations += [HT2rotationMatrix(link.preHT)] 
+            jointOffsets += [HT2translation(link.preHT)]
+
+            #++++++++++++++++++++++++++++++++++
+            #visualization:
+            linkVisualization = link.visualization
+            showMBSjoint = linkVisualization.showMBSjoint
+            r = linkVisualization.jointRadius
+            wJ = linkVisualization.jointWidth
+            wL = linkVisualization.linkWidth
+            color = linkVisualization.linkColor
+            showCOM = linkVisualization.showCOM
+
+            graphicsData = []
+            #draw COM:
+            if linkVisualization.showCOM:
+                dd = r*0.2
+                colorCOM = copy(color)
+                colorCOM[0] *= 0.8 #make COM a little darker
+                colorCOM[1] *= 0.8
+                colorCOM[2] *= 0.8
+                graphicsData += [GraphicsDataOrthoCubePoint(link.COM, [dd,dd,dd], colorCOM)]
+
+
+            #draw joint in this link
+            if showMBSjoint:
+                gJoint = GraphicsDataCylinder(-wJ*axis, wJ*axis, radius=r, color=color4grey)
+                graphicsData += [gJoint]
+                
+            #draw link from parent link origin to this link origin, defined by preHT of this link
+            if self.HasParent(i):
+                iParent = self.GetParentIndex(i)
+                parentLink = self.GetLink(iParent)
+                vParent = HT2translation(link.preHT)
+                gLink = GraphicsDataCylinder([0.,0.,0.], vParent, radius=wL, color=color)
+                graphicsDataList[iParent] += [gLink]
+
+            #add transformed graphicsData of tool to link graphics
+            if (i==len(self.links)-1 and #tool
+                self.tool.visualization.graphicsData != []):
+                pOff = HT2translation(self.tool.HT)
+                Aoff = HT2rotationMatrix(self.tool.HT)
+                for data in self.tool.visualization.graphicsData:
+                    graphicsData += [MoveGraphicsData(data, pOff, Aoff)] 
+
+            graphicsDataList += [graphicsData]
+        
+        #create node for unknowns of KinematicTree
+        nGeneric = mbs.AddNode(NodeGenericODE2(referenceCoordinates=qRef,
+                                               initialCoordinates=[0.]*nLinks,
+                                               initialCoordinates_t=[0.]*nLinks,
+                                               numberOfODE2Coordinates=nLinks))
+        
+        #create KinematicTree
+        oKT = mbs.AddObject(ObjectKinematicTree(nodeNumber=nGeneric, jointTypes=jointTypesList, linkParents=linkParents,
+                                          jointTransformations=exudyn.Matrix3DList(jointTransformations), 
+                                          jointOffsets=exudyn.Vector3DList(jointOffsets), 
+                                          linkInertiasCOM=exudyn.Matrix3DList(linkInertiasCOM), 
+                                          linkCOMs=exudyn.Vector3DList(linkCOMs), linkMasses=linkMasses, 
+                                          baseOffset = baseOffset, gravity=self.gravity, 
+                                          jointForceVector=jointForceVector, forceUserFunction=forceUserFunction,
+                                          jointPositionOffsetVector = jointPositionOffsetVector, jointPControlVector = jointPControlVector,
+                                          jointVelocityOffsetVector = jointVelocityOffsetVector, jointDControlVector = jointDControlVector,
+                                          visualization=VObjectKinematicTree(graphicsDataList = graphicsDataList)))
+
+        #return some needed variables for further use        
+        d = {'nodeGeneric': nGeneric, 'KT': oKT, 'baseObject': baseObject,
+             }
+        return d
+                       
+
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
     #**classFunction: export kinematicTree
     def GetKinematicTree66(self):
         from exudyn.kinematicTree import KinematicTree66, Inertia2T66
@@ -609,6 +770,7 @@ class Robot:
             
             graphicsList += [GraphicsDataCylinder(pAxis=p0, vAxis=-h0*axis0, 
                                                  radius=r, color=color)]
+            
             graphicsList += [GraphicsDataCylinder(pAxis=p1, vAxis= h1*axis1, 
                                                       radius=r, color=color)]
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:59 (last modified)
+* @date         2022-05-16  11:24:37 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,8 +106,8 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         cObjectJointPrismatic2D->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetVector3DSafely(d, "axisMarker0", cObjectJointPrismatic2D->GetParameters().axisMarker0); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetVector3DSafely(d, "normalMarker1", cObjectJointPrismatic2D->GetParameters().normalMarker1); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "axisMarker0", cObjectJointPrismatic2D->GetParameters().axisMarker0); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "normalMarker1", cObjectJointPrismatic2D->GetParameters().normalMarker1); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "constrainRotation")) { cObjectJointPrismatic2D->GetParameters().constrainRotation = py::cast<bool>(d["constrainRotation"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectJointPrismatic2D->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
@@ -156,8 +156,8 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { cObjectJointPrismatic2D->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("axisMarker0") == 0) { EPyUtils::SetVector3DSafely(value, cObjectJointPrismatic2D->GetParameters().axisMarker0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("normalMarker1") == 0) { EPyUtils::SetVector3DSafely(value, cObjectJointPrismatic2D->GetParameters().normalMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("axisMarker0") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectJointPrismatic2D->GetParameters().axisMarker0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("normalMarker1") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectJointPrismatic2D->GetParameters().normalMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("constrainRotation") == 0) { cObjectJointPrismatic2D->GetParameters().constrainRotation = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectJointPrismatic2D->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectJointPrismatic2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

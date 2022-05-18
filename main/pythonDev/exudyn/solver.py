@@ -333,12 +333,13 @@ def ComputeLinearizedSystem(mbs,
     return [M, K, D]
 
 
-#**function: compute eigenvalues for unconstrained ODE2 part of mbs, not considering the effects of algebraic constraints; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState,SetSystemState, see \refSection{sec:mbs:systemData}).
+#**function: compute eigenvalues for unconstrained ODE2 part of mbs, not considering the effects of algebraic constraints; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState,SetSystemState, see \refSection{sec:mbs:systemData}); note that mass and stiffness matrix are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
 #**input:    
 #   mbs: the MainSystem containing the assembled system
 #   simulationSettings: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)
 #   useSparseSolver: if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!); Currently, the matrices are exported only in DENSE MODE from mbs! NOTE that the sparsesolver accuracy is much less than the dense solver
 #   numberOfEigenvalues: number of eigenvalues and eivenvectors to be computed; if numberOfEigenvalues==0, all eigenvalues will be computed (may be impossible for larger problems!)
+#   constrainedCoordinates: if this list is non-empty, the integer indices represent constrained coordinates of the system, which are fixed during eigenvalue/vector computation; according rows/columns of mass and stiffness matrices are erased
 #   convert2Frequencies: if True, the eigen values are converted into frequencies (Hz) and the output is [eigenFrequencies, eigenVectors]
 #**output: [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values ($\omega_i^2$, being the squared eigen frequencies in ($\omega_i$ in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
 #**example:
@@ -349,9 +350,7 @@ def ComputeLinearizedSystem(mbs,
 #  #==>values contains the eigenvalues of the ODE2 part of the system in the current configuration
 def ComputeODE2Eigenvalues(mbs, 
                            simulationSettings = exudyn.SimulationSettings(),
-                           useSparseSolver = False, 
-                           numberOfEigenvalues = 0,
-                           setInitialValues = True,
+                           useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates=[],
                            convert2Frequencies = False):
     import numpy as np
     #use static solver, as it does not include factors from time integration (and no velocity derivatives) in the jacobian
@@ -372,18 +371,26 @@ def ComputeODE2Eigenvalues(mbs,
     #obtain ODE2 part from jacobian == stiffness matrix
     K = jacobian[0:nODE2,0:nODE2]
 
+    remappingIndices = np.arange(nODE2) #maps new coordinates to original (full) ones
+    if constrainedCoordinates != []:
+        M = np.delete(np.delete(M, constrainedCoordinates, 0), constrainedCoordinates, 1)
+        K = np.delete(np.delete(K, constrainedCoordinates, 0), constrainedCoordinates, 1)
+        remappingIndices = np.delete(remappingIndices, constrainedCoordinates)
+
     if not useSparseSolver:
         from scipy.linalg import eigh  #eigh for symmetric matrices, positive definite; eig for standard eigen value problems
         [eigenValuesUnsorted, eigenVectors] = eigh(K, M) #this gives omega^2 ... squared eigen frequencies (rad/s)
+        sortIndices = np.argsort(abs(eigenValuesUnsorted)) #get resorting index
         eigenValues = np.sort(a=abs(eigenValuesUnsorted)) #eigh returns unsorted eigenvalues...
         if numberOfEigenvalues > 0:
             eigenValues = eigenValues[0:numberOfEigenvalues]
-            eigenVectors = eigenVectors[0:numberOfEigenvalues]
+            eigenVectors = eigenVectors[:,sortIndices[0:numberOfEigenvalues]] #eigenvectors are given in columns!
     else:
         if numberOfEigenvalues == 0: #compute all eigenvalues
             numberOfEigenvalues = nODE2
 
-        from scipy.sparse.linalg import eigsh, csr_matrix #eigh for symmetric matrices, positive definite
+        from scipy.sparse.linalg import eigsh #eigh for symmetric matrices, positive definite
+        from scipy.sparse import csr_matrix
 
         Kcsr = csr_matrix(K)
         Mcsr = csr_matrix(M)
@@ -394,7 +401,16 @@ def ComputeODE2Eigenvalues(mbs,
                                    which='LM', sigma=0, mode='normal') 
 
         #sort eigenvalues
+        sortIndices = np.argsort(abs(eigenValues)) #get resorting index
         eigenValues = np.sort(a=abs(eigenValues))
+        eigenVectors = eigenVectors[:,sortIndices] #eigenvectors are given in columns!
+
+    eigenVectorsNew = np.zeros((nODE2,numberOfEigenvalues))
+    if constrainedCoordinates != []:
+        # print('remap=', remappingIndices)
+        for i in range(numberOfEigenvalues):
+            eigenVectorsNew[remappingIndices,i] = eigenVectors[:,i]
+        eigenVectors = eigenVectorsNew
 
     if convert2Frequencies:
         eigenFrequencies = np.sqrt(eigenValues)/(2*np.pi)

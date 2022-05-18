@@ -87,6 +87,14 @@ export DISPLAY=:0
 
 ==> this already is sufficient to run xserver
 
+# *** trouble shooting ***
+#sometimes, the display may be linked to some 192.168.178.x:0
+#check with:
+echo $DISPLAY
+#set back to original:
+export DISPLAY=:0
+==> this gives back functionality!
+
 install nedit (to test xserver):
 sudo apt-get install nedit
 

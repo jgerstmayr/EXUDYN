@@ -90,10 +90,10 @@ For details on the interaction of nodes, objects, markers and loads see \refSect
 
 \mysubsubsection{Developers of \codeName\ and thanks}
 \codeName\ is currently (\the\month-\the\year) developed at the University of Innsbruck.
-In the first phase most of the core code is written by Johannes Gerstmayr, implementing ideas that followed out of the project HOTINT. 15 years of development led to a lot of lessions learned and after 20 years, a code must be re-designed.
+In the first phase most of the core code is written by Johannes Gerstmayr, implementing ideas that followed out of the project HOTINT \cite{GerstmayrEtAl2013}. 15 years of development led to a lot of lessons learned and after 20 years, a code must be re-designed.
 
 Some important tests for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
-For the interoperability between C++ and Python, we extensively use \mybold{Pybind11}\cite{pybind11}, originally written by Jakob Wenzel, see \texttt{https://github.com/pybind/pybind11}. Without Pybind11 we couldn't have made this project -- Thank's a lot!
+For the interoperability between C++ and Python, we extensively use \mybold{Pybind11}\cite{pybind11}, originally written by Jakob Wenzel, see \texttt{https://github.com/pybind/pybind11}. Without Pybind11 we couldn't have made this project -- Thanks a lot!
 
 Important discussions with researchers from the community were important for the design and development of \codeName , where we like to mention Joachim Sch{\"o}berl from TU-Vienna who boosted the design of the code with great concepts. 
 %During a Comet-K2 cooperation project, several discussions with the TMECH/LCM group in Linz influenced the code development.
@@ -102,7 +102,7 @@ The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training
 
 The following people have contributed to Python and C++ library implementations:
 \bi
-  \item Joachim Sch{\"o}berl, TU Vienna (Providing specialized NGsolve core library with \texttt{taskmanager} for \mybold{multithreaded parallelization}; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
+  \item Joachim Sch{\"o}berl, TU Vienna (Providing specialized NGsolve \cite{Schoeberl1997,Schoeberl2014,2022NGsolve} core library with \texttt{taskmanager} for \mybold{multi-threaded parallelization}; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
   \item Stefan Holzinger, University of Innsbruck (Lie group solvers in Python, Lie group node)
   \item Andreas Zw{\"o}lfer, Technical University Munich (FFRF and CMS formulation)
   \item Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation / pip install on linux / wsl with graphics)
@@ -271,21 +271,29 @@ This will add a wheel in the \texttt{dist} folder.
 \mysubsubsection{Build and install \codeName\ under Mac OS X?}
 \label{sec:build:MacOS}
 Installation and building on Mac OS X is rarely tested, but first successful compilation including GLFW has been achieved.
-Requirements are an according Anaconda installation.
+Requirements are an according Anaconda (or Miniconda) installation.
 
 \noindent \mybold{Tested configurations}:
 \bi
   \item Mac OS 11.x 'Big Sur', Mac Mini (2021), Apple M1, 16GB Memory
-  \item Anaconda (i368 based with Rosetta 2) with Python 3.8
+  \item Anaconda (x86 / i368 based with Rosetta 2) with Python 3.8
   \item this configuration is currently evaluated but showed general compatibility
   \item[] $\ra$ some wheels are already available on pypi (you may need to download them manually)!
 \ei
+\noindent \mybold{NOTE}:
+\bi
+  \item on Apple M1 processors, there are significant problems with Miniconda; scipy cannot be installed properly (April 2022)
+  \item a significant number of Exudyn test models does not run properly! Optimization and processing functions do not run (especially multiprocessing and tqdm); 
+  \item as eigensolvers were not available for tests on M1, all these test models fail 
+  \item note that even some test result deviate from Windows results significantly!
+\ei
+
+
 Alternatively, we tested on:
 \bi
   \item Mac OS X 10.11.6 'El Capitan', Mac Pro (2010), 3.33GHz 6-Core Intel Xeon, 4GB Memory, Anaconda Navigator 1.9.7, Python 3.7.0, Spyder 3.3.6
 \ei
-Note, that in all cases tkinter does not yet run properly (help appreciated), while otherwise we produced a stable version. The AppleM1 native version is approx.~10x faster
-than the Rosetta version!
+Note, that in all cases tkinter does not run properly on MacOS (help appreciated), while otherwise we produced a stable version. The AppleM1 native version is in some cases superior to the Windows version and also to the Rosetta version on Apple!
 
 For a compatible Mac OS X system some pre-built wheels will be available via pypi.org. Note that these my be built on an emulated AppleM1, thus being much slower than the Windows or Linux compliant.
 %Go to the \texttt{main/dist} directory in your back terminal and type, e.g.,
@@ -439,7 +447,7 @@ After the first development phase (2019-2021), it
   \item is a moderately large (2MB on windows!) multibody library, which can be easily linked to other projects,
   \item contains basic multibody rigid bodies, flexible bodies, joints, contact, etc.,
   \item includes a large Python utility library for convenient building and post processing of models,
-  \item allows to efficiently simulate small scale systems (compute 100000s time steps per second for systems with $n_{DOF}<10$),
+  \item allows to efficiently simulate small scale systems (compute $100\,000$s of time steps per second for systems with $n_{DOF}<10$),
   \item allows to efficiently simulate medium scaled systems for problems with $n_{DOF} < 1\,000\,000$,
   \item is a safe and widely accessible module for Python,
   \item allows to add user defined objects and solvers in C++,

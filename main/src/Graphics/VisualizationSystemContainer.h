@@ -37,6 +37,7 @@
 #include <pybind11/functional.h>
 namespace py = pybind11;            //! namespace 'py' used throughout in code
 
+
 //! object graphics data for ground objects, rigid bodies and mass points
 class BodyGraphicsData
 {
@@ -60,15 +61,24 @@ public:
 		glTriangles.SetNumberOfItems(0);
 	}
 
+	//! destructor
 	~BodyGraphicsData()
 	{
 		FlushData(); //delete allocated strings !
 	}
+
+	//! clone for BodyGraphicsDataList : ObjectContainer
+	BodyGraphicsData* GetClone() const { return new BodyGraphicsData(*this); }
+
 };
 
-//moved to EXUvis, VisualizationPrimitives.h //! copy bodyGraphicsData (of body) into global graphicsData (of system); add position offset and transform with rotation matrix
-//void AddBodyGraphicsData(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, const Float3& position, const Matrix3DF& rotation);
+//! BodyGraphicsData lists (KinematicTree)
+typedef ObjectContainer<BodyGraphicsData> BodyGraphicsDataList;
+//class BodyGraphicsDataList : ObjectContainer<BodyGraphicsData>
+//{
+//};
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! python function to read BodyGraphicsData from dictionary, e.g. for body or ground graphics
 bool PyWriteBodyGraphicsData(const py::dict& d, const char* item, BodyGraphicsData& data);
 
@@ -77,6 +87,19 @@ bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data);
 
 //! python function to write BodyGraphicsData to dictionary, e.g. for testing; 
 py::dict PyGetBodyGraphicsDataDictionary(const BodyGraphicsData& data);
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//for BodyGraphicsData lists (KinematicTree)
+//! python function to read BodyGraphicsDataList from dictionary, e.g. for body or ground graphics
+bool PyWriteBodyGraphicsDataList(const py::dict& d, const char* item, BodyGraphicsDataList& data);
+
+//! python function to read BodyGraphicsDataList from py::object, which must be a list of lists of graphicsData dictionaries
+bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsDataList& data);
+
+//! python function to write BodyGraphicsDataList to dictionary, e.g. for testing; 
+py::list PyGetBodyGraphicsDataList(const BodyGraphicsDataList& data);
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 
 class CSystem;

@@ -71,21 +71,48 @@ pyFunctionTypeConversion = {'PyFunctionGraphicsData': 'std::function<py::object(
 def IsASetSafelyParameter(parameterType):
     if ((parameterType == 'String') or
         (parameterType == 'Vector2D') or 
+        (parameterType == 'Vector3DList') or
+        (parameterType == 'Matrix3DList') or
         (parameterType == 'Vector3D') or
         (parameterType == 'Vector4D') or 
         (parameterType == 'Vector6D') or
+        (parameterType == 'Vector7D') or
+        (parameterType == 'Vector9D') or
         (parameterType == 'Matrix3D') or
         (parameterType == 'Matrix6D') or
         (parameterType == 'NumpyMatrix') or 
         (parameterType == 'NumpyMatrixI') or #for index arrays, mesh, ...
         (parameterType == 'PyMatrixContainer') or
-        (parameterType == 'NumpyVector') or 
-        (parameterType == 'Vector7D') 
+        (parameterType == 'NumpyVector')
         #or (parameterType in pyFunctionTypeConversion)
         ):
         return True
     else:
         return False
+
+def GetSetSafelyFunctionName(parType):
+    if parType[0:6] == 'Vector' and parType[-1] == 'D': #any Vector[]D
+        val = parType[6:-1]   #gives number
+        safelyFunctionName =  'SetSlimVectorTemplateSafely<Real, '+val+'>'
+    elif parType[0:6] == 'Matrix' and parType[-1] == 'D': #any Vector[]D
+        val = parType[6:-1]   #gives number
+        safelyFunctionName =  'SetConstMatrixTemplateSafely<'+val+','+val+'>'
+    else:
+        safelyFunctionName = 'Set'+parType+'Safely'
+    return safelyFunctionName 
+    
+#SetConstMatrixTemplateSafely<3, 3>(d, item, destination);
+
+#return true, if the the parameter triggers an internal get/set function for conversion, e.g., BeamSection
+def IsInternalSetGetParameter(parameterType):
+    #needs to automatically generate Internal function
+    if ((parameterType == 'BeamSection')
+        #or (parameterType == 'BeamSectionGeometry') #this is directly stored in visualization
+        ):
+        return True
+    else:
+        return False
+
 
 #return True for types, which get a range check and does a .def_property access in pybind and a set/get function
 def IsTypeWithRangeCheck(origType):
@@ -193,14 +220,15 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     
     #these are the typecasts for the dictionary in the according pybind functions in MainItem
     typeCasts = {'Bool':'bool', 'Int':'int', 'Real':'Real', 'UInt':'Index', 'UReal':'Real', 'PInt':'Index', 'PReal':'Real', 
-                 'Vector':'std::vector<Real>', 'Vector7D':'std::vector<Real>', 'Vector6D':'std::vector<Real>', 
-                 'Vector4D':'std::vector<Real>', 'Vector3D':'std::vector<Real>', 'Vector2D':'std::vector<Real>', 
+                 'Vector':'std::vector<Real>', 'Vector9D':'std::vector<Real>', 'Vector7D':'std::vector<Real>', 'Vector6D':'std::vector<Real>', 
+                 'Vector4D':'std::vector<Real>', 'Vector3D':'std::vector<Real>', 'Vector2D':'std::vector<Real>',
                  'Matrix':'Matrix', 'SymmetricMatrix':'Matrix', 'Matrix6D':'std::array<std::array<Real,6>,6>', 
+                 'JointTypeList':'std::vector<Joint::Type>',#not needed; JointTypeList is defined in C++
                  'ArrayIndex':'std::vector<Index>', 'String':'std::string',
                  'NumpyMatrix':'py::array_t<Real>', 
                  'NumpyMatrixI':'py::array_t<Index>', 
-                 #'MatrixContainer':'PyMatrixContainer', 
                  'NumpyVector':'py::array_t<Real>',
+                 #'BeamSectionGeometry':'PyBeamSectionGeometry',
                  'Float2': 'std::vector<float>', 'Float3': 'std::vector<float>', 'Float4': 'std::vector<float>',  #e.g. for OpenGL vectors
                  'Float9': 'std::vector<float>', 'Float16': 'std::vector<float>', #e.g. for OpenGL rotation matrix and homogenous transformation
                  'Index2': 'std::vector<Index>', 'Index3': 'std::vector<Index>'
@@ -516,7 +544,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 defaultValueStr = sString+DefaultValue2Python(parameter['defaultValue'])+sString
 
                 #special treatment of BodyGraphicsData
-                if parameter['type'] == 'BodyGraphicsData':
+                if parameter['type'] == 'BodyGraphicsData' or parameter['type'] == 'BodyGraphicsDataList':
                     defaultValueStr = '[]'
 
                 #write item interface class initialization, constructor and iterator doc:
@@ -605,7 +633,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 
     #process variables:    
     for parameter in parameterList:
-        if (parameter['lineType'] == 'V'): #only if it is a member variable
+        if (parameter['lineType'] == 'V' and
+            not IsInternalSetGetParameter(parameter['type']) ): #only if it is a member variable but not special one with conversion
             typeStr = TypeConversion(parameter['type'], typeConversion)
             if parameter['cFlags'].find('U') != -1:
                 typeStr = 'mutable ' + typeStr #make this variable changable in GetMassMatrix(), ComputeODE2RHS(), ... functions
@@ -651,7 +680,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             sList[i]+=space4+'{\n'
         
             for parameter in parameterList:
-                if (parameter['lineType'].find('V') != -1): #only if it is a variable; include parent members
+                if (parameter['lineType'].find('V') != -1 and
+                    not IsInternalSetGetParameter(parameter['type']) ): #only if it is a variable and not variable with internal conversion; include parent members
                     strDefault = parameter['defaultValue']
                     if len(strDefault) | (parameter['type'] == 'String'): #only add initialization if default value exists
                         if parameter['type'] == 'String':
@@ -737,13 +767,16 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             if typeStr[len(typeStr)-1] == '*':
                 refChar = ''
     
-            if (i > 1) & (parameter['lineType'] != 'Vp'): #must be comp, main or visu class; don't do it, if variable of parent class
+            #add function definition for internal conversion functions:
+            if IsInternalSetGetParameter(parameter['type']):
+                sList[i]+=space4+'void SetInternal' + parameter['type'] + '(const py::object& pyObject); //! AUTO: special function which writes pyObject into local data\n'
+                sList[i]+=space4+'Py' + parameter['type']+' GetInternal' + parameter['type'] + '() const; //! AUTO: special function which returns '+parameter['type'] +' converted from local data\n'
+            #add Get/Set class function except from members in CItem parameter classes, which are public
+            elif (i > 1) and (parameter['lineType'] != 'Vp'): #must be comp, main or visu class; don't do it, if variable of parent class
+                #print('add access to:',compClassStr,':',paramStr)
                 sList[i]+=space4+'//! AUTO:  Write (Reference) access to:' + Str2Doxygen(parameter['parameterDescription']) + '\n'
                 sList[i]+=space4+'void Set' + functionStr + '(const ' + TypeConversion(parameter['type'], typeConversion)
                 sList[i]+='& value) { ' + paramStr + ' = value; }\n'
-#                sList[i]+=space4+'//! # Write (Reference) access to:' + parameter['parameterDescription'] + '\n'
-#                sList[i]+=space4+typeStr + '&' + ' '
-#                sList[i]+='Get' + functionStr + '() { return ' + paramStr + '; }\n'
         
                 sList[i]+=space4+'//! AUTO:  Read (Reference) access to:' + Str2Doxygen(parameter['parameterDescription']) + '\n'
                 sList[i]+=space4+'const ' + typeStr + refChar + ' '
@@ -753,6 +786,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     sList[i]+=space4 + typeStr + refChar + ' '
                     sList[i]+='Get' + functionStr + '() { return '+paramStr+'; }\n'
                 sList[i]+='\n'
+
+                
+
 
             destFolder = '' #destination folder string (e.g. GetParameters())
             if parameter['destination'].find('C') != -1: #computation
@@ -784,6 +820,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 parWrite = '' #used for dictionary write and for parameter write
                 if parameter['type'] == 'BodyGraphicsData': #special conversion routine
                     dictListRead[i] +=space8+'d["' + pyName + '"] = PyGetBodyGraphicsDataDictionary(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
+                elif parameter['type'] == 'BodyGraphicsDataList': #special conversion routine
+                    dictListRead[i] +=space8+'d["' + pyName + '"] = PyGetBodyGraphicsDataList(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
+                elif IsInternalSetGetParameter(parameter['type']):
+                    parRead = 'GetInternal'+ parameter['type'] +'()'                    
                 elif parameter['type'] == 'Matrix6D':
                     parRead = 'EXUmath::Matrix6DToStdArray66(' + destStr + ')'
                     #dictListRead[i] +=space8+'d["' + pyName + '"] = EXUmath::Matrix6DToStdArray66(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
@@ -834,10 +874,16 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                         dictListWrite[i]+='if (EPyUtils::DictItemExists(d, "' +  pyName + '")) { '
                     #if (parameter['type'] == 'String') | (parameter['type'] == 'Vector2D') | (parameter['type'] == 'Vector3D') | (parameter['type'] == 'Vector4D') | (parameter['type'] == 'Vector6D') | (parameter['type'] == 'Vector7D'):
                     if IsASetSafelyParameter(parameter['type']):
-                        dictListWrite[i]+='EPyUtils::Set' + parameter['type'] + 'Safely(d, "' +  pyName + '", '
+                        safelyFunctionName = GetSetSafelyFunctionName(parameter['type'])
+                        dictListWrite[i]+='EPyUtils::' + safelyFunctionName  + '(d, "' +  pyName + '", '
+                        #dictListWrite[i]+='EPyUtils::Set' + parameter['type'] + 'Safely(d, "' +  pyName + '", '
                         dictListWrite[i]+=destStr + '); /*! AUTO:  safely cast to C++ type*/'
+                    elif IsInternalSetGetParameter(parameter['type']):
+                        dictListWrite[i]+='SetInternal' + parameter['type'] + '(d["' +  pyName + '"]); /*! AUTO:  safely cast to C++ type*/'
                     elif parameter['type'] == 'BodyGraphicsData': #special conversion routine
                         dictListWrite[i]+='PyWriteBodyGraphicsData(d, "' +  pyName + '", ' + destStr + '); /*! AUTO: convert dict to BodyGraphicsData*/'
+                    elif parameter['type'] == 'BodyGraphicsDataList': #special conversion routine
+                        dictListWrite[i]+='PyWriteBodyGraphicsDataList(d, "' +  pyName + '", ' + destStr + '); /*! AUTO: convert dict to BodyGraphicsDataList*/'
                     else:
                         dictStr = 'd["' + pyName + '"]'
                         if isPyFunction: #in case of function, special conversion and tests are necessary (function is either 0 or a python function)
@@ -864,9 +910,15 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 
                     #if (parameter['type'] == 'String') | (parameter['type'] == 'Vector2D') | (parameter['type'] == 'Vector3D') | (parameter['type'] == 'Vector4D') | (parameter['type'] == 'Vector6D') | (parameter['type'] == 'Vector7D'):
                     if IsASetSafelyParameter(parameter['type']):
-                        parWrite+='EPyUtils::Set' + parameter['type'] + 'Safely(value, '
+                        safelyFunctionName = GetSetSafelyFunctionName(parameter['type'])
+                        parWrite+='EPyUtils::' + safelyFunctionName + '(value, '
+                        # parWrite+='EPyUtils::Set' + parameter['type'] + 'Safely(value, '
                         parWrite+=destStr + '); /*! AUTO:  safely cast to C++ type*/'
+                    elif IsInternalSetGetParameter(parameter['type']):
+                        parWrite+='SetInternal' + parameter['type'] + '(value); /*! AUTO:  safely cast to C++ type*/'
                     elif parameter['type'] == 'BodyGraphicsData': #special conversion routine
+                        parWrite+='' #not implemented right now!
+                    elif parameter['type'] == 'BodyGraphicsDataList': #special conversion routine
                         parWrite+='' #not implemented right now!
                     elif IsItemIndex(parameter['type']):
                         parWrite+=destStr + ' = ' + 'EPyUtils::Get'+parameter['type']+'Safely'
@@ -1446,7 +1498,7 @@ try: #still close file if crashes
     #s += 'from exudyn import OutputVariableType\n\n' #do not import exudyn, causes problems e.g. with exudynFast, ...
     s += '#item interface diagonal matrix creator\n'
     s += '\n'
-    s += 'import exudyn #for exudyn.InvalidIndex() needed in RigidBodySpringDamper\n\n'
+    s += 'import exudyn #for exudyn.InvalidIndex() and other exudyn native structures needed in RigidBodySpringDamper\n\n'
     s += '#helper function diagonal matrices, not needing numpy\n'
     s += 'def IIDiagMatrix(rowsColumns, value):\n'
     s += space4+'m = []\n'

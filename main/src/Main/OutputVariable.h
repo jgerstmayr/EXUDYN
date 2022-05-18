@@ -418,6 +418,42 @@ inline void ItemID2IndexType(Index itemID, Index& index, ItemType& type, Index& 
 	}
 }
 
+//! define enum for Joint types, used in KinematicTree
+namespace Joint { 
+	//! used for KinematicTree
+	enum Type {
+		_None = 0, //marks that no type is used
+		RevoluteX = 1 << 0,						//!< revolute joint around local X axis
+		RevoluteY = 1 << 1,						//!< revolute joint around local Y axis
+		RevoluteZ = 1 << 2,						//!< revolute joint around local Z axis
+		PrismaticX = 1 << 3,					//!< prismatic joint with translation along local X axis
+		PrismaticY = 1 << 4,					//!< prismatic joint with translation along local Y axis
+		PrismaticZ = 1 << 5,					//!< prismatic joint with translation along local Z axis
+
+		//EndOfEnumList = 1 << ??				//!< KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
+	};
+
+	//! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
+	inline STDstring GetTypeString(Type var)
+	{
+		STDstring t; //empty string
+		if (var == Joint::_None) { t = "_None/Undefined"; }
+		if (var & RevoluteX) { t += "RevoluteX"; }
+		if (var & RevoluteY) { t += "RevoluteY"; }
+		if (var & RevoluteZ) { t += "RevoluteZ"; }
+		if (var & PrismaticX) { t += "PrismaticX"; }
+		if (var & PrismaticY) { t += "PrismaticY"; }
+		if (var & PrismaticZ) { t += "PrismaticZ"; }
+
+		if (t.length() == 0) { CHECKandTHROWstring("Marker::GetTypeString(...) called for invalid type!"); }
+
+		return t;
+	}
+
+}
+
+typedef std::vector<Joint::Type> JointTypeList;
+
 
 //UNUSED:
 //! helper function to transform loadType and markerType to (necessary) AccessFunctionType

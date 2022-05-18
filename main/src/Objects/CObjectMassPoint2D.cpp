@@ -19,7 +19,7 @@
 void CObjectMassPoint2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
 {
 	//Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
-	//massMatrix.SetScalarMatrix(nODE2Coordinates, parameters.physicsMass);
+	//massMatrix.SetScalarMatrix(nODE2coordinates, parameters.physicsMass);
 
 	massMatrixC.SetUseDenseMatrix(false);
 	SparseTripletVector& triplets = massMatrixC.GetInternalSparseTripletMatrix().GetTriplets();
@@ -33,7 +33,7 @@ void CObjectMassPoint2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 void CObjectMassPoint2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
-	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
+	ode2Lhs.SetNumberOfItems(nODE2coordinates);
 	ode2Lhs.SetAll(0.);
 }
 

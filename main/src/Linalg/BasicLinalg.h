@@ -39,6 +39,25 @@ typedef ConstSizeMatrix<6*6> Matrix6D;//will be changed to SlimMatrix<...>
 typedef ConstSizeMatrixBase<float, 9> Matrix3DF; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrixBase<float,4> Matrix2DF; //will be changed to SlimMatrix<...>
 
+//! a list of SlimVectors for interaction with Python (used e.g. in KinematicTree)
+template<Index dataSize>
+using VectorList = ResizableArray<SlimVector<dataSize>>;
+template<Index dataSize>
+using MatrixList = ResizableArray<ConstSizeMatrix<dataSize*dataSize>>;
+
+typedef VectorList<3> Vector3DList;
+typedef MatrixList<3> Matrix3DList;
+typedef VectorList<2> Vector2DList; //for BeamSectionGeometry
+typedef VectorList<6> Vector6DList;
+typedef MatrixList<6> Matrix6DList;
+
+
+//typedef ResizableArray<SlimVector<3>> Vector3DList; 
+//typedef ResizableArray<ConstSizeMatrix<3 * 3>> Matrix3DList;
+//typedef ResizableArray<SlimVector<2>> Vector2DList; //for BeamSectionGeometry
+//typedef ResizableArray<SlimVector<6>> Vector6DList;
+//typedef ResizableArray<ConstSizeMatrix<6 * 6>> Matrix6DList;
+
 //makes problems with Index: typedef ConstSizeMatrixBase<Index, 9> Matrix3DI; //will be changed to SlimMatrix<...>
 
 
@@ -160,7 +179,7 @@ namespace EXUmath {
 		if (L0 == 0.) { normal1.SetVector({ 1.,0.,0. }); normal2.SetVector({ 0.,1.,0. }); } //any solution will suffice
 		vector0 *= 1. / L0;
 
-		if (fabs(vector0[0]) > 0.5 && fabs(vector0[1]) < 0.1 && fabs(vector0[2]) < 0.1) { normal1.SetVector({ 0., 1., 0. }); }
+		if (::fabs(vector0[0]) > 0.5 && ::fabs(vector0[1]) < 0.1 && ::fabs(vector0[2]) < 0.1) { normal1.SetVector({ 0., 1., 0. }); }
 		else { normal1.SetVector({ 1., 0., 0. }); }
 
 		Real h = normal1 * vector0;
@@ -169,9 +188,21 @@ namespace EXUmath {
 		normal2 = vector0.CrossProduct(normal1);
 	}
 
-	//! Project normal into normal plane of vector (Gram-Schmidt orthogonalization); works for any vector typehaving scalar*vector and vector*vector operator
+	//! compute normalized normal from triangle points; for function with single normal see Geometry.h
+	template<class TReal>
+	SlimVectorBase<TReal, 3> ComputeTriangleNormal(const SlimVectorBase<TReal, 3>& p0, const SlimVectorBase<TReal, 3>& p1, const SlimVectorBase<TReal, 3>& p2)
+	{
+		SlimVectorBase<TReal, 3> v1 = p1 - p0;
+		SlimVectorBase<TReal, 3> v2 = p2 - p0;
+		SlimVectorBase<TReal, 3> n = v1.CrossProduct(v2); //@todo: need to check correct outward normal direction in openGL
+		TReal len = n.GetL2Norm();
+		if (len != 0.f) { n *= 1.f / len; }
+		return n;
+	}
+
+	//! Project normal into normal plane of vector (Gram-Schmidt orthogonalization); works for any vector type having scalar*vector and vector*vector operator
 	template<class TVector>
-	inline void GramSchmidtOrthogonalization(const TVector vector, TVector& normal)
+	inline void GramSchmidtOrthogonalization(const TVector& vector, TVector& normal)
 	{
 		Real h = (normal * vector) / (vector*vector);
 		normal -= h * vector;
@@ -179,15 +210,94 @@ namespace EXUmath {
 
 	//! Use GramSchmidtOrthogonalization(...) and normalize the resulting 'normal' vector; vector must have a .Normalization() function
 	template<class TVector>
-	inline void GramSchmidtOrthogonalizationNormalized(const TVector vector, TVector& normal)
+	inline void GramSchmidtOrthogonalizationNormalized(const TVector& vector, TVector& normal)
 	{
 		GramSchmidtOrthogonalization(vector, normal);
 		normal.Normalize();
 	}
 
+	//! compute orthogonal, normalized basis from two given non-parallel and non-zero vectors (vector0, vector1); all vectors modified and normalized
+	template<class TVector>
+	inline void OrthogonalBasisFrom2Vectors(TVector& vector0, TVector& vector1, TVector& vector2)
+	{
+		vector0.Normalize();
+		Real h = (vector1 * vector0);
+		vector1 -= h * vector0;
+		vector1.Normalize();
+		vector2 = vector0.CrossProduct(vector1);
+	}
 
+	//! compute orthogonal, normalized basis from two given non-parallel and non-zero vectors (vector0, vector1) which are
+	//! the first two column vectors in Matrix A; column vectors in Matrix A are normalized
+	inline void OrthogonalBasisFromVectorsXY(Matrix3D& A)
+	{
+		Vector3D vector0({ A(0,0), A(1,0), A(2,0) });
+		Vector3D vector1({ A(0,1), A(1,1), A(2,1) });
+		vector0.Normalize();
+		Real h = (vector1 * vector0);
+		vector1 -= h * vector0;
+		vector1.Normalize();
+		Vector3D vector2 = vector0.CrossProduct(vector1);
+		A(0, 0) = vector0[0];
+		A(1, 0) = vector0[1];
+		A(2, 0) = vector0[2];
+		A(0, 1) = vector1[0];
+		A(1, 1) = vector1[1];
+		A(2, 1) = vector1[2];
+		A(0, 2) = vector2[0];
+		A(1, 2) = vector2[1];
+		A(2, 2) = vector2[2];
+	}
+
+	//! compute orthogonal, normalized basis from two given non-parallel and non-zero vectors (vector0, vector1);
+	//! In this version, Z is the leading vector, Y is used to define the plane and X is compute from cross product
+	//! column vectors in Matrix A are normalized
+	template <class TReal>
+	inline void OrthogonalBasisFromVectorsZY(SlimVectorBase<TReal, 3> vectorY,  //copy vectors because they are modified
+		SlimVectorBase<TReal, 3> vectorZ, ConstSizeMatrixBase<TReal, 3*3>& A)
+	{
+		A.SetNumberOfRowsAndColumns(3, 3);
+		//SlimVectorBase<TReal, 3> vectorZ({ A(0,2), A(1,2), A(2,2) });
+		//SlimVectorBase<TReal, 3> vectorY({ A(0,1), A(1,1), A(2,1) });
+		vectorZ.Normalize();
+		TReal h = (vectorY * vectorZ);
+		vectorY -= h * vectorZ;
+		vectorY.Normalize();
+		SlimVectorBase<TReal, 3> vectorX = vectorY.CrossProduct(vectorZ);
+		A(0, 0) = vectorX[0];
+		A(1, 0) = vectorX[1];
+		A(2, 0) = vectorX[2];
+		A(0, 1) = vectorY[0];
+		A(1, 1) = vectorY[1];
+		A(2, 1) = vectorY[2];
+		A(0, 2) = vectorZ[0];
+		A(1, 2) = vectorZ[1];
+		A(2, 2) = vectorZ[2];
+	}
+
+	////! compute orthogonal, normalized basis from two given non-parallel and non-zero vectors (vector0, vector1);
+	////! In this version, Z is the leading vector, Y is used to define the plane and X is compute from cross product
+	////! column vectors in Matrix A are NOT normalized
+	//inline void OrthogonalVectorsFromVectorsZY(Matrix3D A)
+	//{
+	//	Vector3D vectorZ({ A(0,2), A(1,2), A(2,2) });
+	//	Vector3D vectorY({ A(0,1), A(1,1), A(2,1) });
+	//	Real h = (vectorY * vectorZ) / (vectorZ*vectorZ);
+	//	vectorY -= h * vectorZ;
+	//	Vector3D vectorX = vectorY.CrossProduct(vectorZ);
+	//	A(0, 0) = vectorX[0];
+	//	A(1, 0) = vectorX[1];
+	//	A(2, 0) = vectorX[2];
+	//	A(0, 1) = vectorY[0];
+	//	A(1, 1) = vectorY[1];
+	//	A(2, 1) = vectorY[2];
+	//	A(0, 2) = vectorZ[0];
+	//	A(1, 2) = vectorZ[1];
+	//	A(2, 2) = vectorZ[2];
+	//}
 
 	//numerical integration in interval [-1,1]; int(1) = 2
+	static const Index maxIntegrationPoints = 5; //adjust this value, if number of Gauss points is increased!
 	static const SlimVector<1> gaussRuleOrder1Points({ 0. });
 	static const SlimVector<1> gaussRuleOrder1Weights({ 2. });
 	static const SlimVector<2> gaussRuleOrder3Points({ -sqrt(1. / 3.), sqrt(1. / 3.) });
@@ -205,6 +315,34 @@ namespace EXUmath {
 	static const SlimVector<3> lobattoRuleOrder4Weights({ 1./3., 4./3., 1./3.});
 	static const SlimVector<4> lobattoRuleOrder6Points({ -1., -sqrt(1./5.), sqrt(1./5.), 1.});
 	static const SlimVector<4> lobattoRuleOrder6Weights({ 1./6., 5./6., 5./6., 1./6.});
+
+	template<class TVector>
+	void SetGaussIntegrationRule(Index order, TVector& integrationPoints, TVector& integrationWeights)
+	{
+		switch (order)
+		{
+		case 1: integrationPoints.CopyFrom(gaussRuleOrder1Points); integrationWeights.CopyFrom(gaussRuleOrder1Weights); break;
+		case 3: integrationPoints.CopyFrom(gaussRuleOrder3Points); integrationWeights.CopyFrom(gaussRuleOrder3Weights); break;
+		case 5: integrationPoints.CopyFrom(gaussRuleOrder5Points); integrationWeights.CopyFrom(gaussRuleOrder5Weights); break;
+		case 7: integrationPoints.CopyFrom(gaussRuleOrder7Points); integrationWeights.CopyFrom(gaussRuleOrder7Weights); break;
+		case 9: integrationPoints.CopyFrom(gaussRuleOrder9Points); integrationWeights.CopyFrom(gaussRuleOrder9Weights); break;
+		default:
+			CHECKandTHROWstring("SetGaussIntegrationRule: invalid order");
+		}
+	}
+
+	template<class TVector>
+	void SetLobattoIntegrationRule(Index order, TVector& integrationPoints, TVector& integrationWeights)
+	{
+		switch (order)
+		{
+		case 2: integrationPoints.CopyFrom(lobattoRuleOrder2Points); integrationWeights.CopyFrom(lobattoRuleOrder2Weights); break;
+		case 4: integrationPoints.CopyFrom(lobattoRuleOrder4Points); integrationWeights.CopyFrom(lobattoRuleOrder4Weights); break;
+		case 6: integrationPoints.CopyFrom(lobattoRuleOrder6Points); integrationWeights.CopyFrom(lobattoRuleOrder6Weights); break;
+		default:
+			CHECKandTHROWstring("SetLobattoIntegrationRule: invalid order");
+		}
+	}
 
 	//numerically integrate a function in interval [a,b]
 	//inline does not work on older MacOS
@@ -458,6 +596,23 @@ namespace EXUmath {
 	//! transposed(Matrix) * Matrix multiplication templates for multiplication with rigid body G-matrices
 	inline void MultMatrixTransposedMatrix(const ConstSizeMatrix<12>& m1, const ConstSizeMatrix<9>& m2, ConstSizeMatrix<12>& result) {
 		MultMatrixTransposedMatrixTemplate<ConstSizeMatrix<12>, ConstSizeMatrix<9>, ConstSizeMatrix<12>>(m1, m2, result);
+	}
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//! multiply components of vectors and write result into vector
+	template<class TVector1, class TVector2, class TVectorResult>
+	inline void MultVectorComponents(const TVector1& vector1, const TVector2& vector2, TVectorResult& result)
+	{
+		CHECKandTHROW((vector1.NumberOfItems() == vector2.NumberOfItems()) &&
+			(vector1.NumberOfItems() <= result.MaxNumberOfItems()),
+			"EXUmath::MultVectorComponents(vector1,vector2,result): Size mismatch");
+
+		result.SetNumberOfItems(vector1.NumberOfItems());
+
+		for (Index i = 0; i < result.NumberOfItems(); i++)
+		{
+			result[i] = vector1[i] * vector2[i];
+		}
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

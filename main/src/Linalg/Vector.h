@@ -353,7 +353,9 @@ public:
 	//}
 
 	//! substract vector v from *this vector (for each component); both vectors must have same size
-    VectorBase& operator-=(const VectorBase& v)
+	template <class Tvector>
+	VectorBase& operator-=(const Tvector& v)
+	//VectorBase& operator-=(const VectorBase& v)
     {
 		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator-=: incompatible size of vectors");
         Index cnt = 0;
@@ -484,6 +486,17 @@ public:
 		for (Index i = 0; i < NumberOfItems(); i++)
 		{
 			data[i] += scalar * v[i];
+		}
+	}
+
+	//! multiply components of this vector with components of other vector
+	template<class Tvector>
+	void MultComponentWise(const Tvector& v)
+	{
+		CHECKandTHROW((v.NumberOfItems() == NumberOfItems()), "VectorBase::MultComponentWise: incompatible size of vectors");
+		for (Index i = 0; i < NumberOfItems(); i++)
+		{
+			data[i] *= v[i];
 		}
 	}
 

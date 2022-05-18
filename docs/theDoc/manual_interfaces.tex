@@ -490,9 +490,9 @@ The MatrixContainer is a versatile representation for dense and sparse matrices.
 
 %++++++++++++++++++++
 \mysubsection{Vector3DList}
-The Vector3DList is used to represent lists of 3D vectors. \\ \\ Usage: \bi
+The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
   \item Create empty \texttt{Vector3DList} with \texttt{x = Vector3DList()} 
-  \item Create \texttt{Vector3DList} with list of numpy arras \texttt{x = Vector3DList(numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]))}
+  \item Create \texttt{Vector3DList} with list of numpy arrays:\\ \texttt{x = Vector3DList([ numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]) ])}
   \item Create \texttt{Vector3DList} with list of lists \texttt{x = Vector3DList([[1.,2.,3.], [4.,5.,6.]])}
   \item Append item: \texttt{x.Append([0.,2.,4.])}
   \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
@@ -504,9 +504,63 @@ The Vector3DList is used to represent lists of 3D vectors. \\ \\ Usage: \bi
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  Append(pyArray) & add single array or list to VectorList; array or list must have appropriate dimension!\\ \hline 
-  GetPythonObject() & convert VectorList list of numpy arrays\\ \hline 
-  \_\_repr\_\_() & return the string representation of the VectorList\\ \hline 
+  Append(pyArray) & add single array or list to Vector3DList; array or list must have appropriate dimension!\\ \hline 
+  GetPythonObject() & convert Vector3DList into (copied) list of numpy arrays\\ \hline 
+  len(data) & return length of the Vector3DList, using len(data) where data is the Vector3DList\\ \hline 
+  data[index]= ... & set list item 'index' with data, write: data[index] = ...\\ \hline 
+  ... = data[index] & get copy of list item with 'index' as vector\\ \hline 
+  \_\_repr\_\_() & return the string representation of the Vector3DList data, e.g.: print(data)\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsection{Vector2DList}
+The Vector2DList is used to represent lists of 2D vectors. This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
+  \item Create empty \texttt{Vector2DList} with \texttt{x = Vector2DList()} 
+  \item Create \texttt{Vector2DList} with list of numpy arrays:\\ \texttt{x = Vector2DList([ numpy.array([1.,2.]), numpy.array([4.,5.]) ])}
+  \item Create \texttt{Vector2DList} with list of lists \texttt{x = Vector2DList([[1.,2.], [4.,5.]])}
+  \item Append item: \texttt{x.Append([0.,2.])}
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+  \item similar to Vector3DList !
+\ei
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  Append(pyArray) & add single array or list to Vector2DList; array or list must have appropriate dimension!\\ \hline 
+  GetPythonObject() & convert Vector2DList into (copied) list of numpy arrays\\ \hline 
+  len(data) & return length of the Vector2DList, using len(data) where data is the Vector2DList\\ \hline 
+  data[index]= ... & set list item 'index' with data, write: data[index] = ...\\ \hline 
+  ... = data[index] & get copy of list item with 'index' as vector\\ \hline 
+  \_\_repr\_\_() & return the string representation of the Vector2DList data, e.g.: print(data)\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsection{Matrix3DList}
+The Matrix3DList is used to represent lists of 3D Matrices. . This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
+  \item Create empty \texttt{Matrix3DList} with \texttt{x = Matrix3DList()} 
+  \item Create \texttt{Matrix3DList} with list of numpy arrays:\\  \texttt{x = Matrix3DList([ numpy.eye(3), numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]) ])}
+  \item Append item: \texttt{x.Append(numpy.eye(3))}
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+  \item similar to Vector3DList !
+\ei
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  Append(pyArray) & add single 2D array or list of lists to Matrix3DList; array or lists must have appropriate dimension!\\ \hline 
+  GetPythonObject() & convert Matrix3DList into (copied) list of 2D numpy arrays\\ \hline 
+  len(data) & return length of the Matrix3DList, using len(data) where data is the Matrix3DList\\ \hline 
+  data[index]= ... & set list item 'index' with matrix, write: data[index] = ...\\ \hline 
+  ... = data[index] & get copy of list item with 'index' as matrix\\ \hline 
+  \_\_repr\_\_() & return the string representation of the Matrix3DList data, e.g.: print(data)\\ \hline 
 \end{longtable}
 \end{center}
 
@@ -699,6 +753,30 @@ This section shows the NodeType structure, which is used for defining node types
   GenericODE1 & node with general ODE1 variables\\ \hline 
   GenericAE & node with general algebraic variables\\ \hline 
   GenericData & node with general data variables\\ \hline 
+  Point3DSlope1 & node with 1 slope vector\\ \hline 
+  Point3DSlope23 & node with 2 slope vectors in y and z direction\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsubsection{JointType}
+\label{sec:JointType}
+This section shows the JointType structure, which is used for defining joint types, used in KinematicTree.
+
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  \_None & node has no type\\ \hline 
+  RevoluteX & revolute joint type with rotation around local X axis\\ \hline 
+  RevoluteY & revolute joint type with rotation around local Y axis\\ \hline 
+  RevoluteZ & revolute joint type with rotation around local Z axis\\ \hline 
+  PrismaticX & prismatic joint type with translation along local X axis\\ \hline 
+  PrismaticY & prismatic joint type with translation along local Y axis\\ \hline 
+  PrismaticZ & prismatic joint type with translation along local Z axis\\ \hline 
 \end{longtable}
 \end{center}
 

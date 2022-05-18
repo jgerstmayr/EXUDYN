@@ -52,7 +52,7 @@ void CObjectBeamGeometricallyExact2D::ComputeMassMatrix(EXUmath::MatrixContainer
 	}
 	else
 	{
-		massMatrix.SetScalarMatrix(nODE2Coordinates, 0.); //set 6x6 matrix
+		massMatrix.SetScalarMatrix(nODE2coordinates, 0.); //set 6x6 matrix
 
 		Real a = -0.5*parameters.physicsLength;
 		Real b = 0.5*parameters.physicsLength;
@@ -108,7 +108,7 @@ void CObjectBeamGeometricallyExact2D::ComputeGeneralizedStrains(Real u1_x, Real 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
 void CObjectBeamGeometricallyExact2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
-	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
+	ode2Lhs.SetNumberOfItems(nODE2coordinates);
 	ode2Lhs.SetAll(0.);
 
 	//could be speed up by only computing relevant components!
@@ -179,7 +179,7 @@ void CObjectBeamGeometricallyExact2D::GetAccessFunctionBody(AccessFunctionType a
 
 		Real x = localPosition[0]; //only x-coordinate
 		Vector2D SV = ComputeShapeFunctions(x);
-		value.SetNumberOfRowsAndColumns(3, nODE2Coordinates); //3D velocity, 6 coordinates qt
+		value.SetNumberOfRowsAndColumns(3, nODE2coordinates); //3D velocity, 6 coordinates qt
 
 		value.SetAll(0.);
 		value(0, 0) = SV[0];
@@ -197,7 +197,7 @@ void CObjectBeamGeometricallyExact2D::GetAccessFunctionBody(AccessFunctionType a
 
 		Real x = localPosition[0]; //only x-coordinate
 
-		value.SetNumberOfRowsAndColumns(3, nODE2Coordinates); //3D velocity, 6 coordinates qt
+		value.SetNumberOfRowsAndColumns(3, nODE2coordinates); //3D velocity, 6 coordinates qt
 		value.SetAll(0.); //last row not necessary to set to zero ... 
 		
 		Vector2D SV = ComputeShapeFunctions(x);
@@ -214,7 +214,7 @@ void CObjectBeamGeometricallyExact2D::GetAccessFunctionBody(AccessFunctionType a
 	}
 	case AccessFunctionType::DisplacementMassIntegral_q:
 	{
-		value.SetNumberOfRowsAndColumns(3, nODE2Coordinates); //3D velocity, 6 coordinates qt
+		value.SetNumberOfRowsAndColumns(3, nODE2coordinates); //3D velocity, 6 coordinates qt
 		value.SetAll(0.);
 
 		Real L = parameters.physicsLength;

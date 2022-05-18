@@ -119,7 +119,7 @@ void CObjectANCFCable2DBase::PreComputeMassTerms() const
 {
 	if (!massMatrixComputed)
 	{
-		precomputedMassMatrix.SetScalarMatrix(nODE2Coordinates, 0.); //set 8x8 matrix
+		precomputedMassMatrix.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
 		Real L = GetLength();
 		Real rhoA = GetMassPerLength();
 		const Index ns = 4;   //number of shape functions
@@ -166,31 +166,32 @@ void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber)
 	ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t);
 }
 
-inline void AxialStrainNumericallyStable(const DReal16& rxNorm, const SlimVectorBase<DReal16, 2>& rx, DReal16& axialStrain)
-{
-	axialStrain = rxNorm - 1.;
-	//axialStrain = ((rx[0] * rx[0] - 1.) + rx[1] * rx[1]) / (rxNorm + 1);
-}
-
-inline void AxialStrainNumericallyStable(const Real& rxNorm, const Vector2D& rx, Real& axialStrain)
-{
-	if (rx[0] > rx[1])
-	{
-		axialStrain = ((rx[0] * rx[0] - 1.) + rx[1] * rx[1]) / (rxNorm+1);
-	}
-	else
-	{
-		axialStrain = ((rx[1] * rx[1] - 1.) + rx[0] * rx[0]) / (rxNorm+1);
-	}
-
-}
+////does not resolve problem in general; find other ways!
+//inline void AxialStrainNumericallyStable(const DReal16& rxNorm, const SlimVectorBase<DReal16, 2>& rx, DReal16& axialStrain)
+//{
+//	axialStrain = rxNorm - 1.;
+//	//axialStrain = ((rx[0] * rx[0] - 1.) + rx[1] * rx[1]) / (rxNorm + 1);
+//}
+//
+//inline void AxialStrainNumericallyStable(const Real& rxNorm, const Vector2D& rx, Real& axialStrain)
+//{
+//	if (rx[0] > rx[1])
+//	{
+//		axialStrain = ((rx[0] * rx[0] - 1.) + rx[1] * rx[1]) / (rxNorm+1);
+//	}
+//	else
+//	{
+//		axialStrain = ((rx[1] * rx[1] - 1.) + rx[0] * rx[0]) / (rxNorm+1);
+//	}
+//
+//}
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 template<class TReal>
 void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, 
-	const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF_t) const
+	const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF_t) const
 {
-	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
+	ode2Lhs.SetNumberOfItems(nODE2coordinates);
 	ode2Lhs.SetAll(0.);
 	//compute work of elastic forces:
 
@@ -259,15 +260,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 		TReal rxNorm2 = rx.GetL2NormSquared();
 		TReal rxNorm = sqrt(rxNorm2);
 
-//DELETE:
-//#define CObjectANCFCable2DBaseImprovedAxialStrain
-
-#ifdef CObjectANCFCable2DBaseImprovedAxialStrain
-		TReal axialStrain;
-		AxialStrainNumericallyStable(rxNorm, rx, axialStrain); //does not resolve problems in general! 
-#else
 		TReal axialStrain = rxNorm - 1.; // axial strain
-#endif
 		TReal axialStrain_t = 0.; //rate of axial strain
 
 		Real axialStrainRef = axialStrain0;
@@ -1048,9 +1041,9 @@ Real CObjectANCFCable2DBase::ComputeCurvature_t(Real x, ConfigurationType config
 //OLD AUTODIFF:
 ////! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //template<class TReal>
-//void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF_t) const
+//void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF_t) const
 //{
-//	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
+//	ode2Lhs.SetNumberOfItems(nODE2coordinates);
 //	ode2Lhs.SetAll(0.);
 //	//compute work of elastic forces:
 //

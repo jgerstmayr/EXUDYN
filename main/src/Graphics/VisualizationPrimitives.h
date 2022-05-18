@@ -24,16 +24,18 @@
 class VisualizationSystem; //avoid including Visualization classes
 
 namespace EXUvis {
-	
+
 	//! compute normalized normal from triangle points; for function with single normal see Geometry.h
 	template<class TReal>
 	void ComputeTriangleNormals(const std::array<SlimVectorBase<TReal, 3>, 3>& trigPoints, std::array<SlimVectorBase<TReal, 3>, 3>& normals)
 	{
-		SlimVectorBase<TReal, 3> v1 = trigPoints[1] - trigPoints[0];
-		SlimVectorBase<TReal, 3> v2 = trigPoints[2] - trigPoints[0];
-		SlimVectorBase<TReal, 3> n = v1.CrossProduct(v2); //@todo: need to check correct outward normal direction in openGL
-		TReal len = n.GetL2Norm();
-		if (len != 0.f) { n *= 1.f / len; }
+		//SlimVectorBase<TReal, 3> v1 = trigPoints[1] - trigPoints[0];
+		//SlimVectorBase<TReal, 3> v2 = trigPoints[2] - trigPoints[0];
+		//SlimVectorBase<TReal, 3> n = v1.CrossProduct(v2); //@todo: need to check correct outward normal direction in openGL
+		//TReal len = n.GetL2Norm();
+		//if (len != 0.f) { n *= 1.f / len; }
+		SlimVectorBase<TReal, 3> n = EXUmath::ComputeTriangleNormal(trigPoints[0], trigPoints[1], trigPoints[2]);
+
 		normals[0] = n;
 		normals[1] = n;
 		normals[2] = n;
@@ -129,7 +131,7 @@ namespace EXUvis {
 	//! length defines the length of each axis; radius is the radius of the shaft; arrowSize is diameter relative to radius
 	//! colorfactor: 1=rgb color, 0=grey color (and any value between)
 	void DrawOrthonormalBasis(const Vector3D& p, const Matrix3D& rot, Real length, Real radius, GraphicsData& graphicsData, Index itemID,
-		float colorFactor = 1.f, bool draw3D = true, Index nTiles = 12, Real arrowSizeRelative = 2.5, Index showNumber = EXUstd::InvalidIndex);
+		float colorFactor = 1.f, bool draw3D = true, Index nTiles = 12, Real arrowSizeRelative = 2.5, Index showNumber = EXUstd::InvalidIndex, const char* preText = nullptr);
 
 	//! draw arraw (for forces, etc.); doubleArrow for torques
 	void DrawArrow(const Vector3D& p, const Vector3D& v, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID,

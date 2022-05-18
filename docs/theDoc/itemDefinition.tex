@@ -594,9 +594,9 @@ The item VNodeRigidBody2D has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SliderCrank.py}{\texttt{SliderCrank.py}} (Examples/)
 \item  ...
 
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismRedundant.py}{\texttt{fourBarMechanismRedundant.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -751,6 +751,110 @@ The item VNodePoint2DSlope1 has the following parameters:\vspace{-1cm}\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
+\mysubsubsection{NodePoint3DSlope1}
+\label{sec:item:NodePoint3DSlope1}
+A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements; the node has 6 displacement degrees of freedom (3 for displacement of point node and 3 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime\;\;r_z^\prime]^T=[1\;\;0]^T$.\vspace{12pt}
+ \\{\bf Additional information for NodePoint3DSlope1}:
+\bi
+  \item The Node has the following types = \texttt{Position}
+  \item {\bf Short name} for Python = {\bf Point3DS1}  \item {\bf Short name} for Python (visualization object) = {\bf VPoint3DS1}\ei
+\vspace{12pt} \noindent The item {\bf NodePoint3DSlope1} with type = 'Point3DSlope1' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     node's unique name\\ \hline
+    referenceCoordinates &     Vector6D &     6 &     [0.,0.,0.,1.,0.,0.] &     \tabnewline reference coordinates (x-pos,y-pos,z-pos; x-slopex, y-slopex, z-slopex) of node; global position of node without displacement\\ \hline
+    initialCoordinates &     Vector6D &     6 &     [0.,0.,0.,0.,0.,0.] &     \tabnewline initial displacement coordinates: ux, uy, uz and x/y/z 'displacements' of slopex\\ \hline
+    initialVelocities &     Vector6D &     6 &     [0.,0.,0.,0.,0.,0.] &     \tabnewline initial velocity coordinates\\ \hline
+    visualization & VNodePoint3DSlope1 & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VNodePoint3DSlope1 has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used\\ \hline
+	  \end{longtable}
+	\end{center}
+\par\noindent\rule{\textwidth}{0.4pt}
+\mysubsubsubsection{DESCRIPTION of NodePoint3DSlope1:}
+\label{description_NodePoint3DSlope1}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
+\rowTable{Position}{}{global 3D position vector of node (=displacement+reference position)}
+\rowTable{Displacement}{}{global 3D displacement vector of node}
+\rowTable{Velocity}{}{global 3D velocity vector of node}
+\rowTable{Coordinates}{}{coordinates vector of node (3 displacement coordinates + 3 slope vector coordinates)}
+\rowTable{Coordinates\_t}{}{velocity coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates)}
+\rowTable{Coordinates\_tt}{}{acceleration coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates)}
+\finishTable
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{NodePoint3DSlope23}
+\label{sec:item:NodePoint3DSlope23}
+A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements; the node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopey' and 'slopez'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slopey vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$ and slopez gets $\rv_z^\prime=[0\;\;0\;\;1]^T$.\vspace{12pt}
+ \\{\bf Additional information for NodePoint3DSlope23}:
+\bi
+  \item The Node has the following types = \texttt{Position}, \texttt{Orientation}
+  \item {\bf Short name} for Python = {\bf Point3DS23}  \item {\bf Short name} for Python (visualization object) = {\bf VPoint3DS23}\ei
+\vspace{12pt} \noindent The item {\bf NodePoint3DSlope23} with type = 'Point3DSlope23' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     node's unique name\\ \hline
+    referenceCoordinates &     Vector9D &     9 &     [0.,0.,0.,1.,0.,0.,1.,0.,0.] &     \tabnewline reference coordinates (x-pos,y-pos,z-pos; x-slopey, y-slopey, z-slopey; x-slopez, y-slopez, z-slopez) of node; global position of node without displacement\\ \hline
+    initialCoordinates &     Vector9D &     9 &     [0.,0.,0.,0.,0.,0.,0.,0.,0.] &     \tabnewline initial displacement coordinates relative to reference coordinates\\ \hline
+    initialVelocities &     Vector9D &     9 &     [0.,0.,0.,0.,0.,0.,0.,0.,0.] &     \tabnewline initial velocity coordinates\\ \hline
+    visualization & VNodePoint3DSlope23 & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VNodePoint3DSlope23 has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used\\ \hline
+	  \end{longtable}
+	\end{center}
+\par\noindent\rule{\textwidth}{0.4pt}
+\mysubsubsubsection{DESCRIPTION of NodePoint3DSlope23:}
+\label{description_NodePoint3DSlope23}
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
+\rowTable{Position}{}{global 3D position vector of node (=displacement+reference position)}
+\rowTable{Displacement}{}{global 3D displacement vector of node}
+\rowTable{Velocity}{}{global 3D velocity vector of node}
+\rowTable{Coordinates}{}{coordinates vector of node (3 displacement coordinates + 2 $\times$ 3 slope vector coordinates)}
+\rowTable{Coordinates\_t}{}{velocity coordinates vector of node}
+\rowTable{Coordinates\_tt}{}{acceleration coordinates vector of node}
+\finishTable
+\vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
+%
+\noindent For examples on NodePoint3DSlope23 see Examples and TestModels:
+\bi
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
+\ei
+
+%
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
 \mysubsubsection{NodeGenericODE2}
 \label{sec:item:NodeGenericODE2}
 A node containing a number of \hac{ODE2} variables; use e.g. for scalar dynamic equations (Mass1D) or for the ALECable element. Note that referenceCoordinates and all initialCoordinates(\_t) must be initialized, because no default values exist.\vspace{12pt}
@@ -806,10 +910,12 @@ The item VNodeGenericODE2 has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCF_pipe.py}{\texttt{ALEANCF\_pipe.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py}{\texttt{ANCFALEtest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_moving_rigidbody.py}{\texttt{ANCF\_moving\_rigidbody.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py}{\texttt{kinematicTreeAndMBS.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simulateInteractively.py}{\texttt{simulateInteractively.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeTest.py}{\texttt{kinematicTreeTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/solverExplicitODE1ODE2test.py}{\texttt{solverExplicitODE1ODE2test.py}} (TestModels/)
 \ei
 
@@ -1007,8 +1113,8 @@ The item VNodePointGround has the following parameters:\vspace{-1cm}\\
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -1171,7 +1277,7 @@ A 3D mass point which is attached to a position-based node, usually NodePoint.\v
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
     physicsMass &     UReal &      &     0. &     mass [SI:kg] of mass point\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number (type NodeIndex) for mass point\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number (type NodeIndex) for mass point\\ \hline
     visualization & VObjectMassPoint & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -1301,7 +1407,7 @@ A 2D mass point which is attached to a position-based 2D node.\vspace{12pt}
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
     physicsMass &     UReal &      &     0. &     mass [SI:kg] of mass point\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number (type NodeIndex) for mass point\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number (type NodeIndex) for mass point\\ \hline
     visualization & VObjectMassPoint2D & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -1420,7 +1526,7 @@ A 1D (translational) mass which is attached to Node1D. Note, that the mass does 
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
     physicsMass &     UReal &      &     0. &     mass [SI:kg] of mass\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number (type NodeIndex) for Node1D\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number (type NodeIndex) for Node1D\\ \hline
     referencePosition &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline a reference position, used to transform the 1D coordinate to a position\\ \hline
     referenceRotation &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates\\ \hline
     visualization & VObjectMass1D & & & parameters for visualization of item \\ \hline
@@ -1540,7 +1646,7 @@ A 1D rotational inertia (mass) which is attached to Node1D.\vspace{12pt}
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
     physicsInertia &     UReal &      &     0. &     inertia components [SI:kgm$^2$] of rotor / rotational mass\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number (type NodeIndex) of Node1D, providing rotation coordinate $\psi_0 = c_0$\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number (type NodeIndex) of Node1D, providing rotation coordinate $\psi_0 = c_0$\\ \hline
     referencePosition &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline a constant reference position = reference point, used to assign joint constraints accordingly and for drawing\\ \hline
     referenceRotation &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description\\ \hline
     visualization & VObjectRotationalMass1D & & & parameters for visualization of item \\ \hline
@@ -1662,7 +1768,7 @@ A 3D rigid body which is attached to a 3D rigid body node. The rotation parametr
     physicsMass &     UReal &      &     0. &     mass [SI:kg] of rigid body\\ \hline
     physicsInertia &     Vector6D &      &     [0.,0.,0., 0.,0.,0.] &     \tabnewline inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to \hac{COM}; use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, \hac{COM} and mass\\ \hline
     physicsCenterOfMass &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline local position of \hac{COM} relative to the body's reference point; if the vector of the \hac{COM} is [0,0,0], the computation will not consider additional terms for the \hac{COM} and it is faster\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number (type NodeIndex) for rigid body node\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number (type NodeIndex) for rigid body node\\ \hline
     visualization & VObjectRigidBody & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -1898,7 +2004,7 @@ A 2D rigid body which is attached to a rigid body 2D node. The body obtains coor
     name &     String &      &     '' &     objects's unique name\\ \hline
     physicsMass &     UReal &      &     0. &     mass [SI:kg] of rigid body\\ \hline
     physicsInertia &     UReal &      &     0. &     inertia [SI:kgm$^2$] of rigid body w.r.t. center of mass\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number (type NodeIndex) for 2D rigid body node\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number (type NodeIndex) for 2D rigid body node\\ \hline
     visualization & VObjectRigidBody2D & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -2300,6 +2406,7 @@ The item VObjectGenericODE2 has the following parameters:\vspace{-1cm}\\
 %
 \noindent For examples on ObjectGenericODE2 see Examples and TestModels:
 \bi
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py}{\texttt{kinematicTreeAndMBS.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simulateInteractively.py}{\texttt{simulateInteractively.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TestModels/)
@@ -2317,11 +2424,11 @@ The item VObjectGenericODE2 has the following parameters:\vspace{-1cm}\\
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectKinematicTree}
 \label{sec:item:ObjectKinematicTree}
-A special object to represent open kinematic trees using minimum coordinate formulation (UNDER DEVELOPMENT!).\vspace{12pt}
+A special object to represent open kinematic trees using minimum coordinate formulation (UNDER DEVELOPMENT!). The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.\ per link (body). Every link is defined by a previous joint and a coordinate transformation from the previous link to this link's joint coordinates. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.\vspace{12pt}
  \\{\bf Additional information for ObjectKinematicTree}:
 \bi
   \item The Object has the following types = \texttt{Body}, \texttt{MultiNoded}, \texttt{SuperElement}
-  \item Requested node type: read detailed information of item
+  \item Requested node type = \texttt{GenericODE2}
   \item {\bf Short name} for Python = {\bf KinematicTree}  \item {\bf Short name} for Python (visualization object) = {\bf VKinematicTree}\ei
 \vspace{12pt} \noindent The item {\bf ObjectKinematicTree} with type = 'KinematicTree' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
@@ -2331,18 +2438,31 @@ A special object to represent open kinematic trees using minimum coordinate form
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
-    nodeNumbers &     ArrayNodeIndex &      &     [] &     node numbers which provide the coordinates for the object (consecutively as provided in this list)\\ \hline
-    massMatrix &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     \tabnewline mass matrix of object as MatrixContainer (or numpy array / list of lists)\\ \hline
-    stiffnessMatrix &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     \tabnewline stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction\\ \hline
-    dampingMatrix &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     \tabnewline damping matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with stiffnessMatrix and jacobianUserFunction\\ \hline
-    forceVector &     NumpyVector &      &     [] &     generalized force vector added to RHS\\ \hline
-    forceUserFunction &     PyFunctionVectorMbsScalarIndex2Vector &     \tabnewline  &     \tabnewline 0 &     \tabnewline A Python user function which computes the generalized user force vector for the \hac{ODE2} equations; see description below\\ \hline
-    massMatrixUserFunction &     PyFunctionMatrixContainerMbsScalarIndex2Vector &     \tabnewline  &     \tabnewline 0 &     \tabnewline A Python user function which computes the mass matrix instead of the constant mass matrix given in $\Mm$; return numpy array or MatrixContainer; see description below\\ \hline
-    jacobianUserFunction &     PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar &     \tabnewline  &     \tabnewline 0 &     \tabnewline A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t.\ the coordinates (times $f_{ODE2}$) and w.r.t.\ the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below\\ \hline
-    coordinateIndexPerNode &     ArrayIndex &      &     [] &     this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed\\ \hline
-    tempCoordinates &     NumpyVector &      &     [] &     temporary vector containing coordinates\\ \hline
-    tempCoordinates\_t &     NumpyVector &      &     [] &     temporary vector containing velocity coordinates\\ \hline
-    tempCoordinates\_tt &     NumpyVector &      &     [] &     temporary vector containing acceleration coordinates\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; $n$ being the number of minimum coordinates\\ \hline
+    gravity &     Vector3D &      &     [0.,0.,0.] &     \tabnewline gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree\\ \hline
+    baseOffset &     Vector3D &      &     [0.,0.,0.] &     \tabnewline offset vector for base, in global coordinates\\ \hline
+    jointTypes &     JointTypeList &      &     [] &     joint types of kinematic Tree joints; must be always set\\ \hline
+    linkParents &     ArrayIndex &      &     [] &     index of parent joint/link; if no parent exists, the value is $-1$; by default, $p_0=-1$ because the $i$th parent index must always fulfill $p_i<i$; must be always set\\ \hline
+    jointTransformations &     Matrix3DList &      &     [] &     list of constant joint transformations from parent joint coordinates $p_0$ to this joint coordinates $j_0$; if no parent exists ($-1$), the base coordinate system $0$ is used; must be always set\\ \hline
+    jointOffsets &     Vector3DList &      &     [] &     list of constant joint offsets from parent joint to this joint; $p_0$, $p_1$, $\ldots$ denote the parent coordinate systems; if no parent exists ($-1$), the base coordinate system $0$ is used; must be always set\\ \hline
+    linkInertiasCOM &     Matrix3DList &      &     [] &     list of link inertia tensors w.r.t.\ \ac{COM} in joint/link $j_i$ coordinates; must be always set\\ \hline
+    linkCOMs &     Vector3DList &      &     [] &     list of vectors for center of mass (COM) in joint/link $j_i$ coordinates; must be always set\\ \hline
+    linkMasses &     Vector &      &     [] &     masses of links; must be always set\\ \hline
+    linkForces &     Vector3DList &      &     [] &     list of 3D force vectors per link in global coordinates acting on joint frame origin; use force-torque couple to realize off-origin forces; defaults to empty list $[]$, adding no forces\\ \hline
+    linkTorques &     Vector3DList &      &     [] &     list of 3D torque vectors per link in global coordinates; defaults to empty list $[]$, adding no torques\\ \hline
+    jointForceVector &     Vector &      &     [] &     generalized force vector per coordinate added RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint $i$, the torque $f[i]$ acts positive (w.r.t.\ rotation axis) on link $i$ and negative on parent link $p_i$; must be either empty list/array $[]$ (default) or have size $n$\\ \hline
+    jointPositionOffsetVector &     Vector &      &     [] &     offset for joint coordinates used in P(D) control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array $[]$ (default) or have size $n$\\ \hline
+    jointVelocityOffsetVector &     Vector &      &     [] &     velocity offset for joint coordinates used in (P)D control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array $[]$ (default) or have size $n$\\ \hline
+    jointPControlVector &     Vector &      &     [] &     proportional (P) control values per joint (multiplied with position error between joint value and offset $\uv_o$); note that more complicated control laws must be implemented with user functions; must be either empty list/array $[]$ (default) or have size $n$\\ \hline
+    jointDControlVector &     Vector &      &     [] &     derivative (D) control values per joint (multiplied with velocity error between joint velocity and velocity offset $\vv_o$); note that more complicated control laws must be implemented with user functions; must be either empty list/array $[]$ (default) or have size $n$\\ \hline
+    forceUserFunction &     PyFunctionVectorMbsScalarIndex2Vector &     \tabnewline  &     \tabnewline 0 &     \tabnewline A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below\\ \hline
+    jointTransformations &     Transformations66List &     \tabnewline  &     \tabnewline [] &     \tabnewline temporary list containing transformations (Pluecker transforms) per joint\\ \hline
+    linkInertiasT66 &     Transformations66List &     \tabnewline  &     \tabnewline [] &     \tabnewline temporary list link inertias as Pluecker transforms per link\\ \hline
+    tempListT66 &     Transformations66List &     \tabnewline  &     \tabnewline [] &     \tabnewline temporary list of Pluecker transforms per link\\ \hline
+    motionSubspaces &     Vector6DList &      &     [] &     temporary list containing 6D motion subspaces per joint\\ \hline
+    jointVelocities &     Vector6DList &      &     [] &     temporary list containing 6D velocities per joint\\ \hline
+    jointAccelerations &     Vector6DList &      &     [] &     temporary list containing 6D accelerations per joint\\ \hline
+    jointForces &     Vector6DList &      &     [] &     temporary list containing 6D torques/forces per joint/link\\ \hline
     visualization & VObjectKinematicTree & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -2354,10 +2474,10 @@ The item VObjectKinematicTree has the following parameters:\vspace{-1cm}\\
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    showLinks &     Bool &      &     True &     set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link\\ \hline
+    showJoints &     Bool &      &     True &     set true, if joints shall be shown; if graphicsDataList is empty, a standard drawing for joints is used (drawing a cylinder for revolute joints; size relative to frame size in KinematicTree visualization settings)\\ \hline
     color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used\\ \hline
-    triangleMesh &     NumpyMatrixI &      &     MatrixI[] &     a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!\\ \hline
-    showNodes &     Bool &      &     False &     set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'\\ \hline
-    graphicsDataUserFunction &     PyFunctionGraphicsData &     \tabnewline  &     \tabnewline 0 &     A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization\\ \hline
+    graphicsDataList &     BodyGraphicsDataList &     \tabnewline  &     \tabnewline  &     Structure contains data for link/joint visualization; data is defined as list of BodyGraphicdData where every BodyGraphicdData corresponds to one link/joint; must either be emtpy list or length must agree with number of links\\ \hline
 	  \end{longtable}
 	\end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -2365,17 +2485,31 @@ The item VObjectKinematicTree has the following parameters:\vspace{-1cm}\\
 \label{description_ObjectKinematicTree}
 \paragraph{Information on input parameters:} 
 \startTable{input parameter}{symbol}{description see tables above}
-\rowTable{nodeNumbers}{$\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$}{}
-\rowTable{massMatrix}{$\Mm \in \Rcal^{n \times n}$}{}
-\rowTable{stiffnessMatrix}{$\Km \in \Rcal^{n \times n}$}{}
-\rowTable{dampingMatrix}{$\Dm \in \Rcal^{n \times n}$}{}
-\rowTable{forceVector}{$\fv \in \Rcal^{n}$}{}
+\rowTable{nodeNumber}{$n_0 \in \Ncal^n$}{}
+\rowTable{gravity}{$\LU{0}{\gv} in \Rcal^{3}$}{}
+\rowTable{baseOffset}{$\LU{0}{\pv_b} in \Rcal^{3}$}{}
+\rowTable{jointTypes}{$\jv_T in \Ncal^{n}$}{}
+\rowTable{linkParents}{$\iv_p = [p_0,\, p_1,\, \ldots] in \Ncal^{n}$}{}
+\rowTable{jointTransformations}{$\Tm = [\LU{p_0,j_0}{\Tm_0},\, \LU{p_1,j_1}{\Tm_1},\, \ldots ] in [\Rcal^{3 \times 3}, ...]$}{}
+\rowTable{jointOffsets}{$\Vm = [\LU{p_0}{o_0},\, \LU{p_1}{o_1},\, \ldots ] in [\Rcal^{3}, ...]$}{}
+\rowTable{linkInertiasCOM}{$\Jm_{COM} = [\LU{j_0}{\Jm_0},\, \LU{j_1}{\Jm_1},\, \ldots ] in [\Rcal^{3 \times 3}, ...]$}{}
+\rowTable{linkCOMs}{$\Cm = [\LU{j_0}{\cv_0},\, \LU{j_1}{\cv_1},\, \ldots ] in [\Rcal^{3}, ...]$}{}
+\rowTable{linkMasses}{$\mv in \Rcal^{n}$}{}
+\rowTable{linkForces}{$\LU{0}{\Fm} in [\Rcal^{3}, ...]$}{}
+\rowTable{linkTorques}{$\LU{0}{\Fm_\tau} in [\Rcal^{3}, ...]$}{}
+\rowTable{jointForceVector}{$\fv \in \Rcal^{n}$}{}
+\rowTable{jointPositionOffsetVector}{$\uv_o \in \Rcal^{n}$}{}
+\rowTable{jointVelocityOffsetVector}{$\vv_o \in \Rcal^{n}$}{}
+\rowTable{jointPControlVector}{$\Pm \in \Rcal^{n}$}{}
+\rowTable{jointDControlVector}{$\Dm \in \Rcal^{n}$}{}
 \rowTable{forceUserFunction}{$\fv_{user} \in \Rcal^{n}$}{}
-\rowTable{massMatrixUserFunction}{$\Mm_{user} \in \Rcal^{n\times n}$}{}
-\rowTable{jacobianUserFunction}{$\Jm_{user} \in \Rcal^{n\times n}$}{}
-\rowTable{tempCoordinates}{$\cv_{temp} \in \Rcal^{n}$}{}
-\rowTable{tempCoordinates\_t}{$\dot \cv_{temp} \in \Rcal^{n}$}{}
-\rowTable{tempCoordinates\_tt}{$\ddot \cv_{temp} \in \Rcal^{n}$}{}
+\rowTable{jointTransformations}{$\Xm \in \Rcal^{n \times (6 \times 6)}$}{}
+\rowTable{linkInertiasT66}{$\Jm_{66} \in \Rcal^{n \times (6 \times 6)}$}{}
+\rowTable{tempListT66}{$\in \Rcal^{n \times (6 \times 6)}$}{}
+\rowTable{motionSubspaces}{$\Mm\Sm \in \Rcal^{n \times 6}$}{}
+\rowTable{jointVelocities}{$\Vm_j \in \Rcal^{n \times 6}$}{}
+\rowTable{jointAccelerations}{$\Am_j \in \Rcal^{n \times 6}$}{}
+\rowTable{jointForces}{$\Fm_j \in \Rcal^{n \times 6}$}{}
 \finishTable
 {\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
 \startTable{output variable}{symbol}{description}
@@ -2386,8 +2520,133 @@ The item VObjectKinematicTree has the following parameters:\vspace{-1cm}\\
 \finishTable
  \noindent
     %
+    \mysubsubsubsection{General notes}
+    The \texttt{KinematicTree} object is used to represent the equations of motion of a (open) tree-structured multibody system
+    using a minimum set of coordinates. Even though that \codeName\ is based on redundant coordinates,
+    the \texttt{KinematicTree} allows to efficiently model standard multibody models based on revolute and prismatic joints.
+    Especially, a chain with 3 links leads to only 3 equations of motion, while a redundant formulation would lead
+    to $3 \times 7$ coordinates using Euler Parameters and $3 \times 6$ constraints for joints and Euler parameters,
+    which gives a set of 39 equations. However this set of equations is very sparse and the evaluation is much faster
+    than the kinematic tree.
+
+    The question, which formulation to chose cannot be answered uniquely. However, \texttt{KinematicTree} objects
+    do not include constraints, so they can be solved with explicit solvers. Furthermore, the joint values (angels)
+    can be addressed directly -- controllers or sensors are generally simpler.
+    %
     \mysubsubsubsection{Equations of motion}
-    Coming soon!
+    The equations follow the description given in Chapters 2 and 3 in the handbook of robotics, 2016 edition \cite{Siciliano2016}.
+
+    Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
+    or \texttt{SensorSuperElement}, see \refSection{sec:mainsystem:sensor}, directly access special output variables
+    (\texttt{OutputVariableType}) of the (mesh) nodes of the superelement. The mesh nodes are the links of the
+    \texttt{KinematicTree}.
+    
+    Note, however, that some functionality is considerably different for \texttt{ObjectGenericODE2}.
+    
+    %
+    \mysubsubsubsection{Equations of motion}
+    The \texttt{KinematicTree} has one node of type \texttt{NodeGenericODE2} with $n$ coordinates.
+    %
+    The equations of motion are built by special multibody algorithms. Currently, there is only the
+    so-called Composite-Rigid-Body (CRB) algorithm implemented.
+    This algorithm does not show the highest performance, but creates the mass matrix $\Mm_{CRB}$ and forces $\fv_{CRB}$
+    in a conventional form. The equations read
+    \be \label{eq_ObjectGenericODE2_EOM}
+      \Mm_{CRB}(\qv) \ddot \qv = \fv_{CRB}(\qv,\dot \qv) + \fv + \fv_{PD} + \fv_{user}(mbs, t, i_N,\qv,\dot \qv)
+    \ee
+    The term $\fv_{CRB}(\qv,\dot \qv)$ represents inertial terms, which are due to accelerations and 
+    quadratic velocities and is computed by \texttt{ComputeODE2LHS}.
+    Note that the user function $\fv_{user}(mbs, t, i_N,\qv,\dot \qv)$ may be empty (=0), 
+    and \texttt{iN} represents the itemNumber (=objectNumber). 
+    The force $\fv$ is given by the \texttt{jointForceVector}, which also may have zero length, causing it to be ignored.
+    While $\fv$ is constant, it may be varied using a \texttt{mbs.preStepUserFunction}, which can
+    then represent any force over time. Note that such changes are not considered in the object's jacobian.
+    
+    The user force $\fv_{user}$ is described below and may represent any force over time.
+    Note that this force is considered in the object's jacobian, but it does not include external 
+    dependencies -- if a control law is feeds back measured quantities and couples them to forces.
+    This leads to worse performance (up to non-convergence) of implicit solvers.
+    
+    The control force $\fv_{PD}$ realizes a simple linear control law
+    \be
+      \fv_{PD} = \Pm . (\uv_o - \qv) + \Dm . (\vv_o - \dot \qv)
+    \ee
+    Here, the '.' operator represents an element-wise multiplication of two vectors, resulting in a vector.
+    The force $\fv_{PD}$ at the \ac{RHS} acts in direction of prescribed joint motion $\uv_o$ and
+    prescribed joint velocities $\vv_o$ multiplied with proportional and 'derivative' factors $P$ and $D$.
+    Omitting $\uv_o$ and $\vv_o$ and putting $\fv_{PD}$ on the \ac{LHS}, we immediately can interpret these
+    terms as stiffness and damping on the single coordinates.
+    The control force is also considered in the object's jacobian, which is currently computed by numerical
+    differentiation.
+        
+    More detailed equations will be added later on. Follow exactly the description (and coordinate systems) of the object parameters,
+    especially for describing the kinematic chain as well as the inertial parameters.
+
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}
+    A user function, which computes a force vector applied to the joint coordinates depending on current time and states of object. 
+    Note that itemNumber represents the index of the ObjectKinematicTree object in mbs, which can be used to retrieve additional data from the object through
+    \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
+    %
+    %The function takes the time, coordinates q (without reference values) and coordinate velocities q\_t
+    \startTable{arguments /  return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs}
+      \rowTable{\texttt{t}}{Real}{current time in mbs}
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{q}}{Vector $\in \Rcal^n$}{object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values}
+      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^n$}{object velocity coordinates (time derivative of \texttt{q}) in current configuration}
+      \rowTable{\returnValue}{Vector $\in \Rcal^{n}$}{returns force vector for object}
+    \finishTable
+    \vspace{12pt}
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
+\mysubsubsubsection{MINI EXAMPLE for ObjectKinematicTree}
+\label{miniExample_ObjectKinematicTree}
+\pythonstyle
+\begin{lstlisting}[language=Python, firstnumber=1]
+    #build 1R mechanism (pendulum)
+    L = 1 #length of link
+    RBinertia = InertiaCuboid(1000, [L,0.1*L,0.1*L])
+    inertiaLinkCOM = RBinertia.InertiaCOM() #KinematicTree requires COM inertia
+    linkCOM = np.array([0.5*L,0.,0.]) #if COM=0, gravity does not act on pendulum!
+
+    offsetsList = exu.Vector3DList([[0,0,0]])
+    rotList = exu.Matrix3DList([np.eye(3)])
+    linkCOMs=exu.Vector3DList([linkCOM])
+    linkInertiasCOM=exu.Matrix3DList([inertiaLinkCOM])
+    
+    
+    nGeneric = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0.],initialCoordinates=[0.],
+                                           initialCoordinates_t=[0.],numberOfODE2Coordinates=1))
+
+    oKT = mbs.AddObject(ObjectKinematicTree(nodeNumber=nGeneric, jointTypes=[exu.JointType.RevoluteZ], linkParents=[-1],
+                                      jointTransformations=rotList, jointOffsets=offsetsList, linkInertiasCOM=linkInertiasCOM,
+                                      linkCOMs=linkCOMs, linkMasses=[RBinertia.mass], 
+                                      baseOffset = [0.5,0.,0.], gravity=[0.,-9.81,0.]))
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    
+    simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+    simulationSettings.timeIntegration.numberOfSteps = 1000 #gives very accurate results
+    exu.SolveDynamic(mbs, simulationSettings , solverType=exu.DynamicSolverType.RK67) #highly accurate!
+
+    #check final value of angle:
+    q0 = mbs.GetNodeOutput(nGeneric, exu.OutputVariableType.Coordinates)
+    #exu.Print(q0)
+    exudynTestGlobals.testResult = q0 #-3.134018551808591; RigidBody2D with 2e6 time steps gives: -3.134018551809384
+
+\end{lstlisting}
+
+\vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
+%
+\noindent For examples on ObjectKinematicTree see Examples and TestModels:
+\bi
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py}{\texttt{kinematicTreeAndMBS.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeTest.py}{\texttt{kinematicTreeTest.py}} (TestModels/)
+\ei
+
+%
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -3111,7 +3370,7 @@ A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosi
     physicsReferenceAxialStrain &     Real &      &     0. &      [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value\\ \hline
     physicsReferenceCurvature &     Real &      &     0. &      [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value\\ \hline
     strainIsRelativeToReference &     Real &      &     0. &      if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1.\\ \hline
-    nodeNumbers &     NodeIndex2 &      &     [MAXINT, MAXINT] &     \tabnewline two node numbers ANCF cable element\\ \hline
+    nodeNumbers &     NodeIndex2 &      &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers ANCF cable element\\ \hline
     useReducedOrderIntegration &     Index &      &     0 &     0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments\\ \hline
     visualization & VObjectANCFCable2D & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -3453,7 +3712,7 @@ A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially 
     physicsReferenceAxialStrain &     Real &      &     0. &      [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value\\ \hline
     physicsReferenceCurvature &     Real &      &     0. &      [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value\\ \hline
     physicsUseCouplingTerms &     Bool &      &     True &     true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then)\\ \hline
-    nodeNumbers &     NodeIndex3 &      &     [MAXINT, MAXINT, MAXINT] &     \tabnewline two node numbers ANCF cable element, third node=ALE GenericODE2 node\\ \hline
+    nodeNumbers &     NodeIndex3 &      &     [invalid [-1], invalid [-1], invalid [-1]] &     \tabnewline two node numbers ANCF cable element, third node=ALE GenericODE2 node\\ \hline
     useReducedOrderIntegration &     Index &      &     0 &     0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments\\ \hline
     strainIsRelativeToReference &     Real &      &     0. &      if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1.\\ \hline
     visualization & VObjectALEANCFCable2D & & & parameters for visualization of item \\ \hline
@@ -3531,6 +3790,76 @@ The item VObjectALEANCFCable2D has the following parameters:\vspace{-1cm}\\
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectANCFBeam3D}
+\label{sec:item:ObjectANCFBeam3D}
+OBJECT UNDER CONSTRUCTION: A 3D beam finite element based on the absolute nodal coordinate formulation, using two . The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes; assuming dimensions $w_y$ and $w_z$ in cross section, the local position range is $\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]$.\vspace{12pt}
+ \\{\bf Additional information for ObjectANCFBeam3D}:
+\bi
+  \item The Object has the following types = \texttt{Body}, \texttt{MultiNoded}
+  \item Requested node type = \texttt{Position} + \texttt{Orientation}
+  \item {\bf Short name} for Python = {\bf Beam3D}  \item {\bf Short name} for Python (visualization object) = {\bf VBeam3D}\ei
+\vspace{12pt} \noindent The item {\bf ObjectANCFBeam3D} with type = 'ANCFBeam3D' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     objects's unique name\\ \hline
+    nodeNumbers &     NodeIndex2 &      &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers for beam element\\ \hline
+    physicsLength &     PReal &      &     0. &      [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive\\ \hline
+    sectionData &     BeamSection &      &     BeamSection() &     data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.\\ \hline
+    crossSectionPenaltyFactor &     Vector3D &      &     [1.,1.,1.] &     \tabnewline  [SI:1] additional penalty factors for cross section deformation, which are in total $k_{cs} = [f_{yy}\cdot k_{yy},\, f_{zz}\cdot k_{zz},\, f_{yz}\cdot k_{yz}]\tp$\\ \hline
+    testBeamRectangularSize &     Vector2D &      &     [-1.,-1.] &     \tabnewline  [SI:m] test dimensions for mass matrix and other terms using standard rectangular cross section\\ \hline
+    visualization & VObjectANCFBeam3D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectANCFBeam3D has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown; geometry is defined by sectionGeometry\\ \hline
+    sectionGeometry &     BeamSectionGeometry &     \tabnewline  &     \tabnewline BeamSectionGeometry() &     \tabnewline defines cross section shape used for visualization and contact\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+\par\noindent\rule{\textwidth}{0.4pt}
+\mysubsubsubsection{DESCRIPTION of ObjectANCFBeam3D:}
+\label{description_ObjectANCFBeam3D}
+\paragraph{Information on input parameters:} 
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{physicsLength}{$L$}{}
+\rowTable{crossSectionPenaltyFactor}{$f_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp$}{}
+\rowTable{testBeamRectangularSize}{$[h_y,\, h_z]$}{}
+\finishTable
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
+\rowTable{Position}{}{global position vector of local position vector}
+\rowTable{Displacement}{}{global displacement vector of local position vector}
+\rowTable{Velocity}{}{global velocity vector of local position vector}
+\rowTable{VelocityLocal}{}{global velocity vector of local position vector}
+\rowTable{AngularVelocity}{}{global angular velocity vector of local (axis) position vector}
+\rowTable{AngularVelocityLocal}{}{local angular velocity vector of local (axis) position vector}
+\rowTable{Acceleration}{}{global acceleration vector of local position vector}
+\rowTable{Rotation}{}{3D Tait-Bryan rotation components of cross section rotation}
+\rowTable{RotationMatrix}{}{rotation matrix of cross section rotation as 9D vector}
+\finishTable
+ \noindent
+    Detailed description coming later.
+\vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
+%
+\noindent For examples on ObjectANCFBeam3D see Examples and TestModels:
+\bi
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
+\ei
+
+%
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
 \mysubsubsection{ObjectBeamGeometricallyExact2D}
 \label{sec:item:ObjectBeamGeometricallyExact2D}
 A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM}).\vspace{12pt}
@@ -3547,7 +3876,7 @@ A 2D geometrically exact beam finite element, currently using 2 nodes of type No
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
-    nodeNumbers &     NodeIndex2 &      &     [MAXINT, MAXINT] &     \tabnewline two node numbers for beam element\\ \hline
+    nodeNumbers &     NodeIndex2 &      &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers for beam element\\ \hline
     physicsLength &     UReal &      &     0. &      [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive\\ \hline
     physicsMassPerLength &     UReal &      &     0. &      [SI:kg/m] mass per length of beam\\ \hline
     physicsCrossSectionInertia &     UReal &      &     0. &      [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section\\ \hline
@@ -3597,7 +3926,72 @@ The item VObjectBeamGeometricallyExact2D has the following parameters:\vspace{-1
 %
 \noindent For examples on ObjectBeamGeometricallyExact2D see Examples and TestModels:
 \bi
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeam2Dtest.py}{\texttt{geometricallyExactBeam2Dtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeam3Dtest.py}{\texttt{geometricallyExactBeam3Dtest.py}} (TestModels/)
+\ei
+
+%
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectBeamGeometricallyExact3D}
+\label{sec:item:ObjectBeamGeometricallyExact3D}
+OBJECT UNDER CONSTRUCTION: A 3D geometrically exact beam finite element, currently using two 3D rigid body nodes. The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes.\vspace{12pt}
+ \\{\bf Additional information for ObjectBeamGeometricallyExact3D}:
+\bi
+  \item The Object has the following types = \texttt{Body}, \texttt{MultiNoded}
+  \item Requested node type = \texttt{Position} + \texttt{Orientation}
+  \item {\bf Short name} for Python = {\bf Beam3D}  \item {\bf Short name} for Python (visualization object) = {\bf VBeam3D}\ei
+\vspace{12pt} \noindent The item {\bf ObjectBeamGeometricallyExact3D} with type = 'BeamGeometricallyExact3D' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     objects's unique name\\ \hline
+    nodeNumbers &     NodeIndex2 &      &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers for beam element\\ \hline
+    physicsLength &     PReal &      &     0. &      [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive\\ \hline
+    sectionData &     BeamSection &      &     BeamSection() &     data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.\\ \hline
+    visualization & VObjectBeamGeometricallyExact3D & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectBeamGeometricallyExact3D has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown; geometry is defined by sectionGeometry\\ \hline
+    sectionGeometry &     BeamSectionGeometry &     \tabnewline  &     \tabnewline BeamSectionGeometry() &     \tabnewline defines cross section shape used for visualization and contact\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+\par\noindent\rule{\textwidth}{0.4pt}
+\mysubsubsubsection{DESCRIPTION of ObjectBeamGeometricallyExact3D:}
+\label{description_ObjectBeamGeometricallyExact3D}
+\paragraph{Information on input parameters:} 
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{physicsLength}{$L$}{}
+\finishTable
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
+\rowTable{Position}{}{global position vector of local axis (1) and cross section (2) position}
+\rowTable{Displacement}{}{global displacement vector of local axis (1) and cross section (2) position}
+\rowTable{Velocity}{}{global velocity vector of local axis (1) and cross section (2) position}
+\rowTable{Rotation}{}{3D Tait-Bryan rotation components, containing rotation around $z$-axis only}
+\rowTable{StrainLocal}{}{6 strain components, containing only axial ($xx$) and shear strain ($xy$)}
+\rowTable{CurvatureLocal}{}{3D vector of curvature, containing only curvature w.r.t. $z$-axis}
+\finishTable
+ \noindent
+    Detailed description coming later.
+\vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
+%
+\noindent For examples on ObjectBeamGeometricallyExact3D see Examples and TestModels:
+\bi
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeam3Dtest.py}{\texttt{geometricallyExactBeam3Dtest.py}} (TestModels/)
 \ei
 
 %
@@ -3626,7 +4020,7 @@ A generic joint in 3D; constrains components of the absolute position and rotati
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     constrainedAxes &     ArrayIndex &     6 &     [1,1,1,1,1,1] &     \tabnewline flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis\\ \hline
     rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0\\ \hline
     rotationMarker1 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1\\ \hline
@@ -3861,7 +4255,7 @@ A revolute joint in 3D; constrains the position of two rigid body markers and th
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0\\ \hline
     rotationMarker1 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
@@ -4015,7 +4409,7 @@ A prismatic joint in 3D; constrains the relative rotation of two rigid body mark
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0\\ \hline
     rotationMarker1 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
@@ -4137,7 +4531,7 @@ A spherical joint, which constrains the relative translation between two positio
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector; $m1$ is the moving coin rigid body and $m0$ is the marker for the ground body, which use the localPosition=[0,0,0] for this marker!\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector; $m1$ is the moving coin rigid body and $m0$ is the marker for the ground body, which use the localPosition=[0,0,0] for this marker!\\ \hline
     constrainedAxes &     ArrayIndex &     3 &     [1,1,1] &     \tabnewline flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     visualization & VObjectJointSpherical & & & parameters for visualization of item \\ \hline
@@ -4255,7 +4649,7 @@ A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector; $m0$ represents the ground and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector; $m0$ represents the ground and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point\\ \hline
     constrainedAxes &     ArrayIndex &     3 &     [1,1,1] &     \tabnewline flag, which determines which constraints are active, in which $j_0,j_1$ represent the tangential motion and $j_2$ represents the normal (contact) direction\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     discRadius &     PReal &      &     0 &     defines the disc radius\\ \hline
@@ -4400,7 +4794,7 @@ A revolute joint in 2D; constrains the absolute 2D position of two points given 
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     visualization & VObjectJointRevolute2D & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -4465,7 +4859,7 @@ A prismatic joint in 2D; allows the relative motion of two bodies, using two Rig
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     axisMarker0 &     Vector3D &      &     [1.,0.,0.] &     \tabnewline direction of prismatic axis, given as a 3D vector in Marker0 frame\\ \hline
     normalMarker1 &     Vector3D &      &     [0.,1.,0.] &     \tabnewline direction of normal to prismatic axis, given as a 3D vector in Marker1 frame\\ \hline
     constrainRotation &     Bool &      &     True &     flag, which determines, if the connector also constrains the relative rotation of the two objects; if set to false, the constraint will keep an algebraic equation set equal zero\\ \hline
@@ -4520,10 +4914,10 @@ A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1)
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline marker m0: position or rigid body marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline marker m0: position or rigid body marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)\\ \hline
     slidingMarkerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [] &     these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker $m_{si}$ at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1)\\ \hline
     slidingMarkerOffsets &     Vector &      &     [] &     this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker m0: offset=0, marker m1: offset=Length(cable0), marker m2: offset=Length(cable0)+Length(cable1), ...\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position\\ \hline
     classicalFormulation &     Bool &      &     True &     True: uses a formulation with 3 (+1) equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; False: use local formulation, which only needs 2 (+1) equations and can be used with index 2 formulation\\ \hline
     constrainRotation &     Bool &      &     False &     True: add constraint on rotation of marker m0 relative to slope (if True, marker m0 must be a rigid body marker); False: marker m0 body can rotate freely\\ \hline
     axialForce &     Real &      &     0 &     ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions.\\ \hline
@@ -4721,11 +5115,11 @@ A specialized axially moving joint (without rotation) in 2D between a ALE Cable2
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline marker m0: position-marker of mass point or rigid body; marker m1: updated marker to ANCF Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline marker m0: position-marker of mass point or rigid body; marker m1: updated marker to ANCF Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)\\ \hline
     slidingMarkerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [] &     a list of sn (global) marker numbers which are are used to update marker1\\ \hline
     slidingMarkerOffsets &     Vector &      &     [] &     this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker0: offset=0, marker1: offset=Length(cable0), marker2: offset=Length(cable0)+Length(cable1), ...\\ \hline
     slidingOffset &     Real &      &     0. &     sliding offset list [SI:m]: a list of sn scalar offsets, which represent the (reference arc) length of all previous sliding cable elements\\ \hline
-    nodeNumbers &     ArrayNodeIndex &      &     [ MAXINT, MAXINT ] &     \tabnewline node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one \hac{ODE2} coordinate\\ \hline
+    nodeNumbers &     ArrayNodeIndex &      &     [ invalid [-1], invalid [-1] ] &     \tabnewline node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one \hac{ODE2} coordinate\\ \hline
     usePenaltyFormulation &     Bool &      &     False &     flag, which determines, if the connector is formulated with penalty, but still using algebraic equations (IsPenaltyConnector() still false)\\ \hline
     penaltyStiffness &     Real &      &     0. &     penalty stiffness [SI:N/m] used if usePenaltyFormulation=True\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
@@ -4899,7 +5293,7 @@ An simple spring-damper element with additional force; connects to position-base
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     referenceLength &     PReal &      &     0. &     reference length [SI:m] of spring\\ \hline
     stiffness &     UReal &      &     0. &     stiffness [SI:N/m] of spring; acts against (length-initialLength)\\ \hline
     damping &     UReal &      &     0. &     damping [SI:N/(m s)] of damper; acts against d/dt(length)\\ \hline
@@ -5173,7 +5567,7 @@ An 3D spring-damper element, providing springs and dampers in three (global) dir
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     stiffness &     Vector3D &      &     [0.,0.,0.] &     \tabnewline stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction\\ \hline
     damping &     Vector3D &      &     [0.,0.,0.] &     \tabnewline damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction\\ \hline
     offset &     Vector3D &      &     [0.,0.,0.] &     \tabnewline offset between two springs\\ \hline
@@ -5401,10 +5795,10 @@ An 3D spring-damper element acting on relative displacements and relative rotati
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number of a NodeGenericData (size depends on application) for dataCoordinates for user functions (e.g., implementing contact/friction user function)\\ \hline
-    stiffness &     Matrix6D &      &     np.zeros([6,6]) &     stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles); in the simplest case, the first 3 diagonal values correspond to the local stiffness in x,y,z direction and the last 3 diagonal values correspond to the rotational stiffness around x,y and z axis\\ \hline
-    damping &     Matrix6D &      &     np.zeros([6,6]) &     damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData (size depends on application) for dataCoordinates for user functions (e.g., implementing contact/friction user function)\\ \hline
+    stiffness &     Matrix6D &      &     np.zeros((6,6)) &     stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles); in the simplest case, the first 3 diagonal values correspond to the local stiffness in x,y,z direction and the last 3 diagonal values correspond to the rotational stiffness around x,y and z axis\\ \hline
+    damping &     Matrix6D &      &     np.zeros((6,6)) &     damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector\\ \hline
     rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0\\ \hline
     rotationMarker1 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1\\ \hline
     offset &     Vector6D &      &     [0.,0.,0.,0.,0.,0.] &     \tabnewline translational and rotational offset considered in the spring force calculation\\ \hline
@@ -5617,8 +6011,8 @@ An torsional spring-damper element acting on relative rotations around Z-axis of
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number of a NodeGenericData with 1 dataCoordinate for continuous rotation reconstruction; if this node is left to invalid index, it will not be used\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData with 1 dataCoordinate for continuous rotation reconstruction; if this node is left to invalid index, it will not be used\\ \hline
     stiffness &     Real &      &     0. &     torsional stiffness [SI:Nm/rad] against relative rotation\\ \hline
     damping &     Real &      &     0. &     torsional damping [SI:Nm/(rad/s)]\\ \hline
     rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 0; transforms joint into marker coordinates\\ \hline
@@ -5790,7 +6184,7 @@ A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates; con
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     stiffness &     Real &      &     0. &     stiffness [SI:N/m] of spring; acts against relative value of coordinates\\ \hline
     damping &     Real &      &     0. &     damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates\\ \hline
     offset &     Real &      &     0. &     offset between two coordinates (reference length of springs), see equation\\ \hline
@@ -5973,7 +6367,7 @@ A connector for additing forces due to gravitational fields beween two bodies, w
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     gravitationalConstant &     Real &      &     6.67430e-11 &     gravitational constant [SI:m$^3$kg$^{-1}$s$^{-2}$)]; while not recommended, a negative constant gan represent a repulsive force\\ \hline
     mass0 &     UReal &      &     0. &     mass [SI:kg] of object attached to marker $m0$\\ \hline
     mass1 &     UReal &      &     0. &     mass [SI:kg] of object attached to marker $m1$\\ \hline
@@ -6169,8 +6563,8 @@ A (flexible) connector representing a rolling rigid disc (marker 1) on a flat su
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector; $m0$ represents the ground, which can undergo translations but not rotations, and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector; $m0$ represents the ground, which can undergo translations but not rotations, and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)\\ \hline
     dryFrictionAngle &     Real &      &     0. &     angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle\\ \hline
     contactStiffness &     Real &      &     0. &     normal contact stiffness [SI:N/m]\\ \hline
     contactDamping &     Real &      &     0. &     normal contact damping [SI:N/(m s)]\\ \hline
@@ -6376,8 +6770,8 @@ A contact connector representing a convex roll (marker 1) on a flat surface (mar
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector; $m0$ represents the ground, which can undergo translations but not rotations, and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the roll's center point\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector; $m0$ represents the ground, which can undergo translations but not rotations, and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the roll's center point\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)\\ \hline
     contactStiffness &     Real &      &     0. &     normal contact stiffness [SI:N/m]\\ \hline
     contactDamping &     Real &      &     0. &     normal contact damping [SI:N/(m s)]\\ \hline
     dynamicFriction &     UReal &      &     0. &     dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}\\ \hline
@@ -6541,8 +6935,8 @@ A penalty-based contact condition for one coordinate; the contact gap $g$ is def
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline markers define contact gap\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number of a NodeGenericData for 1 dataCoordinate (used for active set strategy ==> holds the gap of the last discontinuous iteration)\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline markers define contact gap\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData for 1 dataCoordinate (used for active set strategy ==> holds the gap of the last discontinuous iteration)\\ \hline
     contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m]; acts only upon penetration\\ \hline
     contactDamping &     UReal &      &     0. &     contact damping [SI:N/(m s)]; acts only upon penetration\\ \hline
     offset &     Real &      &     0. &     offset [SI:m] of contact\\ \hline
@@ -6596,8 +6990,8 @@ A very specialized penalty-based contact condition between a 2D circle (=marker0
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline markers define contact gap\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number of a NodeGenericData for nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline markers define contact gap\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData for nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)\\ \hline
     numberOfContactSegments &     Index &      &     3 &     number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker\\ \hline
     contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration\\ \hline
     contactDamping &     UReal &      &     0. &     contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration\\ \hline
@@ -6662,8 +7056,8 @@ A very specialized penalty-based contact/friction condition between a 2D circle 
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline a marker $m0$ with position and orientation  and a marker $m1$ of type BodyCable2DShape; together defining the contact geometry\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number of a NodeGenericData with 3 $\times n_{cs}$  dataCoordinates (used for active set strategy $\ra$ hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*$n_{cs}$+[-2]*$n_{cs}$+[0.]*$n_{cs}$, meaning that there is no initial contact with undefined slip/stick\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline a marker $m0$ with position and orientation  and a marker $m1$ of type BodyCable2DShape; together defining the contact geometry\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData with 3 $\times n_{cs}$  dataCoordinates (used for active set strategy $\ra$ hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*$n_{cs}$+[-2]*$n_{cs}$+[0.]*$n_{cs}$, meaning that there is no initial contact with undefined slip/stick\\ \hline
     numberOfContactSegments &     PInt &      &     3 &     number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker\\ \hline
     contactStiffness &     UReal &      &     0. &     contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_n$ act in contact normal direction only upon penetration\\ \hline
     contactDamping &     UReal &      &     0. &     contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration\\ \hline
@@ -7100,7 +7494,7 @@ Connector which enforces constant or prescribed distance between two bodies/node
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     distance &     UReal &      &     0. &     prescribed distance [SI:m] of the used markers\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint\\ \hline
     visualization & VObjectConnectorDistance & & & parameters for visualization of item \\ \hline
@@ -7219,7 +7613,7 @@ A coordinate constraint which constrains two (scalar) coordinates of Marker[Node
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     offset &     Real &      &     0. &     An offset between the two values\\ \hline
     factorValue1 &     Real &      &     1. &     An additional factor multiplied with value1 used in algebraic equation\\ \hline
     velocityLevel &     Bool &      &     False &     If true: connector constrains velocities (only works for \hac{ODE2} coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored\\ \hline
@@ -7410,8 +7804,8 @@ The item VObjectConnectorCoordinate has the following parameters:\vspace{-1cm}\\
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -7436,7 +7830,7 @@ A constraint which constrains the coordinate vectors of two markers Marker[Node|
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
-    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ MAXINT, MAXINT ] &     \tabnewline list of markers used in connector\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     scalingMarker0 &     NumpyMatrix &      &     Matrix[] &     linear scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format\\ \hline
     scalingMarker1 &     NumpyMatrix &      &     Matrix[] &     linear scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format\\ \hline
     quadraticTermMarker0 &     NumpyMatrix &      &     Matrix[] &     quadratic scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format\\ \hline
@@ -7818,7 +8212,7 @@ A marker attached to the body mass; use this marker to apply a body-load (e.g. g
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     ObjectIndex &      &     MAXINT &     \tabnewline body number to which marker is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     invalid (-1) &     \tabnewline body number to which marker is attached to\\ \hline
     visualization & VMarkerBodyMass & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -7879,7 +8273,7 @@ A position body-marker attached to a local (body-fixed) position $\pLocB = [b_0,
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     ObjectIndex &      &     MAXINT &     \tabnewline body number to which marker is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     invalid (-1) &     \tabnewline body number to which marker is attached to\\ \hline
     localPosition &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline local body position of marker; e.g. local (body-fixed) position where force is applied to\\ \hline
     visualization & VMarkerBodyPosition & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -7945,7 +8339,7 @@ A rigid-body (position+orientation) body-marker attached to a local (body-fixed)
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     ObjectIndex &      &     MAXINT &     \tabnewline body number to which marker is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     invalid (-1) &     \tabnewline body number to which marker is attached to\\ \hline
     localPosition &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline local body position of marker; e.g. local (body-fixed) position where force is applied to\\ \hline
     visualization & VMarkerBodyRigid & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
@@ -8011,7 +8405,7 @@ A node-Marker attached to a position-based node.\vspace{12pt}
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number to which marker is attached to\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number to which marker is attached to\\ \hline
     visualization & VMarkerNodePosition & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -8047,8 +8441,8 @@ The item VMarkerNodePosition has the following parameters:\vspace{-1cm}\\
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -8072,7 +8466,7 @@ A rigid-body (position+orientation) node-marker attached to a rigid-body node.\v
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number to which marker is attached to\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number to which marker is attached to\\ \hline
     visualization & VMarkerNodeRigid & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -8107,9 +8501,9 @@ The item VMarkerNodeRigid has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/objectFFRFreducedOrderNetgen.py}{\texttt{objectFFRFreducedOrderNetgen.py}} (Examples/)
 \item  ...
 
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -8133,8 +8527,8 @@ A node-Marker attached to a \hac{ODE2} coordinate of a node; this marker allows 
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number to which marker is attached to\\ \hline
-    coordinate &     UInt &      &     MAXINT &     \tabnewline coordinate of node to which marker is attached to\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number to which marker is attached to\\ \hline
+    coordinate &     UInt &      &     invalid (-1) &     \tabnewline coordinate of node to which marker is attached to\\ \hline
     visualization & VMarkerNodeCoordinate & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -8170,8 +8564,8 @@ The item VMarkerNodeCoordinate has the following parameters:\vspace{-1cm}\\
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -8195,7 +8589,7 @@ A node-Marker attached to all \hac{ODE2} coordinates of a node; IN CONTRAST to M
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number to which marker is attached to\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number to which marker is attached to\\ \hline
     visualization & VMarkerNodeCoordinates & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -8240,8 +8634,8 @@ A node-Marker attached to a \hac{ODE1} coordinate of a node.\vspace{12pt}
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number to which marker is attached to\\ \hline
-    coordinate &     UInt &      &     MAXINT &     \tabnewline coordinate of node to which marker is attached to\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number to which marker is attached to\\ \hline
+    coordinate &     UInt &      &     invalid (-1) &     \tabnewline coordinate of node to which marker is attached to\\ \hline
     visualization & VMarkerNodeODE1Coordinate & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -8273,8 +8667,8 @@ A node-Marker attached to a a node containing rotation; the Marker measures a ro
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number to which marker is attached to\\ \hline
-    rotationCoordinate &     UInt &      &     MAXINT &     \tabnewline rotation coordinate: 0=x, 1=y, 2=z\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number to which marker is attached to\\ \hline
+    rotationCoordinate &     UInt &      &     invalid (-1) &     \tabnewline rotation coordinate: 0=x, 1=y, 2=z\\ \hline
     visualization & VMarkerNodeRotationCoordinate & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -8319,7 +8713,7 @@ A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericO
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     ObjectIndex &      &     MAXINT &     \tabnewline body number to which marker is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     invalid (-1) &     \tabnewline body number to which marker is attached to\\ \hline
     meshNodeNumbers &     ArrayIndex &      &     [] &     a list of $n_m$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers\\ \hline
     weightingFactors &     Vector &      &     [] &     a list of $n_m$ weighting factors per node to compute the final local position; the sum of these weights shall be 1, such that a summation of all nodal positions times weights gives the average position of the marker\\ \hline
     visualization & VMarkerSuperElementPosition & & & parameters for visualization of item \\ \hline
@@ -8452,7 +8846,7 @@ A position and orientation (rigid-body) marker attached to a SuperElement, such 
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     ObjectIndex &      &     MAXINT &     \tabnewline body number to which marker is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     invalid (-1) &     \tabnewline body number to which marker is attached to\\ \hline
     offset &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline local marker SuperElement reference position offset used to correct the center point of the marker, which is computed from the weighted average of reference node positions (which may have some offset to the desired joint position). Note that this offset shall be small and larger offsets can cause instability in simulation models (better to have symmetric meshes at joints).\\ \hline
     meshNodeNumbers &     ArrayIndex &      &     [] &     a list of $n_m$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position and orientation; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers\\ \hline
     weightingFactors &     Vector &      &     [] &     a list of $n_m$ weighting factors per node to compute the final local position and orientation; these factors could be based on surface integrals of the constrained mesh faces\\ \hline
@@ -8699,7 +9093,7 @@ A Marker attached to all coordinates of an object (currently only body is possib
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    objectNumber &     ObjectIndex &      &     MAXINT &     \tabnewline body number to which marker is attached to\\ \hline
+    objectNumber &     ObjectIndex &      &     invalid (-1) &     \tabnewline body number to which marker is attached to\\ \hline
     visualization & VMarkerObjectODE2Coordinates & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -8742,7 +9136,7 @@ A special Marker attached to a 2D ANCF beam finite element with cubic interpolat
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     ObjectIndex &      &     MAXINT &     \tabnewline body number to which marker is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     invalid (-1) &     \tabnewline body number to which marker is attached to\\ \hline
     numberOfSegments &     PInt &      &     3 &     number of number of segments; each segment is a line and is associated to a data (history) variable; must be same as in according contact element\\ \hline
     verticalOffset &     Real &      &     0. &     vertical offset from beam axis in positive (local) Y-direction; this offset accounts for consistent computation of positions and velocities at the surface of the beam\\ \hline
     visualization & VMarkerBodyCable2DShape & & & parameters for visualization of item \\ \hline
@@ -8797,7 +9191,7 @@ A special Marker attached to the coordinates of a 2D ANCF beam finite element wi
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
-    bodyNumber &     ObjectIndex &      &     MAXINT &     \tabnewline body number to which marker is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     invalid (-1) &     \tabnewline body number to which marker is attached to\\ \hline
     visualization & VMarkerBodyCable2DCoordinates & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -8851,7 +9245,7 @@ Load with (3D) force vector; attached to position-based marker.\vspace{12pt}
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     load's unique name\\ \hline
-    markerNumber &     MarkerIndex &      &     MAXINT &     \tabnewline marker's number to which load is applied\\ \hline
+    markerNumber &     MarkerIndex &      &     invalid (-1) &     \tabnewline marker's number to which load is applied\\ \hline
     loadVector &     Vector3D &      &     [0.,0.,0.] &     \tabnewline vector-valued load [SI:N]\\ \hline
     bodyFixed &     Bool &      &     False &     if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used\\ \hline
     loadVectorUserFunction &     PyFunctionVector3DmbsScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A Python function which defines the time-dependent load; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object\\ \hline
@@ -8943,7 +9337,7 @@ Load with (3D) torque vector; attached to rigidbody-based marker.\vspace{12pt}
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     load's unique name\\ \hline
-    markerNumber &     MarkerIndex &      &     MAXINT &     \tabnewline marker's number to which load is applied\\ \hline
+    markerNumber &     MarkerIndex &      &     invalid (-1) &     \tabnewline marker's number to which load is applied\\ \hline
     loadVector &     Vector3D &      &     [0.,0.,0.] &     \tabnewline vector-valued load [SI:N]\\ \hline
     bodyFixed &     Bool &      &     False &     if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower torque; if false: global coordinates are used\\ \hline
     loadVectorUserFunction &     PyFunctionVector3DmbsScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]\\ \hline
@@ -9011,7 +9405,7 @@ The item VLoadTorqueVector has the following parameters:\vspace{-1cm}\\
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -9035,7 +9429,7 @@ Load attached to MarkerBodyMass marker, applying a 3D vector load (e.g. the vect
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     load's unique name\\ \hline
-    markerNumber &     MarkerIndex &      &     MAXINT &     \tabnewline marker's number to which load is applied\\ \hline
+    markerNumber &     MarkerIndex &      &     invalid (-1) &     \tabnewline marker's number to which load is applied\\ \hline
     loadVector &     Vector3D &      &     [0.,0.,0.] &     \tabnewline vector-valued load [SI:N/kg = m/s$^2$]; typically, this will be the gravity vector in global coordinates\\ \hline
     loadVectorUserFunction &     PyFunctionVector3DmbsScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!\\ \hline
     visualization & VLoadMassProportional & & & parameters for visualization of item \\ \hline
@@ -9140,7 +9534,7 @@ Load with scalar value, which is attached to a coordinate-based marker; the load
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     load's unique name\\ \hline
-    markerNumber &     MarkerIndex &      &     MAXINT &     \tabnewline marker's number to which load is applied\\ \hline
+    markerNumber &     MarkerIndex &      &     invalid (-1) &     \tabnewline marker's number to which load is applied\\ \hline
     load &     Real &      &     0. &     scalar load [SI:N]\\ \hline
     loadUserFunction &     PyFunctionMbsScalar2 &     \tabnewline  &     \tabnewline 0 &     A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!\\ \hline
     visualization & VLoadCoordinate & & & parameters for visualization of item \\ \hline
@@ -9240,7 +9634,7 @@ A sensor attached to a \hac{ODE2} or \hac{ODE1} node. The sensor measures Output
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     sensor's unique name\\ \hline
-    nodeNumber &     NodeIndex &      &     MAXINT &     \tabnewline node number to which sensor is attached to\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number to which sensor is attached to\\ \hline
     writeToFile &     Bool &      &     True &     True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''\\ \hline
     fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
     outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::\_None &     \tabnewline OutputVariableType for sensor\\ \hline
@@ -9269,6 +9663,7 @@ The item VSensorNode has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py}{\texttt{beltDriveReevingSystem.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py}{\texttt{geneticOptimizationSliderCrank.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/gyroStability.py}{\texttt{gyroStability.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py}{\texttt{kinematicTreeAndMBS.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionODE1.py}{\texttt{lugreFrictionODE1.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionTest.py}{\texttt{lugreFrictionTest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py}{\texttt{massSpringFrictionInteractive.py}} (Examples/)
@@ -9276,7 +9671,6 @@ The item VSensorNode has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py}{\texttt{particleClusters.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/plotSensorExamples.py}{\texttt{plotSensorExamples.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystem.py}{\texttt{reevingSystem.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TestModels/)
@@ -9301,7 +9695,7 @@ A sensor attached to any object except bodies  (connectors, constraint, spring-d
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     sensor's unique name\\ \hline
-    objectNumber &     ObjectIndex &      &     MAXINT &     \tabnewline object (e.g. connector) number to which sensor is attached to\\ \hline
+    objectNumber &     ObjectIndex &      &     invalid (-1) &     \tabnewline object (e.g. connector) number to which sensor is attached to\\ \hline
     writeToFile &     Bool &      &     True &     True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''\\ \hline
     fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
     outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::\_None &     \tabnewline OutputVariableType for sensor\\ \hline
@@ -9362,7 +9756,7 @@ A sensor attached to a body-object with local position $\pLocB$. As a difference
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     sensor's unique name\\ \hline
-    bodyNumber &     ObjectIndex &      &     MAXINT &     \tabnewline body (=object) number to which sensor is attached to\\ \hline
+    bodyNumber &     ObjectIndex &      &     invalid (-1) &     \tabnewline body (=object) number to which sensor is attached to\\ \hline
     localPosition &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline local (body-fixed) body position of sensor\\ \hline
     writeToFile &     Bool &      &     True &     True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''\\ \hline
     fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
@@ -9428,8 +9822,8 @@ A sensor attached to a SuperElement-object with mesh node number. As a differenc
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     sensor's unique name\\ \hline
-    bodyNumber &     ObjectIndex &      &     MAXINT &     \tabnewline body (=object) number to which sensor is attached to\\ \hline
-    meshNodeNumber &     UInt &      &     MAXINT &     \tabnewline mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder\\ \hline
+    bodyNumber &     ObjectIndex &      &     invalid (-1) &     \tabnewline body (=object) number to which sensor is attached to\\ \hline
+    meshNodeNumber &     UInt &      &     invalid (-1) &     \tabnewline mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder\\ \hline
     writeToFile &     Bool &      &     True &     True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''\\ \hline
     fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
     outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::\_None &     \tabnewline OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, \refSection{sec:objectffrfreducedorder:superelementoutput})\\ \hline
@@ -9485,7 +9879,7 @@ A sensor attached to a marker. The sensor measures the selected marker values an
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     sensor's unique name\\ \hline
-    markerNumber &     MarkerIndex &      &     MAXINT &     \tabnewline marker number to which sensor is attached to\\ \hline
+    markerNumber &     MarkerIndex &      &     invalid (-1) &     \tabnewline marker number to which sensor is attached to\\ \hline
     writeToFile &     Bool &      &     True &     True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''\\ \hline
     fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
     outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::\_None &     \tabnewline OutputVariableType for sensor; output variables are only possible according to markertype, see general description of SensorMarker\\ \hline
@@ -9533,7 +9927,7 @@ A sensor attached to a load. The sensor measures the load values and outputs val
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     sensor's unique name\\ \hline
-    loadNumber &     LoadIndex &      &     MAXINT &     \tabnewline load number to which sensor is attached to\\ \hline
+    loadNumber &     LoadIndex &      &     invalid (-1) &     \tabnewline load number to which sensor is attached to\\ \hline
     writeToFile &     Bool &      &     True &     True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''\\ \hline
     fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
     storeInternal &     Bool &      &     False &     true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available\\ \hline
@@ -9667,6 +10061,7 @@ The item VSensorUserFunction has the following parameters:\vspace{-1cm}\\
 \noindent For examples on SensorUserFunction see Examples and TestModels:
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py}{\texttt{kinematicTreeAndMBS.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionODE1.py}{\texttt{lugreFrictionODE1.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionTest.py}{\texttt{lugreFrictionTest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismRedundant.py}{\texttt{fourBarMechanismRedundant.py}} (TestModels/)

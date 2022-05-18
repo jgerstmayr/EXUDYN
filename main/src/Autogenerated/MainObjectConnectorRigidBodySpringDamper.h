@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:59 (last modified)
+* @date         2022-05-16  11:24:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,11 +114,11 @@ public: // AUTO:
     {
         cObjectConnectorRigidBodySpringDamper->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { cObjectConnectorRigidBodySpringDamper->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        EPyUtils::SetMatrix6DSafely(d, "stiffness", cObjectConnectorRigidBodySpringDamper->GetParameters().stiffness); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetMatrix6DSafely(d, "damping", cObjectConnectorRigidBodySpringDamper->GetParameters().damping); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetMatrix3DSafely(d, "rotationMarker0", cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetMatrix3DSafely(d, "rotationMarker1", cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::SetVector6DSafely(d, "offset", cObjectConnectorRigidBodySpringDamper->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/} 
+        EPyUtils::SetConstMatrixTemplateSafely<6,6>(d, "stiffness", cObjectConnectorRigidBodySpringDamper->GetParameters().stiffness); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::SetConstMatrixTemplateSafely<6,6>(d, "damping", cObjectConnectorRigidBodySpringDamper->GetParameters().damping); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::SetConstMatrixTemplateSafely<3,3>(d, "rotationMarker0", cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::SetConstMatrixTemplateSafely<3,3>(d, "rotationMarker1", cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 6>(d, "offset", cObjectConnectorRigidBodySpringDamper->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "springForceTorqueUserFunction")) { if (EPyUtils::CheckForValidFunction(d["springForceTorqueUserFunction"])) 
             { cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>>((py::function)d["springForceTorqueUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
@@ -191,11 +191,11 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { cObjectConnectorRigidBodySpringDamper->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { cObjectConnectorRigidBodySpringDamper->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("stiffness") == 0) { EPyUtils::SetMatrix6DSafely(value, cObjectConnectorRigidBodySpringDamper->GetParameters().stiffness); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("damping") == 0) { EPyUtils::SetMatrix6DSafely(value, cObjectConnectorRigidBodySpringDamper->GetParameters().damping); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::SetMatrix3DSafely(value, cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::SetMatrix3DSafely(value, cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("offset") == 0) { EPyUtils::SetVector6DSafely(value, cObjectConnectorRigidBodySpringDamper->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("stiffness") == 0) { EPyUtils::SetConstMatrixTemplateSafely<6,6>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().stiffness); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("damping") == 0) { EPyUtils::SetConstMatrixTemplateSafely<6,6>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().damping); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("offset") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 6>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("springForceTorqueUserFunction") == 0) { if (py::isinstance<py::function>(value)) {cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction = py::cast<std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D, StdMatrix6D,StdMatrix6D, StdMatrix3D,StdMatrix3D, StdVector6D)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else
             if (!EPyUtils::IsPyTypeInteger(value) || (py::cast<int>(value) != 0)) {PyError(STDstring("Failed to convert PyFunction: must be either valid python function or 0, but got ")+EXUstd::ToString(value)); }; } //! AUTO: get parameter

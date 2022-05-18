@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-03-16  23:48:44 (last modified)
+* @date         2022-05-16  11:24:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -116,8 +116,8 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { cObjectConnectorTorsionalSpringDamper->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         cObjectConnectorTorsionalSpringDamper->GetParameters().stiffness = py::cast<Real>(d["stiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorTorsionalSpringDamper->GetParameters().damping = py::cast<Real>(d["damping"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetMatrix3DSafely(d, "rotationMarker0", cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetMatrix3DSafely(d, "rotationMarker1", cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::SetConstMatrixTemplateSafely<3,3>(d, "rotationMarker0", cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::SetConstMatrixTemplateSafely<3,3>(d, "rotationMarker1", cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "offset")) { cObjectConnectorTorsionalSpringDamper->GetParameters().offset = py::cast<Real>(d["offset"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "velocityOffset")) { cObjectConnectorTorsionalSpringDamper->GetParameters().velocityOffset = py::cast<Real>(d["velocityOffset"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "torque")) { cObjectConnectorTorsionalSpringDamper->GetParameters().torque = py::cast<Real>(d["torque"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -190,8 +190,8 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumber") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("stiffness") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().stiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("damping") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().damping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::SetMatrix3DSafely(value, cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::SetMatrix3DSafely(value, cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().offset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("velocityOffset") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().velocityOffset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("torque") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().torque = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

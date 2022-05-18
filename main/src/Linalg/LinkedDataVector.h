@@ -90,6 +90,17 @@ public:
 		this->data = const_cast<T*>(ptr); //needed, if vector passed as const ... workaround
 		this->numberOfItems = numberOfItemsLinked;
 	}
+
+	//! Initialize LinkedDataVectorBase by data given data pointer and size 
+	LinkedDataVectorBase(const T* ptr, Index numberOfItemsLinked) : VectorBase<T>()
+	{
+		if (numberOfItemsLinked) //otherwise, data and numberOfItems are initialized as 0 / nullptr
+		{
+			this->data = const_cast<T*>(ptr); //needed, if vector passed as const ... workaround
+			this->numberOfItems = numberOfItemsLinked; //0 is also possible (appears, if e.g. no ODE2, AE or ODE1 coordinates)
+		}
+	}
+
 	template<Index dataSize>
 	LinkedDataVectorBase(const ConstSizeVectorBase<T, dataSize>& vector) : VectorBase<T>()
 	{

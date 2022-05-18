@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectKinematicTree
-* @brief        A special object to represent open kinematic trees using minimum coordinate formulation (UNDER DEVELOPMENT!).
+* @brief        A special object to represent open kinematic trees using minimum coordinate formulation (UNDER DEVELOPMENT!). The kinematic tree is defined by lists of joint types, parents, inertia parameters, etc.\ per link (body). Every link is defined by a previous joint and a coordinate transformation from the previous link to this link's joint coordinates. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-04-21  02:15:43 (last modified)
+* @date         2022-05-05  09:56:57 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -25,23 +25,40 @@
 class VisualizationObjectKinematicTree: public VisualizationObjectSuperElement // AUTO: 
 {
 protected: // AUTO: 
+    bool showLinks;                               //!< AUTO: set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link
+    bool showJoints;                              //!< AUTO: set true, if joints shall be shown; if graphicsDataList is empty, a standard drawing for joints is used (drawing a cylinder for revolute joints; size relative to frame size in KinematicTree visualization settings)
     Float4 color;                                 //!< AUTO: RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used
-    MatrixI triangleMesh;                         //!< AUTO: a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!
-    bool showNodes;                               //!< AUTO: set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'
-    std::function<py::object(const MainSystem&, Index)> graphicsDataUserFunction;//!< AUTO: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization
+    MatrixI triangleMesh;                         //!< AUTO: unused in KinematicTree
+    bool showNodes;                               //!< AUTO: unused in KinematicTree
+    BodyGraphicsDataList graphicsDataList;        //!< AUTO: Structure contains data for link/joint visualization; data is defined as list of BodyGraphicdData where every BodyGraphicdData corresponds to one link/joint; must either be emtpy list or length must agree with number of links
 
 public: // AUTO: 
     //! AUTO: default constructor with parameter initialization
     VisualizationObjectKinematicTree()
     {
         show = true;
+        showLinks = true;
+        showJoints = true;
         color = Float4({-1.f,-1.f,-1.f,-1.f});
         triangleMesh = MatrixI();
         showNodes = false;
-        graphicsDataUserFunction = 0;
     };
 
     // AUTO: access functions
+    //! AUTO:  Write (Reference) access to:set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link
+    void SetShowLinks(const bool& value) { showLinks = value; }
+    //! AUTO:  Read (Reference) access to:set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link
+    const bool& GetShowLinks() const { return showLinks; }
+    //! AUTO:  Read (Reference) access to:set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link
+    bool& GetShowLinks() { return showLinks; }
+
+    //! AUTO:  Write (Reference) access to:set true, if joints shall be shown; if graphicsDataList is empty, a standard drawing for joints is used (drawing a cylinder for revolute joints; size relative to frame size in KinematicTree visualization settings)
+    void SetShowJoints(const bool& value) { showJoints = value; }
+    //! AUTO:  Read (Reference) access to:set true, if joints shall be shown; if graphicsDataList is empty, a standard drawing for joints is used (drawing a cylinder for revolute joints; size relative to frame size in KinematicTree visualization settings)
+    const bool& GetShowJoints() const { return showJoints; }
+    //! AUTO:  Read (Reference) access to:set true, if joints shall be shown; if graphicsDataList is empty, a standard drawing for joints is used (drawing a cylinder for revolute joints; size relative to frame size in KinematicTree visualization settings)
+    bool& GetShowJoints() { return showJoints; }
+
     //! AUTO:  Write (Reference) access to:RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used
     void SetColor(const Float4& value) { color = value; }
     //! AUTO:  Read (Reference) access to:RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used
@@ -49,35 +66,35 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used
     Float4& GetColor() { return color; }
 
-    //! AUTO:  Write (Reference) access to:a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!
+    //! AUTO:  Write (Reference) access to:unused in KinematicTree
     void SetTriangleMesh(const MatrixI& value) { triangleMesh = value; }
-    //! AUTO:  Read (Reference) access to:a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!
+    //! AUTO:  Read (Reference) access to:unused in KinematicTree
     const MatrixI& GetTriangleMesh() const { return triangleMesh; }
-    //! AUTO:  Read (Reference) access to:a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!
+    //! AUTO:  Read (Reference) access to:unused in KinematicTree
     MatrixI& GetTriangleMesh() { return triangleMesh; }
 
-    //! AUTO:  Write (Reference) access to:set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'
+    //! AUTO:  Write (Reference) access to:unused in KinematicTree
     void SetShowNodes(const bool& value) { showNodes = value; }
-    //! AUTO:  Read (Reference) access to:set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'
+    //! AUTO:  Read (Reference) access to:unused in KinematicTree
     const bool& GetShowNodes() const { return showNodes; }
-    //! AUTO:  Read (Reference) access to:set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'
+    //! AUTO:  Read (Reference) access to:unused in KinematicTree
     bool& GetShowNodes() { return showNodes; }
-
-    //! AUTO:  user function which is called to update specific object graphics computed in Python functions; this is rather slow, but useful for user elements
-    virtual void CallUserFunction(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber) override;
 
     //! AUTO:  return true, if object has a user function to be called during redraw
     virtual bool HasUserFunction() const override
     {
-        return graphicsDataUserFunction!=0;
+        return false;
     }
 
-    //! AUTO:  Write (Reference) access to:A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization
-    void SetGraphicsDataUserFunction(const std::function<py::object(const MainSystem&, Index)>& value) { graphicsDataUserFunction = value; }
-    //! AUTO:  Read (Reference) access to:A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization
-    const std::function<py::object(const MainSystem&, Index)>& GetGraphicsDataUserFunction() const { return graphicsDataUserFunction; }
-    //! AUTO:  Read (Reference) access to:A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization
-    std::function<py::object(const MainSystem&, Index)>& GetGraphicsDataUserFunction() { return graphicsDataUserFunction; }
+    //! AUTO:  Write (Reference) access to:Structure contains data for link/joint visualization; data is defined as list of BodyGraphicdData where every BodyGraphicdData corresponds to one link/joint; must either be emtpy list or length must agree with number of links
+    void SetGraphicsDataList(const BodyGraphicsDataList& value) { graphicsDataList = value; }
+    //! AUTO:  Read (Reference) access to:Structure contains data for link/joint visualization; data is defined as list of BodyGraphicdData where every BodyGraphicdData corresponds to one link/joint; must either be emtpy list or length must agree with number of links
+    const BodyGraphicsDataList& GetGraphicsDataList() const { return graphicsDataList; }
+    //! AUTO:  Read (Reference) access to:Structure contains data for link/joint visualization; data is defined as list of BodyGraphicdData where every BodyGraphicdData corresponds to one link/joint; must either be emtpy list or length must agree with number of links
+    BodyGraphicsDataList& GetGraphicsDataList() { return graphicsDataList; }
+
+    //! AUTO:  Update visualizationSystem -> graphicsData for item; index shows item Number in CData
+    virtual void UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber) override;
 
 };
 

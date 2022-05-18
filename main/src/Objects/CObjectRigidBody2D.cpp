@@ -19,7 +19,7 @@
 void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
 {
 	//Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
-	//massMatrix.SetMatrix(nODE2Coordinates, nODE2Coordinates,
+	//massMatrix.SetMatrix(nODE2coordinates, nODE2coordinates,
 	//	{ parameters.physicsMass,0.,0., 
 	//	  0.,parameters.physicsMass,0., 
 	//	  0.,0.,parameters.physicsInertia });
@@ -42,7 +42,7 @@ void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 void CObjectRigidBody2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
-	ode2Lhs.SetNumberOfItems(nODE2Coordinates);
+	ode2Lhs.SetNumberOfItems(nODE2coordinates);
 	ode2Lhs.SetAll(0.);
 }
 

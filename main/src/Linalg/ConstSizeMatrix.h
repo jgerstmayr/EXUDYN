@@ -176,6 +176,42 @@ public:
 		}
 	}
 
+	//! conversion of ConstSizeMatrix into std::array<std::array<...>> (needed e.g. in pybind)
+	operator std::array <std::array<T, 3>, 3>() const
+	{
+		std::array <std::array<T, 3>, 3> matrix;
+		CHECKandTHROW((numberOfRows == 3 && numberOfColumns == 3),
+			"ConstSizeMatrixBase::operator std::array <std::array<T, 3>, 3>: invalid number of rows/columns");
+
+		for (Index rows = 0; rows < 3; rows++)
+		{
+			for (Index cols = 0; cols < 3; cols++)
+			{
+				matrix[rows][cols] = GetUnsafe(rows, cols);
+			}
+		}
+
+		return matrix;
+	}
+	//! conversion of ConstSizeMatrix into std::array<std::array<...>> (needed e.g. in pybind)
+	operator std::array <std::array<T, 6>, 6>() const
+	{
+		std::array <std::array<T, 6>, 6> matrix;
+		CHECKandTHROW((numberOfRows == 6 && numberOfColumns == 6),
+			"ConstSizeMatrixBase::operator std::array <std::array<T, 6>, 6>: invalid number of rows/columns");
+
+		for (Index rows = 0; rows < 6; rows++)
+		{
+			for (Index cols = 0; cols < 6; cols++)
+			{
+				matrix[rows][cols] = GetUnsafe(rows, cols);
+			}
+		}
+
+		return matrix;
+	}
+
+
 	//! destructor, rule of 5
 	//~ConstSizeMatrixBase<T, dataSize>()
 	//{
@@ -249,7 +285,7 @@ public:
 	void SetMatrix(Index numberOfRowsInit, Index numberOfColumnsInit, std::initializer_list<T> listOfTs)
 	{
 		CHECKandTHROW((numberOfRowsInit*numberOfColumnsInit == (Index)listOfTs.size()),
-			"Matrix::SetMatrix(Index, Index, initializer_list): inconsistent size of initializer_list");
+			"ConstSizeMatrixBase::SetMatrix(Index, Index, initializer_list): inconsistent size of initializer_list");
 		ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
 
 		Index cnt = 0;
@@ -275,6 +311,15 @@ public:
 
 	}
 
+	//Set Skew Matrix from vector v; only valid for dataSize=9; creates 3x3 matrix
+	void SetSkewMatrix(const Vector3D v)
+	{
+		CHECKandTHROW((dataSize >= 9), "ConstSizeMatrixBase::SetSkewMatrix: only valid for dataSize >= 9");
+		SetMatrix(3,3,{ 0.,  -v[2], v[1],
+						v[2],    0,-v[0],
+						-v[1], v[0],    0 });
+	}
+
 	//Set Matrix with diadic product of vectors vA . vB
 	template<class TVectorA, class TVectorB>
 	void SetWithDiadicProduct(const TVectorA& vectorA, const TVectorB& vectorB)
@@ -288,6 +333,21 @@ public:
 			{
 				GetItem(i, j) = vectorA.GetUnsafe(i) * vectorB.GetUnsafe(j);
 				//GetUnsafe(i, j) = vectorA.GetUnsafe(i) * vectorB.GetUnsafe(j);
+			}
+		}
+	}
+
+	//!set matrix sm as submatrix in this matrix at position (rm,sm), using full size of sm
+	template <class TMatrix>
+	void SetSubmatrix(const TMatrix& sm, Index row = 0, Index column = 0)
+	{
+		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "ConstSizeMatrixBase::SetSubmatrix size mismatch");
+
+		for (Index i = 0; i < sm.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < sm.NumberOfColumns(); j++)
+			{
+				data[(i + row)*numberOfColumns + column + j] = sm.GetUnsafe(i, j);
 			}
 		}
 	}
@@ -328,15 +388,15 @@ public:
 	//! const (read) access of item with index 'i'; items run in range[0, numberOfRows*numberOfColumns]
 	const T& GetItem(Index index) const
 	{
-		//CHECKandTHROW((index >= 0) && "Matrix::GetItem(Index) const: index < 0");
-		CHECKandTHROW((index < numberOfRows*numberOfColumns), "Matrix::GetItem(Index) const: index >= numberOfRows*numberOfColumns");
+		//CHECKandTHROW((index >= 0) && "ConstSizeMatrixBase::GetItem(Index) const: index < 0");
+		CHECKandTHROW((index < numberOfRows*numberOfColumns), "ConstSizeMatrixBase::GetItem(Index) const: index >= numberOfRows*numberOfColumns");
 		return data[index];
 	}
 
 	//! by reference (write) access of item with index 'i'; does not automatically increase array (compatibility with SlimArray<>)
 	T& GetItem(Index index)
 	{
-		CHECKandTHROW((index < numberOfRows*numberOfColumns), "Matrix::GetItem(Index): index >= numberOfRows*numberOfColumns");
+		CHECKandTHROW((index < numberOfRows*numberOfColumns), "ConstSizeMatrixBase::GetItem(Index): index >= numberOfRows*numberOfColumns");
 		return data[index];
 	}
 
@@ -355,8 +415,8 @@ public:
 	//Referencing access-operator on element using row- and column-values
 	T& GetItem(Index row, Index column)
 	{
-		CHECKandTHROW((row < numberOfRows), "Matrix::GetItem()(Index, Index): request of invalid row");
-		CHECKandTHROW((column < numberOfColumns), "Matrix::GetItem()(Index, Index): request of invalid column");
+		CHECKandTHROW((row < numberOfRows), "ConstSizeMatrixBase::GetItem()(Index, Index): request of invalid row");
+		CHECKandTHROW((column < numberOfColumns), "ConstSizeMatrixBase::GetItem()(Index, Index): request of invalid column");
 
 		return data[row*numberOfColumns + column];
 	}
@@ -364,8 +424,8 @@ public:
 	//Referencing constant access-operator on element using row- and column-values, WARNING: ZERO-BASED (DIFFERENT TO HOTINT1)
 	const T& GetItem(Index row, Index column) const
 	{
-		CHECKandTHROW((row < numberOfRows), "Matrix::GetItem()(Index, Index) const: request of invalid row");
-		CHECKandTHROW((column < numberOfColumns), "Matrix::GetItem()(Index, Index) const: request of invalid column");
+		CHECKandTHROW((row < numberOfRows), "ConstSizeMatrixBase::GetItem()(Index, Index) const: request of invalid row");
+		CHECKandTHROW((column < numberOfColumns), "ConstSizeMatrixBase::GetItem()(Index, Index) const: request of invalid column");
 
 		return data[row*numberOfColumns + column];
 	};
@@ -391,14 +451,14 @@ public:
 	//! get pointer to row with Index 'row'; allows matrix access with [row][column] style (column is C-based array and does not include range check/assertion!!!)
 	T* operator[](Index row)
 	{
-		CHECKandTHROW(/*(row >= 0) && */(row < numberOfRows), "Matrix::operator[](Index): request of invalid row");
+		CHECKandTHROW(/*(row >= 0) && */(row < numberOfRows), "ConstSizeMatrixBase::operator[](Index): request of invalid row");
 
 		return &(data[row*numberOfColumns]);
 	}
 
 	const T* operator[](Index row) const
 	{
-		CHECKandTHROW(/*(row >= 0) && */(row < numberOfRows), "Matrix::operator[](Index) const: request of invalid row");
+		CHECKandTHROW(/*(row >= 0) && */(row < numberOfRows), "ConstSizeMatrixBase::operator[](Index) const: request of invalid row");
 
 		return &(data[row*numberOfColumns]);
 	}
@@ -406,8 +466,8 @@ public:
 	//Referencing access-operator on element using row- and column-values
 	T& operator()(Index row, Index column)
 	{
-		CHECKandTHROW(/*(row >= 0) && */(row < numberOfRows), "Matrix::operator()(Index, Index): request of invalid row");
-		CHECKandTHROW(/*(column >= 0) && */(column < numberOfColumns), "Matrix::operator()(Index, Index): request of invalid column");
+		CHECKandTHROW(/*(row >= 0) && */(row < numberOfRows), "ConstSizeMatrixBase::operator()(Index, Index): request of invalid row");
+		CHECKandTHROW(/*(column >= 0) && */(column < numberOfColumns), "ConstSizeMatrixBase::operator()(Index, Index): request of invalid column");
 
 		return data[row*numberOfColumns + column];
 	}
@@ -416,8 +476,8 @@ public:
 	//Referencing constant access-operator on element using row- and column-values, WARNING: ZERO-BASED (DIFFERENT TO HOTINT1)
 	const T& operator()(Index row, Index column) const
 	{
-		CHECKandTHROW(/*(row >= 0) && */(row < numberOfRows), "Matrix::operator()(Index, Index) const: request of invalid row");
-		CHECKandTHROW(/*(column >= 0) && */(column < numberOfColumns), "Matrix::operator()(Index, Index) const: request of invalid column");
+		CHECKandTHROW(/*(row >= 0) && */(row < numberOfRows), "ConstSizeMatrixBase::operator()(Index, Index) const: request of invalid row");
+		CHECKandTHROW(/*(column >= 0) && */(column < numberOfColumns), "ConstSizeMatrixBase::operator()(Index, Index) const: request of invalid column");
 
 		return data[row*numberOfColumns + column];
 	};
@@ -425,7 +485,7 @@ public:
 	//! comparison operator, component-wise compare; MATRIX DIMENSIONS MUST BE SAME; returns true, if all components are equal
 	bool operator== (const ConstSizeMatrixBase& matrix) const
 	{
-		CHECKandTHROW((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()), "Matrix::operator==: incompatible number of rows and/or columns");
+		CHECKandTHROW((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()), "ConstSizeMatrixBase::operator==: incompatible number of rows and/or columns");
 		Index cnt = 0;
 		for (const auto item : matrix)
 		{
@@ -437,8 +497,25 @@ public:
 	//! add matrix to *this matrix (for each component); both matrices must have same size; FAST / no memory allocation
 	ConstSizeMatrixBase& operator+= (const ConstSizeMatrixBase& matrix)
 	{
-		CHECKandTHROW((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()), "Matrix::operator+=: incompatible number of rows and/or columns");
+		CHECKandTHROW((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()), "ConstSizeMatrixBase::operator+=: incompatible number of rows and/or columns");
 		Index cnt = 0;
+		for (auto item : matrix) { data[cnt++] += item; }
+		return *this;
+	}
+
+	//! add any matrix to *this matrix (for each component); both matrices must have same size; FAST / no memory allocation
+	template<class TMatrix>
+	ConstSizeMatrixBase& operator+= (const TMatrix& matrix)
+	{
+		CHECKandTHROW((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()), "ConstSizeMatrixBase::operator+=<>: incompatible number of rows and/or columns");
+		Index cnt = 0;
+		for (Index i = 0; i < numberOfRows; i++)
+		{
+			for (Index j = 0; j < numberOfColumns; j++)
+			{
+				GetUnsafe(i, j) += matrix.GetUnsafe(i, j);
+			}
+		}
 		for (auto item : matrix) { data[cnt++] += item; }
 		return *this;
 	}
@@ -446,7 +523,7 @@ public:
 	//! add matrix from *this matrix (for each component); both matrices must have same size; FAST / no memory allocation
 	ConstSizeMatrixBase& operator-= (const ConstSizeMatrixBase& matrix)
 	{
-		CHECKandTHROW((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()), "Matrix::operator-=: incompatible number of rows and/or columns");
+		CHECKandTHROW((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()), "ConstSizeMatrixBase::operator-=: incompatible number of rows and/or columns");
 		Index cnt = 0;
 		for (auto item : matrix) { data[cnt++] -= item; }
 		return *this;
@@ -625,10 +702,23 @@ public:
 
 		for (Index i = 0; i < this->numberOfRows; i++) {
 			for (Index j = 0; j < this->numberOfColumns; j++) {
-				result(j, i) = (*this)(i, j);
+				//result(j, i) = (*this)(i, j);
+				result(j, i) = GetUnsafe(i, j);
 			}
 		}
 		return result;
+	}
+
+	//! computes and returns the transposed of *this (does not change *this)
+	T Trace() const
+	{
+		T trace = 0.;
+
+		for (Index i = 0; i < this->numberOfRows; i++) 
+		{
+			trace += GetUnsafe(i, i);
+		}
+		return trace;
 	}
 
 	//! use Gaussian elimination to invert matrix (slow, old school approach); store inverse in mInverse; modifies *this !; return true, if successful
@@ -753,7 +843,7 @@ public:
 	//! @todo check efficient implementation of tranpose for non-square matrices
 	void TransposeYourself()
 	{
-		CHECKandTHROW(IsSquare(), "Matrix::GetTransposed: matrix must be square!");
+		CHECKandTHROW(IsSquare(), "ConstSizeMatrixBase::GetTransposed: matrix must be square!");
 
 		for (Index i = 0; i < numberOfRows; i++) {
 			for (Index j = 0; j < i; j++) { //operates only on lower left triangular matrix
@@ -915,6 +1005,55 @@ SlimVectorBase<T, 2> operator*(const SlimVectorBase<T, 2>& vector, const ConstSi
 	return result;
 }
 
+//multiplication must be defined outside and with ConstSizeMatrixBase<T, 36>
+template<typename T, typename T2>
+SlimVectorBase<T, 6> operator*(const ConstSizeMatrixBase<T, 36>& matrix, const SlimVectorBase<T2, 6>& vector)
+{
+	CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
+		"operator*(ConstSizeMatrixBase,SlimVectorBase<T, 6>): Size mismatch");
+	CHECKandTHROW((matrix.NumberOfRows() == 6),
+		"operator*(ConstSizeMatrixBase,SlimVectorBase<T, 6>): matrix does not fit");
+
+	SlimVectorBase<T, 6> result; //no initialization for SlimVector
+
+	for (Index i = 0; i < result.NumberOfItems(); i++)
+	{
+		T resultRow = 0;
+		for (Index j = 0; j < vector.NumberOfItems(); j++)
+		{
+			resultRow += matrix(i, j)*vector[j];
+		}
+		result[i] = resultRow;
+	}
+	return result;
+}
+
+//multiplication must be defined outside and with "36" ConstSizeMatrixBase<T, 36>, otherwise this operator is also used for 4x3 matrices
+template<typename T, typename T2>
+SlimVectorBase<T, 6> operator*(const SlimVectorBase<T2, 6>& vector, const ConstSizeMatrixBase<T, 36>& matrix)
+{
+	CHECKandTHROW(matrix.NumberOfRows() == vector.NumberOfItems(),
+		"operator*(SlimVectorBase<T, 6>,ConstSizeMatrixBase): Size mismatch");
+	CHECKandTHROW((matrix.NumberOfColumns() == 6),
+		"operator*(SlimVectorBase<T, 6>,ConstSizeMatrixBase): matrix does not fit");
+
+	SlimVectorBase<T, 6> result; //no initialization for SlimVector
+
+	for (Index i = 0; i < result.NumberOfItems(); i++)
+	{
+		T resultRow = 0;
+		for (Index j = 0; j < vector.NumberOfItems(); j++)
+		{
+			resultRow += vector[j] * matrix(j, i);
+		}
+		result[i] = resultRow;
+	}
+	return result;
+}
+
+
+
+
 //! use Gaussian elimination to invert matrix (slow, old school approach); store in mInverse; modifies *this matrix! return true, if successful
 template <typename T, Index dataSize>
 bool ConstSizeMatrixBase<T, dataSize>::ComputeInverse(ConstSizeMatrixBase<T, dataSize>& mInverse)
@@ -943,7 +1082,7 @@ bool ConstSizeMatrixBase<T, dataSize>::ComputeInverse(ConstSizeMatrixBase<T, dat
 		}
 		if (pivot == 0)
 		{
-			//SysError(STDstring("Matrix::Invert: problems with column ") + EXUstd::ToString(j) + "\n");
+			//SysError(STDstring("ConstSizeMatrixBase::Invert: problems with column ") + EXUstd::ToString(j) + "\n");
 			return false;
 		}
 		//pout << "  pivot = " << pivotpos << "\n";

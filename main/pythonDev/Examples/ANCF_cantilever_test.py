@@ -91,7 +91,7 @@ simulationSettings.displayStatistics = True
 
 SC.visualizationSettings.nodes.defaultSize = 0.01
 
-simulationSettings.solutionSettings.solutionInformation = "Planar four-bar-mechanism with initial angular velocity and gravity"
+simulationSettings.solutionSettings.solutionInformation = "ANCF cantilever beam"
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 
 doDynamicSimulation = True #switch between static and dynamic simulation

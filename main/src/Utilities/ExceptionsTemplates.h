@@ -33,18 +33,18 @@ void UserFunctionExceptionHandling(Tfunction&& f, const char* functionName)
 	//mostly catches python errors:
 	catch (const pybind11::error_already_set& ex)
 	{
-		SysError("Error in Python USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your Python code!");
+		PyError("Error in Python USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your Python code!");
 		//not needed due to change of SysError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 
 	catch (const EXUexception& ex)
 	{
-		SysError("Internal error in Python in USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your Python code!");
+		PyError("Internal error in Python in USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your Python code!");
 		//not needed due to change of SysError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (...) //any other exception
 	{
-		SysError("Unknown error in Python USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!): check your Python code!");
+		PyError("Unknown error in Python USER FUNCTION '" + STDstring(functionName) + "' (referred line number my be wrong!): check your Python code!");
 	}
 #else
 	f();
@@ -64,7 +64,7 @@ void SolverExceptionHandling(Tfunction&& f, const char* functionName)
 	//mostly catches python errors:
 	catch (const pybind11::error_already_set& ex)
 	{
-		SysError("Error in solver function '" + STDstring(functionName) + "' originating from Python code (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your Python code!");
+		PyError("Error in solver function '" + STDstring(functionName) + "' originating from Python code (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your Python code!");
 		//not needed due to change of SysError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
 	}
 	catch (const EXUexception& ex)
@@ -80,5 +80,33 @@ void SolverExceptionHandling(Tfunction&& f, const char* functionName)
 	f();
 #endif
 }
+
+//! generic handling of exceptions for SetSafely and other data transmission
+template <typename Tfunction>
+void GenericExceptionHandling(Tfunction&& f, const char* placeOfException)
+{
+	try
+	{
+		f();
+	}
+	//mostly catches python errors:
+	catch (const pybind11::error_already_set& ex)
+	{
+		PyError("Error in '" + STDstring(placeOfException) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your Python code!");
+		//not needed due to change of SysError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+	}
+
+	catch (const EXUexception& ex)
+	{
+		PyError("Internal error in '" + STDstring(placeOfException) + "' (referred line number my be wrong!):\n" + STDstring(ex.what()) + "; check your Python code!");
+		//not needed due to change of SysError: throw(ex); //avoid multiple exceptions trown again (don't know why!)!
+	}
+	catch (...) //any other exception
+	{
+		PyError("Unknown error in '" + STDstring(placeOfException) + "' (referred line number my be wrong!): check your Python code!");
+	}
+}
+
+
 
 #endif

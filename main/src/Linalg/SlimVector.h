@@ -95,7 +95,7 @@ public:
 	//SlimVector(const T(&listOfItems)[dataSize]) //immediate check of initializer_list size, but would allow to cast to std::vector<> ==> dangerous!!! //pass by value as a standard in C++11
 	{
 		//not needed in C++14 and above; 
-		CHECKandTHROW(dataSize == (Index)listOfItems.size(), "ERROR: SlimVector::constructor, initializer_list.size() must match template dataSize");
+		CHECKandTHROW(dataSize == (Index)listOfItems.size(), "ERROR: SlimVectorBase::constructor, initializer_list.size() must match template dataSize");
 		//static_assert supported by C++14 (supports listOfReals.size() as constexpr)
 		
         Index cnt = 0;
@@ -109,7 +109,7 @@ public:
     //! copies 'dataSize' items, independently of vector size (might cause memory access error)
 	SlimVectorBase(const VectorBase<T>& vector, Index startPositionVector) //remove default argument for startPositionVector in order to avoid unwanted casting from Vector
     {
-		CHECKandTHROW(startPositionVector >= 0, "ERROR: SlimVector(const VectorBase<T>&, Index), startPositionVector < 0");
+		CHECKandTHROW(startPositionVector >= 0, "ERROR: SlimVectorBase(const VectorBase<T>&, Index), startPositionVector < 0");
 		CHECKandTHROW(dataSize + startPositionVector <= vector.NumberOfItems(), "ERROR:  SlimVector(const VectorBase<T>&, Index), dataSize mismatch with initializer_list");
 
         Index cnt = startPositionVector;
@@ -122,7 +122,7 @@ public:
 	//! constructor with std::vector
 	SlimVectorBase(const std::vector<T> vector)
 	{
-		CHECKandTHROW(vector.size() == dataSize, "ERROR: SlimVector(const std::vector<T> vector), dataSize mismatch");
+		CHECKandTHROW(vector.size() == dataSize, "ERROR: SlimVectorBase(const std::vector<T> vector), dataSize mismatch");
 
 		//better?: std::copy(vector.begin(), vector.end(), this->begin());
 		Index cnt = 0;
@@ -133,7 +133,7 @@ public:
 
 	SlimVectorBase(const std::array<T, dataSize> vector)
 	{
-		CHECKandTHROW(vector.size() == dataSize, "ERROR: SlimVector(const std::array<T> vector), dataSize mismatch");
+		CHECKandTHROW(vector.size() == dataSize, "ERROR: SlimVectorBase(const std::array<T> vector), dataSize mismatch");
 
 		//better?: std::copy(vector.begin(), vector.end(), this->begin());
 		Index cnt = 0;
@@ -164,7 +164,7 @@ public:
 	//! set vector to data given by initializer list
 	void SetVector(std::initializer_list<T> listOfItems)
 	{
-		CHECKandTHROW(dataSize == (Index)listOfItems.size(), "ERROR: SlimVector::SetVector, initializer_list.size() must match template dataSize");
+		CHECKandTHROW(dataSize == (Index)listOfItems.size(), "ERROR: SlimVectorBase::SetVector, initializer_list.size() must match template dataSize");
 
 		Index cnt = 0;
 		for (auto val : listOfItems) {
@@ -195,7 +195,7 @@ public:
     //! reference (write) access-operator.
     T& operator[](Index item)
     {
-		CHECKandTHROW((item >= 0) && (item < dataSize), "ERROR: SlimVector T& operator[]: index out of range");
+		CHECKandTHROW((item >= 0) && (item < dataSize), "ERROR: SlimVectorBase T& operator[]: index out of range");
 
         return data[item];
     };
@@ -456,6 +456,17 @@ public:
     // EXTENDED FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+	//! multiply components of this vector with components of other vector
+	template<class Tvector>
+	void MultComponentWise(const Tvector& v)
+	{
+		CHECKandTHROW((v.NumberOfItems() == NumberOfItems()), "SlimVectorBase::MultComponentWise: incompatible size of vectors");
+		for (Index i = 0; i < NumberOfItems(); i++)
+		{
+			data[i] *= v[i];
+		}
+	}
+
     //! returns the sum of squared components (v[0]^2 + v[1]^2 + v[2]^2 ....)
     T GetL2NormSquared() const
     {
@@ -474,40 +485,40 @@ public:
     void Normalize()
     {
         T norm = GetL2Norm();
-		CHECKandTHROW(norm != 0., "SlimVector::Normalized() called with GetL2Norm() == 0.");
-
-        for (auto &item : *this) { item /= norm; }
+		CHECKandTHROW(norm != 0., "SlimVectorBase::Normalized() called with GetL2Norm() == 0.");
+		norm = 1 / norm; //if T=int, this would not work but anyway outcome would be int ...!
+        for (auto &item : *this) { item *= norm; } //changed from "item /= norm" to be compatible with autodiff
     }
 
     T& X()
     {
-        static_assert(dataSize >= 1, "ERROR: SlimVector dataSize < 1 for function T& X()");
+        static_assert(dataSize >= 1, "ERROR: SlimVectorBase dataSize < 1 for function T& X()");
         return data[0];
     }
     T& Y()
     {
-        static_assert(dataSize >= 2, "ERROR: SlimVector dataSize < 2 for function T& Y()");
+        static_assert(dataSize >= 2, "ERROR: SlimVectorBase dataSize < 2 for function T& Y()");
         return data[1];
     }
     T& Z()
     {
-        static_assert(dataSize >= 3, "ERROR: SlimVector dataSize < 3 for function T& Z()");
+        static_assert(dataSize >= 3, "ERROR: SlimVectorBase dataSize < 3 for function T& Z()");
         return data[2];
     }
 
     T X() const
     {
-        static_assert(dataSize >= 1, "ERROR: SlimVector dataSize < 1 for function T X() const");
+        static_assert(dataSize >= 1, "ERROR: SlimVectorBase dataSize < 1 for function T X() const");
         return data[0];
     }
     T Y() const
     {
-        static_assert(dataSize >= 2, "ERROR: SlimVector dataSize < 2 for function T Y() const");
+        static_assert(dataSize >= 2, "ERROR: SlimVectorBase dataSize < 2 for function T Y() const");
         return data[1];
     }
     T Z() const
     {
-        static_assert(dataSize >= 3, "ERROR: SlimVector dataSize < 3 for function T Z() const");
+        static_assert(dataSize >= 3, "ERROR: SlimVectorBase dataSize < 3 for function T Z() const");
         return data[2];
     }
 
@@ -541,6 +552,7 @@ typedef SlimVector<4> Vector4D;
 //typedef SlimVector<5> Vector5D; //uncomment as soon it is needed
 typedef SlimVector<6> Vector6D; //inertia parameters, stresses, ...
 typedef SlimVector<7> Vector7D; //rigid body initial/reference/... coordinates
+typedef SlimVector<9> Vector9D; //NodePoint3DSlope23
 
 typedef SlimVectorBase<float, 2> Float2; //!< a triple of float values => for OpenGL
 typedef SlimVectorBase<float, 3> Float3; //!< a triple of float values => for OpenGL

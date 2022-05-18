@@ -189,6 +189,9 @@ namespace EXUstd {
 	const float _MINFLOAT = -1e38f; //!< largest negative value to be on the safe side; @TODO use std lib constants instead
 	const float _MAXFLOAT =  1e38f; //!< largest positive value to be on the safe side
 
+	constexpr Index dim3D = 3; //!< this shall make changes to other dimensionalities easier; avoid using 3 in code
+	constexpr Index dim2D = 2; //!< this shall make changes to other dimensionalities easier; avoid using 2 in code
+
 	//not tested if works with MAC or linux
 	constexpr double LOWESTREAL = std::numeric_limits<Real>::lowest(); //lowest (neg) Real number
 	constexpr double MAXREAL = std::numeric_limits<Real>::lowest();  //highest (pos) Real number

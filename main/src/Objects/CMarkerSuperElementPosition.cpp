@@ -12,7 +12,7 @@
 ************************************************************************************************ */
 
 #include "Main/CSystemData.h"
-#include "Utilities/RigidBodyMath.h"
+#include "Linalg/RigidBodyMath.h"
 
 //#include <pybind11/pybind11.h>      //! AUTO: include pybind for dictionary access
 //#include <pybind11/stl.h>           //! AUTO: needed for stl-casts; otherwise py::cast with std::vector<Real> crashes!!!

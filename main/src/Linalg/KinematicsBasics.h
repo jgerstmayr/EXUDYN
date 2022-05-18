@@ -13,7 +13,8 @@
 
 #include "Linalg/RigidBodyMath.h"
 
-//! class representing (efficiently) homogeneous transformations
+//! class representing (efficiently) homogeneous transformations; 
+//! follows widely the Python implementation in exudyn.rigidBodyUtilities and lieGroupBasics
 //! UNTESTED
 class HomogeneousTransformation
 {
@@ -171,9 +172,26 @@ public:
 		HomogeneousTransformation HTinv;
 		HTinv.GetRotation() = A.GetTransposed();
 		HTinv.GetTranslation() = -(HTinv.GetRotation() * v);
+		return HTinv;
 	}
 
+	//! convert skew matrix representation (as returned e.g. by LogSE3) to inremental rotation and displacement
+	void Skew2Vector(Vector3D& incDisp, Vector3D& incRot)
+	{
+		incRot[0] = A(2,1);
+		incRot[1] = A(0,2);
+		incRot[2] = A(1,0); //Python uses -A(0,1)
+		incDisp[0] = v[0];
+		incDisp[1] = v[1];
+		incDisp[2] = v[2];
+	}
 
+	//! get difference of *thi frame to HT1 as logarithm of relative homogeneous transformations
+	//! note that *this*ExpSE(incDisp, incRot) = *this * this->GetInverse() * HT1 = HT1
+	void GetRelativeMotionTo(const HomogeneousTransformation& HT1,
+		Vector3D& incDisp, Vector3D& incRot);
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! comparison operator, component-wise compare; MATRIX DIMENSIONS MUST BE SAME; returns true, if all components are equal
 	bool operator== (const HomogeneousTransformation& HT) const
 	{
@@ -202,10 +220,112 @@ public:
 		return *this;
 	}
 
+	friend std::ostream& operator<<(std::ostream& os, const HomogeneousTransformation& HT)
+	{
+		os << "[" << HT.GetRotation() << ", " << HT.GetTranslation() << "]";
+		return os;
+	}
+
+
 };
+
+namespace EXUlie {
+
+	//! compute homogeneous transformation from incremental displacemnet and incremental rotation
+	//! compute the matrix exponential map on the Lie group SE(3), see \cite{Bruels2011}
+	inline HomogeneousTransformation ExpSE3(const Vector3D& incDisp, const Vector3D& incRot)
+	{
+		Vector3D x = incDisp * TExpSO3(incRot); //TExpSO3(incRot).T * incDisp
+		return HomogeneousTransformation(ExpSO3(incRot), x);
+	}
+
+	inline HomogeneousTransformation LogSE3(const HomogeneousTransformation& H)
+	{
+		Matrix3D aSkew = LogSO3(H.GetRotation());
+
+		Vector3D a = RigidBodyMath::SkewMatrix2Vector(aSkew);
+		
+		HomogeneousTransformation logH;
+		Matrix3D A = TExpSO3Inv(a).GetTransposed();
+		logH.GetTranslation() = A * H.GetTranslation();
+		logH.GetRotation() = aSkew;
+
+		return logH;
+	}
+
+	//! compute the tangent operator TExpSE3 corresponding to ExpSE3, see \cite{Bruels2011}
+	inline Matrix6D TExpSE3(const Vector3D& incDisp, const Vector3D& incRot)
+	{
+		Matrix3D dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
+		Matrix3D rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
+
+		Real phi = incRot.GetL2Norm();
+		Real phiHalf = phi * 0.5;
+		Matrix3D TDispRotPlus = (-0.5)*dispSkew;
+		if (phi != 0.)
+		{
+			Real phi2 = phi * phi;
+			Real a = (2 * sin(phiHalf)*cos(phiHalf)) / phi;
+			Real b = 4 * EXUstd::Square(sin(phiHalf)) / (phi2);
+			TDispRotPlus += 0.5*(1. - b)*dispSkew;
+			TDispRotPlus += ((1. - a) / (phi2))*(dispSkew*rotSkew + rotSkew*dispSkew); //could be optimized with transposed!
+			TDispRotPlus += -(((a - b) / (phi2))*incRot*incDisp)* rotSkew;
+			TDispRotPlus += ((1. / (phi2))*(0.5*b - (3. / (phi2))*(1. - a))*(incRot*incDisp))*(rotSkew*rotSkew);
+		}
+		Matrix3D MTexpSO3 = TExpSO3(incRot);
+		Matrix6D Texp(6, 6);
+		Texp.SetSubmatrix(MTexpSO3, 0, 0);
+		Texp.SetSubmatrix(TDispRotPlus, 0, 3);
+		Texp.SetSubmatrix(EXUmath::zeroMatrix3D, 3, 0);
+		Texp.SetSubmatrix(MTexpSO3, 3, 3);
+
+		return Texp;
+	}
+
+
+	//! compute the inverse of tangent operator TExpSE3, see \cite{Sonneville2014}
+	inline Matrix6D TExpSE3Inv(const Vector3D& incDisp, const Vector3D& incRot)
+	{
+		Real phi = incRot.GetL2Norm();
+		Matrix3D Tuwm;
+		if (phi == 0.)
+		{
+			Tuwm = 0.5*RigidBodyMath::Vector2SkewMatrix(incDisp);
+		}
+		else
+		{
+			Real phi2 = phi * phi;
+			Real alpha = EXUmath::Sinc(phi);
+			Real beta = 2. * (1. - cos(phi)) / (phi2);
+			Matrix3D dispSkew = RigidBodyMath::Vector2SkewMatrix(incDisp);
+			Matrix3D rotSkew = RigidBodyMath::Vector2SkewMatrix(incRot);
+			
+			Tuwm = 0.5*dispSkew;
+			Tuwm += ((beta - alpha) / (beta*phi2))*(dispSkew*rotSkew + rotSkew*dispSkew);
+			Tuwm += ((1. + alpha -2. * beta) / (beta*phi2*phi2))*(incRot*incDisp)*(rotSkew * rotSkew);
+		}
+		Matrix3D MTexpSO3Inv = TExpSO3Inv(incRot);
+		Matrix6D Tinv(6,6);
+		Tinv.SetSubmatrix(MTexpSO3Inv, 0, 0);
+		Tinv.SetSubmatrix(Tuwm, 0, 3);
+		Tinv.SetSubmatrix(EXUmath::zeroMatrix3D, 3, 0);
+		Tinv.SetSubmatrix(MTexpSO3Inv, 3, 3);
+
+		return Tinv;
+	}
+};
+
+//! get difference of *thi frame to HT1 as logarithm of relative homogeneous transformations
+//! note that *this*ExpSE(incDisp, incRot) = *this * this->GetInverse() * HT1 = HT1
+inline void HomogeneousTransformation::GetRelativeMotionTo(const HomogeneousTransformation& HT1,
+	Vector3D& incDisp, Vector3D& incRot)
+{
+	EXUlie::LogSE3(GetInverse() * HT1).Skew2Vector(incDisp, incRot);
+}
 
 
 namespace RigidBodyMath {
+
 	//+++++++++++++++++++++++++++++++++++++++
 	//(inefficient) T66 Pluecker transformations
 	//follows Siciliano/Kathib Handbook of Robotics 2016, Chapter 3 (Featherstone) notion with some adaptations
@@ -273,7 +393,7 @@ namespace RigidBodyMath {
 	}
 
 	//! compute Pluecker transformation T66 from translation vector
-	inline Matrix6D RotationZ2T66(const Vector3D& t)
+	inline Matrix6D Translation2T66(const Vector3D& t)
 	{
 		Matrix6D A(false);
 		A.SetMatrix(6, 6, {
@@ -284,37 +404,75 @@ namespace RigidBodyMath {
 			-t[2],0.,   t[0], 0.,1.,0.,
 			t[1], -t[0],0.,   0.,0.,1.
 			});
+		return A;
 	}
 
 	//! convert Pluecker (motion) transformation T66 into rotation matrix A and translation vector v
-	inline void T66toRotationTranslation(const Matrix6D& T66, Matrix3D A, Vector3D& v)
+	inline void T66toRotationTranslation(const Matrix6D& T66, Matrix3D& A, Vector3D& v)
 	{
-		Matrix3D vSkew;
+		Matrix3D vSkew(3,3);
+		A.SetNumberOfRowsAndColumns(3, 3);
 		for (Index i = 0; i < 3; i++)
 		{
 			for (Index j = 0; j < 3; j++)
 			{
 				A(i, j) = T66(i, j);
-				vSkew(i, j) = T66(i+3, j);
+				vSkew(i, j) = T66(i + 3, j);
 			}
 		}
-		vSkew = vSkew*A.GetTransposed();
-		v = RigidBodyMath::SkewMatrix2Vector(vSkew);
+		vSkew = vSkew * A.GetTransposed();
+		v = SkewMatrix2Vector(vSkew);
 	}
 
-	//! convert Pluecker (motion) transformation T66 into rotation matrix A and translation vector v
-	inline Matrix6D RotationTranslation2T66(const Matrix3D A, const Vector3D& v)
+	//! convert Pluecker (motion) transformation T66 inverse into rotation matrix A and translation vector v
+	inline void T66toRotationTranslationInverse(const Matrix6D& T66, Matrix3D& A, Vector3D& v)
 	{
-		Matrix6D T66(6,6);
+		//(AT, -(AT*v))
+		Matrix3D vSkew(3, 3);
+		A.SetNumberOfRowsAndColumns(3, 3);
+		for (Index i = 0; i < 3; i++)
+		{
+			for (Index j = 0; j < 3; j++)
+			{
+				A(i, j) = T66(j, i);
+				vSkew(i, j) = T66(i + 3, j);
+			}
+		}
+		vSkew = vSkew * A;
+		v = -(A*SkewMatrix2Vector(vSkew));
+	}
+
+	//! convert rotation matrix A and translation vector v into Pluecker (motion) transformation T66 
+	inline Matrix6D RotationTranslation2T66(const Matrix3D& A, const Vector3D& v)
+	{
+		Matrix6D T66(6, 6);
 		Matrix3D vSkewA = RigidBodyMath::Vector2SkewMatrix(v)*A;
 		for (Index i = 0; i < 3; i++)
 		{
 			for (Index j = 0; j < 3; j++)
 			{
 				T66(i, j) = A(i, j);
-				T66(i+3, j+3) = A(i, j);
-				T66(i, j+3) = 0.;
-				T66(i+3, j) = vSkewA(i,j);
+				T66(i + 3, j + 3) = A(i, j);
+				T66(i, j + 3) = 0.;
+				T66(i + 3, j) = vSkewA(i, j);
+			}
+		}
+		return T66;
+	}
+
+	//! convert rotation matrix A and translation vector v into inverse Pluecker (motion) transformation T66 
+	inline Matrix6D RotationTranslation2T66Inverse(const Matrix3D& A, const Vector3D& v)
+	{
+		Matrix6D T66(6, 6);
+		Matrix3D vSkewA = RigidBodyMath::Vector2SkewMatrix(v)*A;
+		for (Index i = 0; i < 3; i++)
+		{
+			for (Index j = 0; j < 3; j++)
+			{
+				T66(i, j) = A(j, i); //A.T
+				T66(i + 3, j + 3) = A(j, i); //A.T
+				T66(i, j + 3) = 0.;
+				T66(i + 3, j) = vSkewA(j, i); //-A.T*Skew(v)  = Skew(v)*A
 			}
 		}
 		return T66;
@@ -341,27 +499,28 @@ namespace RigidBodyMath {
 	}
 
 	//! compute inertia parameters in T66 form from parameters (at center of mass!)
-	inline Matrix6D InertiaT66FromInertiaParameters(Real mass, const Vector3D& centerOfMass, Matrix3D& inertiaCOM)
+	inline Matrix6D InertiaT66FromInertiaParameters(Real mass, const Vector3D& centerOfMass, const Matrix3D& inertiaCOM)
 	{
 		Matrix3D skewCOM = RigidBodyMath::Vector2SkewMatrix(centerOfMass);
-		Matrix3D massCOMCOM = (-mass) * skewCOM * skewCOM; //minus represents transposed
+		Matrix3D massCOMCOMT = (-mass) * skewCOM * skewCOM; //minus represents transposed
 		Matrix6D A(6,6);
 
 		for (Index i = 0; i < 3; i++)
 		{
 			for (Index j = 0; j < 3; j++)
 			{
-				A(i, j) = inertiaCOM(i, j) + massCOMCOM(i, j);
-				A(i + 3, j + 3) = 0.;
-				A(i + 3, j) = mass*skewCOM(i,j);
-				A(i, j + 3) = mass*skewCOM(j,i); //transposed
+				A(i, j) = inertiaCOM(i, j) + massCOMCOMT(i, j);
+				A(i, j + 3) = mass * skewCOM(i, j);
+				A(i + 3, j) = mass*skewCOM(j,i); //transposed
+				if (i != j) { A(i + 3, j + 3) = 0.; }
+				else { A(i + 3, j + 3) = mass; }
 			}
-			A(i + 3, i + 3) = mass;
 		}
+		return A;
 	}
 
 	//! compute skew matrix for T66 motion vectors v=[vRot, vTrans]
-	inline Matrix6D T66SkewMotion(const Vector6D v)
+	inline Matrix6D T66SkewMotion(const Vector6D& v)
 	{
 		return Matrix6D(6, 6, {
 			   0.,-v[2], v[1],   0.,   0.,   0.,
@@ -373,7 +532,7 @@ namespace RigidBodyMath {
 	}
 
 	//! compute skew matrix for T66 force vectors v=[vRot, vTrans]
-	inline Matrix6D T66SkewForce(const Vector6D v)
+	inline Matrix6D T66SkewForce(const Vector6D& v)
 	{
 		//return T66SkewMotion(-v).GetTransposed();
 		return Matrix6D(6, 6, {
@@ -386,6 +545,10 @@ namespace RigidBodyMath {
 	}
 
 } //namespace RigidBodyMath
+
+
+typedef Matrix6D Transformation66;
+typedef ResizableArray<Transformation66> Transformations66List;
 
 
 #endif

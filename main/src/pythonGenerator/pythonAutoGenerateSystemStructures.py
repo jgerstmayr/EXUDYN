@@ -20,6 +20,9 @@ typeCasts = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt'
              'UInt2': 'std::array<Index,2>', 'UInt3': 'std::array<Index,3>', 'UInt4': 'std::array<Index,4>', 
              'Index2': 'std::array<Index,2>', 'Index3': 'std::array<Index,3>', 'Index4': 'std::array<Index,4>', 
              'KeyPressUserFunction': 'std::function<bool(int, int, int)>',
+             'Matrix3D': 'std::array<std::array<Real,3>,3>',
+             'Matrix6D': 'std::array<std::array<Real,6>,6>',
+             'Vector2DList': 'PyVector2DList',
              } #convert parameter types to C++/DYNALFEX types
 
 #conversion rules for dictionary 'type'; this type conversion adds rules for the user's values in the dictionary
@@ -37,6 +40,15 @@ addDocuMember = True #add doc string for member variables
 #return True for types, which get a range check and does a .def_property access in pybind and a set/get function
 def IsTypeWithRangeCheck(origType):
     if origType.find('PInt') != -1 or origType.find('UInt') != -1 or origType.find('PReal') != -1 or origType.find('UReal') != -1:
+        return True
+    return False
+
+#return True for types, which need a .def_property access in pybind and a set/get function
+def IsTypeWithSetGetFunction(origType):
+    if (origType.find('Matrix3D') != -1 or
+        origType.find('Matrix6D') != -1 or
+        origType.find('Vector2DList') != -1 
+        ):
         return True
     return False
 
@@ -66,6 +78,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     dateStr = str(now.year) + '-' + monthZero + str(now.month) + '-' + dayZero + str(now.day)
     
     sLatex = parseInfo['latexText'] #.replace('\\n','\n') #this is the string for latex documentation
+    cppText = parseInfo['cppText'] #.replace('\\n','\n') #this is the string for latex documentation
     sGetSetDictionarys = '' #goes into separate file
 
     #create name for #ifdef macro to include header files only once:
@@ -107,7 +120,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     s+='#include "Main/OutputVariable.h"\n'
     s+='#include "Linalg/BasicLinalg.h"\n' #for std::array conversion
     s+='\n'
-
+    if cppText != '':
+        s += cppText
+        s += '\n'
 
     #create sorted parameter list; distinguish between structures (cFlags have 'S') and values: adds 0/1 before name for sorting ...
     parameterListSorted=sorted(parameterList, 
@@ -315,12 +330,13 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 s+='Get' + functionStr + '() { return ' + paramStr + '; }\n'
 
             typeWithRangeCheck = IsTypeWithRangeCheck(origType)
+            typeWithGetSetFunction = IsTypeWithSetGetFunction(origType)
                 
             typeCastStr = TypeConversion(parameter['type'], typeCasts)
             #delete: if (((typeCastStr.find('std::vector') != -1 or typeCastStr.find('std::array') != -1 or (parameter['type'].find('KeyPressUserFunction') != -1)) and typeCastStr.find('std::ofstream') == -1) or 
             if (((typeCastStr.find('std::vector') != -1 or typeCastStr.find('std::array') != -1) and 
                  typeCastStr.find('std::ofstream') == -1 and typeCastStr.find('ExuFile::BinaryFileSettings') == -1) or 
-                typeWithRangeCheck or 
+                typeWithRangeCheck or typeWithGetSetFunction or
                 (parameter['lineType'].find('L') == -1  and parameter['cplusplusName'].find('.') != -1)): #then it must get a set/get function!
                 accessWritten = True
                 castStr = '(' + typeCastStr + ')'
@@ -335,29 +351,27 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 #print(paramStr + ':' + typeStr + ' gets a setter function')
                 s+='  //! AUTO: Set function (needed in pybind) for: ' + Str2Doxygen(parameter['parameterDescription']) + '\n'
                 s+='  void '
-                s+='PySet' + functionStr + '(const ' + typeCastStr + refChar + ' ' + paramStrPure + 'Init) { ' + linkedClassStr + paramStr + ' = ' + paramSetStr + '; }\n'
-                # if parameter['type'].find('KeyPressUserFunction') != -1:
-                #     do special tasks:
-                    # .def_property("keyPressUserFunction", &VSettingsWindow::PyGetKeyPressUserFunction, 
-                    #    py::object& object) { VSettingsWindow::PySetKeyPressUserFunction(object); })
-                    # #include <pybind11/pybind11.h>
-                    # namespace py = pybind11;
-                    #class py::object;
-                    #void PySetKeyPressUserFunction(const py::object& keyPressUserFunctionInit);
-            		# .def_property("keyPressUserFunction", &VSettingsWindow::PyGetKeyPressUserFunction,
-            		# 	&[](const py::object& object) { VSettingsWindow::PySetKeyPressUserFunction(object); })
-
+                getReturnStr = typeCastStr
+                
+                if not typeWithGetSetFunction:
+                    s+='PySet' + functionStr + '(const ' + typeCastStr + refChar + ' ' + paramStrPure + 'Init) { ' + linkedClassStr + paramStr + ' = ' + paramSetStr + '; }\n'
+                else:
+                    s+='PySet' + functionStr + '(const ' + typeCastStr + refChar + ' ' + paramStrPure + 'Init) { ' + paramStr+ '=(const ' + typeStr+ '&)'+ paramStrPure + 'Init; }\n'
+                        
+                    if typeStr == 'Matrix3D' or typeStr == 'Matrix6D': #Matrix type (Matrix3D, ...)
+                        getReturnStr = 'py::array_t<Real>' #this makes a numpy array instead of list of lists!
+                        typeCastStr = 'EPyUtils::Matrix2NumPyTemplate'
 
                 s+='  //! AUTO: Read (Copy) access to: ' + Str2Doxygen(parameter['parameterDescription']) + '\n'
-                s+='  '+typeCastStr + ' '
-                s+='PyGet' + functionStr + '() const { return ' + castStr + '('+linkedClassStr + paramStr + '); }\n'
+                s+='  '+getReturnStr + ' '
+                s+='PyGet' + functionStr + '() const { return ' + typeCastStr + '('+linkedClassStr + paramStr + '); }\n'
             
             if accessWritten:
                 s+= '\n'
             
             #++++++++++++++++++++++++++++++++++++++++++++++++++++++
             #read/write dictionary from hierarchical structure
-            if parameter['cFlags'].find('P') != -1:
+            if parameter['cFlags'].find('P') != -1 and parameter['cFlags'].find('D') == -1:
 
                 if parameter['pythonName'] == 'itemIdentifier':
                     print("ERROR: pythonName may not be called 'itemIdentifier'") #this term needs to be reserved, as this is the key for a value object
@@ -515,6 +529,13 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
     #print ('Create Pybind11 includes')
 
+    #remove some \ and other texts from strings written into pybind interface
+    def CleanPyDocStrings(s):
+        s = s.replace('{ODE2}','ODE2')
+        s = s.replace('\\hac','')
+        s = s.replace('\\','')
+        return s
+
     spaces1 = '    '            #first level
     spaces2 = spaces1+'    '    #second level
 
@@ -522,11 +543,17 @@ def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
     #************************************
     #class definition:
     parentClass = ''
+    pythonClass = parseInfo['class']
+    if parseInfo['pythonClass'] != '':
+        pythonClass = parseInfo['pythonClass']
+        #print('pythonClass=', pythonClass, ', cClass=', parseInfo['class'])
+        
+        
 #    if len(parseInfo['parentClass']) != 0: #derived class does not work in pybind, if parent class is not defined!
 #        parentClass = ', ' + parseInfo['parentClass']
-    s += spaces1 + 'py::class_<' + parseInfo['class'] + parentClass + '>(m, "' + parseInfo['class'] + '"'
+    s += spaces1 + 'py::class_<' + parseInfo['class'] + parentClass + '>(m, "' + pythonClass + '"'
     if addDocuClass:
-        s += ', "'+parseInfo['class']+' class"'
+        s += ', "'+pythonClass+' class"'
     s += ') // AUTO: \n'
     s += spaces2 + '.def(py::init<>())\n'
 
@@ -547,11 +574,12 @@ def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
 
             if ((typeCastStr.find('std::vector') == -1) and (typeCastStr.find('std::array') == -1) and 
             (parameter['lineType'].find('L') == -1) and (parameter['cplusplusName'].find('.') == -1)
-            and not IsTypeWithRangeCheck(parameter['type']) ): #then it has a set/get function! e.g. Int2, Int3, Float2, Float3, .... are array structures ==> must be converted
+            and not IsTypeWithRangeCheck(parameter['type']) and not IsTypeWithSetGetFunction(parameter['type'])): #then it has a set/get function! e.g. Int2, Int3, Float2, Float3, .... are array structures ==> must be converted
             #and (parameter['type'].find('KeyPressUserFunction') == -1)): 
                 s += spaces2 + '.def_readwrite("' + parameter['pythonName'] + '", &' + parseInfo['class'] + '::' + linkedClassStr + parameter['cplusplusName']
                 if addDocuMember:
-                    s += ', "member: ' + parameter['pythonName'] + '"'
+                    #s += ', "member: ' + parameter['pythonName'] + '"'
+                    s += ', "' + CleanPyDocStrings(parameter['parameterDescription']) + '"'
                 s += ')\n' #extend this to incorporate 'read only' and other flags
             else:
                 sReturnValueProperty = '' #for structures that should also have write access
@@ -673,11 +701,13 @@ try: #still close file if crashes
                  'appendToFile':'',     #True, if shall be appended to given file
                  'writePybindIncludes':'',#True, if pybind11 includes shall be written for this class
                  'addDictionaryAccess':'',#True, if dictionary access function should be added via pybind
+                 'pythonClass':'',      #name of class in Python or empty
                  'parentClass':'',      #name of parent class or empty
                  'classDescription':'', #add a (brief, one line) description of class
                  'addConstructor':'',   #code added at the end of default constructor
                  'linkedClass':'',      #if not empty, this is a class member to which the python interface is linked
-                 'latexText':''}        #text, which will be added before the class description (e.g., to start a new section)
+                 'latexText':'',        #text, which will be added before the class description (e.g., to start a new section)
+                 'cppText':''}          #code which is added before class definition
     lineDefinition = ['lineType',       #[V|F[v]]P: V...Value (=member variable), F...Function (access via member function); v ... virtual Function; P ... write Pybind11 interface
                       'pythonName',     #name which is used in python
                       'cplusplusName',     #name which is used in DYNALFEX (leave empty if it is the same)
@@ -729,10 +759,13 @@ try: #still close file if crashes
                             defName = info[0].replace(' ','')
                             #print("defname =",defName)
                             RHS = RemoveSpacesTabs(info[1])
-                            RHS = RHS.strip('"')
-                            if (defName != 'classDescription' and defName != 'latexText' and defName != 'addConstructor'):
+                            if RHS[0] == "'":
+                                RHS = RHS.strip("'")
+                            else:
+                                RHS = RHS.strip('"')
+                            if (defName != 'classDescription' and defName != 'latexText' and defName != 'cppText' and defName != 'addConstructor'):
                                 RHS = RHS.replace(' ','')
-                            if (defName == 'classDescription' or defName == 'latexText'):
+                            if (defName == 'classDescription' or defName == 'latexText' or defName == 'cppText'):
                                 RHS = RHS.replace('\\n','\n') #enable line breaks!
                                 
                             if (defName in parseInfo):
@@ -786,10 +819,12 @@ try: #still close file if crashes
                                     parseInfo['writeFile'] = ''
                                     parseInfo['class'] = ''
                                     parseInfo['parentClass'] = ''
+                                    parseInfo['pythonClass'] = ''
                                     parseInfo['classDescription'] = ''
                                     parseInfo['addConstructor'] = ''
                                     parseInfo['linkedClass'] = ''
                                     parseInfo['latexText'] = ''
+                                    parseInfo['cppText'] = ''
                                     parseInfo['writePybindIncludes'] = 'False'
                                     parseInfo['addDictionaryAccess'] = 'False'
                                 else:

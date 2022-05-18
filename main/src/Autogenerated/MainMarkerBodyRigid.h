@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:59 (last modified)
+* @date         2022-05-16  11:24:37 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,7 +106,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         cMarkerBodyRigid->GetParameters().bodyNumber = EPyUtils::GetObjectIndexSafely(d["bodyNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetVector3DSafely(d, "localPosition", cMarkerBodyRigid->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "localPosition", cMarkerBodyRigid->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationMarkerBodyRigid->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
@@ -140,7 +140,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("bodyNumber") == 0) { cMarkerBodyRigid->GetParameters().bodyNumber = EPyUtils::GetObjectIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("localPosition") == 0) { EPyUtils::SetVector3DSafely(value, cMarkerBodyRigid->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("localPosition") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cMarkerBodyRigid->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationMarkerBodyRigid->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("MarkerBodyRigid::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:58 (last modified)
+* @date         2022-05-16  11:24:35 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,8 +113,8 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         cObjectRigidBody->GetParameters().physicsMass = py::cast<Real>(d["physicsMass"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetVector6DSafely(d, "physicsInertia", cObjectRigidBody->GetParameters().physicsInertia); /*! AUTO:  safely cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "physicsCenterOfMass")) { EPyUtils::SetVector3DSafely(d, "physicsCenterOfMass", cObjectRigidBody->GetParameters().physicsCenterOfMass); /*! AUTO:  safely cast to C++ type*/} 
+        EPyUtils::SetSlimVectorTemplateSafely<Real, 6>(d, "physicsInertia", cObjectRigidBody->GetParameters().physicsInertia); /*! AUTO:  safely cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "physicsCenterOfMass")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "physicsCenterOfMass", cObjectRigidBody->GetParameters().physicsCenterOfMass); /*! AUTO:  safely cast to C++ type*/} 
         cObjectRigidBody->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectRigidBody->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -165,8 +165,8 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsMass") == 0) { cObjectRigidBody->GetParameters().physicsMass = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsInertia") == 0) { EPyUtils::SetVector6DSafely(value, cObjectRigidBody->GetParameters().physicsInertia); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsCenterOfMass") == 0) { EPyUtils::SetVector3DSafely(value, cObjectRigidBody->GetParameters().physicsCenterOfMass); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsInertia") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 6>(value, cObjectRigidBody->GetParameters().physicsInertia); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsCenterOfMass") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectRigidBody->GetParameters().physicsCenterOfMass); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { cObjectRigidBody->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectRigidBody->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { if (py::isinstance<py::function>(value)) {visualizationObjectRigidBody->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&, Index)>>(value); /* AUTO:  read out dictionary and cast to C++ type*/} else

@@ -25,10 +25,10 @@ void CObjectALEANCFCable2D::PreComputeMassTerms() const
 
 	if (!massTermsALEComputed)
 	{
-		preComputedM1.SetScalarMatrix(nODE2Coordinates, 0.); //set 8x8 matrix
-		preComputedM2.SetScalarMatrix(nODE2Coordinates, 0.); //set 8x8 matrix
-		preComputedB1.SetScalarMatrix(nODE2Coordinates, 0.); //set 8x8 matrix
-		preComputedB2.SetScalarMatrix(nODE2Coordinates, 0.); //set 8x8 matrix
+		preComputedM1.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
+		preComputedM2.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
+		preComputedB1.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
+		preComputedB2.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
 
 		Vector4D SV0 = ComputeShapeFunctions(0, L);
 		Vector4D SVL = ComputeShapeFunctions(L, L);
@@ -96,10 +96,10 @@ void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatr
 
 	//if (!massTermsALEComputed)
 	//{
-	//	preComputedM1.SetScalarMatrix(nODE2Coordinates, 0.); //set 8x8 matrix
-	//	preComputedM2.SetScalarMatrix(nODE2Coordinates, 0.); //set 8x8 matrix
-	//	preComputedB1.SetScalarMatrix(nODE2Coordinates, 0.); //set 8x8 matrix
-	//	preComputedB2.SetScalarMatrix(nODE2Coordinates, 0.); //set 8x8 matrix
+	//	preComputedM1.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
+	//	preComputedM2.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
+	//	preComputedB1.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
+	//	preComputedB2.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
 	//	
 	//	Vector4D SV0 = ComputeShapeFunctions(0, L);
 	//	Vector4D SVL = ComputeShapeFunctions(L, L);
@@ -156,12 +156,12 @@ void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatr
 	//compute ALE mass terms:
 	//++++++++++++++++++++++++++++++
 	//Term M'*q:
-	massMatrix.SetNumberOfRowsAndColumns(nODE2Coordinates + 1, nODE2Coordinates + 1);
+	massMatrix.SetNumberOfRowsAndColumns(nODE2coordinates + 1, nODE2coordinates + 1);
 	massMatrix.SetSubmatrix(precomputedMassMatrix); //set 8x8 matrix at (0,0)
 	//pout << "Mass1=" << precomputedMassMatrix << "\n";
 
-	ConstSizeVector<nODE2Coordinates> mq(nODE2Coordinates);    //M'*qANCF
-	ConstSizeVector<nODE2Coordinates> qANCF(nODE2Coordinates); //element coordinates
+	ConstSizeVector<nODE2coordinates> mq(nODE2coordinates);    //M'*qANCF
+	ConstSizeVector<nODE2coordinates> qANCF(nODE2coordinates); //element coordinates
 
 	ComputeCurrentObjectCoordinates(qANCF);
 	//pout << "qANCF=" << qANCF << "\n";
@@ -174,16 +174,16 @@ void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatr
 	{
 		for (Index i = 0; i < 2 * ns; i++)
 		{
-			massMatrix(i, nODE2Coordinates) = mq[i];//fill last (9th) column of matrix
-			massMatrix(nODE2Coordinates, i) = mq[i];	//fill last (9th) row of matrix
+			massMatrix(i, nODE2coordinates) = mq[i];//fill last (9th) column of matrix
+			massMatrix(nODE2coordinates, i) = mq[i];	//fill last (9th) row of matrix
 		}
 	}
 	else
 	{
 		for (Index i = 0; i < 2 * ns; i++)
 		{
-			massMatrix(i, nODE2Coordinates) = 0;//fill last (9th) column of matrix
-			massMatrix(nODE2Coordinates, i) = 0;	//fill last (9th) row of matrix
+			massMatrix(i, nODE2coordinates) = 0;//fill last (9th) column of matrix
+			massMatrix(nODE2coordinates, i) = 0;	//fill last (9th) row of matrix
 		}
 	}
 
@@ -194,11 +194,11 @@ void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatr
 	if (1 || parameters.physicsUseCouplingTerms)
 	{
 		//this term is approximately the mass of the cable parameters.physicsLength*parameters.physicsMassPerLength:
-		massMatrix(nODE2Coordinates, nODE2Coordinates) = qANCF * mq; //mu = q^T*M''*q; check if this does any Vector conversion
+		massMatrix(nODE2coordinates, nODE2coordinates) = qANCF * mq; //mu = q^T*M''*q; check if this does any Vector conversion
 	}
 	else
 	{
-		massMatrix(nODE2Coordinates, nODE2Coordinates) = rhoAmoving * L;
+		massMatrix(nODE2coordinates, nODE2coordinates) = rhoAmoving * L;
 	}
 	//pout << "mu  =" << qANCF * mq << "\n";
 	//pout << "mass=" << parameters.physicsLength*parameters.physicsMassPerLength << "\n";
@@ -215,26 +215,26 @@ void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) 
 	//if (!massTermsALEComputed)
 	//{
 	//	//must set already correct size of LinkedDataMatrix here:
-	//	ConstSizeMatrix< (nODE2Coordinates + 1)*(nODE2Coordinates + 1)> temp(nODE2Coordinates + 1, nODE2Coordinates + 1);
+	//	ConstSizeMatrix< (nODE2coordinates + 1)*(nODE2coordinates + 1)> temp(nODE2coordinates + 1, nODE2coordinates + 1);
 	//	//Matrix temp;
 	//	LinkedDataMatrix linkedTemp(temp);
 	//	ComputeMassMatrix(linkedTemp, objectNumber); //temp matrix is not used
 	//	//now preComputedM,M1,M2,B1 and B2 matrices are available
 	//}
 
-	ode2Lhs.SetNumberOfItems(nODE2Coordinates + 1);
-	LinkedDataVector ode2LhsANCF(ode2Lhs, 0, nODE2Coordinates);
+	ode2Lhs.SetNumberOfItems(nODE2coordinates + 1);
+	LinkedDataVector ode2LhsANCF(ode2Lhs, 0, nODE2coordinates);
 
-	ConstSizeVector<nODE2Coordinates> temp;
+	ConstSizeVector<nODE2coordinates> temp;
 	CObjectANCFCable2DBase::ComputeODE2LHS(ode2LhsANCF, objectNumber); //compute stiffness terms
 	
-	//ode2Lhs.SetNumberOfItems(nODE2Coordinates + 1);
-	//ode2Lhs.CopyFrom(temp, 0, 0, nODE2Coordinates); //copies 8 terms
+	//ode2Lhs.SetNumberOfItems(nODE2coordinates + 1);
+	//ode2Lhs.CopyFrom(temp, 0, 0, nODE2coordinates); //copies 8 terms
 	
 	Real vALE = ((CNodeODE2*)GetCNode(2))->GetCurrentCoordinateVector_t()[0];
 
-	ConstSizeVector<nODE2Coordinates> qANCF;
-	ConstSizeVector<nODE2Coordinates> qANCF_t;
+	ConstSizeVector<nODE2coordinates> qANCF;
+	ConstSizeVector<nODE2coordinates> qANCF_t;
 	ComputeCurrentObjectCoordinates(qANCF);
 	ComputeCurrentObjectVelocities(qANCF_t);
 
@@ -252,25 +252,25 @@ void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) 
 	Qvqt += 0.5*vALE*vALE*(qANCF*temp);
 	//pout << "QV=" << Qvqt << "\n";
 
-	ode2Lhs[nODE2Coordinates] = Qvqt; //this term is not added, because it does not exist in standard ANCF
+	ode2Lhs[nODE2coordinates] = Qvqt; //this term is not added, because it does not exist in standard ANCF
 
 	//++++++++++++++++++++++++++++++
 	//Term Q_q_tv (1x8 vector): 2*v*M' \dot q + v^2(B'-M'')q
 	EXUmath::MultMatrixVector(preComputedM1, qANCF_t, temp);
 	temp *= 2.*vALE;
 
-	ConstSizeMatrix<nODE2Coordinates*nODE2Coordinates> mTemp(nODE2Coordinates, nODE2Coordinates);
+	ConstSizeMatrix<nODE2coordinates*nODE2coordinates> mTemp(nODE2coordinates, nODE2coordinates);
 	mTemp.CopyFrom(preComputedB1);
 	mTemp -= preComputedM2; //check if data is allocated or copied!
 
-	ConstSizeVector<nODE2Coordinates> temp2;
+	ConstSizeVector<nODE2coordinates> temp2;
 	EXUmath::MultMatrixVector(mTemp, qANCF, temp2);
 	temp2 *= vALE * vALE;
 
 	//pout << "QA=" << temp + temp2 << "\n";
 
 	//fill in all forces due to velocity term
-	for (Index i = 0; i < nODE2Coordinates; i++)
+	for (Index i = 0; i < nODE2coordinates; i++)
 	{
 		ode2Lhs[i] += temp[i] + temp2[i]; //these terms are added to conventional elastic forces
 	}

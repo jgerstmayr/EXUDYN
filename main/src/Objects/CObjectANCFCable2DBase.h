@@ -22,9 +22,9 @@
 class CObjectANCFCable2DBase: public CObjectBody
 {
 protected:
-	static const Index nODE2Coordinates = 8; //!< fixed size of coordinates used e.g. for ConstSizeVectors
+	static const Index nODE2coordinates = 8; //!< fixed size of coordinates used e.g. for ConstSizeVectors
 	mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set
-	mutable ConstSizeMatrix<nODE2Coordinates*nODE2Coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
+	mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
 
 public:
 
@@ -56,11 +56,11 @@ public:
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//TEMPLATED FUNCTIONS
 	template<class TReal>
-	void ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF_t) const;
+	void ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF_t) const;
 
 	//!  map element coordinates (position or veloctiy level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc.
 	template<class TReal>
-	SlimVectorBase<TReal, 2> MapCoordinates(const Vector4D& SV, const ConstSizeVectorBase<TReal, nODE2Coordinates>& qANCF) const
+	SlimVectorBase<TReal, 2> MapCoordinates(const Vector4D& SV, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF) const
 	{
 		SlimVectorBase<TReal, 2> v;
 		v[0] = 0;

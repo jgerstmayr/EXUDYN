@@ -252,6 +252,7 @@ geoCrank = CSGeometry()
 #crankConfig = [0,np.pi*2./3.,2.*np.pi*2./3.] #3-piston
 #crankConfig = [0,np.pi,np.pi,0] #4-piston
 crankConfig = [0,np.pi*2./3.,2.*np.pi*2./3.,2.*np.pi*2./3.,np.pi*2./3.,0] #6-piston
+crankConfig = crankConfig*2
 
 nPistons = len(crankConfig)
 

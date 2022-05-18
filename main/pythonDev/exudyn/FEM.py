@@ -3,7 +3,7 @@
 #
 # Details:  Support functions and helper classes for import of meshes, finite element models (ABAQUS, ANSYS, NETGEN) and for generation of FFRF (floating frame of reference) objects.
 #
-# Author:   Johannes Gerstmayr; Stefan Holzinger (Abaqus and Ansys import utilities); Joachim Sch\"oberl (support for NGsolve import and eigen computations)
+# Author:   Johannes Gerstmayr; Stefan Holzinger (Abaqus and Ansys import utilities); Joachim Sch\"oberl (support for Netgen and NGsolve \cite{Schoeberl1997,Schoeberl2014,2022NGsolve} import and eigen computations)
 # Date:     2020-03-10 (created)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
@@ -1407,7 +1407,7 @@ class HCBstaticModeSelection(Enum):
 #+++++   FEMinterface - finite element interface class   ++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**class: general interface to different FEM / mesh imports and export to EXUDYN functions
-#         use this class to import meshes from different meshing or FEM programs (NETGEN/NGsolve, ABAQUS, ANSYS, ..) and store it in a unique format
+#         use this class to import meshes from different meshing or FEM programs (NETGEN/NGsolve \cite{2022NGsolve}, ABAQUS, ANSYS, ..) and store it in a unique format
 #         do mesh operations, compute eigenmodes and reduced basis, etc.
 #         load/store the data efficiently with LoadFromFile(...), SaveToFile(...)  if import functions are slow
 #         export to EXUDYN objects
@@ -1656,7 +1656,7 @@ class FEMinterface:
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #**classFunction: import mesh from NETGEN/NGsolve and setup mechanical problem
     #**notes: The interface to NETGEN/NGsolve has been created together with Joachim Sch\"oberl, main developer 
-    #  of NETGEN/NGsolve; Thank's a lot!
+    #  of NETGEN/NGsolve \cite{Schoeberl1997,Schoeberl2014}; Thank's a lot!
     #  download NGsolve at: https://ngsolve.org/
     #  NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!
     #  note that node/element indices in the NGsolve mesh are 1-based and need to be converted to 0-base!
@@ -2547,7 +2547,7 @@ class FEMinterface:
     #    meshOrder: use 1 for linear elements and 2 for second order elements (recommended to use 2 for much higher accuracy!)
     #**output: return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
     #**notes: The interface to NETGEN/NGsolve has been created together with Joachim Sch\"oberl, main developer 
-    #  of NETGEN/NGsolve; Thank's a lot!
+    #  of NETGEN/NGsolve \cite{Schoeberl1997,Schoeberl2014}; Thank's a lot!
     #  download NGsolve at: https://ngsolve.org/
     #  NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!
     #  note that node/element indices in the NGsolve mesh are 1-based and need to be converted to 0-base!

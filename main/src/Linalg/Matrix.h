@@ -488,6 +488,23 @@ public:
 		return *this;
 	}
 
+	//! add any matrix to *this matrix (for each component); both matrices must have same size; FAST / no memory allocation
+	template<class TMatrix>
+	MatrixBase<T>& operator+= (const TMatrix& matrix)
+	{
+		CHECKandTHROW((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()), "Matrix::operator+=<>: incompatible number of rows and/or columns");
+		Index cnt = 0;
+		for (Index i = 0; i < numberOfRows; i++) 
+		{
+			for (Index j = 0; j < numberOfColumns; j++) 
+			{
+				GetUnsafe(i, j) += matrix.GetUnsafe(i, j);
+			}
+		}
+		for (auto item : matrix) { data[cnt++] += item; }
+		return *this;
+	}
+
 	//! add matrix from *this matrix (for each component); both matrices must have same size; FAST / no memory allocation
 	MatrixBase<T>& operator-= (const MatrixBase<T>& matrix)
 	{
@@ -871,7 +888,7 @@ public:
 
 	//! Add submatrix (factor * sm) with possibly smaller size than *this matrix
 	//! the destination rows and columns of the submatrix (sm) relative to row and column are given in LTGrows and LTGcolumns
-	void AddSubmatrix(const MatrixBase<T>& sm, Real factor, const ResizableArray<Index>& LTGrows, const ResizableArray<Index>& LTGcolumns, Index row = 0, Index column = 0)
+	void AddSubmatrix(const MatrixBase<T>& sm, T factor, const ResizableArray<Index>& LTGrows, const ResizableArray<Index>& LTGcolumns, Index row = 0, Index column = 0)
 	{
 		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::AddSubmatrix(2) size mismatch");
 
@@ -887,7 +904,7 @@ public:
 
 	//! Add transposed submatrix (factor * sm) with possibly smaller size than *this matrix
 	//! the destination rows and columns of the submatrix (sm) relative to row and column are given in LTGrows and LTGcolumns
-	void AddSubmatrixTransposed(const MatrixBase<T>& sm, Real factor, const ResizableArray<Index>& LTGrows, const ResizableArray<Index>& LTGcolumns, Index row = 0, Index column = 0)
+	void AddSubmatrixTransposed(const MatrixBase<T>& sm, T factor, const ResizableArray<Index>& LTGrows, const ResizableArray<Index>& LTGcolumns, Index row = 0, Index column = 0)
 	{
 		for (Index j = 0; j < sm.numberOfRows; j++)
 		{
@@ -901,9 +918,8 @@ public:
 
 
 	//! Set submatrix 'sm'*factor with possibly smaller size than this at (*this) 'row' and 'column'
-	//! Set submatrix 'sm'*factor with possibly smaller size than this at (*this) 'row' and 'column'
 	template <class TMatrix>
-	void SetSubmatrix(const TMatrix& sm, Index row = 0, Index column = 0, Real factor = 1.)
+	void SetSubmatrix(const TMatrix& sm, Index row = 0, Index column = 0, T factor = 1.)
 	{
 	#ifndef EXUDYN_RELEASE
 		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::SetSubmatrix size mismatch");
@@ -976,12 +992,13 @@ typedef MatrixBase<Index> MatrixI;
 namespace EXUmath {
 
 	//implement the following functions as templates within namespace EXUmath::MultMatrixVector(...), ...
+
 	//! matrix*vector multiplication with given result vector (does not invoke memory allocation if result vector has appropriate size)
 	template<class TMatrix, class TVector, class TVectorResult>
 	inline void MultMatrixVectorTemplate(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
 	{
 		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
-			"Hmath::MultMatrixVector(matrix,vector,result,T): Size mismatch");
+			"EXUmath::MultMatrixVector(matrix,vector,result,T): Size mismatch");
 
 		result.SetNumberOfItems(matrix.NumberOfRows());
 
@@ -1008,7 +1025,7 @@ namespace EXUmath {
 	inline void MultMatrixTransposedVectorTemplate(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
 	{
 		CHECKandTHROW(matrix.NumberOfRows() == vector.NumberOfItems(),
-			"Hmath::MultMatrixTransposedVectorTemplate(matrix,vector,result): Size mismatch");
+			"EXUmath::MultMatrixTransposedVectorTemplate(matrix,vector,result): Size mismatch");
 
 		result.SetNumberOfItems(matrix.NumberOfColumns());
 
@@ -1035,7 +1052,7 @@ namespace EXUmath {
 	//inline void MultMatrixVectorSquaredTemplate(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
 	//{
 	//	CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
-	//		"Hmath::MultMatrixVector(matrix,vector,result,T): Size mismatch");
+	//		"EXUmath::MultMatrixVector(matrix,vector,result,T): Size mismatch");
 
 	//	result.SetNumberOfItems(matrix.NumberOfRows());
 
@@ -1060,7 +1077,7 @@ namespace EXUmath {
 	inline void MultMatrixVectorSquaredAddTemplate(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
 	{
 		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
-			"Hmath::MultMatrixVector(matrix,vector,result,T): Size mismatch");
+			"EXUmath::MultMatrixVector(matrix,vector,result,T): Size mismatch");
 
 		result.SetNumberOfItems(matrix.NumberOfRows());
 
@@ -1086,12 +1103,12 @@ namespace EXUmath {
 	inline void MultMatrixTransposedVectorAddTemplate(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
 	{
 		CHECKandTHROW(matrix.NumberOfRows() == vector.NumberOfItems(),
-			"Hmath::MultMatrixTransposedVectorAddTemplate(matrix,vector,result): Size mismatch");
+			"EXUmath::MultMatrixTransposedVectorAddTemplate(matrix,vector,result): Size mismatch");
 
 		CHECKandTHROW(matrix.NumberOfColumns() == result.NumberOfItems(),
-			"Hmath::MultMatrixTransposedVectorAddTemplate(matrix,vector,result): Size mismatch");
+			"EXUmath::MultMatrixTransposedVectorAddTemplate(matrix,vector,result): Size mismatch");
 
-		Real* mm = matrix.GetDataPointer();
+		const Real* mm = matrix.GetDataPointer();
 		const Real* vv = vector.GetDataPointer();
 		Index resultLength = result.NumberOfItems();
 		Index vectorLength = vector.NumberOfItems();
@@ -1099,7 +1116,7 @@ namespace EXUmath {
 		for (Index i = 0; i < resultLength; i++)
 		{
 			Real val = 0;
-			Real* mr = &mm[i];
+			const Real* mr = &mm[i];
 			for (Index j = 0; j < vectorLength; j++)
 			{
 				val += *mr * vv[j];
@@ -1116,10 +1133,10 @@ namespace EXUmath {
 	inline void MultMatrixVectorAddTemplate(const TMatrix& matrix, const TVector& vector, TVectorResult& result)
 	{
 		CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
-			"Hmath::MultMatrixVectorAddTemplate(matrix,vector,result): Size mismatch");
+			"EXUmath::MultMatrixVectorAddTemplate(matrix,vector,result): Size mismatch");
 
 		CHECKandTHROW(matrix.NumberOfRows() == result.NumberOfItems(),
-			"Hmath::MultMatrixVectorAddTemplate(matrix,vector,result): Size mismatch");
+			"EXUmath::MultMatrixVectorAddTemplate(matrix,vector,result): Size mismatch");
 
 		const Real* mm = matrix.GetDataPointer();
 		const Real* vv = vector.GetDataPointer();

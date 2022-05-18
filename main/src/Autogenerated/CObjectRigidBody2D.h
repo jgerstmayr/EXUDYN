@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-03-15  20:27:49 (last modified)
+* @date         2022-05-14  23:29:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -65,7 +65,7 @@ public: // AUTO:
 class CObjectRigidBody2D: public CObjectBody // AUTO: 
 {
 protected: // AUTO: 
-    static constexpr Index nODE2Coordinates = 3;
+    static constexpr Index nODE2coordinates = 3;
     CObjectRigidBody2DParameters parameters; //! AUTO: contains all parameters for CObjectRigidBody2D
 
 public: // AUTO: 
@@ -146,7 +146,7 @@ public: // AUTO:
     //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
     virtual Index GetODE2Size() const override
     {
-        return nODE2Coordinates;
+        return nODE2coordinates;
     }
 
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation

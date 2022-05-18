@@ -264,10 +264,12 @@ public:
 		trig.itemID = itemID;
 		trig.isFiniteElement = isFiniteElement;
 
+		Vector3D normal = EXUmath::ComputeTriangleNormal(points[0], points[1], points[2]);
+
 		for (Index i = 0; i < (Index)points.size(); i++)
 		{
 			trig.points[i] = Float3({ (float)(points[i][0]), (float)(points[i][1]), (float)(points[i][2]) });
-			trig.normals[i] = Float3({ 0.,0.,0. });
+			trig.normals[i] = Float3({ (float)(normal[0]), (float)(normal[1]), (float)(normal[2]) });
 			trig.colors[i] = colors[i];
 		}
 		return glTriangles.Append(trig);
@@ -288,6 +290,34 @@ public:
 			trig.colors[i] = colors[i];
 		}
 		return glTriangles.Append(trig);
+	}
+
+	//! create a quad with local colors; normals not considered in this call!
+	void AddQuad(const std::array<Vector3D, 4>& points, /*const std::array<Vector3D, 4>& normals,*/ const std::array<Float4, 4>& colors,
+		Index itemID, GLisFiniteElement isFiniteElement = false)
+	{
+		GLTriangle trig;
+		trig.itemID = itemID;
+		trig.isFiniteElement = isFiniteElement;
+
+		Vector3D normal = EXUmath::ComputeTriangleNormal(points[0], points[1], points[2]);
+
+		for (Index i = 0; i < 3; i++)
+		{
+			trig.points[i] = Float3({ (float)(points[i][0]), (float)(points[i][1]), (float)(points[i][2]) });
+			trig.normals[i] = Float3({ (float)(normal[0]), (float)(normal[1]), (float)(normal[2]) });
+			trig.colors[i] = colors[i];
+		}
+		glTriangles.Append(trig);
+		for (Index i = 0; i < 3; i++)
+		{
+			Index ii = i;
+			if (i > 0) { ii++; }
+			trig.points[i] = Float3({ (float)(points[ii][0]), (float)(points[ii][1]), (float)(points[ii][2]) });
+			trig.normals[i] = Float3({ (float)(normal[0]), (float)(normal[1]), (float)(normal[2]) });;
+			trig.colors[i] = colors[ii];
+		}
+		glTriangles.Append(trig);
 	}
 
 	//! create text from string with 3D-point, color and size (0 ... use default text size)

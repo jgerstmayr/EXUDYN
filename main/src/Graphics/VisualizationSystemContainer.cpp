@@ -701,11 +701,59 @@ bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data)
 	return true;
 }
 
+//! python function to write BodyGraphicsData to dictionary, e.g. for testing; 
 py::dict PyGetBodyGraphicsDataDictionary(const BodyGraphicsData& data)
 {
 	auto d = py::dict();
 	//d["type"] = std::string("Line");
-	d["TODO"] = std::string("Get graphics data to be implemented");
+	d["graphicsData"] = std::string("<not available>");
+	return d;
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//for BodyGraphicsData lists (KinematicTree)
+//! object graphics data for ground objects, rigid bodies and mass points
+bool PyWriteBodyGraphicsDataList(const py::dict& d, const char* item, BodyGraphicsDataList& data)
+{
+	data.Flush(); //erases all objects
+	if (d.contains(item))
+	{
+		py::object other = d[item]; //this is necessary to make isinstance work
+		return PyWriteBodyGraphicsDataList(other, data);
+	}//if "GraphicsDataList" does not exist, no error is displayed
+	return true;
+}
+
+//! python function to read BodyGraphicsData from py::object, which must be a list of graphicsData dictionaries
+bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsDataList& data)
+{
+	if (py::isinstance<py::list>(object)) //must be a list of graphicsData dictionaries
+	{
+		data.Flush(); //erases all objects
+		py::list list = (py::list)(object);
+
+		for (auto graphicsItem : list)
+		{
+			const py::object& pyObject = (const py::object&)graphicsItem;
+			BodyGraphicsData oneData;
+			Index i = data.Append(oneData);
+
+			PyWriteBodyGraphicsData(pyObject, data[i]);
+		}
+	}
+	else
+	{
+		PyError("GraphicsDataList must be of type list: [graphicsData, graphicsData, ...]"); return false;
+	}
+	return true;
+}
+
+//! python function to write BodyGraphicsData to dictionary, e.g. for testing; 
+py::list PyGetBodyGraphicsDataList(const BodyGraphicsDataList& data)
+{
+	auto d = py::dict();
+	//d["type"] = std::string("Line");
+	d["graphicsDataList"] = std::string("<not available>");
 	return d;
 }
 

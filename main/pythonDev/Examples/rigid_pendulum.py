@@ -46,7 +46,8 @@ print(mbs)
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
 simulationSettings.timeIntegration.numberOfSteps = 1000000
-simulationSettings.timeIntegration.endTime = 2000
+simulationSettings.timeIntegration.endTime = 4000
+simulationSettings.timeIntegration.startTime = 2000
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8*100 #10000
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-10
 simulationSettings.timeIntegration.verboseMode = 1

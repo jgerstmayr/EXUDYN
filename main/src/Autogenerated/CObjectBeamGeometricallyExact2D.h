@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-09-27  18:50:22 (last modified)
+* @date         2022-05-14  23:29:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -72,9 +72,9 @@ public: // AUTO:
 class CObjectBeamGeometricallyExact2D: public CObjectBody // AUTO: 
 {
 protected: // AUTO: 
-    static constexpr Index nODE2Coordinates = 6; //!< fixed size of coordinates used e.g. for ConstSizeVectors
+    static constexpr Index nODE2coordinates = 6; //!< fixed size of coordinates used e.g. for ConstSizeVectors
     mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set
-    mutable ConstSizeMatrix<nODE2Coordinates*nODE2Coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
+    mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
     CObjectBeamGeometricallyExact2DParameters parameters; //! AUTO: contains all parameters for CObjectBeamGeometricallyExact2D
 
 public: // AUTO: 
@@ -137,7 +137,7 @@ public: // AUTO:
     //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
     virtual Index GetODE2Size() const override
     {
-        return nODE2Coordinates;
+        return nODE2coordinates;
     }
 
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation

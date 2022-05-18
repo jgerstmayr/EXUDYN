@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:58 (last modified)
+* @date         2022-05-16  11:24:35 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,8 +113,8 @@ public: // AUTO:
     {
         cObjectRotationalMass1D->GetParameters().physicsInertia = py::cast<Real>(d["physicsInertia"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectRotationalMass1D->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "referencePosition")) { EPyUtils::SetVector3DSafely(d, "referencePosition", cObjectRotationalMass1D->GetParameters().referencePosition); /*! AUTO:  safely cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "referenceRotation")) { EPyUtils::SetMatrix3DSafely(d, "referenceRotation", cObjectRotationalMass1D->GetParameters().referenceRotation); /*! AUTO:  safely cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "referencePosition")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "referencePosition", cObjectRotationalMass1D->GetParameters().referencePosition); /*! AUTO:  safely cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "referenceRotation")) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(d, "referenceRotation", cObjectRotationalMass1D->GetParameters().referenceRotation); /*! AUTO:  safely cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectRotationalMass1D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsData(d, "VgraphicsData", visualizationObjectRotationalMass1D->GetGraphicsData()); /*! AUTO: convert dict to BodyGraphicsData*/} 
@@ -156,8 +156,8 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsInertia") == 0) { cObjectRotationalMass1D->GetParameters().physicsInertia = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { cObjectRotationalMass1D->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("referencePosition") == 0) { EPyUtils::SetVector3DSafely(value, cObjectRotationalMass1D->GetParameters().referencePosition); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("referenceRotation") == 0) { EPyUtils::SetMatrix3DSafely(value, cObjectRotationalMass1D->GetParameters().referenceRotation); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("referencePosition") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectRotationalMass1D->GetParameters().referencePosition); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("referenceRotation") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectRotationalMass1D->GetParameters().referenceRotation); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectRotationalMass1D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectRotationalMass1D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:59 (last modified)
+* @date         2022-05-16  11:24:37 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,7 +112,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "constrainedAxes")) { cObjectJointRollingDisc->GetParameters().constrainedAxes = py::cast<std::vector<Index>>(d["constrainedAxes"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectJointRollingDisc->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         cObjectJointRollingDisc->GetParameters().discRadius = py::cast<Real>(d["discRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "planeNormal")) { EPyUtils::SetVector3DSafely(d, "planeNormal", cObjectJointRollingDisc->GetParameters().planeNormal); /*! AUTO:  safely cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "planeNormal")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "planeNormal", cObjectJointRollingDisc->GetParameters().planeNormal); /*! AUTO:  safely cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectJointRollingDisc->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdiscWidth")) { visualizationObjectJointRollingDisc->GetDiscWidth() = py::cast<float>(d["VdiscWidth"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -162,7 +162,7 @@ public: // AUTO:
         else if (parameterName.compare("constrainedAxes") == 0) { cObjectJointRollingDisc->GetParameters().constrainedAxes = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectJointRollingDisc->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("discRadius") == 0) { cObjectJointRollingDisc->GetParameters().discRadius = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("planeNormal") == 0) { EPyUtils::SetVector3DSafely(value, cObjectJointRollingDisc->GetParameters().planeNormal); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("planeNormal") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectJointRollingDisc->GetParameters().planeNormal); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectJointRollingDisc->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdiscWidth") == 0) { visualizationObjectJointRollingDisc->GetDiscWidth() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectJointRollingDisc->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

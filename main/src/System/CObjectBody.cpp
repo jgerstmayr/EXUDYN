@@ -18,7 +18,7 @@
 ************************************************************************************************ */
 
 #include "Main/CSystemData.h"
-#include "Utilities/RigidBodyMath.h"
+#include "Linalg/RigidBodyMath.h"
 
 
 CNode*& CObject::GetCNode(Index localIndex)

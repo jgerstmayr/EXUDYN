@@ -17,6 +17,7 @@ import sys, platform
 if sys.version_info.major != 3 or sys.version_info.minor < 6:# or sys.version_info.minor > 12:
     raise ImportError("EXUDYN only supports python versions >= 3.6")
 isMacOS = (sys.platform == 'darwin')
+isWindows = (sys.platform == 'win32')
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #include right exudyn module now:
@@ -56,12 +57,12 @@ runMiniExamples = True
 runCppUnitTests = True
 
 printTestResults = False #print list, which can be imported for new reference values
-if platform.architecture()[0] == '32bit':
+if platform.architecture()[0] == '32bit' and isWindows:
     testTolerance = 2e-12 #2022-03-17: use 2e-12 instead of 2e-13 to complete all tests; larger tolerance, because reference values are computed with 64bit version (WHY?)
-elif isMacOS:
-    testTolerance = 2.5e-11 #use larger tolerance value due to different compilation (heavy top gives error > 2.2e-11)
+elif isMacOS or not isWindows:
+    testTolerance = 3e-11 #use larger tolerance value due to different compilation (heavy top gives error > 2.2e-11) on linux error > 2.5e-11
 else:
-    testTolerance = 5e-14
+    testTolerance = 5e-14 #on windows 64bit
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 #additional options for old trapezoidal solver, NOT active any more!
@@ -102,7 +103,9 @@ exuDateStr = str(exuDate.year) + '-' + NumTo2digits(exuDate.month) + '-' + NumTo
 platformString = platform.architecture()[0]#'32bit'
 platformString += 'P'+str(sys.version_info.major) +'.'+ str(sys.version_info.minor)
 if isMacOS:
-    platformString += 'MacOSX'
+    platformString += 'macOS'
+elif not isWindows:
+    platformString += sys.platform
 
 logFileName = '../TestSuiteLogs/testSuiteLog_V'+exu.GetVersionString()+'_'+platformString+'.txt'
 exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=False) #write all testSuite logs to files
@@ -114,6 +117,7 @@ exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
 exu.Print('EXUDYN version      = '+exu.GetVersionString())
 exu.Print('EXUDYN build date   = '+exuDateStr)
 exu.Print('platform            = '+platform.architecture()[0])
+exu.Print('system              = '+sys.platform)
 exu.Print('python version      = '+str(sys.version_info.major)+'.'+str(sys.version_info.minor)+'.'+str(sys.version_info.micro))
 exu.Print('test tolerance      = ',testTolerance)
 exu.Print('testsuite date (now)= '+dateStr)

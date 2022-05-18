@@ -25,6 +25,13 @@ import exudyn as exu
 from modelUnitTests import RunAllModelUnitTests, TestInterface, ExudynTestStructure, exudynTestGlobals
 import time
 
+psutilExists = False
+try:
+    import psutil #for cpu_percent
+    psutilExists = True
+except:
+    print('*** WARNING: no psutils installed! Will NOT show CPU load during performance tests! ***')
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
@@ -95,6 +102,9 @@ exu.Print('processor           = '+platform.processor())
 exu.Print('python version      = '+str(sys.version_info.major)+'.'+str(sys.version_info.minor)+'.'+str(sys.version_info.micro))
 exu.Print('test tolerance      = ',testTolerance)
 exu.Print('test date (now)     = '+dateStr)
+if psutilExists:
+    exu.Print('CPU usage (%/thread)= '+str(psutil.cpu_percent(interval=1, percpu=True)))
+    exu.Print('Power plugged       = '+str(psutil.sensors_battery().power_plugged))
 exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
 
 
@@ -169,6 +179,9 @@ for file in testFileList:
 exu.Print('\n')
 exu.SetWriteToConsole(True) #final output always written
 exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=True) #write also to file (needed?)
+
+if psutilExists:
+    exu.Print('CPU usage (%/thread)= '+str(psutil.cpu_percent(interval=1, percpu=True)))
 
 exu.Print('****************************************************')
 if len(testsFailed) == 0:

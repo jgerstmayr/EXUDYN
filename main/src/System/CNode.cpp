@@ -63,23 +63,28 @@ const Real& CNodeODE2::GetCurrentCoordinate_tt(Index i) const
 	return computationalData->currentState.ODE2Coords_tt[globalODE2CoordinateIndex + i];
 }
 
-//! get vector with current coordinates; corresponds to displacements
-LinkedDataVector CNodeODE2::GetCurrentCoordinateVector() const
-{
-	return LinkedDataVector(computationalData->currentState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
-}
 
-//! get vector with current coordinates_t; corresponds to velocities
-LinkedDataVector CNodeODE2::GetCurrentCoordinateVector_t() const
-{
-	return LinkedDataVector(computationalData->currentState.ODE2Coords_t, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
-}
-
-//! get vector with current coordinates_tt; corresponds to accelerations
-LinkedDataVector CNodeODE2::GetCurrentCoordinateVector_tt() const
-{
-	return LinkedDataVector(computationalData->currentState.ODE2Coords_tt, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
-}
+//in CPP:
+//ALL 6 PERFORMANCE TESTS SUCCESSFUL
+//TOTAL PERFORMANCE TEST TIME = 87.94748115539551 seconds
+//ALL 6 PERFORMANCE TESTS SUCCESSFUL
+//TOTAL PERFORMANCE TEST TIME = 88.8079776763916 seconds
+//LinkedDataVector CNodeODE2::GetCurrentCoordinateVector() const
+//{
+//	return LinkedDataVector(computationalData->currentState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+//}
+//
+////! get vector with current coordinates_t; corresponds to velocities
+//LinkedDataVector CNodeODE2::GetCurrentCoordinateVector_t() const
+//{
+//	return LinkedDataVector(computationalData->currentState.ODE2Coords_t, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+//}
+//
+////! get vector with current coordinates_tt; corresponds to accelerations
+//LinkedDataVector CNodeODE2::GetCurrentCoordinateVector_tt() const
+//{
+//	return LinkedDataVector(computationalData->currentState.ODE2Coords_tt, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+//}
 
 LinkedDataVector CNodeODE2::GetInitialCoordinateVector() const
 {

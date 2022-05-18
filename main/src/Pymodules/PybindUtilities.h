@@ -18,6 +18,8 @@
 
 #include "Linalg/MatrixContainer.h"	
 #include "System/ItemIndices.h"	
+//#include "Pymodules/PyMatrixVector.h"
+#include "Utilities/ExceptionsTemplates.h"
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -25,6 +27,8 @@
 //#include <pybind11/operators.h>
 #include <pybind11/numpy.h>			//interface to numpy
 //#include <pybind11/cast.h>		//for argument annotation
+
+//typedef py::array_t<Real> PyNumpyArray; //PyNumpyArray is used at some places to avoid include of pybind
 
 namespace py = pybind11;            //! namespace 'py' used throughout in code
 
@@ -368,20 +372,21 @@ namespace EPyUtils {
 		return false;
 	}
 
-	inline bool SetVector2DSafely(const py::dict& d, const char* item, Vector2D& destination) {
-		return SetSlimVectorTemplateSafely<Real, 2>(d, item, destination); }
+	//inline bool SetVector2DSafely(const py::dict& d, const char* item, Vector2D& destination) {
+	//	return SetSlimVectorTemplateSafely<Real, 2>(d, item, destination); }
 
-	inline bool SetVector3DSafely(const py::dict& d, const char* item, Vector3D& destination) {
-		return SetSlimVectorTemplateSafely<Real, 3>(d, item, destination);}
+	//Delete:
+	//inline bool SetVector3DSafely(const py::dict& d, const char* item, Vector3D& destination) {
+	//	return SetSlimVectorTemplateSafely<Real, 3>(d, item, destination);}
 
-	inline bool SetVector4DSafely(const py::dict& d, const char* item, Vector4D& destination) {
-		return SetSlimVectorTemplateSafely<Real, 4>(d, item, destination);}
+	//inline bool SetVector4DSafely(const py::dict& d, const char* item, Vector4D& destination) {
+	//	return SetSlimVectorTemplateSafely<Real, 4>(d, item, destination);}
 
-	inline bool SetVector6DSafely(const py::dict& d, const char* item, Vector6D& destination) {
-		return SetSlimVectorTemplateSafely<Real, 6>(d, item, destination);}
+	//inline bool SetVector6DSafely(const py::dict& d, const char* item, Vector6D& destination) {
+	//	return SetSlimVectorTemplateSafely<Real, 6>(d, item, destination);}
 
-	inline bool SetVector7DSafely(const py::dict& d, const char* item, Vector7D& destination) {
-		return SetSlimVectorTemplateSafely<Real, 7>(d, item, destination);}
+	//inline bool SetVector7DSafely(const py::dict& d, const char* item, Vector7D& destination) {
+	//	return SetSlimVectorTemplateSafely<Real, 7>(d, item, destination);}
 
 
 
@@ -466,25 +471,26 @@ namespace EPyUtils {
 		return false;
 	}
 
-	inline bool SetMatrix6DSafely(const py::object& value, Matrix6D& destination) 
-	{
-		return SetConstMatrixTemplateSafely<6, 6>(value, destination);
-	}
+	//inline bool SetMatrix6DSafely(const py::object& value, Matrix6D& destination) 
+	//{
+	//	return SetConstMatrixTemplateSafely<6, 6>(value, destination);
+	//}
 
-	inline bool SetMatrix6DSafely(const py::dict& d, const char* item, Matrix6D& destination) 
-	{
-		return SetConstMatrixTemplateSafely<6, 6>(d, item, destination);
-	}
+	//DELETE:
+	//inline bool SetMatrix6DSafely(const py::dict& d, const char* item, Matrix6D& destination) 
+	//{
+	//	return SetConstMatrixTemplateSafely<6, 6>(d, item, destination);
+	//}
 
-	inline bool SetMatrix3DSafely(const py::object& value, Matrix3D& destination) 
-	{
-		return SetConstMatrixTemplateSafely<3, 3>(value, destination);
-	}
+	//inline bool SetMatrix3DSafely(const py::object& value, Matrix3D& destination) 
+	//{
+	//	return SetConstMatrixTemplateSafely<3, 3>(value, destination);
+	//}
 
-	inline bool SetMatrix3DSafely(const py::dict& d, const char* item, Matrix3D& destination) 
-	{
-		return SetConstMatrixTemplateSafely<3, 3>(d, item, destination);
-	}
+	//inline bool SetMatrix3DSafely(const py::dict& d, const char* item, Matrix3D& destination) 
+	//{
+	//	return SetConstMatrixTemplateSafely<3, 3>(d, item, destination);
+	//}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! Set a general sized Matrix from a py::object safely and return false (if failed) and true if value has been set
@@ -705,7 +711,6 @@ namespace EPyUtils {
 	}
 
 
-
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//!convert Vector to numpy vector
@@ -722,7 +727,7 @@ namespace EPyUtils {
 	}
 
 	//!convert ArrayIndex to numpy vector
-	inline py::array_t<Real> ArrayIndex2NumPy(const ArrayIndex& v)
+	inline py::array_t<Index> ArrayIndex2NumPy(const ArrayIndex& v)
 	{
 		return py::array_t<Index>(v.NumberOfItems(), v.GetDataPointer()); 
 	}
@@ -735,6 +740,14 @@ namespace EPyUtils {
 	//{
 	//	return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer()); //copy array (could also be referenced!)
 	//}
+
+	//!convert Matrix to numpy matrix
+	template<class TMatrix>
+	py::array_t<Real> Matrix2NumPyTemplate(const TMatrix& matrix)
+	{
+		return py::array_t<Real>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
+	}
+
 
 	//!convert Matrix to numpy matrix
 	inline py::array_t<Real> Matrix2NumPy(const Matrix& matrix)

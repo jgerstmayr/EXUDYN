@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -85,27 +85,27 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: number of DOF, above which solution file (coordinatesSolutionFile) buffers are always flushed, irrespectively of whether flushFilesImmediately is set True or False (see also flushFilesImmediately); for larger files, writing takes so much time that flushing does not add considerable time
   void PySetFlushFilesDOF(const Index& flushFilesDOFInit) { flushFilesDOF = EXUstd::GetSafelyPInt(flushFilesDOFInit,"flushFilesDOF"); }
   //! AUTO: Read (Copy) access to: number of DOF, above which solution file (coordinatesSolutionFile) buffers are always flushed, irrespectively of whether flushFilesImmediately is set True or False (see also flushFilesImmediately); for larger files, writing takes so much time that flushing does not add considerable time
-  Index PyGetFlushFilesDOF() const { return (Index)(flushFilesDOF); }
+  Index PyGetFlushFilesDOF() const { return Index(flushFilesDOF); }
 
   //! AUTO: Set function (needed in pybind) for: precision for floating point numbers written to solution and sensor files
   void PySetOutputPrecision(const Index& outputPrecisionInit) { outputPrecision = EXUstd::GetSafelyUInt(outputPrecisionInit,"outputPrecision"); }
   //! AUTO: Read (Copy) access to: precision for floating point numbers written to solution and sensor files
-  Index PyGetOutputPrecision() const { return (Index)(outputPrecision); }
+  Index PyGetOutputPrecision() const { return Index(outputPrecision); }
 
   //! AUTO: Set function (needed in pybind) for: time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance
   void PySetRestartWritePeriod(const Real& restartWritePeriodInit) { restartWritePeriod = EXUstd::GetSafelyUReal(restartWritePeriodInit,"restartWritePeriod"); }
   //! AUTO: Read (Copy) access to: time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance
-  Real PyGetRestartWritePeriod() const { return (Real)(restartWritePeriod); }
+  Real PyGetRestartWritePeriod() const { return Real(restartWritePeriod); }
 
   //! AUTO: Set function (needed in pybind) for: time span (period), determines how often the sensor output is written to file or internal storage during a simulation
   void PySetSensorsWritePeriod(const Real& sensorsWritePeriodInit) { sensorsWritePeriod = EXUstd::GetSafelyUReal(sensorsWritePeriodInit,"sensorsWritePeriod"); }
   //! AUTO: Read (Copy) access to: time span (period), determines how often the sensor output is written to file or internal storage during a simulation
-  Real PyGetSensorsWritePeriod() const { return (Real)(sensorsWritePeriod); }
+  Real PyGetSensorsWritePeriod() const { return Real(sensorsWritePeriod); }
 
   //! AUTO: Set function (needed in pybind) for: time span (period), determines how often the solution file (coordinatesSolutionFile) is written during a simulation
   void PySetSolutionWritePeriod(const Real& solutionWritePeriodInit) { solutionWritePeriod = EXUstd::GetSafelyUReal(solutionWritePeriodInit,"solutionWritePeriod"); }
   //! AUTO: Read (Copy) access to: time span (period), determines how often the solution file (coordinatesSolutionFile) is written during a simulation
-  Real PyGetSolutionWritePeriod() const { return (Real)(solutionWritePeriod); }
+  Real PyGetSolutionWritePeriod() const { return Real(solutionWritePeriod); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -153,7 +153,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -197,12 +197,12 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: minimum size of coordinates in relative differentiation parameter
   void PySetMinimumCoordinateSize(const Real& minimumCoordinateSizeInit) { minimumCoordinateSize = EXUstd::GetSafelyUReal(minimumCoordinateSizeInit,"minimumCoordinateSize"); }
   //! AUTO: Read (Copy) access to: minimum size of coordinates in relative differentiation parameter
-  Real PyGetMinimumCoordinateSize() const { return (Real)(minimumCoordinateSize); }
+  Real PyGetMinimumCoordinateSize() const { return Real(minimumCoordinateSize); }
 
   //! AUTO: Set function (needed in pybind) for: relative differentiation parameter epsilon; the numerical differentiation parameter \f$\varepsilon\f$ follows from the formula (\f$\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)\f$, with \f$\varepsilon_\mathrm{relative}\f$=relativeEpsilon, \f$q_{min} = \f$minimumCoordinateSize, \f$q_i\f$ is the current coordinate which is differentiated, and \f$qRef_i\f$ is the reference coordinate of the current coordinate
   void PySetRelativeEpsilon(const Real& relativeEpsilonInit) { relativeEpsilon = EXUstd::GetSafelyUReal(relativeEpsilonInit,"relativeEpsilon"); }
   //! AUTO: Read (Copy) access to: relative differentiation parameter epsilon; the numerical differentiation parameter \f$\varepsilon\f$ follows from the formula (\f$\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)\f$, with \f$\varepsilon_\mathrm{relative}\f$=relativeEpsilon, \f$q_{min} = \f$minimumCoordinateSize, \f$q_i\f$ is the current coordinate which is differentiated, and \f$qRef_i\f$ is the reference coordinate of the current coordinate
-  Real PyGetRelativeEpsilon() const { return (Real)(relativeEpsilon); }
+  Real PyGetRelativeEpsilon() const { return Real(relativeEpsilon); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -233,7 +233,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -269,12 +269,12 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: absolute tolerance for discontinuous (post Newton) iterations; the errors represent absolute residuals and can be quite high
   void PySetIterationTolerance(const Real& iterationToleranceInit) { iterationTolerance = EXUstd::GetSafelyUReal(iterationToleranceInit,"iterationTolerance"); }
   //! AUTO: Read (Copy) access to: absolute tolerance for discontinuous (post Newton) iterations; the errors represent absolute residuals and can be quite high
-  Real PyGetIterationTolerance() const { return (Real)(iterationTolerance); }
+  Real PyGetIterationTolerance() const { return Real(iterationTolerance); }
 
   //! AUTO: Set function (needed in pybind) for: maximum number of discontinuous (post Newton) iterations
   void PySetMaxIterations(const Index& maxIterationsInit) { maxIterations = EXUstd::GetSafelyUInt(maxIterationsInit,"maxIterations"); }
   //! AUTO: Read (Copy) access to: maximum number of discontinuous (post Newton) iterations
-  Index PyGetMaxIterations() const { return (Index)(maxIterations); }
+  Index PyGetMaxIterations() const { return Index(maxIterations); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -301,7 +301,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -358,42 +358,42 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance
   void PySetAbsoluteTolerance(const Real& absoluteToleranceInit) { absoluteTolerance = EXUstd::GetSafelyUReal(absoluteToleranceInit,"absoluteTolerance"); }
   //! AUTO: Read (Copy) access to: absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance
-  Real PyGetAbsoluteTolerance() const { return (Real)(absoluteTolerance); }
+  Real PyGetAbsoluteTolerance() const { return Real(absoluteTolerance); }
 
   //! AUTO: Set function (needed in pybind) for: this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (value=\f$u_1^2\f$+\f$u_2^2\f$+...), and solutionV/A...; if the norm of solution vectors are larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)
   void PySetMaximumSolutionNorm(const Real& maximumSolutionNormInit) { maximumSolutionNorm = EXUstd::GetSafelyUReal(maximumSolutionNormInit,"maximumSolutionNorm"); }
   //! AUTO: Read (Copy) access to: this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (value=\f$u_1^2\f$+\f$u_2^2\f$+...), and solutionV/A...; if the norm of solution vectors are larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)
-  Real PyGetMaximumSolutionNorm() const { return (Real)(maximumSolutionNorm); }
+  Real PyGetMaximumSolutionNorm() const { return Real(maximumSolutionNorm); }
 
   //! AUTO: Set function (needed in pybind) for: maximum number of iterations (including modified + restart Newton steps); after that iterations, the static/dynamic solver stops with error
   void PySetMaxIterations(const Index& maxIterationsInit) { maxIterations = EXUstd::GetSafelyUInt(maxIterationsInit,"maxIterations"); }
   //! AUTO: Read (Copy) access to: maximum number of iterations (including modified + restart Newton steps); after that iterations, the static/dynamic solver stops with error
-  Index PyGetMaxIterations() const { return (Index)(maxIterations); }
+  Index PyGetMaxIterations() const { return Index(maxIterations); }
 
   //! AUTO: Set function (needed in pybind) for: maximum number of iterations for modified Newton (without Jacobian update); after that number of iterations, the modified Newton method gets a jacobian update and is further iterated
   void PySetMaxModifiedNewtonIterations(const Index& maxModifiedNewtonIterationsInit) { maxModifiedNewtonIterations = EXUstd::GetSafelyUInt(maxModifiedNewtonIterationsInit,"maxModifiedNewtonIterations"); }
   //! AUTO: Read (Copy) access to: maximum number of iterations for modified Newton (without Jacobian update); after that number of iterations, the modified Newton method gets a jacobian update and is further iterated
-  Index PyGetMaxModifiedNewtonIterations() const { return (Index)(maxModifiedNewtonIterations); }
+  Index PyGetMaxModifiedNewtonIterations() const { return Index(maxModifiedNewtonIterations); }
 
   //! AUTO: Set function (needed in pybind) for: maximum number of iterations for modified Newton after aJacobian update; after that number of iterations, the full Newton method is started for this step
   void PySetMaxModifiedNewtonRestartIterations(const Index& maxModifiedNewtonRestartIterationsInit) { maxModifiedNewtonRestartIterations = EXUstd::GetSafelyUInt(maxModifiedNewtonRestartIterationsInit,"maxModifiedNewtonRestartIterations"); }
   //! AUTO: Read (Copy) access to: maximum number of iterations for modified Newton after aJacobian update; after that number of iterations, the full Newton method is started for this step
-  Index PyGetMaxModifiedNewtonRestartIterations() const { return (Index)(maxModifiedNewtonRestartIterations); }
+  Index PyGetMaxModifiedNewtonRestartIterations() const { return Index(maxModifiedNewtonRestartIterations); }
 
   //! AUTO: Set function (needed in pybind) for: maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed
   void PySetModifiedNewtonContractivity(const Real& modifiedNewtonContractivityInit) { modifiedNewtonContractivity = EXUstd::GetSafelyPReal(modifiedNewtonContractivityInit,"modifiedNewtonContractivity"); }
   //! AUTO: Read (Copy) access to: maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed
-  Real PyGetModifiedNewtonContractivity() const { return (Real)(modifiedNewtonContractivity); }
+  Real PyGetModifiedNewtonContractivity() const { return Real(modifiedNewtonContractivity); }
 
   //! AUTO: Set function (needed in pybind) for: 0 ... use residual for computation of error (standard); 1 ... use \hac{ODE2} and \hac{ODE1} newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
   void PySetNewtonResidualMode(const Index& newtonResidualModeInit) { newtonResidualMode = EXUstd::GetSafelyUInt(newtonResidualModeInit,"newtonResidualMode"); }
   //! AUTO: Read (Copy) access to: 0 ... use residual for computation of error (standard); 1 ... use \hac{ODE2} and \hac{ODE1} newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
-  Index PyGetNewtonResidualMode() const { return (Index)(newtonResidualMode); }
+  Index PyGetNewtonResidualMode() const { return Index(newtonResidualMode); }
 
   //! AUTO: Set function (needed in pybind) for: relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)
   void PySetRelativeTolerance(const Real& relativeToleranceInit) { relativeTolerance = EXUstd::GetSafelyUReal(relativeToleranceInit,"relativeTolerance"); }
   //! AUTO: Read (Copy) access to: relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)
-  Real PyGetRelativeTolerance() const { return (Real)(relativeTolerance); }
+  Real PyGetRelativeTolerance() const { return Real(relativeTolerance); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -431,7 +431,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -473,17 +473,17 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: value beta for Newmark method; default value beta = \f$\frac 1 4\f$ corresponds to (undamped) trapezoidal rule
   void PySetNewmarkBeta(const Real& newmarkBetaInit) { newmarkBeta = EXUstd::GetSafelyUReal(newmarkBetaInit,"newmarkBeta"); }
   //! AUTO: Read (Copy) access to: value beta for Newmark method; default value beta = \f$\frac 1 4\f$ corresponds to (undamped) trapezoidal rule
-  Real PyGetNewmarkBeta() const { return (Real)(newmarkBeta); }
+  Real PyGetNewmarkBeta() const { return Real(newmarkBeta); }
 
   //! AUTO: Set function (needed in pybind) for: value gamma for Newmark method; default value gamma = \f$\frac 1 2\f$ corresponds to (undamped) trapezoidal rule
   void PySetNewmarkGamma(const Real& newmarkGammaInit) { newmarkGamma = EXUstd::GetSafelyUReal(newmarkGammaInit,"newmarkGamma"); }
   //! AUTO: Read (Copy) access to: value gamma for Newmark method; default value gamma = \f$\frac 1 2\f$ corresponds to (undamped) trapezoidal rule
-  Real PyGetNewmarkGamma() const { return (Real)(newmarkGamma); }
+  Real PyGetNewmarkGamma() const { return Real(newmarkGamma); }
 
   //! AUTO: Set function (needed in pybind) for: spectral radius for Generalized-alpha solver; set this value to 1 for no damping or to 0 < spectralRadius < 1 for damping of high-frequency dynamics; for position-level constraints (index 3), spectralRadius must be < 1
   void PySetSpectralRadius(const Real& spectralRadiusInit) { spectralRadius = EXUstd::GetSafelyUReal(spectralRadiusInit,"spectralRadius"); }
   //! AUTO: Read (Copy) access to: spectral radius for Generalized-alpha solver; set this value to 1 for no damping or to 0 < spectralRadius < 1 for damping of high-frequency dynamics; for position-level constraints (index 3), spectralRadius must be < 1
-  Real PyGetSpectralRadius() const { return (Real)(spectralRadius); }
+  Real PyGetSpectralRadius() const { return Real(spectralRadius); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -513,7 +513,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -574,7 +574,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -608,6 +608,7 @@ public: // AUTO:
   Real minimumStepSize;                           //!< AUTO: \f$h_{min}\f$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)
   Index numberOfSteps;                            //!< AUTO: \f$n_{steps}\f$: number of steps in time integration; (maximum) stepSize \f$h\f$ is computed from \f$h = \frac{t_{end} - t_{start}}{n_{steps}}\f$; for automatic stepsize control, this stepSize is the maximum steps size, \f$h_{max} = h\f$
   Real realtimeFactor;                            //!< AUTO: if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)
+  Index realtimeWaitMicroseconds;                 //!< AUTO: if simulateInRealtime=True, a loop runs which waits realtimeWaitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy
   Real relativeTolerance;                         //!< AUTO: \f$r_{tol}\f$: if automaticStepSize=True, relative tolerance for the error control; must fulfill \f$r_{tol} \ge 0\f$; see \refSection{sec:ExplicitSolver}
   bool reuseConstantMassMatrix;                   //!< AUTO: True: does not recompute constant mass matrices (e.g. of some finite elements, mass points, etc.); if False, it always recomputes the mass matrix (e.g. needed, if user changes mass parameters via Python)
   bool simulateInRealtime;                        //!< AUTO: True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues
@@ -635,6 +636,7 @@ public: // AUTO:
     minimumStepSize = 1e-8;
     numberOfSteps = 100;
     realtimeFactor = 1;
+    realtimeWaitMicroseconds = 1000;
     relativeTolerance = 1e-8;
     reuseConstantMassMatrix = true;
     simulateInRealtime = false;
@@ -650,87 +652,92 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: \f$a_{tol}\f$: if automaticStepSize=True, absolute tolerance for the error control; must fulfill \f$a_{tol} > 0\f$; see \refSection{sec:ExplicitSolver}
   void PySetAbsoluteTolerance(const Real& absoluteToleranceInit) { absoluteTolerance = EXUstd::GetSafelyUReal(absoluteToleranceInit,"absoluteTolerance"); }
   //! AUTO: Read (Copy) access to: \f$a_{tol}\f$: if automaticStepSize=True, absolute tolerance for the error control; must fulfill \f$a_{tol} > 0\f$; see \refSection{sec:ExplicitSolver}
-  Real PyGetAbsoluteTolerance() const { return (Real)(absoluteTolerance); }
+  Real PyGetAbsoluteTolerance() const { return Real(absoluteTolerance); }
 
   //! AUTO: Set function (needed in pybind) for: Multiplicative factor (MUST BE: 0 < factor < 1) for step size to decrese due to discontinuousIteration or Newton errors
   void PySetAdaptiveStepDecrease(const Real& adaptiveStepDecreaseInit) { adaptiveStepDecrease = EXUstd::GetSafelyUReal(adaptiveStepDecreaseInit,"adaptiveStepDecrease"); }
   //! AUTO: Read (Copy) access to: Multiplicative factor (MUST BE: 0 < factor < 1) for step size to decrese due to discontinuousIteration or Newton errors
-  Real PyGetAdaptiveStepDecrease() const { return (Real)(adaptiveStepDecrease); }
+  Real PyGetAdaptiveStepDecrease() const { return Real(adaptiveStepDecrease); }
 
   //! AUTO: Set function (needed in pybind) for: Multiplicative factor (MUST BE > 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors
   void PySetAdaptiveStepIncrease(const Real& adaptiveStepIncreaseInit) { adaptiveStepIncrease = EXUstd::GetSafelyUReal(adaptiveStepIncreaseInit,"adaptiveStepIncrease"); }
   //! AUTO: Read (Copy) access to: Multiplicative factor (MUST BE > 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors
-  Real PyGetAdaptiveStepIncrease() const { return (Real)(adaptiveStepIncrease); }
+  Real PyGetAdaptiveStepIncrease() const { return Real(adaptiveStepIncrease); }
 
   //! AUTO: Set function (needed in pybind) for: Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value
   void PySetAdaptiveStepRecoveryIterations(const Index& adaptiveStepRecoveryIterationsInit) { adaptiveStepRecoveryIterations = EXUstd::GetSafelyUInt(adaptiveStepRecoveryIterationsInit,"adaptiveStepRecoveryIterations"); }
   //! AUTO: Read (Copy) access to: Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value
-  Index PyGetAdaptiveStepRecoveryIterations() const { return (Index)(adaptiveStepRecoveryIterations); }
+  Index PyGetAdaptiveStepRecoveryIterations() const { return Index(adaptiveStepRecoveryIterations); }
 
   //! AUTO: Set function (needed in pybind) for: Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors
   void PySetAdaptiveStepRecoverySteps(const Index& adaptiveStepRecoveryStepsInit) { adaptiveStepRecoverySteps = EXUstd::GetSafelyUInt(adaptiveStepRecoveryStepsInit,"adaptiveStepRecoverySteps"); }
   //! AUTO: Read (Copy) access to: Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors
-  Index PyGetAdaptiveStepRecoverySteps() const { return (Index)(adaptiveStepRecoverySteps); }
+  Index PyGetAdaptiveStepRecoverySteps() const { return Index(adaptiveStepRecoverySteps); }
 
   //! AUTO: Set function (needed in pybind) for: \f$t_{end}\f$: end time of time integration
   void PySetEndTime(const Real& endTimeInit) { endTime = EXUstd::GetSafelyUReal(endTimeInit,"endTime"); }
   //! AUTO: Read (Copy) access to: \f$t_{end}\f$: end time of time integration
-  Real PyGetEndTime() const { return (Real)(endTime); }
+  Real PyGetEndTime() const { return Real(endTime); }
 
   //! AUTO: Set function (needed in pybind) for: \f$h_{init}\f$: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.
   void PySetInitialStepSize(const Real& initialStepSizeInit) { initialStepSize = EXUstd::GetSafelyUReal(initialStepSizeInit,"initialStepSize"); }
   //! AUTO: Read (Copy) access to: \f$h_{init}\f$: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.
-  Real PyGetInitialStepSize() const { return (Real)(initialStepSize); }
+  Real PyGetInitialStepSize() const { return Real(initialStepSize); }
 
   //! AUTO: Set function (needed in pybind) for: \f$h_{min}\f$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)
   void PySetMinimumStepSize(const Real& minimumStepSizeInit) { minimumStepSize = EXUstd::GetSafelyPReal(minimumStepSizeInit,"minimumStepSize"); }
   //! AUTO: Read (Copy) access to: \f$h_{min}\f$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)
-  Real PyGetMinimumStepSize() const { return (Real)(minimumStepSize); }
+  Real PyGetMinimumStepSize() const { return Real(minimumStepSize); }
 
   //! AUTO: Set function (needed in pybind) for: \f$n_{steps}\f$: number of steps in time integration; (maximum) stepSize \f$h\f$ is computed from \f$h = \frac{t_{end} - t_{start}}{n_{steps}}\f$; for automatic stepsize control, this stepSize is the maximum steps size, \f$h_{max} = h\f$
   void PySetNumberOfSteps(const Index& numberOfStepsInit) { numberOfSteps = EXUstd::GetSafelyPInt(numberOfStepsInit,"numberOfSteps"); }
   //! AUTO: Read (Copy) access to: \f$n_{steps}\f$: number of steps in time integration; (maximum) stepSize \f$h\f$ is computed from \f$h = \frac{t_{end} - t_{start}}{n_{steps}}\f$; for automatic stepsize control, this stepSize is the maximum steps size, \f$h_{max} = h\f$
-  Index PyGetNumberOfSteps() const { return (Index)(numberOfSteps); }
+  Index PyGetNumberOfSteps() const { return Index(numberOfSteps); }
 
   //! AUTO: Set function (needed in pybind) for: if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)
   void PySetRealtimeFactor(const Real& realtimeFactorInit) { realtimeFactor = EXUstd::GetSafelyPReal(realtimeFactorInit,"realtimeFactor"); }
   //! AUTO: Read (Copy) access to: if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)
-  Real PyGetRealtimeFactor() const { return (Real)(realtimeFactor); }
+  Real PyGetRealtimeFactor() const { return Real(realtimeFactor); }
+
+  //! AUTO: Set function (needed in pybind) for: if simulateInRealtime=True, a loop runs which waits realtimeWaitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy
+  void PySetRealtimeWaitMicroseconds(const Index& realtimeWaitMicrosecondsInit) { realtimeWaitMicroseconds = EXUstd::GetSafelyPInt(realtimeWaitMicrosecondsInit,"realtimeWaitMicroseconds"); }
+  //! AUTO: Read (Copy) access to: if simulateInRealtime=True, a loop runs which waits realtimeWaitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy
+  Index PyGetRealtimeWaitMicroseconds() const { return Index(realtimeWaitMicroseconds); }
 
   //! AUTO: Set function (needed in pybind) for: \f$r_{tol}\f$: if automaticStepSize=True, relative tolerance for the error control; must fulfill \f$r_{tol} \ge 0\f$; see \refSection{sec:ExplicitSolver}
   void PySetRelativeTolerance(const Real& relativeToleranceInit) { relativeTolerance = EXUstd::GetSafelyUReal(relativeToleranceInit,"relativeTolerance"); }
   //! AUTO: Read (Copy) access to: \f$r_{tol}\f$: if automaticStepSize=True, relative tolerance for the error control; must fulfill \f$r_{tol} \ge 0\f$; see \refSection{sec:ExplicitSolver}
-  Real PyGetRelativeTolerance() const { return (Real)(relativeTolerance); }
+  Real PyGetRelativeTolerance() const { return Real(relativeTolerance); }
 
   //! AUTO: Set function (needed in pybind) for: \f$t_{start}\f$: start time of time integration (usually set to zero)
   void PySetStartTime(const Real& startTimeInit) { startTime = EXUstd::GetSafelyUReal(startTimeInit,"startTime"); }
   //! AUTO: Read (Copy) access to: \f$t_{start}\f$: start time of time integration (usually set to zero)
-  Real PyGetStartTime() const { return (Real)(startTime); }
+  Real PyGetStartTime() const { return Real(startTime); }
 
   //! AUTO: Set function (needed in pybind) for: add up the following binary flags: 0 ... show only step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step or period, 4 ... show Newton jacobians (jac) per step or period, 8 ... show discontinuous iterations (Dit) per step or period, 16 ... show step size (dt), 32 ... show CPU time spent; 64 ... show adaptive step reduction warnings; 128 ... show step increase information; 1024 ... show every time step; time is usually shown in fractions of seconds (s), hours (h), or days
   void PySetStepInformation(const Index& stepInformationInit) { stepInformation = EXUstd::GetSafelyUInt(stepInformationInit,"stepInformation"); }
   //! AUTO: Read (Copy) access to: add up the following binary flags: 0 ... show only step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step or period, 4 ... show Newton jacobians (jac) per step or period, 8 ... show discontinuous iterations (Dit) per step or period, 16 ... show step size (dt), 32 ... show CPU time spent; 64 ... show adaptive step reduction warnings; 128 ... show step increase information; 1024 ... show every time step; time is usually shown in fractions of seconds (s), hours (h), or days
-  Index PyGetStepInformation() const { return (Index)(stepInformation); }
+  Index PyGetStepInformation() const { return Index(stepInformation); }
 
   //! AUTO: Set function (needed in pybind) for: \f$f_{maxInc}\f$: if automaticStepSize=True, maximum increase of step size per step, see \refSection{sec:ExplicitSolver}; make this factor smaller (but \f$> 1\f$) if too many rejected steps
   void PySetStepSizeMaxIncrease(const Real& stepSizeMaxIncreaseInit) { stepSizeMaxIncrease = EXUstd::GetSafelyUReal(stepSizeMaxIncreaseInit,"stepSizeMaxIncrease"); }
   //! AUTO: Read (Copy) access to: \f$f_{maxInc}\f$: if automaticStepSize=True, maximum increase of step size per step, see \refSection{sec:ExplicitSolver}; make this factor smaller (but \f$> 1\f$) if too many rejected steps
-  Real PyGetStepSizeMaxIncrease() const { return (Real)(stepSizeMaxIncrease); }
+  Real PyGetStepSizeMaxIncrease() const { return Real(stepSizeMaxIncrease); }
 
   //! AUTO: Set function (needed in pybind) for: \f$r_{sfty}\f$: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see \refSection{sec:ExplicitSolver}. Make this factor smaller if many steps are rejected.
   void PySetStepSizeSafety(const Real& stepSizeSafetyInit) { stepSizeSafety = EXUstd::GetSafelyUReal(stepSizeSafetyInit,"stepSizeSafety"); }
   //! AUTO: Read (Copy) access to: \f$r_{sfty}\f$: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see \refSection{sec:ExplicitSolver}. Make this factor smaller if many steps are rejected.
-  Real PyGetStepSizeSafety() const { return (Real)(stepSizeSafety); }
+  Real PyGetStepSizeSafety() const { return Real(stepSizeSafety); }
 
   //! AUTO: Set function (needed in pybind) for: 0 ... no output, 1 ... show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)
   void PySetVerboseMode(const Index& verboseModeInit) { verboseMode = EXUstd::GetSafelyUInt(verboseModeInit,"verboseMode"); }
   //! AUTO: Read (Copy) access to: 0 ... no output, 1 ... show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)
-  Index PyGetVerboseMode() const { return (Index)(verboseMode); }
+  Index PyGetVerboseMode() const { return Index(verboseMode); }
 
   //! AUTO: Set function (needed in pybind) for: same behaviour as verboseMode, but outputs all solver information to file
   void PySetVerboseModeFile(const Index& verboseModeFileInit) { verboseModeFile = EXUstd::GetSafelyUInt(verboseModeFileInit,"verboseModeFile"); }
   //! AUTO: Read (Copy) access to: same behaviour as verboseMode, but outputs all solver information to file
-  Index PyGetVerboseModeFile() const { return (Index)(verboseModeFile); }
+  Index PyGetVerboseModeFile() const { return Index(verboseModeFile); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -752,6 +759,7 @@ public: // AUTO:
     os << "  minimumStepSize = " << minimumStepSize << "\n";
     os << "  numberOfSteps = " << numberOfSteps << "\n";
     os << "  realtimeFactor = " << realtimeFactor << "\n";
+    os << "  realtimeWaitMicroseconds = " << realtimeWaitMicroseconds << "\n";
     os << "  relativeTolerance = " << relativeTolerance << "\n";
     os << "  reuseConstantMassMatrix = " << reuseConstantMassMatrix << "\n";
     os << "  simulateInRealtime = " << simulateInRealtime << "\n";
@@ -779,7 +787,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -843,67 +851,67 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: Multiplicative factor (MUST BE: 0 < factor < 1) for step size to decrese due to discontinuousIteration or Newton errors
   void PySetAdaptiveStepDecrease(const Real& adaptiveStepDecreaseInit) { adaptiveStepDecrease = EXUstd::GetSafelyUReal(adaptiveStepDecreaseInit,"adaptiveStepDecrease"); }
   //! AUTO: Read (Copy) access to: Multiplicative factor (MUST BE: 0 < factor < 1) for step size to decrese due to discontinuousIteration or Newton errors
-  Real PyGetAdaptiveStepDecrease() const { return (Real)(adaptiveStepDecrease); }
+  Real PyGetAdaptiveStepDecrease() const { return Real(adaptiveStepDecrease); }
 
   //! AUTO: Set function (needed in pybind) for: Multiplicative factor (MUST BE > 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors
   void PySetAdaptiveStepIncrease(const Real& adaptiveStepIncreaseInit) { adaptiveStepIncrease = EXUstd::GetSafelyUReal(adaptiveStepIncreaseInit,"adaptiveStepIncrease"); }
   //! AUTO: Read (Copy) access to: Multiplicative factor (MUST BE > 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors
-  Real PyGetAdaptiveStepIncrease() const { return (Real)(adaptiveStepIncrease); }
+  Real PyGetAdaptiveStepIncrease() const { return Real(adaptiveStepIncrease); }
 
   //! AUTO: Set function (needed in pybind) for: Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value
   void PySetAdaptiveStepRecoveryIterations(const Index& adaptiveStepRecoveryIterationsInit) { adaptiveStepRecoveryIterations = EXUstd::GetSafelyUInt(adaptiveStepRecoveryIterationsInit,"adaptiveStepRecoveryIterations"); }
   //! AUTO: Read (Copy) access to: Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value
-  Index PyGetAdaptiveStepRecoveryIterations() const { return (Index)(adaptiveStepRecoveryIterations); }
+  Index PyGetAdaptiveStepRecoveryIterations() const { return Index(adaptiveStepRecoveryIterations); }
 
   //! AUTO: Set function (needed in pybind) for: Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors
   void PySetAdaptiveStepRecoverySteps(const Index& adaptiveStepRecoveryStepsInit) { adaptiveStepRecoverySteps = EXUstd::GetSafelyUInt(adaptiveStepRecoveryStepsInit,"adaptiveStepRecoverySteps"); }
   //! AUTO: Read (Copy) access to: Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors
-  Index PyGetAdaptiveStepRecoverySteps() const { return (Index)(adaptiveStepRecoverySteps); }
+  Index PyGetAdaptiveStepRecoverySteps() const { return Index(adaptiveStepRecoverySteps); }
 
   //! AUTO: Set function (needed in pybind) for: quasi-time for all load steps (added to current time in load steps)
   void PySetLoadStepDuration(const Real& loadStepDurationInit) { loadStepDuration = EXUstd::GetSafelyPReal(loadStepDurationInit,"loadStepDuration"); }
   //! AUTO: Read (Copy) access to: quasi-time for all load steps (added to current time in load steps)
-  Real PyGetLoadStepDuration() const { return (Real)(loadStepDuration); }
+  Real PyGetLoadStepDuration() const { return Real(loadStepDuration); }
 
   //! AUTO: Set function (needed in pybind) for: if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric
   void PySetLoadStepGeometricRange(const Real& loadStepGeometricRangeInit) { loadStepGeometricRange = EXUstd::GetSafelyPReal(loadStepGeometricRangeInit,"loadStepGeometricRange"); }
   //! AUTO: Read (Copy) access to: if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric
-  Real PyGetLoadStepGeometricRange() const { return (Real)(loadStepGeometricRange); }
+  Real PyGetLoadStepGeometricRange() const { return Real(loadStepGeometricRange); }
 
   //! AUTO: Set function (needed in pybind) for: a quasi time, which can be used for the output (first column) as well as for time-dependent forces; quasi-time is increased in every step i by loadStepDuration/numberOfLoadSteps; loadStepTime = loadStepStart + i*loadStepDuration/numberOfLoadSteps, but loadStepStart untouched ==> increment by user
   void PySetLoadStepStart(const Real& loadStepStartInit) { loadStepStart = EXUstd::GetSafelyUReal(loadStepStartInit,"loadStepStart"); }
   //! AUTO: Read (Copy) access to: a quasi time, which can be used for the output (first column) as well as for time-dependent forces; quasi-time is increased in every step i by loadStepDuration/numberOfLoadSteps; loadStepTime = loadStepStart + i*loadStepDuration/numberOfLoadSteps, but loadStepStart untouched ==> increment by user
-  Real PyGetLoadStepStart() const { return (Real)(loadStepStart); }
+  Real PyGetLoadStepStart() const { return Real(loadStepStart); }
 
   //! AUTO: Set function (needed in pybind) for: lower limit of step size, before nonlinear solver stops
   void PySetMinimumStepSize(const Real& minimumStepSizeInit) { minimumStepSize = EXUstd::GetSafelyPReal(minimumStepSizeInit,"minimumStepSize"); }
   //! AUTO: Read (Copy) access to: lower limit of step size, before nonlinear solver stops
-  Real PyGetMinimumStepSize() const { return (Real)(minimumStepSize); }
+  Real PyGetMinimumStepSize() const { return Real(minimumStepSize); }
 
   //! AUTO: Set function (needed in pybind) for: number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once
   void PySetNumberOfLoadSteps(const Index& numberOfLoadStepsInit) { numberOfLoadSteps = EXUstd::GetSafelyPInt(numberOfLoadStepsInit,"numberOfLoadSteps"); }
   //! AUTO: Read (Copy) access to: number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once
-  Index PyGetNumberOfLoadSteps() const { return (Index)(numberOfLoadSteps); }
+  Index PyGetNumberOfLoadSteps() const { return Index(numberOfLoadSteps); }
 
   //! AUTO: Set function (needed in pybind) for: add mass-proportional stabilizer term in \hac{ODE2} part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with \f$stabilizer = (1-loadStepFactor^2)\f$, and go to zero at the end of all load steps: \f$loadStepFactor=1\f$ -> \f$stabilizer = 0\f$
   void PySetStabilizerODE2term(const Real& stabilizerODE2termInit) { stabilizerODE2term = EXUstd::GetSafelyUReal(stabilizerODE2termInit,"stabilizerODE2term"); }
   //! AUTO: Read (Copy) access to: add mass-proportional stabilizer term in \hac{ODE2} part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with \f$stabilizer = (1-loadStepFactor^2)\f$, and go to zero at the end of all load steps: \f$loadStepFactor=1\f$ -> \f$stabilizer = 0\f$
-  Real PyGetStabilizerODE2term() const { return (Real)(stabilizerODE2term); }
+  Real PyGetStabilizerODE2term() const { return Real(stabilizerODE2term); }
 
   //! AUTO: Set function (needed in pybind) for: add up the following binary flags: 0 ... show only step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step or period, 4 ... show Newton jacobians (jac) per step or period, 8 ... show discontinuous iterations (Dit) per step or period, 16 ... show step size (dt), 32 ... show CPU time spent; 64 ... show adaptive step reduction warnings; 128 ... show step increase information; 1024 ... show every time step; time is usually shown in fractions of seconds (s), hours (h), or days
   void PySetStepInformation(const Index& stepInformationInit) { stepInformation = EXUstd::GetSafelyUInt(stepInformationInit,"stepInformation"); }
   //! AUTO: Read (Copy) access to: add up the following binary flags: 0 ... show only step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step or period, 4 ... show Newton jacobians (jac) per step or period, 8 ... show discontinuous iterations (Dit) per step or period, 16 ... show step size (dt), 32 ... show CPU time spent; 64 ... show adaptive step reduction warnings; 128 ... show step increase information; 1024 ... show every time step; time is usually shown in fractions of seconds (s), hours (h), or days
-  Index PyGetStepInformation() const { return (Index)(stepInformation); }
+  Index PyGetStepInformation() const { return Index(stepInformation); }
 
   //! AUTO: Set function (needed in pybind) for: 0 ... no output, 1 ... show errors and load steps, 2 ... show short Newton step information (error), 3 ... show also solution vector, 4 ... show also jacobian, 5 ... show also Jacobian inverse
   void PySetVerboseMode(const Index& verboseModeInit) { verboseMode = EXUstd::GetSafelyUInt(verboseModeInit,"verboseMode"); }
   //! AUTO: Read (Copy) access to: 0 ... no output, 1 ... show errors and load steps, 2 ... show short Newton step information (error), 3 ... show also solution vector, 4 ... show also jacobian, 5 ... show also Jacobian inverse
-  Index PyGetVerboseMode() const { return (Index)(verboseMode); }
+  Index PyGetVerboseMode() const { return Index(verboseMode); }
 
   //! AUTO: Set function (needed in pybind) for: same behaviour as verboseMode, but outputs all solver information to file
   void PySetVerboseModeFile(const Index& verboseModeFileInit) { verboseModeFile = EXUstd::GetSafelyUInt(verboseModeFileInit,"verboseModeFile"); }
   //! AUTO: Read (Copy) access to: same behaviour as verboseMode, but outputs all solver information to file
-  Index PyGetVerboseModeFile() const { return (Index)(verboseModeFile); }
+  Index PyGetVerboseModeFile() const { return Index(verboseModeFile); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -945,7 +953,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -983,7 +991,7 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: treshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity
   void PySetPivotTreshold(const Real& pivotTresholdInit) { pivotTreshold = EXUstd::GetSafelyPReal(pivotTresholdInit,"pivotTreshold"); }
   //! AUTO: Read (Copy) access to: treshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity
-  Real PyGetPivotTreshold() const { return (Real)(pivotTreshold); }
+  Real PyGetPivotTreshold() const { return Real(pivotTreshold); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -1011,7 +1019,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1055,7 +1063,7 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores)
   void PySetNumberOfThreads(const Index& numberOfThreadsInit) { numberOfThreads = EXUstd::GetSafelyPInt(numberOfThreadsInit,"numberOfThreads"); }
   //! AUTO: Read (Copy) access to: number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores)
-  Index PyGetNumberOfThreads() const { return (Index)(numberOfThreads); }
+  Index PyGetNumberOfThreads() const { return Index(numberOfThreads); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -1086,7 +1094,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1135,7 +1143,7 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: precision for floating point numbers written to console; e.g. values written by solver
   void PySetOutputPrecision(const Index& outputPrecisionInit) { outputPrecision = EXUstd::GetSafelyUInt(outputPrecisionInit,"outputPrecision"); }
   //! AUTO: Read (Copy) access to: precision for floating point numbers written to console; e.g. values written by solver
-  Index PyGetOutputPrecision() const { return (Index)(outputPrecision); }
+  Index PyGetOutputPrecision() const { return Index(outputPrecision); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const

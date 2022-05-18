@@ -719,42 +719,63 @@ namespace EXUlie {
 	{
 		Real phi = rot.GetL2Norm();
 		Matrix3D R(EXUmath::unitMatrix3D);
-		Matrix3D rotSkew(RigidBodyMath::Vector2SkewMatrix(rot));
+		//Matrix3D rotSkew(RigidBodyMath::Vector2SkewMatrix(rot));
+		Matrix3D rotSkew;
+		rotSkew.SetSkewMatrix(rot);
 		R += EXUmath::Sinc(phi)*rotSkew + (0.5*EXUstd::Square(EXUmath::Sinc(0.5*phi)))*rotSkew * rotSkew;
 		return R;
 	}
 
-	//! compute rotation axis from given rotation vector
-	template <class T>
-	inline void RotationVector2RotationAxis(const T& rotationVector, T& rotationAxis)
+	//! compute the matrix logarithmic map on the Lie group SO(3), see \cite{Sonneville2014, Sonneville2017}
+	inline Matrix3D LogSO3(const Matrix3D& R)
 	{
-		//compute rotation angle
-		Real rotationAngle = rotationVector.GetL2Norm();
-
-		if (rotationAngle == 0.) { rotationAxis.SetAll(0.); }
+		Matrix3D X;
+		Real val = 0.5*(R.Trace() - 1.);
+			
+		if (fabs(val) > 1.) //#if slightly larger than 1, due to numerical differentiation
+		{ 
+			val = val / fabs(val); 
+		}
+		
+		Real phi = acos(val);
+		if (phi == 0.)
+		{
+			X.SetScalarMatrix(3,0.); 
+		}
 		else
 		{
-			rotationAxis.CopyFrom(rotationVector);
-			rotationAxis *= 1. / rotationAngle;
+			X = R - R.GetTransposed();
+			X *= phi / (2. * sin(phi));
 		}
+		return X;
 	}
 
-	//! compute composition operation for rotation vectors v0 and incremental rotation vector Omega, see \cite{Holzinger2021}
-	inline Vector3D CompositionRotationVector(const Vector3D& v0, const Vector3D& Omega)
+	//! compute the tangent operator corresponding to ExpSO3, see \cite{Bruels2011}; improved version using polynomial expansion
+	inline Matrix3D TExpSO3(const Vector3D& rot)
 	{
-		Real w1Half = 0.5*v0.GetL2Norm();
-		Real w2Half = 0.5*Omega.GetL2Norm();
-		Real c0 = cos(w1Half);
-		Real c1 = cos(w2Half);
-		Real s0 = EXUmath::Sinc(w1Half);
-		Real s1 = EXUmath::Sinc(w2Half);
-		Real x = c0*c1 - 0.25*s0*s1*(v0 * Omega);
-		Real xTemp = sqrt(fabs(1 - EXUstd::Square(x))); //fabs added, because term may be slightly smaller than zero
-		Real w = EXUstd::pi - 2.*atan2(x, xTemp);
-		Vector3D rho = s0*c1 * v0 + c0*s1 * Omega + 0.5*s0*s1* v0.CrossProduct(Omega);
-		Vector3D n;
-		RotationVector2RotationAxis(rho, n);
-		return w * n;
+		Real phi = rot.GetL2Norm();
+		Matrix3D T(false);
+		T.SetScalarMatrix(3, 1.);
+
+		if (phi != 0.)
+		{
+			Matrix3D rotSkew(false);
+			rotSkew.SetSkewMatrix(rot);
+			Real t1 = -0.5*EXUstd::Square(EXUmath::Sinc(phi / 2.));
+			Real t2;
+			Real phi2 = phi * phi;
+			if (phi < 0.01)
+			{
+				t2 = 1. / 6. - (1. / 120.)*phi2 + (1. / 5040.)*phi2*phi2;
+			}
+			else
+			{
+				t2 = (1. / (phi2))*(1 - (sin(phi) / phi)); //sinc not needed here, because phi >= 0.01
+			}
+			T += t1 * rotSkew;
+			T += t2 * rotSkew*rotSkew;
+		}
+		return T;
 	}
 
 	//! compute the inverse of the tangent operator TExpSO3, see \cite{Sonneville2014}; improved version of Stefan Holzinger
@@ -794,7 +815,39 @@ namespace EXUlie {
 			}
 		}
 		return Tinv;
+	}
 
+	//! compute rotation axis from given rotation vector
+	template <class T>
+	inline void RotationVector2RotationAxis(const T& rotationVector, T& rotationAxis)
+	{
+		//compute rotation angle
+		Real rotationAngle = rotationVector.GetL2Norm();
+
+		if (rotationAngle == 0.) { rotationAxis.SetAll(0.); }
+		else
+		{
+			rotationAxis.CopyFrom(rotationVector);
+			rotationAxis *= 1. / rotationAngle;
+		}
+	}
+
+	//! compute composition operation for rotation vectors v0 and incremental rotation vector Omega, see \cite{Holzinger2021}
+	inline Vector3D CompositionRotationVector(const Vector3D& v0, const Vector3D& Omega)
+	{
+		Real w1Half = 0.5*v0.GetL2Norm();
+		Real w2Half = 0.5*Omega.GetL2Norm();
+		Real c0 = cos(w1Half);
+		Real c1 = cos(w2Half);
+		Real s0 = EXUmath::Sinc(w1Half);
+		Real s1 = EXUmath::Sinc(w2Half);
+		Real x = c0 * c1 - 0.25*s0*s1*(v0 * Omega);
+		Real xTemp = sqrt(fabs(1 - EXUstd::Square(x))); //fabs added, because term may be slightly smaller than zero
+		Real w = EXUstd::pi - 2.*atan2(x, xTemp);
+		Vector3D rho = s0 * c1 * v0 + c0 * s1 * Omega + 0.5*s0*s1* v0.CrossProduct(Omega);
+		Vector3D n;
+		RotationVector2RotationAxis(rho, n);
+		return w * n;
 	}
 
 } //namespace LieGroup

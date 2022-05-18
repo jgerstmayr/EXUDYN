@@ -10,15 +10,222 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.2.57.dev1, 
-  \item last change =  2022-04-29, 
-  \item Number of issues = 1061, 
-  \item Number of resolved issues = 899 (57 in current version), 
+  \item Exudyn version = 1.2.86.dev1, 
+  \item last change =  2022-05-18, 
+  \item Number of issues = 1093, 
+  \item Number of resolved issues = 928 (86 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.2.86}:  resolved Issue 1092: {\bf openAI gym}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add example for interface with openAI gym using cart-pole model}
+    \item {\bf notes: see Examples/testGymCartpole.py}
+    \item   date resolved: {\bf 2022-05-18 09:47},
+date raised: 2022-05-18 
+  \ei
+  \item {\bf Version 1.2.85}: {\bf \color{warningRed}  resolved BUG 1091}: {\bf ComputeODE2Eigenvalues}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: eigenvectors sorting is not according to eigenvalues sorting}
+    \item   date resolved: {\bf 2022-05-17 10:00},
+date raised: 2022-05-17 
+  \ei
+  \item {\bf Version 1.2.84}:  resolved Issue 1090: {\bf ComputeODE2Eigenvalues}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: solver.ComputeODE2Eigenvalues gets additional flag constrainedCoordinates to specify list of constrained coordinates in system for eigenvalue computation}
+    \item   date resolved: {\bf 2022-05-16 23:01},
+date raised: 2022-05-16 
+  \ei
+  \item {\bf Version 1.2.83}: {\bf \color{warningRed}  resolved BUG 1089}: {\bf ComputeODE2Eigenvalues}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: setInitialValues has no effect}
+    \item {\bf notes: flag erased}
+    \item   date resolved: {\bf 2022-05-16 22:03},
+date raised: 2022-05-16 
+  \ei
+  \item {\bf Version 1.2.82}: {\bf \color{warningRed}  resolved BUG 1086}: {\bf ParameterVariation}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: numberOfThreads cannot be passed to parameter variation as it is duplicated by **args}
+    \item {\bf notes: numberOfThreads is now a named argument}
+    \item   date resolved: {\bf 2022-05-16 16:34},
+date raised: 2022-05-16 
+  \ei
+  \item {\bf Version 1.2.81}:  resolved Issue 1079: {\bf Beam drawing}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add generic drawing function for beams, especially for contour plot}
+    \item   date resolved: {\bf 2022-05-15 23:24},
+date raised: 2022-05-09 
+  \ei
+  \item {\bf Version 1.2.80}:  resolved Issue 1076: {\bf ANCFBeam3D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add shear deformable 3D ANCF beam according to Nachbagauer Gerstmayr Pechstein using structural mechanics formulation}
+    \item   date resolved: {\bf 2022-05-15 23:24},
+date raised: 2022-05-06 
+  \ei
+  \item {\bf Version 1.2.79}:  resolved Issue 1081: {\bf linux testSuite}
+(check)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: check failed tests under linux; see tests for 1.2.75 linux}
+    \item {\bf notes: resolved issues related to initial accelerations; still deviation in test generalContactFrictionTests.py}
+    \item   date resolved: {\bf 2022-05-11 18:54},
+date raised: 2022-05-11 
+  \ei
+  \item {\bf Version 1.2.78}: {\bf \color{warningRed}  resolved BUG 1084}: {\bf node frame drawing}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: node frames shows letter N unintended}
+    \item   date resolved: {\bf 2022-05-11 18:23},
+date raised: 2022-05-11 
+  \ei
+  \item {\bf Version 1.2.77}: {\bf \color{warningRed}  resolved BUG 1083}: {\bf initial accelerations}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: not correctly handled in linux build (and probably also on MacOS}
+    \item   date resolved: {\bf 2022-05-11 16:18},
+date raised: 2022-05-11 
+  \ei
+  \item {\bf Version 1.2.76}:  resolved Issue 1082: {\bf testsuite linux}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extend test suite to run always for linux and add file ending for linux and MacOS}
+    \item   date resolved: {\bf 2022-05-11 12:51},
+date raised: 2022-05-11 
+  \ei
+  \item {\bf Version 1.2.75}: {\bf \color{warningRed}  resolved BUG 1080}: {\bf gcc compile}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: errors when compiling PyVectorLists and PyMatrixLists on gcc}
+    \item   date resolved: {\bf 2022-05-11 09:27},
+date raised: 2022-05-11 
+  \ei
+  \item {\bf Version 1.2.74}:  resolved Issue 0471: {\bf geometrically exact beam3D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add to CPP}
+    \item {\bf notes: added first version based on conventional parameterization of nodes, but using Lie groups for beam section forces in ode2LHS}
+    \item   date resolved: {\bf 2022-05-09 21:24},
+date raised: 2020-11-21 
+  \ei
+  \item {\bf Version 1.2.73}:  resolved Issue 1077: {\bf TExpSO3(Omega)}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: reduce number of terms in termExpanded; only up to x**4 needed for 16 digits}
+    \item   date resolved: {\bf 2022-05-09 21:22},
+date raised: 2022-05-07 
+  \ei
+  \item {\bf Version 1.2.72}:  resolved Issue 1074: {\bf BeamSection}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add new structure (cpp+Python) for beam cross section as well as BeamSectionGeometry for geometrical representation}
+    \item   date resolved: {\bf 2022-05-09 21:22},
+date raised: 2022-05-06 
+  \ei
+  \item {\bf Version 1.2.71}:  resolved Issue 1073: {\bf structures description}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add description for simulationSettings, visualizationSettings, solver structures, etc. in Python bindings}
+    \item   date resolved: {\bf 2022-05-06 13:54},
+date raised: 2022-05-06 
+  \ei
+  \item {\bf Version 1.2.70}:  resolved Issue 1069: {\bf KinematicTree}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add interface to class Robot, to create either redundant or minimum coordinates kinematic tree}
+    \item {\bf notes: however, is not capable of creating robots with localHT!=HT0()}
+    \item   date resolved: {\bf 2022-05-06 00:07},
+date raised: 2022-05-05 
+  \ei
+  \item {\bf Version 1.2.69}:  resolved Issue 1064: {\bf KinematicTree}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add basic description (equations)}
+    \item   date resolved: {\bf 2022-05-05 22:14},
+date raised: 2022-05-05 
+  \ei
+  \item {\bf Version 1.2.68}:  resolved Issue 1067: {\bf KinematicTree}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add standalone example}
+    \item {\bf notes: see TestModels/kinematicTreeTest.py}
+    \item   date resolved: {\bf 2022-05-05 20:00},
+date raised: 2022-05-05 
+  \ei
+  \item {\bf Version 1.2.67}:  resolved Issue 1065: {\bf KinematicTree}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add user function description}
+    \item   date resolved: {\bf 2022-05-05 20:00},
+date raised: 2022-05-05 
+  \ei
+  \item {\bf Version 1.2.66}:  resolved Issue 1068: {\bf KinematicTree}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add test}
+    \item {\bf notes: added test and MiniExample}
+    \item   date resolved: {\bf 2022-05-05 19:59},
+date raised: 2022-05-05 
+  \ei
+  \item {\bf Version 1.2.65}: {\bf \color{warningRed}  resolved BUG 1063}: {\bf KinematicTree}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: cpp version gives wrong results as compared to MBS}
+    \item {\bf notes: corrected inertia - must be w.r.t. COM}
+    \item   date resolved: {\bf 2022-05-05 16:14},
+date raised: 2022-05-05 
+  \ei
+  \item {\bf Version 1.2.64}:  resolved Issue 1066: {\bf BodyGraphicsDataList}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: new interface used in Kinematic tree which holds a list of GraphicsData lists}
+    \item   date resolved: {\bf 2022-05-05 11:32},
+date raised: 2022-05-05 
+  \ei
+  \item {\bf Version 1.2.63}:  resolved Issue 0655: {\bf add KinematicTree}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: ObjectKinematicTree (MinimumCoordinates)}
+    \item {\bf notes: this is a first version, but tests and validation are necessary!}
+    \item   date resolved: {\bf 2022-05-05 10:27},
+date raised: 2021-05-01 
+  \ei
+  \item {\bf Version 1.2.62}:  resolved Issue 0913: {\bf KinematicTree}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add efficient C++ functionality for operating on 6D vectors and matrices for kinematics/dynamics}
+    \item   date resolved: {\bf 2022-05-05 10:23},
+date raised: 2022-02-02 
+  \ei
+  \item {\bf Version 1.2.61}:  resolved Issue 1062: {\bf RigidBodyMath.h}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: remove duplicate from src/Utilities}
+    \item   date resolved: {\bf 2022-05-03 11:33},
+date raised: 2022-05-03 
+  \ei
+  \item {\bf Version 1.2.60}:  resolved Issue 1047: {\bf Matrix3DList}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add new structure Matrix3DList; used to create list of 3D matrices and transfer into MainSystem mbs, e.g. in KinematicTree}
+    \item   date resolved: {\bf 2022-05-01 00:47},
+date raised: 2022-04-25 
+  \ei
+  \item {\bf Version 1.2.59}:  resolved Issue 1038: {\bf simulateInRealtime}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: put waitMicroSeconds into settings}
+    \item   date resolved: {\bf 2022-04-30 20:41},
+date raised: 2022-04-07 
+  \ei
+  \item {\bf Version 1.2.58}:  resolved Issue 1049: {\bf MacOS}
+(check)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: check if flag -mmacosx-version-min=11.0 is needed in setup.py and if this causes problems on older pre-AppleM1 which needs wheel version 10.9}
+    \item {\bf notes: x86 compilation requires 11.0, otherwise it fails; need to find another way for compilation}
+    \item   date resolved: {\bf 2022-04-29 09:59},
+date raised: 2022-04-25 
+  \ei
   \item {\bf Version 1.2.57}:  resolved Issue 1060: {\bf buildDate.tex}
 (change)
   \begin{itemize}[label=$\bullet$]
@@ -3777,6 +3984,11 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 1085}:  {\bf GeneralContact}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: generalContactFrictionTests.py gives considerably different results after t=0.05 seconds between Windows and linux compiled version; may be caused by some initialization problems (bugs...); needs further tests}
+    \item date raised: 2022-05-11 
+  \ei
   \item open {\bf BUG 1048}:  {\bf sse2neon.h}
   \begin{itemize}[label=$\bullet$]
     \item {description: on Apple, sse2neon.h is missing (include from github) and compilation fails; check if this only happens on M1 and change include modes of sse2neon.h; add this file to python setup.py for other cases}

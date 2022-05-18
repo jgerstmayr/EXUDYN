@@ -69,12 +69,12 @@ public:
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	virtual VectorType GetType() const { return VectorType::ResizableVector; }
+	virtual VectorType GetType() const override { return VectorType::ResizableVector; }
 
     Index MaxNumberOfItems() const { return maxNumberOfItems; }             //!< Get dataSize (available memory) of ConstSizeVectorBase
 
     //! Change the currently used numberOfItems, which can be larger than previous numberOfItems (leads to delete/new) or smaller/equal to previous numberOfItems (no delete/new)
-    virtual void SetNumberOfItems(Index newNumberOfItems)
+    virtual void SetNumberOfItems(Index newNumberOfItems) override
     {
         if (newNumberOfItems > MaxNumberOfItems())
         {
@@ -97,45 +97,48 @@ public:
 		this->data = nullptr;
 	}
 
-	//! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
-	void CopyFrom(const VectorBase<T>& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
-	{
-		CHECKandTHROW((thisPosition + numberOfCopiedItems <= this->NumberOfItems()), "ResizableVectorBase::CopyFrom(...): thisPosition index mismatch");
-		CHECKandTHROW((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()), "ResizableVectorBase::CopyFrom(...): vectorPosition index mismatch");
+	//available in Vector, not needed! 2022-05-04
+	////! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
+	//void CopyFrom(const VectorBase<T>& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
+	//{
+	//	CHECKandTHROW((thisPosition + numberOfCopiedItems <= this->NumberOfItems()), "ResizableVectorBase::CopyFrom(...): thisPosition index mismatch");
+	//	CHECKandTHROW((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()), "ResizableVectorBase::CopyFrom(...): vectorPosition index mismatch");
 
-		for (Index i = 0; i < numberOfCopiedItems; i++)
-		{
-			(*this)[i + thisPosition] = vector[i + vectorPosition];
-		}
-	}
+	//	for (Index i = 0; i < numberOfCopiedItems; i++)
+	//	{
+	//		(*this)[i + thisPosition] = vector[i + vectorPosition];
+	//	}
+	//}
 
+	////! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
+	////template<Index dataSize>
+	////void CopyFrom(const ConstSizeVectorBase<T, dataSize>& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
 	//template<class Tvector>
 	//void CopyFrom(const Tvector& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
-	//! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
-	template<Index dataSize>
-	void CopyFrom(const ConstSizeVectorBase<T, dataSize>& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
-	{
-		//CHECKandTHROW((vectorPosition >= 0), "VectorBase::CopyFrom(...): vectorPosition < 0");
-		//CHECKandTHROW((thisPosition >= 0), "VectorBase::CopyFrom(...): thisPosition < 0");
-		CHECKandTHROW((thisPosition + numberOfCopiedItems <= this->NumberOfItems()), "ResizableVectorBase::CopyFrom(ConstSizeVectorBase<T, dataSize>, ...): thisPosition index mismatch");
-		CHECKandTHROW((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()), "ResizableVectorBase::CopyFrom(ConstSizeVectorBase<T, dataSize>, ...): vectorPosition index mismatch");
+	//{
+	//	//CHECKandTHROW((vectorPosition >= 0), "VectorBase::CopyFrom(...): vectorPosition < 0");
+	//	//CHECKandTHROW((thisPosition >= 0), "VectorBase::CopyFrom(...): thisPosition < 0");
+	//	CHECKandTHROW((thisPosition + numberOfCopiedItems <= this->NumberOfItems()), "ResizableVectorBase::CopyFrom(ConstSizeVectorBase<T, dataSize>, ...): thisPosition index mismatch");
+	//	CHECKandTHROW((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()), "ResizableVectorBase::CopyFrom(ConstSizeVectorBase<T, dataSize>, ...): vectorPosition index mismatch");
 
-		for (Index i = 0; i < numberOfCopiedItems; i++)
-		{
-			this->GetUnsafe(i + thisPosition) = vector.GetUnsafe(i + vectorPosition);
-			//this->GetUnsafe(i + thisPosition) = vector[i + vectorPosition];
-		}
-	}
+	//	for (Index i = 0; i < numberOfCopiedItems; i++)
+	//	{
+	//		this->GetUnsafe(i + thisPosition) = vector.GetUnsafe(i + vectorPosition);
+	//		//this->GetUnsafe(i + thisPosition) = vector[i + vectorPosition];
+	//	}
+	//}
 
-	void CopyFrom(const VectorBase<T>& vector)
-	{
-		SetNumberOfItems(vector.NumberOfItems());
+	////! copy from other vector (or even array) and perform type conversion (e.g. for graphics)
+	//template<class TVector>
+	//void CopyFrom(const TVector& vector)
+	//{
+	//	SetNumberOfItems(vector.NumberOfItems());
 
-		Index cnt = 0;
-		for (auto value : vector) {
-			this->data[cnt++] = value;
-		}
-	}
+	//	Index cnt = 0;
+	//	for (auto val : vector) {
+	//		this->GetUnsafe(cnt++) = (T)val;
+	//	}
+	//}
 
     //! @todo: ResizableVectorBase: check if operator+,-,* need to be overloaded (compare ConstSizeVectorBase)
 
@@ -154,7 +157,9 @@ public:
 	}
 
 	//! add vector v to *this vector (for each component); both vectors must have same size
-	ResizableVectorBase& operator+=(const ResizableVectorBase& v)
+	//ResizableVectorBase& operator+=(const ResizableVectorBase& v)
+	template <class Tvector>
+	ResizableVectorBase& operator+=(const Tvector& v)
 	{
 		CHECKandTHROW((this->NumberOfItems() == v.NumberOfItems()), "ResizableVectorBase::operator+=: incompatible size of vectors");
 		Index cnt = 0;
@@ -165,7 +170,9 @@ public:
 	}
 
 	//! substract vector v from *this vector (for each component); both vectors must have same size
-	ResizableVectorBase& operator-=(const ResizableVectorBase& v)
+	//ResizableVectorBase& operator-=(const ResizableVectorBase& v)
+	template <class Tvector>
+	ResizableVectorBase& operator-=(const Tvector& v)
 	{
 		CHECKandTHROW((this->NumberOfItems() == v.NumberOfItems()), "ResizableVectorBase::operator-=: incompatible size of vectors");
 		Index cnt = 0;

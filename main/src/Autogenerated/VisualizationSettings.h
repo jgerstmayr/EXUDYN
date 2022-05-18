@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -93,47 +93,47 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)
   void PySetAxesTiling(const Index& axesTilingInit) { axesTiling = EXUstd::GetSafelyPInt(axesTilingInit,"axesTiling"); }
   //! AUTO: Read (Copy) access to: global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)
-  Index PyGetAxesTiling() const { return (Index)(axesTiling); }
+  Index PyGetAxesTiling() const { return Index(axesTiling); }
 
   //! AUTO: Set function (needed in pybind) for: red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])
   void PySetBackgroundColor(const std::array<float,4>& backgroundColorInit) { backgroundColor = backgroundColorInit; }
   //! AUTO: Read (Copy) access to: red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])
-  std::array<float,4> PyGetBackgroundColor() const { return (std::array<float,4>)(backgroundColor); }
+  std::array<float,4> PyGetBackgroundColor() const { return std::array<float,4>(backgroundColor); }
 
   //! AUTO: Set function (needed in pybind) for: red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
   void PySetBackgroundColorBottom(const std::array<float,4>& backgroundColorBottomInit) { backgroundColorBottom = backgroundColorBottomInit; }
   //! AUTO: Read (Copy) access to: red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
-  std::array<float,4> PyGetBackgroundColorBottom() const { return (std::array<float,4>)(backgroundColorBottom); }
+  std::array<float,4> PyGetBackgroundColorBottom() const { return std::array<float,4>(backgroundColorBottom); }
 
   //! AUTO: Set function (needed in pybind) for: global number of segments for circles; if smaller than 2, 2 segments are used (flat)
   void PySetCircleTiling(const Index& circleTilingInit) { circleTiling = EXUstd::GetSafelyPInt(circleTilingInit,"circleTiling"); }
   //! AUTO: Read (Copy) access to: global number of segments for circles; if smaller than 2, 2 segments are used (flat)
-  Index PyGetCircleTiling() const { return (Index)(circleTiling); }
+  Index PyGetCircleTiling() const { return Index(circleTiling); }
 
   //! AUTO: Set function (needed in pybind) for: global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
   void PySetCylinderTiling(const Index& cylinderTilingInit) { cylinderTiling = EXUstd::GetSafelyPInt(cylinderTilingInit,"cylinderTiling"); }
   //! AUTO: Read (Copy) access to: global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
-  Index PyGetCylinderTiling() const { return (Index)(cylinderTiling); }
+  Index PyGetCylinderTiling() const { return Index(cylinderTiling); }
 
   //! AUTO: Set function (needed in pybind) for: precision of general floating point numbers shown in render window: total number of digits used  (max. 16)
   void PySetRendererPrecision(const Index& rendererPrecisionInit) { rendererPrecision = EXUstd::GetSafelyPInt(rendererPrecisionInit,"rendererPrecision"); }
   //! AUTO: Read (Copy) access to: precision of general floating point numbers shown in render window: total number of digits used  (max. 16)
-  Index PyGetRendererPrecision() const { return (Index)(rendererPrecision); }
+  Index PyGetRendererPrecision() const { return Index(rendererPrecision); }
 
   //! AUTO: Set function (needed in pybind) for: seconds to show help message on startup (0=deactivate)
   void PySetShowHelpOnStartup(const Index& showHelpOnStartupInit) { showHelpOnStartup = EXUstd::GetSafelyPInt(showHelpOnStartupInit,"showHelpOnStartup"); }
   //! AUTO: Read (Copy) access to: seconds to show help message on startup (0=deactivate)
-  Index PyGetShowHelpOnStartup() const { return (Index)(showHelpOnStartup); }
+  Index PyGetShowHelpOnStartup() const { return Index(showHelpOnStartup); }
 
   //! AUTO: Set function (needed in pybind) for: global number of segments for spheres; if smaller than 2, 2 segments are used (flat)
   void PySetSphereTiling(const Index& sphereTilingInit) { sphereTiling = EXUstd::GetSafelyPInt(sphereTilingInit,"sphereTiling"); }
   //! AUTO: Read (Copy) access to: global number of segments for spheres; if smaller than 2, 2 segments are used (flat)
-  Index PyGetSphereTiling() const { return (Index)(sphereTiling); }
+  Index PyGetSphereTiling() const { return Index(sphereTiling); }
 
   //! AUTO: Set function (needed in pybind) for: general text color (default); used for system texts in render window
   void PySetTextColor(const std::array<float,4>& textColorInit) { textColor = textColorInit; }
   //! AUTO: Read (Copy) access to: general text color (default); used for system texts in render window
-  std::array<float,4> PyGetTextColor() const { return (std::array<float,4>)(textColor); }
+  std::array<float,4> PyGetTextColor() const { return std::array<float,4>(textColor); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -185,7 +185,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -237,12 +237,12 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: precision of floating point values shown in color bar; total number of digits used (max. 16)
   void PySetColorBarPrecision(const Index& colorBarPrecisionInit) { colorBarPrecision = EXUstd::GetSafelyPInt(colorBarPrecisionInit,"colorBarPrecision"); }
   //! AUTO: Read (Copy) access to: precision of floating point values shown in color bar; total number of digits used (max. 16)
-  Index PyGetColorBarPrecision() const { return (Index)(colorBarPrecision); }
+  Index PyGetColorBarPrecision() const { return Index(colorBarPrecision); }
 
   //! AUTO: Set function (needed in pybind) for: number of tiles (segements) shown in the colorbar for the contour plot
   void PySetColorBarTiling(const Index& colorBarTilingInit) { colorBarTiling = EXUstd::GetSafelyPInt(colorBarTilingInit,"colorBarTiling"); }
   //! AUTO: Read (Copy) access to: number of tiles (segements) shown in the colorbar for the contour plot
-  Index PyGetColorBarTiling() const { return (Index)(colorBarTiling); }
+  Index PyGetColorBarTiling() const { return Index(colorBarTiling); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -277,7 +277,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -325,17 +325,17 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: default cRGB color for nodes; 4th value is alpha-transparency
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
   //! AUTO: Read (Copy) access to: default cRGB color for nodes; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
+  std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
 
   //! AUTO: Set function (needed in pybind) for: draw nodal slope vectors, e.g. in ANCF beam finite elements
   void PySetShowNodalSlopes(const Index& showNodalSlopesInit) { showNodalSlopes = EXUstd::GetSafelyUInt(showNodalSlopesInit,"showNodalSlopes"); }
   //! AUTO: Read (Copy) access to: draw nodal slope vectors, e.g. in ANCF beam finite elements
-  Index PyGetShowNodalSlopes() const { return (Index)(showNodalSlopes); }
+  Index PyGetShowNodalSlopes() const { return Index(showNodalSlopes); }
 
   //! AUTO: Set function (needed in pybind) for: tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4
   void PySetTiling(const Index& tilingInit) { tiling = EXUstd::GetSafelyPInt(tilingInit,"tiling"); }
   //! AUTO: Read (Copy) access to: tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4
-  Index PyGetTiling() const { return (Index)(tiling); }
+  Index PyGetTiling() const { return Index(tiling); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -368,7 +368,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -416,17 +416,17 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: number of segments to discretise the beams axis
   void PySetAxialTiling(const Index& axialTilingInit) { axialTiling = EXUstd::GetSafelyPInt(axialTilingInit,"axialTiling"); }
   //! AUTO: Read (Copy) access to: number of segments to discretise the beams axis
-  Index PyGetAxialTiling() const { return (Index)(axialTiling); }
+  Index PyGetAxialTiling() const { return Index(axialTiling); }
 
   //! AUTO: Set function (needed in pybind) for: number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing
   void PySetCrossSectionTiling(const Index& crossSectionTilingInit) { crossSectionTiling = EXUstd::GetSafelyPInt(crossSectionTilingInit,"crossSectionTiling"); }
   //! AUTO: Read (Copy) access to: number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing
-  Index PyGetCrossSectionTiling() const { return (Index)(crossSectionTiling); }
+  Index PyGetCrossSectionTiling() const { return Index(crossSectionTiling); }
 
   //! AUTO: Set function (needed in pybind) for: color for outputVariable to be drawn along cross section (vertically)
   void PySetDrawVerticalColor(const std::array<float,4>& drawVerticalColorInit) { drawVerticalColor = drawVerticalColorInit; }
   //! AUTO: Read (Copy) access to: color for outputVariable to be drawn along cross section (vertically)
-  std::array<float,4> PyGetDrawVerticalColor() const { return (std::array<float,4>)(drawVerticalColor); }
+  std::array<float,4> PyGetDrawVerticalColor() const { return std::array<float,4>(drawVerticalColor); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -454,12 +454,73 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
+* @class        VSettingsKinematicTree
+* @brief        Visualization settings for kinematic trees.
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2022-05-09 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class VSettingsKinematicTree // AUTO: 
+{
+public: // AUTO: 
+  float frameSize;                                //!< AUTO: size of COM and joint frames
+  bool showCOMframes;                             //!< AUTO: if True, a frame is attached to every center of mass
+  bool showFramesNumbers;                         //!< AUTO: if True, numbers are drawn for joint frames (O[i]J[j]) and COM frames (O[i]COM[j]) for object [i] and local joint [j]
+  bool showJointFrames;                           //!< AUTO: if True, a frame is attached to the origin of every joint frame
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsKinematicTree()
+  {
+    frameSize = 0.2f;
+    showCOMframes = false;
+    showFramesNumbers = true;
+    showJointFrames = true;
+  };
+
+  // AUTO: access functions
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsKinematicTree" << ":\n";
+    os << "  frameSize = " << frameSize << "\n";
+    os << "  showCOMframes = " << showCOMframes << "\n";
+    os << "  showFramesNumbers = " << showFramesNumbers << "\n";
+    os << "  showJointFrames = " << showJointFrames << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsKinematicTree& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
 * @class        VSettingsBodies
 * @brief        Visualization settings for bodies.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -478,6 +539,7 @@ class VSettingsBodies // AUTO:
 {
 public: // AUTO: 
   VSettingsBeams beams;                           //!< AUTO: visualization settings for beams (e.g. ANCFCable or other beam elements)
+  VSettingsKinematicTree kinematicTree;           //!< AUTO: visualization settings for kinematic tree
   Float4 defaultColor;                            //!< AUTO: default cRGB color for bodies; 4th value is 
   Float3 defaultSize;                             //!< AUTO: global body size of xyz-cube
   float deformationScaleFactor;                   //!< AUTO: global deformation scale factor; also applies to nodes, if drawn; used for scaled drawing of (linear) finite elements, beams, etc.
@@ -500,18 +562,19 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: default cRGB color for bodies; 4th value is 
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
   //! AUTO: Read (Copy) access to: default cRGB color for bodies; 4th value is 
-  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
+  std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
 
   //! AUTO: Set function (needed in pybind) for: global body size of xyz-cube
   void PySetDefaultSize(const std::array<float,3>& defaultSizeInit) { defaultSize = defaultSizeInit; }
   //! AUTO: Read (Copy) access to: global body size of xyz-cube
-  std::array<float,3> PyGetDefaultSize() const { return (std::array<float,3>)(defaultSize); }
+  std::array<float,3> PyGetDefaultSize() const { return std::array<float,3>(defaultSize); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
     os << "VSettingsBodies" << ":\n";
     os << "  beams = " << beams << "\n";
+    os << "  kinematicTree = " << kinematicTree << "\n";
     os << "  defaultColor = " << defaultColor << "\n";
     os << "  defaultSize = " << defaultSize << "\n";
     os << "  deformationScaleFactor = " << deformationScaleFactor << "\n";
@@ -535,7 +598,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -585,12 +648,12 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: default cRGB color for connectors; 4th value is alpha-transparency
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
   //! AUTO: Read (Copy) access to: default cRGB color for connectors; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
+  std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
 
   //! AUTO: Set function (needed in pybind) for: number of windings for springs drawn as helical spring
   void PySetSpringNumberOfWindings(const Index& springNumberOfWindingsInit) { springNumberOfWindings = EXUstd::GetSafelyPInt(springNumberOfWindingsInit,"springNumberOfWindings"); }
   //! AUTO: Read (Copy) access to: number of windings for springs drawn as helical spring
-  Index PyGetSpringNumberOfWindings() const { return (Index)(springNumberOfWindings); }
+  Index PyGetSpringNumberOfWindings() const { return Index(springNumberOfWindings); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -624,7 +687,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -664,7 +727,7 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: default cRGB color for markers; 4th value is alpha-transparency
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
   //! AUTO: Read (Copy) access to: default cRGB color for markers; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
+  std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -693,7 +756,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -739,7 +802,7 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: default cRGB color for loads; 4th value is alpha-transparency
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
   //! AUTO: Read (Copy) access to: default cRGB color for loads; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
+  std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -771,7 +834,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -811,7 +874,7 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: default cRGB color for sensors; 4th value is alpha-transparency
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
   //! AUTO: Read (Copy) access to: default cRGB color for sensors; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return (std::array<float,4>)(defaultColor); }
+  std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -840,7 +903,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -888,12 +951,12 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: cRGB color
   void PySetColorBoundingBoxes(const std::array<float,4>& colorBoundingBoxesInit) { colorBoundingBoxes = colorBoundingBoxesInit; }
   //! AUTO: Read (Copy) access to: cRGB color
-  std::array<float,4> PyGetColorBoundingBoxes() const { return (std::array<float,4>)(colorBoundingBoxes); }
+  std::array<float,4> PyGetColorBoundingBoxes() const { return std::array<float,4>(colorBoundingBoxes); }
 
   //! AUTO: Set function (needed in pybind) for: cRGB color
   void PySetColorSearchTree(const std::array<float,4>& colorSearchTreeInit) { colorSearchTree = colorSearchTreeInit; }
   //! AUTO: Read (Copy) access to: cRGB color
-  std::array<float,4> PyGetColorSearchTree() const { return (std::array<float,4>)(colorSearchTree); }
+  std::array<float,4> PyGetColorSearchTree() const { return std::array<float,4>(colorSearchTree); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -926,7 +989,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -972,7 +1035,7 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: initial size of OpenGL render window in pixel
   void PySetRenderWindowSize(const std::array<Index,2>& renderWindowSizeInit) { renderWindowSize = renderWindowSizeInit; }
   //! AUTO: Read (Copy) access to: initial size of OpenGL render window in pixel
-  std::array<Index,2> PyGetRenderWindowSize() const { return (std::array<Index,2>)(renderWindowSize); }
+  std::array<Index,2> PyGetRenderWindowSize() const { return std::array<Index,2>(renderWindowSize); }
 
   //! AUTO: set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself
   void ResetKeyPressUserFunction() {
@@ -982,7 +1045,7 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)
   void PySetStartupTimeout(const Index& startupTimeoutInit) { startupTimeout = EXUstd::GetSafelyPInt(startupTimeoutInit,"startupTimeout"); }
   //! AUTO: Read (Copy) access to: OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)
-  Index PyGetStartupTimeout() const { return (Index)(startupTimeout); }
+  Index PyGetStartupTimeout() const { return Index(startupTimeout); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -1013,7 +1076,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1125,37 +1188,37 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True
   void PySetInitialCenterPoint(const std::array<float,3>& initialCenterPointInit) { initialCenterPoint = initialCenterPointInit; }
   //! AUTO: Read (Copy) access to: centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True
-  std::array<float,3> PyGetInitialCenterPoint() const { return (std::array<float,3>)(initialCenterPoint); }
+  std::array<float,3> PyGetInitialCenterPoint() const { return std::array<float,3>(initialCenterPoint); }
 
   //! AUTO: Set function (needed in pybind) for: 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
   void PySetLight0position(const std::array<float,4>& light0positionInit) { light0position = light0positionInit; }
   //! AUTO: Read (Copy) access to: 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
-  std::array<float,4> PyGetLight0position() const { return (std::array<float,4>)(light0position); }
+  std::array<float,4> PyGetLight0position() const { return std::array<float,4>(light0position); }
 
   //! AUTO: Set function (needed in pybind) for: 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
   void PySetLight1position(const std::array<float,4>& light1positionInit) { light1position = light1positionInit; }
   //! AUTO: Read (Copy) access to: 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
-  std::array<float,4> PyGetLight1position() const { return (std::array<float,4>)(light1position); }
+  std::array<float,4> PyGetLight1position() const { return std::array<float,4>(light1position); }
 
   //! AUTO: Set function (needed in pybind) for: global ambient light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_AMBIENT,[r,g,b,a])
   void PySetLightModelAmbient(const std::array<float,4>& lightModelAmbientInit) { lightModelAmbient = lightModelAmbientInit; }
   //! AUTO: Read (Copy) access to: global ambient light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_AMBIENT,[r,g,b,a])
-  std::array<float,4> PyGetLightModelAmbient() const { return (std::array<float,4>)(lightModelAmbient); }
+  std::array<float,4> PyGetLightModelAmbient() const { return std::array<float,4>(lightModelAmbient); }
 
   //! AUTO: Set function (needed in pybind) for: 4f ambient color of material
   void PySetMaterialAmbientAndDiffuse(const std::array<float,4>& materialAmbientAndDiffuseInit) { materialAmbientAndDiffuse = materialAmbientAndDiffuseInit; }
   //! AUTO: Read (Copy) access to: 4f ambient color of material
-  std::array<float,4> PyGetMaterialAmbientAndDiffuse() const { return (std::array<float,4>)(materialAmbientAndDiffuse); }
+  std::array<float,4> PyGetMaterialAmbientAndDiffuse() const { return std::array<float,4>(materialAmbientAndDiffuse); }
 
   //! AUTO: Set function (needed in pybind) for: 4f specular color of material
   void PySetMaterialSpecular(const std::array<float,4>& materialSpecularInit) { materialSpecular = materialSpecularInit; }
   //! AUTO: Read (Copy) access to: 4f specular color of material
-  std::array<float,4> PyGetMaterialSpecular() const { return (std::array<float,4>)(materialSpecular); }
+  std::array<float,4> PyGetMaterialSpecular() const { return std::array<float,4>(materialSpecular); }
 
   //! AUTO: Set function (needed in pybind) for: multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
   void PySetMultiSampling(const Index& multiSamplingInit) { multiSampling = EXUstd::GetSafelyPInt(multiSamplingInit,"multiSampling"); }
   //! AUTO: Read (Copy) access to: multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
-  Index PyGetMultiSampling() const { return (Index)(multiSampling); }
+  Index PyGetMultiSampling() const { return Index(multiSampling); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -1222,7 +1285,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1266,22 +1329,22 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)
   void PySetHeightAlignment(const Index& heightAlignmentInit) { heightAlignment = EXUstd::GetSafelyPInt(heightAlignmentInit,"heightAlignment"); }
   //! AUTO: Read (Copy) access to: alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)
-  Index PyGetHeightAlignment() const { return (Index)(heightAlignment); }
+  Index PyGetHeightAlignment() const { return Index(heightAlignment); }
 
   //! AUTO: Set function (needed in pybind) for: current value of the counter which is used to consecutively save frames (images) with consecutive numbers
   void PySetSaveImageFileCounter(const Index& saveImageFileCounterInit) { saveImageFileCounter = EXUstd::GetSafelyUInt(saveImageFileCounterInit,"saveImageFileCounter"); }
   //! AUTO: Read (Copy) access to: current value of the counter which is used to consecutively save frames (images) with consecutive numbers
-  Index PyGetSaveImageFileCounter() const { return (Index)(saveImageFileCounter); }
+  Index PyGetSaveImageFileCounter() const { return Index(saveImageFileCounter); }
 
   //! AUTO: Set function (needed in pybind) for: timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes
   void PySetSaveImageTimeOut(const Index& saveImageTimeOutInit) { saveImageTimeOut = EXUstd::GetSafelyPInt(saveImageTimeOutInit,"saveImageTimeOut"); }
   //! AUTO: Read (Copy) access to: timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes
-  Index PyGetSaveImageTimeOut() const { return (Index)(saveImageTimeOut); }
+  Index PyGetSaveImageTimeOut() const { return Index(saveImageTimeOut); }
 
   //! AUTO: Set function (needed in pybind) for: alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)
   void PySetWidthAlignment(const Index& widthAlignmentInit) { widthAlignment = EXUstd::GetSafelyPInt(widthAlignmentInit,"widthAlignment"); }
   //! AUTO: Read (Copy) access to: alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)
-  Index PyGetWidthAlignment() const { return (Index)(widthAlignment); }
+  Index PyGetWidthAlignment() const { return Index(widthAlignment); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -1312,7 +1375,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1370,17 +1433,17 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: cRGB color for highlighted item; 4th value is alpha-transparency
   void PySetHighlightColor(const std::array<float,4>& highlightColorInit) { highlightColor = highlightColorInit; }
   //! AUTO: Read (Copy) access to: cRGB color for highlighted item; 4th value is alpha-transparency
-  std::array<float,4> PyGetHighlightColor() const { return (std::array<float,4>)(highlightColor); }
+  std::array<float,4> PyGetHighlightColor() const { return std::array<float,4>(highlightColor); }
 
   //! AUTO: Set function (needed in pybind) for: index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
   void PySetHighlightMbsNumber(const Index& highlightMbsNumberInit) { highlightMbsNumber = EXUstd::GetSafelyUInt(highlightMbsNumberInit,"highlightMbsNumber"); }
   //! AUTO: Read (Copy) access to: index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
-  Index PyGetHighlightMbsNumber() const { return (Index)(highlightMbsNumber); }
+  Index PyGetHighlightMbsNumber() const { return Index(highlightMbsNumber); }
 
   //! AUTO: Set function (needed in pybind) for: cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
   void PySetHighlightOtherColor(const std::array<float,4>& highlightOtherColorInit) { highlightOtherColor = highlightOtherColorInit; }
   //! AUTO: Read (Copy) access to: cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
-  std::array<float,4> PyGetHighlightOtherColor() const { return (std::array<float,4>)(highlightOtherColor); }
+  std::array<float,4> PyGetHighlightOtherColor() const { return std::array<float,4>(highlightOtherColor); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -1418,7 +1481,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

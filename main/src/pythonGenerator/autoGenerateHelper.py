@@ -46,7 +46,7 @@ def Str2Latex(s, isDefaultValue=False, replaceCurlyBracket=True): #replace _ and
         s = s.replace('true','True') #correct python notation
         s = s.replace('false','False') #correct python notation
 
-        s = s.replace('EXUstd::InvalidIndex','MAXINT') #correct python notation
+        s = s.replace('EXUstd::InvalidIndex','invalid (-1)') #correct python notation
 
         if (s.find('EXUmath::unitMatrix3D') != -1): #manually done - could be automatized in future ...
             s = s.replace('EXUmath::unitMatrix3D','[[1,0,0], [0,1,0], [0,0,1]]')  
@@ -54,12 +54,22 @@ def Str2Latex(s, isDefaultValue=False, replaceCurlyBracket=True): #replace _ and
             s = s.replace('EXUmath::zeroMatrix3D','[[0,0,0], [0,0,0], [0,0,0]]')  
 
         if (s.find('Matrix6D(6,6,0.)') != -1): #manually done - could be automatized in future ...
-            s = 'np.zeros([6,6])'
+            s = 'np.zeros((6,6))'
         
         
-        if (s.find('Index') != -1) | (s.find('Float') != -1) | (s.find('Vector') != -1) | (s.find('Matrix') != -1):
+        if ( (s.find('Index') != -1) or (s.find('Float') != -1) or
+            (s.find('Vector') != -1) or (s.find('Matrix') != -1) or 
+            (s.find('Transformations66List') != -1) or (s.find('Matrix3DList') != -1) or (s.find('JointTypeList') != -1)
+            ):
             s = s.replace('ArrayIndex','') #correct python notation
+            s = s.replace('JointTypeList','') #KinematicTree
+            s = s.replace('Vector3DList','') #KinematicTree
+            s = s.replace('Vector6DList','') #KinematicTree
+            s = s.replace('Vector6DList','') #KinematicTree
+            s = s.replace('Matrix3DList','') #KinematicTree
+            s = s.replace('Transformations66List','') #KinematicTree
             s = s.replace('Vector7D','') #correct python notation; rigid body coordinates
+            s = s.replace('Vector9D','') #correct python notation; inertia parameters
             s = s.replace('Vector6D','') #correct python notation; inertia parameters
             s = s.replace('Vector4D','') #correct python notation
             s = s.replace('Vector3D','') #correct python notation
@@ -118,6 +128,8 @@ def DefaultValue2Python(s):
     s = s.replace('Matrix()','[]')  #replace empty matrix with emtpy list
     s = s.replace('MatrixI()','[]') #replace empty matrix with emtpy list
     s = s.replace('PyMatrixContainer()','[]')  #initialization in iteminterface with empty array
+    s = s.replace('BeamSectionGeometry()','exudyn.BeamSectionGeometry()')  #initialization in iteminterface with empty array
+    s = s.replace('BeamSection()','exudyn.BeamSection()')  #initialization in iteminterface with empty array
 
     
     if (s.find('Matrix6D(6,6,') != -1):
@@ -132,8 +144,18 @@ def DefaultValue2Python(s):
         if s != '0' and s != '0.': print('error: Matrix3D(...) may only initialized with 0s')
         s = 'IIDiagMatrix(rowsColumns=3,value=' + s + ')'
         #
-    elif (s.find('Index') != -1) | (s.find('Float') != -1) | (s.find('Vector') != -1):
+    elif ( (s.find('Index') != -1) or (s.find('Float') != -1) or 
+          (s.find('Vector') != -1) or (s.find('Matrix3DList') != -1) or 
+          (s.find('JointTypeList') != -1)
+          ):
         s = s.replace('ArrayIndex','') #correct python notation
+        s = s.replace('JointTypeList','') #KinematicTree
+        s = s.replace('Vector6DList','') #KinematicTree
+        s = s.replace('Vector3DList','') #KinematicTree
+        s = s.replace('Matrix3DList','') #KinematicTree
+        s = s.replace('Vector2DList','') #BeamSectionGeometry
+        s = s.replace('PyVector2DList','') #BeamSectionGeometry
+        s = s.replace('Vector9D','') #correct python notation
         s = s.replace('Vector7D','') #correct python notation; rigid body coordinates
         s = s.replace('Vector6D','') #correct python notation; inertia parameters
         s = s.replace('Vector4D','') #correct python notation
@@ -315,7 +337,12 @@ def SplitString(string, line): #split comma separated string; commas in "..." ar
 #************************************************
 
 
-
+pyFunctionAccessConvert = {
+    '__repr__': '__repr__()',
+    '__getitem__': '... = data[index]',
+    '__setitem__': 'data[index]= ...',
+    '__len__': 'len(data)',
+    }
 
 #************************************************
 #helper functions to create manual pybinding to access functions in classes
@@ -339,6 +366,14 @@ def DefPyFunctionAccess(cClass, pyName, cName, description, argList=[], defaultA
     else:
         s += '        m.def("'
 
+    #convert some special functions, like __repr__()
+    addBraces = True
+    pyNameLatex = pyName
+    if pyNameLatex in pyFunctionAccessConvert:
+        pyNameLatex = pyFunctionAccessConvert[pyName]
+        addBraces = False
+        #print('now pyName=', pyName)
+
     s += pyName + '", ' 
     if not(isLambdaFunction): #if lambda function ==> just copy cName as code
         s += '&' 
@@ -351,7 +386,8 @@ def DefPyFunctionAccess(cClass, pyName, cName, description, argList=[], defaultA
         s += ', ' + options
     
     
-    sLatex = '  ' + Str2Latex(pyName) + '('
+    sLatex = '  ' + Str2Latex(pyNameLatex)
+    if addBraces: sLatex += '('
     if len(argList):
         for i in range(len(argList)):
             s += ', py::arg("' + argList[i] + '")'
@@ -362,7 +398,7 @@ def DefPyFunctionAccess(cClass, pyName, cName, description, argList=[], defaultA
             sLatex += ', '
         sLatex = sLatex[:-2] #remove last ', '
 
-    sLatex += ')'
+    if addBraces: sLatex += ')'
 
     s += ')'
             

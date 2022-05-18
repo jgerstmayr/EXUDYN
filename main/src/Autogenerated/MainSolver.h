@@ -7,7 +7,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -55,12 +55,12 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! 
   void PySetInitializedSystemSizes(const std::array<Index,4>& initializedSystemSizesInit) { initializedSystemSizes = initializedSystemSizesInit; }
   //! AUTO: Read (Copy) access to: index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! 
-  std::array<Index,4> PyGetInitializedSystemSizes() const { return (std::array<Index,4>)(initializedSystemSizes); }
+  std::array<Index,4> PyGetInitializedSystemSizes() const { return std::array<Index,4>(initializedSystemSizes); }
 
   //! AUTO: Set function (needed in pybind) for: multiplicative load step factor; this factor is computed from loadStepGeometric parameters in SolveSystem(...)
   void PySetLoadStepGeometricFactor(const Real& loadStepGeometricFactorInit) { cSolver.loadStepGeometricFactor = loadStepGeometricFactorInit; }
   //! AUTO: Read (Copy) access to: multiplicative load step factor; this factor is computed from loadStepGeometric parameters in SolveSystem(...)
-  Real PyGetLoadStepGeometricFactor() const { return (Real)(cSolver.loadStepGeometricFactor); }
+  Real PyGetLoadStepGeometricFactor() const { return Real(cSolver.loadStepGeometricFactor); }
 
   //! AUTO: constructor, in order to set valid state (settings not initialized at beginning)
    MainSolverStatic() {
@@ -93,7 +93,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -127,12 +127,12 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: copy of parameter in timeIntegration.generalizedAlpha
   void PySetAlphaF(const Real& alphaFInit) { GetCSolverImplicitSecondOrder().alphaF = alphaFInit; }
   //! AUTO: Read (Copy) access to: copy of parameter in timeIntegration.generalizedAlpha
-  Real PyGetAlphaF() const { return (Real)(GetCSolverImplicitSecondOrder().alphaF); }
+  Real PyGetAlphaF() const { return Real(GetCSolverImplicitSecondOrder().alphaF); }
 
   //! AUTO: Set function (needed in pybind) for: copy of parameter in timeIntegration.generalizedAlpha
   void PySetAlphaM(const Real& alphaMInit) { GetCSolverImplicitSecondOrder().alphaM = alphaMInit; }
   //! AUTO: Read (Copy) access to: copy of parameter in timeIntegration.generalizedAlpha
-  Real PyGetAlphaM() const { return (Real)(GetCSolverImplicitSecondOrder().alphaM); }
+  Real PyGetAlphaM() const { return Real(GetCSolverImplicitSecondOrder().alphaM); }
 
   //! AUTO: for static solver, this is a factor in interval [0,1]; MUST be overwritten
   Real ComputeLoadFactor(const SimulationSettings& simulationSettings) {
@@ -142,7 +142,7 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: locally computed parameter from generalizedAlpha parameters
   void PySetFactJacAlgorithmic(const Real& factJacAlgorithmicInit) { GetCSolverImplicitSecondOrder().factJacAlgorithmic = factJacAlgorithmicInit; }
   //! AUTO: Read (Copy) access to: locally computed parameter from generalizedAlpha parameters
-  Real PyGetFactJacAlgorithmic() const { return (Real)(GetCSolverImplicitSecondOrder().factJacAlgorithmic); }
+  Real PyGetFactJacAlgorithmic() const { return Real(GetCSolverImplicitSecondOrder().factJacAlgorithmic); }
 
   //! AUTO: get locally stored / last computed algorithmic accelerations
   py::array_t<Real> GetAAlgorithmic();
@@ -171,17 +171,17 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! 
   void PySetInitializedSystemSizes(const std::array<Index,4>& initializedSystemSizesInit) { initializedSystemSizes = initializedSystemSizesInit; }
   //! AUTO: Read (Copy) access to: index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! 
-  std::array<Index,4> PyGetInitializedSystemSizes() const { return (std::array<Index,4>)(initializedSystemSizes); }
+  std::array<Index,4> PyGetInitializedSystemSizes() const { return std::array<Index,4>(initializedSystemSizes); }
 
   //! AUTO: Set function (needed in pybind) for: copy of parameter in timeIntegration.generalizedAlpha
   void PySetNewmarkBeta(const Real& newmarkBetaInit) { GetCSolverImplicitSecondOrder().newmarkBeta = newmarkBetaInit; }
   //! AUTO: Read (Copy) access to: copy of parameter in timeIntegration.generalizedAlpha
-  Real PyGetNewmarkBeta() const { return (Real)(GetCSolverImplicitSecondOrder().newmarkBeta); }
+  Real PyGetNewmarkBeta() const { return Real(GetCSolverImplicitSecondOrder().newmarkBeta); }
 
   //! AUTO: Set function (needed in pybind) for: copy of parameter in timeIntegration.generalizedAlpha
   void PySetNewmarkGamma(const Real& newmarkGammaInit) { GetCSolverImplicitSecondOrder().newmarkGamma = newmarkGammaInit; }
   //! AUTO: Read (Copy) access to: copy of parameter in timeIntegration.generalizedAlpha
-  Real PyGetNewmarkGamma() const { return (Real)(GetCSolverImplicitSecondOrder().newmarkGamma); }
+  Real PyGetNewmarkGamma() const { return Real(GetCSolverImplicitSecondOrder().newmarkGamma); }
 
   //! AUTO: set user function
   void SetUserFunctionComputeNewtonJacobian(MainSystem& mainSystem, const MainSolverImplicitSecondOrderUserFunction& userFunction) {
@@ -231,7 +231,7 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: copy of parameter in timeIntegration.generalizedAlpha
   void PySetSpectralRadius(const Real& spectralRadiusInit) { GetCSolverImplicitSecondOrder().spectralRadius = spectralRadiusInit; }
   //! AUTO: Read (Copy) access to: copy of parameter in timeIntegration.generalizedAlpha
-  Real PyGetSpectralRadius() const { return (Real)(GetCSolverImplicitSecondOrder().spectralRadius); }
+  Real PyGetSpectralRadius() const { return Real(GetCSolverImplicitSecondOrder().spectralRadius); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -263,7 +263,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-04-20 (last modfied)
+* @date         AUTO: 2022-05-09 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -317,7 +317,7 @@ public: // AUTO:
   //! AUTO: Set function (needed in pybind) for: index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! 
   void PySetInitializedSystemSizes(const std::array<Index,4>& initializedSystemSizesInit) { initializedSystemSizes = initializedSystemSizesInit; }
   //! AUTO: Read (Copy) access to: index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! 
-  std::array<Index,4> PyGetInitializedSystemSizes() const { return (std::array<Index,4>)(initializedSystemSizes); }
+  std::array<Index,4> PyGetInitializedSystemSizes() const { return std::array<Index,4>(initializedSystemSizes); }
 
   //! AUTO: constructor, in order to set valid state (settings not initialized at beginning)
    MainSolverExplicit();

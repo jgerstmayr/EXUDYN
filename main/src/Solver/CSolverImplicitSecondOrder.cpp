@@ -124,7 +124,7 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 		computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, velocityLevel);// , fillIntoSystemMatrix);
 
 		//Mass matrix - may also be directly filled into data.systemJacobian?
-		if (!hasConstantMassMatrix)
+		if (!hasConstantMassMatrix) //not yet set at this point, done in PostInitializeSolverSpecific; default=false
 		{
 			data.systemMassMatrix->SetAllZero();
 			computationalSystem.ComputeMassMatrix(data.tempCompData, *(data.systemMassMatrix));
@@ -263,6 +263,8 @@ void CSolverImplicitSecondOrderTimeInt::PreInitializeSolverSpecific(CSystem& com
 {
 	const TimeIntegrationSettings& timeint = simulationSettings.timeIntegration;
 
+	hasConstantMassMatrix = false;
+
 	//do solver-specific tasks and initialization:
 	newmarkBeta = timeint.generalizedAlpha.newmarkBeta; //0.25 ... trapezoidal rule
 	newmarkGamma = timeint.generalizedAlpha.newmarkGamma; //0.5  ... trapezoidal rule
@@ -319,6 +321,11 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 	//++++++++++++++++++++++++++++++++++++++
 	//initialize special for implicit solver:
 	hasConstantMassMatrix = computationalSystem.HasConstantMassMatrix(); //this should not be called all time, because it costs some time
+
+	if (IsVerbose(3))
+	{
+		Verbose(3, STDstring("  has constant mass matrix=") + EXUstd::ToString(hasConstantMassMatrix) + "\n");
+	}
 
 	if (!simulationSettings.timeIntegration.reuseConstantMassMatrix) { hasConstantMassMatrix = false; }
 

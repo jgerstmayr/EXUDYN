@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-04-26  22:11:41 (last modified)
+* @date         2022-05-05  18:42:09 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -23,39 +23,65 @@
 #include "System/ItemIndices.h"
 
 #include <functional> //! AUTO: needed for std::function
+#include "Linalg/KinematicsBasics.h"//for transformations
+#include "Pymodules/PyMatrixVector.h"//for some matrix and vector lists
+#include "Main/OutputVariable.h"
+#include <pybind11/numpy.h>//for NumpyMatrix
+#include <pybind11/stl.h>//for NumpyMatrix
+#include <pybind11/pybind11.h>
+#include "Pymodules/PyMatrixVector.h"//for some matrix and vector lists
+class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectKinematicTreeParameters
 class CObjectKinematicTreeParameters // AUTO: 
 {
 public: // AUTO: 
-    ArrayIndex nodeNumbers;                       //!< AUTO: node numbers which provide the coordinates for the object (consecutively as provided in this list)
-    PyMatrixContainer massMatrix;                 //!< AUTO: mass matrix of object as MatrixContainer (or numpy array / list of lists)
-    PyMatrixContainer stiffnessMatrix;            //!< AUTO: stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction
-    PyMatrixContainer dampingMatrix;              //!< AUTO: damping matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with stiffnessMatrix and jacobianUserFunction
-    Vector forceVector;                           //!< AUTO: generalized force vector added to RHS
-    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> forceUserFunction;//!< AUTO: A Python user function which computes the generalized user force vector for the \hac{ODE2} equations; see description below
-    std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector)> massMatrixUserFunction;//!< AUTO: A Python user function which computes the mass matrix instead of the constant mass matrix given in \f$\Mm\f$; return numpy array or MatrixContainer; see description below
-    std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,Real,Real)> jacobianUserFunction;//!< AUTO: A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t.\ the coordinates (times \f$f_{ODE2}\f$) and w.r.t.\ the velocities (times \f$f_{ODE2_t}\f$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below
-    ArrayIndex coordinateIndexPerNode;            //!< AUTO: this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
+    Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; \f$n\f$ being the number of minimum coordinates
+    Vector3D gravity;                             //!< AUTO: gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree
+    Vector3D baseOffset;                          //!< AUTO: offset vector for base, in global coordinates
+    JointTypeList jointTypes;                     //!< AUTO: joint types of kinematic Tree joints; must be always set
+    ArrayIndex linkParents;                       //!< AUTO: index of parent joint/link; if no parent exists, the value is \f$-1\f$; by default, \f$p_0=-1\f$ because the \f$i\f$th parent index must always fulfill \f$p_i<i\f$; must be always set
+    Matrix3DList jointTransformations;            //!< AUTO: list of constant joint transformations from parent joint coordinates \f$p_0\f$ to this joint coordinates \f$j_0\f$; if no parent exists (\f$-1\f$), the base coordinate system \f$0\f$ is used; must be always set
+    Vector3DList jointOffsets;                    //!< AUTO: list of constant joint offsets from parent joint to this joint; \f$p_0\f$, \f$p_1\f$, \f$\ldots\f$ denote the parent coordinate systems; if no parent exists (\f$-1\f$), the base coordinate system \f$0\f$ is used; must be always set
+    Matrix3DList linkInertiasCOM;                 //!< AUTO: list of link inertia tensors w.r.t.\ \ac{COM} in joint/link \f$j_i\f$ coordinates; must be always set
+    Vector3DList linkCOMs;                        //!< AUTO: list of vectors for center of mass (COM) in joint/link \f$j_i\f$ coordinates; must be always set
+    Vector linkMasses;                            //!< AUTO: masses of links; must be always set
+    Vector3DList linkForces;                      //!< AUTO: list of 3D force vectors per link in global coordinates acting on joint frame origin; use force-torque couple to realize off-origin forces; defaults to empty list \f$[]\f$, adding no forces
+    Vector3DList linkTorques;                     //!< AUTO: list of 3D torque vectors per link in global coordinates; defaults to empty list \f$[]\f$, adding no torques
+    Vector jointForceVector;                      //!< AUTO: generalized force vector per coordinate added RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint \f$i\f$, the torque \f$f[i]\f$ acts positive (w.r.t.\ rotation axis) on link \f$i\f$ and negative on parent link \f$p_i\f$; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
+    Vector jointPositionOffsetVector;             //!< AUTO: offset for joint coordinates used in P(D) control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
+    Vector jointVelocityOffsetVector;             //!< AUTO: velocity offset for joint coordinates used in (P)D control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
+    Vector jointPControlVector;                   //!< AUTO: proportional (P) control values per joint (multiplied with position error between joint value and offset \f$\uv_o\f$); note that more complicated control laws must be implemented with user functions; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
+    Vector jointDControlVector;                   //!< AUTO: derivative (D) control values per joint (multiplied with velocity error between joint velocity and velocity offset \f$\vv_o\f$); note that more complicated control laws must be implemented with user functions; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
+    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> forceUserFunction;//!< AUTO: A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below
     //! AUTO: default constructor with parameter initialization
     CObjectKinematicTreeParameters()
     {
-        nodeNumbers = ArrayIndex();
-        massMatrix = PyMatrixContainer();
-        stiffnessMatrix = PyMatrixContainer();
-        dampingMatrix = PyMatrixContainer();
-        forceVector = Vector();
+        nodeNumber = EXUstd::InvalidIndex;
+        gravity = Vector3D({0.,0.,0.});
+        baseOffset = Vector3D({0.,0.,0.});
+        jointTypes = JointTypeList();
+        linkParents = ArrayIndex();
+        jointTransformations = Matrix3DList();
+        jointOffsets = Vector3DList();
+        linkInertiasCOM = Matrix3DList();
+        linkCOMs = Vector3DList();
+        linkMasses = Vector();
+        linkForces = Vector3DList();
+        linkTorques = Vector3DList();
+        jointForceVector = Vector();
+        jointPositionOffsetVector = Vector();
+        jointVelocityOffsetVector = Vector();
+        jointPControlVector = Vector();
+        jointDControlVector = Vector();
         forceUserFunction = 0;
-        massMatrixUserFunction = 0;
-        jacobianUserFunction = 0;
-        coordinateIndexPerNode = ArrayIndex();
     };
 };
 
 
 /** ***********************************************************************************************
 * @class        CObjectKinematicTree
-* @brief        A special object to represent open kinematic trees using minimum coordinate formulation (UNDER DEVELOPMENT!).
+* @brief        A special object to represent open kinematic trees using minimum coordinate formulation (UNDER DEVELOPMENT!). The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.\ per link (body). Every link is defined by a previous joint and a coordinate transformation from the previous link to this link's joint coordinates. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -78,17 +104,30 @@ class CObjectKinematicTree: public CObjectSuperElement // AUTO:
 {
 protected: // AUTO: 
     CObjectKinematicTreeParameters parameters; //! AUTO: contains all parameters for CObjectKinematicTree
-    mutable Vector tempCoordinates;               //!< AUTO: temporary vector containing coordinates
-    mutable Vector tempCoordinates_t;             //!< AUTO: temporary vector containing velocity coordinates
-    mutable Vector tempCoordinates_tt;            //!< AUTO: temporary vector containing acceleration coordinates
+    mutable ResizableVector tempVector;           //!< AUTO: temporary vector during computation of mass and ODE2LHS
+    mutable ResizableVector tempVector2;          //!< AUTO: second temporary vector during computation of mass and ODE2LHS
+    mutable Transformations66List jointTransformations;//!< AUTO: temporary list containing transformations (Pluecker transforms) per joint
+    mutable Transformations66List linkInertiasT66;//!< AUTO: temporary list link inertias as Pluecker transforms per link
+    mutable Transformations66List tempListT66;    //!< AUTO: temporary list of Pluecker transforms per link
+    mutable Vector6DList motionSubspaces;         //!< AUTO: temporary list containing 6D motion subspaces per joint
+    mutable Vector6DList jointVelocities;         //!< AUTO: temporary list containing 6D velocities per joint
+    mutable Vector6DList jointAccelerations;      //!< AUTO: temporary list containing 6D accelerations per joint
+    mutable Vector6DList jointForces;             //!< AUTO: temporary list containing 6D torques/forces per joint/link
 
 public: // AUTO: 
+    static constexpr Index noParent = -1;//AUTO: number which defines that this link has no parent
     //! AUTO: default constructor with parameter initialization
     CObjectKinematicTree()
     {
-        tempCoordinates = Vector();
-        tempCoordinates_t = Vector();
-        tempCoordinates_tt = Vector();
+        tempVector = ResizableVector();
+        tempVector2 = ResizableVector();
+        jointTransformations = Transformations66List();
+        linkInertiasT66 = Transformations66List();
+        tempListT66 = Transformations66List();
+        motionSubspaces = Vector6DList();
+        jointVelocities = Vector6DList();
+        jointAccelerations = Vector6DList();
+        jointForces = Vector6DList();
     };
 
     // AUTO: access functions
@@ -97,31 +136,73 @@ public: // AUTO:
     //! AUTO: Read access to parameters
     virtual const CObjectKinematicTreeParameters& GetParameters() const { return parameters; }
 
-    //! AUTO:  Write (Reference) access to:\f$\cv_{temp} \in \Rcal^{n}\f$temporary vector containing coordinates
-    void SetTempCoordinates(const Vector& value) { tempCoordinates = value; }
-    //! AUTO:  Read (Reference) access to:\f$\cv_{temp} \in \Rcal^{n}\f$temporary vector containing coordinates
-    const Vector& GetTempCoordinates() const { return tempCoordinates; }
-    //! AUTO:  Read (Reference) access to:\f$\cv_{temp} \in \Rcal^{n}\f$temporary vector containing coordinates
-    Vector& GetTempCoordinates() { return tempCoordinates; }
+    //! AUTO:  Write (Reference) access to:temporary vector during computation of mass and ODE2LHS
+    void SetTempVector(const ResizableVector& value) { tempVector = value; }
+    //! AUTO:  Read (Reference) access to:temporary vector during computation of mass and ODE2LHS
+    const ResizableVector& GetTempVector() const { return tempVector; }
+    //! AUTO:  Read (Reference) access to:temporary vector during computation of mass and ODE2LHS
+    ResizableVector& GetTempVector() { return tempVector; }
 
-    //! AUTO:  Write (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n}\f$temporary vector containing velocity coordinates
-    void SetTempCoordinates_t(const Vector& value) { tempCoordinates_t = value; }
-    //! AUTO:  Read (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n}\f$temporary vector containing velocity coordinates
-    const Vector& GetTempCoordinates_t() const { return tempCoordinates_t; }
-    //! AUTO:  Read (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n}\f$temporary vector containing velocity coordinates
-    Vector& GetTempCoordinates_t() { return tempCoordinates_t; }
+    //! AUTO:  Write (Reference) access to:second temporary vector during computation of mass and ODE2LHS
+    void SetTempVector2(const ResizableVector& value) { tempVector2 = value; }
+    //! AUTO:  Read (Reference) access to:second temporary vector during computation of mass and ODE2LHS
+    const ResizableVector& GetTempVector2() const { return tempVector2; }
+    //! AUTO:  Read (Reference) access to:second temporary vector during computation of mass and ODE2LHS
+    ResizableVector& GetTempVector2() { return tempVector2; }
 
-    //! AUTO:  Write (Reference) access to:\f$\ddot \cv_{temp} \in \Rcal^{n}\f$temporary vector containing acceleration coordinates
-    void SetTempCoordinates_tt(const Vector& value) { tempCoordinates_tt = value; }
-    //! AUTO:  Read (Reference) access to:\f$\ddot \cv_{temp} \in \Rcal^{n}\f$temporary vector containing acceleration coordinates
-    const Vector& GetTempCoordinates_tt() const { return tempCoordinates_tt; }
-    //! AUTO:  Read (Reference) access to:\f$\ddot \cv_{temp} \in \Rcal^{n}\f$temporary vector containing acceleration coordinates
-    Vector& GetTempCoordinates_tt() { return tempCoordinates_tt; }
+    //! AUTO:  Write (Reference) access to:\f$\Xm \in \Rcal^{n \times (6 \times 6)}\f$temporary list containing transformations (Pluecker transforms) per joint
+    void SetJointTransformations(const Transformations66List& value) { jointTransformations = value; }
+    //! AUTO:  Read (Reference) access to:\f$\Xm \in \Rcal^{n \times (6 \times 6)}\f$temporary list containing transformations (Pluecker transforms) per joint
+    const Transformations66List& GetJointTransformations() const { return jointTransformations; }
+    //! AUTO:  Read (Reference) access to:\f$\Xm \in \Rcal^{n \times (6 \times 6)}\f$temporary list containing transformations (Pluecker transforms) per joint
+    Transformations66List& GetJointTransformations() { return jointTransformations; }
+
+    //! AUTO:  Write (Reference) access to:\f$\Jm_{66} \in \Rcal^{n \times (6 \times 6)}\f$temporary list link inertias as Pluecker transforms per link
+    void SetLinkInertiasT66(const Transformations66List& value) { linkInertiasT66 = value; }
+    //! AUTO:  Read (Reference) access to:\f$\Jm_{66} \in \Rcal^{n \times (6 \times 6)}\f$temporary list link inertias as Pluecker transforms per link
+    const Transformations66List& GetLinkInertiasT66() const { return linkInertiasT66; }
+    //! AUTO:  Read (Reference) access to:\f$\Jm_{66} \in \Rcal^{n \times (6 \times 6)}\f$temporary list link inertias as Pluecker transforms per link
+    Transformations66List& GetLinkInertiasT66() { return linkInertiasT66; }
+
+    //! AUTO:  Write (Reference) access to:\f$\in \Rcal^{n \times (6 \times 6)}\f$temporary list of Pluecker transforms per link
+    void SetTempListT66(const Transformations66List& value) { tempListT66 = value; }
+    //! AUTO:  Read (Reference) access to:\f$\in \Rcal^{n \times (6 \times 6)}\f$temporary list of Pluecker transforms per link
+    const Transformations66List& GetTempListT66() const { return tempListT66; }
+    //! AUTO:  Read (Reference) access to:\f$\in \Rcal^{n \times (6 \times 6)}\f$temporary list of Pluecker transforms per link
+    Transformations66List& GetTempListT66() { return tempListT66; }
+
+    //! AUTO:  Write (Reference) access to:\f$\Mm\Sm \in \Rcal^{n \times 6}\f$temporary list containing 6D motion subspaces per joint
+    void SetMotionSubspaces(const Vector6DList& value) { motionSubspaces = value; }
+    //! AUTO:  Read (Reference) access to:\f$\Mm\Sm \in \Rcal^{n \times 6}\f$temporary list containing 6D motion subspaces per joint
+    const Vector6DList& GetMotionSubspaces() const { return motionSubspaces; }
+    //! AUTO:  Read (Reference) access to:\f$\Mm\Sm \in \Rcal^{n \times 6}\f$temporary list containing 6D motion subspaces per joint
+    Vector6DList& GetMotionSubspaces() { return motionSubspaces; }
+
+    //! AUTO:  Write (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint
+    void SetJointVelocities(const Vector6DList& value) { jointVelocities = value; }
+    //! AUTO:  Read (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint
+    const Vector6DList& GetJointVelocities() const { return jointVelocities; }
+    //! AUTO:  Read (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint
+    Vector6DList& GetJointVelocities() { return jointVelocities; }
+
+    //! AUTO:  Write (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint
+    void SetJointAccelerations(const Vector6DList& value) { jointAccelerations = value; }
+    //! AUTO:  Read (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint
+    const Vector6DList& GetJointAccelerations() const { return jointAccelerations; }
+    //! AUTO:  Read (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint
+    Vector6DList& GetJointAccelerations() { return jointAccelerations; }
+
+    //! AUTO:  Write (Reference) access to:\f$\Fm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D torques/forces per joint/link
+    void SetJointForces(const Vector6DList& value) { jointForces = value; }
+    //! AUTO:  Read (Reference) access to:\f$\Fm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D torques/forces per joint/link
+    const Vector6DList& GetJointForces() const { return jointForces; }
+    //! AUTO:  Read (Reference) access to:\f$\Fm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D torques/forces per joint/link
+    Vector6DList& GetJointForces() { return jointForces; }
 
     //! AUTO:  return true, if object has a computation user function
     virtual bool HasUserFunction() const override
     {
-        return (parameters.forceUserFunction!=0) || (parameters.massMatrixUserFunction!=0) || (parameters.jacobianUserFunction!=0);
+        return (parameters.forceUserFunction!=0);
     }
 
     //! AUTO:  Computational function: compute mass matrix
@@ -129,9 +210,6 @@ public: // AUTO:
 
     //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
     virtual void ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const override;
-
-    //! AUTO:  Computational function: compute jacobian (dense or sparse mode, see parent CObject function)
-    virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override;
@@ -163,17 +241,20 @@ public: // AUTO:
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override
     {
-        return parameters.nodeNumbers[localIndex];
+        return parameters.nodeNumber;
     }
 
     //! AUTO:  number of nodes; needed for every object
     virtual Index GetNumberOfNodes() const override
     {
-        return parameters.nodeNumbers.NumberOfItems();
+        return 1;
     }
 
-    //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
-    virtual Index GetODE2Size() const override;
+    //! AUTO:  number of \hac{ODE2} coordinates
+    virtual Index GetODE2Size() const override
+    {
+        return parameters.linkMasses.NumberOfItems();
+    }
 
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation
     virtual CObjectType GetType() const override
@@ -184,38 +265,32 @@ public: // AUTO:
     //! AUTO:  return true if object has time and coordinate independent (=constant) mass matrix
     virtual bool HasConstantMassMatrix() const override
     {
-        return (parameters.massMatrixUserFunction==0);
+        return false;
     }
 
     //! AUTO:  This flag is reset upon change of parameters; says that the vector of coordinate indices has changed
     virtual void ParametersHaveChanged() override
     {
-        InitializeCoordinateIndices();
+        ;
     }
-
-    //! AUTO:  read access to coordinate index array
-    virtual Index GetLocalODE2CoordinateIndexPerNode(Index localNode) const override
-    {
-        return parameters.coordinateIndexPerNode[localNode];
-    }
-
-    //! AUTO:  compute object coordinates composed from all nodal coordinates; does not include reference coordinates
-    void ComputeObjectCoordinates(Vector& coordinates, Vector& coordinates_t, ConfigurationType configuration = ConfigurationType::Current) const;
-
-    //! AUTO:  compute object acceleration coordinates composed from all nodal coordinates
-    void ComputeObjectCoordinates_tt(Vector& coordinates_tt, ConfigurationType configuration = ConfigurationType::Current) const;
-
-    //! AUTO:  initialize coordinateIndexPerNode array
-    void InitializeCoordinateIndices();
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
     void EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t) const;
 
-    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t, const ArrayIndex& ltg) const;
+    //! AUTO:  compute negative 6D gravity to be used in Pluecker transforms
+    void GetNegativeGravity6D(Vector6D& gravity6D) const;
 
-    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& jacobianODE2, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const;
+    //! AUTO:  compute joint transformation T and motion subspace MS for jointType and joint value q
+    void JointTransformMotionSubspace66(Joint::Type jointType, Real q, Transformation66& T, Vector6D& MS) const;
+
+    //! AUTO:  compute list of Pluecker transformations Xup, 6D velocities and 6D acceleration terms (not joint accelerations) per joint
+    void ComputeTreeTransformations(ConfigurationType configuration, bool computeVelocitiesAccelerations, Transformations66List& Xup, Vector6DList& V, Vector6DList& Avp) const;
+
+    //! AUTO:  compute mass matrix if computeMass = true and compute ODE2LHS vector if computeMass=false
+    void ComputeMassMatrixAndODE2LHS(EXUmath::MatrixContainer* massMatrixC, const ArrayIndex* ltg, Vector* ode2Lhs, Index objectNumber, bool computeMass) const;
+
+    //! AUTO:  function which adds 3D torques/forces per joint to Fvp
+    void AddExternalForces6D(const Transformations66List& Xup, Vector6DList& Fvp) const;
 
     //! AUTO:  return true, if object has reference frame; return according LOCAL node number
     virtual bool HasReferenceFrame(Index& localReferenceFrameNode) const override
@@ -223,20 +298,11 @@ public: // AUTO:
         localReferenceFrameNode = 0; return false;
     }
 
-    //! AUTO:  return the number of mesh nodes, which is 1 less than the number of nodes if referenceFrame is used
+    //! AUTO:  return the number of mesh nodes; these are virtual nodes per link, emulating rigid bodies recomputed from kinematic tree
     virtual Index GetNumberOfMeshNodes() const override
     {
-        return GetNumberOfNodes();
+        return parameters.linkMasses.NumberOfItems();
     }
-
-    //! AUTO:  return the mesh node pointer; for consistency checks
-    virtual CNodeODE2* GetMeshNode(Index meshNodeNumber) const override;
-
-    //! AUTO:  return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh
-    virtual Vector3D GetMeshNodeLocalPosition(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const override;
-
-    //! AUTO:  return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh
-    virtual Vector3D GetMeshNodeLocalVelocity(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const override;
 
     //! AUTO:  return the (global) position of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
     virtual Vector3D GetMeshNodePosition(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const override;

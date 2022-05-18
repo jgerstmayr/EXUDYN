@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:59 (last modified)
+* @date         2022-05-16  11:24:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,8 +106,8 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         cObjectJointRevoluteZ->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetMatrix3DSafely(d, "rotationMarker0", cObjectJointRevoluteZ->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetMatrix3DSafely(d, "rotationMarker1", cObjectJointRevoluteZ->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::SetConstMatrixTemplateSafely<3,3>(d, "rotationMarker0", cObjectJointRevoluteZ->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::SetConstMatrixTemplateSafely<3,3>(d, "rotationMarker1", cObjectJointRevoluteZ->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectJointRevoluteZ->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectJointRevoluteZ->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -156,8 +156,8 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { cObjectJointRevoluteZ->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::SetMatrix3DSafely(value, cObjectJointRevoluteZ->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::SetMatrix3DSafely(value, cObjectJointRevoluteZ->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectJointRevoluteZ->GetParameters().rotationMarker0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectJointRevoluteZ->GetParameters().rotationMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectJointRevoluteZ->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectJointRevoluteZ->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VaxisRadius") == 0) { visualizationObjectJointRevoluteZ->GetAxisRadius() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

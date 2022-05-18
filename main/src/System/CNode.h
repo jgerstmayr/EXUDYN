@@ -48,7 +48,7 @@ namespace Node {
 		//2D
 		Position2D = 1 << 1,				//!< used for: 2D point nodes, rigid nodes, nodes with position and slopes, ...; must provide position + translational displacement, velocity
 		Orientation2D = 1 << 2,				//!< used for: 2D rigid nodes (independent of parameterization); node must provide rotation matrix, dAngularVelocity/dq
-		Point2DSlope1 = 1 << 3,				//!< used for: nodes which provide a position and a slope vector in 1-direction
+		Point2DSlope1 = 1 << 3,				//!< used for: nodes which provide a 2D position and a 2D slope vector in 1-direction
 		//3D
 		Position = 1 << 4,					//!< used for: point nodes, rigid nodes, nodes with position and slopes, ...; must provide position + translational displacement, velocity
 		Orientation = 1 << 5,				//!< nodes, which can measure rotation, can apply torque (not only rigid nodes); node must provide rotation matrix, dAngularVelocity/dq
@@ -62,9 +62,12 @@ namespace Node {
 		GenericODE2 = 1 << 11,				//!< used for node with ODE2 coordinates (no specific access functions, except on coordinate level)
 		GenericODE1 = 1 << 12,				//!< used for node with ODE1 coordinates (no specific access functions, except on coordinate level)
 		GenericAE = 1 << 13,				//!< (CURRENTLY UNUSED!) used for node with AE coordinates (no specific access functions, except on coordinate level)
-		GenericData = 1 << 14				//!< used for node with data coordinates
+		GenericData = 1 << 14,				//!< used for node with data coordinates
+		//ANCF:
+		Point3DSlope1 = 1 << 15,			//!< used for: nodes which provide a position and a slope vector in 1-direction
+		Point3DSlope23 = 1 << 16			//!< used for: nodes which provide a position and slope vectors in 2 and 3-direction
 		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		//keep these lists synchronized with PybindModule.cpp lists
+		//keep these lists synchronized with autoGeneratePybindings.py lists
 	};
 	//! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
 	inline STDstring GetTypeString(Type var)
@@ -227,13 +230,30 @@ public:
 	virtual const Real& GetCurrentCoordinate_tt(Index i) const;
 
 	//! read globally stored current coordinates (displacements)
-	virtual LinkedDataVector GetCurrentCoordinateVector() const override;
+	inline virtual LinkedDataVector GetCurrentCoordinateVector() const override
+	{
+		return LinkedDataVector(computationalData->currentState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+	}
+
+	//! get current + reference coordinates written into a TVector (assumed to be e.g. a ConstVector
+	template<class TVector>
+	void GetCurrentAndReferenceODE2CoordinateVector(TVector& vector) const
+	{
+		vector.CopyFrom(GetReferenceCoordinateVector());
+		vector += LinkedDataVector(computationalData->currentState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+	}
 
 	//! read globally stored current coordinates (velocities)
-	virtual LinkedDataVector GetCurrentCoordinateVector_t() const;
+	inline virtual LinkedDataVector GetCurrentCoordinateVector_t() const
+	{
+		return LinkedDataVector(computationalData->currentState.ODE2Coords_t, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+	}
 
 	//! read globally stored current coordinates (accelerations)
-	virtual LinkedDataVector GetCurrentCoordinateVector_tt() const;
+	inline virtual LinkedDataVector GetCurrentCoordinateVector_tt() const
+	{
+		return LinkedDataVector(computationalData->currentState.ODE2Coords_tt, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+	}
 
 	//! read globally stored initial coordinates (displacements)
 	virtual LinkedDataVector GetInitialCoordinateVector() const override;
@@ -261,6 +281,33 @@ public:
 
 	//! read visualization coordinates (accelerations)
 	virtual LinkedDataVector GetVisualizationCoordinateVector_tt() const;
+
+	template<class TVector>
+	void GetODE2CoordinateVectorWithReference(TVector& vector, ConfigurationType configuration = ConfigurationType::Current) const
+	{
+		vector.CopyFrom(GetReferenceCoordinateVector());
+		
+		switch (configuration)
+		{
+		case ConfigurationType::Current:
+			vector += LinkedDataVector(computationalData->currentState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+			break;
+		case ConfigurationType::Initial: 
+			vector += LinkedDataVector(computationalData->initialState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+			break;
+		case ConfigurationType::Reference:
+			break;
+		case ConfigurationType::StartOfStep:
+			vector += LinkedDataVector(computationalData->startOfStepState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+			break;
+		case ConfigurationType::Visualization:
+			vector += LinkedDataVector(computationalData->visualizationState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
+			break;
+		default: CHECKandTHROWstring("CNodeODE2::GetCoordinateVectorWithReference: invalid ConfigurationType");
+		}
+	}
+
+
 
 	virtual LinkedDataVector GetCoordinateVector(ConfigurationType configuration) const override
     {

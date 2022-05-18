@@ -18,7 +18,7 @@
 ************************************************************************************************ */
 
 #include "Main/CSystemData.h"
-//#include "Utilities/RigidBodyMath.h"
+//#include "Linalg/RigidBodyMath.h"
 #include "System/CObjectConnector.h"
 
 //! function to compute jacobian for connectors having a simple structure with a local jacobian 

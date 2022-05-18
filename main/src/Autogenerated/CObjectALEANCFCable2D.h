@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-03-15  19:59:58 (last modified)
+* @date         2022-05-14  23:29:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,7 +86,7 @@ class CObjectALEANCFCable2D: public CObjectANCFCable2DBase // AUTO:
 {
 protected: // AUTO: 
     mutable bool massTermsALEComputed; //!< flag which shows that ALE mass terms have been computed; will be set to false at time when parameters are set
-    mutable ConstSizeMatrix<nODE2Coordinates*nODE2Coordinates> preComputedM1, preComputedM2, preComputedB1, preComputedB2; //!< if massTermsALEComputed=true, this contains the constant mass terms for faster computation
+    mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> preComputedM1, preComputedM2, preComputedB1, preComputedB2; //!< if massTermsALEComputed=true, this contains the constant mass terms for faster computation
     CObjectALEANCFCable2DParameters parameters; //! AUTO: contains all parameters for CObjectALEANCFCable2D
 
 public: // AUTO: 
@@ -161,7 +161,7 @@ public: // AUTO:
     //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
     virtual Index GetODE2Size() const override
     {
-        return nODE2Coordinates+1;
+        return nODE2coordinates+1;
     }
 
     //! AUTO:  return true if object has time and coordinate independent (=constant) mass matrix

@@ -16,12 +16,14 @@
 #size = leave empty if size is variable; e.g. 3 (size of vector), 2x3 (2 rows, 3 columns)  %used for vectors and matrices only!
 #type = Bool, Int, Real, UInt, UReal (unsigned Real), PInt (Int > 0), PReal (Real > 0), Vector, Matrix, SymmetricMatrix
 #defaultValue = default value or string (use "" to clearly identify strings incl. spaces); for 'V'-types: default initialization; vor 'F' and 'F'-types: C++ code of function;
-#cFlags = A...add access functions (e.g. const Real&/Real&), S...substructure (e.g. Newton), V... return value policy copy, O...move return policy, G... add args for pybind, R(read only), M(modifiableDuringSimulation), C...const function, D...definition only (implementation in separate file), P ... write Pybind11 interface [default is read/write access and that changes are immediately applied and need no reset of the system]
+#cFlags = A...add access functions (e.g. const Real&/Real&), D...no dictionary with type info, S...substructure (e.g. Newton), V... return value policy copy, O...move return policy, G... add args for pybind, R(read only), M(modifiableDuringSimulation), C...const function, D...definition only (implementation in separate file), P ... write Pybind11 interface [default is read/write access and that changes are immediately applied and need no reset of the system]
 #parameterDescription = description for parameter used in C++ code
 
 # classDescription = "parameters for CSystem"
 # class = System2
+# parentClass = System
 # latexText = ""        #text, which will be added before the class description (e.g., to start a new section)
+# cppText = ""          #code which is added before class definition
 # addConstructor = "",   #code added to default constructor
 # addDictionaryAccess #add access function to export/import data to/from dictionary (with type information)
 # linkedClass= "",       #member variable (representing a class) to which this object is linked
@@ -34,41 +36,44 @@
 #property classes for structural elements
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class = BeamSection
+class = PyBeamSection
+parentClass = BeamSection
+pythonClass = BeamSection
 #appendToFile=True #not done in first class
 writePybindIncludes = True
+cppText = '#include "Main/StructuralElementsDataStructures.h"\n'
+#cppText = 'class PyNumpyArray; //declaration to avoid include of pybind\n'
 latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Structures for structural elements}\nThis section includes data structures for structural elements, surch as beams (and plates in future). These classes are used as interface between Python libraries for structural elements and Exudyn internal classes.\n"
 classDescription = "Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which $X$ represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t.\ bending; $Y$ and $Z$ are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero."
 #V|F, pythonName,          cplusplusName,   size, type,                     defaultValue,args,  cFlags, parameterDescription
 #
 #see Bauchau, 2010, page 620
-V,  length,                             ,       , PReal,                    0.,             ,  P      , "$l_b$ [SI:m] length of beam element"
-V,  sectionalStiffnessMatrix,           ,       , Matrix6D,                 "Matrix6D(0.)", ,  P      , "$\LU{c}{\Cm} \in \Rcal^{6 \times 6}\,$ [SI:Nm$^2$, Nm and N (mixed)] sectional stiffness matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Cm} \vp{\LU{c}{\teps}}{\LU{c}{\tkappa}}$ with sectional normal force $\LU{c}{\nv}$, torque $\LU{c}{\mv}$, strain $\LU{c}{\teps}$ and curvature $\LU{c}{\tkappa}$, all quantities expressed in the cross section frame $c$."
-V,  sectionalDampingMatrix,             ,       , Matrix6D,                 "Matrix6D(0.)", ,  P      , "$\LU{c}{\Dm} \in \Rcal^{6 \times 6}\,$ [SI:Nsm$^2$, Nsm and Ns (mixed)] sectional linear damping matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Dm} \vp{\LU{c}{\tepsDot}}{\LU{c}{\tkappaDot}}$; note that this damping models is highly simplified and usually, it cannot be derived from material parameters; however, it can be used to adjust model damping to observed damping behavior."
-V,  massPerLength,                      ,       , UReal,                    0.,             ,  P      , "$\rho A\,$ [SI:kg/m] mass per unit length of the beam"
-# V,  bendingStiffnessY,                  ,       , UReal,                    0.,         ,      P      , "$EI_Y\,$ [SI:Nm$^2$] bending stiffness w.r.t.\ local $Y$-axis"
-# V,  bendingStiffnessZ,                  ,       , UReal,                    0.,         ,      P      , "$EI_Z\,$ [SI:Nm$^2$] bending stiffness w.r.t.\ local $Z$-axis; used in planar (2D) beam elements"
-# V,  bendingStiffnessY,                  ,       , UReal,                    0.,         ,      P      , "$EI_{YZ}\,$ [SI:Nm$^2$] bending stiffness coupling term; only used in special 3D beam elements"
-# V,  shearStiffnessY,                    ,       , UReal,                    0.,         ,      P      , "$GA_Y\,$ [SI:N] effective shear stiffness w.r.t.\ local $Y$-axis; including shear correction factors"
-# V,  shearStiffnessZ,                    ,       , UReal,                    0.,         ,      P      , "$GA_Z\,$ [SI:N] effective shear stiffness w.r.t.\ local $Z$-axis; including shear correction factors"
-# V,  torsionalStiffness,                 ,       , UReal,                    0.,         ,      P      , "$GI_X\,$ [SI:Nm$^2$] effective torsional stiffness; including shear correction factors"
-# V,  axialStiffness,                     ,       , UReal,                    0.,         ,      P      , "$EA\,$ [SI:N] axial stiffness"
+#not part of section?: V,  length,                             ,       , PReal,                    0.,             ,  DP     , "$l_b$ [SI:m] length of beam element"
+VL,  stiffnessMatrix,                   ,       , Matrix6D,                 "Matrix6D(6,6,0.)", ,  DP     , "$\LU{c}{\Cm} \in \Rcal^{6 \times 6}\,$ [SI:Nm$^2$, Nm and N (mixed)] sectional stiffness matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Cm} \vp{\LU{c}{\teps}}{\LU{c}{\tkappa}}$ with sectional normal force $\LU{c}{\nv}$, torque $\LU{c}{\mv}$, strain $\LU{c}{\teps}$ and curvature $\LU{c}{\tkappa}$, all quantities expressed in the cross section frame $c$."
+VL,  dampingMatrix,                     ,       , Matrix6D,                 "Matrix6D(6,6,0.)", ,  DP     , "$\LU{c}{\Dm} \in \Rcal^{6 \times 6}\,$ [SI:Nsm$^2$, Nsm and Ns (mixed)] sectional linear damping matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Dm} \vp{\LU{c}{\tepsDot}}{\LU{c}{\tkappaDot}}$; note that this damping models is highly simplified and usually, it cannot be derived from material parameters; however, it can be used to adjust model damping to observed damping behavior."
+VL,  massPerLength,                     ,       , UReal,                    0.,             ,  DP     , "$\rho A\,$ [SI:kg/m] mass per unit length of the beam"
+VL,  inertia,                           ,       , Matrix3D,                 "EXUmath::zeroMatrix3D", ,  DP     , "$\LU{c}{\Jm} \in \Rcal^{3 \times 3}\,$ [SI:kg$\,$m$^2$] sectional inertia for shear-deformable beams."
+#optional, used by Bauchau:
+#V,  sectionalCOM,                       ,       , Vector2D,                 "Vector2D(0.)", ,  DP     , "$\LU{c}{\vv_{com}} \in \Rcal^2\,$ [SI:m] sectional center of mass."
 #
-writeFile=StructuralElementsDataStructures.h
+writeFile=PyStructuralElementsDataStructures.h
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = BeamSectionGeometry
-appendToFile=True
+#parentClass = BeamSectionGeometry
+#pythonClass = BeamSectionGeometry
+#appendToFile=True
 writePybindIncludes = True
+#cppText = '#include "Main/StructuralElementsDataStructures.h"\n'
 classDescription = "Data structure for definition of 2D and 3D beam (cross) section geometrical properties. Used for visualization and contact."
 #V|F, pythonName,          cplusplusName,   size, type,                     defaultValue,args,  cFlags, parameterDescription
 #
-V,  crossSectionType,                   ,       , CrossSectionType,         "CrossSectionType::Polygon", , P , "Type of cross section: Polygon, Circular, etc."
-V,  crossSectionRadiusY,                ,       , UReal,                    0.,         ,      P      , "$c_Y\,$ [SI:m] $Y$ radius for circular cross section"
-V,  crossSectionRadiusZ,                ,       , UReal,                    0.,         ,      P      , "$c_Z\,$ [SI:m] $Z$ radius for circular cross section"
-V,  polygonalPoints,                    ,       , std::vector<Vector2D>,      "",         ,      P      , "$\pv_{pg}\,$ [SI: (m,m) ] list of polygonal ($Y,Z$) points in local beam cross section coordinates, defined in positive rotation direction"
+V,  crossSectionType,                   ,       , CrossSectionType,         "CrossSectionType::Polygon", , DP, "Type of cross section: Polygon, Circular, etc."
+V,  crossSectionRadiusY,                ,       , UReal,                    0.,         ,      DP     , "$c_Y\,$ [SI:m] $Y$ radius for circular cross section"
+V,  crossSectionRadiusZ,                ,       , UReal,                    0.,         ,      DP     , "$c_Z\,$ [SI:m] $Z$ radius for circular cross section"
+V,  polygonalPoints,                    ,       , Vector2DList,             "",         ,      DP     , "$\pv_{pg}\,$ [SI: (m,m) ] list of polygonal ($Y,Z$) points in local beam cross section coordinates, defined in positive rotation direction"
 #
-writeFile=StructuralElementsDataStructures.h
+writeFile=BeamSectionGeometry.h
 
     
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -232,6 +237,7 @@ V,  reuseConstantMassMatrix,   ,, bool,                     true,   ,  P,  "True
 #removed 2022-01-18: V,  preStepPyExecute,    ,          , String,                     ""    ,   ,  P,  "DEPRECATED, use mbs.SetPreStepUserFunction(...); Python code to be executed prior to every step and after last step, e.g. for postprocessing"
 V,  simulateInRealtime,     ,         , bool,                    false,   ,  P,  "True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues"
 V,  realtimeFactor,         ,         , PReal,                   1    ,   ,  P,  "if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)"
+V,  realtimeWaitMicroseconds,,        , PInt,                    1000 ,   ,  P,  "if simulateInRealtime=True, a loop runs which waits realtimeWaitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy"
 # information and output:
 V,  verboseMode,         ,      , UInt,                     0   ,   ,  P,  "0 ... no output, 1 ... show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)"
 V,  verboseModeFile,     ,      , UInt,                     0   ,   ,  P,  "same behaviour as verboseMode, but outputs all solver information to file"
@@ -431,6 +437,21 @@ V,      drawVerticalOffset,         ,                  ,     float,         "0.f
 #
 writeFile=VisualizationSettings.h
 
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = VSettingsKinematicTree
+appendToFile=True
+writePybindIncludes = True
+classDescription = "Visualization settings for kinematic trees."
+#V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
+V,      showCOMframes,              ,                  ,     bool,          false,                    , P,       "if True, a frame is attached to every center of mass"
+V,      showJointFrames,            ,                  ,     bool,          true,                     , P,       "if True, a frame is attached to the origin of every joint frame"
+V,      showFramesNumbers,          ,                  ,     bool,          true,                     , P,       "if True, numbers are drawn for joint frames (O[i]J[j]) and COM frames (O[i]COM[j]) for object [i] and local joint [j]"
+V,      frameSize,                  ,                  ,     float,         "0.2f",                   , P,       "size of COM and joint frames"
+#
+writeFile=VisualizationSettings.h
+
+
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsBodies
 appendToFile=True
@@ -443,6 +464,7 @@ V,      defaultSize,                ,                  3,    Float3,       "Floa
 V,      defaultColor,               ,                  4,    Float4,       "Float4({0.3f,0.3f,1.f,1.f})",, P,  "default cRGB color for bodies; 4th value is "
 V,      deformationScaleFactor,     ,                  ,     float,        "1",                        , P,    "global deformation scale factor; also applies to nodes, if drawn; used for scaled drawing of (linear) finite elements, beams, etc."
 V,      beams,                      ,                  ,     VSettingsBeams,   ,                       , PS,   "visualization settings for beams (e.g. ANCFCable or other beam elements)"
+V,      kinematicTree,              ,                  ,     VSettingsKinematicTree,   ,               , PS,   "visualization settings for kinematic tree"
 #
 writeFile=VisualizationSettings.h
 

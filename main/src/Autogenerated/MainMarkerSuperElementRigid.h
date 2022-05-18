@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:21:00 (last modified)
+* @date         2022-05-16  11:24:37 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -109,7 +109,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         cMarkerSuperElementRigid->GetParameters().bodyNumber = EPyUtils::GetObjectIndexSafely(d["bodyNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetVector3DSafely(d, "offset", cMarkerSuperElementRigid->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "offset", cMarkerSuperElementRigid->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/
         cMarkerSuperElementRigid->GetParameters().meshNodeNumbers = py::cast<std::vector<Index>>(d["meshNodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cMarkerSuperElementRigid->GetParameters().weightingFactors = py::cast<std::vector<Real>>(d["weightingFactors"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cMarkerSuperElementRigid->GetParameters().useAlternativeApproach = py::cast<bool>(d["useAlternativeApproach"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -155,7 +155,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("bodyNumber") == 0) { cMarkerSuperElementRigid->GetParameters().bodyNumber = EPyUtils::GetObjectIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("offset") == 0) { EPyUtils::SetVector3DSafely(value, cMarkerSuperElementRigid->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("offset") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cMarkerSuperElementRigid->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("meshNodeNumbers") == 0) { cMarkerSuperElementRigid->GetParameters().meshNodeNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("weightingFactors") == 0) { cMarkerSuperElementRigid->GetParameters().weightingFactors = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("useAlternativeApproach") == 0) { cMarkerSuperElementRigid->GetParameters().useAlternativeApproach = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

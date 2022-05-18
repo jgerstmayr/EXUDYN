@@ -22,7 +22,7 @@
 
 #include "Utilities/BasicDefinitions.h"
 
-#define PERFORM_UNIT_TESTS //set with compiler flags in setup.py, but can be switched here for testing
+//#define PERFORM_UNIT_TESTS //set with compiler flags in setup.py, but can be switched here for testing
 
 #ifdef PERFORM_UNIT_TESTS
 //run all unit tests; return 0 on success, otherwise the number of fails

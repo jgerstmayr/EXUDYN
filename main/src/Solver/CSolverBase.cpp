@@ -869,11 +869,14 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 	{
 		Real cpuTimeElapsed = simulationSettings.timeIntegration.realtimeFactor * (EXUstd::GetTimeInSeconds() - output.cpuStartTime);
 		Real simTimeElapsed = t - it.startTime;
-		Index waitMicroSeconds = 1000; //wait time until next computation
+		Index waitMicroSeconds = simulationSettings.timeIntegration.realtimeWaitMicroseconds; //wait time until next computation
 
 		while (cpuTimeElapsed < simTimeElapsed) //no workaround if simTimeElapsed would be much too big
 		{
-			std::this_thread::sleep_for(std::chrono::microseconds(waitMicroSeconds)); //avoid continuous computation
+			if (waitMicroSeconds != 0)
+			{
+				std::this_thread::sleep_for(std::chrono::microseconds(waitMicroSeconds)); //avoid continuous computation
+			}
 			cpuTimeElapsed = (EXUstd::GetTimeInSeconds() - output.cpuStartTime);
 		}
 	}
@@ -1579,7 +1582,7 @@ void CSolverBase::WriteSolutionFileHeader(CSystem& computationalSystem, const Si
 				STDstring solInfo = solutionSettings.solutionInformation;
 				bool foundString = true;
 				STDstring endLine = "\n";
-				size_t len = endLine.length();
+				//size_t len = endLine.length();
 				std::size_t found = 0;
 				while (foundString)
 				{

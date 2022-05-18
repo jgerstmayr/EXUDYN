@@ -45,6 +45,7 @@ def TestExamplesReferenceSolution():
             'geneticOptimizationTest.py':0.10117518366826603, #before 2022-02-20 (accuracy of internal sensors is higher); 0.10117518367051619, #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.10117518366934351,
             'geometricallyExactBeam2Dtest.py':-2.2115028353806547,
             'heavyTop.py':33.423125751743804,
+            'kinematicTreeTest.py': -1.309383960216414,
             'manualExplicitIntegrator.py':2.059698629692295,
             'mecanumWheelRollingDiscTest.py':0.2714267238324343,
             'objectFFRFreducedOrderAccelerations.py':0.5000285122944431,#before 2022-02-20 (accuracy of internal sensors is higher): 0.5000285122930983,
@@ -146,14 +147,9 @@ def MiniExamplesReferenceSolution():
     if exudynTestGlobals.useCorrectedAccGenAlpha or exudynTestGlobals.useNewGenAlphaSolver: #new version
         refSol = {
             #results after change to new Jacobian, diff about 1e-12
+            'LoadMassProportional.py':-4.904999999999998,
+            'MarkerSuperElementPosition.py':1.0039999999354785,
             'ObjectANCFCable2D.py':-0.5013058140308901,
-            'ObjectMassPoint.py':2.0,
-            'ObjectMassPoint2D.py':2.0,
-            'ObjectMass1D.py':2.0,
-            'ObjectRotationalMass1D.py':2.0,
-            'ObjectRigidBody2D.py':4.356194490192344,
-            'ObjectGenericODE2.py':1.0039999999354785,
-            'ObjectGenericODE1.py':-0.8206847097689384,
             'ObjectConnectorSpringDamper.py':0.9733828995763039, #until 2022-01-25 (before analytical Jac for SpringDamper):0.9733828995759499,
             'ObjectConnectorCartesianSpringDamper.py':-0.0009999999999750209,
             'ObjectConnectorRigidBodySpringDamper.py':-0.534929955894111,
@@ -162,9 +158,15 @@ def MiniExamplesReferenceSolution():
             'ObjectConnectorGravity.py':100000.00000000485,
             'ObjectConnectorDistance.py':-0.9861806726069355,
             'ObjectConnectorCoordinate.py':0.04999999999999982,
+            'ObjectGenericODE2.py':1.0039999999354785,
+            'ObjectGenericODE1.py':-0.8206847097689384,
             'ObjectJointRevoluteZ.py':0.49999999999999795,
-            'MarkerSuperElementPosition.py':1.0039999999354785,
-            'LoadMassProportional.py':-4.904999999999998,
+            'ObjectKinematicTree.py':-3.134018551808591,
+            'ObjectMass1D.py':2.0,
+            'ObjectMassPoint.py':2.0,
+            'ObjectMassPoint2D.py':2.0,
+            'ObjectRigidBody2D.py':4.356194490192344,
+            'ObjectRotationalMass1D.py':2.0,
 
             # #OLD results:
             # 'ObjectMassPoint.py':2.0,

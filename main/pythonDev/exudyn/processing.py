@@ -274,7 +274,7 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
 #    useMultiProcessing: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!
 #    showProgress: if True, shows for every iteration the progress bar (requires tqdm library)
 #    resultsFile: if provided, output is immediately written to resultsFile during processing
-#    numberOfThreads: default: same as number of cpus (threads); used for multiprocessing lib;
+#    numberOfThreads: default(None): same as number of cpus (threads); used for multiprocessing lib;
 #    parameterFunctionData: dictionary containing additional data passed to the parameterFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
 #    clusterHostNames: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
 #    useDispyWebMonitor: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
@@ -286,20 +286,19 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
 def ParameterVariation(parameterFunction, parameters, 
                        useLogSpace=False, debugMode=False, addComputationIndex=False,
                        useMultiProcessing=False, showProgress = True, parameterFunctionData={}, clusterHostNames=[],
-                       **kwargs):
+                       numberOfThreads=None, **kwargs):
     
     if 'multiprocessing' in sys.modules:
         from multiprocessing import cpu_count
-        numberOfThreads = cpu_count() #cpu_count in fact gives number of threads ...
+        if numberOfThreads == None:
+            numberOfThreads = cpu_count() #cpu_count in fact gives number of threads ...
         if debugMode:
             if clusterHostNames == []:
                 print("using", numberOfThreads, "cpus")
             else:
                 print("using cluster")
-    else:
-        numberOfThreads = 8
-    if 'numberOfThreads' in kwargs: 
-        numberOfThreads = kwargs['numberOfThreads']
+    if numberOfThreads == None:
+        numberOfThreads = 8 #just some default, if no other value available
 
     resultsFile = ''
     if 'resultsFile' in kwargs: 

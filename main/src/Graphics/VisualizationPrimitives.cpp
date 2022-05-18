@@ -784,7 +784,7 @@ namespace EXUvis {
 	//! length defines the length of each axis; radius is the radius of the shaft; arrowSize is diameter relative to radius
 	//! colorfactor: 1=rgb color, 0=grey color (and any value between)
 	void DrawOrthonormalBasis(const Vector3D& p, const Matrix3D& rot, Real length, Real radius, 
-		GraphicsData& graphicsData, Index itemID, float colorFactor, bool draw3D, Index nTiles, Real arrowSizeRelative, Index showNumber)
+		GraphicsData& graphicsData, Index itemID, float colorFactor, bool draw3D, Index nTiles, Real arrowSizeRelative, Index showNumber, const char* preText)
 	{
 
 		for (Index i = 0; i < 3; i++)
@@ -799,9 +799,15 @@ namespace EXUvis {
 			{
 				graphicsData.AddLine(p, p + length * v, color, color, itemID);
 			}
-			if (showNumber != EXUstd::InvalidIndex)
+			if (showNumber != EXUstd::InvalidIndex || preText != nullptr)
 			{
-				graphicsData.AddText(p + (length + radius*arrowSizeRelative * 3) * v, color, EXUstd::ToString(showNumber), 0.f, 0.25f, 0.25f, itemID);
+				STDstring textStr;
+				if (showNumber != EXUstd::InvalidIndex) 
+				{ 
+					if (preText != nullptr) { textStr = preText; }
+					textStr += EXUstd::ToString(showNumber);
+				}
+				graphicsData.AddText(p + (length + radius * arrowSizeRelative * 3) * v, color, textStr, 0.f, 0.25f, 0.25f, itemID);
 			}
 		}
 	}

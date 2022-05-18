@@ -132,8 +132,10 @@ def LogSO3(R):
     return X
 
 
+#not all of these terms are needed (as implemented in C++ code):
+#termExpanded = lambda x: 1/6 - (1/120)*x**2 + (1/5040)*x**4 - (1/362880)*x**6 + (1/39916800)*x**8 - (1/6227020800)*x**10 + (1/1307674368000)*x**12 
+termExpanded = lambda x : 1 / 6 - (1 / 120)*x**2 + (1 / 5040)*x**4
 
-termExpanded = lambda x: 1/6 - (1/120)*x**2 + (1/5040)*x**4 - (1/362880)*x**6 + (1/39916800)*x**8 - (1/6227020800)*x**10 + (1/1307674368000)*x**12 
 #**function: compute the tangent operator corresponding to ExpSO3, see \cite{Bruels2011}
 #**input: 3D rotation vector as np.array
 #**output: 3x3 matrix as np.array       
@@ -244,9 +246,9 @@ def TExpSE3Inv(x):
         OmegaSkew = Skew(Omega)
         c1 = 0.5*USkew
         c2 = ((beta-alpha)/(beta*phi**2))*(np.matmul(USkew,OmegaSkew) + np.matmul(OmegaSkew,USkew))
-        c3 = ((1 + alpha + -2*beta)/(beta*phi**4))*(np.dot(Omega,U))*np.matmul(OmegaSkew,OmegaSkew)
+        c3 = ((1 + alpha - 2*beta)/(beta*phi**4))*(np.dot(Omega,U))*np.matmul(OmegaSkew,OmegaSkew)
         Tuwm = c1 + c2 + c3
-    TexpSO3Inv = TExpSO3Inv(Omega)
+    TexpSO3Inv = TExpSO3Inv(Omega) #NOTE: overrides the function TexpSO3Inv
     Tinv = np.block([[TexpSO3Inv,      Tuwm],
                      [np.zeros((3,3)), TexpSO3Inv]])
     return Tinv

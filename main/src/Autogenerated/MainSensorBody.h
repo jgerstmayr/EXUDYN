@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-02-18  20:35:37 (last modified)
+* @date         2022-05-16  11:24:38 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,7 +106,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         cSensorBody->GetParameters().bodyNumber = EPyUtils::GetObjectIndexSafely(d["bodyNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetVector3DSafely(d, "localPosition", cSensorBody->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "localPosition", cSensorBody->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/
         cSensorBody->GetParameters().writeToFile = py::cast<bool>(d["writeToFile"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "fileName", cSensorBody->GetParameters().fileName); /*! AUTO:  safely cast to C++ type*/
         cSensorBody->GetParameters().outputVariableType = (OutputVariableType)py::cast<Index>(d["outputVariableType"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -152,7 +152,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("bodyNumber") == 0) { cSensorBody->GetParameters().bodyNumber = EPyUtils::GetObjectIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("localPosition") == 0) { EPyUtils::SetVector3DSafely(value, cSensorBody->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("localPosition") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cSensorBody->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("writeToFile") == 0) { cSensorBody->GetParameters().writeToFile = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { EPyUtils::SetStringSafely(value, cSensorBody->GetParameters().fileName); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("outputVariableType") == 0) { cSensorBody->GetParameters().outputVariableType = py::cast<OutputVariableType>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

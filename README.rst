@@ -2,8 +2,8 @@
 Exudyn
 ======
 
-+  Exudyn version = 1.2.57.dev1 (Corea)
-+  build date and time=2022-04-29  08:56
++  Exudyn version = 1.2.86.dev1 (Corea)
++  build date and time=2022-05-18  21:15
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn **Version 1.2** is out! The documentation theDoc.pdf now reached > 600 pages! Including now a contact module, improved solvers, sparse matrix support and multi-threading, creation of beams along curves, extended robotics modules, **PlotSensor** fully extended, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
@@ -97,10 +97,10 @@ Developers of Exudyn and thanks
 ==================================
 
 Exudyn is currently  developed at the University of Innsbruck.
-In the first phase most of the core code is written by Johannes Gerstmayr, implementing ideas that followed out of the project HOTINT. 15 years of development led to a lot of lessions learned and after 20 years, a code must be re-designed.
+In the first phase most of the core code is written by Johannes Gerstmayr, implementing ideas that followed out of the project HOTINT . 15 years of development led to a lot of lessons learned and after 20 years, a code must be re-designed.
 
 Some important tests for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
-For the interoperability between C++ and Python, we extensively use \ **Pybind11**\ , originally written by Jakob Wenzel, see \ ``https://github.com/pybind/pybind11``\ . Without Pybind11 we couldn't have made this project -- Thank's a lot!
+For the interoperability between C++ and Python, we extensively use \ **Pybind11**\ , originally written by Jakob Wenzel, see \ ``https://github.com/pybind/pybind11``\ . Without Pybind11 we couldn't have made this project -- Thanks a lot!
 
 Important discussions with researchers from the community were important for the design and development of Exudyn , where we like to mention Joachim Schöberl from TU-Vienna who boosted the design of the code with great concepts. 
 
@@ -108,7 +108,7 @@ The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training
 
 The following people have contributed to Python and C++ library implementations:
 
-+  Joachim Schöberl, TU Vienna (Providing specialized NGsolve core library with \ ``taskmanager``\  for \ **multithreaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
++  Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with \ ``taskmanager``\  for \ **multi-threaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
 +  Stefan Holzinger, University of Innsbruck (Lie group solvers in Python, Lie group node)
 +  Andreas Zwölfer, Technical University Munich (FFRF and CMS formulation)
 +  Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation / pip install on linux / wsl with graphics)
@@ -270,21 +270,29 @@ Build and install Exudyn under Mac OS X?
 
 
 Installation and building on Mac OS X is rarely tested, but first successful compilation including GLFW has been achieved.
-Requirements are an according Anaconda installation.
+Requirements are an according Anaconda (or Miniconda) installation.
 
 \ **Tested configurations**\ :
 
 +  Mac OS 11.x 'Big Sur', Mac Mini (2021), Apple M1, 16GB Memory
-+  Anaconda (i368 based with Rosetta 2) with Python 3.8
++  Anaconda (x86 / i368 based with Rosetta 2) with Python 3.8
 +  this configuration is currently evaluated but showed general compatibility
    => some wheels are already available on pypi (you may need to download them manually)!
+
+\ **NOTE**\ :
+
++  on Apple M1 processors, there are significant problems with Miniconda; scipy cannot be installed properly (April 2022)
++  a significant number of Exudyn test models does not run properly! Optimization and processing functions do not run (especially multiprocessing and tqdm); 
++  as eigensolvers were not available for tests on M1, all these test models fail 
++  note that even some test result deviate from Windows results significantly!
+
+
 
 Alternatively, we tested on:
 
 +  Mac OS X 10.11.6 'El Capitan', Mac Pro (2010), 3.33GHz 6-Core Intel Xeon, 4GB Memory, Anaconda Navigator 1.9.7, Python 3.7.0, Spyder 3.3.6
 
-Note, that in all cases tkinter does not yet run properly (help appreciated), while otherwise we produced a stable version. The AppleM1 native version is approx.~10x faster
-than the Rosetta version!
+Note, that in all cases tkinter does not run properly on MacOS (help appreciated), while otherwise we produced a stable version. The AppleM1 native version is in some cases superior to the Windows version and also to the Rosetta version on Apple!
 
 For a compatible Mac OS X system some pre-built wheels will be available via pypi.org. Note that these my be built on an emulated AppleM1, thus being much slower than the Windows or Linux compliant.
 
@@ -455,7 +463,7 @@ After the first development phase (2019-2021), it
 +  is a moderately large (2MB on windows!) multibody library, which can be easily linked to other projects,
 +  contains basic multibody rigid bodies, flexible bodies, joints, contact, etc.,
 +  includes a large Python utility library for convenient building and post processing of models,
-+  allows to efficiently simulate small scale systems (compute 100000s time steps per second for systems with n_DOF<10),
++  allows to efficiently simulate small scale systems (compute 100\,000s of time steps per second for systems with n_DOF<10),
 +  allows to efficiently simulate medium scaled systems for problems with n_DOF < 1\,000\,000,
 +  is a safe and widely accessible module for Python,
 +  allows to add user defined objects and solvers in C++,
@@ -1468,12 +1476,12 @@ Exudyn was developed for the efficient simulation of flexible multi-body systems
 Focus of the C++ code
 =====================
 
-\ **Four principles**\ : 
+The code focuses on four principles, starting with highest priority: 
 
 +  developer-friendly
 +  error minimization
-+  efficiency
 +  user-friendliness
++  efficiency
 
 The focus is therefore on:
 
@@ -1482,7 +1490,7 @@ The focus is therefore on:
 +  Complete unit tests are added to new program parts during development; for more complex processes, tests are available in Python
 +  In order to implement the sometimes difficult formulations and algorithms without errors, error avoidance is always prioritized.
 +  To generate efficient code, classes for parallelization (vectorization and multithreading) are provided. We live the principle that parallelization takes place on multi-core processors with a central main memory, and thus an increase in efficiency through parallelization is only possible with small systems, as long as the program runs largely in the cache of the processor cores. Vectorization is tailored to SIMD commands as they have Intel processors, but could also be extended to GPGPUs in the future.
-+  The user interface (Python) provides a 1:1 image of the system and the processes running in it, which can be controlled with the extensive possibilities of Python.
++  The user interface (Python) provides a nearly 1:1 image of the system and the processes running in it, which can be controlled with the extensive possibilities of Python.
 
 
 C++ Code structure
@@ -1624,6 +1632,62 @@ In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer(
 +  if a scalar, write coordinate derivative with underscore: _q, _v (derivative w.r.t. velocity coordinates)
 +  for components, elements or entries of vectors, arrays, matrices: use 'item' throughout
 +  '[...]Init' ... in arguments, for initialization of variables; e.g. 'valueInit' for initialization of member variable 'value'
+
+
+
+Implementation of new computational items in C++
+================================================
+
+This section should sketch which changes will be needed to integrate new C++ items.
+In general, it is recommended to first start with a Python implementation with user functions based on
+\ ``NodeGeneric...``\ , \ ``ObjectGeneric...``\ , \ ``ObjectConnectorCoordinateVector``\  for constraints and
+any suitable connector for new nodes or objects. New sensors can be based on the \ ``SensorUserFunction``\ .
+
+If such an implementation is successful, but too slow, a C++ implementation can be considered.
+In the following, two use cases are shown, which show the simplicity of the procedure:
+
++  \ **Case 1**\ : user object (body):
+
+
+  It is recommended to first search for a body with a similar behavior.
+  Copy the definition of such an object inside the file \ ``objectDefinition.py``\  and edit the according lines. 
+  There is not much description of 
+  this file yet (except from the first lines of the file), as it will be transformed into another format in the future.
+  Basically, you need to edit the interface, which contains parameters (which are linked to Python) and functions, 
+  which go to the header file.
+  When you finished editing, run \ ``pythonAutoGenerateObjects.py``\ . This generates the header file in \ ``src/autogenerated``\ 
+  but also adds description to some docs files and adds the \ ``pybind11``\  interface. 
+  Now copy the implementation (\ ``.cpp``\ ) file of the same connector from which you copied from and rename and edit all functions.
+  For the body
+  
++  \ ``ComputeMassMatrix``\ : computes the mass matrix either in sparse or dense mode; this function is performance-critical if the mass matrix is non-constant
++  \ ``ComputeODE2LHS``\ : computes the LHS generalized forces of the body; this function is performance-critical
++  \ ``GetAccessFunctionTypes``\ : specifies, which access functions are available in \ ``GetAccessFunctionBody(...)``\ 
++  \ ``GetAccessFunctionBody``\ : needs to compute functions for 'access' to the body, in the sense that e.g. forces or torques can be applied. 
++  \ ``GetAvailableJacobians``\ : shall return the flags which jacobians of \ ``ComputeODE2LHS``\  need to be computed and which are available as functions; binary flags added up
++  \ ``GetOutputVariableBody``\ : function needs to implement the output variables, such as position, acceleration, forces, etc. as defined in \ ``GetOutputVariableTypes()``\ 
++  \ ``HasConstantMassMatrix``\ : specifies, if mass matrix is constant
++  \ ``GetNumberOfNodes``\ : number of nodes of object
++  \ ``GetODE2Size``\ : total number of ODE2 coordinates
++  \ ``GetType``\ : some flags for objects, such as \ ``Body``\ , \ ``SingleNoded``\ , \ ``SuperElement``\ , ...; these flags are needed for connectivity and special treatment in the system
++  \ ``GetPosition, GetVelocity, ...``\ : provide this functions as far as possible; rigid bodies need to provide positions and rotation matrix, as well as velocity and angular velocity for markers; if functions do not exist, some marker or sensor functions may fail
++  ...   possibly some helper functions, which you should implement for the functionality of your object.
+  
++  \ **Case 2**\ : user connector:
+
+
+  It is recommended to search for a connector with similar behavior; first check, if you would like to implement 
+  an algebraic constraint or a spring-damper-like connector.
+  Again, copy a similar connector in \ ``objectDefinition.py``\  and edit the according lines. 
+  When you finished editing, run \ ``pythonAutoGenerateObjects.py``\  and make a copy of the copied implementation (\ ``.cpp``\ ) file.
+  The implementation file usually consists of
+  
++  \ ``ComputeODE2LHS``\ : this function shall compute the LHS generalized forces on the two marker objects
++  \ ``ComputeJacobianODE2_ODE2``\ : computes the \ ``GetAvailableJacobians()``\  is not providing any '..._function' flag, which indicates that these jacobians are available as function
++  \ ``GetOutputVariableConnector``\ : this function needs to compute all output variables as given in \ ``GetOutputVariableTypes()``\ 
++  ...   possibly some helper functions, which you should implement for the functionality of your object.
+  
+
 
 
 

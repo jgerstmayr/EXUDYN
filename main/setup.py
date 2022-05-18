@@ -173,14 +173,18 @@ ext_modules = [
                  'src/Objects/CNodePoint.cpp',
                  'src/Objects/CNodePoint2D.cpp',
                  'src/Objects/CNodePoint2DSlope1.cpp',
+                 'src/Objects/CNodePoint3DSlope1.cpp',
+                 'src/Objects/CNodePoint3DSlope23.cpp',
                  'src/Objects/CNodePointGround.cpp',
                  'src/Objects/CNodeRigidBody2D.cpp',
                  'src/Objects/CNodeRigidBodyEP.cpp',
                  'src/Objects/CNodeRigidBodyRotVecLG.cpp',
                  'src/Objects/CNodeRigidBodyRxyz.cpp',
                  'src/Objects/CObjectALEANCFCable2D.cpp',
+                 'src/Objects/CObjectANCFBeam3D.cpp',
                  'src/Objects/CObjectANCFCable2D.cpp',
                  'src/Objects/CObjectBeamGeometricallyExact2D.cpp',
+                 'src/Objects/CObjectBeamGeometricallyExact3D.cpp',
                  'src/Objects/CObjectConnectorCartesianSpringDamper.cpp',
                  'src/Objects/CObjectConnectorCoordinate.cpp',
                  'src/Objects/CObjectConnectorCoordinateSpringDamper.cpp',
@@ -210,6 +214,7 @@ ext_modules = [
                  'src/Objects/CObjectJointRollingDisc.cpp',
                  'src/Objects/CObjectJointSliding2D.cpp',
                  'src/Objects/CObjectJointSpherical.cpp',
+                 'src/Objects/CObjectKinematicTree.cpp',
                  'src/Objects/CObjectMass1D.cpp',
                  'src/Objects/CObjectMassPoint.cpp',
                  'src/Objects/CObjectMassPoint2D.cpp',
@@ -447,6 +452,7 @@ if compileParallel:
                 # those lines are copied from distutils.ccompiler.CCompiler directly
                 macros, objects, extra_postargs, pp_opts, build =                         self._setup_compile(output_dir, macros, include_dirs, sources,
                                 depends, extra_postargs)
+                objects.reverse() #puts the heavier files on top (better performance for parallel compile)
                 cc_args = self._get_cc_args(pp_opts, debug, extra_preargs)
                 # parallel code
                 def _single_compile(obj):
@@ -473,6 +479,7 @@ if compileParallel:
                                                    sources, depends, extra_postargs)
                 macros, objects, extra_postargs, pp_opts, build = compile_info
             
+                objects.reverse() #puts the heavier files on top (better performance for parallel compile)
                 compile_opts = extra_preargs or []
                 compile_opts.append('/c')
                 if debug:

@@ -60,7 +60,9 @@ def MassCOMinertia2T66(mass, centerOfMass, inertia):
 def Inertia2T66(inertia):
     C = Skew(inertia.com)
     mass = inertia.mass
-    inertiaCOM = inertia.Translated(-inertia.com).inertiaTensor
+    #inertiaCOM = inertia.Translated(-inertia.com).inertiaTensor
+    inertiaCOM = inertia.InertiaCOM()
+    #alternatively, we could just use inertia.Inertia() in first block!
     return np.block([
         [inertiaCOM + mass*(C @ C.T), mass*C],
         [mass*C.T, mass*np.eye(3) ]])
@@ -502,8 +504,6 @@ class KinematicTree66:
             [XJ, MS[i]] = JointTransformMotionSubspace66(self.jointTypes[i], q[i])
             vJ = MS[i] * q_t[i]
             Xup[i] = XJ @ self.XL(i)
-            # print("vJ=",vJ)
-            # print("Xup"+str(i)+"=",Xup[i])
             if self.parents[i] == -1:
                 v[i] = vJ
                 avp[i] = Xup[i] @ (-gravity6D)
@@ -511,12 +511,16 @@ class KinematicTree66:
                 v[i] = Xup[i] @ v[self.parents[i]] + vJ
                 avp[i] = Xup[i] @ avp[self.parents[i]] + CRM(v[i]) @ vJ
     
-            # print('v['+str(i)+']=',  v[i].round(4))
-            # print('avp['+str(i)+']=',avp[i].round(4))
-            #print()
             fvp[i] = self.inertias[i] @ avp[i] + CRF(v[i]) @ self.inertias[i] @ v[i] 
+
+            # print("Xup"+str(i)+"=",Xup[i])
+            # print("MS"+str(i)+"=",MS[i])
+            # print("IC"+str(i)+"=",self.inertias[i])
+            # print("CRF"+str(i)+"=",CRF(v[i]))
+            # print("v"+str(i)+"=",v[i])
+            # print("avp"+str(i)+"=",avp[i])
+            # print('fvp['+str(i)+']=',fvp[i].round(8))
     
-        # print('fvp =', fvp)
         #add external foces
         fvp = self.AddExternalForces(Xup, fvp, externalForces)
     
@@ -539,13 +543,6 @@ class KinematicTree66:
             if self.parents[i] != -1:
                 IC[self.parents[i]] += Xup[i].T @ IC[i] @ Xup[i]
 
-        # for i in range(n):
-        #     [m, com, Jcom] = Inertia66toMassCOMinertia(IC[i])
-        #     J = Jcom + m*Skew(com)@Skew(com).T
-        #     print('IC'+str(i)+'m=',m)
-        #     print('ICh'+str(i)+'=',m*com)
-        #     print('ICinertia'+str(i)+'=',J)
-    
         #compute generalized mass matrix and projected inertia
         for i in range(n):
             fh = IC[i] @ MS[i]

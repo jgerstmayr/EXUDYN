@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1061, 
-Number of resolved issues = 899 (57 in current minor version), 
-Exudyn version = 1.2.57.dev1, 
-last change =  2022-04-29
+Number of issues = 1093, 
+Number of resolved issues = 928 (86 in current minor version), 
+Exudyn version = 1.2.86.dev1, 
+last change =  2022-05-18
 
 
 <table style = "width:100%">
@@ -39,15 +39,143 @@ last change =  2022-04-29
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>1049</td>
-    <td>MacOS               </td>
+    <td>1088</td>
+    <td>ANCFBeam3D          </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> check if flag -mmacosx-version-min=11.0 is needed in setup.py and if this causes problems on older pre-AppleM1 which needs wheel version 10.9</td>
-    <td>CHECK</td>
+    <td> add test model, compare to 2013 paper</td>
+    <td>EXTENSION</td>
     <td></td>
-    <td>2022-04-25</td>
-    <td>2022-06-24</td>
+    <td>2022-05-16</td>
+    <td>2022-07-15</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1087</td>
+    <td>ANCFBeam3D          </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> complete implementation of all functions (rigid marker, etc.)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-16</td>
+    <td>2022-07-15</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1085</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> generalContactFrictionTests.py gives considerably different results after t=0.05 seconds between Windows and linux compiled version; may be caused by some initialization problems (bugs...); needs further tests</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-05-11</td>
+    <td>2022-07-10</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1078</td>
+    <td>BeamSectionGeometry </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add BeamSectionGeometry to 2D beam elements</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-09</td>
+    <td>2022-07-08</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1075</td>
+    <td>ANCFCable3D         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add 3D version of cable element, using BeamSection in interface</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-06</td>
+    <td>2022-07-05</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1072</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> extend KinematicTree export in order to be able to create robots with localHT!=HT0()</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-06</td>
+    <td>2022-07-05</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1071</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add special MarkerKinematicTreeRigidBody with link number and local position</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-05</td>
+    <td>2022-07-04</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1070</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add SensorSuperElement (BUT call it SensorKinematicTree!) functionality for Position, Velocity, Acceleration, RotationMatrix, AngularVelocity, ...</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-05</td>
+    <td>2022-07-04</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1061</td>
+    <td>Reference and copy  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add information to theDoc regarding copying and referencing objects, such as mbs, GetObject(...), etc.; add info into description C/R into generatePyBindings?</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-30</td>
+    <td>2022-06-29</td>
     <td></td>
     <td></td>
     <td></td>
@@ -64,38 +192,6 @@ last change =  2022-04-29
     <td></td>
     <td>2022-04-25</td>
     <td>2022-06-24</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1047</td>
-    <td>Matrix3DList        </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add new structure Matrix3DList; used to create list of 3D matrices and transfer into MainSystem mbs, e.g. in KinematicTree</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-04-25</td>
-    <td>2022-06-24</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1038</td>
-    <td>simulateInRealtime  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> put waitMicroSeconds into settings</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-04-07</td>
-    <td>2022-06-06</td>
     <td></td>
     <td></td>
     <td></td>
@@ -214,7 +310,7 @@ last change =  2022-04-29
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0990</td>
     <td>MarkerNodeCoordinate</td>
     <td>JG</td>
@@ -230,7 +326,7 @@ last change =  2022-04-29
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0988</td>
     <td>ComputeConstraintJacobianDerivative</td>
     <td>JG</td>
@@ -246,7 +342,7 @@ last change =  2022-04-29
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0987</td>
     <td>ALEANCFCable2D      </td>
     <td>JG</td>
@@ -262,7 +358,7 @@ last change =  2022-04-29
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0984</td>
     <td>OutputVariableConnector</td>
     <td>JG</td>
@@ -278,7 +374,7 @@ last change =  2022-04-29
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0973</td>
     <td>ContactFrictionCircleCable2D</td>
     <td>JG</td>
@@ -294,7 +390,7 @@ last change =  2022-04-29
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0972</td>
     <td>ContactFrictionCircleCable2D</td>
     <td>JG</td>
@@ -310,7 +406,7 @@ last change =  2022-04-29
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0971</td>
     <td>Renderer            </td>
     <td>JG</td>
@@ -326,7 +422,7 @@ last change =  2022-04-29
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>0968</td>
     <td>MarkerBodyCable2DShape</td>
     <td>JG</td>
@@ -540,22 +636,6 @@ last change =  2022-04-29
     <td>JG</td>
     <td>RAISED  </td>
     <td> add computation functions for nodes, e.g., position or rotation jacobian; coordinates are already available in GetNodeOutput(...)</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-02-02</td>
-    <td>2022-04-03</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0913</td>
-    <td>KinematicTree       </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add efficient C++ functionality for operating on 6D vectors and matrices for kinematics/dynamics</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2022-02-02</td>
@@ -1607,22 +1687,6 @@ last change =  2022-04-29
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0655</td>
-    <td>add KinematicTree   </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> ObjectKinematicTree (MinimumCoordinates)</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-05-01</td>
-    <td>2021-06-30</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0648</td>
     <td>solver tutorial     </td>
     <td>JG</td>
@@ -1952,22 +2016,6 @@ last change =  2022-04-29
     <td></td>
     <td>2020-12-04</td>
     <td>2021-02-02</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0471</td>
-    <td>geometrically exact beam3D</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add to CPP</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-11-21</td>
-    <td>2021-01-20</td>
     <td></td>
     <td></td>
     <td></td>
@@ -2631,6 +2679,374 @@ last change =  2022-04-29
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1092</td>
+    <td>openAI gym          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add example for interface with openAI gym using cart-pole model</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-18</td>
+    <td>2022-07-17</td>
+    <td>2022-05-18 09:47</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>see Examples/testGymCartpole.py</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1091</td>
+    <td>ComputeODE2Eigenvalues</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> eigenvectors sorting is not according to eigenvalues sorting</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-05-17</td>
+    <td>2022-07-16</td>
+    <td>2022-05-17 10:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1090</td>
+    <td>ComputeODE2Eigenvalues</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> solver.ComputeODE2Eigenvalues gets additional flag constrainedCoordinates to specify list of constrained coordinates in system for eigenvalue computation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-16</td>
+    <td>2022-07-15</td>
+    <td>2022-05-16 23:01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1089</td>
+    <td>ComputeODE2Eigenvalues</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> setInitialValues has no effect</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-05-16</td>
+    <td>2022-07-15</td>
+    <td>2022-05-16 22:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>flag erased</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1086</td>
+    <td>ParameterVariation  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> numberOfThreads cannot be passed to parameter variation as it is duplicated by **args</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-05-16</td>
+    <td>2022-07-15</td>
+    <td>2022-05-16 16:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>numberOfThreads is now a named argument</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1084</td>
+    <td>node frame drawing  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> node frames shows letter N unintended</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-05-11</td>
+    <td>2022-07-10</td>
+    <td>2022-05-11 18:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1083</td>
+    <td>initial accelerations</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> not correctly handled in linux build (and probably also on MacOS</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-05-11</td>
+    <td>2022-07-10</td>
+    <td>2022-05-11 16:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1082</td>
+    <td>testsuite linux     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend test suite to run always for linux and add file ending for linux and MacOS</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-11</td>
+    <td>2022-07-10</td>
+    <td>2022-05-11 12:51</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1081</td>
+    <td>linux testSuite     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check failed tests under linux; see tests for 1.2.75 linux</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-05-11</td>
+    <td>2022-07-10</td>
+    <td>2022-05-11 18:54</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>resolved issues related to initial accelerations; still deviation in test generalContactFrictionTests.py</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1080</td>
+    <td>gcc compile         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> errors when compiling PyVectorLists and PyMatrixLists on gcc</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-05-11</td>
+    <td>2022-07-10</td>
+    <td>2022-05-11 09:27</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1079</td>
+    <td>Beam drawing        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add generic drawing function for beams, especially for contour plot</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-09</td>
+    <td>2022-07-08</td>
+    <td>2022-05-15 23:24</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1077</td>
+    <td>TExpSO3(Omega)      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> reduce number of terms in termExpanded; only up to x**4 needed for 16 digits</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-05-07</td>
+    <td>2022-07-06</td>
+    <td>2022-05-09 21:22</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1076</td>
+    <td>ANCFBeam3D          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add shear deformable 3D ANCF beam according to Nachbagauer Gerstmayr Pechstein using structural mechanics formulation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-06</td>
+    <td>2022-07-05</td>
+    <td>2022-05-15 23:24</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1074</td>
+    <td>BeamSection         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add new structure (cpp+Python) for beam cross section as well as BeamSectionGeometry for geometrical representation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-06</td>
+    <td>2022-07-05</td>
+    <td>2022-05-09 21:22</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1073</td>
+    <td>structures description</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add description for simulationSettings, visualizationSettings, solver structures, etc. in Python bindings</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-06</td>
+    <td>2022-07-05</td>
+    <td>2022-05-06 13:54</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1069</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add interface to class Robot, to create either redundant or minimum coordinates kinematic tree</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-05</td>
+    <td>2022-07-04</td>
+    <td>2022-05-06 00:07</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>however, is not capable of creating robots with localHT!=HT0()</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1068</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add test</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-05</td>
+    <td>2022-07-04</td>
+    <td>2022-05-05 19:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added test and MiniExample</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1067</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add standalone example</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-05</td>
+    <td>2022-07-04</td>
+    <td>2022-05-05 20:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>see TestModels/kinematicTreeTest.py</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1066</td>
+    <td>BodyGraphicsDataList</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> new interface used in Kinematic tree which holds a list of GraphicsData lists</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-05</td>
+    <td>2022-07-04</td>
+    <td>2022-05-05 11:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1065</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add user function description</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-05-05</td>
+    <td>2022-07-04</td>
+    <td>2022-05-05 20:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1064</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add basic description (equations)</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-05-05</td>
+    <td>2022-07-04</td>
+    <td>2022-05-05 22:14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1063</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> cpp version gives wrong results as compared to MBS</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-05-05</td>
+    <td>2022-07-04</td>
+    <td>2022-05-05 16:14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>corrected inertia - must be w.r.t. COM</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1062</td>
+    <td>RigidBodyMath.h     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove duplicate from src/Utilities</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-05-03</td>
+    <td>2022-07-02</td>
+    <td>2022-05-03 11:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1060</td>
     <td>buildDate.tex       </td>
     <td>JG</td>
@@ -2807,6 +3223,38 @@ last change =  2022-04-29
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1049</td>
+    <td>MacOS               </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check if flag -mmacosx-version-min=11.0 is needed in setup.py and if this causes problems on older pre-AppleM1 which needs wheel version 10.9</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-04-25</td>
+    <td>2022-06-24</td>
+    <td>2022-04-29 09:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>x86 compilation requires 11.0, otherwise it fails; need to find another way for compilation</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1047</td>
+    <td>Matrix3DList        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add new structure Matrix3DList; used to create list of 3D matrices and transfer into MainSystem mbs, e.g. in KinematicTree</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-25</td>
+    <td>2022-06-24</td>
+    <td>2022-05-01 00:47</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1046</td>
     <td>Vector3DList        </td>
     <td>JG</td>
@@ -2929,6 +3377,22 @@ last change =  2022-04-29
     <td>2022-04-10</td>
     <td>2022-06-09</td>
     <td>2022-04-10 11:42</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1038</td>
+    <td>simulateInRealtime  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> put waitMicroSeconds into settings</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-07</td>
+    <td>2022-06-06</td>
+    <td>2022-04-30 20:41</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -4469,6 +4933,22 @@ last change =  2022-04-29
     <td></td>
     <td></td>
     <td>storeInternal boost the speed of writing sensor values, however, most of time is spent on computing sensor values, which typically about 2 seconds for 1e6 time steps per sensor; file write adds usually 3 seconds extra on that bill</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0913</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add efficient C++ functionality for operating on 6D vectors and matrices for kinematics/dynamics</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-02</td>
+    <td>2022-04-03</td>
+    <td>2022-05-05 10:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0906</td>
@@ -7543,6 +8023,22 @@ last change =  2022-04-29
     <td>Use GetTime(...) and SetTime(...) in mbs.systemData instead</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0655</td>
+    <td>add KinematicTree   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> ObjectKinematicTree (MinimumCoordinates)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-05-01</td>
+    <td>2021-06-30</td>
+    <td>2022-05-05 10:27</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>this is a first version, but tests and validation are necessary!</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0654</td>
     <td>coordinates sizes   </td>
     <td>JG</td>
@@ -10133,6 +10629,22 @@ last change =  2022-04-29
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0471</td>
+    <td>geometrically exact beam3D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add to CPP</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-11-21</td>
+    <td>2021-01-20</td>
+    <td>2022-05-09 21:24</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added first version based on conventional parameterization of nodes, but using Lie groups for beam section forces in ode2LHS</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0470</td>

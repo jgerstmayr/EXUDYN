@@ -19,7 +19,7 @@
 #include "Main/CSystemData.h"			//Basics, Vector/Array, OutputVariable, CData, Material, Body, Node, Marker, Load
 #include "Main/CSystem.h"	
 #include "Linalg/Geometry.h"	
-#include "Utilities/RigidBodyMath.h"	
+#include "Linalg/RigidBodyMath.h"	
 
 #include "System/CContact.h"
 #include "System/CContactHelpers.h"

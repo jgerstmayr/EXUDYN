@@ -5,7 +5,7 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #item interface diagonal matrix creator
 
-import exudyn #for exudyn.InvalidIndex() needed in RigidBodySpringDamper
+import exudyn #for exudyn.InvalidIndex() and other exudyn native structures needed in RigidBodySpringDamper
 
 #helper function diagonal matrices, not needing numpy
 def IIDiagMatrix(rowsColumns, value):
@@ -330,6 +330,80 @@ class NodePoint2DSlope1:
 #add typedef for short usage:
 Point2DS1 = NodePoint2DSlope1
 VPoint2DS1 = VNodePoint2DSlope1
+
+class VNodePoint3DSlope1:
+    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.drawSize = drawSize
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'drawSize', self.drawSize
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+class NodePoint3DSlope1:
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,1.,0.,0.], initialCoordinates = [0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.referenceCoordinates = referenceCoordinates
+        self.initialCoordinates = initialCoordinates
+        self.initialVelocities = initialVelocities
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'nodeType', 'Point3DSlope1'
+        yield 'name', self.name
+        yield 'referenceCoordinates', self.referenceCoordinates
+        yield 'initialCoordinates', self.initialCoordinates
+        yield 'initialVelocities', self.initialVelocities
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdrawSize', dict(self.visualization)["drawSize"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+#add typedef for short usage:
+Point3DS1 = NodePoint3DSlope1
+VPoint3DS1 = VNodePoint3DSlope1
+
+class VNodePoint3DSlope23:
+    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.drawSize = drawSize
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'drawSize', self.drawSize
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+class NodePoint3DSlope23:
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,1.,0.,0.,1.,0.,0.], initialCoordinates = [0.,0.,0.,0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.referenceCoordinates = referenceCoordinates
+        self.initialCoordinates = initialCoordinates
+        self.initialVelocities = initialVelocities
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'nodeType', 'Point3DSlope23'
+        yield 'name', self.name
+        yield 'referenceCoordinates', self.referenceCoordinates
+        yield 'initialCoordinates', self.initialCoordinates
+        yield 'initialVelocities', self.initialVelocities
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdrawSize', dict(self.visualization)["drawSize"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+#add typedef for short usage:
+Point3DS23 = NodePoint3DSlope23
+VPoint3DS23 = VNodePoint3DSlope23
 
 class VNodeGenericODE2:
     def __init__(self, show = False):
@@ -770,51 +844,71 @@ class ObjectGenericODE1:
     def __repr__(self):
         return str(dict(self))
 class VObjectKinematicTree:
-    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False, graphicsDataUserFunction = 0):
+    def __init__(self, show = True, showLinks = True, showJoints = True, color = [-1.,-1.,-1.,-1.], graphicsDataList = []):
         self.show = show
+        self.showLinks = showLinks
+        self.showJoints = showJoints
         self.color = color
-        self.triangleMesh = triangleMesh
-        self.showNodes = showNodes
-        self.graphicsDataUserFunction = graphicsDataUserFunction
+        self.graphicsDataList = graphicsDataList
 
     def __iter__(self):
         yield 'show', self.show
+        yield 'showLinks', self.showLinks
+        yield 'showJoints', self.showJoints
         yield 'color', self.color
-        yield 'triangleMesh', self.triangleMesh
-        yield 'showNodes', self.showNodes
-        yield 'graphicsDataUserFunction', self.graphicsDataUserFunction
+        yield 'graphicsDataList', self.graphicsDataList
 
     def __repr__(self):
         return str(dict(self))
 class ObjectKinematicTree:
-    def __init__(self, name = '', nodeNumbers = [], massMatrix = [], stiffnessMatrix = [], dampingMatrix = [], forceVector = [], forceUserFunction = 0, massMatrixUserFunction = 0, jacobianUserFunction = 0, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False, 'graphicsDataUserFunction': 0}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), gravity = [0.,0.,0.], baseOffset = [0.,0.,0.], jointTypes = [], linkParents = [], jointTransformations = [], jointOffsets = [], linkInertiasCOM = [], linkCOMs = [], linkMasses = [], linkForces = [], linkTorques = [], jointForceVector = [], jointPositionOffsetVector = [], jointVelocityOffsetVector = [], jointPControlVector = [], jointDControlVector = [], forceUserFunction = 0, visualization = {'show': True, 'showLinks': True, 'showJoints': True, 'color': [-1.,-1.,-1.,-1.], 'graphicsDataList': []}):
         self.name = name
-        self.nodeNumbers = nodeNumbers
-        self.massMatrix = massMatrix
-        self.stiffnessMatrix = stiffnessMatrix
-        self.dampingMatrix = dampingMatrix
-        self.forceVector = forceVector
+        self.nodeNumber = nodeNumber
+        self.gravity = gravity
+        self.baseOffset = baseOffset
+        self.jointTypes = jointTypes
+        self.linkParents = linkParents
+        self.jointTransformations = jointTransformations
+        self.jointOffsets = jointOffsets
+        self.linkInertiasCOM = linkInertiasCOM
+        self.linkCOMs = linkCOMs
+        self.linkMasses = linkMasses
+        self.linkForces = linkForces
+        self.linkTorques = linkTorques
+        self.jointForceVector = jointForceVector
+        self.jointPositionOffsetVector = jointPositionOffsetVector
+        self.jointVelocityOffsetVector = jointVelocityOffsetVector
+        self.jointPControlVector = jointPControlVector
+        self.jointDControlVector = jointDControlVector
         self.forceUserFunction = forceUserFunction
-        self.massMatrixUserFunction = massMatrixUserFunction
-        self.jacobianUserFunction = jacobianUserFunction
         self.visualization = visualization
 
     def __iter__(self):
         yield 'objectType', 'KinematicTree'
         yield 'name', self.name
-        yield 'nodeNumbers', self.nodeNumbers
-        yield 'massMatrix', self.massMatrix
-        yield 'stiffnessMatrix', self.stiffnessMatrix
-        yield 'dampingMatrix', self.dampingMatrix
-        yield 'forceVector', self.forceVector
+        yield 'nodeNumber', self.nodeNumber
+        yield 'gravity', self.gravity
+        yield 'baseOffset', self.baseOffset
+        yield 'jointTypes', self.jointTypes
+        yield 'linkParents', self.linkParents
+        yield 'jointTransformations', self.jointTransformations
+        yield 'jointOffsets', self.jointOffsets
+        yield 'linkInertiasCOM', self.linkInertiasCOM
+        yield 'linkCOMs', self.linkCOMs
+        yield 'linkMasses', self.linkMasses
+        yield 'linkForces', self.linkForces
+        yield 'linkTorques', self.linkTorques
+        yield 'jointForceVector', self.jointForceVector
+        yield 'jointPositionOffsetVector', self.jointPositionOffsetVector
+        yield 'jointVelocityOffsetVector', self.jointVelocityOffsetVector
+        yield 'jointPControlVector', self.jointPControlVector
+        yield 'jointDControlVector', self.jointDControlVector
         yield 'forceUserFunction', self.forceUserFunction
-        yield 'massMatrixUserFunction', self.massMatrixUserFunction
-        yield 'jacobianUserFunction', self.jacobianUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VshowLinks', dict(self.visualization)["showLinks"]
+        yield 'VshowJoints', dict(self.visualization)["showJoints"]
         yield 'Vcolor', dict(self.visualization)["color"]
-        yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
-        yield 'VshowNodes', dict(self.visualization)["showNodes"]
-        yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
+        yield 'VgraphicsDataList', dict(self.visualization)["graphicsDataList"]
 
     def __repr__(self):
         return str(dict(self))
@@ -1058,6 +1152,47 @@ class ObjectALEANCFCable2D:
 ALECable2D = ObjectALEANCFCable2D
 VALECable2D = VObjectALEANCFCable2D
 
+class VObjectANCFBeam3D:
+    def __init__(self, show = True, sectionGeometry = exudyn.BeamSectionGeometry(), color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.sectionGeometry = sectionGeometry
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'sectionGeometry', self.sectionGeometry
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+class ObjectANCFBeam3D:
+    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], physicsLength = 0., sectionData = exudyn.BeamSection(), crossSectionPenaltyFactor = [1.,1.,1.], testBeamRectangularSize = [-1.,-1.], visualization = {'show': True, 'sectionGeometry': exudyn.BeamSectionGeometry(), 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.nodeNumbers = nodeNumbers
+        self.physicsLength = CheckForValidPReal(physicsLength,"physicsLength","ObjectANCFBeam3D")
+        self.sectionData = sectionData
+        self.crossSectionPenaltyFactor = crossSectionPenaltyFactor
+        self.testBeamRectangularSize = testBeamRectangularSize
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'ANCFBeam3D'
+        yield 'name', self.name
+        yield 'nodeNumbers', self.nodeNumbers
+        yield 'physicsLength', self.physicsLength
+        yield 'sectionData', self.sectionData
+        yield 'crossSectionPenaltyFactor', self.crossSectionPenaltyFactor
+        yield 'testBeamRectangularSize', self.testBeamRectangularSize
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VsectionGeometry', dict(self.visualization)["sectionGeometry"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+#add typedef for short usage:
+Beam3D = ObjectANCFBeam3D
+VBeam3D = VObjectANCFBeam3D
+
 class VObjectBeamGeometricallyExact2D:
     def __init__(self, show = True, drawHeight = 0., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -1102,6 +1237,43 @@ class ObjectBeamGeometricallyExact2D:
 #add typedef for short usage:
 Beam2D = ObjectBeamGeometricallyExact2D
 VBeam2D = VObjectBeamGeometricallyExact2D
+
+class VObjectBeamGeometricallyExact3D:
+    def __init__(self, show = True, sectionGeometry = exudyn.BeamSectionGeometry(), color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.sectionGeometry = sectionGeometry
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'sectionGeometry', self.sectionGeometry
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+class ObjectBeamGeometricallyExact3D:
+    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], physicsLength = 0., sectionData = exudyn.BeamSection(), visualization = {'show': True, 'sectionGeometry': exudyn.BeamSectionGeometry(), 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.nodeNumbers = nodeNumbers
+        self.physicsLength = CheckForValidPReal(physicsLength,"physicsLength","ObjectBeamGeometricallyExact3D")
+        self.sectionData = sectionData
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'BeamGeometricallyExact3D'
+        yield 'name', self.name
+        yield 'nodeNumbers', self.nodeNumbers
+        yield 'physicsLength', self.physicsLength
+        yield 'sectionData', self.sectionData
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VsectionGeometry', dict(self.visualization)["sectionGeometry"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+#add typedef for short usage:
+Beam3D = ObjectBeamGeometricallyExact3D
+VBeam3D = VObjectBeamGeometricallyExact3D
 
 class VObjectConnectorSpringDamper:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
