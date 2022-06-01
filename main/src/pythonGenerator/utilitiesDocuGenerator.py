@@ -11,6 +11,7 @@ from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, Extra
 
 fileDir='../../pythonDev/exudyn/'
 filesParsed=[
+             'artificialIntelligence.py',
              'basicUtilities.py',
              'beams.py',
              'FEM.py',

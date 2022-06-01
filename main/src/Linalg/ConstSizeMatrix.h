@@ -508,7 +508,7 @@ public:
 	ConstSizeMatrixBase& operator+= (const TMatrix& matrix)
 	{
 		CHECKandTHROW((NumberOfRows() == matrix.NumberOfRows() && NumberOfColumns() == matrix.NumberOfColumns()), "ConstSizeMatrixBase::operator+=<>: incompatible number of rows and/or columns");
-		Index cnt = 0;
+		//Index cnt = 0;
 		for (Index i = 0; i < numberOfRows; i++)
 		{
 			for (Index j = 0; j < numberOfColumns; j++)
@@ -516,7 +516,8 @@ public:
 				GetUnsafe(i, j) += matrix.GetUnsafe(i, j);
 			}
 		}
-		for (auto item : matrix) { data[cnt++] += item; }
+		//alternative: faster (but would not work for very special matrices ...):
+		//for (auto item : matrix) { data[cnt++] += item; }
 		return *this;
 	}
 

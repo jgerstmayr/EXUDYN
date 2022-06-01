@@ -168,7 +168,7 @@ STDstring GetExudynBuildVersionString(bool addDetails)
 #ifdef __FAST_EXUDYN_LINALG
 	if (addDetails)
 	{
-		str += "[NO RANGE CHECKS]";
+		str += "[FAST]"; //changed from "[NO RANGE CHECKS]"
 	}
 #pragma message("====================================")
 #pragma message("EXUDYN using __FAST_EXUDYN_LINALG without range checks!")
@@ -314,8 +314,8 @@ void PySetLinalgOutputFormatPython(bool flagPythonFormat)
 // write access to system variables dictionary inside exudyn module
 void PyWriteToSysDictionary(const STDstring& key, py::object item)
 {
-	py::module exudynCPP = py::module::import("exudyn");
-	exudynCPP.attr("sys")[key.c_str()] = item;
+	py::module exudynModule = py::module::import("exudyn");
+	exudynModule.attr("sys")[key.c_str()] = item;
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -388,11 +388,16 @@ MySignal registerSignal;
 
 
 #ifdef __FAST_EXUDYN_LINALG
-PYBIND11_MODULE(exudynCPP, m) {
+PYBIND11_MODULE(exudynCPPfast, m) {
 	m.doc() = "EXUDYN binding Python<->C++\n This is the 'fast' version without range/memory/whatsoever checks and uses /fp:fast compiler options!\n -> usage:\nSC=exu.SystemContainer()\nmbs=SC.AddSystem()\n see theDoc.pdf for tutorials, interface description and further information"; // module docstring
+#pragma message("***** pybind: building exudynCPPfast module *****")
+//#pragma message("***** pybind: building exudynCPPfast module *****")
+//#pragma message("***** pybind: building exudynCPPfast module *****")
+//#pragma message("***** pybind: building exudynCPPfast module *****")
 #else
 PYBIND11_MODULE(exudynCPP, m) {
 	m.doc() = "EXUDYN binding Python<->C++\n -> usage:\nSC=exu.SystemContainer()\nmbs=SC.AddSystem()\n see theDoc.pdf for tutorials, interface description and further information"; // module docstring
+//#pragma message("***** pybind: building exudynCPP module *****")
 #endif
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //variables linked to exudyn

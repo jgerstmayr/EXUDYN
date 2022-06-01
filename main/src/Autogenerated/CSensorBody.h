@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-02-19  00:16:29 (last modified)
+* @date         2022-05-26  21:30:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -48,7 +48,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CSensorBody
-* @brief        A sensor attached to a body-object with local position \f$\pLocB\f$. As a difference to ObjectSensors, the body sensor needs a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+* @brief        A sensor attached to a body-object with local position \f$\pLocB\f$. As a difference to SensorObject, the body sensor needs a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

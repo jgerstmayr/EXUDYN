@@ -545,30 +545,13 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 	computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian), -1. * scalODE2, -gammaPrime * scalODE2); //RHS ==> -K
 	STOPTIMER(timer.jacobianODE2);
 
-	////+++++++++++++++++++++++++++++
-	////compute jacobian (w.r.t. U ==> also add V)
-	//STARTTIMER(timer.jacobianODE2);
-	////Tangent stiffness
-	////K-Matrix; has no factor
-	//computationalSystem.NumericalJacobianODE2RHS(data.tempCompData, newton.numericalDifferentiation, 
-	//	data.tempODE2F0, data.tempODE2F1, *(data.systemJacobian), -1. * scalODE2); //RHS ==> -K
-	//STOPTIMER(timer.jacobianODE2);
-
-	////+++++++++++++++++++++++++++++
-	////'Damping' and gyroscopic terms
-	//STARTTIMER(timer.jacobianODE2_t);
-	////Arnold/Bruls: C_t*gammaPrime
-	//computationalSystem.NumericalJacobianODE2RHS_t(data.tempCompData, newton.numericalDifferentiation, data.tempODE2F0, 
-	//	data.tempODE2F1, *(data.systemJacobian), -gammaPrime * scalODE2); //d(ODE2)/dq_t for damping terms; //RHS ==> -D
-	//STOPTIMER(timer.jacobianODE2_t);
-
 	//+++++++++++++++++++++++++++++
 	//compute ODE1 jacobian
 	STARTTIMER(timer.jacobianODE1);
-	//Tangent stiffness
-	//K-Matrix; has no factor
-	computationalSystem.NumericalJacobianODE1RHS(data.tempCompData, newton.numericalDifferentiation,
-		data.tempODE1F0, data.tempODE1F1, *(data.systemJacobian), 1.); //RHS ==> K_ODE1; no scaling for now
+	//Tangent stiffness: for ODE1 part, the jacobian is de facto computed for RHS while the ODE2 jacobian is put to LHS by multiplying with (-1)
+	//ODE1 K-Matrix; has no factor
+	computationalSystem.NumericalJacobianODE1RHS(data.tempCompDataArray, newton.numericalDifferentiation,
+		data.tempODE1F0, data.tempODE1F1, *(data.systemJacobian), 1., -scalODE2, -gammaPrime * scalODE2); //RHS ==> K_ODE1; no scaling for now
 	data.systemJacobian->AddDiagonalMatrix(-2./ it.currentStepSize, data.nODE1, data.nODE2, data.nODE2); //for qODE1_t part
 	STOPTIMER(timer.jacobianODE1);
 

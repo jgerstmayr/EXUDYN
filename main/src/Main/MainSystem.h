@@ -195,6 +195,12 @@ public:
 	//! get index in global ODE2 coordinate vector for first node coordinate
 	virtual Index PyGetNodeODE2Index(const py::object& itemIndex) const;
 
+	//! get index in global ODE1 coordinate vector for first node coordinate
+	virtual Index PyGetNodeODE1Index(const py::object& itemIndex) const;
+
+	//! get index in global AE coordinate vector for first node coordinate
+	virtual Index PyGetNodeAEIndex(const py::object& itemIndex) const;
+
 	////! call pybind node function, possibly with arguments
 	//py::object PyCallNodeFunction(Index nodeNumber, STDstring functionName, py::dict args);
 

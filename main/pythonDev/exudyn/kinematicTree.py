@@ -42,6 +42,20 @@ def RotationY2T66Inverse(angle):
 def RotationZ2T66Inverse(angle):
     return RotationZ2T66(angle).T
 
+#compute inverse 6x6 transformation matrix for translation along X axis; output: first 3 components for rotation, second 3 components for translation!
+def TranslationX2T66Inverse(translation):
+    return Translation2T66([-translation,0,0])
+
+#compute inverse 6x6 transformation matrix for translation along Y axis; output: first 3 components for rotation, second 3 components for translation!
+def TranslationY2T66Inverse(translation):
+    return Translation2T66([0,-translation,0])
+
+#compute inverse 6x6 transformation matrix for translation along Z axis; output: first 3 components for rotation, second 3 components for translation!
+def TranslationZ2T66Inverse(translation):
+    return Translation2T66([0,0,-translation])
+
+
+
 #**function: convert mass, COM and inertia into 6x6 inertia matrix
 #**input:
 #  mass: scalar mass
@@ -87,9 +101,9 @@ dictOfJointTransformMotionSubspace66 = {
     'Rx':[RotationX2T66Inverse,   np.array([1,0,0,0,0,0])], #revolute joint for local X axis
     'Ry':[RotationY2T66Inverse,   np.array([0,1,0,0,0,0])], #revolute joint for local Y axis
     'Rz':[RotationZ2T66Inverse,   np.array([0,0,1,0,0,0])], #revolute joint for local Z axis
-    'Px':[TranslationX2T66, np.array([0,0,0,1,0,0])], #prismatic joint for local X axis
-    'Py':[TranslationY2T66, np.array([0,0,0,0,1,0])], #prismatic joint for local Y axis
-    'Pz':[TranslationZ2T66, np.array([0,0,0,0,0,1])], #prismatic joint for local Z axis
+    'Px':[TranslationX2T66Inverse, np.array([0,0,0,1,0,0])], #prismatic joint for local X axis
+    'Py':[TranslationY2T66Inverse, np.array([0,0,0,0,1,0])], #prismatic joint for local Y axis
+    'Pz':[TranslationZ2T66Inverse, np.array([0,0,0,0,0,1])], #prismatic joint for local Z axis
     #helical and planar joints available in Featherstone's implementation
     }
 
@@ -127,7 +141,7 @@ def JointTransformMotionSubspace(jointType, q):
 #definition of a kinematic tree
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**class: class to define a kinematic tree in Python, which can be used for building serial or tree-structured multibody systems 
-#         (or robots) with a minimum coordinates formulation, using rotation matrices and 3D offsets
+#         (or robots) with a minimum coordinates formulation, using rotation matrices and 3D offsets; for efficient computation, use the C++ ObjectKinematicTree
 #**notes:
 #   The formulation and structures widely follows the more efficient formulas (but still implemented in Python!) with 3D vectors and rotation matrices as proposed in Handbook of robotics \cite{Siciliano2016}, Chapter 3, but with the rotation matrices (\texttt{listOfRotations}) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Pl\"ucker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing
 class KinematicTree33:
@@ -412,7 +426,7 @@ def CRF(v):
 #definition of a kinematic tree
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**class: class to define a kinematic tree, which can be used for building serial or tree-structured multibody systems 
-#         (or robots) with a minimum coordinates formulation, using Pl\"ucker coordinate transforms (6x6)
+#         (or robots) with a minimum coordinates formulation, using Pl\"ucker coordinate transforms (6x6); for efficient computation, use the C++ ObjectKinematicTree
 #**notes:
 #   The formulation and structures widely follow Roy Featherstone (http://royfeatherstone.org/) / Handbook of robotics \cite{Siciliano2016} 
 class KinematicTree66:

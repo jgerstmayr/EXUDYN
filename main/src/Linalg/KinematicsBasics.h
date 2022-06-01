@@ -549,6 +549,7 @@ namespace RigidBodyMath {
 
 typedef Matrix6D Transformation66;
 typedef ResizableArray<Transformation66> Transformations66List;
+typedef ResizableArray<Matrix6D> Matrix6DList;
 
 
 #endif

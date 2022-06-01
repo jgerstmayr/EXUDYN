@@ -610,6 +610,18 @@ sL+=DefLatexStartClass(classStr+': Node', '\label{sec:mainsystem:node}\n This se
                                 example = "mbs.GetNodeODE2Index(nodeNumber=0)"
                                 ); s+=s1; sL+=sL1
 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetNodeODE1Index', cName='PyGetNodeODE1Index', 
+                                description="get index in the global ODE1 coordinate vector for the first node coordinate of the specified node",
+                                argList=['nodeNumber'],
+                                example = "mbs.GetNodeODE1Index(nodeNumber=0)"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetNodeAEIndex', cName='PyGetNodeAEIndex', 
+                                description="get index in the global AE coordinate vector for the first node coordinate of the specified node",
+                                argList=['nodeNumber'],
+                                example = "mbs.GetNodeAEIndex(nodeNumber=0)"
+                                ); s+=s1; sL+=sL1
+
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetNodeParameter', cName='PyGetNodeParameter', 
                                 description="get nodes's parameter from node number (type NodeIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix",
                                 argList=['nodeNumber', 'parameterName'],
@@ -1239,7 +1251,6 @@ s+= '        .def(py::init<const py::object&>(), py::arg("listOfArrays"))\n' #co
 [s1,sL1] = DefPyFinishClass('PyVector3DList'); s+=s1; sL+=sL1
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #documentation and pybindings for PyVector2DList
 classStr = 'PyVector2DList'
 pyClassStr = 'Vector2DList'
@@ -1286,6 +1297,50 @@ s+= '        .def(py::init<const py::object&>(), py::arg("listOfArrays"))\n' #co
 #++++++++++++++++
 [s1,sL1] = DefPyFinishClass('PyVector2DList'); s+=s1; sL+=sL1
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#documentation and pybindings for PyVector6DList
+classStr = 'PyVector6DList'
+pyClassStr = 'Vector6DList'
+[s1,sL1] = DefPyStartClass(classStr, pyClassStr, "The Vector6DList is used to represent lists of 6D vectors. This is used to transfer such lists from Python to C++." +
+        ' \\\\ \\\\ Usage: \\bi\n'+
+        '  \\item Create empty \\texttt{Vector6DList} with \\texttt{x = Vector6DList()} \n'+
+        '  \\item Convert into list of numpy arrays: \\texttt{x.GetPythonObject()}\n'+
+        '  \\item similar to Vector3DList !\n'+
+        '\\ei\n')
+s+=s1; sL+=sL1
+
+s+= '        .def(py::init<const py::object&>(), py::arg("listOfArrays"))\n' #constructor with numpy array or list of lists
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Append', cName='PyAppend', 
+                               argList=['pyArray'],
+                               description="add single array or list to Vector6DList; array or list must have appropriate dimension!"); s+=s1; sL+=sL1
+                                                                                                            
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetPythonObject', cName='GetPythonObject', 
+                               description="convert Vector6DList into (copied) list of numpy arrays"); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__len__', 
+                               cName='[](const PyVector6DList &item) {\n            return item.NumberOfItems(); }', 
+                               description="return length of the Vector6DList, using len(data) where data is the Vector6DList",
+                               isLambdaFunction = True); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__setitem__', 
+                               cName='[](PyVector6DList &item, Index index, const py::object& vector) {\n            item.PySetItem(index, vector); }', 
+                               description="set list item 'index' with data, write: data[index] = ...",
+                               isLambdaFunction = True); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__getitem__', 
+                               cName='[](const PyVector6DList &item, Index index) {\n            return py::array_t<Real>(item[index].NumberOfItems(), item[index].GetDataPointer()); }', 
+                               description="get copy of list item with 'index' as vector",
+                               isLambdaFunction = True); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__repr__', 
+                               cName='[](const PyVector6DList &item) {\n            return EXUstd::ToString(item.GetPythonObject()); }', 
+                               description="return the string representation of the Vector6DList data, e.g.: print(data)",
+                               isLambdaFunction = True); s+=s1; sL+=sL1
+
+#++++++++++++++++
+[s1,sL1] = DefPyFinishClass('PyVector6DList'); s+=s1; sL+=sL1
+
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #documentation and pybindings for PyMatrix3DList
 classStr = 'PyMatrix3DList'
@@ -1305,7 +1360,7 @@ s+= '        .def(py::init<const py::object&>(), py::arg("listOfArrays"))\n' #co
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Append', cName='PyAppend', 
                                argList=['pyArray'],
-                               description="add single 2D array or list of lists to Matrix3DList; array or lists must have appropriate dimension!"); s+=s1; sL+=sL1
+                               description="add single 3D array or list of lists to Matrix3DList; array or lists must have appropriate dimension!"); s+=s1; sL+=sL1
                                                                                                             
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetPythonObject', cName='GetPythonObject', 
                                description="convert Matrix3DList into (copied) list of 2D numpy arrays"); s+=s1; sL+=sL1
@@ -1332,6 +1387,52 @@ s+= '        .def(py::init<const py::object&>(), py::arg("listOfArrays"))\n' #co
 
 #++++++++++++++++
 [s1,sL1] = DefPyFinishClass('PyMatrix3DList'); s+=s1; sL+=sL1
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#documentation and pybindings for PyMatrix6DList
+classStr = 'PyMatrix6DList'
+pyClassStr = 'Matrix6DList'
+[s1,sL1] = DefPyStartClass(classStr, pyClassStr, "The Matrix6DList is used to represent lists of 6D Matrices. . This is used to transfer such lists from Python to C++." +
+        ' \\\\ \\\\ Usage: \\bi\n'+
+        '  \\item Create empty \\texttt{Matrix6DList} with \\texttt{x = Matrix6DList()} \n'+
+        '  \\item Create \\texttt{Matrix6DList} with list of numpy arrays:\\\\  \\texttt{x = Matrix6DList([ numpy.eye(6), 2*numpy.eye(6) ])}\n'+
+        '  \\item Append item: \\texttt{x.Append(numpy.eye(6))}\n'+
+        '  \\item Convert into list of numpy arrays: \\texttt{x.GetPythonObject()}\n'+
+        '  \\item similar to Matrix3DList !\n'+
+        '\\ei\n')
+s+=s1; sL+=sL1
+
+s+= '        .def(py::init<const py::object&>(), py::arg("listOfArrays"))\n' #constructor with numpy array or list of lists
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Append', cName='PyAppend', 
+                               argList=['pyArray'],
+                               description="add single 6D array or list of lists to Matrix6DList; array or lists must have appropriate dimension!"); s+=s1; sL+=sL1
+                                                                                                            
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetPythonObject', cName='GetPythonObject', 
+                               description="convert Matrix6DList into (copied) list of 2D numpy arrays"); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__len__', 
+                               cName='[](const PyMatrix6DList &item) {\n            return item.NumberOfItems(); }', 
+                               description="return length of the Matrix6DList, using len(data) where data is the Matrix6DList",
+                               isLambdaFunction = True); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__setitem__', 
+                               cName='[](PyMatrix6DList &item, Index index, const py::object& matrix) {\n            item.PySetItem(index, matrix); }', 
+                               description="set list item 'index' with matrix, write: data[index] = ...",
+                               isLambdaFunction = True); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__getitem__', 
+                               cName='[](const PyMatrix6DList &item, Index index) {\n            return item.PyGetItem(index); }', 
+                               description="get copy of list item with 'index' as matrix",
+                               isLambdaFunction = True); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__repr__', 
+                               cName='[](const PyMatrix6DList &item) {\n            return EXUstd::ToString(item.GetPythonObject()); }', 
+                               description="return the string representation of the Matrix6DList data, e.g.: print(data)",
+                               isLambdaFunction = True); s+=s1; sL+=sL1
+
+#++++++++++++++++
+[s1,sL1] = DefPyFinishClass('PyMatrix6DList'); s+=s1; sL+=sL1
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

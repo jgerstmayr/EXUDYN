@@ -2,18 +2,20 @@
 Exudyn
 ======
 
-+  Exudyn version = 1.2.86.dev1 (Corea)
-+  build date and time=2022-05-18  21:15
++  Exudyn version = 1.2.109.dev1 (Corea)
++  build date and time=2022-05-31  21:39
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
-Exudyn **Version 1.2** is out! The documentation theDoc.pdf now reached > 600 pages! Including now a contact module, improved solvers, sparse matrix support and multi-threading, creation of beams along curves, extended robotics modules, **PlotSensor** fully extended, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
+Exudyn now includes a redundant coordinate (constraint) as well as a minimum coordinate formulation; machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support and multi-threading; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
 
 If you like using Exudyn, please add a *star* on github, and send an email to  ``reply.exudyn@gmail.com`` such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
 
+A paper on Exudyn is planned to be presented at the `6th Joint International Conference on Multibody System Dynamics <http://imsdacmd2020.iitd.ac.in>`_
+
 +  **A flexible multibody dynamics systems simulation code with Python and C++**
 +  *free, open source* and with plenty of *documentation* and *examples*
-+  **pre-built** for Python 3.6, 3.7, 3.8 and 3.9 under **Windows** ; Python 3.8 for **MacOS** available; some **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
++  **pre-built** for Python 3.6, 3.7, 3.8, 3.9, and 3.10 under **Windows** ; Python 3.8 for **MacOS** available; some **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 
 .. |pic1| image:: docs/demo/screenshots/6pistonEngineStresses.jpg
@@ -113,6 +115,7 @@ The following people have contributed to Python and C++ library implementations:
 +  Andreas Zwölfer, Technical University Munich (FFRF and CMS formulation)
 +  Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation / pip install on linux / wsl with graphics)
 +  Martin Sereinig, University of Innsbruck (special robotics functionality)
++  Grzegorz Orzechowski, Lappeenranta University of Technology (coupling with openAI gym and running machine learning algorithms)
 
 The following people have contributed to examples and other parts:
 
@@ -1418,9 +1421,19 @@ Multibody dynamics simulation should be accurate and reliable on the one hand si
 However, in some cases there is a significant possibility for speeding up computations, which are described in the following list. Not all recommendations may apply to your models.
 
 The following examples refer to \ ``simulationSettings = exu.SimulationSettings()``\ .
-In general, to see where CPU time is lost, use the option turn on \ ``simulationSettings.displayComputationTime = True``\  to see which parts of the solver need most of the time (deactivated in current Python3.8 version!).
+In general, to see where CPU time is lost, use the option turn on \ ``simulationSettings.displayComputationTime = True``\  to see which parts of the solver need most of the time (deactivated in exudynFast versions!).
 
-\ **Possible speed ups in general**\ :
+To activate the Exudyn C++ versions without range checks, which may be approx. 30 percent faster in some situations, use the following code snippet before first import of \ ``exudyn``\ :
+
+.. code-block:: python
+
+import sys
+sys.exudynFast = True #this variable is used to signal to load the fast exudyn module
+import exudyn as exu
+
+
+
+However, there are many \ **ways to speed up Exudyn in general**\ :
 
 +  for models with more than 50 coordinates, switching to sparse solvers might greatly improve speed: \ ``simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse``\ 
 +  try to avoid Python function or try to speed up Python functions
@@ -1435,7 +1448,6 @@ In general, to see where CPU time is lost, use the option turn on \ ``simulation
 \ **Possible speed ups for dynamic simulations**\ :
 
 +  for implicit integration, turn on \ **modified Newton**\ , which updates jacobians only if needed: \ ``simulationSettings.timeIntegration.newton.useModifiedNewton = True``\ 
-+  switch to Python3.8: this version excludes range checks and timings; usually 30\% faster
 +  use \ **multi-threading**\ : \ ``simulationSettings.parallel.numberOfThreads = ...``\ , depending on the number of cores (larger values usually do not help); improves greatly for contact problems, but also for some objects computed in parallel; will improve significantly in future
 +  decrease number of steps (\ ``simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)``\ ) by increasing the step size h if not needed for accuracy reasons; not that in general, the solver will reduce steps in case of divergence, but not for accuracy reasons, which may still lead to divergence if step sizes are too large
 +  switch off measuring computation time, if not needed: \ ``simulationSettings.displayComputationTime = False``\ 

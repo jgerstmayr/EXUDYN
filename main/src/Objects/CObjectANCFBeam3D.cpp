@@ -95,9 +95,9 @@ PyBeamSection MainObjectANCFBeam3D::GetInternalBeamSection() const
 //! get compressed shape function vector
 SlimVector<CObjectANCFBeam3D::nSFperNode*CObjectANCFBeam3D::nNodes> CObjectANCFBeam3D::ComputeShapeFunctions(const Vector3D& localPosition, Real L) 
 {
-	Real x0 = localPosition[0] / L;
-	Real y = localPosition[1];
-	Real z = localPosition[2];
+	Real x0 = localPosition[0] / L; //dimension: [1], as this is multiplied with position
+	Real y = localPosition[1];		//dimension: [m], as this is multiplied with slope vector
+	Real z = localPosition[2];		//dimension: [m], as this is multiplied with slope vector
 	Real val1 = 0.5 - x0;
 	Real val4 = 0.5 + x0;
 
@@ -227,13 +227,13 @@ void CObjectANCFBeam3D::PreComputeMassTerms() const
 				SlimVector<ns> SVint = SV;
 				SVint *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder3Weights[cnt++]);
 
-				for (Index i = 0; i < ns; i++)
+				for (Index i = 0; i < nNodes; i++)
 				{
-					for (Index j = 0; j < ns; j++)
+					for (Index j = 0; j < nNodes; j++)
 					{
 						for (Index k = 0; k < EXUstd::dim3D; k++)
 						{
-							precomputedMassMatrix(i * 2 + k, j * 2 + k) += SV[i] * SVint[j];
+							precomputedMassMatrix(i * EXUstd::dim3D*nSFperNode + k, j * EXUstd::dim3D*nSFperNode + k) += SV[i*nSFperNode] * SVint[j*nSFperNode];
 						}
 					}
 				}
@@ -254,6 +254,9 @@ void CObjectANCFBeam3D::PreComputeMassTerms() const
 			//==> mass matrix: (SY + SZ).T @ Winv.T @ inertiaTensor @ Winv @ (SY + SZ)
 			//distortion of slope vectors contributes to inertia => same as if integrated mass matrix directly + constant mass matrix
 
+			//Matrix3D Winv = parameters.physicsCrossSectionInertia;
+			//CHECKandTHROW(Winv.Invert(), "CObjectANCFBeam3D::PreComputeMassTerms: cross section inertia seems to be singular");
+
 			Matrix3D Winv({ 0.5,0.,0., 0.,1.,0., 0.,0.,1. });
 			Matrix3D WIW = Winv.GetTransposed()*parameters.physicsCrossSectionInertia*Winv;
 			cnt = 0;
@@ -262,9 +265,9 @@ void CObjectANCFBeam3D::PreComputeMassTerms() const
 				Real x = 0.5*(b - a)*item + 0.5*(b + a);
 				SlimVector<ns> SV_y = ComputeShapeFunctions_y(x, L);
 				SlimVector<ns> SV_z = ComputeShapeFunctions_z(x, L);
-				Real fact = rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder3Weights[cnt++]);
-				SlimVector<ns> SVint_y = SV_y;
-				SlimVector<ns> SVint_z = SV_z;
+				Real fact = (0.5*(b - a)*EXUmath::gaussRuleOrder3Weights[cnt++]);
+				//SlimVector<ns> SVint_y = SV_y;
+				//SlimVector<ns> SVint_z = SV_z;
 				ConstSizeMatrix<EXUstd::dim3D* ns*EXUstd::dim3D> SY(EXUstd::dim3D, ns*EXUstd::dim3D, 0.);
 				ConstSizeMatrix<EXUstd::dim3D* ns*EXUstd::dim3D> SZ(EXUstd::dim3D, ns*EXUstd::dim3D, 0.);
 				for (Index i = 0; i < ns; i++)
@@ -326,6 +329,7 @@ void CObjectANCFBeam3D::PreComputeMassTerms() const
 							}
 						}
 						precomputedMassMatrix += (fact*Smat).GetTransposed() * Smat;
+						//pout << "xyz=" << x << "," << y << "," << z << ":preM=" << precomputedMassMatrix << "\n\n";
 					}
 				}
 			}
@@ -861,8 +865,8 @@ void CObjectANCFBeam3D::GetOutputVariableBody(OutputVariableType variableType, c
 	//'Curvature':'axial strain (scalar)', 
 	//'Force':'(local) section normal force (scalar)', 
 	//'Torque':'(local) bending moment (scalar)'}"
-	Real x = localPosition[0];
-	Real y = localPosition[1];
+	//Real x = localPosition[0];
+	//Real y = localPosition[1];
 
 	switch (variableType)
 	{

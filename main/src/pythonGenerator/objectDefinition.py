@@ -722,6 +722,33 @@ Fv,     V,      UpdateGraphics,                 ,               ,       void,   
 writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = NodeGenericAE
+classDescription = "A node containing a number of \hac{AE} variables; use e.g. linear state space systems. Note that referenceCoordinates and initialCoordinates must be initialized, because no default values exist."
+cParentClass = CNodeAE
+mainParentClass = MainNode
+visuParentClass = VisualizationNode
+outputVariables = "{'Coordinates':'$\yv\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig$\hac{AE} coordinates vector of node'}"
+classType = Node
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "node's unique name"
+V,      CP,     referenceCoordinates,           ,               ,       Vector,     "Vector()",                 ,       I,      "$\yv\cRef = [y_0,\,\ldots,\,y_{nc}]\tp\cRef$generic reference coordinates of node; must be consistent with numberOfAECoordinates"
+V,      MP,     initialCoordinates,             ,               ,       Vector,     "Vector()",                 ,       I,     "$\yv\cIni = [y_0,\,\ldots,\,y_{nc}]\tp\cIni$initial displacement coordinates; must be consistent with numberOfAECoordinates"
+V,      CP,     numberOfAECoordinates,          ,               ,       PInt,       "0",                        ,       I,      "$n_c$number of generic \hac{AE} coordinates"
+#
+Fv,     C,      GetNumberOfAECoordinates,     GetNumberOfAECoordinates,,  Index,"return parameters.numberOfAECoordinates;;",                ,       CI,     "return number of second order diff. eq. coordinates" 
+Fv,     C,      GetType,                        ,               ,       Node::Type,  "return Node::GenericAE;", ,   CI,     "return node type (for node treatment in computation)" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'GenericAE';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
+Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,  "return internally stored reference coordinates of node" 
+Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+#VISUALIZATION:
+Vp,     V,      show,                           ,               ,       Bool,       "false",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Fv,     V,      UpdateGraphics,                 ,               ,       void,       ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", I,  "Empty graphics update for now" 
+#file names automatically determined from class name
+writeFile = True
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodeGenericData
 classDescription = "A node containing a number of data (history) variables; use e.g. for contact (active set), friction or plasticity (history variable)."
 cParentClass = CNodeData
@@ -736,7 +763,7 @@ V,      CP,     numberOfDataCoordinates,        ,               ,       UInt,   
 #
 Fv,     C,      GetNumberOfDataCoordinates,     ,               ,       Index,      "return parameters.numberOfDataCoordinates;",                ,       CI,     "return number of data coordinates" 
 Fv,     C,      GetType,                        ,               ,       Node::Type,  "return Node::GenericData;", ,       CI,    "return node type (for node treatment in computation)" 
-#Fv,     C,      NodeGroup,                      ,               ,       CNodeGroup, ,                           ,       CIJ,    "return node group (for classification (\hac{ODE1}/\hac{ODE2}/\hac{AE}) in computation)" 
+#Fv,     C,      NodeGroup,                      ,               ,       CNodeGroup, ,                           ,       CIJ,    "return node group (for classification (\hac{Data}/\hac{ODE2}/\hac{AE}) in computation)" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'GenericData';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #Fv,     M,      CallFunction,                   ,               ,       py::object,  ";",    "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial data coordinates of node" 
@@ -1963,16 +1990,16 @@ equations =
     \pythonstyle
     \begin{lstlisting}[language=Python]
     A = numpy.diag([200,100])
-    #simple linear user function returning A*q
+    #simple linear user function returning A*q + const
     def UFrhs(mbs, t, itemNumber, q): 
         return np.dot(A, q) + np.array([0,2])
         
     nODE1 = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0,0],
-                                        initialCoordinates=[1,0]))
+                                        initialCoordinates=[1,0], numberOfODE1Coordinates=2))
 
     #now add object instead of object in mini-example:
     oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1], 
-                       rhsUserFunction=UFrhs)
+                       rhsUserFunction=UFrhs))
                                  
     \end{lstlisting}
 /end
@@ -2216,10 +2243,10 @@ V,      CP,     forceUserFunction,              ,               ,       PyFuncti
 #
 V,      C,      tempVector,                     ,               ,       ResizableVector,"ResizableVector()",  ,       U,       "temporary vector during computation of mass and ODE2LHS"
 V,      C,      tempVector2,                    ,               ,       ResizableVector,"ResizableVector()",  ,       U,       "second temporary vector during computation of mass and ODE2LHS"
-V,      C,      jointTransformations,           ,               ,       Transformations66List,"Transformations66List()", , IUR,    "$\Xm \in \Rcal^{n \times (6 \times 6)}$temporary list containing transformations (Pluecker transforms) per joint"
+V,      C,      jointTransformationsTemp,       ,               ,       Transformations66List,"Transformations66List()", , IUR,    "$\Xm \in \Rcal^{n \times (6 \times 6)}$temporary list containing transformations (Pluecker transforms) per joint"
 V,      C,      linkInertiasT66,                ,               ,       Transformations66List,"Transformations66List()", , IUR,    "$\Jm_{66} \in \Rcal^{n \times (6 \times 6)}$temporary list link inertias as Pluecker transforms per link"
-V,      C,      tempListT66,                    ,               ,       Transformations66List,"Transformations66List()", , IUR,    "$\in \Rcal^{n \times (6 \times 6)}$temporary list of Pluecker transforms per link"
 V,      C,      motionSubspaces,                ,               ,       Vector6DList,"Vector6DList()",        ,       IUR,    "$\Mm\Sm \in \Rcal^{n \times 6}$temporary list containing 6D motion subspaces per joint"
+V,      C,      jointTempT66,                   ,               ,       Transformations66List,"Transformations66List()", ,  IUR,   "$\Xm_j \in \Rcal^{n \times 6}$temporary list containing 66 transformations per joint"
 V,      C,      jointVelocities,                ,               ,       Vector6DList,"Vector6DList()",        ,       IUR,    "$\Vm_j \in \Rcal^{n \times 6}$temporary list containing 6D velocities per joint"
 V,      C,      jointAccelerations,             ,               ,       Vector6DList,"Vector6DList()",        ,       IUR,    "$\Am_j \in \Rcal^{n \times 6}$temporary list containing 6D accelerations per joint"
 V,      C,      jointForces,                    ,               ,       Vector6DList,"Vector6DList()",        ,       IUR,    "$\Fm_j \in \Rcal^{n \times 6}$temporary list containing 6D torques/forces per joint/link"
@@ -2237,7 +2264,17 @@ Fv,     C,      GetOutputVariableBody,          ,               ,       void,   
 Fv,     C,      GetPosition,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
 Fv,     C,      GetDisplacement,                ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
 Fv,     C,      GetVelocity,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of 'localPosition' according to configuration type" 
-Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, used for massProportionalLoad, which may NOT be appropriate for GenericODE2" 
+Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   ,                           ,       CDI, "return the local position of the center of mass, used for massProportionalLoad, which may NOT be appropriate for GenericODE2" 
+#for KinematicTree we need output functions for link position
+F,      C,      GetPositionKinematicTree,       ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' of linkNumber according to configuration type" 
+#F,      C,      GetDisplacementKinematicTree,  ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) displacement of 'localPosition' of linkNumber according to configuration type" 
+F,      C,      GetRotationMatrixKinematicTree, ,               ,       Matrix3D,   ,                           "Index linkNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the rotation matrix of of linkNumber according to configuration type" 
+F,      C,      GetVelocityKinematicTree,       ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of 'localPosition' and linkNumber according to configuration type" 
+F,      C,      GetAngularVelocityKinematicTree,,               ,       Vector3D,   ,                           "Index linkNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) angular velocity of linkNumber according to configuration type" 
+F,      C,      GetAngularVelocityLocalKinematicTree,,          ,       Vector3D,   ,                           "Index linkNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) angular velocity of linkNumber according to configuration type" 
+F,      C,      GetAccelerationKinematicTree,   ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) acceleration of 'localPosition' and linkNumber according to configuration type" 
+F,      C,      GetAngularAccelerationKinematicTree,,           ,       Vector3D,   ,                           "Index linkNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) angular acceleration of linkNumber according to configuration type" 
+#not needed without loadmassproportional: F,      C,      GetLocalCenterOfMassKinematicTree,           ,               3,      Vector3D,   ,                           "Index linkNumber", CI, "return the local position of the center of mass, used for massProportionalLoad" 
 #
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'KinematicTree';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
@@ -2245,7 +2282,7 @@ Fv,     C,      GetNumberOfNodes,               ,               ,       Index,  
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return parameters.linkMasses.NumberOfItems();",                ,       CI,     "number of \hac{ODE2} coordinates" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericODE2;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 #not implemented in NodePoint, etc. Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericODE2;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
-Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded + (Index)CObjectType::SuperElement);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
+Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded + (Index)CObjectType::SuperElement + (Index)CObjectType::KinematicTree);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
 Fv,     C,      HasConstantMassMatrix,          ,               ,       bool,       "return false;", ,CI,   "return true if object has time and coordinate independent (=constant) mass matrix" 
 Fv,     C,      ParametersHaveChanged,          ,               ,       void,       ";", ,     I,    "This flag is reset upon change of parameters; says that the vector of coordinate indices has changed" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
@@ -2253,7 +2290,7 @@ Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,   
 F,      C,      EvaluateUserFunctionForce,      ,               ,       void,       ,                           "Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
 F,      C,      GetNegativeGravity6D,           ,               ,       void,       ,                           "Vector6D& gravity6D",   CDI,    "compute negative 6D gravity to be used in Pluecker transforms"
 F,      C,      JointTransformMotionSubspace66, ,               ,       void,       ,                           "Joint::Type jointType, Real q, Transformation66& T, Vector6D& MS",          CDI,    "compute joint transformation T and motion subspace MS for jointType and joint value q"
-F,      C,      ComputeTreeTransformations,     ,               ,       void,       ,                           "ConfigurationType configuration, bool computeVelocitiesAccelerations, Transformations66List& Xup, Vector6DList& V, Vector6DList& Avp",          CDI,    "compute list of Pluecker transformations Xup, 6D velocities and 6D acceleration terms (not joint accelerations) per joint"
+F,      C,      ComputeTreeTransformations,     ,               ,       void,       ,                           "ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, Transformations66List& Xup, Vector6DList& V, Vector6DList& A",          CDI,    "compute list of Pluecker transformations Xup, 6D velocities and 6D acceleration terms (not joint accelerations) per joint"
 F,      C,      ComputeMassMatrixAndODE2LHS,    ,               ,       void,       ,                           "EXUmath::MatrixContainer* massMatrixC, const ArrayIndex* ltg, Vector* ode2Lhs, Index objectNumber, bool computeMass",          CDI,    "compute mass matrix if computeMass = true and compute ODE2LHS vector if computeMass=false"
 F,      C,      AddExternalForces6D,            ,               ,       void,       ,                           "const Transformations66List& Xup, Vector6DList& Fvp",          CDI,    "function which adds 3D torques/forces per joint to Fvp"
 #superelement functions:
@@ -2264,9 +2301,13 @@ Fv,     C,      GetNumberOfMeshNodes,           ,               ,       Index,  
 # Fv,     C,      GetMeshNodeLocalVelocity,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh" 
 Fv,     C,      GetMeshNodePosition,            ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh"
 Fv,     C,      GetMeshNodeVelocity,            ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh" 
+#used, but throws:
 Fv,     C,      GetAccessFunctionSuperElement,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, Matrix& value",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file" 
+#used for KinematicTree instead
 Fv,     C,      GetOutputVariableTypesSuperElement,  ,          ,       OutputVariableType,       ,             "Index meshNodeNumber",          DC, "get extended output variable types for multi-nodal objects with mesh nodes; some objects have meshNode-dependent OutputVariableTypes" 
-Fv,     C,      GetOutputVariableSuperElement,  ,               ,       void,       ,                           "OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
+#Fv,     C,      GetOutputVariableSuperElement,  ,               ,       void,       ,                           "OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
+F,      C,      GetOutputVariableKinematicTree,  ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
+F,      C,      GetAccessFunctionKinematicTree,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Index linkNumber, Matrix& value",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file"
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,       "true",                         ,   IO,      "set true, if item is shown in visualization and false if it is not shown"
 #for future, we may use a graphicsDataList with twice length to allow showing links/joints separately?
@@ -8306,6 +8347,7 @@ Fv,     C,      GetOutputVariableType,          ,               ,       OutputVa
 #
 Fv,     C,      GetSensorValues,                ,               ,       void,        ,         "const CSystemData& cSystemData, Vector& values, ConfigurationType configuration = ConfigurationType::Current",     CDI,     "main function to generate sensor output values"
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'Node';",            ,       CI,    "Get type name of sensor (without keyword 'Sensor'...!)" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,          "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
@@ -8337,6 +8379,7 @@ Fv,     C,      GetOutputVariableType,          ,               ,       OutputVa
 #
 Fv,     C,      GetSensorValues,                ,               ,       void,        ,         "const CSystemData& cSystemData, Vector& values, ConfigurationType configuration = ConfigurationType::Current",     CDI,     "main function to generate sensor output values"
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'Object';",            ,       CI,    "Get type name of sensor (without keyword 'Sensor'...!)" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,          "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown; sensors can be shown at the position assiciated with the object - note that in some cases, there might be no such position (e.g. data object)!"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
@@ -8345,7 +8388,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = SensorBody
-classDescription = "A sensor attached to a body-object with local position $\pLocB$. As a difference to ObjectSensors, the body sensor needs a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file."
+classDescription = "A sensor attached to a body-object with local position $\pLocB$. As a difference to SensorObject, the body sensor needs a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file."
 cParentClass = CSensor
 mainParentClass = MainSensor
 visuParentClass = VisualizationSensor
@@ -8370,6 +8413,7 @@ Fv,     C,      GetOutputVariableType,          ,               ,       OutputVa
 #
 Fv,     C,      GetSensorValues,                ,               ,       void,        ,         "const CSystemData& cSystemData, Vector& values, ConfigurationType configuration = ConfigurationType::Current",     CDI,     "main function to generate sensor output values"
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'Body';",            ,       CI,    "Get type name of sensor (without keyword 'Sensor'...!)" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,          "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
@@ -8403,9 +8447,46 @@ Fv,     C,      GetOutputVariableType,          ,               ,       OutputVa
 #
 Fv,     C,      GetSensorValues,                ,               ,       void,       ,         "const CSystemData& cSystemData, Vector& values, ConfigurationType configuration = ConfigurationType::Current",     CDI,     "main function to generate sensor output values"
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'SuperElement';",            ,       CI,    "Get type name of sensor (without keyword 'Sensor'...!)" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,          "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,         ,                         "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+#file names automatically determined from class name
+writeFile = True
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = SensorKinematicTree
+classDescription = "A sensor attached to a KinematicTree with local position $\pLocB$ and link number $n_l$. As a difference to SensorBody, the KinematicTree sensor needs a local position and a link number, which defines the sub-body at which the sensor values are evaluated. The local position is given in sub-body (link) local coordinates. The sensor measures OutputVariableKinematicTree and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file."
+cParentClass = CSensor
+mainParentClass = MainSensor
+visuParentClass = VisualizationSensor
+classType = Sensor
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+Vp,     M,      name,                           ,               ,       String,     "",                          ,       I,     "sensor's unique name"
+V,      CP,     objectNumber,                   ,               ,       ObjectIndex,"EXUstd::InvalidIndex",      ,       I,     "object number of KinematicTree to which sensor is attached to"
+V,      CP,     linkNumber,                     ,               ,       UInt,       "EXUstd::InvalidIndex",      ,       I,     "$n_l$number of link in KinematicTree to measure quantities"
+V,      CP,     localPosition,                  ,               3,      Vector3D,   "Vector3D({0.,0.,0.})",      ,       I,     "$\LU{l}{\bv}$local (link-fixed) position of sensor, defined in link ($l$) coordinate system"
+V,      CP,     writeToFile,                    ,               ,       Bool,       true,                        ,       I,     "True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''"
+V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist"
+V,      CP,     outputVariableType,             ,               ,       OutputVariableType, "OutputVariableType::_None",              ,       I,     "OutputVariableType for sensor"
+V,      CP,     storeInternal,                  ,               ,       Bool,       false,                       ,       I,     "true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available"
+#
+Fv,     C,      GetObjectNumber,                ,               ,       Index,      "return parameters.objectNumber;", ,  CI,     "general access to object number" 
+Fv,     C,      GetType,                        ,               ,       "SensorType", "return SensorType::KinematicTree;", , CI,"return sensor type" 
+#
+F,      C,      GetBodyLocalPosition,           ,               ,       Vector3D,    "return parameters.localPosition;", , CI,  "get local position" 
+F,      C,      GetLinkNumber,                  ,               ,       Index,      "return parameters.linkNumber;", ,  CI,     "general access to link number" 
+Fv,     C,      GetWriteToFileFlag,             ,               ,       Bool,        "return parameters.writeToFile;", , CI,    "get writeToFile flag" 
+Fv,     C,      GetStoreInternalFlag,           ,               ,       Bool,        "return parameters.storeInternal;",,CI,    "get storeInternal flag" 
+Fv,     C,      GetFileName,                    ,               ,       "STDstring", "return parameters.fileName;", ,     CI,   "get file name" 
+Fv,     C,      GetOutputVariableType,          ,               ,       OutputVariableType,  "return parameters.outputVariableType;", ,     CI,     "get OutputVariableType" 
+#
+Fv,     C,      GetSensorValues,                ,               ,       void,        ,         "const CSystemData& cSystemData, Vector& values, ConfigurationType configuration = ConfigurationType::Current",     CDI,     "main function to generate sensor output values"
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'KinematicTree';",            ,       CI,    "Get type name of sensor (without keyword 'Sensor'...!)" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,          "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+#VISUALIZATION:
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
 
@@ -8434,6 +8515,7 @@ Fv,     C,      GetOutputVariableType,          ,               ,       OutputVa
 #
 Fv,     C,      GetSensorValues,                ,               ,       void,        ,         "const CSystemData& cSystemData, Vector& values, ConfigurationType configuration = ConfigurationType::Current",     CDI,     "main function to generate sensor output values"
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'Marker';",            ,       CI,    "Get type name of sensor (without keyword 'Sensor'...!)" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,          "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,       "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,       ,     "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
@@ -8466,6 +8548,7 @@ Fv,     C,      GetOutputVariableType,          ,               ,       OutputVa
 #
 Fv,     C,      GetSensorValues,                ,               ,       void,        ,         "const CSystemData& cSystemData, Vector& values, ConfigurationType configuration = ConfigurationType::Current",     CDI,     "main function to generate sensor output values"
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'Load';",            ,       CI,    "Get type name of sensor (without keyword 'Sensor'...!)" 
+#not needed: Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,          "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                                          "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", I,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
@@ -8552,6 +8635,7 @@ Fv,     C,      GetOutputVariableType,          ,               ,       OutputVa
 #
 Fv,     C,      GetSensorValues,                ,               ,       void,        ,         "const CSystemData& cSystemData, Vector& values, ConfigurationType configuration = ConfigurationType::Current",     CDI,     "main function to generate sensor output values"
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'UserFunction';",            ,       CI,    "Get type name of sensor (without keyword 'Sensor'...!)" 
+#not needed: Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,          "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 F,      C,      EvaluateUserFunction,           ,               ,       void,       ,          "Vector& sensorValues, const MainSystemBase& mainSystem, Real t, ConfigurationType configuration", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
 #delete: F,      C,      EvaluateUserFunction,           ,               ,       void,       ,          "Vector& sensorValues, const MainSystemBase& mainSystem, Real t, const StdArrayIndex& sensorNumbers, const StdVector& factors", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
 #VISUALIZATION:

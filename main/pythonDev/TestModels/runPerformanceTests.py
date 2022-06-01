@@ -21,7 +21,19 @@ isMacOS = (sys.platform == 'darwin')
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #include right exudyn module now:
 import numpy as np
+if (sys.version_info.major == 3 and 
+    (sys.version_info.minor == 7 or sys.version_info.minor == 8)): #for these versions, we use exudynFast
+    sys.exudynFast = True
+else:
+    sys.exudynFast = False
+
 import exudyn as exu
+
+if sys.exudynFast:
+    import exudyn.exudynCPPfast as exuCPP #this is the cpp file, 
+else:
+    import exudyn.exudynCPP as exuCPP #this is the cpp file, 
+
 from modelUnitTests import RunAllModelUnitTests, TestInterface, ExudynTestStructure, exudynTestGlobals
 import time
 
@@ -65,7 +77,6 @@ dateStr = str(now.year) + '-' + NumTo2digits(now.month) + '-' + NumTo2digits(now
 #date and time of exudyn library:
 import os #for retrieving file information
 from datetime import datetime #datetime contains .fromtimestamp(...)
-import exudyn.exudynCPP as exuCPP #this is the cpp file, 
 
 fileInfo=os.stat(exuCPP.__file__)
 exuDate = datetime.fromtimestamp(fileInfo.st_mtime) 
@@ -104,7 +115,8 @@ exu.Print('test tolerance      = ',testTolerance)
 exu.Print('test date (now)     = '+dateStr)
 if psutilExists:
     exu.Print('CPU usage (%/thread)= '+str(psutil.cpu_percent(interval=1, percpu=True)))
-    exu.Print('Power plugged       = '+str(psutil.sensors_battery().power_plugged))
+    if psutil.sensors_battery()!=None:
+        exu.Print('Power plugged       = '+str(psutil.sensors_battery().power_plugged))
 exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
 
 

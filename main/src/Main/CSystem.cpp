@@ -404,12 +404,13 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Node, contains invalid node number " + EXUstd::ToString(n));
 			}
-			else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainNode(n).GetCNode()->GetOutputVariableTypes(), 
-				item->GetCSensor()->GetOutputVariableType()))
-			{
-				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + 
-					"', type = SensorType::Node: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in node with node number " + EXUstd::ToString(n));
-			}
+			//moved to checkPreAssembleConsistencies
+			//else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainNode(n).GetCNode()->GetOutputVariableTypes(), 
+			//	item->GetCSensor()->GetOutputVariableType()))
+			//{
+			//	PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + 
+			//		"', type = SensorType::Node: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in node with node number " + EXUstd::ToString(n));
+			//}
 		}
 		else if (item->GetCSensor()->GetType() == SensorType::Object)
 		{
@@ -419,19 +420,20 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + 
 					"', type = SensorType::Object, contains invalid object number " + EXUstd::ToString(n));
 			}
-			else if (EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType(), CObjectType::Body))
-			{
-				PyError(STDstring("SensorObject ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-					"', type = SensorType::Object: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) +
-					"' cannot be attached to a body. Use SensorBody instead");
-			}
-			else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), 
-				item->GetCSensor()->GetOutputVariableType()))
-			{
-				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-					"', type = SensorType::Object: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) +
-					"' is not available in object with object number " + EXUstd::ToString(n));
-			}
+			////moved to checkPreAssembleConsistencies
+			//else if (EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType(), CObjectType::Body))
+			//{
+			//	PyError(STDstring("SensorObject ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
+			//		"', type = SensorType::Object: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) +
+			//		"' cannot be attached to a body. Use SensorBody instead");
+			//}
+			//else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), 
+			//	item->GetCSensor()->GetOutputVariableType()))
+			//{
+			//	PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
+			//		"', type = SensorType::Object: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) +
+			//		"' is not available in object with object number " + EXUstd::ToString(n));
+			//}
 		}
 		else if (item->GetCSensor()->GetType() == SensorType::Body)
 		{
@@ -440,18 +442,18 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Body, contains invalid object number " + EXUstd::ToString(n));
 			}
-			else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType(), CObjectType::Body))
-			//2020-09-04: wrong use of &: else if (((Index)mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType() & (Index)CObjectType::Body) == 0)
-			{
-				PyError(STDstring("SensorBody ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + 
-					"', type = SensorType::Body, contains invalid object (ID=" + EXUstd::ToString(n) + ") which is not of ObjectType::Body. Use SensorObject instead");
-			}
-			else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), 
-				item->GetCSensor()->GetOutputVariableType()))
-			{
-				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-					"', type = SensorType::Body: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in object with object number " + EXUstd::ToString(n));
-			}
+			//moved to checkPreAssembleConsistencies
+			//else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType(), CObjectType::Body))
+			//{
+			//	PyError(STDstring("SensorBody ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + 
+			//		"', type = SensorType::Body, contains invalid object (ID=" + EXUstd::ToString(n) + ") which is not of ObjectType::Body. Use SensorObject instead");
+			//}
+			//else if (!EXUstd::IsOfTypeAndNotNone(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetOutputVariableTypes(), 
+			//	item->GetCSensor()->GetOutputVariableType()))
+			//{
+			//	PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
+			//		"', type = SensorType::Body: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in object with object number " + EXUstd::ToString(n));
+			//}
 		}
 		else if (item->GetCSensor()->GetType() == SensorType::SuperElement)
 		{
@@ -460,27 +462,35 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::SuperElement, contains invalid object number " + EXUstd::ToString(n));
 			}
-			else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType(), CObjectType::SuperElement))
-			//else if (((Index)mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType() & (Index)CObjectType::SuperElement) == 0)
+			//moved to checkPreAssembleConsistencies
+			//else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject()->GetType(), CObjectType::SuperElement))
+			//{
+			//	PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::SuperElement, contains invalid object (ID=" + EXUstd::ToString(n) + ") which is not of ObjectType::Body");
+			//}
+			//else
+			//{
+			//	const CObjectSuperElement* cObjectSuperElement = (const CObjectSuperElement*)(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject());
+			//	const CSensorSuperElement* cSensorSuperElement = (const CSensorSuperElement*)(item->GetCSensor());
+			//	
+			//	if (!EXUstd::IsOfTypeAndNotNone(cObjectSuperElement->GetOutputVariableTypesSuperElement(cSensorSuperElement->GetMeshNodeNumber()), 
+			//		cSensorSuperElement->GetOutputVariableType()))
+			//	{
+			//		PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
+			//			"', type = SensorType::Body: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in object with object number " + EXUstd::ToString(n));
+			//	}
+			//	if (!EXUstd::IndexIsInRange(cSensorSuperElement->GetMeshNodeNumber(), 0, cObjectSuperElement->GetNumberOfMeshNodes()))
+			//	{
+			//		PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
+			//			"', meshNodeNumber '" + EXUstd::ToString(cSensorSuperElement->GetMeshNodeNumber()) + "' is out of valid range [0, " + EXUstd::ToString(cObjectSuperElement->GetNumberOfMeshNodes()-1) + "]");
+			//	}
+			//}
+		}
+		else if (item->GetCSensor()->GetType() == SensorType::KinematicTree)
+		{
+			Index n = item->GetCSensor()->GetObjectNumber();
+			if (!EXUstd::IndexIsInRange(n, 0, numberOfObjects))
 			{
-				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::SuperElement, contains invalid object (ID=" + EXUstd::ToString(n) + ") which is not of ObjectType::Body");
-			}
-			else
-			{
-				const CObjectSuperElement* cObjectSuperElement = (const CObjectSuperElement*)(mainSystem.GetMainSystemData().GetMainObjects()[n]->GetCObject());
-				const CSensorSuperElement* cSensorSuperElement = (const CSensorSuperElement*)(item->GetCSensor());
-				
-				if (!EXUstd::IsOfTypeAndNotNone(cObjectSuperElement->GetOutputVariableTypesSuperElement(cSensorSuperElement->GetMeshNodeNumber()), 
-					cSensorSuperElement->GetOutputVariableType()))
-				{
-					PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-						"', type = SensorType::Body: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in object with object number " + EXUstd::ToString(n));
-				}
-				if (!EXUstd::IndexIsInRange(cSensorSuperElement->GetMeshNodeNumber(), 0, cObjectSuperElement->GetNumberOfMeshNodes()))
-				{
-					PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-						"', meshNodeNumber '" + EXUstd::ToString(cSensorSuperElement->GetMeshNodeNumber()) + "' is out of valid range [0, " + EXUstd::ToString(cObjectSuperElement->GetNumberOfMeshNodes()-1) + "]");
-				}
+				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::KinematicTree, contains invalid object number " + EXUstd::ToString(n));
 			}
 		}
 		else if (item->GetCSensor()->GetType() == SensorType::Marker)
@@ -490,17 +500,18 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type = SensorType::Marker, contains invalid marker number " + EXUstd::ToString(n));
 			}
-			else
-			{
-				const CMarker& cMarker = *mainSystem.GetMainSystemData().GetMainMarkers()[n]->GetCMarker();
-				if (!( (EXUstd::IsOfType(cMarker.GetType(), Marker::Position) && (item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Position || item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Velocity)) ||
-					(EXUstd::IsOfType(cMarker.GetType(), Marker::Orientation) && (item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Rotation || item->GetCSensor()->GetOutputVariableType() == OutputVariableType::AngularVelocityLocal)) ||
-					(EXUstd::IsOfType(cMarker.GetType(), Marker::Coordinate) && (item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Coordinates || item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Coordinates_t)) ) )
-				{
-					PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-						"', type = SensorType::Marker: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in marker with marker number " + EXUstd::ToString(n));
-				}
-			}
+			////moved to checkPreAssembleConsistencies
+			//else
+			//{
+			//	const CMarker& cMarker = *mainSystem.GetMainSystemData().GetMainMarkers()[n]->GetCMarker();
+			//	if (!( (EXUstd::IsOfType(cMarker.GetType(), Marker::Position) && (item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Position || item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Velocity)) ||
+			//		(EXUstd::IsOfType(cMarker.GetType(), Marker::Orientation) && (item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Rotation || item->GetCSensor()->GetOutputVariableType() == OutputVariableType::AngularVelocityLocal)) ||
+			//		(EXUstd::IsOfType(cMarker.GetType(), Marker::Coordinate) && (item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Coordinates || item->GetCSensor()->GetOutputVariableType() == OutputVariableType::Coordinates_t)) ) )
+			//	{
+			//		PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
+			//			"', type = SensorType::Marker: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in marker with marker number " + EXUstd::ToString(n));
+			//	}
+			//}
 		}
 		else if (item->GetCSensor()->GetType() == SensorType::Load)
 		{
@@ -525,11 +536,6 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 						"', type = SensorType::UserFunction: local sensor number " + EXUstd::ToString(m) + " is invalid");
 				}
 			}
-			//else if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainMarkers()[n]->GetCMarker()->GetOutputVariableTypes(), item->GetCSensor()->GetOutputVariableType()))
-			//{
-			//	PyError(STDstring("Sensor ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() +
-			//		"', type = SensorType::Marker: OutputVariableType '" + GetOutputVariableTypeString(item->GetCSensor()->GetOutputVariableType()) + "' is not available in marker with marker number " + EXUstd::ToString(n));
-			//}
 		}
 		else
 		{
@@ -2254,10 +2260,11 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 
 //! compute numerical differentiation of ODE1RHS; result is a jacobian;  multiply the added entries with scalarFactor
 //! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
-void CSystem::NumericalJacobianODE1RHS(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
-	Vector& f0, Vector& f1, GeneralMatrix& jacobianGM, Real scalarFactor)
+void CSystem::NumericalJacobianODE1RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
+	Vector& f0, Vector& f1, GeneralMatrix& jacobianGM, Real factorODE1, Real factorODE2, Real factorODE2_t)
 {
-	//size needs to be set accordingly in the caller function; components are addd to massMatrix!
+	//size needs to be set accordingly in the caller function; components are added to jacobian!
+	TemporaryComputationData& temp = tempArray[0]; //first array does always exist!
 
 	Real relEps = numDiff.relativeEpsilon;			//relative differentiation parameter
 	Real minCoord = numDiff.minimumCoordinateSize;	//absolute differentiation parameter is limited to this minimum
@@ -2265,9 +2272,17 @@ void CSystem::NumericalJacobianODE1RHS(TemporaryComputationData& temp, const Num
 
 	Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
 	Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
-	Vector& x = cSystemData.GetCData().currentState.ODE1Coords;			//current coordinates ==> this is what is differentiated for
-	Vector& xRef = cSystemData.GetCData().referenceState.ODE1Coords;	//reference coordinates; might be important for numerical differentiation
+	Vector& xODE1 = cSystemData.GetCData().currentState.ODE1Coords;			//current coordinates ==> this is what is differentiated for
+	Vector& xODE2 = cSystemData.GetCData().currentState.ODE2Coords;			//current coordinates ==> this is what is differentiated for
+	Vector& xRefODE1 = cSystemData.GetCData().referenceState.ODE1Coords;	//reference coordinates; might be important for numerical differentiation
+	Vector& xRefODE2 = cSystemData.GetCData().referenceState.ODE2Coords;	//reference coordinates; might be important for numerical differentiation
 	Real xStore; //store value of x; avoid roundoff error effects in numerical differentiation
+
+	Vector& xODE2_t = cSystemData.GetCData().currentState.ODE2Coords_t;		//for diff w.r.t. velocities
+
+	bool diffODE2 = (factorODE2 != 0. && nODE2 != 0);
+	bool diffODE2_t = (factorODE2_t != 0. && nODE2 != 0);
+
 
 	if (!numDiff.doSystemWideDifferentiation)
 	{
@@ -2276,19 +2291,26 @@ void CSystem::NumericalJacobianODE1RHS(TemporaryComputationData& temp, const Num
 		for (Index j : cSystemData.listComputeObjectODE1Rhs)
 		{
 			ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
+			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
 			CObject* object = cSystemData.GetCObjects()[j];
 
 			Index nLocalODE1 = ltgODE1.NumberOfItems();
+			Index nLocalODE2 = ltgODE2.NumberOfItems();
 			f0.SetNumberOfItems(nLocalODE1);
 			f1.SetNumberOfItems(nLocalODE1);
+
+			CHECKandTHROW(nLocalODE1 == 0 || nLocalODE2 == 0, "NumericalJacobianODE1RHS: not implemented for mixed ODE1-ODE2 objects");
+
 			if (ComputeObjectODE1RHS(temp, object, f0, j))
 			{
+				//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+				//compute ODE1-ODE1:
 				localJacobian.SetNumberOfRowsAndColumns(nLocalODE1, nLocalODE1); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
 				Real xRefVal = 0;
 				for (Index i = 0; i < nLocalODE1; i++) //differentiate w.r.t. every ltgODE1 coordinate
 				{
-					Real& xVal = x[ltgODE1[i]];
-					if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRef[ltgODE1[i]]; }
+					Real& xVal = xODE1[ltgODE1[i]];
+					if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRefODE1[ltgODE1[i]]; }
 
 					eps = relEps * (EXUstd::Maximum(minCoord, fabs(xVal + xRefVal)));
 
@@ -2297,15 +2319,44 @@ void CSystem::NumericalJacobianODE1RHS(TemporaryComputationData& temp, const Num
 					ComputeObjectODE1RHS(temp, object, f1, j);
 					xVal = xStore;
 
-					epsInv = (1. / eps) * scalarFactor;
+					epsInv = (1. / eps) * factorODE1;
 
 					for (Index k = 0; k < nLocalODE1; k++)
 					{
 						//use local jacobian:
-						localJacobian(k, i) = epsInv * (f1[k] - f0[k]); 
+						localJacobian(k, i) = epsInv * (f1[k] - f0[k]);
 					}
 				}
 				jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE1, ltgODE1, nODE2, nODE2);
+
+				//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+				//compute ODE1-ODE2:
+				if (nLocalODE2 != 0)
+				{
+					localJacobian.SetNumberOfRowsAndColumns(nLocalODE1, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
+					Real xRefVal = 0;
+					for (Index i = 0; i < nLocalODE2; i++) //differentiate w.r.t. every ltgODE2 coordinate
+					{
+						Real& xVal = xODE2[ltgODE2[i]];
+						if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRefODE2[ltgODE2[i]]; }
+
+						eps = relEps * (EXUstd::Maximum(minCoord, fabs(xVal + xRefVal)));
+
+						xStore = xVal;
+						xVal += eps;
+						ComputeObjectODE1RHS(temp, object, f1, j);
+						xVal = xStore;
+
+						epsInv = (1. / eps) * factorODE1;
+
+						for (Index k = 0; k < nLocalODE2; k++)
+						{
+							//use local jacobian:
+							localJacobian(k, i) = epsInv * (f1[k] - f0[k]);
+						}
+					}
+					jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE1, ltgODE2, nODE2, 0);
+				}
 			}
 		}
 	}
@@ -2319,21 +2370,87 @@ void CSystem::NumericalJacobianODE1RHS(TemporaryComputationData& temp, const Num
 		Index rowOffset = nODE2;
 		Real xRefVal = 0;
 
+		//for ODE1-ODE1:
 		for (Index i = 0; i < nODE1; i++) //compute column i
 		{
-			if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRef[i]; }
-			eps = relEps * (EXUstd::Maximum(minCoord, fabs(x[i] + xRefVal)));
+			if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRefODE1[i]; }
+			eps = relEps * (EXUstd::Maximum(minCoord, fabs(xODE1[i] + xRefVal)));
 
-			xStore = x[i];
-			x[i] += eps;
+			xStore = xODE1[i];
+			xODE1[i] += eps;
 			ComputeSystemODE1RHS(temp, f1);
-			x[i] = xStore;
+			xODE1[i] = xStore;
 
-			epsInv = (1. / eps) * scalarFactor;
+			epsInv = (1. / eps) * factorODE1;
 
 			f1 -= f0;
 			f1 *= epsInv;
-			jacobianGM.AddColumnVector(nODE2+i, f1, rowOffset);//add rowOffset argument to AddColumnVector(..)
+			jacobianGM.AddColumnVector(nODE2 + i, f1, rowOffset);//add rowOffset argument to AddColumnVector(..)
+		}
+		//++++++++++++++++++++++++++++++++++++++++++++++++
+		//for ODE1-ODE2:
+		if (diffODE2)
+		{
+			for (Index i = 0; i < nODE2; i++) //compute column i
+			{
+				if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRefODE2[i]; }
+				eps = relEps * (EXUstd::Maximum(minCoord, fabs(xODE2[i] + xRefVal)));
+
+				xStore = xODE2[i];
+				xODE2[i] += eps;
+				ComputeSystemODE1RHS(temp, f1);
+				xODE2[i] = xStore;
+
+				epsInv = (1. / eps) * factorODE2;
+
+				f1 -= f0;
+				f1 *= epsInv;
+				jacobianGM.AddColumnVector(i, f1, rowOffset);//add rowOffset argument to AddColumnVector(..)
+			}
+		}
+		if (diffODE2_t)
+		{
+			for (Index i = 0; i < nODE2; i++)
+			{
+				eps = relEps * (EXUstd::Maximum(minCoord, fabs(xODE2_t[i])));
+
+				xStore = xODE2_t[i];
+				xODE2_t[i] += eps;
+				ComputeSystemODE1RHS(temp, f1);
+				xODE2_t[i] = xStore;
+
+				epsInv = (1. / eps) * factorODE2_t;
+
+				f1 -= f0;
+				f1 *= epsInv;
+				jacobianGM.AddColumnVector(i, f1);
+			}
+		}
+		if (nODE2 != 0)
+		{
+			//++++++++++++++++++++++++++++++++++++++++++++++++
+			//for ODE2-ODE1:
+			f0.SetNumberOfItems(nODE2);
+			f1.SetNumberOfItems(nODE2);
+			ComputeSystemODE2RHS(tempArray, f0); //compute nominal value for jacobian
+			Real xRefVal = 0;
+
+			for (Index i = 0; i < nODE1; i++) //compute column i
+			{
+				if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRefODE1[i]; }
+				eps = relEps * (EXUstd::Maximum(minCoord, fabs(xODE1[i] + xRefVal)));
+
+				xStore = xODE1[i];
+				xODE1[i] += eps;
+				ComputeSystemODE2RHS(tempArray, f1);
+				xODE1[i] = xStore;
+
+				epsInv = (1. / eps) * factorODE1;
+
+				f1 -= f0;
+				f1 *= epsInv;
+				jacobianGM.AddColumnVector(nODE2 + i, f1, 0);//add rowOffset argument to AddColumnVector(..)
+			}
 		}
 	}
 	//pout << "ODE2jac=" << jacobian << "\n";

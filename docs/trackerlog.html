@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1093, 
-Number of resolved issues = 928 (86 in current minor version), 
-Exudyn version = 1.2.86.dev1, 
-last change =  2022-05-18
+Number of issues = 1123, 
+Number of resolved issues = 951 (109 in current minor version), 
+Exudyn version = 1.2.109.dev1, 
+last change =  2022-05-31
 
 
 <table style = "width:100%">
@@ -38,6 +38,150 @@ last change =  2022-05-18
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1121</td>
+    <td>AnimateSolution     </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> mark as deprecated, use SolutionViewer instead</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-05-31</td>
+    <td>2022-07-30</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1115</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> C++ implement efficient T66 transformations</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-29</td>
+    <td>2022-07-28</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1114</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> create new example(s) comparing CreateKinematicTree and CreateRedundantCoordinateMBS with control and prismatic joints</td>
+    <td>TESTING</td>
+    <td></td>
+    <td>2022-05-29</td>
+    <td>2022-07-28</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1106</td>
+    <td>HydraulicsActuator  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add HydraulicsActuator as object, containing pressure equations</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-23</td>
+    <td>2022-07-22</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1104</td>
+    <td>GenericObject       </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add most general generic object containing ODE1, ODE2 and AE equations + unknowns; jacobianAE as user functions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-23</td>
+    <td>2022-07-22</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1100</td>
+    <td>GeometricallyExactBeam3D</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> finalize implementation and fix jacobian computation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-23</td>
+    <td>2022-07-22</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1099</td>
+    <td>TriangleList        </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> extend GraphicsData TriangleList with two optional lists (which may be empty) containing edges (tuples of point numbers) as well as edgeColors; allows to easily add edges to graphics representation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-22</td>
+    <td>2022-07-21</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1096</td>
+    <td>hydraulics          </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add hydraulics actuator with new element HydraulicsActuator</td>
+    <td>EXAMPLE</td>
+    <td></td>
+    <td>2022-05-22</td>
+    <td>2022-07-21</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1094</td>
+    <td>add links to other github repos</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> link more directly to ngsolve and openAI / stable_baslines3 / etc.; refer to openAI in github links and add ref to theDoc.pdf ; add example/teaser?</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-05-21</td>
+    <td>2022-07-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>1088</td>
     <td>ANCFBeam3D          </td>
@@ -151,22 +295,6 @@ last change =  2022-05-18
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>1070</td>
-    <td>KinematicTree       </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add SensorSuperElement (BUT call it SensorKinematicTree!) functionality for Position, Velocity, Acceleration, RotationMatrix, AngularVelocity, ...</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-05-05</td>
-    <td>2022-07-04</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
     <td>1061</td>
     <td>Reference and copy  </td>
     <td>JG</td>
@@ -262,7 +390,7 @@ last change =  2022-05-18
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1018</td>
     <td>MacOS               </td>
     <td>JG</td>
@@ -278,7 +406,7 @@ last change =  2022-05-18
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1016</td>
     <td>TestSuite           </td>
     <td>JG</td>
@@ -294,7 +422,7 @@ last change =  2022-05-18
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1008</td>
     <td>Contact switching   </td>
     <td>JG</td>
@@ -1020,22 +1148,6 @@ last change =  2022-05-18
     <td>JG</td>
     <td>RAISED  </td>
     <td> add computation functions for bodies and connectors; for connectors, markerData is computed automatically</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-01-08</td>
-    <td>2022-03-09</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0850</td>
-    <td>GetNodeODE1Index, GetNodeAEIndex</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add missing access functions</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2022-01-08</td>
@@ -2679,6 +2791,342 @@ last change =  2022-05-18
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1122</td>
+    <td>GraphicsDataBasis   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> kwargs argument radius not working</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-05-31</td>
+    <td>2022-07-30</td>
+    <td>2022-05-31 15:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1120</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> composite inertia contains wrong index in calculation</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-05-30</td>
+    <td>2022-07-29</td>
+    <td>2022-05-30 20:04</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1119</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> wrong signs (missing inverse) of prismatic joints in C++ and Python implementation of KinematicTree</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-05-30</td>
+    <td>2022-07-29</td>
+    <td>2022-05-30 17:55</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1118</td>
+    <td>ObjectKinematicTree </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> conversion to dict in mbs.GetObject(...) does not work for Matrix3D</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-05-30</td>
+    <td>2022-07-29</td>
+    <td>2022-05-30 16:02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1117</td>
+    <td>Python3.8           </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> the exudyn version for Python3.8 now includes range checks (and is slower than before); for fast version of exudyn without range checks, check issues 1116 and section 'Performance and ways to speed up computations' in theDoc</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-05-30</td>
+    <td>2022-07-29</td>
+    <td>2022-05-30 00:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1116</td>
+    <td>exudynFast          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add separate track for fast exudyn versions; the compiler flag _FAST_EXUDYN_LINALG, previously only activated in Python 3.8, is now used for Python 3.7 and Python 3.8 versions ONLY if according import flags are set by doing the following 3 steps: import sys; sys.exudynFast=True; import exudyn</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-29</td>
+    <td>2022-07-28</td>
+    <td>2022-05-30 00:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1113</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> test for prismatic joint</td>
+    <td>TESTING</td>
+    <td></td>
+    <td>2022-05-29</td>
+    <td>2022-07-28</td>
+    <td>2022-05-30 20:04</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1112</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> CreateKinematicTree: jointForceVector, jointPositionOffsetVector, jointVelocityOffsetVector, jointPControlVector, jointDControlVector removed and replaced by PDcontrol structure in  RobotLink; forceUserFunction kept as is; return value slightly changed</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-05-29</td>
+    <td>2022-07-28</td>
+    <td>2022-05-29 19:10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1111</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> RobotLink adds feature to define PDcontrol, used in robots for joint control of link</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-29</td>
+    <td>2022-07-28</td>
+    <td>2022-05-29 19:10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1110</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> CreateRedundantCoordinateMBS: returns additional list springDamperList, which contains more efficient spring dampers for joint control</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-29</td>
+    <td>2022-07-28</td>
+    <td>2022-05-29 17:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1109</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> CreateRedundantCoordinateMBS: jointLoadUserFunctionList and createJointTorqueLoads marked as deprecated; use NEW jointSpringDamperUserFunctionList which allows to directly actuate at revolute/prismatic joints</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-29</td>
+    <td>2022-07-28</td>
+    <td>2022-05-30 20:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1108</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check OutputVariable functions and compare with redundant-MBS based bodies</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-05-27</td>
+    <td>2022-07-26</td>
+    <td>2022-05-30 21:06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1107</td>
+    <td>Sensors             </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> C++: move sensor-specific consistency tests from CSystem to CheckPreAssembleConsistency</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-05-26</td>
+    <td>2022-07-25</td>
+    <td>2022-05-27 23:41</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1105</td>
+    <td>NodeGenericAE       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add node with algebraic variables</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-23</td>
+    <td>2022-07-22</td>
+    <td>2022-05-23 22:02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1103</td>
+    <td>Object              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> C++: enable objects to be mixed of ODE2, ODE1 and AE variables (most general case); add jacobian_ODE1ODE2 flags and functions in case of ODE1</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-23</td>
+    <td>2022-07-22</td>
+    <td>2022-05-23 23:06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>NumericalJacobianODE1RHS modified accordingly</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1102</td>
+    <td>HydraulicsActuator  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add HydraulicsActuator with user function example</td>
+    <td>EXAMPLE</td>
+    <td></td>
+    <td>2022-05-23</td>
+    <td>2022-07-22</td>
+    <td>2022-05-23 19:53</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>Examples/HydraulicsUserFunction.py</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1101</td>
+    <td>HydraulicsActuator  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add HydraulicsActuator with user function example</td>
+    <td>EXAMPLE</td>
+    <td></td>
+    <td>2022-05-23</td>
+    <td>2022-07-22</td>
+    <td>2022-05-23 22:10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1098</td>
+    <td>GraphicsDataCylinder</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option addEdges which in addition returns GraphicsData for edges; returns then list of dictionaries</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-22</td>
+    <td>2022-07-21</td>
+    <td>2022-05-22 20:54</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1097</td>
+    <td>GraphicsDataOrthoCubePoint</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option addEdges which in addition returns GraphicsData for edges; returns then list of dictionaries</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-22</td>
+    <td>2022-07-21</td>
+    <td>2022-05-22 20:54</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1095</td>
+    <td>hydraulics          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add hydraulics actuator with user function</td>
+    <td>EXAMPLE</td>
+    <td></td>
+    <td>2022-05-22</td>
+    <td>2022-07-21</td>
+    <td>2022-05-30 20:06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>example HydraulicsUserFunction.py added already 5 days earlier</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1093</td>
+    <td>ANCFBeam3D          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> giving wrong results because of error in template<class TMatrix> ConstSizeMatrixBase& operator+= (const TMatrix& matrix); leading to twice the mass matrix</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-05-20</td>
+    <td>2022-07-19</td>
+    <td>2022-05-20 16:07</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1092</td>
     <td>openAI gym          </td>
     <td>JG</td>
@@ -2917,6 +3365,22 @@ last change =  2022-05-18
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1070</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add SensorSuperElement (BUT call it SensorKinematicTree!) functionality for Position, Velocity, Acceleration, RotationMatrix, AngularVelocity, ...</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-05</td>
+    <td>2022-07-04</td>
+    <td>2022-05-27 23:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>created new SensorKinematicTree; tests not done yet</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1069</td>
@@ -5553,6 +6017,22 @@ last change =  2022-05-18
     <td>2022-01-08</td>
     <td>2022-03-09</td>
     <td>2022-01-08 12:09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0850</td>
+    <td>GetNodeODE1Index, GetNodeAEIndex</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add missing access functions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-08</td>
+    <td>2022-03-09</td>
+    <td>2022-05-23 21:48</td>
     <td>JG</td>
     <td></td>
     <td></td>

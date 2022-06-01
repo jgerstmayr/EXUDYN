@@ -8,15 +8,40 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#import the cpp module ==> goes into exu. scope (if imported as: "import exudyn as exu") 
-#from .exudynCPP import *
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#This is a workaround to let users define the 'fast' track, 
+#  avoiding range checks in exudyn (speedup may be 30% and more)
+#  to activate the __FAST_EXUDYN_LINALG compiled version, use the 
+#  following lines (must be done befor first import of exudyn);
+#  Note that this is a hack and may be changed in future; it is only available for certain exudyn versions:
+#import sys
+#sys.exudynFast = True
+#import exudyn
+
+import sys
+useExudynFast = hasattr(sys, 'exudynFast')
+if useExudynFast:
+    useExudynFast = sys.exudynFast #could also be False!
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 try:
     #for regular loading in installed python package
-    from .exudynCPP import *
+    if useExudynFast:
+        print('Importing exudyn fast version without range checks...')
+        try:
+            from .exudynCPPfast import *
+        except:
+            useExudynFast = False
+            print('Import of exudyn fast version failed; falling back to regular version')
+            
+    if not useExudynFast:
+        from .exudynCPP import *
 except:
-    #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
-    from exudynCPP import *
+    #for run inside Visual Studio (exudynCPP lies in Release or Debug folders); no exudynFast! :
+    try:
+        from exudynCPP import *
+    except:
+        raise ImportError('Import of exudyn C++ module failed; check 32/64 bits versions, restart your iPython console or try to uninstall and install exudyn')
 
 #import very useful solver functionality into exudyn module (==> available as exu.SolveStatic, etc.)
 try:

@@ -487,29 +487,85 @@ public:
 };
 
 
+//! node with AE variables: for purely algebraic equations
+class CNodeAE : public CNode
+{
+protected:
+	Index globalAEcoordinateIndex; //!< refers to the place in the global AE coordinate vector
+public:
+	CNodeAE()
+	{
+		globalAEcoordinateIndex = EXUstd::InvalidIndex; //mark that globalAEcoordinateIndex cannot be accessed
+	}
+	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
+	virtual CNodeAE* GetClone() const { return new CNodeAE(*this); }
+
+	virtual void Print(std::ostream& os) const {
+		os << "CNodeAE(AEIndex=" << globalAEcoordinateIndex << ", size=" << GetNumberOfAECoordinates() << "):";
+		CNode::Print(os);
+	}
+
+	virtual CNodeGroup GetNodeGroup() const { return CNodeGroup::AEvariables; }
+	virtual void SetGlobalAECoordinateIndex(Index globalIndex) { globalAEcoordinateIndex = globalIndex; }
+
+	virtual Index GetGlobalAECoordinateIndex() const {
+		return globalAEcoordinateIndex;
+	}
+
+	//! read single coordinate in current configuration
+	virtual const Real& GetCurrentCoordinate(Index i) const override;
+
+	//! read globally stored current coordinates (displacements)
+	virtual LinkedDataVector GetCurrentCoordinateVector() const override;
+
+	//! read globally stored initial coordinates (displacements)
+	virtual LinkedDataVector GetInitialCoordinateVector() const override;
+
+	//! read globally stored start of step coordinates (displacements)
+	virtual LinkedDataVector GetStartOfStepCoordinateVector() const override;
+
+	//! read visualization coordinates (displacements)
+	virtual LinkedDataVector GetVisualizationCoordinateVector() const override;
+
+	virtual LinkedDataVector GetCoordinateVector(ConfigurationType configuration) const override
+	{
+		switch (configuration)
+		{
+		case ConfigurationType::Current: return GetCurrentCoordinateVector();
+		case ConfigurationType::Initial: return GetInitialCoordinateVector();
+		case ConfigurationType::Reference: return GetReferenceCoordinateVector();
+		case ConfigurationType::StartOfStep: return GetStartOfStepCoordinateVector();
+		case ConfigurationType::Visualization: return GetVisualizationCoordinateVector();
+		default: CHECKandTHROWstring("CNodeAE::GetCoordinateVector: invalid ConfigurationType"); return LinkedDataVector();
+		}
+	}
+
+};
+
+
 ////! node with mixed ODE2 and algebraic equations coordinates
 //class CNodeODE2AE : public CNodeODE2
 //{
 //protected:
-//	Index globalAECoordinateIndex;                //!< refers to the place in the global ODE2 coordinate vector, either position or velocity level (must be the same!)
+//	Index globalAEcoordinateIndex;                //!< refers to the place in the global ODE2 coordinate vector, either position or velocity level (must be the same!)
 //public:
 //	CNodeODE2AE(): CNodeODE2()
 //	{
-//		globalAECoordinateIndex = EXUstd::InvalidIndex;
+//		globalAEcoordinateIndex = EXUstd::InvalidIndex;
 //	}
 //	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
 //	virtual CNodeODE2AE* GetClone() const { return new CNodeODE2AE(*this); }
 //
 //	virtual void Print(std::ostream& os) const {
 //		os << "CNodeODE2AE(ODE2Index=" << globalODE2CoordinateIndex << ", size=" << GetNumberOfODE2Coordinates() << ", ";
-//		os << "AEIndex=" << globalAECoordinateIndex << ", size=" << GetNumberOfAECoordinates() << "):";
+//		os << "AEIndex=" << globalAEcoordinateIndex << ", size=" << GetNumberOfAECoordinates() << "):";
 //		CNode::Print(os);
 //	}
 //
 //	virtual CNodeGroup GetNodeGroup() const { return (CNodeGroup)((Index)CNodeGroup::ODE2variables + (Index)CNodeGroup::AEvariables); }
-//	virtual void SetGlobalAECoordinateIndex(Index globalIndex) override { globalAECoordinateIndex = globalIndex; }
+//	virtual void SetGlobalAECoordinateIndex(Index globalIndex) override { globalAEcoordinateIndex = globalIndex; }
 //
-//	virtual Index GetGlobalAECoordinateIndex() const override { return globalAECoordinateIndex; }
+//	virtual Index GetGlobalAECoordinateIndex() const override { return globalAEcoordinateIndex; }
 //};
 
 //! rigid body node for rigid bodies, beams, etc.

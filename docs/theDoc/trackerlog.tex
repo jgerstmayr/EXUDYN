@@ -10,15 +10,175 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.2.86.dev1, 
-  \item last change =  2022-05-18, 
-  \item Number of issues = 1093, 
-  \item Number of resolved issues = 928 (86 in current version), 
+  \item Exudyn version = 1.2.109.dev1, 
+  \item last change =  2022-05-31, 
+  \item Number of issues = 1123, 
+  \item Number of resolved issues = 951 (109 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.2.109}: {\bf \color{warningRed}  resolved BUG 1122}: {\bf GraphicsDataBasis}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: kwargs argument radius not working}
+    \item   date resolved: {\bf 2022-05-31 15:32},
+date raised: 2022-05-31 
+  \ei
+  \item {\bf Version 1.2.108}:  resolved Issue 1108: {\bf KinematicTree}
+(check)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: check OutputVariable functions and compare with redundant-MBS based bodies}
+    \item   date resolved: {\bf 2022-05-30 21:06},
+date raised: 2022-05-27 
+  \ei
+  \item {\bf Version 1.2.107}:  resolved Issue 1095: {\bf hydraulics}
+(example)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add hydraulics actuator with user function}
+    \item {\bf notes: example HydraulicsUserFunction.py added already 5 days earlier}
+    \item   date resolved: {\bf 2022-05-30 20:06},
+date raised: 2022-05-22 
+  \ei
+  \item {\bf Version 1.2.106}:  resolved Issue 1109: {\bf class Robot}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: CreateRedundantCoordinateMBS: jointLoadUserFunctionList and createJointTorqueLoads marked as deprecated; use NEW jointSpringDamperUserFunctionList which allows to directly actuate at revolute/prismatic joints}
+    \item   date resolved: {\bf 2022-05-30 20:05},
+date raised: 2022-05-29 
+  \ei
+  \item {\bf Version 1.2.105}: {\bf \color{warningRed}  resolved BUG 1120}: {\bf KinematicTree}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: composite inertia contains wrong index in calculation}
+    \item   date resolved: {\bf 2022-05-30 20:04},
+date raised: 2022-05-30 
+  \ei
+  \item {\bf Version 1.2.104}:  resolved Issue 1113: {\bf KinematicTree}
+(testing)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: test for prismatic joint}
+    \item   date resolved: {\bf 2022-05-30 20:04},
+date raised: 2022-05-29 
+  \ei
+  \item {\bf Version 1.2.103}: {\bf \color{warningRed}  resolved BUG 1119}: {\bf KinematicTree}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: wrong signs (missing inverse) of prismatic joints in C++ and Python implementation of KinematicTree}
+    \item   date resolved: {\bf 2022-05-30 17:55},
+date raised: 2022-05-30 
+  \ei
+  \item {\bf Version 1.2.102}: {\bf \color{warningRed}  resolved BUG 1118}: {\bf ObjectKinematicTree}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: conversion to dict in mbs.GetObject(...) does not work for Matrix3D}
+    \item   date resolved: {\bf 2022-05-30 16:02},
+date raised: 2022-05-30 
+  \ei
+  \item {\bf Version 1.2.101}:  resolved Issue 1117: {\bf Python3.8}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: the exudyn version for Python3.8 now includes range checks (and is slower than before); for fast version of exudyn without range checks, check issues 1116 and section 'Performance and ways to speed up computations' in theDoc}
+    \item   date resolved: {\bf 2022-05-30 00:34},
+date raised: 2022-05-30 
+  \ei
+  \item {\bf Version 1.2.100}:  resolved Issue 1116: {\bf exudynFast}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add separate track for fast exudyn versions; the compiler flag \_FAST\_EXUDYN\_LINALG, previously only activated in Python 3.8, is now used for Python 3.7 and Python 3.8 versions ONLY if according import flags are set by doing the following 3 steps: import sys; sys.exudynFast=True; import exudyn}
+    \item   date resolved: {\bf 2022-05-30 00:34},
+date raised: 2022-05-29 
+  \ei
+  \item {\bf Version 1.2.99}:  resolved Issue 1112: {\bf class Robot}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: CreateKinematicTree: jointForceVector, jointPositionOffsetVector, jointVelocityOffsetVector, jointPControlVector, jointDControlVector removed and replaced by PDcontrol structure in  RobotLink; forceUserFunction kept as is; return value slightly changed}
+    \item   date resolved: {\bf 2022-05-29 19:10},
+date raised: 2022-05-29 
+  \ei
+  \item {\bf Version 1.2.98}:  resolved Issue 1111: {\bf class Robot}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: RobotLink adds feature to define PDcontrol, used in robots for joint control of link}
+    \item   date resolved: {\bf 2022-05-29 19:10},
+date raised: 2022-05-29 
+  \ei
+  \item {\bf Version 1.2.97}:  resolved Issue 1110: {\bf class Robot}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: CreateRedundantCoordinateMBS: returns additional list springDamperList, which contains more efficient spring dampers for joint control}
+    \item   date resolved: {\bf 2022-05-29 17:05},
+date raised: 2022-05-29 
+  \ei
+  \item {\bf Version 1.2.96}:  resolved Issue 1070: {\bf KinematicTree}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add SensorSuperElement (BUT call it SensorKinematicTree!) functionality for Position, Velocity, Acceleration, RotationMatrix, AngularVelocity, ...}
+    \item {\bf notes: created new SensorKinematicTree; tests not done yet}
+    \item   date resolved: {\bf 2022-05-27 23:43},
+date raised: 2022-05-05 
+  \ei
+  \item {\bf Version 1.2.95}:  resolved Issue 1107: {\bf Sensors}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: move sensor-specific consistency tests from CSystem to CheckPreAssembleConsistency}
+    \item   date resolved: {\bf 2022-05-27 23:41},
+date raised: 2022-05-26 
+  \ei
+  \item {\bf Version 1.2.94}:  resolved Issue 1103: {\bf Object}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: enable objects to be mixed of ODE2, ODE1 and AE variables (most general case); add jacobian\_ODE1ODE2 flags and functions in case of ODE1}
+    \item {\bf notes: NumericalJacobianODE1RHS modified accordingly}
+    \item   date resolved: {\bf 2022-05-23 23:06},
+date raised: 2022-05-23 
+  \ei
+  \item {\bf Version 1.2.93}:  resolved Issue 1101: {\bf HydraulicsActuator}
+(example)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add HydraulicsActuator with user function example}
+    \item   date resolved: {\bf 2022-05-23 22:10},
+date raised: 2022-05-23 
+  \ei
+  \item {\bf Version 1.2.92}:  resolved Issue 1105: {\bf NodeGenericAE}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add node with algebraic variables}
+    \item   date resolved: {\bf 2022-05-23 22:02},
+date raised: 2022-05-23 
+  \ei
+  \item {\bf Version 1.2.91}:  resolved Issue 0850: {\bf GetNodeODE1Index, GetNodeAEIndex}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add missing access functions}
+    \item   date resolved: {\bf 2022-05-23 21:48},
+date raised: 2022-01-08 
+  \ei
+  \item {\bf Version 1.2.90}:  resolved Issue 1102: {\bf HydraulicsActuator}
+(example)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add HydraulicsActuator with user function example}
+    \item {\bf notes: Examples/HydraulicsUserFunction.py}
+    \item   date resolved: {\bf 2022-05-23 19:53},
+date raised: 2022-05-23 
+  \ei
+  \item {\bf Version 1.2.89}:  resolved Issue 1098: {\bf GraphicsDataCylinder}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option addEdges which in addition returns GraphicsData for edges; returns then list of dictionaries}
+    \item   date resolved: {\bf 2022-05-22 20:54},
+date raised: 2022-05-22 
+  \ei
+  \item {\bf Version 1.2.88}:  resolved Issue 1097: {\bf GraphicsDataOrthoCubePoint}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option addEdges which in addition returns GraphicsData for edges; returns then list of dictionaries}
+    \item   date resolved: {\bf 2022-05-22 20:54},
+date raised: 2022-05-22 
+  \ei
+  \item {\bf Version 1.2.87}: {\bf \color{warningRed}  resolved BUG 1093}: {\bf ANCFBeam3D}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: giving wrong results because of error in template<class TMatrix> ConstSizeMatrixBase\& operator+= (const TMatrix\& matrix); leading to twice the mass matrix}
+    \item   date resolved: {\bf 2022-05-20 16:07},
+date raised: 2022-05-20 
+  \ei
   \item {\bf Version 1.2.86}:  resolved Issue 1092: {\bf openAI gym}
 (extension)
   \begin{itemize}[label=$\bullet$]

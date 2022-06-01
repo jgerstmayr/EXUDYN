@@ -2,14 +2,16 @@
 \onlyRST{
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
-Exudyn **Version 1.2** is out! The documentation theDoc.pdf now reached > 600 pages! Including now a contact module, improved solvers, sparse matrix support and multi-threading, creation of beams along curves, extended robotics modules, **PlotSensor** fully extended, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
+Exudyn now includes a redundant coordinate (constraint) as well as a minimum coordinate formulation; machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support and multi-threading; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
 
 If you like using Exudyn, please add a *star* on github, and send an email to \ ``reply.exudyn@gmail.com``\ such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
 
+A paper on Exudyn is planned to be presented at the `6th Joint International Conference on Multibody System Dynamics <http://imsdacmd2020.iitd.ac.in>`_
+
 +  **A flexible multibody dynamics systems simulation code with Python and C++**
 +  *free, open source* and with plenty of *documentation* and *examples*
-+  **pre-built** for Python 3.6, 3.7, 3.8 and 3.9 under **Windows** ; Python 3.8 for **MacOS** available; some **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
++  **pre-built** for Python 3.6, 3.7, 3.8, 3.9, and 3.10 under **Windows** ; Python 3.8 for **MacOS** available; some **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 
 .. |pic1| image:: docs/demo/screenshots/6pistonEngineStresses.jpg
@@ -107,6 +109,7 @@ The following people have contributed to Python and C++ library implementations:
   \item Andreas Zw{\"o}lfer, Technical University Munich (FFRF and CMS formulation)
   \item Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation / pip install on linux / wsl with graphics)
   \item Martin Sereinig, University of Innsbruck (special robotics functionality)
+  \item Grzegorz Orzechowski, Lappeenranta University of Technology (coupling with openAI gym and running machine learning algorithms)
 \ei
 The following people have contributed to examples and other parts:
 \bi

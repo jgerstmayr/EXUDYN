@@ -461,6 +461,33 @@ class NodeGenericODE1:
 
     def __repr__(self):
         return str(dict(self))
+class VNodeGenericAE:
+    def __init__(self, show = False):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+    def __repr__(self):
+        return str(dict(self))
+class NodeGenericAE:
+    def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], numberOfAECoordinates = 0, visualization = {'show': False}):
+        self.name = name
+        self.referenceCoordinates = referenceCoordinates
+        self.initialCoordinates = initialCoordinates
+        self.numberOfAECoordinates = CheckForValidPInt(numberOfAECoordinates,"numberOfAECoordinates","NodeGenericAE")
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'nodeType', 'GenericAE'
+        yield 'name', self.name
+        yield 'referenceCoordinates', self.referenceCoordinates
+        yield 'initialCoordinates', self.initialCoordinates
+        yield 'numberOfAECoordinates', self.numberOfAECoordinates
+        yield 'Vshow', dict(self.visualization)["show"]
+
+    def __repr__(self):
+        return str(dict(self))
 class VNodeGenericData:
     def __init__(self, show = False):
         self.show = show
@@ -2964,6 +2991,41 @@ class SensorSuperElement:
         yield 'name', self.name
         yield 'bodyNumber', self.bodyNumber
         yield 'meshNodeNumber', self.meshNodeNumber
+        yield 'writeToFile', self.writeToFile
+        yield 'fileName', self.fileName
+        yield 'outputVariableType', self.outputVariableType
+        yield 'storeInternal', self.storeInternal
+        yield 'Vshow', dict(self.visualization)["show"]
+
+    def __repr__(self):
+        return str(dict(self))
+class VSensorKinematicTree:
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+    def __repr__(self):
+        return str(dict(self))
+class SensorKinematicTree:
+    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), linkNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
+        self.name = name
+        self.objectNumber = objectNumber
+        self.linkNumber = CheckForValidUInt(linkNumber,"linkNumber","SensorKinematicTree")
+        self.localPosition = localPosition
+        self.writeToFile = writeToFile
+        self.fileName = fileName
+        self.outputVariableType = outputVariableType
+        self.storeInternal = storeInternal
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'sensorType', 'KinematicTree'
+        yield 'name', self.name
+        yield 'objectNumber', self.objectNumber
+        yield 'linkNumber', self.linkNumber
+        yield 'localPosition', self.localPosition
         yield 'writeToFile', self.writeToFile
         yield 'fileName', self.fileName
         yield 'outputVariableType', self.outputVariableType

@@ -23,8 +23,15 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 #download WSL2 Linux kernel update
 https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
 
+#for wsl2 need to go to Windows->Apps and Features->Programs and features->turn on/off features
+#->Activate Hyper-V (includes sub-checks)
+
 #set WSL2 as default
 wsl --set-default-version 2
+
+#install docker (for nvidia/cuda), install docker for windows:
+https://docs.docker.com/desktop/windows/wsl/
+==> this integrates functionality via wsl2
 
 #go to Microsoft Store:
 https://aka.ms/wslstore
@@ -33,6 +40,12 @@ https://aka.ms/wslstore
 
 #without Microsoft Store, you can do this manually:
 https://docs.microsoft.com/en-us/windows/wsl/install-manual
+
+#add local user to docker users (under Windows user management) to docker-users
+==>this will not require admin rights for further operations
+
+#start Windows->Docker and configure:
+#
 
 
 #install Ubuntu18

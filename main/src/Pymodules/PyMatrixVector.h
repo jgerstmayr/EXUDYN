@@ -142,6 +142,7 @@ typedef  PyVectorList<2> PyVector2DList;
 typedef  PyVectorList<3> PyVector3DList;
 typedef  PyVectorList<6> PyVector6DList; //needs to be bound by pybind
 
+
 //! a list of ConstSizeMatrices for interaction with Python (used in KinematicTree)
 template<Index numberOfRowsColumns>
 class PyMatrixList : public MatrixList<numberOfRowsColumns>
@@ -151,6 +152,9 @@ public:
 	//! create empty (dense) container
 	//?remove default constructor to enable conversion from py::object in constructor?
 	PyMatrixList() : MatrixList<numberOfRowsColumns>() {}
+
+	//!conversion from non-Python MatrixList:
+	PyMatrixList(const MatrixList<numberOfRowsColumns>& other) : MatrixList<numberOfRowsColumns>(other) {}
 
 	//! initialize array with list of py::array or with emtpy list (default value)
 	PyMatrixList(const py::object& listOfArrays)
@@ -245,6 +249,8 @@ public:
 };
 
 typedef  PyMatrixList<3> PyMatrix3DList;
+typedef  PyMatrixList<6> PyMatrix6DList; 
+typedef  PyMatrixList<6> PyTransformations66List; //needs to be bound by pybind
 
 //! add to EPyUtils here as otherwise cyclic inclusion between PyMatrixVector.h and PybindUtilities (makes problems with gcc)
 namespace EPyUtils

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-05  18:42:09 (last modified)
+* @date         2022-05-30  14:09:59 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,10 +106,10 @@ protected: // AUTO:
     CObjectKinematicTreeParameters parameters; //! AUTO: contains all parameters for CObjectKinematicTree
     mutable ResizableVector tempVector;           //!< AUTO: temporary vector during computation of mass and ODE2LHS
     mutable ResizableVector tempVector2;          //!< AUTO: second temporary vector during computation of mass and ODE2LHS
-    mutable Transformations66List jointTransformations;//!< AUTO: temporary list containing transformations (Pluecker transforms) per joint
+    mutable Transformations66List jointTransformationsTemp;//!< AUTO: temporary list containing transformations (Pluecker transforms) per joint
     mutable Transformations66List linkInertiasT66;//!< AUTO: temporary list link inertias as Pluecker transforms per link
-    mutable Transformations66List tempListT66;    //!< AUTO: temporary list of Pluecker transforms per link
     mutable Vector6DList motionSubspaces;         //!< AUTO: temporary list containing 6D motion subspaces per joint
+    mutable Transformations66List jointTempT66;   //!< AUTO: temporary list containing 66 transformations per joint
     mutable Vector6DList jointVelocities;         //!< AUTO: temporary list containing 6D velocities per joint
     mutable Vector6DList jointAccelerations;      //!< AUTO: temporary list containing 6D accelerations per joint
     mutable Vector6DList jointForces;             //!< AUTO: temporary list containing 6D torques/forces per joint/link
@@ -121,10 +121,10 @@ public: // AUTO:
     {
         tempVector = ResizableVector();
         tempVector2 = ResizableVector();
-        jointTransformations = Transformations66List();
+        jointTransformationsTemp = Transformations66List();
         linkInertiasT66 = Transformations66List();
-        tempListT66 = Transformations66List();
         motionSubspaces = Vector6DList();
+        jointTempT66 = Transformations66List();
         jointVelocities = Vector6DList();
         jointAccelerations = Vector6DList();
         jointForces = Vector6DList();
@@ -151,11 +151,11 @@ public: // AUTO:
     ResizableVector& GetTempVector2() { return tempVector2; }
 
     //! AUTO:  Write (Reference) access to:\f$\Xm \in \Rcal^{n \times (6 \times 6)}\f$temporary list containing transformations (Pluecker transforms) per joint
-    void SetJointTransformations(const Transformations66List& value) { jointTransformations = value; }
+    void SetJointTransformationsTemp(const Transformations66List& value) { jointTransformationsTemp = value; }
     //! AUTO:  Read (Reference) access to:\f$\Xm \in \Rcal^{n \times (6 \times 6)}\f$temporary list containing transformations (Pluecker transforms) per joint
-    const Transformations66List& GetJointTransformations() const { return jointTransformations; }
+    const Transformations66List& GetJointTransformationsTemp() const { return jointTransformationsTemp; }
     //! AUTO:  Read (Reference) access to:\f$\Xm \in \Rcal^{n \times (6 \times 6)}\f$temporary list containing transformations (Pluecker transforms) per joint
-    Transformations66List& GetJointTransformations() { return jointTransformations; }
+    Transformations66List& GetJointTransformationsTemp() { return jointTransformationsTemp; }
 
     //! AUTO:  Write (Reference) access to:\f$\Jm_{66} \in \Rcal^{n \times (6 \times 6)}\f$temporary list link inertias as Pluecker transforms per link
     void SetLinkInertiasT66(const Transformations66List& value) { linkInertiasT66 = value; }
@@ -164,19 +164,19 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:\f$\Jm_{66} \in \Rcal^{n \times (6 \times 6)}\f$temporary list link inertias as Pluecker transforms per link
     Transformations66List& GetLinkInertiasT66() { return linkInertiasT66; }
 
-    //! AUTO:  Write (Reference) access to:\f$\in \Rcal^{n \times (6 \times 6)}\f$temporary list of Pluecker transforms per link
-    void SetTempListT66(const Transformations66List& value) { tempListT66 = value; }
-    //! AUTO:  Read (Reference) access to:\f$\in \Rcal^{n \times (6 \times 6)}\f$temporary list of Pluecker transforms per link
-    const Transformations66List& GetTempListT66() const { return tempListT66; }
-    //! AUTO:  Read (Reference) access to:\f$\in \Rcal^{n \times (6 \times 6)}\f$temporary list of Pluecker transforms per link
-    Transformations66List& GetTempListT66() { return tempListT66; }
-
     //! AUTO:  Write (Reference) access to:\f$\Mm\Sm \in \Rcal^{n \times 6}\f$temporary list containing 6D motion subspaces per joint
     void SetMotionSubspaces(const Vector6DList& value) { motionSubspaces = value; }
     //! AUTO:  Read (Reference) access to:\f$\Mm\Sm \in \Rcal^{n \times 6}\f$temporary list containing 6D motion subspaces per joint
     const Vector6DList& GetMotionSubspaces() const { return motionSubspaces; }
     //! AUTO:  Read (Reference) access to:\f$\Mm\Sm \in \Rcal^{n \times 6}\f$temporary list containing 6D motion subspaces per joint
     Vector6DList& GetMotionSubspaces() { return motionSubspaces; }
+
+    //! AUTO:  Write (Reference) access to:\f$\Xm_j \in \Rcal^{n \times 6}\f$temporary list containing 66 transformations per joint
+    void SetJointTempT66(const Transformations66List& value) { jointTempT66 = value; }
+    //! AUTO:  Read (Reference) access to:\f$\Xm_j \in \Rcal^{n \times 6}\f$temporary list containing 66 transformations per joint
+    const Transformations66List& GetJointTempT66() const { return jointTempT66; }
+    //! AUTO:  Read (Reference) access to:\f$\Xm_j \in \Rcal^{n \times 6}\f$temporary list containing 66 transformations per joint
+    Transformations66List& GetJointTempT66() { return jointTempT66; }
 
     //! AUTO:  Write (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint
     void SetJointVelocities(const Vector6DList& value) { jointVelocities = value; }
@@ -233,10 +233,28 @@ public: // AUTO:
     virtual Vector3D GetVelocity(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
     //! AUTO:  return the local position of the center of mass, used for massProportionalLoad, which may NOT be appropriate for GenericODE2
-    virtual Vector3D GetLocalCenterOfMass() const override
-    {
-        return Vector3D({0.,0.,0.});
-    }
+    virtual Vector3D GetLocalCenterOfMass() const override;
+
+    //! AUTO:  return the (global) position of 'localPosition' of linkNumber according to configuration type
+    Vector3D GetPositionKinematicTree(const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration = ConfigurationType::Current) const;
+
+    //! AUTO:  return the rotation matrix of of linkNumber according to configuration type
+    Matrix3D GetRotationMatrixKinematicTree(Index linkNumber, ConfigurationType configuration = ConfigurationType::Current) const;
+
+    //! AUTO:  return the (global) velocity of 'localPosition' and linkNumber according to configuration type
+    Vector3D GetVelocityKinematicTree(const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration = ConfigurationType::Current) const;
+
+    //! AUTO:  return the (global) angular velocity of linkNumber according to configuration type
+    Vector3D GetAngularVelocityKinematicTree(Index linkNumber, ConfigurationType configuration = ConfigurationType::Current) const;
+
+    //! AUTO:  return the (local) angular velocity of linkNumber according to configuration type
+    Vector3D GetAngularVelocityLocalKinematicTree(Index linkNumber, ConfigurationType configuration = ConfigurationType::Current) const;
+
+    //! AUTO:  return the (global) acceleration of 'localPosition' and linkNumber according to configuration type
+    Vector3D GetAccelerationKinematicTree(const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration = ConfigurationType::Current) const;
+
+    //! AUTO:  return the (global) angular acceleration of linkNumber according to configuration type
+    Vector3D GetAngularAccelerationKinematicTree(Index linkNumber, ConfigurationType configuration = ConfigurationType::Current) const;
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override
@@ -259,7 +277,7 @@ public: // AUTO:
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation
     virtual CObjectType GetType() const override
     {
-        return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded + (Index)CObjectType::SuperElement);
+        return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded + (Index)CObjectType::SuperElement + (Index)CObjectType::KinematicTree);
     }
 
     //! AUTO:  return true if object has time and coordinate independent (=constant) mass matrix
@@ -284,7 +302,7 @@ public: // AUTO:
     void JointTransformMotionSubspace66(Joint::Type jointType, Real q, Transformation66& T, Vector6D& MS) const;
 
     //! AUTO:  compute list of Pluecker transformations Xup, 6D velocities and 6D acceleration terms (not joint accelerations) per joint
-    void ComputeTreeTransformations(ConfigurationType configuration, bool computeVelocitiesAccelerations, Transformations66List& Xup, Vector6DList& V, Vector6DList& Avp) const;
+    void ComputeTreeTransformations(ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, Transformations66List& Xup, Vector6DList& V, Vector6DList& A) const;
 
     //! AUTO:  compute mass matrix if computeMass = true and compute ODE2LHS vector if computeMass=false
     void ComputeMassMatrixAndODE2LHS(EXUmath::MatrixContainer* massMatrixC, const ArrayIndex* ltg, Vector* ode2Lhs, Index objectNumber, bool computeMass) const;
@@ -317,7 +335,10 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypesSuperElement(Index meshNodeNumber) const override;
 
     //! AUTO:  get extended output variables for multi-nodal objects with mesh nodes
-    virtual void GetOutputVariableSuperElement(OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value) const override;
+    void GetOutputVariableKinematicTree(OutputVariableType variableType, const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration, Vector& value) const;
+
+    //! AUTO:  compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file
+    void GetAccessFunctionKinematicTree(AccessFunctionType accessType, const Vector3D& localPosition, Index linkNumber, Matrix& value) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

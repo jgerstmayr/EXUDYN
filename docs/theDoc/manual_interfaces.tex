@@ -161,6 +161,12 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
   GetNodeODE2Index(nodeNumber) & get index in the global ODE2 coordinate vector for the first node coordinate of the specified node\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.GetNodeODE2Index(nodeNumber=0)}}\\ \hline 
+  GetNodeODE1Index(nodeNumber) & get index in the global ODE1 coordinate vector for the first node coordinate of the specified node\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{mbs.GetNodeODE1Index(nodeNumber=0)}}\\ \hline 
+  GetNodeAEIndex(nodeNumber) & get index in the global AE coordinate vector for the first node coordinate of the specified node\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{mbs.GetNodeAEIndex(nodeNumber=0)}}\\ \hline 
   GetNodeParameter(nodeNumber, parameterName) & get nodes's parameter from node number (type NodeIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.GetNodeParameter(0, {\textquotesingle}referenceCoordinates{\textquotesingle})}}\\ \hline 
@@ -540,6 +546,29 @@ The Vector2DList is used to represent lists of 2D vectors. This is used to trans
 \end{center}
 
 %++++++++++++++++++++
+\mysubsection{Vector6DList}
+The Vector6DList is used to represent lists of 6D vectors. This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
+  \item Create empty \texttt{Vector6DList} with \texttt{x = Vector6DList()} 
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+  \item similar to Vector3DList !
+\ei
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  Append(pyArray) & add single array or list to Vector6DList; array or list must have appropriate dimension!\\ \hline 
+  GetPythonObject() & convert Vector6DList into (copied) list of numpy arrays\\ \hline 
+  len(data) & return length of the Vector6DList, using len(data) where data is the Vector6DList\\ \hline 
+  data[index]= ... & set list item 'index' with data, write: data[index] = ...\\ \hline 
+  ... = data[index] & get copy of list item with 'index' as vector\\ \hline 
+  \_\_repr\_\_() & return the string representation of the Vector6DList data, e.g.: print(data)\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
 \mysubsection{Matrix3DList}
 The Matrix3DList is used to represent lists of 3D Matrices. . This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
   \item Create empty \texttt{Matrix3DList} with \texttt{x = Matrix3DList()} 
@@ -555,12 +584,37 @@ The Matrix3DList is used to represent lists of 3D Matrices. . This is used to tr
 \begin{longtable}{| p{8cm} | p{8cm} |} 
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
-  Append(pyArray) & add single 2D array or list of lists to Matrix3DList; array or lists must have appropriate dimension!\\ \hline 
+  Append(pyArray) & add single 3D array or list of lists to Matrix3DList; array or lists must have appropriate dimension!\\ \hline 
   GetPythonObject() & convert Matrix3DList into (copied) list of 2D numpy arrays\\ \hline 
   len(data) & return length of the Matrix3DList, using len(data) where data is the Matrix3DList\\ \hline 
   data[index]= ... & set list item 'index' with matrix, write: data[index] = ...\\ \hline 
   ... = data[index] & get copy of list item with 'index' as matrix\\ \hline 
   \_\_repr\_\_() & return the string representation of the Matrix3DList data, e.g.: print(data)\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsection{Matrix6DList}
+The Matrix6DList is used to represent lists of 6D Matrices. . This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
+  \item Create empty \texttt{Matrix6DList} with \texttt{x = Matrix6DList()} 
+  \item Create \texttt{Matrix6DList} with list of numpy arrays:\\  \texttt{x = Matrix6DList([ numpy.eye(6), 2*numpy.eye(6) ])}
+  \item Append item: \texttt{x.Append(numpy.eye(6))}
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+  \item similar to Matrix3DList !
+\ei
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  Append(pyArray) & add single 6D array or list of lists to Matrix6DList; array or lists must have appropriate dimension!\\ \hline 
+  GetPythonObject() & convert Matrix6DList into (copied) list of 2D numpy arrays\\ \hline 
+  len(data) & return length of the Matrix6DList, using len(data) where data is the Matrix6DList\\ \hline 
+  data[index]= ... & set list item 'index' with matrix, write: data[index] = ...\\ \hline 
+  ... = data[index] & get copy of list item with 'index' as matrix\\ \hline 
+  \_\_repr\_\_() & return the string representation of the Matrix6DList data, e.g.: print(data)\\ \hline 
 \end{longtable}
 \end{center}
 

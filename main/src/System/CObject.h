@@ -45,7 +45,8 @@ enum class CObjectType {
 	MultiNoded = 1 << 6,	//!< connects nodes (e.g. spring-damper or finite element)
 	FiniteElement = 1 << 7, //!< object is flexible, nodal interpolation
 	SuperElement = 1 << 8,  //!< object contains larger set of nodes and more complicated access functions, e.g., FFRF element, etc.
-	EndOfEnumList = 1 << 9  //!< KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
+	KinematicTree = 1 << 9,  //!< object contains local links, derived from SuperElement
+	EndOfEnumList = 1 << 10  //!< KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //keep these lists synchronized with PybindModule.cpp lists
 };
@@ -58,18 +59,25 @@ namespace JacobianType {
 		ODE2_ODE2 = 1 << 1,		//derivative of ODE2 equations with respect to ODE2 variables
 		ODE2_ODE2_t = 1 << 2,	//derivative of ODE2 equations with respect to ODE2_t (velocity) variables
 		ODE1_ODE1 = 1 << 3,		//derivative of ODE1 equations with respect to ODE1 variables
-		AE_ODE2 = 1 << 4,		//derivative of AE (algebraic) equations with respect to ODE2 variables
-		AE_ODE2_t = 1 << 5,		//derivative of AE (algebraic) equations with respect to ODE2_t (velocity) variables
-		AE_ODE1 = 1 << 6,		//derivative of AE (algebraic) equations with respect to ODE1 variables
-		AE_AE = 1 << 7,			//derivative of AE (algebraic) equations with respect to AE variables
+		ODE1_ODE2 = 1 << 4,		//derivative of ODE1 equations with respect to ODE2 variables
+		ODE1_ODE2_t = 1 << 5,	//derivative of ODE1 equations with respect to ODE2_t variables
+		ODE2_ODE1 = 1 << 6,		//derivative of ODE2 equations with respect to ODE1 variables
+		AE_ODE2 = 1 << 7,		//derivative of AE (algebraic) equations with respect to ODE2 variables
+		AE_ODE2_t = 1 << 8,		//derivative of AE (algebraic) equations with respect to ODE2_t (velocity) variables
+		AE_ODE1 = 1 << 9,		//derivative of AE (algebraic) equations with respect to ODE1 variables
+		AE_AE = 1 << 10,			//derivative of AE (algebraic) equations with respect to AE variables
 		//
-		ODE2_ODE2_function = 1 << 8,	//function available for derivative of ODE2 equations with respect to ODE2 variables
-		ODE2_ODE2_t_function = 1 << 9,	//function available for derivative of ODE2 equations with respect to ODE2_t (velocity) variables; MUST exist, if ODE2_ODE2_function exists!
-		ODE1_ODE1_function = 1 << 10,	//function available for derivative of ODE1 equations with respect to ODE1 variables
-		AE_ODE2_function = 1 << 11,		//function available for derivative of AE (algebraic) equations with respect to ODE2 variables
-		AE_ODE2_t_function = 1 << 12,	//function available for derivative of AE (algebraic) equations with respect to ODE2_t (velocity) variables
-		AE_ODE1_function = 1 << 13,		//function available for derivative of AE (algebraic) equations with respect to ODE1 variables
-		AE_AE_function = 1 << 14,		//function available for derivative of AE (algebraic) equations with respect to AE variables
+		ODE2_ODE2_function = 1 << 11,	//function available for derivative of ODE2 equations with respect to ODE2 variables
+		ODE2_ODE2_t_function = 1 << 12,	//function available for derivative of ODE2 equations with respect to ODE2_t (velocity) variables; MUST exist, if ODE2_ODE2_function exists!
+		ODE1_ODE1_function = 1 << 13,	//function available for derivative of ODE1 equations with respect to ODE1 variables
+		ODE1_ODE2_function = 1 << 14,	//...
+		ODE1_ODE2_t_function = 1 << 15,	//...
+		ODE2_ODE1_function = 1 << 16,	//...
+
+		AE_ODE2_function = 1 << 17,		//function available for derivative of AE (algebraic) equations with respect to ODE2 variables
+		AE_ODE2_t_function = 1 << 18,	//function available for derivative of AE (algebraic) equations with respect to ODE2_t (velocity) variables
+		AE_ODE1_function = 1 << 19,		//function available for derivative of AE (algebraic) equations with respect to ODE1 variables
+		AE_AE_function = 1 << 20,		//function available for derivative of AE (algebraic) equations with respect to AE variables
 	};
 }
 

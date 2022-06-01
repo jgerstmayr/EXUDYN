@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-16  11:24:35 (last modified)
+* @date         2022-05-30  14:19:59 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -154,13 +154,13 @@ public: // AUTO:
         d["baseOffset"] = (std::vector<Real>)cObjectKinematicTree->GetParameters().baseOffset; //! AUTO: cast variables into python (not needed for standard types) 
         d["jointTypes"] = (std::vector<Joint::Type>)cObjectKinematicTree->GetParameters().jointTypes; //! AUTO: cast variables into python (not needed for standard types) 
         d["linkParents"] = (std::vector<Index>)cObjectKinematicTree->GetParameters().linkParents; //! AUTO: cast variables into python (not needed for standard types) 
-        d["jointTransformations"] = (Matrix3DList)cObjectKinematicTree->GetParameters().jointTransformations; //! AUTO: cast variables into python (not needed for standard types) 
-        d["jointOffsets"] = (Vector3DList)cObjectKinematicTree->GetParameters().jointOffsets; //! AUTO: cast variables into python (not needed for standard types) 
-        d["linkInertiasCOM"] = (Matrix3DList)cObjectKinematicTree->GetParameters().linkInertiasCOM; //! AUTO: cast variables into python (not needed for standard types) 
-        d["linkCOMs"] = (Vector3DList)cObjectKinematicTree->GetParameters().linkCOMs; //! AUTO: cast variables into python (not needed for standard types) 
+        d["jointTransformations"] = (PyMatrix3DList)cObjectKinematicTree->GetParameters().jointTransformations; //! AUTO: cast variables into python (not needed for standard types) 
+        d["jointOffsets"] = (PyVector3DList)cObjectKinematicTree->GetParameters().jointOffsets; //! AUTO: cast variables into python (not needed for standard types) 
+        d["linkInertiasCOM"] = (PyMatrix3DList)cObjectKinematicTree->GetParameters().linkInertiasCOM; //! AUTO: cast variables into python (not needed for standard types) 
+        d["linkCOMs"] = (PyVector3DList)cObjectKinematicTree->GetParameters().linkCOMs; //! AUTO: cast variables into python (not needed for standard types) 
         d["linkMasses"] = (std::vector<Real>)cObjectKinematicTree->GetParameters().linkMasses; //! AUTO: cast variables into python (not needed for standard types) 
-        d["linkForces"] = (Vector3DList)cObjectKinematicTree->GetParameters().linkForces; //! AUTO: cast variables into python (not needed for standard types) 
-        d["linkTorques"] = (Vector3DList)cObjectKinematicTree->GetParameters().linkTorques; //! AUTO: cast variables into python (not needed for standard types) 
+        d["linkForces"] = (PyVector3DList)cObjectKinematicTree->GetParameters().linkForces; //! AUTO: cast variables into python (not needed for standard types) 
+        d["linkTorques"] = (PyVector3DList)cObjectKinematicTree->GetParameters().linkTorques; //! AUTO: cast variables into python (not needed for standard types) 
         d["jointForceVector"] = (std::vector<Real>)cObjectKinematicTree->GetParameters().jointForceVector; //! AUTO: cast variables into python (not needed for standard types) 
         d["jointPositionOffsetVector"] = (std::vector<Real>)cObjectKinematicTree->GetParameters().jointPositionOffsetVector; //! AUTO: cast variables into python (not needed for standard types) 
         d["jointVelocityOffsetVector"] = (std::vector<Real>)cObjectKinematicTree->GetParameters().jointVelocityOffsetVector; //! AUTO: cast variables into python (not needed for standard types) 
@@ -171,13 +171,13 @@ public: // AUTO:
         else
             {d["forceUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
-        d["jointTransformations"] = (Transformations66List)cObjectKinematicTree->GetJointTransformations(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["linkInertiasT66"] = (Transformations66List)cObjectKinematicTree->GetLinkInertiasT66(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["tempListT66"] = (Transformations66List)cObjectKinematicTree->GetTempListT66(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["motionSubspaces"] = (Vector6DList)cObjectKinematicTree->GetMotionSubspaces(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["jointVelocities"] = (Vector6DList)cObjectKinematicTree->GetJointVelocities(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["jointAccelerations"] = (Vector6DList)cObjectKinematicTree->GetJointAccelerations(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["jointForces"] = (Vector6DList)cObjectKinematicTree->GetJointForces(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["jointTransformationsTemp"] = (PyTransformations66List)cObjectKinematicTree->GetJointTransformationsTemp(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["linkInertiasT66"] = (PyTransformations66List)cObjectKinematicTree->GetLinkInertiasT66(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["motionSubspaces"] = (PyVector6DList)cObjectKinematicTree->GetMotionSubspaces(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["jointTempT66"] = (PyTransformations66List)cObjectKinematicTree->GetJointTempT66(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["jointVelocities"] = (PyVector6DList)cObjectKinematicTree->GetJointVelocities(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["jointAccelerations"] = (PyVector6DList)cObjectKinematicTree->GetJointAccelerations(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["jointForces"] = (PyVector6DList)cObjectKinematicTree->GetJointForces(); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectKinematicTree->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VshowLinks"] = (bool)visualizationObjectKinematicTree->GetShowLinks(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -196,26 +196,26 @@ public: // AUTO:
         else if (parameterName.compare("baseOffset") == 0) { return py::cast((std::vector<Real>)cObjectKinematicTree->GetParameters().baseOffset);} //! AUTO: get parameter
         else if (parameterName.compare("jointTypes") == 0) { return py::cast((std::vector<Joint::Type>)cObjectKinematicTree->GetParameters().jointTypes);} //! AUTO: get parameter
         else if (parameterName.compare("linkParents") == 0) { return py::cast((std::vector<Index>)cObjectKinematicTree->GetParameters().linkParents);} //! AUTO: get parameter
-        else if (parameterName.compare("jointTransformations") == 0) { return py::cast((Matrix3DList)cObjectKinematicTree->GetParameters().jointTransformations);} //! AUTO: get parameter
-        else if (parameterName.compare("jointOffsets") == 0) { return py::cast((Vector3DList)cObjectKinematicTree->GetParameters().jointOffsets);} //! AUTO: get parameter
-        else if (parameterName.compare("linkInertiasCOM") == 0) { return py::cast((Matrix3DList)cObjectKinematicTree->GetParameters().linkInertiasCOM);} //! AUTO: get parameter
-        else if (parameterName.compare("linkCOMs") == 0) { return py::cast((Vector3DList)cObjectKinematicTree->GetParameters().linkCOMs);} //! AUTO: get parameter
+        else if (parameterName.compare("jointTransformations") == 0) { return py::cast((PyMatrix3DList)cObjectKinematicTree->GetParameters().jointTransformations);} //! AUTO: get parameter
+        else if (parameterName.compare("jointOffsets") == 0) { return py::cast((PyVector3DList)cObjectKinematicTree->GetParameters().jointOffsets);} //! AUTO: get parameter
+        else if (parameterName.compare("linkInertiasCOM") == 0) { return py::cast((PyMatrix3DList)cObjectKinematicTree->GetParameters().linkInertiasCOM);} //! AUTO: get parameter
+        else if (parameterName.compare("linkCOMs") == 0) { return py::cast((PyVector3DList)cObjectKinematicTree->GetParameters().linkCOMs);} //! AUTO: get parameter
         else if (parameterName.compare("linkMasses") == 0) { return py::cast((std::vector<Real>)cObjectKinematicTree->GetParameters().linkMasses);} //! AUTO: get parameter
-        else if (parameterName.compare("linkForces") == 0) { return py::cast((Vector3DList)cObjectKinematicTree->GetParameters().linkForces);} //! AUTO: get parameter
-        else if (parameterName.compare("linkTorques") == 0) { return py::cast((Vector3DList)cObjectKinematicTree->GetParameters().linkTorques);} //! AUTO: get parameter
+        else if (parameterName.compare("linkForces") == 0) { return py::cast((PyVector3DList)cObjectKinematicTree->GetParameters().linkForces);} //! AUTO: get parameter
+        else if (parameterName.compare("linkTorques") == 0) { return py::cast((PyVector3DList)cObjectKinematicTree->GetParameters().linkTorques);} //! AUTO: get parameter
         else if (parameterName.compare("jointForceVector") == 0) { return py::cast((std::vector<Real>)cObjectKinematicTree->GetParameters().jointForceVector);} //! AUTO: get parameter
         else if (parameterName.compare("jointPositionOffsetVector") == 0) { return py::cast((std::vector<Real>)cObjectKinematicTree->GetParameters().jointPositionOffsetVector);} //! AUTO: get parameter
         else if (parameterName.compare("jointVelocityOffsetVector") == 0) { return py::cast((std::vector<Real>)cObjectKinematicTree->GetParameters().jointVelocityOffsetVector);} //! AUTO: get parameter
         else if (parameterName.compare("jointPControlVector") == 0) { return py::cast((std::vector<Real>)cObjectKinematicTree->GetParameters().jointPControlVector);} //! AUTO: get parameter
         else if (parameterName.compare("jointDControlVector") == 0) { return py::cast((std::vector<Real>)cObjectKinematicTree->GetParameters().jointDControlVector);} //! AUTO: get parameter
         else if (parameterName.compare("forceUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>)cObjectKinematicTree->GetParameters().forceUserFunction);} //! AUTO: get parameter
-        else if (parameterName.compare("jointTransformations") == 0) { return py::cast((Transformations66List)cObjectKinematicTree->GetJointTransformations());} //! AUTO: get parameter
-        else if (parameterName.compare("linkInertiasT66") == 0) { return py::cast((Transformations66List)cObjectKinematicTree->GetLinkInertiasT66());} //! AUTO: get parameter
-        else if (parameterName.compare("tempListT66") == 0) { return py::cast((Transformations66List)cObjectKinematicTree->GetTempListT66());} //! AUTO: get parameter
-        else if (parameterName.compare("motionSubspaces") == 0) { return py::cast((Vector6DList)cObjectKinematicTree->GetMotionSubspaces());} //! AUTO: get parameter
-        else if (parameterName.compare("jointVelocities") == 0) { return py::cast((Vector6DList)cObjectKinematicTree->GetJointVelocities());} //! AUTO: get parameter
-        else if (parameterName.compare("jointAccelerations") == 0) { return py::cast((Vector6DList)cObjectKinematicTree->GetJointAccelerations());} //! AUTO: get parameter
-        else if (parameterName.compare("jointForces") == 0) { return py::cast((Vector6DList)cObjectKinematicTree->GetJointForces());} //! AUTO: get parameter
+        else if (parameterName.compare("jointTransformationsTemp") == 0) { return py::cast((PyTransformations66List)cObjectKinematicTree->GetJointTransformationsTemp());} //! AUTO: get parameter
+        else if (parameterName.compare("linkInertiasT66") == 0) { return py::cast((PyTransformations66List)cObjectKinematicTree->GetLinkInertiasT66());} //! AUTO: get parameter
+        else if (parameterName.compare("motionSubspaces") == 0) { return py::cast((PyVector6DList)cObjectKinematicTree->GetMotionSubspaces());} //! AUTO: get parameter
+        else if (parameterName.compare("jointTempT66") == 0) { return py::cast((PyTransformations66List)cObjectKinematicTree->GetJointTempT66());} //! AUTO: get parameter
+        else if (parameterName.compare("jointVelocities") == 0) { return py::cast((PyVector6DList)cObjectKinematicTree->GetJointVelocities());} //! AUTO: get parameter
+        else if (parameterName.compare("jointAccelerations") == 0) { return py::cast((PyVector6DList)cObjectKinematicTree->GetJointAccelerations());} //! AUTO: get parameter
+        else if (parameterName.compare("jointForces") == 0) { return py::cast((PyVector6DList)cObjectKinematicTree->GetJointForces());} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectKinematicTree->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VshowLinks") == 0) { return py::cast((bool)visualizationObjectKinematicTree->GetShowLinks());} //! AUTO: get parameter
         else if (parameterName.compare("VshowJoints") == 0) { return py::cast((bool)visualizationObjectKinematicTree->GetShowJoints());} //! AUTO: get parameter

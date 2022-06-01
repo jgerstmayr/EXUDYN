@@ -501,7 +501,8 @@ public:
 				GetUnsafe(i, j) += matrix.GetUnsafe(i, j);
 			}
 		}
-		for (auto item : matrix) { data[cnt++] += item; }
+		//alternative, faster, but not as general:
+		//for (auto item : matrix) { data[cnt++] += item; }
 		return *this;
 	}
 

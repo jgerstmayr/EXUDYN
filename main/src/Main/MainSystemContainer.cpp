@@ -126,8 +126,8 @@ bool MainSystemContainer::AttachToRenderEngine()
 	bool rv = visualizationSystems.AttachToRenderEngine();
 	if (rv)
 	{
-		py::module exudynCPP = py::module::import("exudyn");
-		exudynCPP.attr("sys")["currentRendererSystemContainer"] = this; //use pointer, otherwise SC is copied ...?
+		py::module exudynModule = py::module::import("exudyn");
+		exudynModule.attr("sys")["currentRendererSystemContainer"] = this; //use pointer, otherwise SC is copied ...?
 		//PyWriteToSysDictionary("currentRendererSystemContainer", *this);
 		return true;
 	}
@@ -137,8 +137,8 @@ bool MainSystemContainer::AttachToRenderEngine()
 //! this function releases the VisualizationSystem from the render engine;
 bool MainSystemContainer::DetachFromRenderEngine()
 {
-	py::module exudynCPP = py::module::import("exudyn");
-	exudynCPP.attr("sys")["currentRendererSystemContainer"] = 0;
+	py::module exudynModule = py::module::import("exudyn");
+	exudynModule.attr("sys")["currentRendererSystemContainer"] = 0;
 	return visualizationSystems.DetachFromRenderEngine(&visualizationSystems);
 }
 

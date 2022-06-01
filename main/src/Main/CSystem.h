@@ -273,8 +273,8 @@ public:
 
 	//! compute numerical differentiation of ODE1RHS; result is a jacobian;  multiply the added entries with scalarFactor
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
-	void NumericalJacobianODE1RHS(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
-		Vector& f0, Vector& f1, GeneralMatrix& jacobianGM, Real scalarFactor = 1.);
+	void NumericalJacobianODE1RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
+		Vector& f0, Vector& f1, GeneralMatrix& jacobianGM, Real factorODE1 = 1., Real factorODE2 = 0., Real factorODE2_t = 0.);
 
 																					//! numerical computation of constraint jacobian with respect to ODE2 and ODE1 (fillIntoSystemMatrix=true: also w.r.t. AE) coordinates
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian

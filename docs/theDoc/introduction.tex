@@ -637,9 +637,16 @@ Multibody dynamics simulation should be accurate and reliable on the one hand si
 However, in some cases there is a significant possibility for speeding up computations, which are described in the following list. Not all recommendations may apply to your models.
 
 The following examples refer to \texttt{simulationSettings = exu.SimulationSettings()}.
-In general, to see where CPU time is lost, use the option turn on \texttt{simulationSettings.displayComputationTime = True} to see which parts of the solver need most of the time (deactivated in current Python3.8 version!).
+In general, to see where CPU time is lost, use the option turn on \texttt{simulationSettings.displayComputationTime = True} to see which parts of the solver need most of the time (deactivated in exudynFast versions!).
 
-\noindent \mybold{Possible speed ups in general}:
+To activate the \codeName\ C++ versions without range checks, which may be approx.\ 30 percent faster in some situations, use the following code snippet before first import of \texttt{exudyn}:
+\pythonstyle\begin{lstlisting}
+import sys
+sys.exudynFast = True #this variable is used to signal to load the fast exudyn module
+import exudyn as exu
+\end{lstlisting}
+
+\noindent However, there are many \mybold{ways to speed up \codeName\ in general}:
 \bi
   \item for models with more than 50 coordinates, switching to sparse solvers might greatly improve speed: \texttt{simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse}
   \item try to avoid Python function or try to speed up Python functions
@@ -652,7 +659,7 @@ In general, to see where CPU time is lost, use the option turn on \texttt{simula
 \mybold{Possible speed ups for dynamic simulations}:
 \bi
   \item for implicit integration, turn on \mybold{modified Newton}, which updates jacobians only if needed: \texttt{simulationSettings.timeIntegration.newton.useModifiedNewton = True}
-  \item switch to Python3.8: this version excludes range checks and timings; usually 30\% faster
+  %\item switch to Python3.8: this version excludes range checks and timings; usually 30\% faster
   \item use \mybold{multi-threading}: \texttt{simulationSettings.parallel.numberOfThreads = ...}, depending on the number of cores (larger values usually do not help); improves greatly for contact problems, but also for some objects computed in parallel; will improve significantly in future
   \item decrease number of steps (\texttt{simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)}) by increasing the step size $h$ if not needed for accuracy reasons; not that in general, the solver will reduce steps in case of divergence, but not for accuracy reasons, which may still lead to divergence if step sizes are too large
   \item switch off measuring computation time, if not needed: \texttt{simulationSettings.displayComputationTime = False}

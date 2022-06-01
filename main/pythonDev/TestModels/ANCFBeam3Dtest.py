@@ -30,6 +30,9 @@ except:
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
+compute2D = True
+compute3D = False
+
 
 L = 2 #length of beam
 w = 0.05 #half width of beam
@@ -42,8 +45,8 @@ sectionData = exu.BeamSection()
 #print('section=',sectionData)
 
 if True: #Nachbagauer, et al 2011
-    nElements = 20
-    L = 2
+    nElements = 1
+    L = 3
     bodyFixedLoad = False
     # Material properties
     if True: #eigenmodes
@@ -141,7 +144,6 @@ mnGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 eY=[0,1,0]
 eZ=[0,0,1]
 lElem = L/nElements
-compute3D = True
 if compute3D:
     initialRotations = eY+eZ
     n0 = mbs.AddNode(NodePoint3DSlope23(referenceCoordinates=[0,0,0]+initialRotations))
@@ -152,6 +154,7 @@ if compute3D:
         oBeam = mbs.AddObject(ObjectANCFBeam3D(nodeNumbers=[n0,n1], physicsLength = lElem, 
                                                testBeamRectangularSize = [h,w],
                                                sectionData = sectionData,
+                                               crossSectionPenaltyFactor = [1,1,1],
                                                visualization=VBeam3D(sectionGeometry=sectionGeometry)))
         n0 = n1
 
@@ -175,7 +178,6 @@ if compute3D:
             mbs.AddObject(CoordinateConstraint(markerNumbers=[mnGround, nm0]))
 
 
-compute2D = False
 if compute2D:
     lElem = L/nElements
     n2d0 = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0]))
@@ -201,18 +203,21 @@ if compute2D:
             mbs.AddObject(CoordinateConstraint(markerNumbers=[mnGround, nm0]))
 
 
+print('EA=', sectionData.stiffnessMatrix[0,0])
+print('EI=', EI)
+
 #print(mbs.GetObject(oBeam))
 
-print(mbs)
+# print(mbs)
 mbs.Assemble()
 
 tEnd = 100     #end time of simulation
-h = 0.01*0.1    #step size; leads to 1000 steps
+stepSize = 0.01*0.1    #step size; leads to 1000 steps
 
 simulationSettings = exu.SimulationSettings()
 simulationSettings.solutionSettings.solutionWritePeriod = 5e-3  #output interval general
 simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
-simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
+simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize) #must be integer
 simulationSettings.timeIntegration.endTime = tEnd
 #simulationSettings.solutionSettings.solutionInformation = "This is the info\nNew line\n and another new line \n"
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
@@ -247,43 +252,48 @@ SC.visualizationSettings.general.worldBasisSize = 0.1
 SC.visualizationSettings.openGL.multiSampling = 4
 
 
-#exu.solver.ComputeLinearizedSystem(mbs, simulationSettings, useSparseSolver=True)
+# [M, K, D] = exu.solver.ComputeLinearizedSystem(mbs, simulationSettings, useSparseSolver=True)
+# print('M=',M.round(1))
 
-if True:
-    nModes = 10
-    nRigidModes = 0
+if useGraphics:
+    exu.StartRenderer()
+
+
+if computeEigenmodes:
+    nModes = 3*(1+int(compute3D))
+    nRigidModes = 3*(1+int(compute3D))
     if compute2D:
         constrainedCoordinates=[0,1,mbs.systemData.ODE2Size()-2]
     else:
         constrainedCoordinates=[0,1,2,5,mbs.systemData.ODE2Size()-8,mbs.systemData.ODE2Size()-7]
+    
+    # constrainedCoordinates=[]
         
-    compeig=exu.ComputeODE2Eigenvalues(mbs, simulationSettings, useSparseSolver=True, 
+    compeig=exu.ComputeODE2Eigenvalues(mbs, simulationSettings, useSparseSolver=False, 
                                 numberOfEigenvalues= nRigidModes+nModes, 
                                 constrainedCoordinates=constrainedCoordinates,
                                 convert2Frequencies= False)
     
     print('eigvalues=',np.sqrt(compeig[0][nRigidModes:]))
-    
-    
-    if useGraphics:
-        exu.StartRenderer()
-    
-    for i in range(nModes):
-        iMode = nRigidModes+i
-        mbs.systemData.SetODE2Coordinates(5*compeig[1][:,iMode], exudyn.ConfigurationType.Visualization)
-        mbs.systemData.SetTime(np.sqrt(compeig[0][iMode]), exudyn.ConfigurationType.Visualization)
-        mbs.SendRedrawSignal()
-    
-        mbs.WaitForUserToContinue()
+        
+    if False: #show modes:
+        for i in range(nModes):
+            iMode = nRigidModes+i
+            mbs.systemData.SetODE2Coordinates(5*compeig[1][:,iMode], exudyn.ConfigurationType.Visualization)
+            mbs.systemData.SetTime(np.sqrt(compeig[0][iMode]), exudyn.ConfigurationType.Visualization)
+            mbs.SendRedrawSignal()
+        
+            mbs.WaitForUserToContinue()
 
+else:
     exu.SolveStatic(mbs, simulationSettings)
     # exu.SolveDynamic(mbs, simulationSettings)
     #exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.RK44)
     
 
-    if useGraphics:
-        SC.WaitForRenderEngineStopFlag()
-        exu.StopRenderer() #safely close rendering window!
+if useGraphics:
+    SC.WaitForRenderEngineStopFlag()
+    exu.StopRenderer() #safely close rendering window!
 
 
 ##evaluate final (=current) output values

@@ -369,6 +369,52 @@ Index MainSystem::PyGetNodeODE2Index(const py::object& itemIndex) const
 	}
 }
 
+//! get index in global ODE1 coordinate vector for first node coordinate
+Index MainSystem::PyGetNodeODE1Index(const py::object& itemIndex) const
+{
+	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
+	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
+	{
+		if (EXUstd::IsOfType(mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetCNode()->GetNodeGroup(), CNodeGroup::ODE1variables)) //CNodeRigidBodyEP also has AEvariables
+		{
+			return mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetCNode()->GetGlobalODE1CoordinateIndex();
+		}
+		else
+		{
+			PyError(STDstring("MainSystem::GetNodeODE1Index: invalid access to node number ") + EXUstd::ToString(nodeNumber) + ": not an ODE1 node");
+			return EXUstd::InvalidIndex;
+		}
+	}
+	else
+	{
+		PyError(STDstring("MainSystem::GetNodeODE1Index: invalid access to node number ") + EXUstd::ToString(nodeNumber) + " (index does not exist)");
+		return EXUstd::InvalidIndex;
+	}
+}
+
+//! get index in global AE coordinate vector for first node coordinate
+Index MainSystem::PyGetNodeAEIndex(const py::object& itemIndex) const
+{
+	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
+	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
+	{
+		if (EXUstd::IsOfType(mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetCNode()->GetNodeGroup(), CNodeGroup::AEvariables)) //CNodeRigidBodyEP also has AEvariables
+		{
+			return mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetCNode()->GetGlobalAECoordinateIndex();
+		}
+		else
+		{
+			PyError(STDstring("MainSystem::GetNodeAEIndex: invalid access to node number ") + EXUstd::ToString(nodeNumber) + ": not an AE node");
+			return EXUstd::InvalidIndex;
+		}
+	}
+	else
+	{
+		PyError(STDstring("MainSystem::GetNodeAEIndex: invalid access to node number ") + EXUstd::ToString(nodeNumber) + " (index does not exist)");
+		return EXUstd::InvalidIndex;
+	}
+}
+
 
 
 ////! call pybind object function, possibly with arguments; empty function, to be overwritten in specialized class

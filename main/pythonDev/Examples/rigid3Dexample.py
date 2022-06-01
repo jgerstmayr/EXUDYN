@@ -23,13 +23,14 @@ print('EXUDYN version='+exu.GetVersionString())
 #rect = [-0.1,-0.1,0.1,0.1] #xmin,ymin,xmax,ymax
 #background0 = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]} #background
 color = [0.1,0.1,0.8,1]
-zz = 2*4 #max size
+zz = 2*3 #max size
 s = 0.1 #size of cube
 sx = 3*s #x-size
 cPosZ = 0.1 #offset of constraint in z-direction
 
 #create background, in order to have according zoom all
-background0 = GraphicsDataRectangle(-zz,-2*zz,zz,zz,color4white)
+# background0 = GraphicsDataRectangle(-zz,-2*zz,zz,zz,color4white)
+background0 = GraphicsDataCheckerBoard(point=[0,-0.5*zz,-zz],size=4*zz)
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
                                    visualization=VObjectGround(graphicsData= [background0])))
 mPosLast = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, 
@@ -49,12 +50,13 @@ for i in range(20):
 
     nRB = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=p0+ep0, 
                                       initialVelocities=v0+list(ep_t0)))
-    #nRB = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0,1,0,0,0], initialVelocities=[0,0,0,0,0,0,0]))
-    oGraphics = GraphicsDataOrthoCubeLines(-sx,-s,-s, sx,s,s, [0.8,0.1,0.1,1])
+    oGraphicsLines = GraphicsDataOrthoCubeLines(-0.9*sx,-s,-s, 0.9*sx,s,s, color=color4black)
+    oGraphics = GraphicsDataOrthoCubePoint(size=[1.8*sx, 2*s, 2*s], color= color4dodgerblue)
+    oGraphicsJoint = GraphicsDataSphere(point=[-sx,0,cPosZ], radius = 0.6*s, color=color4darkgrey, nTiles=24)
     oRB = mbs.AddObject(ObjectRigidBody(physicsMass=2, 
                                         physicsInertia=[6,1,6,0,0,0], 
                                         nodeNumber=nRB, 
-                                        visualization=VObjectRigidBody(graphicsData=[oGraphics])))
+                                        visualization=VObjectRigidBody(graphicsData=[oGraphics, oGraphicsJoint, oGraphicsLines])))
 
     mMassRB = mbs.AddMarker(MarkerBodyMass(bodyNumber = oRB))
     mbs.AddLoad(Gravity(markerNumber = mMassRB, loadVector=[0.,-9.81,0.])) #gravity in negative z-direction
@@ -88,6 +90,8 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 wo
 
 simulationSettings.solutionSettings.solutionInformation = "rigid body tests"
 SC.visualizationSettings.nodes.defaultSize = 0.05
+SC.visualizationSettings.openGL.multiSampling = 4
+SC.visualizationSettings.openGL.lineWidth = 2
 
 exu.StartRenderer()
 mbs.WaitForUserToContinue()

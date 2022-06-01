@@ -73,6 +73,8 @@ def IsASetSafelyParameter(parameterType):
         (parameterType == 'Vector2D') or 
         (parameterType == 'Vector3DList') or
         (parameterType == 'Matrix3DList') or
+        # (parameterType == 'PyVector3DList') or
+        # (parameterType == 'PyMatrix3DList') or
         (parameterType == 'Vector3D') or
         (parameterType == 'Vector4D') or 
         (parameterType == 'Vector6D') or
@@ -100,6 +102,21 @@ def GetSetSafelyFunctionName(parType):
     else:
         safelyFunctionName = 'Set'+parType+'Safely'
     return safelyFunctionName 
+
+
+#some parameters, such as Vector3DList need to be converted to PyVector3DList when writing into dict, etc.
+def ConvertParameter2Python(parName):
+    if parName=='Vector3DList':
+        return 'PyVector3DList'
+    elif parName=='Vector6DList':
+        return 'PyVector6DList'
+    elif parName=='Matrix3DList':
+        return 'PyMatrix3DList'
+    elif parName=='Transformations66List':
+        return 'PyTransformations66List'
+
+    return parName
+
     
 #SetConstMatrixTemplateSafely<3, 3>(d, item, destination);
 
@@ -228,6 +245,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                  'NumpyMatrix':'py::array_t<Real>', 
                  'NumpyMatrixI':'py::array_t<Index>', 
                  'NumpyVector':'py::array_t<Real>',
+                 #'PyVector3DList':'Vector3DList', 'PyVector6DList':'Vector6DList', 'PyMatrix3DList':'Matrix3DList', 
                  #'BeamSectionGeometry':'PyBeamSectionGeometry',
                  'Float2': 'std::vector<float>', 'Float3': 'std::vector<float>', 'Float4': 'std::vector<float>',  #e.g. for OpenGL vectors
                  'Float9': 'std::vector<float>', 'Float16': 'std::vector<float>', #e.g. for OpenGL rotation matrix and homogenous transformation
@@ -813,7 +831,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 pstr = parameter['cplusplusName']
                 destStr = destFolder + 'Get' + pstr[0].upper() + pstr[1:] + '()'
             
-            typeCastStr = TypeConversion(parameter['type'], typeCasts)
+            typeCastStr = ConvertParameter2Python(TypeConversion(parameter['type'], typeCasts)) #conversion for Matrix3DList => PyMatrix3DList
             #dictionary access:
             if parameter['cFlags'].find('I') != -1: #'I' means add dictionary access
                 parRead = '' #used for dictionary read and for parameter read

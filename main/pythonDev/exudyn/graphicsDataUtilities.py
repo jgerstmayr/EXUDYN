@@ -309,7 +309,7 @@ def GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,
     return dataRect
 
 #**function: generate graphics data for orthogonal 3D cube with min and max dimensions
-#**input: minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values
+#**input: minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values; addNormals: add face normals to triangle information
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.], addNormals=False): 
     
@@ -318,9 +318,15 @@ def GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.
     return GraphicsDataCube(pList, color, addNormals=addNormals)
 
 #**function: generate graphics data forfor orthogonal 3D cube with center point and size
-#**input: center point and size of cube (as 3D list or np.array); color provided as list of 4 RGBA values
-#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
-def GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0.,0.,0.,1.], addNormals=False): 
+#**input: 
+#  centerPoint: center of cube as 3D list or np.array
+#  size: size as 3D list or np.array
+#  color: list of 4 RGBA values
+#  addNormals: add face normals to triangle information
+#  addEdges: if True, the function returns a list of GraphicsData: one with the 3D triangles and one with the edges
+#  colorEdges: optional color for edges
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects; if addEdges=True, it returns a list of two dictionaries
+def GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0.,0.,0.,1.], addNormals=False, addEdges=False, colorEdges=color4black): 
     
     xMin = centerPoint[0] - 0.5*size[0]
     yMin = centerPoint[1] - 0.5*size[1]
@@ -329,7 +335,11 @@ def GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0
     yMax = centerPoint[1] + 0.5*size[1]
     zMax = centerPoint[2] + 0.5*size[2]
 
-    return GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color, addNormals)
+    if not addEdges:
+        return GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color, addNormals)
+    else:
+        return [GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color, addNormals), 
+                GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, colorEdges)]
 
 #**function: generate graphics data for general cube with endpoints, according to given vertex definition
 #**input: 
@@ -475,7 +485,7 @@ def GraphicsDataSphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 
 #  alternatingColor: if given, optionally another color in order to see rotation of solid; only works, if angleRange=[0,2*pi]
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTiles = 16, 
-                         angleRange=[0,2*np.pi], lastFace = True, cutPlain = True, **kwargs):  
+                         angleRange=[0,2*np.pi], lastFace = True, cutPlain = True, addEdges=False, colorEdges=color4black, **kwargs):  
 
     if nTiles < 3: print("WARNING: GraphicsDataCylinder: nTiles < 3: set nTiles=3")
     
@@ -506,6 +516,9 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
     fact = nTiles #create correct part of cylinder
     if alpha < 2.*np.pi: 
         fact = nTiles-1
+
+    pointsCyl0 = []
+    pointsCyl1 = []
     
     for i in range(nTiles):
         phi = alpha0 + i*alpha/fact
@@ -518,9 +531,12 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
         points1 += list(pz1)
         points2 += list(pz0) #other points for side faces (different normals)
         points3 += list(pz1) #other points for side faces (different normals)
+        pointsCyl0 += list(pz0) #for edges
+        pointsCyl1 += list(pz1) #for edges
         n = Normalize(list(-vv))
         normals0 = normals0 + n
         normals1 = normals1 + n
+        
     
     points0 += points1+points2+points3
     normals0 += normals1
@@ -589,6 +605,20 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
 
     #triangle normals point inwards to object ...
     data = {'type':'TriangleList', 'colors':colors, 'normals':normals0, 'points':points0, 'triangles':triangles}
+    
+    if addEdges: #add edges for two cylinder faces:
+        pointsList0 = list(pointsCyl0[-3:]) #start with last point
+        for i in range(int(len(pointsCyl0)/3)):
+            pointsList0 += list(pointsCyl0[i*3:i*3+3])
+
+        pointsList1 = list(pointsCyl1[-3:]) #start with last point
+        for i in range(int(len(pointsCyl1)/3)):
+            pointsList1 += list(pointsCyl1[i*3:i*3+3])
+
+        #return a list of 3 GraphicsData:
+        data = [data, 
+                {'type':'Line', 'color': colorEdges, 'data':pointsList0},
+                {'type':'Line', 'color': colorEdges, 'data':pointsList1}]
 
     return data
 
@@ -891,7 +921,7 @@ def GraphicsDataBasis(origin=[0,0,0], length = 1, colors=[color4red, color4green
                       headFactor = 2, headStretch = 4, nTiles = 12, **kwargs):  
     radius = 0.01*length
     if 'radius' in kwargs:
-        radius = kwargs['length']
+        radius = kwargs['radius']
 
     g1 = GraphicsDataArrow(origin,[length,0,0],radius, colors[0], headFactor, headStretch, nTiles)
     g2 = GraphicsDataArrow(origin,[0,length,0],radius, colors[1], headFactor, headStretch, nTiles)
@@ -983,9 +1013,7 @@ def GraphicsDataQuad(pList, color=[0.,0.,0.,1.], **kwargs):
 #  nTiles2: number of tiles for checkerboard pattern in second direction; default: nTiles
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 #**example:
-#plane = GraphicsDataQuad([[-8, 0, -8],[ 8, 0, -8,],[ 8, 0, 8],[-8, 0, 8]], 
-#                         color4darkgrey, nTiles=8, 
-#                         alternatingColor=color4lightgrey)
+#plane = GraphicsDataCheckerBoard(normal=[0,0,1], size=5)
 #oGround=mbs.AddObject(ObjectGround(referencePosition=[0,0,0],
 #                      visualization=VObjectGround(graphicsData=[plane])))
 def GraphicsDataCheckerBoard(point=[0,0,0], normal=[0,0,1], size = 1,

@@ -195,6 +195,39 @@ LinkedDataVector CNodeODE1::GetVisualizationCoordinateVector_t() const
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//CNodeAE
+
+const Real& CNodeAE::GetCurrentCoordinate(Index i) const
+{
+	CHECKandTHROW(i < GetNumberOfAECoordinates(), "ERROR: CNodeAE::GetCurrentCoordinate: index out of range");
+	return computationalData->currentState.AECoords[globalAEcoordinateIndex + i];
+}
+
+//! get vector with current coordinates; corresponds to displacements
+LinkedDataVector CNodeAE::GetCurrentCoordinateVector() const
+{
+	return LinkedDataVector(computationalData->currentState.AECoords, globalAEcoordinateIndex, GetNumberOfAECoordinates());
+}
+
+LinkedDataVector CNodeAE::GetInitialCoordinateVector() const
+{
+	return LinkedDataVector(computationalData->initialState.AECoords, globalAEcoordinateIndex, GetNumberOfAECoordinates());
+}
+
+LinkedDataVector CNodeAE::GetStartOfStepCoordinateVector() const
+{
+	return LinkedDataVector(computationalData->startOfStepState.AECoords, globalAEcoordinateIndex, GetNumberOfAECoordinates());
+}
+
+LinkedDataVector CNodeAE::GetVisualizationCoordinateVector() const
+{
+	return LinkedDataVector(computationalData->visualizationState.AECoords, globalAEcoordinateIndex, GetNumberOfAECoordinates());
+}
+
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //CNodeData
 
 //! read single coordinate in current configuration

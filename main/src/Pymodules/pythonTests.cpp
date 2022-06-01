@@ -362,8 +362,8 @@ void PyTest()
 		//	//py::print(internalSystemDictionary["abc"]);
 		//	STDstring key = "aaa";
 		//	Real item = 1.23;
-		//	py::module exudynCPP = py::module::import("exudyn");
-		//	exudynCPP.attr("sys")[key.c_str()] = item;
+		//	py::module exudynModule = py::module::import("exudyn");
+		//	exudynModule.attr("sys")[key.c_str()] = item;
 		//
 		//	pout << "test\n";
 		//}

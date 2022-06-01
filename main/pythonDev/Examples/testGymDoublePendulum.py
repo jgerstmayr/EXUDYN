@@ -61,7 +61,7 @@ if True: #do some reinforcement learning with exudyn model
     
     from stable_baselines3 import A2C
 
-    doLearning = False
+    doLearning = True
     if doLearning:
         env = DoublePendulumEnv(1)
         env.useRenderer = False
@@ -69,19 +69,23 @@ if True: #do some reinforcement learning with exudyn model
         
         ts = -time.time()
         model = A2C('MlpPolicy', env, verbose=1)
-        model.learn(total_timesteps=2000000)
+        model.learn(total_timesteps=10000000)
         print('time spent=',ts+time.time())
+
     #%%++++++++++++++++++++++++ 
     env = DoublePendulumEnv(10) #allow larger threshold for testing
     env.useRenderer = True
     obs = env.reset()
-    for i in range(1000):
+    for i in range(5000):
         action, _state = model.predict(obs, deterministic=True)
         obs, reward, done, info = env.step(action)
         env.render()
-        time.sleep(0.01)
+        time.sleep(0.01) 
         if done:
           obs = env.reset()
+        if env.mbs.GetRenderEngineStopFlag(): #stop if user press Q
+            break
+
     env.close()
       
       
