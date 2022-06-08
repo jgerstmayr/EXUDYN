@@ -28,7 +28,7 @@ except:
     exudynTestGlobals = ExudynTestGlobals()
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-ie = 0
+ie = 4
 if True:
 #for ie in range(7):
     nElements = 2**ie
@@ -152,8 +152,7 @@ if True:
     SC.visualizationSettings.general.drawWorldBasis = True
     SC.visualizationSettings.general.worldBasisSize = 0.1
     SC.visualizationSettings.openGL.multiSampling = 4
-    
-    
+        
     # [M, K, D] = exu.solver.ComputeLinearizedSystem(mbs, simulationSettings, useSparseSolver=True)
     # print('M=',M.round(1))
     
@@ -169,7 +168,7 @@ if True:
     # constrainedCoordinates=[]
     
     exu.SetWriteToConsole(False)
-    compeig=exu.ComputeODE2Eigenvalues(mbs, simulationSettings, useSparseSolver=False, 
+    compeig=exu.ComputeODE2Eigenvalues(mbs, simulationSettings, useSparseSolver=True, 
                                 numberOfEigenvalues= nRigidModes+nModes, 
                                 constrainedCoordinates=constrainedCoordinates,
                                 convert2Frequencies= False)
@@ -201,7 +200,7 @@ if True:
 
     
     
-if False: #show modes:
+if True: #show modes:
     if useGraphics:
         exu.StartRenderer()
     for i in range(nModes):
@@ -215,6 +214,14 @@ if False: #show modes:
     if useGraphics:
         SC.WaitForRenderEngineStopFlag()
         exu.StopRenderer() #safely close rendering window!
+
+if False: #solve dynamic (but without forces, nothing happens ...)
+    exu.StartRenderer()
+    
+    exu.SolveDynamic(mbs, simulationSettings)
+    
+    SC.WaitForRenderEngineStopFlag()
+    exu.StopRenderer() #safely close rendering window!
 
 
 # exudynTestGlobals.testError = uLast[1] - (-2.2115028353806547) 

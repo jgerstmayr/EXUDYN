@@ -10,228 +10,444 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#constants and fixed structures:
+import exudyn as exu
+from exudyn.utilities import *
+from exudyn.FEM import *
+
 import numpy as np
+
+useGraphics = True
+#performTest = True
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
+try: #only if called from test suite
+    from modelUnitTests import exudynTestGlobals #for globally storing test results
+    useGraphics = exudynTestGlobals.useGraphics
+    performTest = True
+except:
+    class ExudynTestGlobals:
+        pass
+    exudynTestGlobals = ExudynTestGlobals()
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 from math import pi, sin, cos#, sqrt
 from copy import copy, deepcopy
-
-import sys
-#sys.exudynFast=True
-
-import exudyn as exu
 from exudyn.rigidBodyUtilities import Skew, Skew2Vec
 from exudyn.robotics import *
-
-from exudyn.kinematicTree import *
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-useMBS = False
+# useGraphics = False
+# performTest = True
+
+printSensors = False
+#useGraphics = False
+#exudynTestGlobals.testError = 0. #not filled, done via result
+exudynTestGlobals.testResult = 0. #values added up
+
+useMBS = True
 useKinematicTree = True
+
+# case = '3Dmechanism'
+case = 'invertedPendulum'
+#case = 'treeStructure'
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#this function is used to compare class Robot internal structures with ObjectKinematicTree sensor
+compareKT = False
+jacobian = np.eye(3)
+def CompareKinematicTreeAndRobot(newRobot, locPos):
+    #compare with Python class Robot functions for validation:
+    #from exudyn.kinematicTree import *
+    global jacobian
+    #get coordinates (), INCLUDES reference values:
+    q = mbs.GetObjectOutputBody(oKT,exu.OutputVariableType.Coordinates,[0,0,0])
+    q_t = mbs.GetObjectOutputBody(oKT,exu.OutputVariableType.Coordinates_t,[0,0,0])
+    #print('q=',q)
+
+    baseHT = newRobot.GetBaseHT()
+    allHT = newRobot.JointHT(q)
+    
+    print('compare solution for n links=', newRobot.NumberOfLinks())
+    for i in range(newRobot.NumberOfLinks()):
+        #link = newRobot.GetLink(i)
+        #compare position; we need a sensor to access variables
+        s=mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=i, localPosition=locPos,
+                                            outputVariableType=exu.OutputVariableType.Position))
+        mbs.systemIsConsistent = True #adding new sensor requires re-assemble, which is not done here
+        pRobot = HT2translation(allHT[i]) + HT2rotationMatrix(allHT[i]) @ locPos
+        pKT = mbs.GetSensorValues(s)
+        # print('joint pos: Robot=', HT2translation(allHT[i]) + HT2rotationMatrix(allHT[i]) @ locPos, 
+        #       ', KT=', mbs.GetSensorValues(s))
+        print('position diff=', (pRobot-pKT).round(15))
+        
+        #compare velocity
+        sVel=mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=i, localPosition=locPos,
+                                            outputVariableType=exu.OutputVariableType.Velocity))
+        sOmega=mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=i, localPosition=locPos,
+                                            outputVariableType=exu.OutputVariableType.AngularVelocity))
+        mbs.systemIsConsistent = True #adding new sensor requires re-assemble, which is not done here
+
+        jacobian = newRobot.Jacobian(allHT[0:i+1], toolPosition=HT2translation(allHT[i]@HTtranslate(locPos)), mode='all')
+        #print('jac=', jacobian.round(3))
+
+        vOmegaRobot = jacobian @ q_t[0:i+1]
+        vOmegaKT = list(mbs.GetSensorValues(sVel)) + list(mbs.GetSensorValues(sOmega))
+        #print('vel: Robot=', vOmegaRobot, ', KT=', vOmegaKT)
+        print('vel diff=', (vOmegaRobot-vOmegaKT).round(14))
+        
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#cart-pendulum example
+#some spatial mechanism with revolute and prismatic joints:
 
-gGround =  GraphicsDataCheckerBoard(point= [0,0,-2], size = 4)
-objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0],
-                                          visualization=VObjectGround(graphicsData=[gGround])))
-baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPosition=[0,0,0]))
-
-L = 0.5 #length
-w = 0.1 #width of links
-pControl = 1e4*0
-dControl = pControl*0.02
-
-gravity3D = [10*0,-9.81,0]
-graphicsBaseList = [GraphicsDataOrthoCubePoint(size=[L*4, 0.8*w, 0.8*w], color=color4grey)] #rail
-
-newRobot = Robot(gravity=gravity3D,
-              base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
-              tool = RobotTool(HT=HTtranslate([0,0.5*L,0]), visualization=VRobotTool(graphicsData=[
-                  GraphicsDataOrthoCubePoint(size=[w, L, w], color=color4orange)])),
-              referenceConfiguration = []) #referenceConfiguration created with 0s automatically
-
-#cart:
-Jlink = InertiaCuboid(density=5000, sideLengths=[L,w,w]) #w.r.t. reference center of mass
-link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                 jointType='Px', preHT=HT0(), 
-                 PDcontrol=(pControl, dControl),
-                 visualization=VRobotLink(linkColor=color4lawngreen))
-newRobot.AddLink(link)
-
-if True:
-    Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
-    Jlink = Jlink.Translated([0,0.5*L,0])
+if case == '3Dmechanism' or performTest:
+    mbs.Reset()
+    gGround =  GraphicsDataCheckerBoard(point= [0,0,-2], size = 4)
+    objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0],
+                                              visualization=VObjectGround(graphicsData=[gGround])))
+    baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPosition=[0,0,0]))
+    
+    L = 0.5 #length
+    w = 0.1 #width of links
+    pControl = 200*0
+    dControl = pControl*0.02
+    
+    # pControl=None
+    # dControl=None
+    
+    gravity3D = [10*0,-9.81,0]
+    graphicsBaseList = [GraphicsDataOrthoCubePoint(size=[L*4, 0.8*w, 0.8*w], color=color4grey)] #rail
+    
+    newRobot = Robot(gravity=gravity3D,
+                  base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
+                  tool = RobotTool(HT=HTtranslate([0,0.5*L,0]), visualization=VRobotTool(graphicsData=[
+                      GraphicsDataOrthoCubePoint(size=[w, L, w], color=color4orange)])),
+                  referenceConfiguration = []) #referenceConfiguration created with 0s automatically
+    
+    #cart:
+    Jlink = InertiaCuboid(density=5000, sideLengths=[L,w,w]) #w.r.t. reference center of mass
     link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                     jointType='Rz', preHT=HT0(), 
+                     jointType='Px', preHT=HT0(), 
                      PDcontrol=(pControl, dControl),
-                     visualization=VRobotLink(linkColor=color4blue))
+                     visualization=VRobotLink(linkColor=color4lawngreen))
+    newRobot.AddLink(link)
+    
+    if True:
+        Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
+        Jlink = Jlink.Translated([0,0.5*L,0])
+        link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
+                         jointType='Rz', preHT=HT0(), 
+                         PDcontrol=(pControl, dControl),
+                         visualization=VRobotLink(linkColor=color4blue))
+        newRobot.AddLink(link)
+    
+        
+        if True:
+            Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
+            Jlink = Jlink.Translated([0,0.5*L,0])
+            link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
+                             # jointType='Rz', preHT=HTtranslateY(L),
+                             jointType='Rz', preHT=HTtranslateY(L)@HTrotateY(0.25*pi),
+                             PDcontrol=(pControl, dControl), 
+                             visualization=VRobotLink(linkColor=color4red))
+            newRobot.AddLink(link)
+            
+        if False:
+            Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
+            Jlink = Jlink.Translated([0,0.5*L,0])
+            link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
+                             jointType='Px', preHT=HT0(), 
+                             PDcontrol=(pControl, dControl),
+                             visualization=VRobotLink(linkColor=color4lawngreen))
+            newRobot.AddLink(link)
+    
+        if True:
+            Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
+            Jlink = Jlink.Translated([0,0.5*L,0])
+            link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
+                             jointType='Rz', preHT=HTtranslateY(L)@HTrotateZ(-0.5*pi),
+                             PDcontrol=(pControl, dControl), 
+                             #visualization=VRobotLink(linkColor=color4brown))
+                             visualization=VRobotLink(linkColor=[-1,-1,-1,1]))
+            newRobot.AddLink(link)
+    
+        if False:
+            Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
+            Jlink = Jlink.Translated([0,0.5*L,0])
+            link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
+                             jointType='Rz', preHT=HTtranslateY(L)@HTrotateZ(-0.5*pi),
+                             PDcontrol=(pControl, dControl), 
+                             visualization=VRobotLink(linkColor=color4brown))
+            newRobot.AddLink(link)
+    
+            Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
+            Jlink = Jlink.Translated([0,0.5*L,0])
+            link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
+                             jointType='Rz', preHT=HTtranslateY(L)@HTrotateZ(-0.5*pi),
+                             PDcontrol=(pControl, dControl), 
+                             visualization=VRobotLink(linkColor=color4brown))
+            newRobot.AddLink(link)
+    
+            Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
+            Jlink = Jlink.Translated([0,0.5*L,0])
+            link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
+                             jointType='Rz', preHT=HTtranslateY(L)@HTrotateZ(-0.5*pi),
+                             PDcontrol=(pControl, dControl), 
+                             visualization=VRobotLink(linkColor=color4brown))
+            newRobot.AddLink(link)
+    
+    sMBS = []
+    locPos = [0.1,0.2,0.3]
+    # locPos = [0,0,0]
+    nLinks = newRobot.NumberOfLinks()
+    if useMBS:
+        robDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
+        bodies = robDict['bodyList']
+    
+        sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[0], localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Position))]
+        sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[0], localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Acceleration))]
+        sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[1], localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Acceleration))]
+        sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[2], localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Acceleration))]
+    
+        sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Position))]
+        sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Rotation))]
+        sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Velocity))]
+        sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.AngularVelocity))]
+        sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.AngularVelocityLocal))]
+        sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Acceleration))]
+        sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.AngularAcceleration))]
+    
+    sKT = []
+    if useKinematicTree:
+        dKT = newRobot.CreateKinematicTree(mbs)
+        oKT = dKT['objectKinematicTree']
+    
+        sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=0, localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Position))]
+        sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=0, localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Acceleration))]
+        sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=1, localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Acceleration))]
+        sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=2, localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Acceleration))]
+    
+        sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Position))]
+        sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Rotation))]
+        sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Velocity))]
+        sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.AngularVelocity))]
+        sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.AngularVelocityLocal))]
+        sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Acceleration))]
+        sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.AngularAcceleration))]
+    
+    
+    sTitles = [
+    'Position link 0',
+    'Acceleration link 0',
+    'Acceleration link 1',
+    'Acceleration link 2',
+    'Tip Position',
+    'Tip Rotation',
+    'Tip Velocity',
+    'Tip AngularVelocity',
+    'Tip AngularVelocityLocal',
+    'Tip Acceleration',
+    'Tip AngularAcceleration',
+    ]
+    
+    #exu.Print(mbs)
+    mbs.Assemble()
+    
+    simulationSettings = exu.SimulationSettings()
+    
+    tEnd = 0.5
+    if not performTest:
+        tEnd = 2*0.5
+
+    h = 1e-3 #0.1
+    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
+    simulationSettings.timeIntegration.endTime = tEnd
+    # simulationSettings.timeIntegration.numberOfSteps = 1#int(tEnd/h)
+    # simulationSettings.timeIntegration.endTime = h*1#tEnd
+    simulationSettings.solutionSettings.solutionWritePeriod = 0.01
+    simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
+    simulationSettings.timeIntegration.verboseMode = 1
+    #simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
+    simulationSettings.timeIntegration.newton.useModifiedNewton=True
+    
+    # simulationSettings.displayComputationTime = True
+    # simulationSettings.linearSolverType=exu.LinearSolverType.EigenSparse
+    
+    simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.95 #SHOULD work with 0.9 as well
+    
+    SC.visualizationSettings.general.autoFitScene=False
+    SC.visualizationSettings.window.renderWindowSize = [1600,1200]
+    SC.visualizationSettings.general.drawCoordinateSystem=True
+    SC.visualizationSettings.general.drawWorldBasis=True
+    SC.visualizationSettings.openGL.multiSampling=4
+    SC.visualizationSettings.nodes.showBasis = True
+    SC.visualizationSettings.nodes.basisSize = 0.5
+    if useGraphics:
+        exu.StartRenderer()
+        if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
+    
+        mbs.WaitForUserToContinue() #press space to continue
+
+    # exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
+    exu.SolveDynamic(mbs, simulationSettings)
+        
+    if useGraphics: #use this to reload the solution and use SolutionViewer
+        #sol = LoadSolutionFile('coordinatesSolution.txt')
+        from exudyn.interactive import SolutionViewer
+        SolutionViewer(mbs) #can also be entered in IPython ...
+    
+    if useGraphics:
+        SC.WaitForRenderEngineStopFlag()
+        exu.StopRenderer() #safely close rendering window!
+    
+    
+    if len(sMBS) == len(sKT):
+        if useGraphics:
+            from exudyn.plot import PlotSensor
+            PlotSensor(mbs, closeAll=True)
+            
+            for i in range(len(sMBS)):
+                PlotSensor(mbs, sensorNumbers=[sMBS[i]]*3+[sKT[i]]*3, components=[0,1,2]*2, title=sTitles[i])
+        else:
+            u = 0.
+            for i in range(len(sMBS)):
+                v = mbs.GetSensorValues(sMBS[i])
+                if printSensors:
+                    exu.Print('sensor MBS '+str(i)+'=',v)
+                u += np.linalg.norm(v)
+                v = mbs.GetSensorValues(sKT[i])
+                if printSensors:
+                    exu.Print('sensor KT '+str(i)+' =',v)
+                u += np.linalg.norm(v)
+
+            exu.Print("solution of kinematicTreeAndMBStest 1=", u)
+            exudynTestGlobals.testResult += u
+
+        if compareKT:
+            CompareKinematicTreeAndRobot(newRobot, [0.1,0.3,0.2])
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if case == 'invertedPendulum' or performTest:
+    mbs.Reset()
+    gGround =  GraphicsDataCheckerBoard(point= [0,0,-2], size = 12)
+    objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0],
+                                              visualization=VObjectGround(graphicsData=[gGround])))
+    baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPosition=[0,0,0]))
+    
+    L = 0.5 #length
+    w = 0.1 #width of links
+    pControl = 200*0
+    dControl = pControl*0.02
+    
+    gravity3D = [10*0,-9.81,0]
+    graphicsBaseList = [GraphicsDataOrthoCubePoint(size=[L*4, 0.8*w, 0.8*w], color=color4grey)] #rail
+    
+    newRobot = Robot(gravity=gravity3D,
+                  base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
+                  tool = RobotTool(HT=HTtranslate([0,0.5*L,0]), visualization=VRobotTool(graphicsData=[
+                      GraphicsDataOrthoCubePoint(size=[w, L, w], color=color4orange)])),
+                  referenceConfiguration = []) #referenceConfiguration created with 0s automatically
+    
+    #cart:
+    Jlink = InertiaCuboid(density=5000, sideLengths=[L,w,w]) #w.r.t. reference center of mass
+    link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
+                     jointType='Px', preHT=HT0(), 
+                     PDcontrol=(pControl, dControl),
+                     visualization=VRobotLink(linkColor=color4lawngreen))
     newRobot.AddLink(link)
 
+    nChainLinks = 5
     
-    if True:
+    for i in range(nChainLinks):
         Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
         Jlink = Jlink.Translated([0,0.5*L,0])
+        preHT = HT0()
+        if i > 0:
+            preHT = HTtranslateY(L)
+
         link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                         # jointType='Rz', preHT=HTtranslateY(L),
-                         jointType='Rz', preHT=HTtranslateY(L)@HTrotateY(0.25*pi),
-                         PDcontrol=(pControl, dControl), 
-                         visualization=VRobotLink(linkColor=color4red))
-        newRobot.AddLink(link)
-        
-    if False:
-        Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
-        Jlink = Jlink.Translated([0,0.5*L,0])
-        link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                         jointType='Px', preHT=HT0(), 
+                         jointType='Rz', preHT=preHT, 
                          PDcontrol=(pControl, dControl),
-                         visualization=VRobotLink(linkColor=color4lawngreen))
+                         visualization=VRobotLink(linkColor=color4blue))
         newRobot.AddLink(link)
-
-    if True:
-        Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
-        Jlink = Jlink.Translated([0,0.5*L,0])
-        link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                         jointType='Rz', preHT=HTtranslateY(L)@HTrotateZ(-0.5*pi),
-                         PDcontrol=(pControl, dControl), 
-                         #visualization=VRobotLink(linkColor=color4brown))
-                         visualization=VRobotLink(linkColor=[-1,-1,-1,1]))
-        newRobot.AddLink(link)
-
-    if False:
-        Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
-        Jlink = Jlink.Translated([0,0.5*L,0])
-        link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                         jointType='Rz', preHT=HTtranslateY(L)@HTrotateZ(-0.5*pi),
-                         PDcontrol=(pControl, dControl), 
-                         visualization=VRobotLink(linkColor=color4brown))
-        newRobot.AddLink(link)
-
-        Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
-        Jlink = Jlink.Translated([0,0.5*L,0])
-        link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                         jointType='Rz', preHT=HTtranslateY(L)@HTrotateZ(-0.5*pi),
-                         PDcontrol=(pControl, dControl), 
-                         visualization=VRobotLink(linkColor=color4brown))
-        newRobot.AddLink(link)
-
-        Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
-        Jlink = Jlink.Translated([0,0.5*L,0])
-        link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                         jointType='Rz', preHT=HTtranslateY(L)@HTrotateZ(-0.5*pi),
-                         PDcontrol=(pControl, dControl), 
-                         visualization=VRobotLink(linkColor=color4brown))
-        newRobot.AddLink(link)
-
-sMBS = []
-# locPos = [0.1,0.2,0.3]
-locPos = [0,0,0]
-nLinks = newRobot.NumberOfLinks()
-if useMBS:
-    robDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
-    bodies = robDict['bodyList']
-
-    sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[0], localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Position))]
-    sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[0], localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Acceleration))]
-    sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[1], localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Acceleration))]
-    sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[2], localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Acceleration))]
-
-    sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Position))]
-    sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Rotation))]
-    sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Velocity))]
-    sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.AngularVelocity))]
-    sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.AngularVelocityLocal))]
-    sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Acceleration))]
-    sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.AngularAcceleration))]
-
-sKT = []
-if useKinematicTree:
-    dKT = newRobot.CreateKinematicTree(mbs)
-    oKT = dKT['objectKinematicTree']
-
-    sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=0, localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Position))]
-    sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=0, localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Acceleration))]
-    sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=1, localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Acceleration))]
-    sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=2, localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Acceleration))]
-
-    sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Position))]
-    sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Rotation))]
-    sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Velocity))]
-    sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.AngularVelocity))]
-    sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.AngularVelocityLocal))]
-    sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.Acceleration))]
-    sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
-                                    outputVariableType=exu.OutputVariableType.AngularAcceleration))]
-
-
-sTitles = [
-'Position link 0',
-'Acceleration link 0',
-'Acceleration link 1',
-'Acceleration link 2',
-'Tip Position',
-'Tip Rotation',
-'Tip Velocity',
-'Tip AngularVelocity',
-'Tip AngularVelocityLocal',
-'Tip Acceleration',
-'Tip AngularAcceleration',
-]
-#     nGenericCpp = dKT['nodeGeneric']
-
-#     sJointsList += [mbs.AddSensor(SensorNode(nodeNumber=nGenericCpp, fileName='solution/genericNodeCpp.txt',
-#                                              outputVariableType=exu.OutputVariableType.Coordinates))]
     
-#     sCases += [' KT cpp']
+    newRobot.referenceConfiguration[0] = 0.5*0
+    # for i in range(nChainLinks):
+    #     newRobot.referenceConfiguration[i+1] = (2*pi/360) * 5 
+    newRobot.referenceConfiguration[1] = -(2*pi/360) * 5 #-0.5*pi
+    # newRobot.referenceConfiguration[2] = (2*pi/360) * 12 #-0.5*pi
+        
+    
+    sMBS = []
+    # locPos = [0.1,0.2,0.3]
+    locPos = [0,0,0]
+    nLinks = newRobot.NumberOfLinks()
+    if useMBS:
+        robDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
+        bodies = robDict['bodyList']
+    
+        sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Position))]
+    
+    sKT = []
+    if useKinematicTree:
+        dKT = newRobot.CreateKinematicTree(mbs)
+        oKT = dKT['objectKinematicTree']
+        
+        sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Position))]
+        
+    #exu.Print(mbs)
+    mbs.Assemble()
+    
+    simulationSettings = exu.SimulationSettings()
 
-#exu.Print(mbs)
-mbs.Assemble()
-
-simulationSettings = exu.SimulationSettings()
-
-tEnd = 2
-h = 1e-4 #0.1
-simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
-simulationSettings.timeIntegration.endTime = tEnd
-# simulationSettings.timeIntegration.numberOfSteps = 1#int(tEnd/h)
-# simulationSettings.timeIntegration.endTime = h*1#tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
-simulationSettings.timeIntegration.verboseMode = 1
-#simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
-simulationSettings.timeIntegration.newton.useModifiedNewton=True
-
-# simulationSettings.displayComputationTime = True
-# simulationSettings.linearSolverType=exu.LinearSolverType.EigenSparse
-
-simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.95 #SHOULD work with 0.9 as well
-
-useGraphics=True
-if True:
+    tEnd = 0.5
+    if not performTest:
+        tEnd = 0.5
+    h = 1e-3 #0.1
+    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
+    simulationSettings.timeIntegration.endTime = tEnd
+    # simulationSettings.timeIntegration.numberOfSteps = 1#int(tEnd/h)
+    # simulationSettings.timeIntegration.endTime = h*1#tEnd
+    simulationSettings.solutionSettings.solutionWritePeriod = 0.01
+    simulationSettings.solutionSettings.sensorsWritePeriod = 0.001*10
+    simulationSettings.timeIntegration.verboseMode = 1
+    #simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
+    simulationSettings.timeIntegration.newton.useModifiedNewton=True
+    
+    # simulationSettings.displayComputationTime = True
+    # simulationSettings.linearSolverType=exu.LinearSolverType.EigenSparse
+    
+    simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.95 #SHOULD work with 0.9 as well
+    
     SC.visualizationSettings.general.autoFitScene=False
     SC.visualizationSettings.window.renderWindowSize = [1600,1200]
     SC.visualizationSettings.general.drawCoordinateSystem=True
@@ -248,33 +464,192 @@ if True:
 
     # exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
     exu.SolveDynamic(mbs, simulationSettings)
-
-# #u1 = mbs.GetNodeOutput(nGeneric, exu.OutputVariableType.Coordinates)
-# for i in range(len(sJointsList)):
-#     s = sJointsList[i]
-#     qq = mbs.GetSensorValues(s)
-#     exu.Print("joint angles =", qq, ", case ", sCases[i])
-
-if False: #use this to reload the solution and use SolutionViewer
-    #sol = LoadSolutionFile('coordinatesSolution.txt')
-    from exudyn.interactive import SolutionViewer
-    SolutionViewer(mbs) #can also be entered in IPython ...
-
-if useGraphics:
-    SC.WaitForRenderEngineStopFlag()
-    exu.StopRenderer() #safely close rendering window!
-
-
-if len(sMBS) == len(sKT) and True:
-    from exudyn.plot import PlotSensor
-    PlotSensor(mbs, closeAll=True)
+        
+    if useGraphics: #use this to reload the solution and use SolutionViewer
+        #sol = LoadSolutionFile('coordinatesSolution.txt')
+        from exudyn.interactive import SolutionViewer
+        SolutionViewer(mbs) #can also be entered in IPython ...
     
-    for i in range(len(sMBS)):
-        PlotSensor(mbs, sensorNumbers=[sMBS[i]]*3+[sKT[i]]*3, components=[0,1,2]*2, title=sTitles[i])
+    if useGraphics:
+        SC.WaitForRenderEngineStopFlag()
+        exu.StopRenderer() #safely close rendering window!
+    else:
+        #check results for test suite:
+        u = 0.
+        for i in range(len(sMBS)):
+            v = mbs.GetSensorValues(sMBS[i])
+            if printSensors:
+                exu.Print('sensor MBS '+str(i)+'=',v)
+            u += np.linalg.norm(v)
+            v = mbs.GetSensorValues(sKT[i])
+            if printSensors:
+                exu.Print('sensor KT '+str(i)+' =',v)
+            u += np.linalg.norm(v)
+    
+        exu.Print("solution of kinematicTreeAndMBStest 2=", u)
+        exudynTestGlobals.testResult += u
+
+        if compareKT:
+            # CompareKinematicTreeAndRobot(newRobot, [0.1,0.3,0.2])
+            CompareKinematicTreeAndRobot(newRobot, [0.,0.,0.])
 
 
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if case == 'treeStructure' or performTest:
+    mbs.Reset()
+    gGround =  GraphicsDataCheckerBoard(point= [0,0,-2], size = 12)
+    objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0],
+                                              visualization=VObjectGround(graphicsData=[gGround])))
+    baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPosition=[0,0,0]))
+    
+    L = 0.5 #length
+    w = 0.1 #width of links
+    pControl = 200*0
+    dControl = pControl*0.02
+    
+    gravity3D = [10*0,-9.81,0]
+    graphicsBaseList = [GraphicsDataOrthoCubePoint(size=[L*4, 0.8*w, 0.8*w], color=color4grey)] #rail
+    
+    newRobot = Robot(gravity=gravity3D,
+                  base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
+                  #tool = RobotTool(HT=HTtranslate([0,0.5*L,0]), visualization=VRobotTool(graphicsData=[GraphicsDataOrthoCubePoint(size=[w, L, w], color=color4orange)])),
+                  referenceConfiguration = []) #referenceConfiguration created with 0s automatically
+    
+    #cart:
+    Jlink = InertiaCuboid(density=5000, sideLengths=[L,w,w]) #w.r.t. reference center of mass
+    link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
+                     jointType='Px', preHT=HT0(),
+                     parent = -1,
+                     PDcontrol=(pControl, dControl),
+                     visualization=VRobotLink(linkColor=color4lawngreen))
+    rootLink = newRobot.AddLink(link)
+
+    nChainLinks = 5
+    
+    parentLink = rootLink
+    for i in range(nChainLinks):
+        Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
+        Jlink = Jlink.Translated([0,0.5*L,0])
+        preHT = HTtranslateX(0.5*L)
+        if i > 0:
+            preHT = HTtranslateY(L)@HTrotateZ(-5*(2*pi/360))
+
+        link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
+                         jointType='Rz', preHT=preHT, 
+                         parent = parentLink,
+                         PDcontrol=(pControl, dControl),
+                         visualization=VRobotLink(linkColor=color4blue))
+        parentLink = newRobot.AddLink(link)
+    
+    parentLink = rootLink
+    for i in range(nChainLinks):
+        Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
+        Jlink = Jlink.Translated([0,0.5*L,0])
+        preHT = HTtranslateX(-0.5*L)
+        if i > 0:
+            preHT = HTtranslateY(L)@HTrotateZ(5*(2*pi/360))
+
+        link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
+                         jointType='Rz', preHT=preHT, 
+                         parent = parentLink,
+                         PDcontrol=(pControl, dControl),
+                         visualization=VRobotLink(linkColor=color4blue))
+        parentLink = newRobot.AddLink(link)
+    
+    #newRobot.referenceConfiguration[0] = 0.5*0
+    # for i in range(nChainLinks):
+    #     newRobot.referenceConfiguration[i+1] = (2*pi/360) * 5 
+    #newRobot.referenceConfiguration[1] = -(2*pi/360) * 5 #-0.5*pi
+        
+    
+    sMBS = []
+    # locPos = [0.1,0.2,0.3]
+    locPos = [0,0,0]
+    nLinks = newRobot.NumberOfLinks()
+    if useMBS:
+        robDict = newRobot.CreateRedundantCoordinateMBS(mbs=mbs, baseMarker=baseMarker, createJointTorqueLoads=False)
+        bodies = robDict['bodyList']
+    
+        sMBS+=[mbs.AddSensor(SensorBody(bodyNumber=bodies[nLinks-1], localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Position))]
+    
+    sKT = []
+    if useKinematicTree:
+        dKT = newRobot.CreateKinematicTree(mbs)
+        oKT = dKT['objectKinematicTree']
+        
+        sKT+=[mbs.AddSensor(SensorKinematicTree(objectNumber=oKT, linkNumber=nLinks-1, localPosition=locPos, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Position))]
+        
+    #exu.Print(mbs)
+    mbs.Assemble()
+    
+    simulationSettings = exu.SimulationSettings()
+    
+    tEnd = 0.25
+    if not performTest:
+        tEnd = 5
+    h = 1e-3 #0.1
+    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
+    simulationSettings.timeIntegration.endTime = tEnd
+    # simulationSettings.timeIntegration.numberOfSteps = 1#int(tEnd/h)
+    # simulationSettings.timeIntegration.endTime = h*1#tEnd
+    simulationSettings.solutionSettings.solutionWritePeriod = 0.01
+    simulationSettings.solutionSettings.sensorsWritePeriod = 0.001*10
+    simulationSettings.timeIntegration.verboseMode = 1
+    #simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
+    simulationSettings.timeIntegration.newton.useModifiedNewton=True
+    
+    # simulationSettings.displayComputationTime = True
+    # simulationSettings.linearSolverType=exu.LinearSolverType.EigenSparse
+    
+    simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.95 #SHOULD work with 0.9 as well
+    
+    SC.visualizationSettings.general.autoFitScene=False
+    SC.visualizationSettings.window.renderWindowSize = [1600,1200]
+    SC.visualizationSettings.general.drawCoordinateSystem=True
+    SC.visualizationSettings.general.drawWorldBasis=True
+    SC.visualizationSettings.openGL.multiSampling=4
+    SC.visualizationSettings.nodes.showBasis = True
+    SC.visualizationSettings.nodes.basisSize = 0.5
+    if useGraphics:
+
+        exu.StartRenderer()
+        if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
+    
+        mbs.WaitForUserToContinue() #press space to continue
+
+    # exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
+    exu.SolveDynamic(mbs, simulationSettings)
+        
+    if useGraphics: #use this to reload the solution and use SolutionViewer
+        #sol = LoadSolutionFile('coordinatesSolution.txt')
+        from exudyn.interactive import SolutionViewer
+        SolutionViewer(mbs) #can also be entered in IPython ...
+    
+    if useGraphics:
+        SC.WaitForRenderEngineStopFlag()
+        exu.StopRenderer() #safely close rendering window!
+    else:
+        #check results for test suite:
+        u = 0.
+        for i in range(len(sMBS)):
+            v = mbs.GetSensorValues(sMBS[i])
+            if printSensors:
+                exu.Print('sensor MBS '+str(i)+'=',v)
+            u += np.linalg.norm(v)
+            v = mbs.GetSensorValues(sKT[i])
+            if printSensors:
+                exu.Print('sensor KT '+str(i)+' =',v)
+            u += np.linalg.norm(v)
+    
+        exu.Print("solution of kinematicTreeAndMBStest 3=", u)
+        exudynTestGlobals.testResult += u
+        
+            
+        if compareKT:
+            CompareKinematicTreeAndRobot(newRobot, [0.1,0.3,0.2])
 
 
-
-
-
+exu.Print("solution of kinematicTreeAndMBStest all=", exudynTestGlobals.testResult)

@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1123, 
-Number of resolved issues = 951 (109 in current minor version), 
-Exudyn version = 1.2.109.dev1, 
-last change =  2022-05-31
+Number of issues = 1135, 
+Number of resolved issues = 966 (124 in current minor version), 
+Exudyn version = 1.2.124.dev1, 
+last change =  2022-06-08
 
 
 <table style = "width:100%">
@@ -39,15 +39,15 @@ last change =  2022-05-31
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>1121</td>
-    <td>AnimateSolution     </td>
+    <td>1131</td>
+    <td>class Robot         </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> mark as deprecated, use SolutionViewer instead</td>
-    <td>CHANGE</td>
+    <td> add list of graphicsDataLists to each body for individual graphics of links allowing also graphics for tools</td>
+    <td>EXTENSION</td>
     <td></td>
-    <td>2022-05-31</td>
-    <td>2022-07-30</td>
+    <td>2022-06-03</td>
+    <td>2022-08-02</td>
     <td></td>
     <td></td>
     <td></td>
@@ -61,22 +61,6 @@ last change =  2022-05-31
     <td>RAISED  </td>
     <td> C++ implement efficient T66 transformations</td>
     <td>EXTENSION</td>
-    <td></td>
-    <td>2022-05-29</td>
-    <td>2022-07-28</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1114</td>
-    <td>class Robot         </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> create new example(s) comparing CreateKinematicTree and CreateRedundantCoordinateMBS with control and prismatic joints</td>
-    <td>TESTING</td>
     <td></td>
     <td>2022-05-29</td>
     <td>2022-07-28</td>
@@ -279,22 +263,6 @@ last change =  2022-05-31
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>1071</td>
-    <td>KinematicTree       </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add special MarkerKinematicTreeRigidBody with link number and local position</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-05-05</td>
-    <td>2022-07-04</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
     <td>1061</td>
     <td>Reference and copy  </td>
     <td>JG</td>
@@ -326,7 +294,7 @@ last change =  2022-05-31
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1037</td>
     <td>sensor files        </td>
     <td>JG</td>
@@ -342,7 +310,7 @@ last change =  2022-05-31
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1035</td>
     <td>TestModels          </td>
     <td>JG</td>
@@ -358,7 +326,7 @@ last change =  2022-05-31
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1032</td>
     <td>ObjectConnectorCoordinateVector</td>
     <td>JG</td>
@@ -374,7 +342,7 @@ last change =  2022-05-31
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1026</td>
     <td>Save as PNG         </td>
     <td>JG</td>
@@ -2087,22 +2055,6 @@ last change =  2022-05-31
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0503</td>
-    <td>serialrobot         </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> adapt serial robot for prismatic joints</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-12-16</td>
-    <td>2021-02-14</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0496</td>
     <td>controller          </td>
     <td>JG</td>
@@ -2791,6 +2743,182 @@ last change =  2022-05-31
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1134</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add Jacobian computation according to class Robot in order to realize AccessFunction needed from MarkerKinematicTreeRigid; uses special access function because the SuperElement interface does not provide link number</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-06</td>
+    <td>2022-08-05</td>
+    <td>2022-06-08 18:30</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1133</td>
+    <td>SolutionViewer      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> bind additional Button "Q" in interactive dialogs for quit (in addition to Escape)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-05</td>
+    <td>2022-08-04</td>
+    <td>2022-06-05 18:25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1132</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend Jacobian, LinkHT and JointHT functions for tree structure; check StaticTorques</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-03</td>
+    <td>2022-08-02</td>
+    <td>2022-06-06 00:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added comparison for class Robot functions in kinematicTreeAndMBStest.py</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1130</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> tool only working for serial robots; in case of tree structure, tool should not be used as it is attached only to last link</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-06-03</td>
+    <td>2022-08-02</td>
+    <td>2022-06-06 00:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added warning to class Robot.AddLink(...) which raises Warning if tool is defined and tree structure is generated</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1129</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> GetParentIndex(...), HasParent(...) not working for tree structure</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-06-03</td>
+    <td>2022-08-02</td>
+    <td>2022-06-03 00:19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1128</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> CreateRedundantCoordinateMBS not working for tree structure</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-06-03</td>
+    <td>2022-08-02</td>
+    <td>2022-06-03 00:19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1127</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> CreateKinematicTree not working for tree structure</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-06-03</td>
+    <td>2022-08-02</td>
+    <td>2022-06-03 00:28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1126</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> wrong formula in computation of acceleration</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-06-02</td>
+    <td>2022-08-01</td>
+    <td>2022-06-02 22:41</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1125</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend CreateRedundantCoordinateMBS for control of PrsimaticJoints with new LinearSpringDamper</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-01</td>
+    <td>2022-07-31</td>
+    <td>2022-06-01 23:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1124</td>
+    <td>LinearSpringDamper  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add LinearSpringDamper which is the corresponding spring damper/actuator for prismatic joints (like TorsionalSpringDamper for revolute joints), being aligned with a rigid marker, having no limits compared to regular (distance based) SpringDamper</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-01</td>
+    <td>2022-07-31</td>
+    <td>2022-06-01 23:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1123</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend CreateRedundantCoordinateMBS for jointSpringDamperUserFunctionList with prismatic joints</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-01</td>
+    <td>2022-07-31</td>
+    <td>2022-06-01 23:44</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1122</td>
     <td>GraphicsDataBasis   </td>
     <td>JG</td>
@@ -2801,6 +2929,22 @@ last change =  2022-05-31
     <td>2022-05-31</td>
     <td>2022-07-30</td>
     <td>2022-05-31 15:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1121</td>
+    <td>AnimateSolution     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> mark as deprecated, use SolutionViewer instead</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-05-31</td>
+    <td>2022-07-30</td>
+    <td>2022-06-01 20:25</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -2881,6 +3025,22 @@ last change =  2022-05-31
     <td>2022-05-29</td>
     <td>2022-07-28</td>
     <td>2022-05-30 00:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1114</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> create new example(s) comparing CreateKinematicTree and CreateRedundantCoordinateMBS with control and prismatic joints</td>
+    <td>TESTING</td>
+    <td></td>
+    <td>2022-05-29</td>
+    <td>2022-07-28</td>
+    <td>2022-06-05 14:33</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -3361,6 +3521,22 @@ last change =  2022-05-31
     <td>2022-05-06</td>
     <td>2022-07-05</td>
     <td>2022-05-06 13:54</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1071</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add special MarkerKinematicTreeRigidBody with link number and local position</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-05</td>
+    <td>2022-07-04</td>
+    <td>2022-06-08 18:30</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -10645,6 +10821,22 @@ last change =  2022-05-31
     <td></td>
     <td></td>
     <td>done earlier</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0503</td>
+    <td>serialrobot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> adapt serial robot for prismatic joints</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-12-16</td>
+    <td>2021-02-14</td>
+    <td>2022-06-01 20:38</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>functionality with Prismatic joints  now included into class Robot, converting to mbs with CreateRedundantCoordinateMBS or CreateKinematicTree, see issue</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0502</td>

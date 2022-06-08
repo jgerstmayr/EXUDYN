@@ -286,6 +286,8 @@ AccessFunctionType CObjectRigidBody::GetAccessFunctionTypes() const
 //! provide Jacobian at localPosition in "value" according to object access
 void CObjectRigidBody::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
 {
+	//for rigid body, the accelerator function ComputeRigidBodyMarkerData(...) is called for position/orientation markers;
+	//this function is mainly called for DisplacementMassIntegral_q
 	switch (accessType)
 	{
 	case AccessFunctionType::TranslationalVelocity_qt: //global translational velocity at localPosition derivative w.r.t. qt = L-matrix = [I   -A*uLocalTilde*Glocal]

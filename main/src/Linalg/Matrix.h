@@ -719,6 +719,22 @@ public:
 		return result;
 	}
 
+	//! set column vector with any TVector;
+	//! use e.g.: SetColumnVector<3>(v);
+	template<class TVector>
+	void SetColumnVector(const TVector& columnVector, Index column)
+	{
+		CHECKandTHROW(this->numberOfRows == columnVector.NumberOfItems(),
+			"ConstSizeMatrixBase::SetColumnVector(...): size mismatch");
+		CHECKandTHROW(column <= this->numberOfColumns,
+			"ConstSizeMatrixBase::SetColumnVector(...): illegal column");
+
+		for (Index i = 0; i < this->numberOfRows; i++)
+		{
+			(*this)(i, column) = columnVector[i];
+		}
+	}
+
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// SOLVER
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

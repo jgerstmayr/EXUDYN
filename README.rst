@@ -2,11 +2,11 @@
 Exudyn
 ======
 
-+  Exudyn version = 1.2.109.dev1 (Corea)
-+  build date and time=2022-05-31  21:39
++  Exudyn version = 1.2.124.dev1 (Corea)
++  build date and time=2022-06-08  20:24
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
-Exudyn now includes a redundant coordinate (constraint) as well as a minimum coordinate formulation; machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support and multi-threading; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
+Exudyn now includes a redundant coordinate (constraint) as well as a minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support and multi-threading; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
 
 If you like using Exudyn, please add a *star* on github, and send an email to  ``reply.exudyn@gmail.com`` such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
@@ -1273,13 +1273,11 @@ Exudyn offers a convenient WYSIWYS -- 'What you See is What you Simulate' interf
 If you are running large models, it may be more convenient to watch results after simulation has been finished.
 For this, you can use
 
-+  \ ``utilities.AnimateSolution``\ , see Section [theDoc.pdf]
 +  \ ``interactive.SolutionViewer``\ , see Section [theDoc.pdf]
 +  \ ``interactive.AnimateModes``\ , lets you view the animation of computed modes, see Section [theDoc.pdf]
 
-The function \ ``AnimateSolution``\  allows to directly visualize the stored solution for according stored time frames.
 The \ ``SolutionViewer``\  adds a \ ``tkinter``\  interactive dialog, which lets you interact with the model ('Player').
-In both methods \ ``AnimateSolution``\  and \ ``SolutionViewer``\ , the solution needs to be loaded with
+The solution should be loaded with
 \ ``LoadSolutionFile('coordinatesSolution.txt')``\ , where 'coordinatesSolution.txt' represents the stored solution file, 
 see 
 
@@ -1294,7 +1292,7 @@ You can call the \ ``SolutionViewer``\  either in the model, or at the command l
   SolutionViewer(mbs, sol)
 
 
-\ **Alternatively**\ , you can just reload the last stored solution (according to your \ ``simulationSettings``\ ):
+\ **Alternatively**\ , if no solution is provided, \ ``SolutionViewer``\  tries to reload the solution of the previous simulation that is referred to from \ ``mbs.sys[simulationSettings]``\ :
 
 .. code-block:: python
 
@@ -1303,6 +1301,9 @@ You can call the \ ``SolutionViewer``\  either in the model, or at the command l
 
 
 An example for the \ ``SolutionViewer``\  is integrated into the \ ``Examples/``\  directory, see \ ``solutionViewerTest.py``\ . 
+
+
+\ **Note**\ : The previous function \ ``AnimateSolution``\  in \ ``exudyn.utilities``\  allows to directly visualize the stored solution for according stored time frames without \ ``tkinter``\  (useful for MacOS).
 
 Generating animations
 =====================

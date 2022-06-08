@@ -92,7 +92,7 @@ void CObjectConnectorTorsionalSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, cons
 			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(1).rotationJacobian, fRot, ldv1);
 		}
 
-		if (markerData.GetMarkerData(0).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
+		if (markerData.GetMarkerData(0).rotationJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
 		{
 			fRot *= -1.;
 			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).rotationJacobian.NumberOfColumns());

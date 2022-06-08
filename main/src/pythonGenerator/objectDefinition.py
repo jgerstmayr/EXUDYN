@@ -2089,14 +2089,14 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectKinematicTree
-classDescription = "A special object to represent open kinematic trees using minimum coordinate formulation (UNDER DEVELOPMENT!). The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.\ per link (body). Every link is defined by a previous joint and a coordinate transformation from the previous link to this link's joint coordinates. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties."
+classDescription = "A special object to represent open kinematic trees using minimum coordinate formulation (NOT FULLY TESTED!). The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.\ per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl.\ translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties."
 cParentClass = CObjectSuperElement
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObjectSuperElement
 pythonShortName = KinematicTree
 addIncludesC = '#include "Linalg/KinematicsBasics.h"//for transformations\n#include "Pymodules/PyMatrixVector.h"//for some matrix and vector lists\n#include "Main/OutputVariable.h"\n#include <pybind11/numpy.h>//for NumpyMatrix\n#include <pybind11/stl.h>//for NumpyMatrix\n#include <pybind11/pybind11.h>\n#include "Pymodules/PyMatrixVector.h"//for some matrix and vector lists\nclass MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
 addPublicC = "    static constexpr Index noParent = -1;//AUTO: number which defines that this link has no parent\n"
-outputVariables = "{'Coordinates':'all \hac{ODE2} coordinates', 'Coordinates_t':'all \hac{ODE2} velocity coordinates', 'Coordinates_tt':'all \hac{ODE2} acceleration coordinates', 'Force':'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)'}"
+outputVariables = "{'Coordinates':'all \hac{ODE2} joint coordinates, including reference values; these are the minimal coordinates of the object', 'Coordinates_t':'all \hac{ODE2} velocity coordinates', 'Coordinates_tt':'all \hac{ODE2} acceleration coordinates', 'Force':'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)'}"
 classType = Object
 objectType = SuperElement
 equations =
@@ -2279,13 +2279,15 @@ F,      C,      GetAngularAccelerationKinematicTree,,           ,       Vector3D
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'KinematicTree';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
-Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return parameters.linkMasses.NumberOfItems();",                ,       CI,     "number of \hac{ODE2} coordinates" 
+Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return parameters.jointTransformations.NumberOfItems();",                ,       CI,     "number of \hac{ODE2} coordinates" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericODE2;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 #not implemented in NodePoint, etc. Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericODE2;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded + (Index)CObjectType::SuperElement + (Index)CObjectType::KinematicTree);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
 Fv,     C,      HasConstantMassMatrix,          ,               ,       bool,       "return false;", ,CI,   "return true if object has time and coordinate independent (=constant) mass matrix" 
 Fv,     C,      ParametersHaveChanged,          ,               ,       void,       ";", ,     I,    "This flag is reset upon change of parameters; says that the vector of coordinate indices has changed" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+#
+F ,     C,      NumberOfLinks,                  ,               ,       Index,      "return parameters.jointTransformations.NumberOfItems();", , CI, "number of links used in computation functions for kinematic tree" 
 #helper functions:
 F,      C,      EvaluateUserFunctionForce,      ,               ,       void,       ,                           "Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
 F,      C,      GetNegativeGravity6D,           ,               ,       void,       ,                           "Vector6D& gravity6D",   CDI,    "compute negative 6D gravity to be used in Pluecker transforms"
@@ -2295,7 +2297,7 @@ F,      C,      ComputeMassMatrixAndODE2LHS,    ,               ,       void,   
 F,      C,      AddExternalForces6D,            ,               ,       void,       ,                           "const Transformations66List& Xup, Vector6DList& Fvp",          CDI,    "function which adds 3D torques/forces per joint to Fvp"
 #superelement functions:
 Fv,     C,      HasReferenceFrame,              ,               ,       Bool,       "localReferenceFrameNode = 0; return false;", "Index& localReferenceFrameNode", CI,    "return true, if object has reference frame; return according LOCAL node number" 
-Fv,     C,      GetNumberOfMeshNodes,           ,               ,       Index,      "return parameters.linkMasses.NumberOfItems();", , IC, "return the number of mesh nodes; these are virtual nodes per link, emulating rigid bodies recomputed from kinematic tree" 
+Fv,     C,      GetNumberOfMeshNodes,           ,               ,       Index,      "return parameters.jointTransformations.NumberOfItems();", , IC, "return the number of mesh nodes; these are virtual nodes per link, emulating rigid bodies recomputed from kinematic tree" 
 # Fv,     C,      GetMeshNode,                    ,               ,       CNodeODE2*, ,                           "Index meshNodeNumber", DIC, "return the mesh node pointer; for consistency checks" 
 # Fv,     C,      GetMeshNodeLocalPosition,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh" 
 # Fv,     C,      GetMeshNodeLocalVelocity,       ,               ,       Vector3D,   ,                           "Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh" 
@@ -2306,8 +2308,10 @@ Fv,     C,      GetAccessFunctionSuperElement,  ,               ,       void,   
 #used for KinematicTree instead
 Fv,     C,      GetOutputVariableTypesSuperElement,  ,          ,       OutputVariableType,       ,             "Index meshNodeNumber",          DC, "get extended output variable types for multi-nodal objects with mesh nodes; some objects have meshNode-dependent OutputVariableTypes" 
 #Fv,     C,      GetOutputVariableSuperElement,  ,               ,       void,       ,                           "OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
-F,      C,      GetOutputVariableKinematicTree,  ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
-F,      C,      GetAccessFunctionKinematicTree,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Index linkNumber, Matrix& value",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file"
+F,      C,      GetOutputVariableKinematicTree,  ,               ,       void,       ,                          "OutputVariableType variableType, const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
+#F,      C,      GetAccessFunctionKinematicTree,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Index linkNumber, Matrix& value",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file"
+F,      C,      ComputeRigidBodyMarkerDataKT,   ,               ,       void,       ,                           "const Vector3D& localPosition, Index linkNumber, bool computeJacobian, MarkerData& markerData",          CDI, "accelerator function for faster computation of MarkerData for rigid bodies/joints" 
+F,      C,      ComputeJacobian,                ,               ,       void,       ,                           "Index linkNumber, const Vector3D& position, const Transformations66List& jointTransformations, ResizableMatrix& positionJacobian, ResizableMatrix& rotationJacobian",          CDI, "compute rot+pos jacobian of (global) position at linkNumber, using pre-computed joint transformations" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,       "true",                         ,   IO,      "set true, if item is shown in visualization and false if it is not shown"
 #for future, we may use a graphicsDataList with twice length to allow showing links/joints separately?
@@ -4354,6 +4358,162 @@ V,      V,      color,                          ,               ,       Float4, 
 writeFile = True
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = ObjectConnectorLinearSpringDamper
+classDescription = "An linear spring-damper element acting on relative translations along given axis of local joint0 coordinate system; connects to position and orientation-based markers; the linear spring-damper is intended to act within prismatic joints or in situations where only one translational axis is free; if the two markers rotate relative to each other, the spring-damper will always act in the local joint0 coordinate system."
+cParentClass = CObjectConnector
+mainParentClass = MainObjectConnector
+visuParentClass = VisualizationObject
+pythonShortName = LinearSpringDamper
+addIncludesC = 'class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
+outputVariables = "{'DisplacementLocal':'$\Delta x$(scalar) relative displacement of the spring-damper', 'VelocityLocal':'$\Delta v$(scalar) relative velocity of spring-damper', 'ForceLocal':'$f$(scalar) spring-damper force'}"
+classType = Object
+objectType = Connector
+equations =
+    \mysubsubsubsection{Definition of quantities}
+    \startTable{input parameter}{symbol}{description}
+    %\rowTable{rotationMarker0}{$\LU{m0,J0}{\Rot}$}{rotation matrix which transforms from joint 0 into marker 0 coordinates}
+    %\rowTable{rotationMarker1}{$\LU{m1,J1}{\Rot}$}{rotation matrix which transforms from joint 1 into marker 1 coordinates}
+    \rowTable{markerNumbers[0]}{$m0$}{global marker number m0}
+    \rowTable{markerNumbers[1]}{$m1$}{global marker number m1}
+    \finishTable
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
+    %\rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
+    \rowTable{marker m0 position}{$\LU{0}{\pv_{m0}}$}{current position matrix provided by marker m0}
+    \rowTable{marker m1 position}{$\LU{0}{\pv_{m1}}$}{current position matrix provided by marker m1}
+%
+    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity vector provided by marker m0}
+    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{current global velocity vector provided by marker m1}
+    \rowTable{relative displacement}{$\Delta x = (\LU{0,m0}{\Rot} \LU{m0}{\dv})\tp (\LU{0}{\pv_{m1}} - \LU{0}{\pv_{m0}})$}{scalar relative displacement}
+    \rowTable{relative velocity}{$\Delta v = (\LU{0,m0}{\Rot} \LU{m0}{\dv})\tp (\LU{0}{\vv_{m1}} - \LU{0}{\vv_{m0}})$}{scalar relative velocity; note that this only corresponds to the time derivative of $\Delta x$ if the markers only move along the axis (in a prismatic joint)}
+    \finishTable
+
+    \mysubsubsubsection{Connector forces}
+    If \texttt{activeConnector = True}, the vector spring force is computed as
+    \be
+      f_{SD} = k \left(\Delta x - x_\mathrm{off} \right) + d \left(\Delta v - v_\mathrm{off} \right) + f_c
+    \ee
+    if \texttt{activeConnector = False}, $\tau_{SD}$ is set zero.
+
+    If the springForceUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
+	$\tau_{SD}$ instead becomes ($t$ is current time)
+    \be
+      \tau_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta x, \Delta v, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
+    \ee
+    and \texttt{iN} represents the itemNumber (=objectNumber).
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)}
+    A user function, which computes the scalar torque depending on mbs, time, local quantities 
+	(relative displacement, relative velocity), which are evaluated at current time. 
+	Furthermore, the user function contains object parameters (stiffness, damping, offset).
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
+    
+	Detailed description of the arguments and local quantities:
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{displacement}}{Real}{$\Delta x$}
+      \rowTable{\texttt{velocity}}{Real}{$\Delta v$}
+      %
+      \rowTable{\texttt{stiffness}}{Real}{copied from object}
+      \rowTable{\texttt{damping}}{Real}{copied from object}
+      \rowTable{\texttt{offset}}{Real}{copied from object}
+      \rowTable{\returnValue}{Real}{computed force}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    #define simple cubic force for spring-damper:
+    def UFforce(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset): 
+        k = stiffness #passed as list
+        return k*displacement + 0.1*k* displacement**3
+    
+    #markerNumbers and parameters taken from mini example
+    mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody], 
+                                     stiffness = k, 
+                                     damping = k*0.01, 
+                                     offset = 0,
+                                     springForceUserFunction = UFforce))
+    \end{lstlisting}
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+miniExample =
+    #example with rigid body at [0,0,0], with torsional load
+    k=2e3
+    nBody = mbs.AddNode(RigidRxyz())
+    oBody = mbs.AddObject(RigidBody(physicsMass=1, physicsInertia=[1,1,1,0,0,0], 
+                                    nodeNumber=nBody))
+    
+    mBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBody))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, 
+                                            localPosition = [0,0,0]))
+    mbs.AddObject(PrismaticJointX(markerNumbers = [mGround, mBody])) #motion along ground X-axis
+    mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody], 
+                                     stiffness = k, damping = k*0.01, offset = 0))
+
+    #force along x-axis; expect approx. Delta x = 1/k=0.0005
+    mbs.AddLoad(Force(markerNumber = mBody, loadVector=[1,0,0])) 
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    exu.SolveDynamic(mbs, exu.SimulationSettings())
+    
+    #check result at default integration time
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[0]
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+#CObjectMarkerBodyPosition* automatically inserted!
+Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "connector's unique name"
+V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,\, m1]$list of markers used in connector"
+V,      CP,     stiffness,                      ,               ,       Real,   "0.",       ,       I,      "$k$torsional stiffness [SI:Nm/rad] against relative rotation"
+V,      CP,     damping,                        ,               ,       Real,   "0.",       ,       I,      "$d$torsional damping [SI:Nm/(rad/s)]"
+V,      CP,     axisMarker0,                    ,               ,       Vector3D,   "Vector3D(0)", ,I,      "$\LU{m0}{\dv}$local axis of spring-damper in marker 0 coordinates; this axis will co-move with marker $m0$; if marker m0 is attached to ground, the spring-damper represents linear equations"
+V,      CP,     offset,                         ,               ,       Real,   "0.", ,   IO,     "$x_\mathrm{off}$translational offset considered in the spring force calculation (this can be used as position control input!)"
+V,      CP,     velocityOffset,                 ,               ,       Real,   "0.", ,   IO,     "$v_\mathrm{off}$velocity offset considered in the damper force calculation (this can be used as velocity control input!)"
+V,      CP,     force,                          ,               ,       Real,   "0.", ,   IO,     "$f_c$additional constant force [SI:Nm] added to spring-damper; this can be used to prescribe a force between the two attached bodies (e.g., for actuation and control)"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     springForceUserFunction,        ,               ,       PyFunctionMbsScalarIndexScalar5, 0, , IO,"$\mathrm{UF} \in \Rcal$A Python function which computes the scalar force between the two rigid body markers along axisMarker0 in $m0$ coordinates, if activeConnector=True; see description below"
+#
+#++++++++++++++ for discontinuities:
+Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return (parameters.springForceUserFunction!=0);", "", CI,  "return true, if object has a computation user function"  
+Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
+#++++++++++++++
+Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
+Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
+#Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
+Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
+Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,    "return object type (for node treatment in computation)" 
+#Fv,     C,      GetODE2Size,                   ,               ,       Index,      ,                           ,       CDI,    "NEEDED? should be done during preprocessing ==> written in global list; number of \hac{ODE2} coordinates the connector is related to; depends on coordinates of marker objects/nodes" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ConnectorLinearSpringDamper';", , CI,     "Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
+Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
+#for discontinuities:
+# Fv,     C,      HasDiscontinuousIteration,      ,               ,       Bool,       "return (parameters.nodeNumber != EXUstd::InvalidIndex);",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+# Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
+# Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       "",             				  ,       I,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+#non-derived functions:
+F,      C,      ComputeSpringForce,             ,               ,       void,       , "const MarkerDataStructure& markerData, Index itemIndex, Matrix3D& A0, Real& displacement, Real& velocity, Real& force", CDI,    "compute spring damper force helper function" 
+F,      C,      EvaluateUserFunctionForce,      ,               ,       void,       , "Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real& displacement, Real& velocity", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       , "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+#VISUALIZATION:
+Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+V,      V,      drawSize,                       ,               ,       float,  "-1.f",                          ,       IO,    "drawing size = diameter of spring; size == -1.f means that default connector size is used"
+V,      V,      drawAsCylinder,                 ,               ,       Bool,   "false",                         ,       IO,    "if this flag is True, the spring-damper is represented as cylinder; this may fit better if the spring-damper represents an actuator"
+V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
+#file names automatically determined from class name
+writeFile = True
+
+
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorTorsionalSpringDamper
@@ -4363,7 +4523,7 @@ mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
 pythonShortName = TorsionalSpringDamper
 addIncludesC = 'class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
-outputVariables = "{'Rotation':'$\Delta\theta$relative rotation around the joint Z-coordinate, enhanced to a continuous rotation (infinite rotations $>+\pi$ and $<-\pi$) if a NodeGeneric with 1 coordinate as added', 'AngularVelocityLocal':'$\Delta\omega$scalar relative angular velocity around joint0 Z-axis', 'TorqueLocal':'$\tau$scalar joint torque around the local joint0 Z-axis'}"
+outputVariables = "{'Rotation':'$\Delta\theta$relative rotation around the spring-damper Z-coordinate, enhanced to a continuous rotation (infinite rotations $>+\pi$ and $<-\pi$) if a NodeGeneric with 1 coordinate as added', 'AngularVelocityLocal':'$\Delta\omega$scalar relative angular velocity around joint0 Z-axis', 'TorqueLocal':'$\tau_{SD}$scalar spring-damper torque around the local joint0 Z-axis'}"
 classType = Object
 objectType = Connector
 equations =
@@ -4395,7 +4555,7 @@ equations =
     If the springTorqueUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
 	$\tau_{SD}$ instead becomes ($t$ is current time)
     \be
-      \tau_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta\theta, \Delta\omega, \mathrm{stiffness}, \mathrm{damping}, \mathrm{rotationMarker0}, \mathrm{rotationMarker1}, \mathrm{offset})
+      \tau_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta\theta, \Delta\omega, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
     \ee
     and \texttt{iN} represents the itemNumber (=objectNumber).
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -4473,8 +4633,8 @@ V,      CP,     stiffness,                      ,               ,       Real,   
 V,      CP,     damping,                        ,               ,       Real,   "0.",       ,       I,      "$d$torsional damping [SI:Nm/(rad/s)]"
 V,      CP,     rotationMarker0,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "local rotation matrix for marker 0; transforms joint into marker coordinates"
 V,      CP,     rotationMarker1,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "local rotation matrix for marker 1; transforms joint into marker coordinates"
-V,      CP,     offset,                         ,               ,       Real,   "0.", ,   IO,     "$v_\mathrm{off}$rotational offset considered in the spring torque calculation"
-V,      CP,     velocityOffset,                 ,               ,       Real,   "0.", ,   IO,     "$\dot v_\mathrm{off}$angular velocity offset considered in the damper torque calculation"
+V,      CP,     offset,                         ,               ,       Real,   "0.", ,   IO,     "$v_\mathrm{off}$rotational offset considered in the spring torque calculation (this can be used as rotation control input!)"
+V,      CP,     velocityOffset,                 ,               ,       Real,   "0.", ,   IO,     "$\dot v_\mathrm{off}$angular velocity offset considered in the damper torque calculation (this can be used as angular velocity control input!)"
 V,      CP,     torque,                         ,               ,       Real,   "0.", ,   IO,     "$\tau_c$additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control)"
 V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 V,      CP,     springTorqueUserFunction,       ,               ,       PyFunctionMbsScalarIndexScalar5, 0, , IO,"$\mathrm{UF} \in \Rcal$A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below"
@@ -7914,6 +8074,89 @@ writeFile = True
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = MarkerKinematicTreeRigid
+classDescription = "A position and orientation (rigid-body) marker attached to a kinematic tree. The marker is attached to the ObjectKinematicTree object and additionally needs a link number as well as a local position, similar to the SensorKinematicTree. The marker allows to attach loads (LoadForceVector and LoadTorqueVector) at arbitrary links or position. It also allows to attach connectors (e.g., spring dampers or actuators) to the kinematic tree. Finally, joint constraints can be attached, which allows for realization of closed loop structures. NOTE, however, that it is less efficient to attach many markers to a kinematic tree, therefor for forces or joint control use the structures available in kinematic tree whenever possible."
+cParentClass = CMarker
+mainParentClass = MainMarker
+visuParentClass = VisualizationMarker
+classType = Marker
+equations =
+%    {\bf Definition of marker quantities}:
+%    \startTable{intermediate variables}{symbol}{description}
+%    \rowTable{marker position}{$\LU{0}{\pv}_{m} \!=\! \LU{0}{\pv}_r + \LU{0r}{\Rot} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right)$}
+%             {current global position which is provided by marker; note offset $\LU{r}{\ov\cRef}$ added, if used as a correction of marker mesh nodes}
+%    \rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r + \LU{0r}{\Rot} \left( \LU{r}{\tilde \tomega_r} \sum_i (w_i \cdot \LU{r}{\pv^{(i)}}) + \right.
+%             \left. \sum_i (w_i \cdot \LU{r}{\dot \uv^{(i)}}) \right)$}
+%             {current global velocity which is provided by marker}
+%    \rowTable{marker rotation matrix}{$\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} \cdot \mathbf{exp}(\LU{r}{\ttheta}_{m})$}{current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; uses exponential map for SO3, assumes that $\ttheta$ represents a rotation vector}
+%    \rowTable{marker local rotation}{$\LU{r}{\ttheta}_{m}$}{current local linearized rotations (rotation vector); for the computation, see below for the standard and alternative approach}
+%    
+%    \rowTable{marker local angular velocity}{$\LU{r}{\tomega}_{m}$}{local angular velocity due to mesh node velocity only; for the computation, see below for the standard and alternative approach}
+%    \rowTable{marker global angular velocity}{$\LU{0}{\tomega}_{m} = \LU{0}{\tomega_{r}} + \LU{0r}{\Rot} \LU{r}{\tomega}_{m}$}{current global angular velocity}
+%    \finishTable
+%
+%    \vspace{6pt}
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \mysubsubsubsection{Marker quantities}
+    More information will be added later. The marker computes jacobians according to \texttt{Jacobian} in \texttt{class Robot}.
+%    The marker provides a 'position' jacobian, which is the derivative of the global marker velocity w.r.t.\ the 
+%    object velocity coordinates $\dot \qv_{n_b}$,
+%    \be
+%      \LU{0}{\Jm_{m,pos}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}} \eqDot
+%    \ee
+%    In case of \texttt{ObjectGenericODE2}, assuming pure displacement based nodes,
+%    the jacobian will consist of zeros and unit matrices $\Im$ ,
+%    \be
+%      \LU{0}{\Jm_{m,pos}^{GenericODE2}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}} 
+%      = \left[ \Null,\; \ldots,\; \Null,\; \Im,\; \Null,\; \ldots,\; \Null,\; \Im,\; \Null,\; \ldots,\; \Null \right]\eqComma
+%    \ee
+%    in which the $\Im$ matrices are placed at the according indices of marker nodes.
+
+%    In case of \texttt{ObjectFFRFreducedOrder}, this jacobian is computed as weighted sum 
+%    of the position jacobians, see \texttt{ObjectFFRFreducedOrder},
+%    \be
+%      \LU{0}{\Jm_{m,pos}^{FFRFreduced}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}}
+%      = \sum_i w_i \LU{0}{\Jm^{(i)}_\mathrm{pos}}
+%      = \left[\Im, \; -\LU{0r}{\Rot} \left(\sum_i(\LU{r}{\tilde\uv\indf^{(i)}} + \LU{r}{\tilde\xv^{(i)}\cRef}) \right) \LU{r}{\Gm},\;
+%              \sum_i w_i \LU{0r}{\Rot} \vr{\LU{r}{\tPsi_{r=3i}\tp}}{\LU{r}{\tPsi_{r=3i+1}\tp}}{\LU{r}{\tPsi_{r=3i+2}\tp}} \right] \eqDot
+%    \ee
+%    In \texttt{ObjectFFRFreducedOrder}, the jacobian usually affects all reduced coordinates.
+%
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "marker's unique name"
+V,      CP,     objectNumber,                   ,               ,       ObjectIndex,"EXUstd::InvalidIndex",     ,       I,      "$n_b$body number to which marker is attached to"
+V,      CP,     linkNumber,                     ,               ,       UInt,       "EXUstd::InvalidIndex",     ,       I,      "$n_l$number of link in KinematicTree to which marker is attached to"
+V,      CP,     localPosition,                  ,               3,      Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "$\LU{l}{\bv}$local (link-fixed) position of marker at link $n_l$, using the link ($n_l$) coordinate system"
+#
+Fv,     C,      GetObjectNumber,                ,               ,       Index,      "return parameters.objectNumber;", ,  CI,     "general access to object number" 
+#Fv,     C,      GetNodeNumbers,                 ,               ,       ArrayIndex, "return parameters.nodeNumbers;", ,  CI,    "access to node numbers" 
+Fv,     C,      GetType,                        ,               ,       "Marker::Type", "return (Marker::Type)(Marker::Body + Marker::Object + Marker::Position + Marker::Orientation + Marker::KinematicTree);", ,       CI,     "return marker type (for node treatment in computation)" 
+#Fv,     C,      GetDimension,                   ,               ,       Index,      "return 3;",                ,       CI,     "return dimension of connector, which an attached connector would have" 
+Fv,     C,      GetDimension,                   ,               ,       Index,      "return 3;",                "const CSystemData& cSystemData", CI,   "return dimension of connector, which an attached connector would have; for coordinate markers, it gives the number of coordinates used by the marker"
+Fv,     C,      GetPosition,                    ,               ,       void,   ,                               "const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return position of marker" 
+Fv,     C,      GetVelocity,                    ,               ,       void,   ,                               "const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return velocity of marker" 
+Fv,     C,      GetRotationMatrix,              ,               ,       void,       ,                           "const CSystemData& cSystemData, Matrix3D& rotationMatrix, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix" 
+Fv,     C,      GetAngularVelocity,             ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector" 
+Fv,     C,      GetAngularVelocityLocal,        ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector" 
+Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,                           "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
+Fv,     C,      ComputeMarkerDataJacobianDerivative, ,          ,       void,       ,  "const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData", CDI,     "fill in according data for derivative of jacobian times vector v6D, e.g.: d(Jpos.T @ v6D[0:3])/dq; v6D represents 3 force components and 3 torque components in global coordinates!" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'KinematicTreeRigid';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+#helper functions:
+# F,      C,      GetFloatingFrameNodeData,       ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& framePosition, Matrix3D& frameRotationMatrix, Vector3D& frameVelocity, Vector3D& frameAngularVelocityLocal, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return parameters of underlying floating frame node (or default values for case that no frame exists)" 
+# F,      C,      GetWeightedRotations,           ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& weightedRotations, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return weighted (linearized) rotation from local mesh displacements" 
+# F,      C,      GetWeightedAngularVelocity,     ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& weightedAngularVelocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return weighted angular velocity from local mesh velocities" 
+#VISUALIZATION:
+Vp,     V,      show,                           ,               ,       Bool,       "true",                     ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                          "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", I,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+#file names automatically determined from class name
+writeFile = True
+
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MarkerObjectODE2Coordinates
 classDescription = "A Marker attached to all coordinates of an object (currently only body is possible), e.g. to apply special constraints or loads on all coordinates. The measured coordinates INCLUDE reference + current coordinates."
 cParentClass = CMarker
@@ -8465,7 +8708,7 @@ classType = Sensor
 Vp,     M,      name,                           ,               ,       String,     "",                          ,       I,     "sensor's unique name"
 V,      CP,     objectNumber,                   ,               ,       ObjectIndex,"EXUstd::InvalidIndex",      ,       I,     "object number of KinematicTree to which sensor is attached to"
 V,      CP,     linkNumber,                     ,               ,       UInt,       "EXUstd::InvalidIndex",      ,       I,     "$n_l$number of link in KinematicTree to measure quantities"
-V,      CP,     localPosition,                  ,               3,      Vector3D,   "Vector3D({0.,0.,0.})",      ,       I,     "$\LU{l}{\bv}$local (link-fixed) position of sensor, defined in link ($l$) coordinate system"
+V,      CP,     localPosition,                  ,               3,      Vector3D,   "Vector3D({0.,0.,0.})",      ,       I,     "$\LU{l}{\bv}$local (link-fixed) position of sensor, defined in link ($n_l$) coordinate system"
 V,      CP,     writeToFile,                    ,               ,       Bool,       true,                        ,       I,     "True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''"
 V,      CP,     fileName,                       ,               ,       String,     "",                          ,       I,     "directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist"
 V,      CP,     outputVariableType,             ,               ,       OutputVariableType, "OutputVariableType::_None",              ,       I,     "OutputVariableType for sensor"

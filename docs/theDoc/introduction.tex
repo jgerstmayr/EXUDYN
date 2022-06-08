@@ -481,13 +481,12 @@ As this needs to be done during redraw of every frame, it is conveniently done i
 If you are running large models, it may be more convenient to watch results after simulation has been finished.
 For this, you can use
 \bi
-  \item \texttt{utilities.AnimateSolution}, see Section \ref{sec:utilities:AnimateSolution}
+%deprecated: \item \texttt{utilities.AnimateSolution}, see Section \ref{sec:utilities:AnimateSolution}
   \item \texttt{interactive.SolutionViewer}, see Section \ref{sec:interactive:SolutionViewer}
   \item \texttt{interactive.AnimateModes}, lets you view the animation of computed modes, see Section \ref{sec:interactive:AnimateModes}
 \ei
-The function \texttt{AnimateSolution} allows to directly visualize the stored solution for according stored time frames.
 The \texttt{SolutionViewer} adds a \texttt{tkinter} interactive dialog, which lets you interact with the model ('Player').
-In both methods \texttt{AnimateSolution} and \texttt{SolutionViewer}, the solution needs to be loaded with
+The solution should be loaded with
 \texttt{LoadSolutionFile('coordinatesSolution.txt')}, where 'coordinatesSolution.txt' represents the stored solution file, 
 see 
 \bi
@@ -499,12 +498,14 @@ You can call the \texttt{SolutionViewer} either in the model, or at the command 
   sol = LoadSolutionFile('coordinatesSolution.txt')
   SolutionViewer(mbs, sol)
 \end{lstlisting}
-\mybold{Alternatively}, you can just reload the last stored solution (according to your \texttt{simulationSettings}):
+%
+\mybold{Alternatively}, if no solution is provided, \texttt{SolutionViewer} tries to reload the solution of the previous simulation that is referred to from \texttt{mbs.sys$[$simulationSettings$]$}:
 \pythonstyle\begin{lstlisting}
   from exudyn.interactive import SolutionViewer
   SolutionViewer(mbs)
 \end{lstlisting}
-An example for the \texttt{SolutionViewer} is integrated into the \texttt{Examples/} directory, see \texttt{solutionViewerTest.py}. 
+An example for the \texttt{SolutionViewer} is integrated into the \texttt{Examples/} directory, see \texttt{solutionViewerTest.py}. \\
+\mybold{Note}: The previous function \texttt{AnimateSolution} in \texttt{exudyn.utilities} allows to directly visualize the stored solution for according stored time frames without \texttt{tkinter} (useful for MacOS).
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Generating animations}

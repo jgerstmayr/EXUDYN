@@ -300,7 +300,8 @@ class InteractiveDialog:
         self.Run.focus_set() #does not work
         
         self.root.bind('<space>', func=self.StartSimulation) #if focus is not set to button ...
-        self.root.bind("<Escape>", self.OnQuit) #an item has been selected for change
+        self.root.bind('<Escape>', self.OnQuit) #Escape causes immediate quit (no further checks)
+        self.root.bind('q', self.OnQuit) #Button 'Q' causes immediate quit (no further checks)
         
 
         root.update()

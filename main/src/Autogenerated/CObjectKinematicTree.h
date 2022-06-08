@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-30  14:09:59 (last modified)
+* @date         2022-06-08  20:22:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -81,7 +81,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectKinematicTree
-* @brief        A special object to represent open kinematic trees using minimum coordinate formulation (UNDER DEVELOPMENT!). The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.\ per link (body). Every link is defined by a previous joint and a coordinate transformation from the previous link to this link's joint coordinates. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.
+* @brief        A special object to represent open kinematic trees using minimum coordinate formulation (NOT FULLY TESTED!). The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.\ per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl.\ translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -271,7 +271,7 @@ public: // AUTO:
     //! AUTO:  number of \hac{ODE2} coordinates
     virtual Index GetODE2Size() const override
     {
-        return parameters.linkMasses.NumberOfItems();
+        return parameters.jointTransformations.NumberOfItems();
     }
 
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation
@@ -290,6 +290,12 @@ public: // AUTO:
     virtual void ParametersHaveChanged() override
     {
         ;
+    }
+
+    //! AUTO:  number of links used in computation functions for kinematic tree
+    Index NumberOfLinks() const
+    {
+        return parameters.jointTransformations.NumberOfItems();
     }
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
@@ -319,7 +325,7 @@ public: // AUTO:
     //! AUTO:  return the number of mesh nodes; these are virtual nodes per link, emulating rigid bodies recomputed from kinematic tree
     virtual Index GetNumberOfMeshNodes() const override
     {
-        return parameters.linkMasses.NumberOfItems();
+        return parameters.jointTransformations.NumberOfItems();
     }
 
     //! AUTO:  return the (global) position of a mesh node according to configuration type; this is the node position transformed by the motion of the reference frame; meshNodeNumber is the local node number of the (underlying) mesh
@@ -337,8 +343,11 @@ public: // AUTO:
     //! AUTO:  get extended output variables for multi-nodal objects with mesh nodes
     void GetOutputVariableKinematicTree(OutputVariableType variableType, const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration, Vector& value) const;
 
-    //! AUTO:  compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file
-    void GetAccessFunctionKinematicTree(AccessFunctionType accessType, const Vector3D& localPosition, Index linkNumber, Matrix& value) const;
+    //! AUTO:  accelerator function for faster computation of MarkerData for rigid bodies/joints
+    void ComputeRigidBodyMarkerDataKT(const Vector3D& localPosition, Index linkNumber, bool computeJacobian, MarkerData& markerData) const;
+
+    //! AUTO:  compute rot+pos jacobian of (global) position at linkNumber, using pre-computed joint transformations
+    void ComputeJacobian(Index linkNumber, const Vector3D& position, const Transformations66List& jointTransformations, ResizableMatrix& positionJacobian, ResizableMatrix& rotationJacobian) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

@@ -429,15 +429,44 @@ namespace Joint {
 	//! used for KinematicTree
 	enum Type {
 		_None = 0, //marks that no type is used
-		RevoluteX = 1 << 0,						//!< revolute joint around local X axis
-		RevoluteY = 1 << 1,						//!< revolute joint around local Y axis
-		RevoluteZ = 1 << 2,						//!< revolute joint around local Z axis
-		PrismaticX = 1 << 3,					//!< prismatic joint with translation along local X axis
-		PrismaticY = 1 << 4,					//!< prismatic joint with translation along local Y axis
-		PrismaticZ = 1 << 5,					//!< prismatic joint with translation along local Z axis
+		RevoluteX = 1,					//!< revolute joint around local X axis
+		RevoluteY = 2,					//!< revolute joint around local Y axis
+		RevoluteZ = 3,					//!< revolute joint around local Z axis
+		PrismaticX = 4,					//!< prismatic joint with translation along local X axis
+		PrismaticY = 5,					//!< prismatic joint with translation along local Y axis
+		PrismaticZ = 6,					//!< prismatic joint with translation along local Z axis
 
-		//EndOfEnumList = 1 << ??				//!< KEEP THIS AS THE (2^i) MAXIMUM OF THE ENUM LIST!!!
+		//bit-storage may restrict from effficient implementation:
+		//RevoluteX = 1 << 0,						//!< revolute joint around local X axis
+		//RevoluteY = 1 << 1,						//!< revolute joint around local Y axis
+		//RevoluteZ = 1 << 2,						//!< revolute joint around local Z axis
+		//PrismaticX = 1 << 3,					//!< prismatic joint with translation along local X axis
+		//PrismaticY = 1 << 4,					//!< prismatic joint with translation along local Y axis
+		//PrismaticZ = 1 << 5,					//!< prismatic joint with translation along local Z axis
 	};
+
+	inline bool IsRevolute(Type var) { return var >= RevoluteX && var <= RevoluteZ; }
+	inline bool IsPrismatic(Type var) { return var >= PrismaticX && var <= PrismaticZ; }
+
+	////this array maps joint types to joint axis:
+	//Index map2AxisNumber[] = { -1, 0, 1,-1, 2,
+	//						   -1,-1,-1, 0,-1,-1,-1,-1,-1,-1,-1, 1,
+	//						   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 2 };
+	//this array maps joint types to joint axis:
+#ifndef __EXUDYN__APPLE__
+	inline static const 
+#else
+	static const 
+#endif
+	Index map2AxisNumber[] = { -1, 0, 1, 2, 0, 1, 2, 3 };
+
+	inline Index AxisNumber(Type var) 
+	{
+		CHECKandTHROW(var <= 6 and var > 0, "Joint::AxisNumber: joint out of range");
+		return map2AxisNumber[(Index)var];
+	}
+
+	inline bool IsValid(Type var) { return var >= RevoluteX && var <= PrismaticZ && map2AxisNumber[(Index)var]!=-1; }
 
 	//! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
 	inline STDstring GetTypeString(Type var)

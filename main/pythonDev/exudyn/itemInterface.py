@@ -1443,6 +1443,58 @@ class ObjectConnectorRigidBodySpringDamper:
 RigidBodySpringDamper = ObjectConnectorRigidBodySpringDamper
 VRigidBodySpringDamper = VObjectConnectorRigidBodySpringDamper
 
+class VObjectConnectorLinearSpringDamper:
+    def __init__(self, show = True, drawSize = -1., drawAsCylinder = False, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.drawSize = drawSize
+        self.drawAsCylinder = drawAsCylinder
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'drawSize', self.drawSize
+        yield 'drawAsCylinder', self.drawAsCylinder
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+class ObjectConnectorLinearSpringDamper:
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., axisMarker0 = [0], offset = 0., velocityOffset = 0., force = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'drawAsCylinder': False, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.stiffness = stiffness
+        self.damping = damping
+        self.axisMarker0 = axisMarker0
+        self.offset = offset
+        self.velocityOffset = velocityOffset
+        self.force = force
+        self.activeConnector = activeConnector
+        self.springForceUserFunction = springForceUserFunction
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'ConnectorLinearSpringDamper'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'stiffness', self.stiffness
+        yield 'damping', self.damping
+        yield 'axisMarker0', self.axisMarker0
+        yield 'offset', self.offset
+        yield 'velocityOffset', self.velocityOffset
+        yield 'force', self.force
+        yield 'activeConnector', self.activeConnector
+        yield 'springForceUserFunction', self.springForceUserFunction
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdrawSize', dict(self.visualization)["drawSize"]
+        yield 'VdrawAsCylinder', dict(self.visualization)["drawAsCylinder"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+#add typedef for short usage:
+LinearSpringDamper = ObjectConnectorLinearSpringDamper
+VLinearSpringDamper = VObjectConnectorLinearSpringDamper
+
 class VObjectConnectorTorsionalSpringDamper:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -2667,6 +2719,33 @@ class MarkerSuperElementRigid:
         yield 'useAlternativeApproach', self.useAlternativeApproach
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VshowMarkerNodes', dict(self.visualization)["showMarkerNodes"]
+
+    def __repr__(self):
+        return str(dict(self))
+class VMarkerKinematicTreeRigid:
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+    def __repr__(self):
+        return str(dict(self))
+class MarkerKinematicTreeRigid:
+    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), linkNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], visualization = {'show': True}):
+        self.name = name
+        self.objectNumber = objectNumber
+        self.linkNumber = CheckForValidUInt(linkNumber,"linkNumber","MarkerKinematicTreeRigid")
+        self.localPosition = localPosition
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'markerType', 'KinematicTreeRigid'
+        yield 'name', self.name
+        yield 'objectNumber', self.objectNumber
+        yield 'linkNumber', self.linkNumber
+        yield 'localPosition', self.localPosition
+        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))

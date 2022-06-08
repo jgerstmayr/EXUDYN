@@ -10,15 +10,119 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.2.109.dev1, 
-  \item last change =  2022-05-31, 
-  \item Number of issues = 1123, 
-  \item Number of resolved issues = 951 (109 in current version), 
+  \item Exudyn version = 1.2.124.dev1, 
+  \item last change =  2022-06-08, 
+  \item Number of issues = 1135, 
+  \item Number of resolved issues = 966 (124 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.2.124}:  resolved Issue 1134: {\bf KinematicTree}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add Jacobian computation according to class Robot in order to realize AccessFunction needed from MarkerKinematicTreeRigid; uses special access function because the SuperElement interface does not provide link number}
+    \item   date resolved: {\bf 2022-06-08 18:30},
+date raised: 2022-06-06 
+  \ei
+  \item {\bf Version 1.2.123}:  resolved Issue 1071: {\bf KinematicTree}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add special MarkerKinematicTreeRigidBody with link number and local position}
+    \item   date resolved: {\bf 2022-06-08 18:30},
+date raised: 2022-05-05 
+  \ei
+  \item {\bf Version 1.2.122}:  resolved Issue 1130: {\bf class Robot}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: tool only working for serial robots; in case of tree structure, tool should not be used as it is attached only to last link}
+    \item {\bf notes: added warning to class Robot.AddLink(...) which raises Warning if tool is defined and tree structure is generated}
+    \item   date resolved: {\bf 2022-06-06 00:32},
+date raised: 2022-06-03 
+  \ei
+  \item {\bf Version 1.2.121}:  resolved Issue 1132: {\bf class Robot}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extend Jacobian, LinkHT and JointHT functions for tree structure; check StaticTorques}
+    \item {\bf notes: added comparison for class Robot functions in kinematicTreeAndMBStest.py}
+    \item   date resolved: {\bf 2022-06-06 00:31},
+date raised: 2022-06-03 
+  \ei
+  \item {\bf Version 1.2.120}:  resolved Issue 1133: {\bf SolutionViewer}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: bind additional Button "Q" in interactive dialogs for quit (in addition to Escape)}
+    \item   date resolved: {\bf 2022-06-05 18:25},
+date raised: 2022-06-05 
+  \ei
+  \item {\bf Version 1.2.119}:  resolved Issue 1114: {\bf class Robot}
+(testing)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: create new example(s) comparing CreateKinematicTree and CreateRedundantCoordinateMBS with control and prismatic joints}
+    \item   date resolved: {\bf 2022-06-05 14:33},
+date raised: 2022-05-29 
+  \ei
+  \item {\bf Version 1.2.118}: {\bf \color{warningRed}  resolved BUG 1127}: {\bf class Robot}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: CreateKinematicTree not working for tree structure}
+    \item   date resolved: {\bf 2022-06-03 00:28},
+date raised: 2022-06-03 
+  \ei
+  \item {\bf Version 1.2.117}: {\bf \color{warningRed}  resolved BUG 1129}: {\bf class Robot}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: GetParentIndex(...), HasParent(...) not working for tree structure}
+    \item   date resolved: {\bf 2022-06-03 00:19},
+date raised: 2022-06-03 
+  \ei
+  \item {\bf Version 1.2.116}: {\bf \color{warningRed}  resolved BUG 1128}: {\bf class Robot}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: CreateRedundantCoordinateMBS not working for tree structure}
+    \item   date resolved: {\bf 2022-06-03 00:19},
+date raised: 2022-06-03 
+  \ei
+  \item {\bf Version 1.2.115}: {\bf \color{warningRed}  resolved BUG 1126}: {\bf KinematicTree}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: wrong formula in computation of acceleration}
+    \item   date resolved: {\bf 2022-06-02 22:41},
+date raised: 2022-06-02 
+  \ei
+  \item {\bf Version 1.2.114}:  resolved Issue 1123: {\bf class Robot}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extend CreateRedundantCoordinateMBS for jointSpringDamperUserFunctionList with prismatic joints}
+    \item   date resolved: {\bf 2022-06-01 23:44},
+date raised: 2022-06-01 
+  \ei
+  \item {\bf Version 1.2.113}:  resolved Issue 1125: {\bf class Robot}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extend CreateRedundantCoordinateMBS for control of PrsimaticJoints with new LinearSpringDamper}
+    \item   date resolved: {\bf 2022-06-01 23:43},
+date raised: 2022-06-01 
+  \ei
+  \item {\bf Version 1.2.112}:  resolved Issue 1124: {\bf LinearSpringDamper}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add LinearSpringDamper which is the corresponding spring damper/actuator for prismatic joints (like TorsionalSpringDamper for revolute joints), being aligned with a rigid marker, having no limits compared to regular (distance based) SpringDamper}
+    \item   date resolved: {\bf 2022-06-01 23:43},
+date raised: 2022-06-01 
+  \ei
+  \item {\bf Version 1.2.111}:  resolved Issue 0503: {\bf serialrobot}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: adapt serial robot for prismatic joints}
+    \item {\bf notes: functionality with Prismatic joints  now included into class Robot, converting to mbs with CreateRedundantCoordinateMBS or CreateKinematicTree, see issue}
+    \item   date resolved: {\bf 2022-06-01 20:38},
+date raised: 2020-12-16 
+  \ei
+  \item {\bf Version 1.2.110}:  resolved Issue 1121: {\bf AnimateSolution}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: mark as deprecated, use SolutionViewer instead}
+    \item   date resolved: {\bf 2022-06-01 20:25},
+date raised: 2022-05-31 
+  \ei
   \item {\bf Version 1.2.109}: {\bf \color{warningRed}  resolved BUG 1122}: {\bf GraphicsDataBasis}
   \begin{itemize}[label=$\bullet$]
     \item {description: kwargs argument radius not working}

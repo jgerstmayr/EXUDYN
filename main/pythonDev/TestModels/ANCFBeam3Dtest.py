@@ -45,7 +45,7 @@ sectionData = exu.BeamSection()
 #print('section=',sectionData)
 
 if True: #Nachbagauer, et al 2011
-    nElements = 1
+    nElements = 2
     L = 3
     bodyFixedLoad = False
     # Material properties

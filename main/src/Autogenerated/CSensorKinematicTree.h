@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-30  20:01:08 (last modified)
+* @date         2022-06-05  15:30:50 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,7 +29,7 @@ class CSensorKinematicTreeParameters // AUTO:
 public: // AUTO: 
     Index objectNumber;                           //!< AUTO: object number of KinematicTree to which sensor is attached to
     Index linkNumber;                             //!< AUTO: number of link in KinematicTree to measure quantities
-    Vector3D localPosition;                       //!< AUTO: local (link-fixed) position of sensor, defined in link (\f$l\f$) coordinate system
+    Vector3D localPosition;                       //!< AUTO: local (link-fixed) position of sensor, defined in link (\f$n_l\f$) coordinate system
     bool writeToFile;                             //!< AUTO: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
     std::string fileName;                         //!< AUTO: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
     OutputVariableType outputVariableType;        //!< AUTO: OutputVariableType for sensor

@@ -895,7 +895,7 @@ def SetSolutionState(mbs, solution, row, configuration=exudyn.ConfigurationType.
         print("ERROR in SetVisualizationState: invalid row (out of range)")
 
 #++++++++++++++++++++++++++++++++++++++++++++
-#**function: consecutively load the rows of a solution file and visualize the result
+#**function: This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result
 #**input: 
 #  mbs: the system used for animation
 #  solution: solution dictionary previously loaded with LoadSolutionFile; will be played from first to last row

@@ -41,7 +41,7 @@ void CObjectKinematicTree::ComputeMassMatrix(EXUmath::MatrixContainer& massMatri
 {
 	//massMatrixC.SetUseDenseMatrix(true); //uses sparse matrix with no entries.
 	//Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
-	//Index nODE2 = GetODE2Size();
+	//Index nODE2 = NumberOfLinks();
 	//massMatrix.SetNumberOfRowsAndColumns(nODE2, nODE2);
 	//massMatrix.SetAll(0.);
 
@@ -73,28 +73,12 @@ JacobianType::Type CObjectKinematicTree::GetAvailableJacobians() const
 	return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
 }
 
-//! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
-AccessFunctionType CObjectKinematicTree::GetAccessFunctionTypes() const
-{
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt +
-		//(Index)AccessFunctionType::DisplacementMassIntegral_q + //is included in recursive formula, more efficient!
-		(Index)AccessFunctionType::SuperElement);
-}
-
-//! provide Jacobian at localPosition in "value" according to object access
-void CObjectKinematicTree::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
-{
-	SysError("CObjectKinematicTree:GetAccessFunctionBody not available");
-}
-
 //! provide according output variable in "value"
 void CObjectKinematicTree::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
-	//Index nODE2 = GetODE2Size();
-
 	switch (variableType)
 	{
-	case OutputVariableType::Coordinates:	value.CopyFrom(GetCNode(0)->GetCurrentCoordinateVector() + GetCNode(0)->GetReferenceCoordinateVector());	break;
+	case OutputVariableType::Coordinates: ((CNodeODE2*)GetCNode(0))->GetODE2CoordinateVectorWithReference(value, configuration); break;
 	case OutputVariableType::Coordinates_t: value.CopyFrom(((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector_t());	break;
 	case OutputVariableType::Coordinates_tt: 
 	{
@@ -208,7 +192,7 @@ void CObjectKinematicTree::GetNegativeGravity6D(Vector6D& gravity6D) const
 void CObjectKinematicTree::ComputeTreeTransformations(ConfigurationType configuration, bool computeVelocitiesAccelerations, 
 	bool computeAbsoluteTransformations, Transformations66List& Xup, Vector6DList& V, Vector6DList& A) const
 {
-	Index n = GetODE2Size();
+	Index n = NumberOfLinks();
 	Xup.SetNumberOfItems(n);
 	if (computeVelocitiesAccelerations)
 	{
@@ -236,7 +220,9 @@ void CObjectKinematicTree::ComputeTreeTransformations(ConfigurationType configur
 	//iterate over all joints in kinematic tree
 	for (Index i = 0; i < n; i++)
 	{
-		JointTransformMotionSubspace66(parameters.jointTypes[i], q[i]+qRef[i], XJ, MS);
+		Real qTotal = q[i];
+		if (configuration != ConfigurationType::Reference) { qTotal += qRef[i]; }
+		JointTransformMotionSubspace66(parameters.jointTypes[i], qTotal, XJ, MS);
 		Transformation66 XL=RigidBodyMath::RotationTranslation2T66Inverse(parameters.jointTransformations[i], parameters.jointOffsets[i]);
 		Xup[i] = XJ * XL; 
 
@@ -276,7 +262,7 @@ void CObjectKinematicTree::ComputeTreeTransformations(ConfigurationType configur
 void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(EXUmath::MatrixContainer* massMatrixC, const ArrayIndex* ltg, Vector* ode2Lhs, 
 	Index objectNumber, bool computeMass) const
 {
-	Index n = GetODE2Size();
+	Index n = NumberOfLinks();
 
 	Transformations66List& Xup = jointTransformationsTemp;
 	Vector6DList& MS = motionSubspaces;
@@ -460,7 +446,7 @@ void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(EXUmath::MatrixContainer*
 //! compute object coordinates composed from all nodal coordinates; does not include reference coordinates
 void CObjectKinematicTree::AddExternalForces6D(const Transformations66List& Xup, Vector6DList& Fvp) const
 {
-	Index n = GetODE2Size();
+	Index n = NumberOfLinks();
 	Transformations66List& Xa = jointTransformationsTemp;
 	Xa.SetNumberOfItems(n);
 	
@@ -504,7 +490,7 @@ void CObjectKinematicTree::AddExternalForces6D(const Transformations66List& Xup,
 //! return the (global) position of 'localPosition' of linkNumber according to configuration type
 Vector3D CObjectKinematicTree::GetPositionKinematicTree(const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(linkNumber < GetODE2Size(), "CObjectKinematicTree::GetPositionKinematicTree: invalid linkNumber");
+	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetPositionKinematicTree: invalid linkNumber");
 
 	ComputeTreeTransformations(configuration, false, true, jointTransformationsTemp, jointVelocities, jointAccelerations);
 
@@ -518,7 +504,7 @@ Vector3D CObjectKinematicTree::GetPositionKinematicTree(const Vector3D& localPos
 //! return the rotation matrix of of linkNumber according to configuration type
 Matrix3D CObjectKinematicTree::GetRotationMatrixKinematicTree(Index linkNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(linkNumber < GetODE2Size(), "CObjectKinematicTree::GetRotationMatrixKinematicTree: invalid linkNumber");
+	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetRotationMatrixKinematicTree: invalid linkNumber");
 
 	ComputeTreeTransformations(configuration, false, true, jointTransformationsTemp, jointVelocities, jointAccelerations);
 
@@ -532,7 +518,7 @@ Matrix3D CObjectKinematicTree::GetRotationMatrixKinematicTree(Index linkNumber, 
 //! return the (global) velocity of 'localPosition' and linkNumber according to configuration type
 Vector3D CObjectKinematicTree::GetVelocityKinematicTree(const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(linkNumber < GetODE2Size(), "CObjectKinematicTree::GetVelocityKinematicTree: invalid linkNumber");
+	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetVelocityKinematicTree: invalid linkNumber");
 
 	ComputeTreeTransformations(configuration, true, true, jointTransformationsTemp, jointVelocities, jointAccelerations);
 
@@ -549,7 +535,7 @@ Vector3D CObjectKinematicTree::GetVelocityKinematicTree(const Vector3D& localPos
 //! return the (global) angular velocity of linkNumber according to configuration type
 Vector3D CObjectKinematicTree::GetAngularVelocityKinematicTree(Index linkNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(linkNumber < GetODE2Size(), "CObjectKinematicTree::GetAngularVelocityKinematicTree: invalid linkNumber");
+	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetAngularVelocityKinematicTree: invalid linkNumber");
 
 	ComputeTreeTransformations(configuration, true, true, jointTransformationsTemp, jointVelocities, jointAccelerations);
 
@@ -566,13 +552,13 @@ Vector3D CObjectKinematicTree::GetAngularVelocityKinematicTree(Index linkNumber,
 //! return the (local) angular velocity of linkNumber according to configuration type
 Vector3D CObjectKinematicTree::GetAngularVelocityLocalKinematicTree(Index linkNumber, ConfigurationType configuration ) const
 {
-	CHECKandTHROW(linkNumber < GetODE2Size(), "CObjectKinematicTree::GetAngularVelocityLocalKinematicTree: invalid linkNumber");
+	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetAngularVelocityLocalKinematicTree: invalid linkNumber");
 
 	ComputeTreeTransformations(configuration, true, true, jointTransformationsTemp, jointVelocities, jointAccelerations);
 
-	Matrix3D rot3D;
-	Vector3D pos3D;
-	RigidBodyMath::T66toRotationTranslationInverse(jointTransformationsTemp[linkNumber], rot3D, pos3D);
+	//Matrix3D rot3D;
+	//Vector3D pos3D;
+	//RigidBodyMath::T66toRotationTranslationInverse(jointTransformationsTemp[linkNumber], rot3D, pos3D);
 
 	//Vector3D velLocal({ jointVelocities[linkNumber][3], jointVelocities[linkNumber][4], jointVelocities[linkNumber][5] });
 	Vector3D angVelLocal({ jointVelocities[linkNumber][0], jointVelocities[linkNumber][1], jointVelocities[linkNumber][2] });
@@ -583,7 +569,7 @@ Vector3D CObjectKinematicTree::GetAngularVelocityLocalKinematicTree(Index linkNu
 //! return the (global) acceleration of 'localPosition' and linkNumber according to configuration type
 Vector3D CObjectKinematicTree::GetAccelerationKinematicTree(const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(linkNumber < GetODE2Size(), "CObjectKinematicTree::GetAccelerationKinematicTree: invalid linkNumber");
+	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetAccelerationKinematicTree: invalid linkNumber");
 
 	ComputeTreeTransformations(configuration, true, true, jointTransformationsTemp, jointVelocities, jointAccelerations);
 
@@ -597,22 +583,23 @@ Vector3D CObjectKinematicTree::GetAccelerationKinematicTree(const Vector3D& loca
 	Vector3D accLocal({ jointAccelerations[linkNumber][3], jointAccelerations[linkNumber][4], jointAccelerations[linkNumber][5] });
 
 	//d/dt[rot3D * (velLocal + angVelLocal.CrossProduct(localPosition)) ] =
-	//     rot3D * (accLocal + angVelLocal.CrossProduct(angVelLocal.CrossProduct(localPosition)) + angAccLocal.CrossProduct(localPosition) ) +
+	//     rot3D * (accLocal + angAccLocal.CrossProduct(localPosition) ) +
 	//     rot3D * angVelLocal.Cross(velLocal + angVelLocal.CrossProduct(localPosition))
-	// = rot3D * (accLocal + angVelLocal.CrossProduct(velLocal) + 2*angVelLocal.CrossProduct(angVelLocal.CrossProduct(localPosition)) + angAccLocal.CrossProduct(localPosition) )
+	// = rot3D * (accLocal + angVelLocal.CrossProduct(velLocal) + angVelLocal.CrossProduct(angVelLocal.CrossProduct(localPosition)) + 
+	//   angAccLocal.CrossProduct(localPosition) )
 
 	//WRONG: DELETE:
 	//return rot3D * (accLocal + angAccLocal.CrossProduct(localPosition) + 
 	//	angVelLocal.CrossProduct(angVelLocal.CrossProduct(localPosition)) );
 	return rot3D * (accLocal + angVelLocal.CrossProduct(velLocal) + 
-		2. * angVelLocal.CrossProduct(angVelLocal.CrossProduct(localPosition)) + 
+		angVelLocal.CrossProduct(angVelLocal.CrossProduct(localPosition)) + 
 		angAccLocal.CrossProduct(localPosition));
 }
 
 //! return the (global) angular acceleration of linkNumber according to configuration type
 Vector3D CObjectKinematicTree::GetAngularAccelerationKinematicTree(Index linkNumber, ConfigurationType configuration) const
 {
-	CHECKandTHROW(linkNumber < GetODE2Size(), "CObjectKinematicTree::GetAngularAccelerationKinematicTree: invalid linkNumber");
+	CHECKandTHROW(linkNumber < NumberOfLinks(), "CObjectKinematicTree::GetAngularAccelerationKinematicTree: invalid linkNumber");
 
 	ComputeTreeTransformations(configuration, true, true, jointTransformationsTemp, jointVelocities, jointAccelerations);
 
@@ -687,6 +674,21 @@ void CObjectKinematicTree::GetOutputVariableKinematicTree(OutputVariableType var
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //AccessFunction:
+//! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
+AccessFunctionType CObjectKinematicTree::GetAccessFunctionTypes() const
+{
+	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt +
+		//(Index)AccessFunctionType::DisplacementMassIntegral_q + //is included in recursive formula, more efficient!
+		(Index)AccessFunctionType::KinematicTree);
+}
+
+//! just make sure that this overwritten function is not called!
+void CObjectKinematicTree::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
+{
+	SysError("CObjectKinematicTree:GetAccessFunctionBody not available");
+}
+
+
 //! just make sure that this overwritten function is not called!
 void CObjectKinematicTree::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, Matrix& value) const
 {
@@ -694,11 +696,79 @@ void CObjectKinematicTree::GetAccessFunctionSuperElement(AccessFunctionType acce
 }
 
 
-//! this is the main access function for kinematic tree, per link
-void CObjectKinematicTree::GetAccessFunctionKinematicTree(AccessFunctionType accessType, 
-	const Vector3D& localPosition, Index linkNumber, Matrix& value) const
+//! this function replaces regular AccessFunction for kinematic tree, per link
+void CObjectKinematicTree::ComputeRigidBodyMarkerDataKT(const Vector3D& localPosition, Index linkNumber, bool computeJacobian, MarkerData& markerData) const
 {
-	CHECKandTHROWstring("CObjectKinematicTree::GetAccessFunctionSuperElement: Function called without intention; use MarkerKinematicTree instead of MarkerSuperElement");
+	//CHECKandTHROWstring("CObjectKinematicTree::GetAccessFunctionKinematicTree: not implemented yet");
+
+	//for info on what to compute, compare to CObjectBody.h : ComputeRigidBodyMarkerData
+
+	//compute position, orientation, velocity, angularVelocity
+	//position jacobian and rotation jacobian on demand (computeJacobian==true)
+
+	ComputeTreeTransformations(ConfigurationType::Current, true, true, jointTransformationsTemp, jointVelocities, jointAccelerations);
+
+	Vector3D pos3D;
+	RigidBodyMath::T66toRotationTranslationInverse(jointTransformationsTemp[linkNumber], markerData.orientation, pos3D);
+
+	markerData.position = pos3D + markerData.orientation * localPosition;
+
+	Vector3D velLocal({ jointVelocities[linkNumber][3], jointVelocities[linkNumber][4], jointVelocities[linkNumber][5] });
+	Vector3D angVelLocal({ jointVelocities[linkNumber][0], jointVelocities[linkNumber][1], jointVelocities[linkNumber][2] });
+
+	markerData.velocity = markerData.orientation * (velLocal + angVelLocal.CrossProduct(localPosition));
+	markerData.angularVelocityLocal = angVelLocal;
+	markerData.velocityAvailable = true;
+
+	//for jacobian links need to be processed backwards via parent links
+
+	//pout << "******************\n" << "link=" << linkNumber << ", locPos=" << localPosition << "\n";
+
+	if (computeJacobian)
+	{
+		ComputeJacobian(linkNumber, markerData.position, jointTransformationsTemp, markerData.positionJacobian, markerData.rotationJacobian);
+	}
+}
+
+//! compute rot+pos jacobian of (global) position at linkNumber, using pre-computed joint transformations
+void CObjectKinematicTree::ComputeJacobian(Index linkNumber, const Vector3D& position, const Transformations66List& jointTransformations, 
+	ResizableMatrix& positionJacobian, ResizableMatrix& rotationJacobian) const
+{
+	//put this jacobian function into a separate member function in future (to be able to access jacobian)
+	Index n = NumberOfLinks();
+	positionJacobian.SetNumberOfRowsAndColumns(3, n);
+	rotationJacobian.SetNumberOfRowsAndColumns(3, n);
+	positionJacobian.SetAll(0.); //not all entries will be filled!
+	rotationJacobian.SetAll(0.); //...
+
+	Index cnt = 0; //just for safety, if parents are having loop?
+	Index i = linkNumber;
+	Matrix3D rotJoint;	//position at joint axis of computation
+	Vector3D posJoint;	//position at joint axis of computation
+	while (i != noParent && cnt++ < n)
+	{
+		//pout << "i=" << i << ", cnt=" << cnt << ", n=" << n << ", parent=" << parameters.linkParents[i] << "\n";
+		RigidBodyMath::T66toRotationTranslationInverse(jointTransformations[i], rotJoint, posJoint);
+
+		Vector3D localAxis(0.);
+
+		localAxis[Joint::AxisNumber(parameters.jointTypes[i])] = 1.;
+		Vector3D axis = rotJoint * localAxis; //jacobian of global rotation/position
+		if (Joint::IsRevolute(parameters.jointTypes[i]))
+		{
+			rotationJacobian.SetColumnVector(axis, i); 
+			positionJacobian.SetColumnVector(axis.CrossProduct(position - posJoint), i);
+			//pout << "posJoint=" << posJoint << "\n";
+		}
+		else if (Joint::IsPrismatic(parameters.jointTypes[i]))
+		{
+			positionJacobian.SetColumnVector(rotJoint*axis, i);
+		}
+		else { CHECKandTHROWstring("CObjectKinematicTree::ComputeJacobian: illegal jointType"); }
+
+		i = parameters.linkParents[i];
+	}
+	CHECKandTHROW(cnt <= n, "CObjectKinematicTree::ComputeJacobian: too many iterations when computing jacobian; check parent indices");
 }
 
 
@@ -730,31 +800,4 @@ Vector3D CObjectKinematicTree::GetMeshNodeVelocity(Index meshNodeNumber, Configu
 	CHECKandTHROWstring("CObjectKinematicTree::GetMeshNodeVelocity: called without intention!");
 	return Vector3D();
 }
-
-
-////! return the mesh node pointer; for consistency checks
-//CNodeODE2* CObjectKinematicTree::GetMeshNode(Index meshNodeNumber) const
-//{
-//	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectKinematicTree::GetMeshNode: meshNodeNumber out of range");
-//
-//	return nullptr; //there is no meshnode, its only virtual ...
-//}
-
-////! return the (local) position of a mesh node according to configuration type; use Configuration.Reference to access the mesh reference position; meshNodeNumber is the local node number of the (underlying) mesh
-//Vector3D CObjectKinematicTree::GetMeshNodeLocalPosition(Index meshNodeNumber, ConfigurationType configuration) const
-//{
-//	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectKinematicTree::GetMeshNodeLocalPosition: meshNodeNumber out of range");
-//	
-//	CHECKandTHROWstring("CObjectKinematicTree::GetMeshNodeLocalPosition: not implemented");
-//	return Vector3D();
-//}
-
-////! return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh
-//Vector3D CObjectKinematicTree::GetMeshNodeLocalVelocity(Index meshNodeNumber, ConfigurationType configuration) const
-//{
-//	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectKinematicTree::GetMeshNodeLocalVelocity: meshNodeNumber out of range ");
-//
-//	CHECKandTHROWstring("CObjectKinematicTree::GetMeshNodeLocalVelocity: not implemented");
-//	return Vector3D();
-//}
 

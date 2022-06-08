@@ -130,14 +130,38 @@ class OpenAIGymInterfaceEnv:
         self.close()
         self.useRenderer = storeRenderer #restore
 
+    #**classFunction: use solverType = exudyn.DynamicSolverType.[...] to define solver (choose between implicit and explicit solvers!)
+    def SetSolver(self, solverType):
+        self.simulationSettings == solverType
+        if solverType==exu.DynamicSolverType.TrapezoidalIndex2 or solverType==exu.DynamicSolverType.GeneralizedAlpha:
+            useIndex2 = False
+            if solverType == exu.DynamicSolverType.TrapezoidalIndex2:
+                useIndex2 = True
+
+            #manually override settings for integrator
+            self.simulationSettings.timeIntegration.generalizedAlpha.useNewmark = useIndex2
+            self.simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = useIndex2
+        
+            self.dynamicSolver = exu.MainSolverImplicitSecondOrder()
+            self.dynamicSolver.InitializeSolver(self.mbs, self.simulationSettings)
+            self.dynamicSolver.SolveSteps(self.mbs, self.simulationSettings) #to initialize all data
+        else:
+            #explicit integration:
+            self.simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType = solverType
+            self.dynamicSolver = exu.MainSolverExplicit()
+            self.dynamicSolver.InitializeSolver(self.mbs, self.simulationSettings)
+            self.dynamicSolver.SolveSteps(self.mbs, self.simulationSettings) #to initialize all data
+
+
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #INTERNAL FUNCTIONS!
     #**classFunction: internal function which initializes dynamic solver; adapt in special cases; this function has some overhead and should not be called during reset() or step()
     def PreInitializeSolver(self):
-        self.dynamicSolver = exu.MainSolverImplicitSecondOrder()
-        self.dynamicSolver.InitializeSolver(self.mbs, self.simulationSettings)
-        self.dynamicSolver.SolveSteps(self.mbs, self.simulationSettings) #to initialize all data
+        self.SetSolver(exu.DynamicSolverType.GeneralizedAlpha)
+        # self.dynamicSolver = exu.MainSolverImplicitSecondOrder()
+        # self.dynamicSolver.InitializeSolver(self.mbs, self.simulationSettings)
+        # self.dynamicSolver.SolveSteps(self.mbs, self.simulationSettings) #to initialize all data
 
     #**classFunction: internal function which is called to solve for one step
     def IntegrateStep(self):
