@@ -41,7 +41,10 @@ oDistance = mbs.AddObject(DistanceConstraint(markerNumbers = [mGround, mMass], d
 #add loads:
 mbs.AddLoad(Force(markerNumber = mMass, loadVector = [0, -mass*g, 0])) 
 
-print(mbs)
+sDist = mbs.AddSensor(SensorObject(objectNumber=oDistance, storeInternal=True, 
+                                   outputVariableType=exu.OutputVariableType.Distance))
+
+#print(mbs)
 
 mbs.Assemble()
 
@@ -51,13 +54,15 @@ f = 1000000
 simulationSettings.timeIntegration.numberOfSteps = int(1*f)
 simulationSettings.timeIntegration.endTime = 0.001*f
 simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/5000
+simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/50000
 #simulationSettings.displayComputationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.verboseModeFile = 0
 
-#simulationSettings.timeIntegration.newton.useModifiedNewton = False
-simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
-simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = simulationSettings.timeIntegration.generalizedAlpha.useNewmark
+#these Newton settings are slightly faster than full Newton:
+simulationSettings.timeIntegration.newton.useModifiedNewton = True
+simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep = True
+
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.60 #0.62 is approx. the limit
 simulationSettings.timeIntegration.adaptiveStep = False
 
@@ -72,7 +77,9 @@ exu.StartRenderer()
 
 #mbs.WaitForUserToContinue()
 #exu.InfoStat()
-exu.SolveDynamic(mbs, simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings, 
+                 # solverType=exu.DynamicSolverType.TrapezoidalIndex2
+                 )
 #exu.InfoStat()
 
 SC.WaitForRenderEngineStopFlag()
@@ -81,10 +88,17 @@ exu.StopRenderer() #safely close rendering window!
 nODE2 = len(mbs.systemData.GetODE2Coordinates())
 print("ODE2=",nODE2)
 
+#plot constraint error:
+from exudyn.plot import PlotSensor
+PlotSensor(mbs, sensorNumbers=sDist, offsets=[-L], closeAll=True)
+
+#old way, better use PlotSensor:
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
+#plot y-acceleration:
 data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
+plt.figure()
 plt.plot(data[:,0], data[:,1+2*nODE2+1], 'b-')
 
 ax=plt.gca() # get current axes

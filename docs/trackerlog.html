@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1135, 
-Number of resolved issues = 966 (124 in current minor version), 
-Exudyn version = 1.2.124.dev1, 
-last change =  2022-06-08
+Number of issues = 1148, 
+Number of resolved issues = 976 (134 in current minor version), 
+Exudyn version = 1.2.134.dev1, 
+last change =  2022-06-17
 
 
 <table style = "width:100%">
@@ -38,6 +38,86 @@ last change =  2022-06-08
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1142</td>
+    <td>item functions checker</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add automatic tests for all necessary functions in items, such as nodes, objects, etc.; run tests similar to LEST test suite</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-12</td>
+    <td>2022-08-11</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1141</td>
+    <td>object factory      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> consider hash tables for object factory; check current performance?</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-12</td>
+    <td>2022-08-11</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1140</td>
+    <td>c++ user elements   </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add auto registration for C++ user items</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-12</td>
+    <td>2022-08-11</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1139</td>
+    <td>c++ user elements   </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add description regarding which functions are needed to add C++ user elements</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-12</td>
+    <td>2022-08-11</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1136</td>
+    <td>ConnectorsExt       </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add extended Ext versions of connectors: CoordinateSpringDamperExt, TorsionalSpringDamperExt, LinearSpringDamperExt, which allow for friction, coordinate limitation (with other SD-values) and possibly future extensions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-10</td>
+    <td>2022-08-09</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>1131</td>
     <td>class Robot         </td>
@@ -64,22 +144,6 @@ last change =  2022-06-08
     <td></td>
     <td>2022-05-29</td>
     <td>2022-07-28</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1106</td>
-    <td>HydraulicsActuator  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add HydraulicsActuator as object, containing pressure equations</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-05-23</td>
-    <td>2022-07-22</td>
     <td></td>
     <td></td>
     <td></td>
@@ -125,22 +189,6 @@ last change =  2022-06-08
     <td>RAISED  </td>
     <td> extend GraphicsData TriangleList with two optional lists (which may be empty) containing edges (tuples of point numbers) as well as edgeColors; allows to easily add edges to graphics representation</td>
     <td>EXTENSION</td>
-    <td></td>
-    <td>2022-05-22</td>
-    <td>2022-07-21</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1096</td>
-    <td>hydraulics          </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add hydraulics actuator with new element HydraulicsActuator</td>
-    <td>EXAMPLE</td>
     <td></td>
     <td>2022-05-22</td>
     <td>2022-07-21</td>
@@ -2743,6 +2791,134 @@ last change =  2022-06-08
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1147</td>
+    <td>ODE1Coordinates_t   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add missing function SetODE1Coordinates_t and GetODE1Coordinates_t into Python interface</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-17</td>
+    <td>2022-08-16</td>
+    <td>2022-06-17 01:14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1146</td>
+    <td>solver jacobians    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extended jacobians for ODE1 and ODE2 residuals for ODE1-ODE2 coupling in ComputeJacobianODE2RHS, ComputeJacobianODE1RHS, and ComputeJacobianAE; changed default values as well; check your code if you used these functions in Python user functions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-16</td>
+    <td>2022-08-15</td>
+    <td>2022-06-16 19:35</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1145</td>
+    <td>static solver       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add check if system contains ODE1 variables</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-16</td>
+    <td>2022-08-15</td>
+    <td>2022-06-16 18:52</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1144</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> added option to allow components=[plot.componentNorm] for displaying norm of sensors</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-16</td>
+    <td>2022-08-15</td>
+    <td>2022-06-16 17:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1143</td>
+    <td>numba jit           </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add example for numba jit speedup of Python user functions</td>
+    <td>EXAMPLE</td>
+    <td></td>
+    <td>2022-06-16</td>
+    <td>2022-08-15</td>
+    <td>2022-06-16 17:01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added Example springDamperUserFunctionNumbaJIT.py showing speedup of 4 for simple Python function; note that mbs functions cannot be processed by numba</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1138</td>
+    <td>artificialIntelligence</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> OpenAIGymInterfaceEnv obtained additional member variable randomInitializationValue which may be adapted; in future, this may be done in a separate function</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-10</td>
+    <td>2022-08-09</td>
+    <td>2022-06-10 12:26</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1137</td>
+    <td>exudynFast          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> for linux builds, do not activate exudynFast, only for noglfw</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-06-10</td>
+    <td>2022-08-09</td>
+    <td>2022-06-10 12:16</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1135</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> linux version of KinematicTree gives significantly (6e-7) different results, check initialization</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-06-09</td>
+    <td>2022-08-08</td>
+    <td>2022-06-09 20:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>resulted due to high sensitivity to disturbances (1e-15), especially in acceleration sensors, and ONLY for mbs results!</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1134</td>
     <td>KinematicTree       </td>
     <td>JG</td>
@@ -3159,6 +3335,22 @@ last change =  2022-06-08
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1106</td>
+    <td>HydraulicsActuator  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add HydraulicsActuator as object, containing pressure equations</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-23</td>
+    <td>2022-07-22</td>
+    <td>2022-06-16 12:00</td>
+    <td>added new double acting HydraulicActuatorSimple with internal pressure equations and possibility to modify valves by user functions</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1105</td>
     <td>NodeGenericAE       </td>
     <td>JG</td>
@@ -3192,10 +3384,10 @@ last change =  2022-06-08
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1102</td>
-    <td>HydraulicsActuator  </td>
+    <td>HydraulicActuator   </td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> add HydraulicsActuator with user function example</td>
+    <td> add HydraulicActuator with user function example</td>
     <td>EXAMPLE</td>
     <td></td>
     <td>2022-05-23</td>
@@ -3208,10 +3400,10 @@ last change =  2022-06-08
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1101</td>
-    <td>HydraulicsActuator  </td>
+    <td>HydraulicActuator   </td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> add HydraulicsActuator with user function example</td>
+    <td> add HydraulicActuator with user function example</td>
     <td>EXAMPLE</td>
     <td></td>
     <td>2022-05-23</td>
@@ -3220,7 +3412,7 @@ last change =  2022-06-08
     <td>JG</td>
     <td></td>
     <td></td>
-    <td></td>
+    <td>Duplicate of issue 1102</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1098</td>
@@ -3255,11 +3447,27 @@ last change =  2022-06-08
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1096</td>
+    <td>hydraulics          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add hydraulic actuator with new element HydraulicActuatorSimple</td>
+    <td>EXAMPLE</td>
+    <td></td>
+    <td>2022-05-22</td>
+    <td>2022-07-21</td>
+    <td>2022-06-17 00:06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1095</td>
     <td>hydraulics          </td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> add hydraulics actuator with user function</td>
+    <td> add hydraulic actuator with user function</td>
     <td>EXAMPLE</td>
     <td></td>
     <td>2022-05-22</td>

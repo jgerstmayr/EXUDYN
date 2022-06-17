@@ -422,7 +422,13 @@ mbs.systemData.SetODE2Coordinates(coordinates=u,configurationType=exu.Configurat
   GetODE1Coordinates(configuration = exu.ConfigurationType.Current) & get ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{qCurrent = mbs.systemData.GetODE1Coordinates()}}\\ \hline 
-  SetODE1Coordinates(coordinates, configuration = exu.ConfigurationType.Current) & set ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
+  SetODE1Coordinates(coordinates, configuration = exu.ConfigurationType.Current) & set ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{mbs.systemData.SetODE1Coordinates\_t(qCurrent)}}\\ \hline 
+  GetODE1Coordinates\_t(configuration = exu.ConfigurationType.Current) & get ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{qCurrent = mbs.systemData.GetODE1Coordinates\_t()}}\\ \hline 
+  SetODE1Coordinates\_t(coordinates, configuration = exu.ConfigurationType.Current) & set ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.systemData.SetODE1Coordinates(qCurrent)}}\\ \hline 
   GetAECoordinates(configuration = exu.ConfigurationType.Current) & get algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current)\tabnewline 
@@ -850,7 +856,7 @@ This section shows the DynamicSolverType structure, which is used for selecting 
   TrapezoidalIndex2 & an implicit solver for index 3 problems with index2 reduction; uses generalized alpha solver with settings for Newmark with index2 reduction\\ \hline 
   ExplicitEuler & an explicit 1st order solver (generally not compatible with constraints)\\ \hline 
   ExplicitMidpoint & an explicit 2nd order solver (generally not compatible with constraints)\\ \hline 
-  RK33 & an explicit 3 stage 3rd order Runge-Kutta method, aka "Heun"; (generally not compatible with constraints)\\ \hline 
+  RK33 & an explicit 3 stage 3rd order Runge-Kutta method, aka "Heun third order"; (generally not compatible with constraints)\\ \hline 
   RK44 & an explicit 4 stage 4th order Runge-Kutta method, aka "classical Runge Kutta" (generally not compatible with constraints), compatible with Lie group integration and elimination of CoordinateConstraints\\ \hline 
   RK67 & an explicit 7 stage 6th order Runge-Kutta method, see 'On Runge-Kutta Processes of High Order', J. C. Butcher, J. Austr Math Soc 4, (1964); can be used for very accurate (reference) solutions, but without step size control!\\ \hline 
   ODE23 & an explicit Runge Kutta method with automatic step size selection with 3rd order of accuracy and 2nd order error estimation, see Bogacki and Shampine, 1989; also known as ODE23 in MATLAB\\ \hline 

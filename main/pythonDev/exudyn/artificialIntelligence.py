@@ -37,9 +37,17 @@ class OpenAIGymInterfaceEnv:
         #some general gym initialization
         self.state = None
 
-        #mbs initialization        
+        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        #some settings, which may be changed after creation of environment:
         self.rendererRunning=None
         self.useRenderer = False #turn this on if needed
+        
+        #this is the high/low range of randomizer for state initialization
+        #it may also be defined as list, having the length according to the number of states
+        self.randomInitializationValue = 0.05 
+        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        
+        #mbs initialization        
         self.SC = exu.SystemContainer()
         self.mbs = self.SC.AddSystem()
         self.simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -233,7 +241,14 @@ class OpenAIGymInterfaceEnv:
         options: Optional[dict] = None,
     ):
         #super().reset(seed=seed)
-        self.state = np.random.uniform(low=-0.05, high=0.05, size=(self.stateSize,))
+        randSize = (self.stateSize)
+        #randomInitializationValue could also be a vector!
+        if not (type(self.randomInitializationValue) == float
+                or type(self.randomInitializationValue) == int):
+            randSize = None
+            
+        self.state = np.random.uniform(low=-self.randomInitializationValue, 
+                                       high=self.randomInitializationValue, size=randSize)
         self.steps_beyond_done = None
 
 

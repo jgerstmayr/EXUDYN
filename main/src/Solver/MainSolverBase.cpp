@@ -202,7 +202,7 @@ void MainSolverBase::ComputeMassMatrix(MainSystem& mainSystem/*, const Simulatio
 }
 
 //! set systemJacobian to zero and add jacobian (multiplied with factor) of ODE2RHS to systemJacobian in cSolver
-void MainSolverBase::ComputeJacobianODE2RHS(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/, Real scalarFactor)
+void MainSolverBase::ComputeJacobianODE2RHS(MainSystem& mainSystem, Real scalarFactor_ODE2, Real scalarFactor_ODE2_t, Real scalarFactor_ODE1)
 {
 	CheckInitialized(mainSystem);
 
@@ -211,33 +211,40 @@ void MainSolverBase::ComputeJacobianODE2RHS(MainSystem& mainSystem/*, const Simu
 	GetCSolver().data.systemJacobian->SetNumberOfRowsAndColumns(nSys, nSys);
 	GetCSolver().data.systemJacobian->SetAllZero(); //entries are not set to zero inside jacobian computation!
 
-	//mainSystem.cSystem->NumericalJacobianODE2RHS(GetCSolver().data.tempCompData, GetCSolver().newton.numericalDifferentiation/*simulationSettings.staticSolver.newton.numericalDifferentiation*/,
-	//	GetCSolver().data.tempODE2F0, GetCSolver().data.tempODE2F1, *(GetCSolver().data.systemJacobian), scalarFactor);
-
 	mainSystem.cSystem->JacobianODE2RHS(GetCSolver().data.tempCompDataArray, GetCSolver().newton.numericalDifferentiation,
-		*(GetCSolver().data.systemJacobian), scalarFactor, 0.); //only ODE2 part computed
+		*(GetCSolver().data.systemJacobian), scalarFactor_ODE2, scalarFactor_ODE2_t, scalarFactor_ODE1); 
 }
 
-//! add jacobian of ODE2RHS_t (multiplied with factor) to systemJacobian in cSolver
-void MainSolverBase::ComputeJacobianODE2RHS_t(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/, Real scalarFactor)
+//! add jacobian (multiplied with factor) of ODE2RHS to systemJacobian in cSolver
+void MainSolverBase::ComputeJacobianODE1RHS(MainSystem& mainSystem, Real scalarFactor_ODE2, Real scalarFactor_ODE2_t, Real scalarFactor_ODE1)
 {
 	CheckInitialized(mainSystem);
 
-	//only add terms!
-	//mainSystem.cSystem->NumericalJacobianODE2RHS_t(GetCSolver().data.tempCompData, GetCSolver().newton.numericalDifferentiation,
-	//	GetCSolver().data.tempODE2F0, GetCSolver().data.tempODE2F1, *(GetCSolver().data.systemJacobian), scalarFactor);
-	mainSystem.cSystem->JacobianODE2RHS(GetCSolver().data.tempCompDataArray, GetCSolver().newton.numericalDifferentiation,
-		*(GetCSolver().data.systemJacobian), 0., scalarFactor); //only ODE2_t part computed
+	Index nSys = initializedSystemSizes[0] + initializedSystemSizes[1] + initializedSystemSizes[2]; //nODE2+nODE1+nAE; check initialized guarantees that this is same as in mainSystem
+
+	mainSystem.cSystem->JacobianODE1RHS(GetCSolver().data.tempCompDataArray, GetCSolver().newton.numericalDifferentiation,
+		*(GetCSolver().data.systemJacobian), scalarFactor_ODE2, scalarFactor_ODE2_t, scalarFactor_ODE1); 
 }
+
+//not needed any more:
+////! add jacobian of ODE2RHS_t (multiplied with factor) to systemJacobian in cSolver
+//void MainSolverBase::ComputeJacobianODE2RHS_t(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/, Real scalarFactor)
+//{
+//	CheckInitialized(mainSystem);
+//
+//	mainSystem.cSystem->JacobianODE2RHS(GetCSolver().data.tempCompDataArray, GetCSolver().newton.numericalDifferentiation,
+//		*(GetCSolver().data.systemJacobian), 0., 0., scalarFactor); //only ODE2_t part computed
+//}
 
 //! add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver
-void MainSolverBase::ComputeJacobianAE(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/, 
-	Real scalarFactor_ODE2, Real scalarFactor_ODE2_t, bool velocityLevel)
+void MainSolverBase::ComputeJacobianAE(MainSystem& mainSystem, 
+	Real scalarFactor_ODE2, Real scalarFactor_ODE2_t, Real scalarFactor_ODE1, bool velocityLevel)
 {
 	CheckInitialized(mainSystem);
 
 	//only add terms!
-	mainSystem.cSystem->JacobianAE(GetCSolver().data.tempCompData, GetCSolver().newton, *(GetCSolver().data.systemJacobian), scalarFactor_ODE2, scalarFactor_ODE2_t, velocityLevel);// , true);
+	mainSystem.cSystem->JacobianAE(GetCSolver().data.tempCompData, GetCSolver().newton, *(GetCSolver().data.systemJacobian), 
+		scalarFactor_ODE2, scalarFactor_ODE2_t, scalarFactor_ODE1, velocityLevel);// , true);
 }
 
 //! compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)

@@ -360,8 +360,7 @@ for i in range(len(cableList)):
                                                      contactDamping = cDamping,
                                                      frictionVelocityPenalty = 1000,
                                                      frictionCoefficient = mu,
-                                                     circleRadius = r1+a/2,
-                                                     offset = a/2*0))
+                                                     circleRadius = r1+a/2))
     #Generate contact for disk0
     nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList, 
                                                        numberOfDataCoordinates=3*nSegments))
@@ -371,8 +370,7 @@ for i in range(len(cableList)):
                                                      contactDamping = cDamping,
                                                      frictionVelocityPenalty = 1000,
                                                      frictionCoefficient = mu,
-                                                     circleRadius = r0+a/2,
-                                                     offset = a/2*0))
+                                                     circleRadius = r0+a/2))
 
 
 #Generate Load

@@ -10,15 +10,86 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.2.124.dev1, 
-  \item last change =  2022-06-08, 
-  \item Number of issues = 1135, 
-  \item Number of resolved issues = 966 (124 in current version), 
+  \item Exudyn version = 1.2.134.dev1, 
+  \item last change =  2022-06-17, 
+  \item Number of issues = 1148, 
+  \item Number of resolved issues = 976 (134 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.2.134}:  resolved Issue 1147: {\bf ODE1Coordinates\_t}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add missing function SetODE1Coordinates\_t and GetODE1Coordinates\_t into Python interface}
+    \item   date resolved: {\bf 2022-06-17 01:14},
+date raised: 2022-06-17 
+  \ei
+  \item {\bf Version 1.2.133}:  resolved Issue 1096: {\bf hydraulics}
+(example)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add hydraulic actuator with new element HydraulicActuatorSimple}
+    \item   date resolved: {\bf 2022-06-17 00:06},
+date raised: 2022-05-22 
+  \ei
+  \item {\bf Version 1.2.132}:  resolved Issue 1146: {\bf solver jacobians}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extended jacobians for ODE1 and ODE2 residuals for ODE1-ODE2 coupling in ComputeJacobianODE2RHS, ComputeJacobianODE1RHS, and ComputeJacobianAE; changed default values as well; check your code if you used these functions in Python user functions}
+    \item   date resolved: {\bf 2022-06-16 19:35},
+date raised: 2022-06-16 
+  \ei
+  \item {\bf Version 1.2.131}:  resolved Issue 1145: {\bf static solver}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add check if system contains ODE1 variables}
+    \item   date resolved: {\bf 2022-06-16 18:52},
+date raised: 2022-06-16 
+  \ei
+  \item {\bf Version 1.2.130}:  resolved Issue 1144: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: added option to allow components=[plot.componentNorm] for displaying norm of sensors}
+    \item   date resolved: {\bf 2022-06-16 17:32},
+date raised: 2022-06-16 
+  \ei
+  \item {\bf Version 1.2.129}:  resolved Issue 1143: {\bf numba jit}
+(example)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add example for numba jit speedup of Python user functions}
+    \item {\bf notes: added Example springDamperUserFunctionNumbaJIT.py showing speedup of 4 for simple Python function; note that mbs functions cannot be processed by numba}
+    \item   date resolved: {\bf 2022-06-16 17:01},
+date raised: 2022-06-16 
+  \ei
+  \item {\bf Version 1.2.128}:  resolved Issue 1106: {\bf HydraulicsActuator}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add HydraulicsActuator as object, containing pressure equations}
+    \item   date resolved: {\bf 2022-06-16 12:00},
+date raised: 2022-05-23 (resolved by: added new double acting HydraulicActuatorSimple with internal pressure equations and possibility to modify valves by user functions)
+  \ei
+  \item {\bf Version 1.2.127}:  resolved Issue 1138: {\bf artificialIntelligence}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: OpenAIGymInterfaceEnv obtained additional member variable randomInitializationValue which may be adapted; in future, this may be done in a separate function}
+    \item   date resolved: {\bf 2022-06-10 12:26},
+date raised: 2022-06-10 
+  \ei
+  \item {\bf Version 1.2.126}:  resolved Issue 1137: {\bf exudynFast}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: for linux builds, do not activate exudynFast, only for noglfw}
+    \item   date resolved: {\bf 2022-06-10 12:16},
+date raised: 2022-06-10 
+  \ei
+  \item {\bf Version 1.2.125}: {\bf \color{warningRed}  resolved BUG 1135}: {\bf KinematicTree}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: linux version of KinematicTree gives significantly (6e-7) different results, check initialization}
+    \item {\bf notes: resulted due to high sensitivity to disturbances (1e-15), especially in acceleration sensors, and ONLY for mbs results!}
+    \item   date resolved: {\bf 2022-06-09 20:32},
+date raised: 2022-06-09 
+  \ei
   \item {\bf Version 1.2.124}:  resolved Issue 1134: {\bf KinematicTree}
 (extension)
   \begin{itemize}[label=$\bullet$]
@@ -139,7 +210,7 @@ date raised: 2022-05-27
   \item {\bf Version 1.2.107}:  resolved Issue 1095: {\bf hydraulics}
 (example)
   \begin{itemize}[label=$\bullet$]
-    \item {description: add hydraulics actuator with user function}
+    \item {description: add hydraulic actuator with user function}
     \item {\bf notes: example HydraulicsUserFunction.py added already 5 days earlier}
     \item   date resolved: {\bf 2022-05-30 20:06},
 date raised: 2022-05-22 
@@ -234,10 +305,11 @@ date raised: 2022-05-26
     \item   date resolved: {\bf 2022-05-23 23:06},
 date raised: 2022-05-23 
   \ei
-  \item {\bf Version 1.2.93}:  resolved Issue 1101: {\bf HydraulicsActuator}
+  \item {\bf Version 1.2.93}:  resolved Issue 1101: {\bf HydraulicActuator}
 (example)
   \begin{itemize}[label=$\bullet$]
-    \item {description: add HydraulicsActuator with user function example}
+    \item {description: add HydraulicActuator with user function example}
+    \item {\bf notes: Duplicate of issue 1102}
     \item   date resolved: {\bf 2022-05-23 22:10},
 date raised: 2022-05-23 
   \ei
@@ -255,10 +327,10 @@ date raised: 2022-05-23
     \item   date resolved: {\bf 2022-05-23 21:48},
 date raised: 2022-01-08 
   \ei
-  \item {\bf Version 1.2.90}:  resolved Issue 1102: {\bf HydraulicsActuator}
+  \item {\bf Version 1.2.90}:  resolved Issue 1102: {\bf HydraulicActuator}
 (example)
   \begin{itemize}[label=$\bullet$]
-    \item {description: add HydraulicsActuator with user function example}
+    \item {description: add HydraulicActuator with user function example}
     \item {\bf notes: Examples/HydraulicsUserFunction.py}
     \item   date resolved: {\bf 2022-05-23 19:53},
 date raised: 2022-05-23 

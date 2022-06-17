@@ -45,6 +45,8 @@ __plotSensorDefaults.majorTicksX = 10
 __plotSensorDefaults.majorTicksY = 10
 __plotSensorDefaults.sizeInches=[6.4,4.8]
 
+#this is the value for a component which indicates to show the norm (e.g. of a vector) instead of the component
+componentNorm = -2 #
 
 #**function: parse header of output file (solution file, sensor file, genetic optimization output, ...) given in file.readlines() format
 #**output: return dictionary with 'type'=['sensor','solution','geneticOptimization','parameterVariation'], 'variableType', 
@@ -143,7 +145,7 @@ def PlotSensorDefaults():
 #**input: 
 #  mbs: must be a valid MainSystem (mbs)
 #  sensorNumbers: consists of one or a list of sensor numbers (type SensorIndex or int) as returned by the mbs function AddSensor(...); sensors need to set writeToFile=True and/or storeInternal=True for PlotSensor to work; alternatively, it may contain FILENAMES (incl. path) to stored sensor or solution files OR a numpy array instead of sensor numbers; the format of data (file or numpy array) must contain per row the time and according solution values in columns; if components is a list and sensorNumbers is a scalar, sensorNumbers is adjusted automatically to the components
-#  components: consists of one or a list of components according to the component of the sensor to be plotted at y-axis; if components is a list and sensorNumbers is a scalar, sensorNumbers is adjusted automatically to the components; as always, components are zero-based, meaning 0=X, 1=Y, etc.
+#  components: consists of one or a list of components according to the component of the sensor to be plotted at y-axis; if components is a list and sensorNumbers is a scalar, sensorNumbers is adjusted automatically to the components; as always, components are zero-based, meaning 0=X, 1=Y, etc.; for regular sensor files, time will be component=-1; to show the norm (e.g., of a force vector), use component=[plot.componentNorm] for according sensors; norm will consider all values of sensor except time (for 3D force, it will be $\sqrt{f_0^2+f_1^2+f_2^2}$); offsets and factors are mapped on norm (plot value=factor*(norm(values) + offset) ), not on component values
 #  componentsX: default componentsX=[] uses time in files; otherwise provide componentsX as list of components (or scalar) representing x components of sensors in plotted curves; DON'T forget to change xLabel accordingly! Using componentsX=[...] with a list of column indices specifies the respective columns used for the x-coordinates in all sensors; by default, values are plotted against the first column in the files, which is time; according to counting in PlotSensor, this represents componentX=-1; plotting y over x in a position sensor thus reads: components=[1], componentsX=[0]; plotting time over x reads: components=[-1], componentsX=[0]; the default value reads componentsX=[-1,-1,...]
 #  xLabel: string for text at x-axis
 #  yLabel: string for text at y-axis (default: None==> label is automatically computed from sensor value types)
@@ -153,7 +155,7 @@ def PlotSensorDefaults():
 #  figureName: optional name for figure, if newFigure=True
 #  fontSize: change general fontsize of axis, labels, etc. (matplotlib default is 12, default in PlotSensor: 16)
 #  title: optional string representing plot title 
-#  offsets: provide as scalar, list of scalars (per sensor) or list of 2D numpy.arrays (per sensor, having same rows/columns as sensor data) to add offset to each sensor output; for an original value fOrig, the new value reads fNew = factor*(fOrig+offset); for offset provided as numpy array (with same time values), the 'time' column is ignored in the offset computation; can be used to compute difference of sensors; if offsets=[], no offset is used
+#  offsets: provide as scalar, list of scalars (per sensor) or list of 2D numpy.arrays (per sensor, having same rows/columns as sensor data; in this case it will also influence x-axis if componentsX is different from -1) to add offset to each sensor output; for an original value fOrig, the new value reads fNew = factor*(fOrig+offset); for offset provided as numpy array (with same time values), the 'time' column is ignored in the offset computation; can be used to compute difference of sensors; if offsets=[], no offset is used
 #  factors: provide as scalar or list (per sensor) to add factor to each sensor output; for an original value fOrig, the new value reads fNew = factor*(fOrig+offset); if factor=[], no factor is used
 #  majorTicksX: number of major ticks on x-axis; default: 10
 #  majorTicksY: number of major ticks on y-axis; default: 10
@@ -185,7 +187,8 @@ def PlotSensorDefaults():
 #                            outputVariableType=exu.OutputVariableType.Position))
 #PlotSensor(mbs, s0, 0) #plot x-coordinate
 ##plot x for s0 and z for s1:
-#PlotSensor(mbs, sensorNumbers=[s0,s1], components=[0,2], xLabel='time in seconds')
+#PlotSensor(mbs, sensorNumbers=[s0,s1], components=[0,2], yLabel='this is the position in meter')
+#PlotSensor(mbs, sensorNumbers=s0, components=plot.componentNorm) #norm of position
 #PlotSensor(mbs, sensorNumbers=s0, components=[0,1,2], factors=1000., title='Answers to the big questions')
 #PlotSensor(mbs, sensorNumbers=s0, components=[0,1,2,3], 
 #           yLabel='Coordantes with offset 1\nand scaled with $\\frac{1}{1000}$', 
@@ -452,7 +455,10 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
     #+++++++++++++++++++++++++++++++++++++++++++
     #finally plot:
     for i in range(nSensors):
-        componentY = componentList[i] + 1
+        if componentList[i] != componentNorm:
+            componentY = componentList[i] + 1
+        else:
+            componentY = componentNorm
         componentX = componentsX[i] + 1
         
         #now load sensor file:
@@ -519,7 +525,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
             else:
                 raise ValueError('PlotSensor: markerStyles must be either string for one sensor or list of matplotlib marker style codes with length >= number of sensors / components')
             if type(markerDensity) == int:
-                nd = len(data[:,componentY])
+                nd = len(data) #len(data[:,componentY])
                 if markerDensity != 0:
                     markEvery = int(1+nd/markerDensity)
                     #print('markEvery=',markEvery, ', nd=',nd)
@@ -537,25 +543,36 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
                 raise ValueError('PlotSensor: markerSizes must be either a single float for all sensor or list of marker sizes with length >= number of sensors / components')
                 
         #+++++++++++++++++++++++++++++++++++        
+        xData = data[:,componentX]
+        if componentY != componentNorm:
+            yData = data[:,componentY]
+        else:
+            #compute norm, not including time
+            nValues = len(data)
+            yData = np.zeros(nValues)
+            for rowNorm in range(nValues):
+                yData[rowNorm] = np.linalg.norm(data[rowNorm,1:])
+
+        #+++++++++++++++++++++++++++++++++++        
         #add factor and offset if defined:
         if factorOffsetUsed:
             if type(offsets[i]) == float or type(offsets[i]) == int:
-                yData = factors[i]*(data[:,componentY] + offsets[i])
+                yData = factors[i]*(yData + offsets[i])
             else: #must be numpy array
+                if componentY == componentNorm:
+                    raise ValueError('PlotSensor: sensor '+str(sensorNumber) +': component plot.componentNorm is only possible with scalar offsets')
                 if not isinstance(offsets[i], np.ndarray):
                     raise ValueError('PlotSensor: sensor '+str(sensorNumber) +' offset must be either scalar (float) or numpy array, but received: '+str(type(offsets[i])))
                 if offsets[i].shape != data.shape:
                     raise ValueError('PlotSensor: sensor '+str(sensorNumber) +' offset must have same dimensions as sensor data ('+str(data.shape)+') but received: '+str(offsets[i].shape))
-                yData = factors[i]*(data[:,componentY] + offsets[i][:,componentY])
+                yData = factors[i]*(yData + offsets[i][:,componentY])
                 if componentX != 0: #ignored for time
-                    data[:,componentX] = data[:,componentX] + offsets[i][:,componentX]
-        else:
-            yData = data[:,componentY]
+                    xData = xData + offsets[i][:,componentX]
 
         #+++++++++++++++++++++++++++++++++++        
         #finally plot curve:
  
-        plt.plot(data[:,componentX], yData, color=color, linestyle=lineStyle, linewidth=lineWidth,
+        plt.plot(xData, yData, color=color, linestyle=lineStyle, linewidth=lineWidth,
                  marker=markerStyle, fillstyle=markerFillStyle, markersize=markerSize, markevery=markEvery, label=sensorLabels[i]) #numerical solution
        
         #plt.plot(data[:,componentX], yData, CC, label=sensorLabels[i]) #numerical solution

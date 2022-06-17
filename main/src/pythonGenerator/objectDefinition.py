@@ -2042,7 +2042,7 @@ V,      C,      tempCoordinates,                ,               ,       NumpyVec
 V,      C,      tempCoordinates_t,              ,               ,       NumpyVector,"Vector()",                 ,       IUR,    "$\dot \cv_{temp} \in \Rcal^{n}$temporary vector containing velocity coordinates"
 #
 Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return (parameters.rhsUserFunction!=0);", "", CI,  "return true, if object has a computation user function"  
-Fv,     C,      ComputeODE1RHS,                 ,               ,       void,       ,                           "Vector& ode1Rhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode1Rhs'" 
+Fv,     C,      ComputeODE1RHS,                 ,               ,       void,       ,                           "Vector& ode1Rhs, Index objectNumber",          CDI,    "Computational function: compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs'" 
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE1_ODE1);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunction,              ,               ,       void,       ,                           "AccessFunctionType accessType, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
@@ -3969,6 +3969,9 @@ V,      V,      color,                          ,               ,       Float4, 
 #file names automatically determined from class name
 writeFile = True
 
+
+
+
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorCartesianSpringDamper
 classDescription = "An 3D spring-damper element, providing springs and dampers in three (global) directions (x,y,z); the connector can be attached to position-based markers."
@@ -4892,40 +4895,6 @@ equations =
       \eqComma    
     \ee
     where $\Jm_{pos,m1}$ represents the derivative of marker $m1$ w.r.t.\ its associated coordinates $\qv_{m1}$, analogously $\Jm_{pos,m0}$.
-    %
-    % \mysubsubsubsection{Connector Jacobian}
-    % The position-level jacobian for the connector, involving all coordinates associated with markers $m0$ and $m1$, follows from 
-    % \be
-      % \Jm_{SD} = \mp{\frac{\partial \Qm_{SD, m0}}{\partial \qv_{m0}} }{\frac{\partial \Qm_{SD, m0}}{\partial \qv_{m1}}}
-                    % {\frac{\partial \Qm_{SD, m0}}{\partial \qv_{m1}} }{\frac{\partial \Qm_{SD, m1}}{\partial \qv_{m1}}}
-    % \ee
-    % and the velocity level jacobian reads
-    % \be
-      % \Jm_{SD,t} = \mp{\frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m0}} }{\frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m1}}}
-                    % {\frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m1}} }{\frac{\partial \Qm_{SD, m1}}{\partial \dot \qv_{m1}}}
-    % \ee
-    % The sub-Jacobians follow from
-    % \be
-      % \frac{\partial \Qm_{SD, m0}}{\partial \qv_{m0}} = 
-       % -\frac{\partial \Jm_{pos,m0}\tp }{\partial \qv_{m0}} \vv_{f} \left( k\cdot(L-L_0) + d \cdot\Delta\! \LU{0}{\vv}\tp \vv_{f} + f_{a} \right) 
-       % -\Jm_{pos,m0}\tp \frac{\partial \vv_{f} \left( k\cdot(L-L_0) + d \cdot\Delta\! \LU{0}{\vv}\tp \vv_{f} + f_{a} \right)   }{\partial \qv_{m0}} 
-    % \ee
-    % in which the term $\frac{\partial \Jm_{pos,m0}\tp }{\partial \qv_{m0}}$ is computed from a special function provided by markers, that
-    % compute the derivative of the marker jacobian times a constant vector, in this case the spring force $\fv$; this jacobian term is usually less  
-    % dominant, but is included in the numerical as well as the analytical derivatives, see the general jacobian computation information.
-    
-    % The other term, which is the dominant term, is computed as (dependence of velocity term on position coordinates neglected),
-    % \bea
-      % \frac{\partial \Qm_{SD, m0}}{\partial \qv_{m0}}
-      % &=& -\Jm_{pos,m0}\tp \frac{\partial \vv_{f} \left( k\cdot(L-L_0) + d \cdot\Delta\! \LU{0}{\vv}\tp \vv_{f} + f_{a} \right)   }{\partial \qv_{m0}}
-      % \nonumber \\
-      % &=& -\Jm_{pos,m0}\tp \frac{\partial  \left( k\cdot \left( \Delta\! \LU{0}{\pv} - L_0 \vv_{f} \right)+ \vv_{f} \left(d \cdot \vv_{f}\tp \Delta\! \LU{0}{\vv}  + f_{a} \right) \right)   }{\partial \qv_{m0}} 
-      % \nonumber \\
-      % &\approx& \Jm_{pos,m0}\tp \left(k\cdot \Im - k  \frac{L_0}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right)  +\frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right) \left(d \cdot \vv_{f}\tp \Delta\! \LU{0}{\vv}  + f_{a} \right) \right. \nonumber \\
-      % &&\left. + d \LU{0}{\vv_{f}} \otimes \left(\frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes 
-      % \LU{0}{\vv_{f}} \right) \LU{0}{\vv_{f}} \right) \right)
-      % \LU{0}{\Jm_{pos,m0}}
-    % \eea
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -4993,6 +4962,193 @@ writeFile = True
 
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = ObjectConnectorHydraulicActuatorSimple
+classDescription = "A basic hydraulic actuator with pressure build up equations. The actuator follows a valve input value, which results in a in- or outflow of fluid depending on the pressure difference. Valve values can be prescribed by user functions (not yet available) or with the MainSystem PreStepUserFunction(...)."
+cParentClass = CObjectConnector
+mainParentClass = MainObjectConnector
+visuParentClass = VisualizationObject
+pythonShortName = HydraulicActuatorSimple
+addIncludesC = 'class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
+classType = Object
+objectType = Connector
+outputVariables = "{'Distance':'$L = |\Delta\! \LU{0}{\pv}|$distance between both marker points (usually the actuator bushings)', 'Displacement':'relative displacement between both marker points', 'Velocity':'$\dot L$relative velocity between both points', 'Force':'force in actuator resulting as the difference of both pressures times according cross sections'}"
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+equations =
+    \mysubsubsubsection{Definition of quantities}
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
+    \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{}
+    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
+    \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{}
+    \rowTable{time derivative of distance}{$\dot L$}{$\Delta\! \LU{0}{\vv}\tp \vv_{f}$}
+    \finishTable
+    \startTable{output variables}{symbol}{formula}
+    \rowTable{Displacement}{$\Delta\! \LU{0}{\pv}$}{$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}
+    \rowTable{Velocity}{$\Delta\! \LU{0}{\vv}$}{$\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}
+    \rowTable{Force}{$\fv$}{see below}
+    \finishTable
+%
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \mysubsubsubsection{Connector forces}
+    %
+    The unit vector in force direction reads (raises SysError if $L=0$),
+    \be
+      \vv_{f} = \frac{1}{L} \Delta\! \LU{0}{\pv}
+    \ee
+    The simple double-acting hydraulic actuator has two pressure chambers, one being denoted with 0 at the
+    piston head (nut) and the other at the piston rod side denoted with 1. The pressure $p_0$ acts at the piston head at area $A_0$, 
+    while the pressure $p_1$ counteracts on the opposite side with (usually smaller) area $A_1$.
+    %
+    If \texttt{activeConnector = True}, the scalar actuator force (tension = positive) is computed as
+    \be
+      f_{HA} = -p_0 \cdot A_0 + p_1 \cdot A_1 + v \cdot d_HA
+    \ee
+    where $v$ represents the actuator velocitiy and $d_HA$ is the viscous damping coefficient.
+
+    The vector of the actuator force applied at both markers finally reads
+    \be
+      \fv = f_{HA}\vv_{f}
+    \ee
+    The virtual work of the connector force is computed from the virtual displacement 
+    \be
+      \delta \Delta\! \LU{0}{\pv} = \delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \eqComma
+    \ee
+    and the virtual work (not the transposed version here, because the resulting generalized forces shall be a column vector),
+    \be
+      \delta W_{HA} = \fv \delta \Delta\! \LU{0}{\pv} 
+      \eqDot
+    \ee    
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \mysubsubsubsection{Pressure build up equations}
+    %
+    The hydraulic actuator contains internal states, namely pressures $p_0$ and $p_1$.
+    The \ac{ODE1} for pressures follows for the the case of laminar flow, based on system and tank pressure,
+    valve positions as well as the actuator velocity and position (only for change of volume).
+    
+    The distance between the two marker points, which are usually the bushings or clevis mounts of the hydraulic cylinder, is
+    denoted as $L$. The stroke length $s in [0, L_s]$ is defined as
+    \be
+      s = L - L_o
+    \ee
+    such that at zero stroke, the actuator length is $L_o$. The stroke velocity (positive value means extension) reads
+    \be
+      \dot s = \Delta\! \LU{0}{\vv\tp} \vv_{f}
+    \ee
+    
+    If \texttt{useChamberVolumeChange == True}, the volume change due to stroke change will be considered for the
+    volume related to the stiffness of the fluid.
+    The cylinder volumes in chambers 0 and 1 are then
+    \be
+      V_{0,cur} = V_0 + A_0 \cdot s, \quad
+      V_{1,cur} = V_1 - A_1 \cdot s
+    \ee
+    Otherwise, $V_{0,cur}=V_0$ and $V_{1,cur}=V_1$.
+    
+    The pressure equations (explicit \ac{ODE1}) have the structure
+    \be
+      \vp{\dot p_0}{\dot p_1} = \vp{f_0(p_0, s, \dot s)}{f_1(p_1, s, \dot s)}
+    \ee
+    and follow for different cases and chambers / valves $k=\{0,1\}$, based on the simple model where 
+    \bi
+      \item $A_{v,k} = 0$: valve k closed
+      \item $A_{v,k} > 0$: valve k opened towards system pressure (pump)
+      \item $A_{v,k} < 0$: valve k opened towards tank pressure
+    \ei
+    Thus, the following equations are used\footnote{while it should not happen in regular operation, the arguments of the square roots could become negative; 
+    thus, in the implementation we use $\mathrm{sqrts}(x) = \mathrm{sign}(x) \cdot \sqrt{\mathrm{abs}(x)}$.}:
+    \be
+      \dot p_0 = \frac{K_{oil}}{V_{0,cur}} \left( -A_0 \cdot \dot s + A_{v0} \cdot Q_n \cdot \mathrm{sqrts}(p_s - p_0)  \right)  \quad \mathrm{if} \quad \mathrm A_{v0} \ge 0
+    \ee
+    \be
+      \dot p_0 = \frac{K_{oil}}{V_{0,cur}} \left( -A_0 \cdot \dot s + A_{v0} \cdot Q_n \cdot \mathrm{sqrts}(p_0 - p_t)  \right)  \quad \mathrm{if} \quad \mathrm A_{v0} < 0
+    \ee
+    %
+    \be
+      \dot p_1 = \frac{K_{oil}}{V_{1,cur}} \left(  A_1 \cdot \dot s + A_{v1} \cdot Q_n \cdot \mathrm{sqrts}(p_s - p_1)  \right)  \quad \mathrm{if} \quad \mathrm A_{v1} \ge 0
+    \ee
+    \be
+      \dot p_1 = \frac{K_{oil}}{V_{1,cur}} \left(  A_1 \cdot \dot s + A_{v1} \cdot Q_n \cdot \mathrm{sqrts}(p_1 - p_t)  \right)  \quad \mathrm{if} \quad \mathrm A_{v1} < 0
+    \ee
+    
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+#CObjectMarkerBodyPosition* automatically inserted!
+Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "connector's unique name"
+V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector"
+V,      CP,     nodeNumbers,                    ,               ,       ArrayNodeIndex, "ArrayIndex()",          ,       I,      "$\mathbf{n}_n = [n_{ODE1}]\tp$node number of GenericODE1 node for hydraulic components (reference values for this node must be zero); data node may be added in future"
+V,      CP,     offsetLength,                   ,               ,       UReal,      0.,                          ,       I,      "$L_o$offset length [SI:m] of cylinder, representing minimal distance between the two bushings at stroke=0"
+V,      CP,     strokeLength,                   ,               ,       PReal,      0.,                          ,       I,      "$L_s$stroke length [SI:m] of cylinder, representing maximum extension relative to $L_o$; the measured distance between the markers is $L_s+L_o$"
+V,      CP,     chamberCrossSection0,           ,               ,       PReal,      0.,                          ,       I,      "$A_0$cross section [SI:m$^2$] of chamber (inner cylinder) at piston head (nut) side (0)"
+V,      CP,     chamberCrossSection1,           ,               ,       PReal,      0.,                          ,       I,      "$A_1$cross section [SI:m$^2$] of chamber at piston rod side (1); usually smaller than chamberCrossSection0"
+V,      CP,     referenceVolume0,               ,               ,       PReal,      0.,                          ,       I,      "$V_0$chamber reference volume [SI:m$^3$] at piston head (nut) side (0) for stroke length zero"
+V,      CP,     referenceVolume1,               ,               ,       PReal,      0.,                          ,       I,      "$V_1$chamber reference volume [SI:m$^2$] at piston rod side (1) for stroke length zero"
+V,      CP,     valveOpening0,                  ,               ,       Real,       0.,                          ,       I,      "$A_{v0}$relative opening of valve $[-1 \ldots 1]$ [SI:1] at piston head (nut) side (0); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve"
+V,      CP,     valveOpening1,                  ,               ,       Real,       0.,                          ,       I,      "$A_{v1}$relative opening of valve $[-1 \ldots 1]$ [SI:1] at piston rod side (1); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve"
+V,      CP,     actuatorDamping,                ,               ,       UReal,      0.,                          ,       IO,     "$d_{HA}$damping [SI:N/(m$\,$s)] of hydraulic actuator (against actuator axial velocity)"
+V,      CP,     oilBulkModulus,                 ,               ,       PReal,      0.,                          ,       I,      "$K_{oil}$bulk modulus of oil [SI:N/(m$^2$)]"
+V,      CP,     nominalFlow,                    ,               ,       PReal,      0.,                          ,       I,      "$Q_n$nominal flow of oil through valve [SI:m$^3$/s]"
+V,      CP,     systemPressure,                 ,               ,       Real,       0.,                          ,       I,      "$p_s$system pressure [SI:N/(m$^2$)]"
+V,      CP,     tankPressure,                   ,               ,       Real,       0.,                          ,       I,      "$p_t$tank pressure [SI:N/(m$^2$)]"
+V,      CP,     useChamberVolumeChange,         ,               ,       Bool,       "false",                     ,       IO,     "if True, the pressure build up equations include the change of oil stiffness due to change of chamber volume"
+#
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+#questionable if the functions should go into Parameter class:
+#V,      CP,     springForceUserFunction,        ,               ,       PyFunctionMbsScalarIndexScalar5, 0,                     ,       IO,     "$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below"
+#
+#Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return (parameters.springForceUserFunction!=0);", "", CI,  "return true, if object has a computation user function"  
+Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
+Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
+Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
+Fv,     C,      ComputeODE1RHS,                 ,               ,       void,       ,                           "Vector& ode1Rhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,    "Computational function: compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs'" 
+#Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} \ac{LHS} equations w.r.t. ODE2 coordinates and ODE2 velocities; write either dense local jacobian into dense matrix of MatrixContainer or ADD sparse triplets INCLUDING ltg mapping to sparse matrix of MatrixContainer"
+#Fv,     C,      ComputeJacobianForce6D,         ,               ,       void,       ,                           "const MarkerDataStructure& markerData, Index objectNumber, Vector6D& force6D",          CDI,     "compute global 6D force and torque which is used for computation of derivative of jacobian; used only in combination with ComputeJacobianODE2_ODE2" 
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                    ,          CDI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
+Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::Position;", ,   CI,     "provide requested markerType for connector" 
+Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::_None;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
+#
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+#
+#NEEDS also data node?
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return parameters.nodeNumbers.NumberOfItems();",                ,       CI,     "number of nodes; needed for every object" 
+Fv,     C,      GetODE1Size,                    ,               ,       Index,      ,                ,       CDI,     "number of \hac{ODE1} coordinates; needed for object?" 
+#
+Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,    "return object type (for node treatment in computation)" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'HydraulicActuatorSimple';", , CI,     "Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
+Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
+F,      C,      ComputeConnectorProperties,     ,               ,       void,       , "const MarkerDataStructure& markerData, Index itemIndex, Vector3D& relPos, Vector3D& relVel, Real& force, Vector3D& forceDirection", CDI,  "compute connector force and further properties (relative position, etc.) for unique functionality and output"
+#F,      C,      EvaluateUserFunctionForce,      ,               ,       void,       , "Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real deltaL, Real deltaL_t", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
+#VISUALIZATION:
+Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
+#needs several drawing parameters:
+V,      V,      cylinderRadius,                 ,               ,       float,  "0.05f",                         ,       IO,    "radius for drawing of cylinder"
+V,      V,      rodRadius,                      ,               ,       float,  "0.03f",                         ,       IO,    "radius for drawing of rod"
+V,      V,      pistonRadius,                   ,               ,       float,  "0.04f",                         ,       IO,    "radius for drawing of piston (if drawn transparent)"
+V,      V,      pistonLength,                   ,               ,       float,  "0.001f",                        ,       IO,    "radius for drawing of piston (if drawn transparent)"
+V,      V,      rodMountRadius,                 ,               ,       float,  "0.0f",                          ,       IO,    "radius for drawing of rod mount sphere"
+V,      V,      baseMountRadius,                ,               ,       float,  "0.0f",                          ,       IO,    "radius for drawing of base mount sphere"
+V,      V,      baseMountLength,                ,               ,       float,  "0.0f",                          ,       IO,    "radius for drawing of base mount sphere"
+#
+V,      V,      colorCylinder,                  ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA cylinder color; if R==-1, use default connector color" 
+V,      V,      colorPiston,                    ,               ,       Float4,        "Float4({0.8f,0.8f,0.8f,1.f})",,  IO,    "RGBA piston color" 
+#file names automatically determined from class name
+writeFile = True
+
+
+
+
+
+
+
+
+#HERE come constraints:
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorDistance
 classDescription = "Connector which enforces constant or prescribed distance between two bodies/nodes."

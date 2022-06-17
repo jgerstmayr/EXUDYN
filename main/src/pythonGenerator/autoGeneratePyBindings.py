@@ -189,7 +189,7 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
 [s1,sL1] = AddEnumValue(pyClass, 'TrapezoidalIndex2', 'an implicit solver for index 3 problems with index2 reduction; uses generalized alpha solver with settings for Newmark with index2 reduction'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'ExplicitEuler',    'an explicit 1st order solver (generally not compatible with constraints)'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'ExplicitMidpoint', 'an explicit 2nd order solver (generally not compatible with constraints)'); s+=s1; sLenum+=sL1
-[s1,sL1] = AddEnumValue(pyClass, 'RK33',     'an explicit 3 stage 3rd order Runge-Kutta method, aka "Heun"; (generally not compatible with constraints)'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'RK33',     'an explicit 3 stage 3rd order Runge-Kutta method, aka "Heun third order"; (generally not compatible with constraints)'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'RK44',     'an explicit 4 stage 4th order Runge-Kutta method, aka "classical Runge Kutta" (generally not compatible with constraints), compatible with Lie group integration and elimination of CoordinateConstraints'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'RK67',     "an explicit 7 stage 6th order Runge-Kutta method, see 'On Runge-Kutta Processes of High Order', J. C. Butcher, J. Austr Math Soc 4, (1964); can be used for very accurate (reference) solutions, but without step size control!"); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'ODE23',    'an explicit Runge Kutta method with automatic step size selection with 3rd order of accuracy and 2nd order error estimation, see Bogacki and Shampine, 1989; also known as ODE23 in MATLAB'); s+=s1; sLenum+=sL1
@@ -1072,6 +1072,20 @@ sL += DefLatexStartClass(pyClassStr+': Access coordinates', '\label{sec:mbs:syst
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetODE1Coordinates', cName='SetODE1Coords', 
+                                description="set ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!",
+                                argList=['coordinates','configuration'],
+                                defaultArgs=['','exu.ConfigurationType::Current'],
+                                example = "mbs.systemData.SetODE1Coordinates_t(qCurrent)"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetODE1Coordinates_t', cName='GetODE1Coords_t', 
+                                description="get ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)",
+                                argList=['configuration'],
+                                defaultArgs=['exu.ConfigurationType::Current'],
+                                example = "qCurrent = mbs.systemData.GetODE1Coordinates_t()"
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetODE1Coordinates_t', cName='SetODE1Coords_t', 
                                 description="set ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!",
                                 argList=['coordinates','configuration'],
                                 defaultArgs=['','exu.ConfigurationType::Current'],

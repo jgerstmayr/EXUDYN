@@ -193,7 +193,7 @@ public:
     virtual void ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE2LHS"); }
 
     //! compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs', which has dimension GetODE1Size(); objectNumber contains items own number for user functions
-    virtual void ComputeODE1RHS(Vector& ode1Rhs, Index objectNumber) const {}
+    virtual void ComputeODE1RHS(Vector& ode1Rhs, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeODE1LHS"); }
     //??compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) to 'ode2Lhs', which has dimension GetODE1Size() x GetODE1Size(); this is the tangent (stiffness) matrix; q are the system coordinates
     //??virtual void ComputeODE1LHS_q(Matrix& ode2Lhs, const Vector& q) {}
 

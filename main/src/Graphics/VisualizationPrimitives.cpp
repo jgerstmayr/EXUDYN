@@ -452,16 +452,16 @@ namespace EXUvis {
 			Real phi0 = alpha0 + i * alpha / fact;
 			Real phi1 = alpha0 + (i+1) * alpha / fact;
 
-			Real x0 = radius * sin(phi0);
-			Real y0 = radius * cos(phi0);
-			Real x1 = radius * sin(phi1);
-			Real y1 = radius * cos(phi1);
+			Real x0 = sin(phi0);
+			Real y0 = cos(phi0);
+			Real x1 = sin(phi1);
+			Real y1 = cos(phi1);
 			Vector3D vv0 = x0 * basisN1 + y0 * basisN2;
 			Vector3D vv1 = x1 * basisN1 + y1 * basisN2;
-			Vector3D pzL0 = pAxis0 + vv0;
-			Vector3D pzL1 = pAxis0 + vv1;
-			Vector3D pzR0 = pAxis1 + vv0;
-			Vector3D pzR1 = pAxis1 + vv1;
+			Vector3D pzL0 = pAxis0 + radius * vv0;
+			Vector3D pzL1 = pAxis0 + radius * vv1;
+			Vector3D pzR0 = pAxis1 + radius * vv0;
+			Vector3D pzR1 = pAxis1 + radius * vv1;
 			if (drawSmooth)
 			{
 				n0 = -vv0;

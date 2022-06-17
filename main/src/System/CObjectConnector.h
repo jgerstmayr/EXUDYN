@@ -69,8 +69,11 @@ public:
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//specific Connector/Marker functions!
-	//! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'; provides objectNumber for user functions
+	//! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs' for CONNECTORS; provides objectNumber for user functions
 	virtual void ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2LHS"); }
+
+	//! compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs' for CONNECTORS, which has dimension GetODE1Size(); objectNumber contains items own number for user functions
+	virtual void ComputeODE1RHS(Vector& ode1Rhs, const MarkerDataStructure& markerData, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE1LHS"); }
 
 	//! compute algebraic equations to 'algebraicEquations', which has dimension GetAlgebraicEquationsSize(); q are the system coordinates
 	virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool useIndex2 = false) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeAlgebraicEquations"); }

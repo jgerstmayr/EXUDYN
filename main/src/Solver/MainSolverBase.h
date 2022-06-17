@@ -341,12 +341,21 @@ public: //
 	virtual void SetSystemResidual(const Vector& systemResidual);
 	//! compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix
 	virtual void ComputeMassMatrix(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/, Real scalarFactor = 1.);
+
 	//! set systemJacobian to zero and add jacobian (multiplied with factor) of ODE2RHS to systemJacobian in cSolver
-	virtual void ComputeJacobianODE2RHS(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/, Real scalarFactor = 1.);
-	//! add jacobian of ODE2RHS_t (multiplied with factor) to systemJacobian in cSolver
-	virtual void ComputeJacobianODE2RHS_t(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/, Real scalarFactor = 1.);
+	virtual void ComputeJacobianODE2RHS(MainSystem& mainSystem, Real scalarFactor_ODE2 = 1., Real scalarFactor_ODE2_t = 0., Real scalarFactor_ODE1 = 1.);
+
+	//not needed:
+	////! add jacobian of ODE2RHS_t (multiplied with factor) to systemJacobian in cSolver
+	//virtual void ComputeJacobianODE2RHS_t(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/, Real scalarFactor = 1.);
+
+	//! add jacobian (multiplied with factor) of ODE1RHS to systemJacobian in cSolver
+	virtual void ComputeJacobianODE1RHS(MainSystem& mainSystem, Real scalarFactor_ODE2 = 1., Real scalarFactor_ODE2_t = 0., Real scalarFactor_ODE1 = 1.);
+
 	//! add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. ODE2 coordinates and w.r.t. ODE2_t (velocity) coordinates; if velocityLevel == true, the constraints are evaluated at velocity level
-	virtual void ComputeJacobianAE(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/, Real scalarFactor_ODE2 = 1., Real scalarFactor_ODE2_t = 1., bool velocityLevel = false);
+	virtual void ComputeJacobianAE(MainSystem& mainSystem,
+		Real scalarFactor_ODE2 = 1., Real scalarFactor_ODE2_t = 0., Real scalarFactor_ODE1 = 1., bool velocityLevel = false);
+
 	//! compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)
 	virtual void ComputeODE2RHS(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/);
 	//! compute the RHS of ODE1 equations in systemResidual in range(nODE2,nODE2+nODE1)

@@ -289,6 +289,21 @@ public: //
 	}
 
 	//+++++++++++++++++++++++++++++++++++
+	//! pybind read access to ODE1_t coords
+	py::array_t<Real> GetODE1Coords_t(ConfigurationType configurationType = ConfigurationType::Current) const
+	{
+		const Vector& v = GetCSystemState(configurationType)->GetODE1Coords_t();
+		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
+	}
+
+	//! pybind write access to ODE1_t coords
+	void SetODE1Coords_t(const std::vector<Real>& v, ConfigurationType configurationType = ConfigurationType::Current)
+	{
+		CHECKandTHROW((Index)v.size() == GetCSystemState(configurationType)->GetODE1Coords().NumberOfItems(), "SystemData::SetODE1Coords_t: incompatible size of vectors");
+		GetCSystemState(configurationType)->SetODE1Coords_t(v);
+	}
+
+	//+++++++++++++++++++++++++++++++++++
 	//! pybind read access to ODE2 coords
 	py::array_t<Real> GetAECoords(ConfigurationType configurationType = ConfigurationType::Current) const
 	{

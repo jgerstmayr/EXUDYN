@@ -259,24 +259,14 @@ public:
 	//! multiply (before added to jacobianGM) ODE2 with factorODE2 and ODE2_t with factorODE2_t
 	//! the jacobian is ADDed to jacobianGM, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
 	void JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
-		GeneralMatrix& jacobianGM, Real factorODE2 = 1., Real factorODE2_t = 0.);
-
-	////! compute numerical differentiation of ODE2RHS; result is a jacobian;  multiply the added entries with scalarFactor
-	////! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
-	//void NumericalJacobianODE2RHS(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
-	//	Vector& f0, Vector& f1, GeneralMatrix& jacobianGM, Real scalarFactor = 1.); // ResizableMatrix& jacobian);
-
-	////! compute numerical differentiation of ODE2RHS with respect to velocity coordinates; result is a jacobian; multiply the added entries with scalarFactor
-	////! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
-	//void NumericalJacobianODE2RHS_t(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
-	//	Vector& f0, Vector& f1, GeneralMatrix& jacobianGM, Real scalarFactor = 1.);
+		GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1);
 
 	//! compute numerical differentiation of ODE1RHS; result is a jacobian;  multiply the added entries with scalarFactor
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
 	void NumericalJacobianODE1RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
-		Vector& f0, Vector& f1, GeneralMatrix& jacobianGM, Real factorODE1 = 1., Real factorODE2 = 0., Real factorODE2_t = 0.);
+		GeneralMatrix& jacobianGM, Real factorODE2 = 1., Real factorODE2_t = 0., Real factorODE1 = 1.);
 
-																					//! numerical computation of constraint jacobian with respect to ODE2 and ODE1 (fillIntoSystemMatrix=true: also w.r.t. AE) coordinates
+	//! numerical computation of constraint jacobian with respect to ODE2 and ODE1 (fillIntoSystemMatrix=true: also w.r.t. AE) coordinates
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
 	//! factorODE2 is used to scale the ODE2-part of the jacobian (to avoid postmultiplication); 
 	//! velocityLevel = velocityLevel constraints are used, if available; 
@@ -285,7 +275,7 @@ public:
 	template<class TGeneralMatrix>
 	void NumericalJacobianAE(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
 		Vector& f0, Vector& f1, TGeneralMatrix& jacobianGM, Real factorAE_ODE2, Real factorAE_ODE2_t, 
-		bool velocityLevel = false, Real factorODE2_AE = 1., Real factorAE_AE = 1.);// , bool fillIntoSystemMatrix = false); //ResizableMatrix& jacobian
+		Real factorAE_ODE1, bool velocityLevel = false, Real factorODE2_AE = 1., Real factorODE1_AE = 1., Real factorAE_AE = 1.);// , bool fillIntoSystemMatrix = false); //ResizableMatrix& jacobian
 
 	////! compute numerical differentiation of AE with respect to ODE2 velocity coordinates; if fillIntoSystemMatrix==true, the jacobian is filled directly into the system matrix; result is a jacobian; THIS FUNCTION IS ONLY FOR COMPARISON (SLOW!!!)
 	//void NumericalJacobianAE_ODE2_t(const NumericalDifferentiation& numDiff,
@@ -295,8 +285,8 @@ public:
 	//! compute object-wise jacobian of ODE1RHS w.r.t. ODE1 coordinates
 	//! the jacobian is ADDed to the given matrix, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
 	//! The factor 'factor_ODE1' is used to scale the jacobian
-	void JacobianODE1RHS(TemporaryComputationData& temp, const NumericalDifferentiationSettings& newton, Real factorODE1,
-		ResizableMatrix& jacobian_ODE1) {}; //used in future!
+	void JacobianODE1RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
+		GeneralMatrix& jacobianGM, Real factorODE2 = 1., Real factorODE2_t = 0., Real factorODE1 = 1.) {}; //used in future!
 
 	//!compute per-object jacobians for object j, providing TemporaryComputationData;
 	//! the jacobian computed in according temp structure
@@ -318,10 +308,8 @@ public:
 	//! ALWAYS TRUE: fillIntoSystemMatrix=true: fill in g_q_ODE2, g_q_ODE2^T AND g_q_AE into system matrix at according positions
 	//! DEPRECATED: fillIntoSystemMatrix=false: fill in g_q_ODE2 into jacobian matrix at (0,0)
 	void JacobianAE(TemporaryComputationData& temp, const NewtonSettings& newton, GeneralMatrix& jacobianGM,
-		Real factorAE_ODE2, Real factorAE_ODE2_t, bool velocityLevel = false, Real factorODE2_AE = 1., Real factorAE_AE=1.);// , bool fillIntoSystemMatrix = false);
-	//template<class TGeneralMatrix>
-	//void JacobianAE(TemporaryComputationData& temp, const Newton& newton, TGeneralMatrix& jacobianGM,
-	//	Real factorAE_ODE2, Real factorAE_ODE2_t, bool velocityLevel = false, bool fillIntoSystemMatrix = false);
+		Real factorAE_ODE2, Real factorAE_ODE2_t, Real factorAE_ODE1, bool velocityLevel = false, 
+		Real factorODE2_AE = 1., Real factorODE1_AE = 1., Real factorAE_AE=1.);// , bool fillIntoSystemMatrix = false);
 
 
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

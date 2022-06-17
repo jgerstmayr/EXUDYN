@@ -123,6 +123,11 @@ void CSolverStatic::PostInitializeSolverSpecific(CSystem& computationalSystem, c
 		if (staticSettings.loadStepGeometric) { str = " geometric"; }
 		Verbose(2, STDstring("*********************\nStatic solver (") + EXUstd::ToString(staticSettings.numberOfLoadSteps) + str + " load steps):\n*********************\n");
 	}
+
+	if (data.nODE1 != 0)
+	{
+		PyError("StaticSolver: system may not contain ODE1 equations of variables");
+	}
 }
 
 
@@ -211,13 +216,12 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
 	//Tangent stiffness
 	//compute jacobian (w.r.t. U ==> also add V); jacobianAE used as temporary matrix
 	STARTTIMER(timer.jacobianODE2);
-	//computationalSystem.NumericalJacobianODE2RHS(data.tempCompData, newton.numericalDifferentiation, data.tempODE2F0, data.tempODE2F1, *(data.systemJacobian));
-	computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian)); //only ODE2 part computed!
+	computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian), 1., 0., 1.); //ODE2_t part not needed, but ODE1 included!
 	STOPTIMER(timer.jacobianODE2);
 
 	STARTTIMER(timer.jacobianAE);
 	//add jacobian algebraic equations part to system jacobian:
-	computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), 1., 1., false);// , true);
+	computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), 1., 1., 1., false);// , true);
 	STOPTIMER(timer.jacobianAE);
 
 	//pout << "stabilizerODE2term=" << simulationSettings.staticSolver.stabilizerODE2term << "\n";

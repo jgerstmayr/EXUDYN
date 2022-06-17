@@ -115,13 +115,14 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 		data.systemJacobian->SetAllZero(); //entries are not set to zero inside jacobian computation!
 		Real factorAE_ODE2 = 1.;			//for position level constraints: depends, if index reduction is used
 		Real factorAE_ODE2_t = 1.;			//for velocity constraints ==> C_qt*q_tt term from velocity level, if C=C(q_t)
+		Real factorAE_ODE1 = 1.;			//
 		//bool fillIntoSystemMatrix = true;
 		bool velocityLevel = false;
 
 		//+++++++++++++++++++++++++++++
 		//Jacobian of algebraic equations
 		//Real factorAE = EXUstd::Square(stepSize) * newmarkBeta; //Index3
-		computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, velocityLevel);// , fillIntoSystemMatrix);
+		computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, velocityLevel);// , fillIntoSystemMatrix);
 
 		//Mass matrix - may also be directly filled into data.systemJacobian?
 		if (!hasConstantMassMatrix) //not yet set at this point, done in PostInitializeSolverSpecific; default=false
@@ -520,6 +521,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	Real scalODE2 = 1; //scaling factors for ODE2 part
+	Real scalODE1 = 1; //scaling factors for ODE1 part;
 	Real scalAE = 1;   //scaling factors for AE part
 	if (useScaling)
 	{
@@ -542,7 +544,8 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 	STARTTIMER(timer.jacobianODE2);
 	//Tangent stiffness
 	//K-Matrix; has no factor
-	computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian), -1. * scalODE2, -gammaPrime * scalODE2); //RHS ==> -K
+	computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian), 
+		-1. * scalODE2, -gammaPrime * scalODE2, scalODE1); //RHS ==> -K
 	STOPTIMER(timer.jacobianODE2);
 
 	//+++++++++++++++++++++++++++++
@@ -551,7 +554,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 	//Tangent stiffness: for ODE1 part, the jacobian is de facto computed for RHS while the ODE2 jacobian is put to LHS by multiplying with (-1)
 	//ODE1 K-Matrix; has no factor
 	computationalSystem.NumericalJacobianODE1RHS(data.tempCompDataArray, newton.numericalDifferentiation,
-		data.tempODE1F0, data.tempODE1F1, *(data.systemJacobian), 1., -scalODE2, -gammaPrime * scalODE2); //RHS ==> K_ODE1; no scaling for now
+		*(data.systemJacobian), scalODE1, gammaPrime * scalODE1, scalODE1); //RHS ==> K_ODE1; no scaling for now
 	data.systemJacobian->AddDiagonalMatrix(-2./ it.currentStepSize, data.nODE1, data.nODE2, data.nODE2); //for qODE1_t part
 	STOPTIMER(timer.jacobianODE1);
 
@@ -560,7 +563,9 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 	//Real factorAE = EXUstd::Square(stepSize) * newmarkBeta; //Index3
 	Real factorAE_ODE2 = 1;		//for position level constraints; dC/dq
 	Real factorAE_ODE2_t = gammaPrime;  //for velocity constraints ==> same for index 2 and index 3: dC_t/d(Delta q) = dC_t/dq_t * dq_t/dq = dC/dq*gammaPrime
+	Real factorAE_ODE1 = 1.;
 	Real factorODE2_AE = scalAE * scalODE2;
+	Real factorODE1_AE = scalAE;
 	Real factorAE_AE = scalAE;
 	if (simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints) 
 	{ 
@@ -569,7 +574,8 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 
 	STARTTIMER(timer.jacobianAE);
 	//add jacobian algebraic equations part to system jacobian:
-	computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, false, factorODE2_AE, factorAE_AE);
+	computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, false, 
+		factorODE2_AE, factorODE1_AE, factorAE_AE);
 	STOPTIMER(timer.jacobianAE);
 
 	computationalSystem.GetSolverData().signalJacobianUpdate = false; //as jacobian has been computed, no further update is necessary

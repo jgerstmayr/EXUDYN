@@ -195,6 +195,7 @@ cppFiles = [
                  'src/Objects/CObjectConnectorCoordinateVector.cpp',
                  'src/Objects/CObjectConnectorDistance.cpp',
                  'src/Objects/CObjectConnectorGravity.cpp',
+                 'src/Objects/CObjectConnectorHydraulicsActuatorSimple.cpp',
                  'src/Objects/CObjectConnectorLinearSpringDamper.cpp',
                  'src/Objects/CObjectConnectorRigidBodySpringDamper.cpp',
                  'src/Objects/CObjectConnectorRollingDiscPenalty.cpp',
