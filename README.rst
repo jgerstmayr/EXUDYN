@@ -21,20 +21,20 @@ A paper on Exudyn is planned to be presented at the `6th Joint International Con
 .. |pic1| image:: docs/demo/screenshots/pistonEngine.gif
    :width: 200
 
-.. |pic2| image:: docs/demo/screenshots/demo4piston.png
-   :width: 160
+.. |pic2| image:: docs/demo/screenshots/hydraulic2arm.gif
+   :width: 200
 
 .. |pic3| image:: docs/demo/screenshots/particles2M.gif
    :width: 120
 
 .. |pic4| image:: docs/demo/screenshots/shaftGear.png
-   :width: 280
+   :width: 160
 
 .. |pic5| image:: docs/demo/screenshots/rotor_runup_plot3.png
-   :width: 280
+   :width: 190
 
 .. |pic6| image:: docs/theDoc/figures/DrawSystemGraphExample.png
-   :width: 280
+   :width: 240
    
 |pic1| |pic2| |pic3| |pic4| |pic5| |pic6|
 
