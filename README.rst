@@ -22,20 +22,20 @@ A paper on Exudyn is planned to be presented at the `6th Joint International Con
    :width: 200
 
 .. |pic2| image:: docs/demo/screenshots/demo4piston.png
-   :width: 200
+   :width: 160
 
 .. |pic3| image:: docs/demo/screenshots/particles2M.gif
    :width: 120
 
 .. |pic4| image:: docs/demo/screenshots/shaftGear.png
-   :width: 200
+   :width: 280
 
 .. |pic5| image:: docs/demo/screenshots/rotor_runup_plot3.png
-   :width: 200
+   :width: 280
 
 .. |pic6| image:: docs/theDoc/figures/DrawSystemGraphExample.png
-   :width: 200
-
+   :width: 280
+   
 |pic1| |pic2| |pic3| |pic4| |pic5| |pic6|
 
 This README document is a small part of the complete documentation found as PDF document in docs/theDoc/theDoc.pdf.
