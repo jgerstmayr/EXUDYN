@@ -19,26 +19,24 @@ A paper on Exudyn is planned to be presented at the `6th Joint International Con
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 
 .. |pic1| image:: docs/demo/screenshots/pistonEngine.gif
-   :width: 40%
+   :width: 200
 
 .. |pic2| image:: docs/demo/screenshots/demo4piston.png
-   :width: 40%
+   :width: 200
 
 .. |pic3| image:: docs/demo/screenshots/particles2M.gif
-   :width: 8%
+   :width: 120
 
 .. |pic4| image:: docs/demo/screenshots/shaftGear.png
-   :width: 30%
+   :width: 200
 
 .. |pic5| image:: docs/demo/screenshots/rotor_runup_plot3.png
-   :width: 30%
+   :width: 200
 
 .. |pic6| image:: docs/theDoc/figures/DrawSystemGraphExample.png
-   :width: 30%
+   :width: 200
 
-|pic1| |pic2| |pic3| 
-
-|pic4| |pic5| |pic6|
+|pic1| |pic2| |pic3| |pic4| |pic5| |pic6|
 
 This README document is a small part of the complete documentation found as PDF document in docs/theDoc/theDoc.pdf.
 It is auto-generated from .tex files (sorry for some conversion errors!). 
