@@ -27,8 +27,8 @@ A paper on Exudyn is planned to be presented at the `6th Joint International Con
 .. |pic3| image:: docs/demo/screenshots/shaftGear.png
    :width: 30%
 
-.. |pic4| image:: docs/theDoc/screenshots/particles2M.gif
-   :width: 14%
+.. |pic4| image:: docs/demo/screenshots/particles2M.gif
+   :width: 15%
 
 .. |pic5| image:: docs/demo/screenshots/rotor_runup_plot3.png
    :width: 30%
