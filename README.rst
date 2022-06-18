@@ -18,7 +18,7 @@ A paper on Exudyn is planned to be presented at the `6th Joint International Con
 +  **pre-built** for Python 3.6, 3.7, 3.8, 3.9, and 3.10 under **Windows** ; Python 3.8 for **MacOS** available; some **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 
-.. |pic1| image:: docs/demo/screenshots/6pistonEngineStresses.jpg
+.. |pic1| image:: docs/demo/screenshots/pistonEngine.gif
    :width: 22%
 
 .. |pic2| image:: docs/demo/screenshots/demo4piston.png
@@ -27,13 +27,16 @@ A paper on Exudyn is planned to be presented at the `6th Joint International Con
 .. |pic3| image:: docs/demo/screenshots/shaftGear.png
    :width: 20%
 
-.. |pic4| image:: docs/demo/screenshots/rotor_runup_plot3.png
+.. |pic4| image:: docs/theDoc/figures/particles2M.gif
+   :width: 14%
+
+.. |pic5| image:: docs/demo/screenshots/rotor_runup_plot3.png
    :width: 21%
 
-.. |pic5| image:: docs/theDoc/figures/DrawSystemGraphExample.png
+.. |pic6| image:: docs/theDoc/figures/DrawSystemGraphExample.png
    :width: 21%
 
-|pic1| |pic2| |pic3| |pic4| |pic5|
+|pic1| |pic2| |pic3| |pic4| |pic5| |pic6|
 
 This README document is a small part of the complete documentation found as PDF document in docs/theDoc/theDoc.pdf.
 It is auto-generated from .tex files (sorry for some conversion errors!). 
