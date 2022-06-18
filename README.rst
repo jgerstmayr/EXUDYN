@@ -19,13 +19,13 @@ A paper on Exudyn is planned to be presented at the `6th Joint International Con
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 
 .. |pic1| image:: docs/demo/screenshots/pistonEngine.gif
-   :width: 30%
+   :width: 40%
 
 .. |pic2| image:: docs/demo/screenshots/demo4piston.png
-   :width: 30%
+   :width: 40%
 
 .. |pic3| image:: docs/demo/screenshots/particles2M.gif
-   :width: 15%
+   :width: 8%
 
 .. |pic4| image:: docs/demo/screenshots/shaftGear.png
    :width: 30%
