@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1148, 
-Number of resolved issues = 976 (134 in current minor version), 
-Exudyn version = 1.2.134.dev1, 
-last change =  2022-06-17
+Number of issues = 1157, 
+Number of resolved issues = 989 (0 in current minor version), 
+Exudyn version = 1.3.0, 
+last change =  2022-06-22
 
 
 <table style = "width:100%">
@@ -38,6 +38,22 @@ last change =  2022-06-17
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1156</td>
+    <td>renderState         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add description of render state from C++ into theDoc</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-06-21</td>
+    <td>2022-08-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>1142</td>
     <td>item functions checker</td>
@@ -535,22 +551,6 @@ last change =  2022-06-17
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0972</td>
-    <td>ContactFrictionCircleCable2D</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add / extend description</td>
-    <td>DOCU</td>
-    <td></td>
-    <td>2022-03-09</td>
-    <td>2022-05-08</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0971</td>
     <td>Renderer            </td>
     <td>JG</td>
@@ -560,22 +560,6 @@ last change =  2022-06-17
     <td></td>
     <td>2022-03-06</td>
     <td>2022-05-05</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0968</td>
-    <td>MarkerBodyCable2DShape</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add offset from beam axis, to compute position, velocity and jacobians at contact surface</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-03-03</td>
-    <td>2022-05-02</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1008,22 +992,6 @@ last change =  2022-06-17
     <td></td>
     <td>2022-01-15</td>
     <td>2022-03-16</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0863</td>
-    <td>RaspberryPi         </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> check compilation on Raspi, make adaptation of ngsolve includes to run</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-01-14</td>
-    <td>2022-03-15</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1655,22 +1623,6 @@ last change =  2022-06-17
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0735</td>
-    <td>parallel build      </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> check parallel build with MSbuild to reduce compilation times</td>
-    <td>CHECK</td>
-    <td></td>
-    <td>2021-08-12</td>
-    <td>2021-10-11</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0734</td>
     <td>continuous integration</td>
     <td>JG</td>
@@ -1776,22 +1728,6 @@ last change =  2022-06-17
     <td></td>
     <td>2021-06-28</td>
     <td>2021-08-27</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0677</td>
-    <td>single threaded renderer</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> correct crash with visualization dialog (MacOS)</td>
-    <td>BUG</td>
-    <td></td>
-    <td>2021-05-12</td>
-    <td>2021-07-11</td>
     <td></td>
     <td></td>
     <td></td>
@@ -2786,6 +2722,134 @@ last change =  2022-06-17
     <td>2019-07-01</td>
     <td></td>
     <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1155</td>
+    <td>center point        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add key "o" option to set center point to current center point of view; this allows to rotate around the current center point of the view</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-21</td>
+    <td>2022-08-20</td>
+    <td>2022-06-21 18:16</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1154</td>
+    <td>Zoom all            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change procedures for zoom all and for computation of maximum scene coordinates; may affect appearance of your models; necessary for consistently computing perspective and shadow parameters</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-06-21</td>
+    <td>2022-08-20</td>
+    <td>2022-06-21 08:38</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1153</td>
+    <td>noglfw              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check compilation without GLFW</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-06-20</td>
+    <td>2022-08-19</td>
+    <td>2022-06-20 10:58</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1152</td>
+    <td>Renderer            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add separate function to compute accurate scene size, store as 3D vector and as norm</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-20</td>
+    <td>2022-08-19</td>
+    <td>2022-06-21 17:56</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1151</td>
+    <td>linux builds        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove -g flag from linux builds, leading to 2.6MB instead of 38MB binaries; to enable debug information (e.g. to detect origin of some crashes, remove the -g0 flag in setup.py)</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-06-19</td>
+    <td>2022-08-18</td>
+    <td>2022-06-19 18:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1150</td>
+    <td>OpenGL              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add shadows (simple)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-18</td>
+    <td>2022-08-17</td>
+    <td>2022-06-20 01:49</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>activate with SC.VisualizationSettings().openGL.shadow, chosing a value between 0. and 1; good results obtained with 0.5</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1149</td>
+    <td>OpenGL              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add perspective</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-18</td>
+    <td>2022-08-17</td>
+    <td>2022-06-19 01:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added openGL option perspective; EXPERIMENTAL!</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1148</td>
+    <td>jacobian ODE1 ODE2  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fix jacobian computations for mixed ODE1-ODE2 components; check with HydraulicActuatorSimple (lower number of jacobians and iterations)</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-06-18</td>
+    <td>2022-08-17</td>
+    <td>2022-06-18 23:38</td>
+    <td>JG</td>
     <td></td>
     <td></td>
     <td></td>
@@ -5095,6 +5159,22 @@ last change =  2022-06-17
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0972</td>
+    <td>ContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add / extend description</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-03-09</td>
+    <td>2022-05-08</td>
+    <td>2022-06-22 07:44</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0970</td>
     <td>PlotSensor          </td>
     <td>JG</td>
@@ -5125,6 +5205,22 @@ last change =  2022-06-17
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0968</td>
+    <td>MarkerBodyCable2DShape</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add offset from beam axis, to compute position, velocity and jacobians at contact surface</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-03-03</td>
+    <td>2022-05-02</td>
+    <td>2022-06-22 07:46</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>already done earlier</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0967</td>
@@ -6357,6 +6453,22 @@ last change =  2022-06-17
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0863</td>
+    <td>RaspberryPi         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check compilation on Raspi, make adaptation of ngsolve includes to run</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-01-14</td>
+    <td>2022-03-15</td>
+    <td>2022-06-22 07:48</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>already done earlier</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0857</td>
@@ -7767,6 +7879,22 @@ last change =  2022-06-17
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0735</td>
+    <td>parallel build      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check parallel build with MSbuild to reduce compilation times</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2021-08-12</td>
+    <td>2021-10-11</td>
+    <td>2022-06-22 07:58</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>already done earlier</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0733</td>
     <td>ContactCoordinate   </td>
     <td>JG</td>
@@ -8565,6 +8693,22 @@ last change =  2022-06-17
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0677</td>
+    <td>single threaded renderer</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> correct crash with visualization dialog (MacOS)</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-05-12</td>
+    <td>2021-07-11</td>
+    <td>2022-06-22 07:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>not resolved, but it is an issue of missing tkinter capabilities in MacOS</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0676</td>

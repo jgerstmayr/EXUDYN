@@ -82,10 +82,12 @@ public:
 
 	//++++++++++++++++++++++++++++++++++++
 	//selection:
-	//DELETE: selectionMode;					//!< true, if in selection mode
-	Vector2D selectionMouseCoordinates; //!mouse coordinates used for selection
-	//std::string selectionString;		//!< string about object to be shown on screen
-	
+	Vector2D selectionMouseCoordinates; //!< mouse coordinates used for selection
+	Index highlightIndex;			//!< item index of selected item (with mouse click)
+	ItemType highlightType;			//!< item type of selected item
+	Index highlightMbsNumber;			//!< mbs number of selected item
+	Real highlightTimeout; 			//!< time at which highlighted item shall be removed, using EXUstd::GetTimeInSeconds(); 0, if no timeout
+
 	std::string rendererMessage;		//!< rendererMessage to be shown in status line
 	Real renderMessageTimeout; 			//!< time at which message shall be removed, using EXUstd::GetTimeInSeconds(); 0, if no timeout
 
@@ -110,7 +112,7 @@ private:
 	static std::thread rendererThread;	//!< std::thread variable for rendererThread
 	static Index rendererError;			//!< 0 ... no error, 1 ... glfwInit() failed, 2 ... glfwCreateWindow failed, 3 ... other error
 	static bool verboseRenderer;        //!< initialized in SetupRenderer(bool verbose): output helpful information
-	static Index firstRun; //zoom all in first run
+	//static Index firstRun; //zoom all in first run
 	static std::atomic_flag renderFunctionRunning;  //!< semaphore to check if Render(...)  function is currently running (prevent from calling twice)
 	static std::atomic_flag showMessageSemaphore;   //!< semaphore to prevent calling ShowMessage twice
 
@@ -134,6 +136,7 @@ private:
 	static GLuint spheresListBase;			//!< starting index for GLlists for spheres
 	static constexpr Index maxSpheresLists = 8; //!< max. number of GLlists for spheres (with resolution 2,4,8,16, etc.
 
+	static constexpr Index invalidIndex = -1; //!< for some state machine variables (itemIndex, joystick number, ...)
 	//+++++++++++++++++++++++++++++++++++++++++
 	//link to GraphicsData and Settings:
 	static ResizableArray<GraphicsData*>* graphicsDataList;					//!< link to graphics data; only works for one MainSystem, but could also be realized for several systems
@@ -159,6 +162,9 @@ public:
 	//! return renderState object
 	static RenderState GetRenderState() { return *state; }
 
+	//! reset some state machines, e.g., left mouse click, item select, etc.
+	static void ResetStateMachine();
+
 	static bool WindowIsInitialized()
 	{
 		if (window && rendererActive) { return true; }
@@ -183,7 +189,7 @@ public:
 			state->mouseLeftPressed = false;
 			state->mouseRightPressed = false;
 			state->mouseMiddlePressed = false;
-			state->joystickAvailable = -1;
+			state->joystickAvailable = invalidIndex;
 			return true;
 		}
 		else { return false; }
@@ -287,8 +293,8 @@ private: //to be called internally only!
 	static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 	static void window_close_callback(GLFWwindow* window);
 
-	//! return true, if joystick available and updated values are available; if joystickNumber==-1, chose a joystick; 
-	//! if joystickNumber!=-1, it uses the fixed joystick until end of Renderer
+	//! return true, if joystick available and updated values are available; if joystickNumber==invalidIndex, chose a joystick; 
+	//! if joystickNumber!=invalidIndex, it uses the fixed joystick until end of Renderer
 	static bool GetJoystickValues(Vector3D& position, Vector3D& rotation, Index& joystickNumber);
 	
 	//! read joystick values; if changed, send refresh signal for graphics
@@ -322,6 +328,8 @@ private: //to be called internally only!
 	//! Render function called for every update of OpenGl window
 	static void Render(GLFWwindow* window); //GLFWwindow* needed in argument, because of glfwSetWindowRefreshCallback
 
+	static void SetProjection(int width, int height, float ratio, float& zoom, GLdouble& zFactor); //load GL_PROJECTION and set according to zoom, perspective, etc.
+
 	//! check if frame shall be grabed and saved to file using visualization options
 	static void SaveImage();
 
@@ -331,8 +339,14 @@ private: //to be called internally only!
 	//! Render particulary the graphics data of multibody system; selectionMode==true adds names
 	static void RenderGraphicsData(bool selectionMode = false); // fontScale now stored in GLFWRenderer: float fontScale); 
 
+	//! Render triangles with stencil shadow method (slow, but accurate and should be sufficient for some animations)
+	static void DrawTrianglesWithShadow(GraphicsData* data); 
+	
+	//! compute maxSceneSize and center from graphicsData 
+	static void ComputeMaxSceneSize(float& maxSceneSize, Float3& center);
+
 	//! Zoom all graphics objects (for current configuration)
-	static void ZoomAll();
+	static void ZoomAll(bool updateGraphicsData=true, bool computeMaxScene=true, bool render=true);
 
 	//! Set all light functions for openGL
 	static void SetGLLights();

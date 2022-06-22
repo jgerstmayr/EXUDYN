@@ -293,6 +293,26 @@ namespace EXUstd {
 		return value;
 	}
 
+	inline float GetSafelyUFloat(float value, const char* parameterName)
+	{
+		if (value < 0)
+		{
+			PyError(STDstring("float parameter '") + parameterName + "' may not be negative, but received: " + EXUstd::ToString(value));
+			return 0;
+		}
+		return value;
+	}
+
+	inline float GetSafelyPFloat(float value, const char* parameterName)
+	{
+		if (value <= 0)
+		{
+			PyError(STDstring("float parameter '") + parameterName + "' must be positive (> 0), but received: " + EXUstd::ToString(value));
+			return 1; //any positive value, should work in most cases as a backup
+		}
+		return value;
+	}
+
 	//a function to wait until flag is available, then reserve flag
 	inline void WaitAndLockSemaphore(std::atomic_flag& flag)
 	{

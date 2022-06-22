@@ -386,6 +386,7 @@ class BuildExt(build_ext):
          '-Wno-unknown-pragmas', #warning from ngs_core.hpp/taskmanager.hpp (NGsolve)
          '-Wno-sign-compare', #warning from taskmanager.hpp (NGsolve)
  		 '-Wall',
+         '-g0', #deactivate debug information (overrides default -g flags), decreases files size from 38MB to 2.6 MB in Python 3.6 version
          '-D'+exudynPythonMacro,
          #'-std=c++17', #==>chosen automatic
          #'-fpermissive', #because of exceptions ==> allows compilation

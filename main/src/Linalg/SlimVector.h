@@ -490,7 +490,23 @@ public:
         for (auto &item : *this) { item *= norm; } //changed from "item /= norm" to be compatible with autodiff
     }
 
-    T& X()
+	////! get sum of components
+	//T Sum() const
+	//{
+	//	T result = 0.;
+	//	for (auto item : *this) { result += item; }
+	//	return result;
+	//}
+
+	//! get sum of absolute values
+	T SumAbs() const
+	{
+		T result = 0.;
+		for (auto item : *this) { result += fabs(item); }
+		return result;
+	}
+
+	T& X()
     {
         static_assert(dataSize >= 1, "ERROR: SlimVectorBase dataSize < 1 for function T& X()");
         return data[0];

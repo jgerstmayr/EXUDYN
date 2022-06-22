@@ -60,7 +60,7 @@ void fRotTest(const ConstSizeVectorBase<TReal, 6>& q, ConstSizeVectorBase<TReal,
 
 Matrix3D CNodePoint3DSlope23::GetRotationMatrix_t(ConfigurationType configuration) const
 {
-	CHECKandTHROWstring("CNodePoint3DSlope23::GetRotationMatrix_t: not implemented!");
+	//CHECKandTHROWstring("CNodePoint3DSlope23::GetRotationMatrix_t: not implemented!");
 	const Index nqSlope = 6;
 	const Index dimRot = 9; //number of entries in rotation matrix A
 	ConstSizeVector<nODE2coordinates> q0;
@@ -143,7 +143,7 @@ Matrix3D CNodePoint3DSlope23::GetRotationMatrix(ConfigurationType configuration)
 //! AUTO:  return configuration dependent velocity of node; returns always a 3D Vector
 Vector3D CNodePoint3DSlope23::GetAngularVelocity(ConfigurationType configuration) const
 {
-	CHECKandTHROWstring("CNodePoint3DSlope23::GetAngularVelocity: untested!");
+	//CHECKandTHROWstring("CNodePoint3DSlope23::GetAngularVelocity: untested!");
 
 	ConstSizeVector<nODE2coordinates> q;
 	q.CopyFrom(GetCoordinateVector(ConfigurationType::Reference));
@@ -174,14 +174,14 @@ Vector3D CNodePoint3DSlope23::GetAngularVelocity(ConfigurationType configuration
 //! AUTO:  return configuration dependent velocity of node; returns always a 3D Vector
 Vector3D CNodePoint3DSlope23::GetAngularVelocityLocal(ConfigurationType configuration) const
 {
-	CHECKandTHROWstring("CNodePoint3DSlope23::GetAngularVelocityLocal: untested!");
+	//CHECKandTHROWstring("CNodePoint3DSlope23::GetAngularVelocityLocal: untested!");
 
 	return GetRotationMatrix(configuration).GetTransposed() * GetAngularVelocity(configuration);
 }
 
 void CNodePoint3DSlope23::GetRotationJacobian(Matrix& value) const
 {
-	CHECKandTHROWstring("CNodePoint3DSlope23::GetRotationJacobian: untested!");
+	//CHECKandTHROWstring("CNodePoint3DSlope23::GetRotationJacobian: untested!");
 
 
 	ConstSizeVector<nODE2coordinates> q;

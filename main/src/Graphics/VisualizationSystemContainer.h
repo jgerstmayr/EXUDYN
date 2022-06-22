@@ -114,7 +114,8 @@ public: //declared as public for direct access via pybind
 	VisualizationSettings settings;		//!< general settings for visualization
 	RenderState renderState;		//!< Data linked to state variables of the OpenGL engine (e.g. zoom, transformation matrices, ...)
 	ResizableArray<VisualizationSystem*> visualizationSystems; //! linked to all visualization systems (placed in MainSystem); links need to be kept up-to-date by MainSystem Add/Delete
-	bool zoomAllRequest;				//! used to perform UpdateMaximumSceneCoordinates()
+	bool zoomAllRequest;				//! used to perform zoom all()
+	bool computeMaxSceneRequest;		//! used to update max scene coordinates and center
 	bool updateGraphicsDataNow;			//! renderer signals to update the graphics data, e.g. if settings have changed; reset to false after UpdateGraphicsData(...) is called
 	std::string computationMessage;		//! message of computation to be shown in renderer window
 	bool saveImage;						//!< set true: signal to save the current state shall be rendered and saved to a given image (with consecutive number); will be set false, as soon as frame is saved
@@ -127,6 +128,7 @@ public:
 	VisualizationSystemContainer()
 	{
 		zoomAllRequest = false;
+		computeMaxSceneRequest = true; //always done at beginning!
 		saveImage = false;
 		saveImageOpenGL = false;
 		updateGraphicsDataNowInternal = false;
@@ -202,7 +204,7 @@ public:
 	//virtual void SetVisualizationIsRunning(bool flag = true) override;
 
 	//! if the system has changed or loaded, compute maximum box of all items and reset scene to the maximum box
-	virtual void UpdateMaximumSceneCoordinates() override;
+	virtual void InitializeView() override;
 
 	//! renderer signals to update the graphics data, e.g. if settings have changed
 	virtual void UpdateGraphicsDataNow() override
@@ -229,6 +231,11 @@ public:
 		if (zoomAllRequest) { zoomAllRequest = false; return true; }
 		return false;
 	}
+
+	virtual void SetZoomAllRequest(bool flag) override { zoomAllRequest = flag; }
+
+	virtual void SetComputeMaxSceneRequest(bool flag) override { computeMaxSceneRequest = flag; }
+	virtual bool GetComputeMaxSceneRequest() override { return computeMaxSceneRequest; }
 
 	//! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
 	virtual std::string GetComputationMessage(bool solverInformation = true, 

@@ -2054,23 +2054,22 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 			{
 				ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
 				Index nLocalODE2 = ltgODE2.NumberOfItems();
-				f0.SetNumberOfItems(nLocalODE2);
-				f1.SetNumberOfItems(nLocalODE2);
 
 				JacobianType::Type jacType = object->GetAvailableJacobians();
 
 				bool jacobianComputed = false;
-				if (jacType & (JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t)) //any ODE2 dependency
+				if (jacType & (JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE1)) //any ODE2 dependency
 				{
-					if (!numDiff.forODE2 && ((jacType & (JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function)) != 0))
+					if (!numDiff.forODE2 && ((jacType & (JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function/* + JacobianType::ODE2_ODE1_function*/)) != 0))
 					{
 						if (!EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
-						{   //*** compute object jacobian, e.g., finite element or rigid body
+						{   // ++++++++++++++ compute object jacobian, e.g., finite element or rigid body
 							jacobianComputed = true;
 
 							//matrix size set inside object
 							object->ComputeJacobianODE2_ODE2(temp.jacobianODE2Container, temp.jacobianTemp,
 								-factorODE2, -factorODE2_t, j, ltgODE2); //minus (-) because in numerical mode, f0-f1 leads to negative sign (RHS ==> LHS)
+							//ODE2_ODE1 missing here!
 							if (temp.jacobianODE2Container.UseDenseMatrix())
 							{
 								jacobianGM.AddSubmatrix(temp.jacobianODE2Container.GetInternalDenseMatrix(), 1., ltgODE2, ltgODE2);
@@ -2084,7 +2083,7 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 							}
 						} //if (!EXUstd::IsOfType(object->GetType(), CObjectType::Connector)
 						else if (!numDiff.forODE2connectors)
-						{	//*** go the lengthier way: compute connector jacobian, e.g., spring-damper
+						{	// ++++++++++++++ go the lengthier way: compute connector jacobian, e.g., spring-damper
 							CObjectConnector* connector = (CObjectConnector*)object;
 
 							const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
@@ -2143,59 +2142,97 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 						} //if (numDiff.forODE2connectors)
 					}
 
-					if (!jacobianComputed && ComputeObjectODE2LHS(temp, object, f0, j)) //check if it is a constraint, etc. which is not differentiated for ODE2 jacobian
+
+					if (!jacobianComputed)
 					{
-						localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
-						if (diffODE2)
+						f0.SetNumberOfItems(nLocalODE2); //size also correct for ODE1 derivatives
+						f1.SetNumberOfItems(nLocalODE2);
+						if (ComputeObjectODE2LHS(temp, object, f0, j)) //check if it is a constraint, etc. which is not differentiated for ODE2 jacobian
 						{
-							Real xRefVal = 0;
-							for (Index i = 0; i < nLocalODE2; i++) //differentiate w.r.t. every ltgODE2 coordinate
+							localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
+							if (diffODE2)
 							{
-								Real& xVal = x[ltgODE2[i]];
-								if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRef[ltgODE2[i]]; }
-
-								eps = relEps * (EXUstd::Maximum(minCoord, fabs(xVal + xRefVal)));
-
-								xStore = xVal;
-								xVal += eps;
-								ComputeObjectODE2LHS(temp, object, f1, j);
-								xVal = xStore;
-
-								epsInv = (1. / eps) * factorODE2;
-
-								for (Index k = 0; k < nLocalODE2; k++)
+								Real xRefVal = 0;
+								for (Index i = 0; i < nLocalODE2; i++) //differentiate w.r.t. every ltgODE2 coordinate
 								{
-									//use local jacobian:
-									localJacobian(k, i) = epsInv * (f0[k] - f1[k]); //-(f1-f0) == (f0-f1): negative sign, because object ODE2RHS is subtracted from global RHS-vector
+									Real& xVal = x[ltgODE2[i]];
+									if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRef[ltgODE2[i]]; }
+
+									eps = relEps * (EXUstd::Maximum(minCoord, fabs(xVal + xRefVal)));
+
+									xStore = xVal;
+									xVal += eps;
+									ComputeObjectODE2LHS(temp, object, f1, j);
+									xVal = xStore;
+
+									epsInv = (1. / eps) * factorODE2;
+
+									for (Index k = 0; k < nLocalODE2; k++)
+									{
+										//use local jacobian:
+										localJacobian(k, i) = epsInv * (f0[k] - f1[k]); //-(f1-f0) == (f0-f1): negative sign, because object ODE2RHS is subtracted from global RHS-vector
+									}
 								}
 							}
-						}
-						else { localJacobian.SetAll(0.); }
+							else { localJacobian.SetAll(0.); }
 
-						if (diffODE2_t && EXUstd::IsOfType(jacType, JacobianType::ODE2_ODE2_t))
-						{
-							for (Index i = 0; i < nLocalODE2; i++) //differentiate w.r.t. every ltgODE2 coordinate
+							if (diffODE2_t && EXUstd::IsOfType(jacType, JacobianType::ODE2_ODE2_t))
 							{
-								Real& xVal = x_t[ltgODE2[i]];
-								eps = relEps * (EXUstd::Maximum(minCoord, fabs(xVal)));
-
-								xStore = xVal;
-								xVal += eps;
-								ComputeObjectODE2LHS(temp, object, f1, j);
-								xVal = xStore;
-
-								epsInv = (1. / eps) * factorODE2_t;
-
-								for (Index k = 0; k < nLocalODE2; k++)
+								for (Index i = 0; i < nLocalODE2; i++) //differentiate w.r.t. every ltgODE2 coordinate
 								{
-									//use local jacobian:
-									localJacobian(k, i) += epsInv * (f0[k] - f1[k]); //-(f1-f0) == (f0-f1): negative sign, because object ODE2RHS is subtracted from global RHS-vector
+									Real& xVal = x_t[ltgODE2[i]];
+									eps = relEps * (EXUstd::Maximum(minCoord, fabs(xVal)));
+
+									xStore = xVal;
+									xVal += eps;
+									ComputeObjectODE2LHS(temp, object, f1, j);
+									xVal = xStore;
+
+									epsInv = (1. / eps) * factorODE2_t;
+
+									for (Index k = 0; k < nLocalODE2; k++)
+									{
+										//use local jacobian:
+										localJacobian(k, i) += epsInv * (f0[k] - f1[k]); //-(f1-f0) == (f0-f1): negative sign, because object ODE2RHS is subtracted from global RHS-vector
+									}
 								}
 							}
-						}
 
-						jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE2, ltgODE2);
-						//pout << "jacN" << j << "=np.array(" << localJacobian << ")\n";
+							jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE2, ltgODE2);
+							//pout << "jacN" << j << "=np.array(" << localJacobian << ")\n";
+
+							if (diffODE1 && (jacType & JacobianType::ODE2_ODE1))
+							{
+								ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
+								Index nLocalODE1 = ltgODE1.NumberOfItems();
+
+								localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE1); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
+
+								Real xRefVal = 0;
+								for (Index i = 0; i < nLocalODE1; i++) //differentiate w.r.t. every ltgODE1 coordinate
+								{
+									Real& xVal = xODE1[ltgODE1[i]];
+									if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRefODE1[ltgODE1[i]]; }
+
+									eps = relEps * (EXUstd::Maximum(minCoord, fabs(xVal + xRefVal)));
+
+									xStore = xVal;
+									xVal += eps;
+									ComputeObjectODE2LHS(temp, object, f1, j);
+									xVal = xStore;
+
+									epsInv = (1. / eps) * factorODE1;
+
+									for (Index k = 0; k < nLocalODE2; k++)
+									{
+										//use local jacobian:
+										localJacobian(k, i) = epsInv * (f0[k] - f1[k]); //-(f1-f0) == (f0-f1): negative sign, because object ODE1RHS is subtracted from global RHS-vector
+									}
+								}
+								//pout << "locJacODE1=" << localJacobian << "\n";
+								jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE2, ltgODE1, 0, nODE2); //fill into ODE2 rows, ODE1 columns
+							}
+						}
 					}
 				}
 			}//isActive
@@ -2253,9 +2290,6 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 		{
 			//++++++++++++++++++++++++++++++++++++++++++++++++
 			//for ODE2-ODE1:
-			f0.SetNumberOfItems(nODE2);
-			f1.SetNumberOfItems(nODE2);
-			ComputeSystemODE2RHS(tempArray, f0); //compute nominal value for jacobian
 			Real xRefVal = 0;
 
 			for (Index i = 0; i < nODE1; i++) //compute column i
@@ -2321,9 +2355,11 @@ void CSystem::NumericalJacobianODE1RHS(TemporaryComputationDataArray& tempArray,
 
 	Vector& xODE2_t = cSystemData.GetCData().currentState.ODE2Coords_t;		//for diff w.r.t. velocities
 
+	bool diffODE1 = (factorODE1 != 0. && nODE1 != 0);
 	bool diffODE2 = (factorODE2 != 0. && nODE2 != 0);
 	bool diffODE2_t = (factorODE2_t != 0. && nODE2 != 0);
-
+	//diffODE2 = false;
+	//diffODE2_t = false;
 
 	if (!numDiff.doSystemWideDifferentiation)
 	{
@@ -2437,21 +2473,24 @@ void CSystem::NumericalJacobianODE1RHS(TemporaryComputationDataArray& tempArray,
 		Real xRefVal = 0;
 
 		//for ODE1-ODE1:
-		for (Index i = 0; i < nODE1; i++) //compute column i
+		if (diffODE1)
 		{
-			if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRefODE1[i]; }
-			eps = relEps * (EXUstd::Maximum(minCoord, fabs(xODE1[i] + xRefVal)));
+			for (Index i = 0; i < nODE1; i++) //compute column i
+			{
+				if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRefODE1[i]; }
+				eps = relEps * (EXUstd::Maximum(minCoord, fabs(xODE1[i] + xRefVal)));
 
-			xStore = xODE1[i];
-			xODE1[i] += eps;
-			ComputeSystemODE1RHS(temp, f1);
-			xODE1[i] = xStore;
+				xStore = xODE1[i];
+				xODE1[i] += eps;
+				ComputeSystemODE1RHS(temp, f1);
+				xODE1[i] = xStore;
 
-			epsInv = (1. / eps) * factorODE1;
+				epsInv = (1. / eps) * factorODE1;
 
-			f1 -= f0;
-			f1 *= epsInv;
-			jacobianGM.AddColumnVector(nODE2 + i, f1, rowOffset);//add rowOffset argument to AddColumnVector(..)
+				f1 -= f0;
+				f1 *= epsInv;
+				jacobianGM.AddColumnVector(nODE2 + i, f1, rowOffset);//add rowOffset argument to AddColumnVector(..)
+			}
 		}
 		//++++++++++++++++++++++++++++++++++++++++++++++++
 		//for ODE1-ODE2:
@@ -2489,7 +2528,7 @@ void CSystem::NumericalJacobianODE1RHS(TemporaryComputationDataArray& tempArray,
 
 				f1 -= f0;
 				f1 *= epsInv;
-				jacobianGM.AddColumnVector(i, f1);
+				jacobianGM.AddColumnVector(i, f1, rowOffset);
 			}
 		}
 	}
@@ -2561,15 +2600,8 @@ void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const Numerica
 		for (Index j = 0; j < nAE; j++)
 		{
 			Real x = epsInv * (f1[j] - f0[j]);
-			//if (fillIntoSystemMatrix)
-			//{
 			jacobian(offsetAE + j, i) = factorAE_ODE2 * x; //add Cq ==> factor only used for Position constraints ...
 			jacobian(i, offsetAE + j) = factorODE2_AE * x; //add CqT ==> new factor
-			//}
-			//else
-			//{
-			//	jacobian(j, i) = /*factorAE_ODE2 * */ x; //add Cq which is lateron used as transposed matrix; factor is usually 1 in this case
-			//}
 		}
 	}
 

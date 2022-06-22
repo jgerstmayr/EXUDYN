@@ -17,6 +17,7 @@ import sys, platform
 if sys.version_info.major != 3 or sys.version_info.minor < 6:# or sys.version_info.minor > 9:
     raise ImportError("EXUDYN only supports python versions >= 3.6")
 isMacOS = (sys.platform == 'darwin')
+isWindows = (sys.platform == 'win32')
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #include right exudyn module now:
@@ -90,6 +91,8 @@ platformString = platform.architecture()[0]#'32bit'
 platformString += 'P'+str(sys.version_info.major) +'.'+ str(sys.version_info.minor)
 if isMacOS:
     platformString += 'MacOSX'
+elif not isWindows: #add linux, to distinguish linux tests from windows tests!
+    platformString += sys.platform
 
 subFolder = ''
 if platform.processor() == 'Intel64 Family 6 Model 142 Stepping 10, GenuineIntel':
@@ -106,6 +109,7 @@ exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
 exu.Print('EXUDYN version      = '+exu.GetVersionString())
 exu.Print('EXUDYN build date   = '+exuDateStr)
 exu.Print('platform            = '+platform.architecture()[0])
+exu.Print('system              = '+sys.platform)
 
 #Surface book 2 = 'Intel64 Family 6 Model 142 Stepping 10, GenuineIntel'
 exu.Print('processor           = '+platform.processor()) 

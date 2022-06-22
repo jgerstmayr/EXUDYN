@@ -105,7 +105,19 @@ def ConvertString2Value(value, vType, vSize, dictionaryTypesT):
         else:
             return [False, errorMsg]
 
-    if vType == 'float':
+    if (vType == 'float' 
+        or vType == 'PReal' or vType == 'UReal'
+        or vType == 'PFloat' or vType == 'UFloat'):
+        floatValue = float(value)
+        if vType == 'PReal' and floatValue <= 0:
+                errorMsg = 'PReal must be > 0'
+        if vType == 'UReal' and floatValue < 0:
+                errorMsg = 'UReal must be >= 0'
+        if vType == 'PFloat' and floatValue <= 0:
+                errorMsg = 'PFloat must be > 0'
+        if vType == 'UFloat' and floatValue < 0:
+                errorMsg = 'UFloat must be >= 0'
+        
         return [float(value), errorMsg]
 
     if vType == 'Index' or vType == 'Int' or vType == 'PInt' or vType == 'UInt':

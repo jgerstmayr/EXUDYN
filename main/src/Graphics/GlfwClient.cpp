@@ -14,6 +14,10 @@
 #include "Graphics/GlfwClient.h"
 #include "Utilities/SlimArray.h"
 
+
+
+#ifdef USE_GLFW_GRAPHICS
+
 #define GlfwRendererUsePNG //deactivate this flag for compatibility; switches to .TGA image output
 
 //needs to be tested!!!
@@ -22,16 +26,17 @@
 //#endif 
 
 //we need to exclude Python36 (in fact Ubuntu18.04, where glfw is not available with stb_image_write.h
-#if defined(__EXUDYN__LINUX__) && defined(__EXUDYN__PYTHON36)
+#if (defined(__EXUDYN__LINUX__) && defined(__EXUDYN__PYTHON36))
 #undef GlfwRendererUsePNG 
 #endif
 
+//GlfwRendererUsePNG only makes sense if GLFW_GRAPHICS is available
 #ifdef GlfwRendererUsePNG
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "deps/stb_image_write.h" //for save image as .PNG
 #endif
 
-#ifdef USE_GLFW_GRAPHICS
+
 using namespace std::string_literals; // enables s-suffix for std::string literals
 
 //if this flag is set, the GLFW thread will be detached (which may be advantageous is stoprenderer is not called); otherwise it is a joinable thread
@@ -81,7 +86,7 @@ RenderState* GlfwRenderer::state;
 RenderStateMachine GlfwRenderer::stateMachine;
 std::thread GlfwRenderer::rendererThread;
 bool GlfwRenderer::verboseRenderer = false;        
-Index GlfwRenderer::firstRun = 0; //zoom all in first run
+//DELETE: Index GlfwRenderer::firstRun = 0; //zoom all in first run
 std::atomic_flag GlfwRenderer::renderFunctionRunning = ATOMIC_FLAG_INIT;  //!< semaphore to check if Render(...)  function is currently running (prevent from calling twice); initialized with clear state
 std::atomic_flag GlfwRenderer::showMessageSemaphore = ATOMIC_FLAG_INIT;   //!< semaphore for ShowMessage
 
@@ -114,6 +119,15 @@ GlfwRenderer::GlfwRenderer()
 	graphicsDataList = nullptr;
 	window = nullptr;
 
+	fontScale = 1; //initialized if needed before bitmap initialization
+	//renderState state cannot be initialized here, because it will be linked later to visualizationSystemContainer
+
+	ResetStateMachine();
+};
+
+
+void GlfwRenderer::ResetStateMachine()
+{
 	stateMachine.leftMousePressed = false;
 	stateMachine.rightMousePressed = false;
 	stateMachine.shiftPressed = false;
@@ -125,14 +139,15 @@ GlfwRenderer::GlfwRenderer()
 	stateMachine.lastMousePressedX = 0;	//!< last left mouse button position pressed
 	stateMachine.lastMousePressedY = 0;
 
-	//DELETE: stateMachine.selectionMode = false;
-	//stateMachine.selectionString = "";
+	//initialize highlight item:
+	stateMachine.highlightIndex = invalidIndex;
+	stateMachine.highlightType = ItemType::_None;
+	stateMachine.highlightMbsNumber = 0;
+	stateMachine.highlightTimeout = 0.;
+
 	stateMachine.selectionMouseCoordinates = Vector2D({ 0.,0. });
 
-	fontScale = 1; //initialized if needed before bitmap initialization
-	//renderState state cannot be initialized here, because it will be linked later to visualizationSystemContainer
-
-};
+}
 
 //! add status message, e.g., if button is pressed
 void GlfwRenderer::ShowMessage(const STDstring& str, Real timeout)
@@ -609,10 +624,10 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 		
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		
-		if (!hasShift && key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[1] -= transStep; }
-		if (!hasShift && key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[1] += transStep; }
-		if (!hasShift && key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[0] += transStep; }
-		if (!hasShift && key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[0] -= transStep; }
+		if (!hasShift && !hasAlt && key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[1] -= transStep; }
+		if (!hasShift && !hasAlt && key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[1] += transStep; }
+		if (!hasShift && !hasAlt && key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[0] += transStep; }
+		if (!hasShift && !hasAlt && key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT)) { state->centerPoint[0] -= transStep; }
 
 		if ((key == GLFW_KEY_KP_SUBTRACT || key == GLFW_KEY_COMMA) && (action == GLFW_PRESS || action == GLFW_REPEAT))
 		{
@@ -631,19 +646,27 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 			else { state->zoom /= zoomStep;; }
 		}
 
-		if (key == GLFW_KEY_A && action == GLFW_PRESS) { ZoomAll(); UpdateGraphicsDataNow(); }
+		if (key == GLFW_KEY_A && action == GLFW_PRESS) 
+		{ 
+			ZoomAll(); 
+		}
+		//if (key == GLFW_KEY_O && action == GLFW_PRESS)
+		//{
+		//	const Float16& A = state->modelRotation;
+		//	Matrix3DF rotMatrix(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
+
+		//	//check which offset or rotation is needed here!
+		//	***
+		//	state->rotationCenterPoint = rotMatrix.GetTransposed()*state->centerPoint;
+		//	pout << "rot center point=" << state->rotationCenterPoint << "\n";
+		//}
 	}
 	//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag);
 }
 
-void GlfwRenderer::ZoomAll()
+void GlfwRenderer::ComputeMaxSceneSize(float& maxSceneSize, Float3& center)
 {
-	//pout << "zoom all\n";
-	//pout << "graphicsDataList=" << graphicsDataList << "\n";
 	//max scene size from current line data:
-	//Float3 pmax({ -1e30f,-1e30f,-1e30f });
-	//Float3 pmin({ 1e30f,1e30f,1e30f });
-
 	Float3 pmax({ -1e30f,-1e30f,-1e30f });
 	Float3 pmin({ 1e30f,1e30f,1e30f });
 
@@ -698,31 +721,31 @@ void GlfwRenderer::ZoomAll()
 			}
 		}
 
-		Float3 center = 0.5f*(pmin + pmax);
+		center = 0.5f*(pmin + pmax);
 
-		float maxSceneSize = (pmax - pmin).GetL2Norm();
+		maxSceneSize = (pmax - pmin).GetL2Norm();
 		if (maxSceneSize < visSettings->general.minSceneSize) { maxSceneSize = visSettings->general.minSceneSize; }
 
 		if (graphicsDataList->NumberOfItems() == 0 ||
 			((*graphicsDataList)[0]->glCirclesXY.NumberOfItems() == 0 && (*graphicsDataList)[0]->glLines.NumberOfItems() == 0
 				&& (*graphicsDataList)[0]->glSpheres.NumberOfItems() == 0 && (*graphicsDataList)[0]->glTexts.NumberOfItems() == 0
-			&& (*graphicsDataList)[0]->glTriangles.NumberOfItems() == 0))
+				&& (*graphicsDataList)[0]->glTriangles.NumberOfItems() == 0))
 		{
 			maxSceneSize = 1;
 			center = Float3({ 0,0,0 });
 		}
-
-		//rendererOut << "Zoom all\n";
-		//rendererOut << "maxScenesize=" << maxSceneSize << "\n";
-		//rendererOut << "center=" << center << "\n";
-
-		state->zoom = 0.4f*maxSceneSize;
-		state->centerPoint = center;
-		//state->zoom = 0.5f*state->maxSceneSize;
-		//state->centerPoint = state->sceneCenterPoint; //computed in VisualizationSystem::UpdateMaximumSceneCoordinates
-
-		UpdateGraphicsDataNow(); //remove from here; just put here for testing 
 	}
+}
+
+//! at beginning with autofitScene and when manually requested
+void GlfwRenderer::ZoomAll(bool updateGraphicsData, bool computeMaxScene, bool render)
+{
+	if (updateGraphicsData) { UpdateGraphicsDataNow(); }
+	if (computeMaxScene) { ComputeMaxSceneSize(state->maxSceneSize, state->centerPoint); }
+
+	state->zoom = 0.4f*state->maxSceneSize;
+
+	if (render) { Render(window); }
 }
 
 void GlfwRenderer::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -934,12 +957,12 @@ void GlfwRenderer::cursor_position_callback(GLFWwindow* window, double xpos, dou
 	}
 }
 
-//! return true, if joystick available and updated values are available; if joystickNumber==-1, chose a joystick; 
-//! if joystickNumber!=-1, it uses the fixed joystick until end of Renderer
+//! return true, if joystick available and updated values are available; if joystickNumber==invalidIndex, chose a joystick; 
+//! if joystickNumber!=invalidIndex, it uses the fixed joystick until end of Renderer
 bool GlfwRenderer::GetJoystickValues(Vector3D& position, Vector3D& rotation, Index& joystickNumber)
 {
 	bool initFirst = false; //if initialized first, also reset stateMachine
-	if (joystickNumber == -1)
+	if (joystickNumber == invalidIndex)
 	{
 		//check if joystick available
 		for (Index i = 0; i <= GLFW_JOYSTICK_LAST - GLFW_JOYSTICK_1; i++)
@@ -989,9 +1012,6 @@ void GlfwRenderer::ProcessJoystick()
 		stateMachine.mode == RendererMode::_None && //only if no other move/zoom action ongoing!
 		GetJoystickValues(state->joystickPosition, state->joystickRotation, state->joystickAvailable))
 	{
-		//for debugging ...
-		//ShowMessage("joystick =" + EXUstd::ToString(state->joystickPosition) + EXUstd::ToString(state->joystickRotation));
-
 		Vector3D diffPos = state->joystickPosition - stateMachine.storedJoystickPosition;
 		Vector3D diffRot = state->joystickRotation - stateMachine.storedJoystickRotation;
 		stateMachine.storedJoystickPosition = state->joystickPosition;
@@ -1014,14 +1034,6 @@ void GlfwRenderer::ProcessJoystick()
 		if (!(diffRot == 0.))
 		{
 			diffRot *= visSettings->interactive.joystickScaleRotation;
-			//local rotations:
-			//glMatrixMode(GL_MODELVIEW);
-			////glLoadIdentity();	//start with identity
-			//glLoadMatrixf(state->modelRotation.GetDataPointer()); //load previous rotation
-			//glRotatef((float)diffRot[0], 1.f, 0.f, 0.f); //apply "incremental" rotation around x
-			//glRotatef((float)diffRot[1], 0.f, 1.f, 0.f); //apply "incremental" rotation around y
-			//glRotatef(-(float)diffRot[2], 0.f, 0.f, 1.f); //apply "incremental" rotation around z
-			//glGetFloatv(GL_MODELVIEW_MATRIX, state->modelRotation.GetDataPointer()); //store rotation in modelRotation, applied in model rendering
 
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();	//start with identity
@@ -1058,15 +1070,16 @@ bool GlfwRenderer::MouseSelect(GLFWwindow* window, Index mouseX, Index mouseY, I
 		(Index)stateMachine.selectionMouseCoordinates[0],
 		(Index)stateMachine.selectionMouseCoordinates[1],
 		itemID);
-	//DELETE: stateMachine.selectionMode = false;
-	Index itemIndex;
-	ItemType itemType;
-	Index mbsNumber;
-	ItemID2IndexType(itemID, itemIndex, itemType, mbsNumber);
+
+	const Real timeOutHighlightItem = 0.5; //just short to exactly see object
+	ItemID2IndexType(itemID, stateMachine.highlightIndex, stateMachine.highlightType, stateMachine.highlightMbsNumber);
+
 	//PrintDelayed("itemID=" + EXUstd::ToString(itemID));
 
-	if (itemType != ItemType::_None && itemIndex != -1)
+	if (stateMachine.highlightType != ItemType::_None && stateMachine.highlightIndex != invalidIndex)
 	{
+		stateMachine.highlightTimeout = EXUstd::GetTimeInSeconds() + timeOutHighlightItem; //5 seconds timeout
+
 		STDstring itemTypeName;
 		STDstring itemName;
 		//STDstring itemInfo;
@@ -1076,15 +1089,13 @@ bool GlfwRenderer::MouseSelect(GLFWwindow* window, Index mouseX, Index mouseY, I
 		{
 			ShowMessage("Selected item: " + itemTypeName +
 				//"type = " + EXUstd::ToString(itemType) + 
-				", index = " + EXUstd::ToString(itemIndex) + " (" + itemName + ")", 0);
+				", index = " + EXUstd::ToString(stateMachine.highlightIndex) + " (" + itemName + ")", 0);
 		}
-		//UpdateGraphicsDataNow();
 		return true;
 	}
 	else
 	{
 		ShowMessage("no item selected", 2);
-		//DELETE: stateMachine.selectionMode = false;
 		return false;
 	}
 }
@@ -1094,7 +1105,6 @@ void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mou
 {
 	//++++++++++++++++++++++++++++++++++++++++
 	//put into separate function, for Render(...)
-	float ratio;
 	int width, height;
 
 	glfwGetFramebufferSize(window, &width, &height);
@@ -1103,15 +1113,10 @@ void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mou
 	state->currentWindowSize[0] = width;
 	state->currentWindowSize[1] = height;
 
-	ratio = (float)width;
-	if (height != 0)
-	{
-		ratio = width / (float)height;
-	}
+	float ratio = (float)width;
+	if (height != 0) { ratio = width / (float)height; }
 
-	GLfloat zoom = state->zoom;
 	//++++++++++++++++++++++++++++++++++++++++
-
 
 	const Index selectBufferSize = 10000; //size for number of objects picked at same time
 	GLuint selectBuffer[selectBufferSize];
@@ -1122,16 +1127,6 @@ void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mou
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	//rendererOut << "viewport=" << viewport[0] << ", " << viewport[1] << ", " << viewport[2] << ", " << viewport[3] << "\n";
 	//rendererOut << "mouse=" << mouseX << ", " << mouseY << "\n";
-
-	////from meshDoc:
-	//glMatrixMode(GL_PROJECTION);
-	//glPushMatrix();
-
-	//GLdouble projmat[16];
-	//glGetDoublev(GL_PROJECTION_MATRIX, projmat);
-
-	//glLoadIdentity();
-
 
 	float backgroundColor = 0.f;
 	glClearColor(backgroundColor, backgroundColor, backgroundColor, 1.0f);
@@ -1147,9 +1142,9 @@ void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mou
 	SetViewOnMouseCursor(mouseX, viewport[3] - mouseY, selectArea*ratio, selectArea, viewport); //add ratio to make area non-distorted?q
 
 	//++++++++++++++++++++++++++++++++++++++++
-	//use function for that part:
-	GLdouble zFactor = 100.; //original:100
-	glOrtho(-ratio * zoom, ratio*zoom, -zoom, zoom, -zFactor * 2.*state->maxSceneSize, zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
+	float zoom;
+	GLdouble zFactor;
+	SetProjection(width, height, ratio, zoom, zFactor); //set zoom, perspective, ...; may not work for larger perspective
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
@@ -1227,7 +1222,13 @@ bool GlfwRenderer::SetupRenderer(bool verbose)
 	{
 		PySetRendererCallbackLock(false); //reset callback lock if still set from earlier run (for safety ...)
 
-		basicVisualizationSystemContainer->UpdateMaximumSceneCoordinates(); //this is done to make OpenGL zoom and maxSceneCoordinates work
+		basicVisualizationSystemContainer->InitializeView(); //this is done to make OpenGL zoom and maxSceneCoordinates work
+		basicVisualizationSystemContainer->SetComputeMaxSceneRequest(true); //computes maxSceneCoordinates for perspective and shadow
+		if (visSettings->general.autoFitScene) 
+		{ 
+			basicVisualizationSystemContainer->SetZoomAllRequest(true); 
+			//pout << "set zoom all\n";
+		}
 		basicVisualizationSystemContainer->ForceQuitSimulation(false); //reset flag if set from earlier simulations
 
 		rendererError = 0; 
@@ -1467,7 +1468,8 @@ void GlfwRenderer::InitCreateWindow()
 
 		//+++++++++++++++++++++++++++++++++
 		//joystick
-		state->joystickAvailable = -1; //this causes to search for new joystick and, if fourn, initialize stateMachine!
+		state->joystickAvailable = invalidIndex; //this causes to search for new joystick and, if fourn, initialize stateMachine!
+		ResetStateMachine();
 
 		//+++++++++++++++++
 		//initialize opengl
@@ -1512,7 +1514,7 @@ void GlfwRenderer::InitCreateWindow()
 
 		//+++++++++++++++++++++++++++++++++
 		//do this just before RunLoop, all initialization finished ...
-		firstRun = 0; //zoom all on startup of window
+		//DELETE: firstRun = 0; //zoom all on startup of window
 		rendererActive = true; //this is still threadsafe, because main thread waits for this signal!
 		//+++++++++++++++++++++++++++++++++
 
@@ -1591,7 +1593,19 @@ void GlfwRenderer::DoRendererTasks()
 	if (useMultiThreadedRendering || (time >= lastGraphicsUpdate + updateInterval) || GetCallBackSignal())
 	{
 		basicVisualizationSystemContainer->UpdateGraphicsData();
-		if (basicVisualizationSystemContainer->GetAndResetZoomAllRequest()) { ZoomAll(); }
+		bool maxSceneComputed = false;
+		if (basicVisualizationSystemContainer->GetComputeMaxSceneRequest()) 
+		{ 
+			ComputeMaxSceneSize(state->maxSceneSize, state->centerPoint); 
+			maxSceneComputed = true;
+			basicVisualizationSystemContainer->SetComputeMaxSceneRequest(false);
+			//pout << "maxSceneSize=" << state->maxSceneSize << ", center=" << state->centerPoint << "\n";
+			//pout << "ComputeMaxSceneSize\n";
+		}
+		if (basicVisualizationSystemContainer->GetAndResetZoomAllRequest()) {
+			ZoomAll(false, !maxSceneComputed, false); 
+			//pout << "Zoom all\n";
+		}
 		Render(window);
 		SaveImage(); //in case of flag, save frame to image file
 		lastGraphicsUpdate = time;
@@ -1668,13 +1682,40 @@ void GlfwRenderer::DoRendererIdleTasks(Real waitSeconds)
 	}
 }
 
+//load GL_PROJECTION and set according to zoom, perspective, etc.
+void GlfwRenderer::SetProjection(int width, int height, float ratio, float& zoom, GLdouble& zFactor)
+{
+	zoom = state->zoom;
+	zFactor = 100.; //z-factor to avoid clipping; original:100
+
+	if (visSettings->openGL.perspective <= 0)
+	{
+		glOrtho(-ratio * zoom, ratio*zoom, -zoom, zoom, -zFactor * 2.*state->maxSceneSize, zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
+		//void glOrtho(GLdouble left,GLdouble right,GLdouble bottom,GLdouble top,GLdouble nearVal,GLdouble farVal);
+	}
+	else
+	{
+		//visSettings->openGL.perspective
+		float fact = 1.f / (float)visSettings->openGL.perspective;
+		float factZoom = 0.5f; //correction, to show same zoom level as orthographic projection
+
+		float zNear = state->maxSceneSize*fact;
+		float zFar = state->maxSceneSize * (4.f*fact + 2.f);
+		float right = ratio * zoom*factZoom;
+		float left = -right;
+		float top = zoom * factZoom;
+		float bottom = -zoom * factZoom;
+		glFrustum(left, right, bottom, top, zNear, zFar);
+		glTranslatef(0.f, 0.f, -2 * fact * state->maxSceneSize);
+	}
+}
+
 void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, because of glfwSetWindowRefreshCallback
 {
 	if (PyGetRendererCallbackLock()) { return; }
 	EXUstd::WaitAndLockSemaphore(renderFunctionRunning); //lock Render(...) function, no second call possible
 	//std::cout << "start renderer\n";
 
-	float ratio;
 	int width, height;
 
 	glfwGetFramebufferSize(window, &width, &height);
@@ -1683,13 +1724,6 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	state->currentWindowSize[0] = width;
 	state->currentWindowSize[1] = height;
 
-	ratio = (float)width;
-	if (height != 0)
-	{
-		ratio = width / (float)height;
-	}
-
-	GLfloat zoom = state->zoom;
 	
 	//determine the windows scale; TODO: add callback to redraw if monitor is changed: glfwSetWindowContentScaleCallback(...)
 	//float xWindowScale, yWindowScale;
@@ -1714,13 +1748,15 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	glClearColor(bg[0], bg[1], bg[2], bg[3]); //(float red, float green, float blue, float alpha);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//glDisable(GL_LIGHTING);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	GLdouble zFactor = 100.; //original:100
-	glOrtho(-ratio * zoom, ratio*zoom, -zoom, zoom, -zFactor*2.*state->maxSceneSize, zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
-	//original (flipped?): 
-	//glOrtho(-ratio * zoom, ratio*zoom, -1.f*zoom, 1.f*zoom, zFactor*2.*state->maxSceneSize, -zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
+
+	float ratio = (float)width;
+	if (height != 0) { ratio = width / (float)height; }
+	float zoom;
+	GLdouble zFactor;
+	SetProjection(width, height, ratio, zoom, zFactor); //set zoom, perspective, ...
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
@@ -1747,17 +1783,41 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	//put here, will be fixed light seen from camera:
 	SetGLLights(); //moved here 2020-12-05; light should now be rotation independent!
 
-	glTranslated(-state->centerPoint[0], -state->centerPoint[1], 0.f); 
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//model rotation and translation, include rotation center point
+	const Float16& A = state->modelRotation;
+ 	Matrix3DF rotMatrix(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
+
+	glTranslatef(-state->centerPoint[0], -state->centerPoint[1], 0.f); 
+
+	//Float3 rot2 = state->rotationCenterPoint;
+	//glTranslatef(rot2[0], rot2[1], rot2[2]);
 
 	glMultMatrixf(state->modelRotation.GetDataPointer());
+
+	////rot2 = rotMatrix.GetTransposed() * (-state->rotationCenterPoint); //A.T*rotationCenterPoint
+	//rot2 =  (-state->rotationCenterPoint); //A.T*rotationCenterPoint
+	//glTranslatef(rot2[0], rot2[1], rot2[2]);
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
 	//glRotatef(state->rotations[2], 0.f, 0.f, 1.f);//((float)glfwGetTime() * 50.f, 0.f, 0.f, 1.f);
 	//glRotatef(state->rotations[1], 0.f, 1.f, 0.f);
 	//glRotatef(state->rotations[0], 1.f, 0.f, 0.f);
 
 	//put here, will rotate with model-view:
-	//SetGLLights(); //moved here 2020-12-05; light should now be rotation independent!
+	//SetGLLights(); 
 
 	RenderGraphicsData();
+
+
+	if (visSettings->openGL.perspective != 0)
+	{
+		//for texts, axes, etc.: draw without perspective
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-ratio * zoom, ratio*zoom, -zoom, zoom, -zFactor * 2.*state->maxSceneSize, zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
+	}
 
 	//glPushMatrix(); //store current matrix
 	//glPopMatrix(); //restore matrix
@@ -1948,14 +2008,6 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 			p0 += Float3({ 0.f,-sizeY,0.f });
 
 		}
-		//		glBegin(GL_TRIANGLES);
-		//		glColor3f(1.f, 0.f, 0.f);
-		//		glVertex3f(-0.6f+i, -0.4f+j, 0.f);
-		//		glColor3f(0.f, 1.f, 0.f);
-		//		glVertex3f(0.6f+i, -0.4f+j, 0.f);
-		//		glColor3f(0.f, 0.f, 1.f);
-		//		glVertex3f(0.f+i, 0.6f+j, 0.f);
-		//		glEnd();
 		glDepthMask(GL_TRUE);
 	}
 
@@ -1981,9 +2033,6 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		//float factor = -0.35f*zoom * 2.5f;
-		//glOrtho(0.0f, ratio, 1, 0.0f, 0.0f, 1.0f);
-		//float factor = -0.35f;
 
 		Float2 pPix = PixelToVertexCoordinates(10 + visSettings->general.coordinateSystemSize*fontSize, 
 			10 + (visSettings->general.coordinateSystemSize+0.f)*fontSize); //+1.f because of possible status line at bottom
@@ -2046,12 +2095,11 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 
 	glfwSwapBuffers(window);
 
-	//rendererOut << "Render ready\n";
+	//DELETE:
+	//firstRun++;
+	////if (firstRun == 10) { ZoomAll(); }
 
-	firstRun++;
-	//if (firstRun == 10) { ZoomAll(); }
-
-	if ((firstRun *  visSettings->general.graphicsUpdateInterval) < 1. && visSettings->general.autoFitScene) { ZoomAll(); }
+	//if ((firstRun *  visSettings->general.graphicsUpdateInterval) < 1. && visSettings->general.autoFitScene) { ZoomAll(); }
 
 	//std::cout << "  finish renderer\n";
 
@@ -2208,10 +2256,10 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 {
 	if (graphicsDataList)
 	{
-		Index lastItemID = -1;
+		Index lastItemID = invalidIndex;
 		if (selectionMode)
 		{
-			glLoadName(-1); //to have some name in
+			glLoadName(invalidIndex); //to have some name in it
 		}
 		//check if item shall be highlighted:
 		bool highlight = false;
@@ -2220,10 +2268,26 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 		Float4 highlightColor2 = visSettings->interactive.highlightColor; //for text and lines
 		Float4 otherColor2 = visSettings->interactive.highlightOtherColor; //for text and lines
 
-
+		//Index highlightIndex;
+		//ItemType highlightType;
+		//Index highlightMbsNumber;
 		Index highlightIndex = visSettings->interactive.highlightItemIndex;
 		ItemType highlightType = visSettings->interactive.highlightItemType;
 		Index highlightMbsNumber = visSettings->interactive.highlightMbsNumber;
+		if (visSettings->interactive.selectionHighlights && stateMachine.highlightIndex != invalidIndex)
+		{
+			//if selected with mouse, temporarily use this:
+			if (stateMachine.highlightTimeout != 0. && stateMachine.highlightTimeout < EXUstd::GetTimeInSeconds())
+			{
+				stateMachine.highlightIndex = invalidIndex; //from now on, no further highlighting
+			}
+			else
+			{
+				highlightIndex = stateMachine.highlightIndex;
+				highlightType = stateMachine.highlightType;
+				highlightMbsNumber = stateMachine.highlightMbsNumber;
+			}
+		}
 
 		Index highlightID = Index2ItemID(highlightIndex, highlightType, highlightMbsNumber);
 		if (highlightIndex >= 0 && highlightType != ItemType::_None)
@@ -2494,6 +2558,10 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 							glEnd();
 						}
 					}
+					if (!selectionMode && visSettings->openGL.shadow != 0)
+					{
+						DrawTrianglesWithShadow(data);
+					}
 				}
 				else //for global transparency of faces; slower
 				{
@@ -2566,11 +2634,140 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 		} //for (auto data : *graphicsDataList)
 		if (selectionMode)
 		{
-			glLoadName(-1); //to have some name in
+			glLoadName(invalidIndex); //to have some name in
 		}
 
 	} //if graphicsDataList
 }
 
+//draw stenciled shadow volume
+//following concepts of https://github.com/joshb/shadowvolumes
+void RenderTriangleShadowVolume(const GLTriangle& trig, const Float3& lightPos, float maxDist, float shadow)
+{
+	//glColor4f(0.6f,0.3f,0.3f,1);
+	bool computeNormals = false;
+	//glColor4f(0.f, 0.f, 0.f, shadow);//shadow
+
+	//check if triangle normal is looking in direction of light (otherwise no shadow is produced
+	if (EXUmath::ComputeTriangleNormal(trig.points[0], trig.points[1], trig.points[2]) * (lightPos - trig.points[0]) > 0)
+	{
+		if (computeNormals) { glNormal3fv(EXUmath::ComputeTriangleNormal(trig.points[0], trig.points[1], trig.points[2]).GetDataPointer()); }
+		glBegin(GL_TRIANGLES);
+		for (Index i = 0; i < 3; i++)
+		{
+			glVertex3fv(trig.points[i].GetDataPointer());
+		}
+		std::array< Float3, 3> farPoints;
+
+		if (computeNormals) { glNormal3fv(EXUmath::ComputeTriangleNormal(trig.points[2], trig.points[1], trig.points[0]).GetDataPointer()); }
+		for (Index i = 2; i >= 0; i--)
+		{
+			Float3 vecDist = trig.points[i] - lightPos;
+			float dist = vecDist.SumAbs()*0.577f; //cheaper than norm, but needs safety factor sqrt(3)
+			//float dist = vecDist.GetL2Norm(); //SumAbs()*0.577 would be cheaper and also on safe side
+			if (dist != 0)
+			{
+				vecDist *= maxDist / dist; //scale up to maximum distance in scene, will cover all objects
+			}
+
+			farPoints[i] = trig.points[i] + vecDist;
+			glVertex3fv(farPoints[i].GetDataPointer());
+		}
+		glEnd();
+
+		glBegin(GL_QUADS);
+		for (Index i = 0; i < 3; i++)
+		{
+			Index iNext = (i + 1) % 3;
+			if (computeNormals) { glNormal3fv(EXUmath::ComputeTriangleNormal(trig.points[i], farPoints[i], farPoints[iNext]).GetDataPointer()); }
+			glVertex3fv(trig.points[i].GetDataPointer());
+			glVertex3fv(farPoints[i].GetDataPointer());
+			glVertex3fv(farPoints[iNext].GetDataPointer());
+			glVertex3fv(trig.points[iNext].GetDataPointer());
+		}
+		glEnd();
+	}
+
+}
+
+//draw full plane over screen, containing shadow mask
+void DrawShadowPlane(float shadow)
+{
+	glPushMatrix();
+	glLoadIdentity();
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0, 1, 1, 0, 0, 1);
+	glDisable(GL_DEPTH_TEST);
+
+	glColor4f(0.0f, 0.0f, 0.0f, shadow);
+	glBegin(GL_QUADS);
+	glVertex2i(0, 0);
+	glVertex2i(0, 1);
+	glVertex2i(1, 1);
+	glVertex2i(1, 0);
+	glEnd();
+
+	glEnable(GL_DEPTH_TEST);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+}
+
+
+void GlfwRenderer::DrawTrianglesWithShadow(GraphicsData* data)
+{
+	const Float4& lp = visSettings->openGL.light0position;
+	Float3 lightPos({ lp[0], lp[1], lp[2] });
+	float maxDist = state->maxSceneSize*1.5f;
+	float shadow = EXUstd::Minimum(visSettings->openGL.shadow, 1.f);
+
+	//add shadow now:
+
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	glDepthMask(GL_FALSE);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_STENCIL_TEST);
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(0.0f, visSettings->openGL.shadowPolygonOffset * state->maxSceneSize); //original: 100.0f, may be too big
+
+	glCullFace(GL_FRONT);
+	glStencilFunc(GL_ALWAYS, 0x0, 0xff);
+	glStencilOp(GL_KEEP, GL_INCR, GL_KEEP);
+	for (const GLTriangle& trig : data->glTriangles)
+	{ //draw faces
+		if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
+			|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
+		{
+			RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow);
+		}
+	}
+	glCullFace(GL_BACK);
+	glStencilFunc(GL_ALWAYS, 0x0, 0xff);
+	glStencilOp(GL_KEEP, GL_DECR, GL_KEEP);
+	for (const GLTriangle& trig : data->glTriangles)
+	{ //draw faces
+		if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
+			|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
+		{
+			RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow);
+		}
+	}
+
+	glDisable(GL_POLYGON_OFFSET_FILL);
+	glDisable(GL_CULL_FACE);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glDepthMask(GL_TRUE);
+
+	glStencilFunc(GL_NOTEQUAL, 0x0, 0xff);
+	glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+
+	DrawShadowPlane(shadow);
+
+	glDisable(GL_STENCIL_TEST);
+
+
+}
 
 #endif //USE_GLFW_GRAPHICS

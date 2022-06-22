@@ -52,6 +52,12 @@ void MainSystem::Reset()
 	//mainSystemIndex = -1; //... check if this is correctly set? test several SC.Reset and similar operations ==> this MainSystem would not be usable any more, as it is not linked to SystemContainer
 }
 
+void MainSystem::SystemHasChanged()
+{
+	GetCSystem()->SystemHasChanged();
+	GetVisualizationSystem().SetSystemHasChanged(true);
+}
+
 MainSystemContainer& MainSystem::GetMainSystemContainer() 
 {
 	return *mainSystemContainerBacklink; 
@@ -181,7 +187,7 @@ void MainSystem::RaiseIfNotConsistent(const char* functionName) const
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 Index MainSystem::AddMainNode(py::dict d)
 {
-	GetCSystem()->SystemHasChanged();
+	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainNode(*this, d);
 	InteractiveModeActions();
 	return ind;
@@ -281,7 +287,7 @@ void MainSystem::PyModifyNode(const py::object& itemIndex, py::dict nodeDict)
 	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
 	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
 	{
-		GetCSystem()->SystemHasChanged();
+		SystemHasChanged();
 		mainSystemData.GetMainNodes().GetItem(nodeNumber)->SetWithDictionary(nodeDict);
 		InteractiveModeActions();
 	}
@@ -475,7 +481,7 @@ void MainSystem::PySetNodeParameter(const py::object& itemIndex, const STDstring
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 Index MainSystem::AddMainObject(py::dict d)
 {
-	GetCSystem()->SystemHasChanged();
+	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainObject(*this, d);
 	InteractiveModeActions();
 
@@ -561,7 +567,7 @@ void MainSystem::PyModifyObject(const py::object& itemIndex, py::dict d)
 	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 	{
-		GetCSystem()->SystemHasChanged();
+		SystemHasChanged();
 		mainSystemData.GetMainObjects().GetItem(itemNumber)->SetWithDictionary(d);
 		InteractiveModeActions();
 	}
@@ -731,7 +737,7 @@ void MainSystem::PySetObjectParameter(const py::object& itemIndex, const STDstri
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 Index MainSystem::AddMainMarker(py::dict d)
 {
-	GetCSystem()->SystemHasChanged();
+	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainMarker(*this, d);
 	InteractiveModeActions();
 	return ind;
@@ -817,7 +823,7 @@ void MainSystem::PyModifyMarker(const py::object& itemIndex, py::dict d)
 	Index itemNumber = EPyUtils::GetMarkerIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainMarkers().NumberOfItems())
 	{
-		GetCSystem()->SystemHasChanged();
+		SystemHasChanged();
 		mainSystemData.GetMainMarkers().GetItem(itemNumber)->SetWithDictionary(d);
 		InteractiveModeActions();
 	}
@@ -893,7 +899,7 @@ void MainSystem::PySetMarkerParameter(const py::object& itemIndex, const STDstri
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 Index MainSystem::AddMainLoad(py::dict d)
 {
-	GetCSystem()->SystemHasChanged();
+	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainLoad(*this, d);
 	InteractiveModeActions();
 	return ind;
@@ -979,7 +985,7 @@ void MainSystem::PyModifyLoad(const py::object& itemIndex, py::dict d)
 	Index itemNumber = EPyUtils::GetLoadIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainLoads().NumberOfItems())
 	{
-		GetCSystem()->SystemHasChanged();
+		SystemHasChanged();
 		mainSystemData.GetMainLoads().GetItem(itemNumber)->SetWithDictionary(d);
 		InteractiveModeActions();
 	}
@@ -1072,7 +1078,7 @@ void MainSystem::PySetLoadParameter(const py::object& itemIndex, const STDstring
 //! this is the hook to the object factory, handling all kinds of objects, nodes, ...
 Index MainSystem::AddMainSensor(py::dict d)
 {
-	GetCSystem()->SystemHasChanged();
+	SystemHasChanged();
 	Index ind = GetMainObjectFactory().AddMainSensor(*this, d);
 	InteractiveModeActions();
 	return ind;
@@ -1158,7 +1164,7 @@ void MainSystem::PyModifySensor(const py::object& itemIndex, py::dict d)
 	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainSensors().NumberOfItems())
 	{
-		GetCSystem()->SystemHasChanged();
+		SystemHasChanged();
 		mainSystemData.GetMainSensors().GetItem(itemNumber)->SetWithDictionary(d);
 		InteractiveModeActions();
 	}

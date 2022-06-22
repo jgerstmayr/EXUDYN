@@ -28,7 +28,7 @@ class VisualizationSystemContainerBase
 public:
 	//! OpenGL renderer sends message that graphics shall be updated
 	virtual void UpdateGraphicsData() = 0;		//!< renderer reports to simulation to update the graphics data
-	virtual void UpdateMaximumSceneCoordinates() = 0;	//!< renderer reports to update the maximum scene coordinates (on initialization)
+	virtual void InitializeView() = 0;	//!< renderer reports to update the maximum scene coordinates (on initialization)
 	virtual void StopSimulation() = 0;			//!< renderer reports to simulation that simulation shall be interrupted
 	virtual void ForceQuitSimulation(bool flag = true) = 0;		//!< renderer reports that render window is closed and simulation shall be shut down
 	virtual void ContinueSimulation() = 0;		//!< renderer reports to simulation that simulation can be continued
@@ -37,12 +37,15 @@ public:
 	virtual void SaveImageFinished() = 0;		//! renderer signals that frame has been grabed and saved
 	virtual bool SaveImageRequest() = 0;		//! signal renderer that a frame shall be recorded
 	virtual bool GetAndResetZoomAllRequest() = 0;//! get zoom all request and reset to false
-	virtual std::string GetComputationMessage(bool solverInformation = true, 
+	virtual void SetComputeMaxSceneRequest(bool flag) = 0;
+	virtual bool GetComputeMaxSceneRequest() = 0;
+
+	virtual std::string GetComputationMessage(bool solverInformation = true,
 		bool solutionInformation = true, bool solverTime = true) = 0; //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
 	virtual MainSystem* GetMainSystemBacklink(Index iSystem) = 0; //! REMOVE: get backlink of ith main system (0 if not existing), temporary for selection
 	virtual Index NumberOFMainSystemsBacklink() const = 0; //! REMOVE: get backlink to number of main systems, temporary for selection
 	virtual bool DoIdleOperations() = 0; //!< this function does any idle operations (execute some python commands) and returns false if stop flag in the render engine, otherwise true;
-
+	virtual void SetZoomAllRequest(bool flag) = 0; //!< request ZoomAll
 
 	virtual ~VisualizationSystemContainerBase() {} //added for correct deletion of derived classes
 
@@ -77,7 +80,8 @@ class RenderState
 {
 public:
 	//GLfloat modelview[16]; //current model view matrix
-	Float3 centerPoint;		//offset of scene in x, y and z direction; initialized by user, then by UpdateMaximumSceneCoordinates and hereafter changed in OpenGL renderer by ZoomAll (z not used, because it would bring objects out of near/far plane)
+	Float3 centerPoint;		//offset of scene in x, y and z direction; initialized by user, then by InitializeView and hereafter changed in OpenGL renderer by ZoomAll (z not used, because it would bring objects out of near/far plane)
+	//Float3 rotationCenterPoint;	//additional offset for point around which the model view is rotated; standard=[0,0,0]
 	float maxSceneSize;		//size given e.g. by initial state of system
 	float zoom;				//this is a factor for zoom
 

@@ -45,7 +45,7 @@ def TestExamplesReferenceSolution():
             'geneticOptimizationTest.py':0.10117518366826603, #before 2022-02-20 (accuracy of internal sensors is higher); 0.10117518367051619, #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.10117518366934351,
             'geometricallyExactBeam2Dtest.py':-2.2115028353806547,
             'heavyTop.py':33.423125751743804,
-            'hydraulicActuatorSimpleTest.py':7.130437437122315,
+            'hydraulicActuatorSimpleTest.py':7.130440021870293,
             'kinematicTreeAndMBStest.py':2.6388120463802767e-05, #original but too sensitive to disturbances: 263.88120463802767,
             'kinematicTreeConstraintTest.py':1.8135975384620484 ,
             'kinematicTreeTest.py': -1.309383960216414,

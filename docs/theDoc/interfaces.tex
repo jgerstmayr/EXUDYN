@@ -338,7 +338,7 @@ VSettingsGeneral has the following items:
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
-    autoFitScene &     bool &      &     True &     automatically fit scene within first second after StartRenderer()\\ \hline
+    autoFitScene &     bool &      &     True &     automatically fit scene within startup after StartRenderer()\\ \hline
     axesTiling &     PInt &      &     12 &     global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)\\ \hline
     backgroundColor &     Float4 &     4 &     [1.0,1.0,1.0,1.0] &     \tabnewline red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])\\ \hline
     backgroundColorBottom &     Float4 &     4 &     [0.8,0.8,1.0,1.0] &     \tabnewline red, green, blue and alpha values for bottom background color in case that useGradientBackground = True\\ \hline
@@ -621,16 +621,16 @@ VSettingsOpenGL has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     drawFaceNormals &     bool &     1 &     False &     draws triangle normals, e.g. at center of triangles; used for debugging of faces\\ \hline
-    drawNormalsLength &     float &     1 &     0.1 &     length of normals; used for debugging\\ \hline
+    drawNormalsLength &     PFloat &     1 &     0.1 &     length of normals; used for debugging\\ \hline
     drawVertexNormals &     bool &     1 &     False &     draws vertex normals; used for debugging\\ \hline
     enableLight0 &     bool &     1 &     True &     turn on/off light0\\ \hline
     enableLight1 &     bool &     1 &     True &     turn on/off light1\\ \hline
     enableLighting &     bool &     1 &     True &     generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL\_LIGHTING)\\ \hline
     facesTransparent &     bool &     1 &     False &     True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers\\ \hline
     initialCenterPoint &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True\\ \hline
-    initialMaxSceneSize &     float &      &     1. &     initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True\\ \hline
+    initialMaxSceneSize &     PFloat &      &     1. &     initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True\\ \hline
     initialModelRotation &     StdArray33F &     3x3 &     [Matrix3DF[3,3,1.,0.,0., 0.,1.,0., 0.,0.,1.]] &     \tabnewline initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]\\ \hline
-    initialZoom &     float &      &     1. &     initial zoom of scene; overwritten/ignored if autoFitScene = True\\ \hline
+    initialZoom &     UFloat &      &     1. &     initial zoom of scene; overwritten/ignored if autoFitScene = True\\ \hline
     light0ambient &     float &     1 &     0.3 &     ambient value of GL\_LIGHT0\\ \hline
     light0constantAttenuation &     float &     1 &     1.0 &     constant attenuation coefficient of GL\_LIGHT0, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1\\ \hline
     light0diffuse &     float &     1 &     0.6 &     diffuse value of GL\_LIGHT0\\ \hline
@@ -649,18 +649,21 @@ VSettingsOpenGL has the following items:
     lightModelLocalViewer &     bool &     1 &     False &     select local viewer for light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_LOCAL\_VIEWER,...)\\ \hline
     lightModelTwoSide &     bool &     1 &     True &     enlighten also backside of object; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_TWO\_SIDE,...)\\ \hline
     lineSmooth &     bool &     1 &     True &     draw lines smooth\\ \hline
-    lineWidth &     float &     1 &     1. &     width of lines used for representation of lines, circles, points, etc.\\ \hline
+    lineWidth &     UFloat &     1 &     1. &     width of lines used for representation of lines, circles, points, etc.\\ \hline
     materialAmbientAndDiffuse &     Float4 &     4 &     [0.6,0.6,0.6,1.] &     \tabnewline 4f ambient color of material\\ \hline
     materialShininess &     float &     1 &     32. &     shininess of material\\ \hline
     materialSpecular &     Float4 &     4 &     [0.6,0.6,0.6,1.] &     \tabnewline 4f specular color of material\\ \hline
     multiSampling &     PInt &     1 &     1 &     multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!\\ \hline
+    perspective &     UFloat &      &     0. &     parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 0.5 (large amount of perspective); mouse coordinates will not work with perspective\\ \hline
     shadeModelSmooth &     bool &     1 &     True &     True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces\\ \hline
+    shadow &     UFloat &      &     0. &     parameter $\in [0 ... 1]$ prescribes amount of shadow; if this parameter is different from 1, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows\\ \hline
+    shadowPolygonOffset &     PFloat &      &     10. &     some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize\\ \hline
     showFaceEdges &     bool &     1 &     False &     show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
     showFaces &     bool &     1 &     True &     show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
     showMeshEdges &     bool &     1 &     True &     show edges of finite elements; independent of showFaceEdges\\ \hline
     showMeshFaces &     bool &     1 &     True &     show faces of finite elements; independent of showFaces\\ \hline
     textLineSmooth &     bool &     1 &     False &     draw lines for representation of text smooth\\ \hline
-    textLineWidth &     float &     1 &     1. &     width of lines used for representation of text\\ \hline
+    textLineWidth &     UFloat &     1 &     1. &     width of lines used for representation of text\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -706,6 +709,7 @@ VSettingsInteractive has the following items:
     keypressRotationStep &     float &      &     5. &     rotation increment per keypress in degree (full rotation = 360 degree)\\ \hline
     keypressTranslationStep &     float &      &     0.1 &     translation increment per keypress relative to window size\\ \hline
     mouseMoveRotationFactor &     float &      &     1. &     rotation increment per 1 pixel mouse movement in degree\\ \hline
+    selectionHighlights &     bool &      &     True &     True: mouse click highlights item (default: red)\\ \hline
     selectionLeftMouse &     bool &      &     True &     True: left mouse click on items and show basic information\\ \hline
     selectionRightMouse &     bool &      &     True &     True: right mouse click on items and show dictionary (read only!)\\ \hline
     useJoystickInput &     bool &      &     True &     True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ...\\ \hline

@@ -97,6 +97,13 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 		systemData->GetCData().visualizationState = postProcessData->GetVisualizationStateUpdate();
 		postProcessData->SetVisualizationStateUpdateAvailable(false);
 	}
+
+	if (GetSystemHasChanged())
+	{
+		visualizationSystemContainer.SetComputeMaxSceneRequest(true);
+		SetSystemHasChanged(false);
+	}
+
 	EXUstd::ReleaseSemaphore(postProcessData->accessState); //now visualizationStateUpdate can be written again in main thread
 
 	try

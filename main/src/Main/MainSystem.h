@@ -81,6 +81,10 @@ public:
 	//! backlink to MainSystemContainer; add const as it cannot be distinguished by pybind11
 	const MainSystemContainer& GetMainSystemContainerConst() const;
 
+	//! signal CSystem and VisualizationSystem that there are new items; system becomes invalid; 
+	//! visualization system needs to update maxSceneSize and center
+	void SystemHasChanged();
+
 	//DELETE: void Test() const { int i = 1; };
 
 	VisualizationSystem& GetVisualizationSystem() { return visualizationSystem; }
@@ -158,7 +162,7 @@ public:
 	void Assemble() 
 	{ 
 		cSystem->Assemble(*this); 
-		//visualizationSystem.UpdateMaximumSceneCoordinates(); //uses reference coordinates to obtain the scene center and its size
+		//visualizationSystem.InitializeView(); //uses reference coordinates to obtain the scene center and its size
 	}
 	void AssembleCoordinates() { cSystem->AssembleCoordinates(*this); }
 	void AssembleLTGLists() { cSystem->AssembleLTGLists(*this); }

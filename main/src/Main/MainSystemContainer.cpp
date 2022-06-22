@@ -32,6 +32,7 @@ py::dict MainSystemContainer::RenderState2PyDict(const RenderState& state)
 {
 	auto d = py::dict();
 	d["centerPoint"] = (const std::vector<float>)state.centerPoint;
+	//d["rotationCenterPoint"] = (const std::vector<float>)state.rotationCenterPoint;
 	d["maxSceneSize"] = state.maxSceneSize;
 	d["zoom"] = state.zoom;
 	d["currentWindowSize"] = (const std::vector<Index>)state.currentWindowSize;
@@ -41,7 +42,7 @@ py::dict MainSystemContainer::RenderState2PyDict(const RenderState& state)
 	//Float9 A33({ A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] }); //convert 4x4 into 3x3 matrix as position part of A is [0,0,0]
 	//d["modelRotation"] = EXUmath::SlimVectorF9ToStdArray33F(A33);
 
-	Matrix3DF rotMatrix(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
+	//Matrix3DF rotMatrix(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
 		
 	//++++++++++++++++++++++++++++++++++++++++++++
 	//old, with numpy, gives problems in output ("array( ...", "dtype=float32")
@@ -86,8 +87,11 @@ void MainSystemContainer::PySetRenderState(py::dict renderState)
 		RenderState& state = visualizationSystems.renderState;
 			
 		//Vector3D centerPoint;
-		EPyUtils::SetSlimVectorTemplateSafely<float,3>(renderState["centerPoint"], state.centerPoint);
-
+		EPyUtils::SetSlimVectorTemplateSafely<float, 3>(renderState["centerPoint"], state.centerPoint);
+		//if (renderState.contains("rotationCenterPoint"))
+		//{
+		//	EPyUtils::SetSlimVectorTemplateSafely<float, 3>(renderState["rotationCenterPoint"], state.rotationCenterPoint);
+		//}
 		state.maxSceneSize = py::cast<float>(renderState["maxSceneSize"]);
 		state.zoom = py::cast<float>(renderState["zoom"]);
 

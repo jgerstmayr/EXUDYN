@@ -382,7 +382,8 @@ SC.visualizationSettings.nodes.tiling = 4
 SC.visualizationSettings.openGL.drawFaceNormals = False
 
 SC.visualizationSettings.openGL.multiSampling = 4
-
+SC.visualizationSettings.openGL.shadow = 0.25
+SC.visualizationSettings.openGL.light0position = [-3,3,10,0]
 
 if useGraphics:
     SC.visualizationSettings.general.autoFitScene = False

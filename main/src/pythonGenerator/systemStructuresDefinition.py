@@ -348,7 +348,7 @@ writePybindIncludes = True
 classDescription = "General settings for visualization."
 #V|F,   pythonName,                     cplusplusName,     size, type,          defaultValue,args,      cFlags, parameterDescription
 V,      graphicsUpdateInterval,         ,                  ,     float,        "0.1f",                 , P,      "interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed"
-V,      autoFitScene,                   ,                  ,     bool,         true,                   , P,      "automatically fit scene within first second after StartRenderer()"
+V,      autoFitScene,                   ,                  ,     bool,         true,                   , P,      "automatically fit scene within startup after StartRenderer()"
 V,      textSize,                       ,                  ,     float,        "12.f",                 , P,      "general text size (font size) in pixels if not overwritten; if useWindowsMonitorScaleFactor=True, the the textSize is multplied with the windows monitor scaling factor for larger texts on on high resolution monitors; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)"
 V,      textColor,                      ,                  4,    Float4,       "Float4({0.f,0.f,0.f,1.0f})", , P, "general text color (default); used for system texts in render window"
 V,      rendererPrecision,              ,                  ,     PInt,         "4",                    , P,      "precision of general floating point numbers shown in render window: total number of digits used  (max. 16)"
@@ -581,15 +581,19 @@ writePybindIncludes = True
 classDescription = "OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL functionality"
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 V,      initialCenterPoint,             ,                  3,    Float3,       "Float3({0.f,0.f,0.f})",, P,      "centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True"
-V,      initialZoom,                    ,                  ,     float,        "1.f",                  , P,      "initial zoom of scene; overwritten/ignored if autoFitScene = True"
-V,      initialMaxSceneSize,            ,                  ,     float,        "1.f",                  , P,      "initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True"
+V,      initialZoom,                    ,                  ,     UFloat,       "1.f",                  , P,      "initial zoom of scene; overwritten/ignored if autoFitScene = True"
+V,      initialMaxSceneSize,            ,                  ,     PFloat,       "1.f",                  , P,      "initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True"
 V,      initialModelRotation,           ,                  3x3,    StdArray33F,    "EXUmath::Matrix3DFToStdArray33(Matrix3DF(3,3,{1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f}))",      , P,      "initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]"
+#V,      usePerspective,                 ,                  ,     bool,         false,                  , P,      "if True, uses perspective drawing; use "
+V,      perspective,                    ,                  ,     UFloat,       "0.f",                  , P,      "parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 0.5 (large amount of perspective); mouse coordinates will not work with perspective"
+V,      shadow,                         ,                  ,     UFloat,       "0.f",                  , P,      "parameter $\in [0 ... 1]$ prescribes amount of shadow; if this parameter is different from 1, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows"
+V,      shadowPolygonOffset,            ,                  ,     PFloat,       "10.f",                 , P,      "some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize"
 #V,      initialModelRotation,           ,                  9,    Matrix3DF,    "Matrix3DF(3,3,{1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f})",      , P,      "initial model rotation matrix for OpenGl; in Python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]"
 # 
 V,      multiSampling,                  ,                  1,    PInt,         "1",                    , P,      "multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!"
-V,      lineWidth,                      ,                  1,    float,        "1.f",                  , P,      "width of lines used for representation of lines, circles, points, etc."
+V,      lineWidth,                      ,                  1,    UFloat,       "1.f",                  , P,      "width of lines used for representation of lines, circles, points, etc."
 V,      lineSmooth,                     ,                  1,    bool,         true,                   , P,      "draw lines smooth"
-V,      textLineWidth,                  ,                  1,    float,        "1.f",                  , P,      "width of lines used for representation of text"
+V,      textLineWidth,                  ,                  1,    UFloat,       "1.f",                  , P,      "width of lines used for representation of text"
 V,      textLineSmooth,                 ,                  1,    bool,         false,                  , P,      "draw lines for representation of text smooth"
 V,      facesTransparent,               ,                  1,    bool,         false,                  , P,      "True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers"
 V,      showFaces,                      ,                  1,    bool,         true,                   , P,      "show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation"
@@ -628,7 +632,7 @@ V,      light1quadraticAttenuation,     ,                  1,    float,        "
 # debug:
 V,      drawFaceNormals,                ,                  1,    bool,         false,                  , P,      "draws triangle normals, e.g. at center of triangles; used for debugging of faces"
 V,      drawVertexNormals,              ,                  1,    bool,         false,                  , P,      "draws vertex normals; used for debugging"
-V,      drawNormalsLength,              ,                  1,    float,        "0.1f",                 , P,      "length of normals; used for debugging"
+V,      drawNormalsLength,              ,                  1,    PFloat,       "0.1f",                 , P,      "length of normals; used for debugging"
 #
 writeFile=VisualizationSettings.h
 
@@ -667,6 +671,7 @@ V,      highlightMbsNumber,             ,                  ,     UInt,         "
 V,      highlightColor,                 ,                  4,    Float4,       "Float4({0.8f,0.05f,0.05f,0.75f})",, P, "cRGB color for highlighted item; 4th value is alpha-transparency"
 V,      highlightOtherColor,            ,                  4,    Float4,       "Float4({0.5f,0.5f,0.5f,0.4f})", , P, "cRGB color for other items (which are not highlighted); 4th value is alpha-transparency"
 #
+V,      selectionHighlights,            ,                  ,     bool,         true,                  , P,      "True: mouse click highlights item (default: red)"
 V,      selectionLeftMouse,             ,                  ,     bool,         true,                  , P,      "True: left mouse click on items and show basic information"
 V,      selectionRightMouse,            ,                  ,     bool,         true,                  , P,      "True: right mouse click on items and show dictionary (read only!)"
 V,      useJoystickInput,               ,                  ,     bool,         true,                  , P,      "True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ..."

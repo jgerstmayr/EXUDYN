@@ -2,11 +2,11 @@
 Exudyn
 ======
 
-+  Exudyn version = 1.2.134.dev1 (Corea)
-+  build date and time=2022-06-17  01:34
++  Exudyn version = 1.3.0 (Davis)
++  build date and time=2022-06-22  08:18
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
-Exudyn now includes a redundant coordinate (constraint) as well as a minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support and multi-threading; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
+Exudyn 1.3 is out! It includes a redundant coordinate (constraint) as well as a minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support and multi-threading; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
 
 If you like using Exudyn, please add a *star* on github, and send an email to  ``reply.exudyn@gmail.com`` such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !

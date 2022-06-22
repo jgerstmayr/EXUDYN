@@ -45,7 +45,8 @@ public:
 	bool forceQuitSimulation;			//!< flag is set if user closes simulation window (but not if Escape pressed)
 	bool simulationPaused;				//!< true: simulation sends renderer or GUI that simulation is paused, waiting for user-input (SPACE)
 	Real visualizationTime;				//!< this value is set as soon as the computation date is generated from visualization; needed to synchronize text message and visualization state
-	
+	bool systemHasChanged;				//!< systemHasChanged is used to signal GLFWclient to compute new maxSceneSize and center
+
 	VisualizationSystem* visualizationSystem; //!< this backlink ist used for: user functions, WaitForUserToContinue and for MainSystem backlink (but use rarely!!!)
 	bool requestUserFunctionDrawing;	//!< if this flag is set, user functions request drawing update from computation thread
 	std::atomic_flag requestUserFunctionDrawingAtomicFlag;  //!< flag for user function drawing in python
@@ -67,6 +68,7 @@ public:
 		forceQuitSimulation = false;
 		simulationPaused = false;
 		visualizationTime = 0;
+		systemHasChanged = true; // used to compute maxSceneSize at beginning
 
 		visualizationStateUpdateAvailable = false;
 		requestUserFunctionDrawing = false;

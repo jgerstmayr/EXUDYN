@@ -60,6 +60,10 @@ private:
 public:
 	virtual ~VisualizationSystem() {}	//added for correct deletion of derived classes
 
+	//! systemHasChanged is used to signal GLFWclient to compute new maxSceneSize and center
+	void SetSystemHasChanged(bool flag) { postProcessData->systemHasChanged = flag; }
+	bool GetSystemHasChanged() { return postProcessData->systemHasChanged; }
+
 	GraphicsData& GetGraphicsData() { return graphicsData; }
 	const GraphicsData& GetGraphicsData() const { return graphicsData; }
 
@@ -107,7 +111,7 @@ public:
 	virtual std::string GetComputationMessage(bool solverInformation = true, bool solutionInformation = true, bool solverTime = true);
 
 	//! if the system has changed or loaded, compute maximum box of all items and reset scene to the maximum box
-	//virtual void UpdateMaximumSceneCoordinates();
+	//virtual void InitializeView();
 
 	virtual void Print(std::ostream& os) const
 	{

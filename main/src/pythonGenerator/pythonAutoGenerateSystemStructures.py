@@ -12,7 +12,8 @@ from autoGenerateHelper import RemoveSpacesTabs, CountLines, TypeConversion, Gen
 
 sortStructures = True
 
-typeCasts = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 'UReal':'Real',  'PReal':'Real', 
+typeCasts = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 
+             'UReal':'Real',  'PReal':'Real', 'UFloat':'float',  'PFloat':'float', 
              'Vector':'std::vector<Real>', 'Vector3D':'std::vector<Real>', #'Matrix':'Matrix', 'SymmetricMatrix':'Matrix', 
              'ArrayIndex':'std::vector<Index>', 'String':'std::string', 'FileName':'std::string',
              'Float2': 'std::array<float,2>', 'Float3': 'std::array<float,3>', 'Float4': 'std::array<float,4>',  #e.g. for OpenGL vectors
@@ -39,7 +40,10 @@ addDocuMember = True #add doc string for member variables
 
 #return True for types, which get a range check and does a .def_property access in pybind and a set/get function
 def IsTypeWithRangeCheck(origType):
-    if origType.find('PInt') != -1 or origType.find('UInt') != -1 or origType.find('PReal') != -1 or origType.find('UReal') != -1:
+    if (origType.find('PInt') != -1 or origType.find('UInt') != -1 or 
+        origType.find('PReal') != -1 or origType.find('UReal') != -1 or
+        origType.find('PFloat') != -1 or origType.find('UFloat') != -1
+        ):
         return True
     return False
 
@@ -690,7 +694,9 @@ try: #still close file if crashes
     
     fileLines = file.readlines()
     
-    typeConversion = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 'UReal':'Real', 'PReal':'Real', 'Vector':'Vector', 
+    typeConversion = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 
+                      'UReal':'Real', 'PReal':'Real', 'UFloat':'float',  'PFloat':'float', 
+                      'Vector':'Vector', 
                       'Matrix':'Matrix', 'SymmetricMatrix':'Vector', 
                       'NumpyMatrix':'py::array_t<Real>', 'NumpyVector':'py::array_t<Real>', 
                       'String':'std::string', 'FileName':'std::string',

@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -26,7 +26,7 @@
 class VSettingsGeneral // AUTO: 
 {
 public: // AUTO: 
-  bool autoFitScene;                              //!< AUTO: automatically fit scene within first second after StartRenderer()
+  bool autoFitScene;                              //!< AUTO: automatically fit scene within startup after StartRenderer()
   Index axesTiling;                               //!< AUTO: global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)
   Float4 backgroundColor;                         //!< AUTO: red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])
   Float4 backgroundColorBottom;                   //!< AUTO: red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
@@ -185,7 +185,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -277,7 +277,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -368,7 +368,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -459,7 +459,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -520,7 +520,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -598,7 +598,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -687,7 +687,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -756,7 +756,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -834,7 +834,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -903,7 +903,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -989,7 +989,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1076,7 +1076,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1128,7 +1128,10 @@ public: // AUTO:
   float materialShininess;                        //!< AUTO: shininess of material
   Float4 materialSpecular;                        //!< AUTO: 4f specular color of material
   Index multiSampling;                            //!< AUTO: multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
+  float perspective;                              //!< AUTO: parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 0.5 (large amount of perspective); mouse coordinates will not work with perspective
   bool shadeModelSmooth;                          //!< AUTO: True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces
+  float shadow;                                   //!< AUTO: parameter \f$\in [0 ... 1]\f$ prescribes amount of shadow; if this parameter is different from 1, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows
+  float shadowPolygonOffset;                      //!< AUTO: some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize
   bool showFaceEdges;                             //!< AUTO: show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation
   bool showFaces;                                 //!< AUTO: show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation
   bool showMeshEdges;                             //!< AUTO: show edges of finite elements; independent of showFaceEdges
@@ -1175,7 +1178,10 @@ public: // AUTO:
     materialShininess = 32.f;
     materialSpecular = Float4({0.6f,0.6f,0.6f,1.f});
     multiSampling = 1;
+    perspective = 0.f;
     shadeModelSmooth = true;
+    shadow = 0.f;
+    shadowPolygonOffset = 10.f;
     showFaceEdges = false;
     showFaces = true;
     showMeshEdges = true;
@@ -1185,10 +1191,25 @@ public: // AUTO:
   };
 
   // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: length of normals; used for debugging
+  void PySetDrawNormalsLength(const float& drawNormalsLengthInit) { drawNormalsLength = EXUstd::GetSafelyPFloat(drawNormalsLengthInit,"drawNormalsLength"); }
+  //! AUTO: Read (Copy) access to: length of normals; used for debugging
+  float PyGetDrawNormalsLength() const { return float(drawNormalsLength); }
+
   //! AUTO: Set function (needed in pybind) for: centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True
   void PySetInitialCenterPoint(const std::array<float,3>& initialCenterPointInit) { initialCenterPoint = initialCenterPointInit; }
   //! AUTO: Read (Copy) access to: centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True
   std::array<float,3> PyGetInitialCenterPoint() const { return std::array<float,3>(initialCenterPoint); }
+
+  //! AUTO: Set function (needed in pybind) for: initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True
+  void PySetInitialMaxSceneSize(const float& initialMaxSceneSizeInit) { initialMaxSceneSize = EXUstd::GetSafelyPFloat(initialMaxSceneSizeInit,"initialMaxSceneSize"); }
+  //! AUTO: Read (Copy) access to: initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True
+  float PyGetInitialMaxSceneSize() const { return float(initialMaxSceneSize); }
+
+  //! AUTO: Set function (needed in pybind) for: initial zoom of scene; overwritten/ignored if autoFitScene = True
+  void PySetInitialZoom(const float& initialZoomInit) { initialZoom = EXUstd::GetSafelyUFloat(initialZoomInit,"initialZoom"); }
+  //! AUTO: Read (Copy) access to: initial zoom of scene; overwritten/ignored if autoFitScene = True
+  float PyGetInitialZoom() const { return float(initialZoom); }
 
   //! AUTO: Set function (needed in pybind) for: 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
   void PySetLight0position(const std::array<float,4>& light0positionInit) { light0position = light0positionInit; }
@@ -1205,6 +1226,11 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: global ambient light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_AMBIENT,[r,g,b,a])
   std::array<float,4> PyGetLightModelAmbient() const { return std::array<float,4>(lightModelAmbient); }
 
+  //! AUTO: Set function (needed in pybind) for: width of lines used for representation of lines, circles, points, etc.
+  void PySetLineWidth(const float& lineWidthInit) { lineWidth = EXUstd::GetSafelyUFloat(lineWidthInit,"lineWidth"); }
+  //! AUTO: Read (Copy) access to: width of lines used for representation of lines, circles, points, etc.
+  float PyGetLineWidth() const { return float(lineWidth); }
+
   //! AUTO: Set function (needed in pybind) for: 4f ambient color of material
   void PySetMaterialAmbientAndDiffuse(const std::array<float,4>& materialAmbientAndDiffuseInit) { materialAmbientAndDiffuse = materialAmbientAndDiffuseInit; }
   //! AUTO: Read (Copy) access to: 4f ambient color of material
@@ -1219,6 +1245,26 @@ public: // AUTO:
   void PySetMultiSampling(const Index& multiSamplingInit) { multiSampling = EXUstd::GetSafelyPInt(multiSamplingInit,"multiSampling"); }
   //! AUTO: Read (Copy) access to: multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
   Index PyGetMultiSampling() const { return Index(multiSampling); }
+
+  //! AUTO: Set function (needed in pybind) for: parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 0.5 (large amount of perspective); mouse coordinates will not work with perspective
+  void PySetPerspective(const float& perspectiveInit) { perspective = EXUstd::GetSafelyUFloat(perspectiveInit,"perspective"); }
+  //! AUTO: Read (Copy) access to: parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 0.5 (large amount of perspective); mouse coordinates will not work with perspective
+  float PyGetPerspective() const { return float(perspective); }
+
+  //! AUTO: Set function (needed in pybind) for: parameter \f$\in [0 ... 1]\f$ prescribes amount of shadow; if this parameter is different from 1, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows
+  void PySetShadow(const float& shadowInit) { shadow = EXUstd::GetSafelyUFloat(shadowInit,"shadow"); }
+  //! AUTO: Read (Copy) access to: parameter \f$\in [0 ... 1]\f$ prescribes amount of shadow; if this parameter is different from 1, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows
+  float PyGetShadow() const { return float(shadow); }
+
+  //! AUTO: Set function (needed in pybind) for: some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize
+  void PySetShadowPolygonOffset(const float& shadowPolygonOffsetInit) { shadowPolygonOffset = EXUstd::GetSafelyPFloat(shadowPolygonOffsetInit,"shadowPolygonOffset"); }
+  //! AUTO: Read (Copy) access to: some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize
+  float PyGetShadowPolygonOffset() const { return float(shadowPolygonOffset); }
+
+  //! AUTO: Set function (needed in pybind) for: width of lines used for representation of text
+  void PySetTextLineWidth(const float& textLineWidthInit) { textLineWidth = EXUstd::GetSafelyUFloat(textLineWidthInit,"textLineWidth"); }
+  //! AUTO: Read (Copy) access to: width of lines used for representation of text
+  float PyGetTextLineWidth() const { return float(textLineWidth); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -1260,7 +1306,10 @@ public: // AUTO:
     os << "  materialShininess = " << materialShininess << "\n";
     os << "  materialSpecular = " << materialSpecular << "\n";
     os << "  multiSampling = " << multiSampling << "\n";
+    os << "  perspective = " << perspective << "\n";
     os << "  shadeModelSmooth = " << shadeModelSmooth << "\n";
+    os << "  shadow = " << shadow << "\n";
+    os << "  shadowPolygonOffset = " << shadowPolygonOffset << "\n";
     os << "  showFaceEdges = " << showFaceEdges << "\n";
     os << "  showFaces = " << showFaces << "\n";
     os << "  showMeshEdges = " << showMeshEdges << "\n";
@@ -1285,7 +1334,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1375,7 +1424,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1403,6 +1452,7 @@ public: // AUTO:
   float keypressRotationStep;                     //!< AUTO: rotation increment per keypress in degree (full rotation = 360 degree)
   float keypressTranslationStep;                  //!< AUTO: translation increment per keypress relative to window size
   float mouseMoveRotationFactor;                  //!< AUTO: rotation increment per 1 pixel mouse movement in degree
+  bool selectionHighlights;                       //!< AUTO: True: mouse click highlights item (default: red)
   bool selectionLeftMouse;                        //!< AUTO: True: left mouse click on items and show basic information
   bool selectionRightMouse;                       //!< AUTO: True: right mouse click on items and show dictionary (read only!)
   bool useJoystickInput;                          //!< AUTO: True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ...
@@ -1423,6 +1473,7 @@ public: // AUTO:
     keypressRotationStep = 5.f;
     keypressTranslationStep = 0.1f;
     mouseMoveRotationFactor = 1.f;
+    selectionHighlights = true;
     selectionLeftMouse = true;
     selectionRightMouse = true;
     useJoystickInput = true;
@@ -1459,6 +1510,7 @@ public: // AUTO:
     os << "  keypressRotationStep = " << keypressRotationStep << "\n";
     os << "  keypressTranslationStep = " << keypressTranslationStep << "\n";
     os << "  mouseMoveRotationFactor = " << mouseMoveRotationFactor << "\n";
+    os << "  selectionHighlights = " << selectionHighlights << "\n";
     os << "  selectionLeftMouse = " << selectionLeftMouse << "\n";
     os << "  selectionRightMouse = " << selectionRightMouse << "\n";
     os << "  useJoystickInput = " << useJoystickInput << "\n";
@@ -1481,7 +1533,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-16 (last modfied)
+* @date         AUTO: 2022-06-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

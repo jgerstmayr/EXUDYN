@@ -10,15 +10,111 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.2.134.dev1, 
-  \item last change =  2022-06-17, 
-  \item Number of issues = 1148, 
-  \item Number of resolved issues = 976 (134 in current version), 
+  \item Exudyn version = 1.3.0, 
+  \item last change =  2022-06-22, 
+  \item Number of issues = 1157, 
+  \item Number of resolved issues = 989 (0 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.3.0}: {\bf \color{warningRed}  resolved BUG 0677}: {\bf single threaded renderer}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: correct crash with visualization dialog (MacOS)}
+    \item {\bf notes: not resolved, but it is an issue of missing tkinter capabilities in MacOS}
+    \item   date resolved: {\bf 2022-06-22 07:59},
+date raised: 2021-05-12 
+  \ei
+  \item {\bf Version 1.2.146}:  resolved Issue 0735: {\bf parallel build}
+(check)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: check parallel build with MSbuild to reduce compilation times}
+    \item {\bf notes: already done earlier}
+    \item   date resolved: {\bf 2022-06-22 07:58},
+date raised: 2021-08-12 
+  \ei
+  \item {\bf Version 1.2.145}:  resolved Issue 0863: {\bf RaspberryPi}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: check compilation on Raspi, make adaptation of ngsolve includes to run}
+    \item {\bf notes: already done earlier}
+    \item   date resolved: {\bf 2022-06-22 07:48},
+date raised: 2022-01-14 
+  \ei
+  \item {\bf Version 1.2.144}:  resolved Issue 0968: {\bf MarkerBodyCable2DShape}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add offset from beam axis, to compute position, velocity and jacobians at contact surface}
+    \item {\bf notes: already done earlier}
+    \item   date resolved: {\bf 2022-06-22 07:46},
+date raised: 2022-03-03 
+  \ei
+  \item {\bf Version 1.2.143}:  resolved Issue 0972: {\bf ContactFrictionCircleCable2D}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add / extend description}
+    \item   date resolved: {\bf 2022-06-22 07:44},
+date raised: 2022-03-09 
+  \ei
+  \item {\bf Version 1.2.142}:  resolved Issue 1155: {\bf center point}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add key "o" option to set center point to current center point of view; this allows to rotate around the current center point of the view}
+    \item   date resolved: {\bf 2022-06-21 18:16},
+date raised: 2022-06-21 
+  \ei
+  \item {\bf Version 1.2.141}:  resolved Issue 1152: {\bf Renderer}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add separate function to compute accurate scene size, store as 3D vector and as norm}
+    \item   date resolved: {\bf 2022-06-21 17:56},
+date raised: 2022-06-20 
+  \ei
+  \item {\bf Version 1.2.140}:  resolved Issue 1154: {\bf Zoom all}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: change procedures for zoom all and for computation of maximum scene coordinates; may affect appearance of your models; necessary for consistently computing perspective and shadow parameters}
+    \item   date resolved: {\bf 2022-06-21 08:38},
+date raised: 2022-06-21 
+  \ei
+  \item {\bf Version 1.2.139}:  resolved Issue 1153: {\bf noglfw}
+(check)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: check compilation without GLFW}
+    \item   date resolved: {\bf 2022-06-20 10:58},
+date raised: 2022-06-20 
+  \ei
+  \item {\bf Version 1.2.138}:  resolved Issue 1150: {\bf OpenGL}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add shadows (simple)}
+    \item {\bf notes: activate with SC.VisualizationSettings().openGL.shadow, chosing a value between 0. and 1; good results obtained with 0.5}
+    \item   date resolved: {\bf 2022-06-20 01:49},
+date raised: 2022-06-18 
+  \ei
+  \item {\bf Version 1.2.137}:  resolved Issue 1151: {\bf linux builds}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: remove -g flag from linux builds, leading to 2.6MB instead of 38MB binaries; to enable debug information (e.g. to detect origin of some crashes, remove the -g0 flag in setup.py)}
+    \item   date resolved: {\bf 2022-06-19 18:34},
+date raised: 2022-06-19 
+  \ei
+  \item {\bf Version 1.2.136}:  resolved Issue 1149: {\bf OpenGL}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add perspective}
+    \item {\bf notes: added openGL option perspective; EXPERIMENTAL!}
+    \item   date resolved: {\bf 2022-06-19 01:59},
+date raised: 2022-06-18 
+  \ei
+  \item {\bf Version 1.2.135}:  resolved Issue 1148: {\bf jacobian ODE1 ODE2}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: fix jacobian computations for mixed ODE1-ODE2 components; check with HydraulicActuatorSimple (lower number of jacobians and iterations)}
+    \item   date resolved: {\bf 2022-06-18 23:38},
+date raised: 2022-06-18 
+  \ei
   \item {\bf Version 1.2.134}:  resolved Issue 1147: {\bf ODE1Coordinates\_t}
 (extension)
   \begin{itemize}[label=$\bullet$]
@@ -4344,11 +4440,6 @@ date raised: 2020-07-20
   \begin{itemize}[label=$\bullet$]
     \item {description: modified Newton does not work, no Jacobian update computed when switching}
     \item date raised: 2021-08-13 
-  \ei
-  \item open {\bf BUG 0677}:  {\bf single threaded renderer}
-  \begin{itemize}[label=$\bullet$]
-    \item {description: correct crash with visualization dialog (MacOS)}
-    \item date raised: 2021-05-12 
   \ei
   \item open {\bf BUG 0448}:  {\bf ObjectGenericODE2 bug}
   \begin{itemize}[label=$\bullet$]
