@@ -17,11 +17,7 @@ A paper on Exudyn is planned to be presented at the `6th Joint International Con
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 +  *free, open source* and with plenty of *documentation* and *examples*
 +  **pre-built** for Python 3.6, 3.7, 3.8, 3.9, and 3.10 under **Windows** ; Python 3.8 for **MacOS** available; some **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
-+  Exudyn can be linked to any other package in Python, but we explicitly mention `NGsolve <https://github.com/NGSolve/ngsolve>`_,
-`OpenAI <https://github.com/openai>`_,
-`OpenAI gym <https://github.com/openai/gym>`_,
-`Robotics Toolbox (Peter Corke) <https://github.com/petercorke/robotics-toolbox-python>`_,
-`Pybind11 <https://github.com/pybind/pybind11>`_,
++  Exudyn can be linked to any other Python package, but we explicitly mention: `NGsolve <https://github.com/NGSolve/ngsolve>`_, `OpenAI <https://github.com/openai>`_, `OpenAI gym <https://github.com/openai/gym>`_, `Robotics Toolbox (Peter Corke) <https://github.com/petercorke/robotics-toolbox-python>`_, `Pybind11 <https://github.com/pybind/pybind11>`_
 
 .. |pic1| image:: docs/demo/screenshots/pistonEngine.gif
    :width: 200
