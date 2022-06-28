@@ -440,9 +440,13 @@ namespace EXUvis {
 		Vector3D nF1 = vAxis;
 		nF1.Normalize();
 
-		std::array<Vector3D, 3> normalsFace0 = { { (nF1),(nF1),(nF1) } };
+#ifdef FLIP_NORMALS
 		nF1 = -nF1;
+#endif
+
 		std::array<Vector3D, 3> normalsFace1 = { { nF1,nF1,nF1 } };
+		nF1 = -nF1;
+		std::array<Vector3D, 3> normalsFace0 = { { nF1,nF1,nF1 } };
 		Vector3D n0(0);
 		Vector3D n1(0);
 
@@ -464,8 +468,13 @@ namespace EXUvis {
 			Vector3D pzR1 = pAxis1 + radius * vv1;
 			if (drawSmooth)
 			{
+#ifdef FLIP_NORMALS
 				n0 = -vv0;
 				n1 = -vv1;
+#else
+				n0 = vv0;
+				n1 = vv1;
+#endif
 				n0.Normalize();
 				n1.Normalize();
 			}
@@ -557,7 +566,19 @@ namespace EXUvis {
 	{
 		if (nTiles < 2) { nTiles = 2; } //less than 2 tiles makes no sense
 		if (radius <= 0.) { return; } //not visible
-		
+
+		//drawSmooth = false;
+#ifdef FLIP_TRIANGLES  
+		const Index trigOff = 1;
+#else
+		const Index trigOff = 0;
+#endif
+#ifdef FLIP_NORMALS
+		const Real flipFact = -1.;
+#else
+		const Real flipFact = 1.;
+#endif
+
 		std::array<Vector3D, 3> points;
 		std::array<Vector3D, 3> normals; // = { Vector3D(0), Vector3D(0), Vector3D(0) };
 		std::array<Float4, 3> colors = { { color,color,color } }; //all triangles have same color
@@ -591,14 +612,15 @@ namespace EXUvis {
 				Vector3D v1B({ x1B, y1B, z1 });
 
 				points[0] = p + v0A;
-				points[1] = p + v1A;
-				points[2] = p + v1B;
+				points[1+trigOff] = p + v1A;
+				points[2-trigOff] = p + v1B;
+
 				//triangle1: 0A, 1B, 1A
 				if (drawSmooth)
 				{
-					normals[0] = v0A;
-					normals[1] = v1A;
-					normals[2] = v1B;
+					normals[0] = flipFact * v0A;
+					normals[1+ trigOff] = flipFact * v1A;
+					normals[2- trigOff] = flipFact * v1B;
 					normals[0].Normalize();
 					normals[1].Normalize();
 					normals[2].Normalize();
@@ -610,14 +632,15 @@ namespace EXUvis {
 				graphicsData.AddTriangle(points, normals, colors, itemID);
 
 				points[0] = p + v0A;
-				points[1] = p + v0B;
-				points[2] = p + v1B;
+				points[2 - trigOff] = p + v0B;
+				points[1 + trigOff] = p + v1B;
 				//triangle1: 0A, 0B, 1B
 				if (drawSmooth)
 				{
-					normals[0] = -v0A;
-					normals[1] = -v0B;
-					normals[2] = -v1B;
+					normals[0] = flipFact * v0A;
+					normals[2- trigOff] = flipFact * v0B;
+					normals[1+ trigOff] = flipFact * v1B;
+
 					normals[0].Normalize();
 					normals[1].Normalize();
 					normals[2].Normalize();
@@ -735,8 +758,11 @@ namespace EXUvis {
 		Vector3D nF0 = vAxis;
 		nF0.Normalize();
 
+#ifdef FLIP_NORMALS
 		std::array<Vector3D, 3> normalsFace0 = { nF0,nF0,nF0 };
-
+#else
+		std::array<Vector3D, 3> normalsFace0 = { -nF0,-nF0,-nF0 };
+#endif
 		for (Index i = 0; i < nTiles; i++)
 		{
 			Real phi0 = i * alpha / fact;
@@ -756,14 +782,19 @@ namespace EXUvis {
 			if (drawSmooth)
 			{
 				//normal to cone surface:
-				Vector3D n0 = (-axisLength / radius)*vv0 + radius * nF0;
-				Vector3D n1 = (-axisLength / radius)*vv1 + radius * nF0;
+				Vector3D n0 = (axisLength / radius)*vv0 + radius * nF0;
+				Vector3D n1 = (axisLength / radius)*vv1 + radius * nF0;
 				n0.Normalize();
 				n1.Normalize();
-
+#ifdef FLIP_NORMALS
+				normals[0] = -n0;
+				normals[1] = -n1;
+				normals[2] = -n1;
+#else
 				normals[0] = n0;
 				normals[1] = n1;
 				normals[2] = n1;
+#endif
 			}
 			points[0] = pzL0;
 			points[1] = pzL1;

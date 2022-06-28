@@ -65,6 +65,9 @@ color4list = [color4red, color4green, color4blue,
               color4brown]
 color4listSize = len(color4list) #maximum number of colors in color4list
 
+normalsFactor = 1. #this is a factor being either -1. [original normals pointing inside; until 2022-06-27], while +1. gives corrected normals pointing outside
+switchTriangleOrder = False #this is the old ordering of triangles in some Sphere or Cylinder functions, causing computed normals to point inside
+
 #**function: helper function to switch order of three items in a list; mostly used for reverting normals in triangles
 #**input: 3D vector as list or as np.array
 #**output: interchanged 2nd and 3rd component of list
@@ -219,6 +222,7 @@ def ShrinkMeshNormalToSurface(points, triangles, distance):
 
 #************************************************
 #**function: add rigid body transformation to GraphicsData, using position offset (global) pOff (list or np.array) and rotation Aoff (transforms local to global coordinates; list of lists or np.array)
+#**notes: transformation corresponds to HomogeneousTransformation(Aoff, pOff)
 def MoveGraphicsData(g, pOff, Aoff):
     gNew = copy.deepcopy(g)
     p0 = np.array(pOff)
@@ -443,15 +447,16 @@ def GraphicsDataSphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 
         for iphi in range(nTiles):
             z = -r*np.cos(np.pi*i0/nTiles)    #runs from -r .. r (this is the coordinate of the axis of circles)
             phi = 2*np.pi*iphi/nTiles #angle
-            
             fact = np.sin(np.pi*i0/nTiles)
+
             x = fact*r*np.sin(phi)
             y = fact*r*np.cos(phi)
 
             vv = x*e0 + y*e1 + z*e2
             points += list(p + vv)
             
-            n = Normalize(list(-vv))
+            n = Normalize(list(vv)) #2022-06-27: corrected to (vv) to point outwards
+            #print(n)
             normals += n
             
             colors += color
@@ -467,9 +472,15 @@ def GraphicsDataSphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 
             p2 = i0*nTiles+iphi1
             p3 = (i0+1)*nTiles+iphi1
 
-            triangles += [p0,p3,p1, p0,p2,p3]
+            if switchTriangleOrder:
+                triangles += [p0,p3,p1, p0,p2,p3]
+            else:
+                triangles += [p0,p1,p3, p0,p3,p2]
+                
             
-    data = {'type':'TriangleList', 'colors':colors, 'normals':normals, 'points':points, 'triangles':triangles}
+    data = {'type':'TriangleList', 'colors':colors, 
+            'normals':normals, 
+            'points':points, 'triangles':triangles}
     return data
             
 #**function: generate graphics data for a cylinder with given axis, radius and color; nTiles gives the number of tiles (minimum=3)
@@ -503,9 +514,11 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
     n2 = basis[2]
     r=radius
     
+    nf = normalsFactor #-1 original; -1 points inside
+
     #create normals at left and right face (pointing inwards)
-    normals0 = Normalize(vAxis)
-    normals1 = Normalize([-vAxis[0],-vAxis[1],-vAxis[2]])
+    normals0 = Normalize([-vAxis[0],-vAxis[1],-vAxis[2]])
+    normals1 = Normalize(vAxis)
 
     points2 = []
     points3 = []
@@ -533,7 +546,7 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
         points3 += list(pz1) #other points for side faces (different normals)
         pointsCyl0 += list(pz0) #for edges
         pointsCyl1 += list(pz1) #for edges
-        n = Normalize(list(-vv))
+        n = Normalize(list(nf*vv))
         normals0 = normals0 + n
         normals1 = normals1 + n
         
@@ -542,9 +555,9 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
     normals0 += normals1
 
     for i in range(nTiles):
-        normals0 += Normalize(vAxis)
+        normals0 += Normalize([-nf*vAxis[0],-nf*vAxis[1],-nf*vAxis[2]])
     for i in range(nTiles):
-        normals0 += Normalize([-vAxis[0],-vAxis[1],-vAxis[2]])
+        normals0 += Normalize([nf*vAxis[0],nf*vAxis[1],nf*vAxis[2]])
 
     n = nTiles+1 #number of points of one ring+midpoint
     color2 = color #alternating color
@@ -566,24 +579,42 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
     triangles = []
     #circumference:
     for i in range(nTiles):
-        if i != nTiles-1:
-            triangles += [1+i,n+1+i+1,n+1+i]
-            triangles += [1+i,1+i+1,n+1+i+1]
+        if switchTriangleOrder:
+            if i != nTiles-1:
+                triangles += [1+i,n+1+i+1,n+1+i]
+                triangles += [1+i,1+i+1,n+1+i+1]
+            else:
+                if lastFace and cutPlain:
+                    triangles += [1+i,n+1,n+1+i]
+                    triangles += [1+i,1,n+1]
         else:
-            if lastFace and cutPlain:
-                triangles += [1+i,n+1,n+1+i]
-                triangles += [1+i,1,n+1]
+            if i != nTiles-1:
+                triangles += [1+i,n+1+i,n+1+i+1]
+                triangles += [1+i,n+1+i+1,1+i+1]
+            else:
+                if lastFace and cutPlain:
+                    triangles += [1+i,n+1+i,n+1]
+                    triangles += [1+i,n+1,1]
             
     #sides faces left and right:
     nn=2*n #offset
     for i in range(nTiles):
-        if i != nTiles-1:
-            triangles += [0,nn+i+1,nn+i]
-            triangles += [n,nn+nTiles+i,nn+nTiles+i+1]
+        if switchTriangleOrder:
+            if i != nTiles-1:
+                triangles += [0,nn+i,nn+i+1]
+                triangles += [n,nn+nTiles+i+1,nn+nTiles+i]
+            else:
+                if cutPlain:
+                    triangles += [0,nn+i,nn]
+                    triangles += [n,nn+nTiles,nn+nTiles+i]
         else:
-            if cutPlain:
-                triangles += [0,nn,nn+i]
-                triangles += [n,nn+nTiles+i,nn+nTiles]
+            if i != nTiles-1:
+                triangles += [0,nn+i,nn+i+1]
+                triangles += [n,nn+nTiles+i+1,nn+nTiles+i]
+            else:
+                if cutPlain:
+                    triangles += [0,nn+i,nn]
+                    triangles += [n,nn+nTiles,nn+nTiles+i]
 
     #if angles are not 2*pi, add closing face
     if lastFace and not(cutPlain):
@@ -594,17 +625,27 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
         p5 = points3[len(points3)-3:len(points3)]
         points0 += pAxis + pAxis1 + p2 + p3 + pAxis + pAxis1 + p4 + p5
         n1=np.cross(VSub(pAxis,pAxis1),VSub(p3,pAxis))
-        n1=list(Normalize(n1))
+        n1=list(Normalize(-nf*n1))
         n2=np.cross(VSub(pAxis1,pAxis),VSub(p4,pAxis))
-        n2=list(Normalize(n2))
+        n2=list(Normalize(-nf*n2))
         normals0 += n1+n1+n1+n1+n2+n2+n2+n2  #8 additional normals
-        triangles += [s+0,s+3,s+1, s+0,s+2,s+3, 
-                      s+5,s+6,s+4, s+5,s+7,s+6]
+        if switchTriangleOrder:
+            triangles += [s+0,s+3,s+1, s+0,s+2,s+3, 
+                          s+5,s+6,s+4, s+5,s+7,s+6]
+        else:
+            triangles += [s+0,s+1,s+3, s+0,s+3,s+2, 
+                          s+5,s+4,s+6, s+5,s+6,s+7]
+            
         for i in range(8): #8 additional colors
             colors += color
 
+    # print('points len=', len(points0))
+    # print('normals len=', len(normals0))
+
     #triangle normals point inwards to object ...
-    data = {'type':'TriangleList', 'colors':colors, 'normals':normals0, 'points':points0, 'triangles':triangles}
+    data = {'type':'TriangleList', 'colors':colors, 
+            'normals':normals0, 
+            'points':points0, 'triangles':triangles}
     
     if addEdges: #add edges for two cylinder faces:
         pointsList0 = list(pointsCyl0[-3:]) #start with last point
@@ -677,7 +718,9 @@ def GraphicsDataRigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
     normals = data0['normals'] + data1['normals'] + data2['normals']
     colors = data0['colors'] + data1['colors'] + data2['colors']
     
-    data = {'type':'TriangleList', 'colors':colors, 'normals':normals, 'points':points, 'triangles':triangles}
+    data = {'type':'TriangleList', 'colors':colors, 
+            'normals':normals, 
+            'points':points, 'triangles':triangles}
     return data
 
 
@@ -831,6 +874,7 @@ def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nT
     normals = []
     colors = []
     nT2 = int(nTiles/2)
+    nf = normalsFactor #factor for normals (inwards/outwards)
 
     for j in range(len(contour)-1):
         pc0 = np.array(contour[j])
@@ -857,11 +901,11 @@ def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nT
             #vc = pc1-pc0
             #nc = [-vc[1],vc[0]]
             nc0 = contourNormals[j]
-            nUnit0 = Normalize(nc0[1]*np.sin(phi)*n1 + nc0[1]*np.cos(phi)*n2+nc0[0]*v)
+            nUnit0 = Normalize(nf*nc0[1]*np.sin(phi)*n1 + nf*nc0[1]*np.cos(phi)*n2+nf*nc0[0]*v)
             nUnit1 = nUnit0
             if smoothContour:
                 nc1 = contourNormals[j+1]
-                nUnit1 = Normalize(nc1[1]*np.sin(phi)*n1 + nc1[1]*np.cos(phi)*n2+nc1[0]*v)
+                nUnit1 = Normalize(nf*nc1[1]*np.sin(phi)*n1 + nf*nc1[1]*np.cos(phi)*n2+nf*nc1[0]*v)
 
             normals0 = normals0 + nUnit0
             normals1 = normals1 + nUnit1
@@ -878,14 +922,16 @@ def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nT
         k = j*2*n
         for i in range(nTiles):
             if i < nTiles-1:
-                triangles += [i+k,n+i+1+k,n+i+k]
-                triangles += [i+k,i+1+k,n+i+1+k]
+                triangles += [i+k,n+i+k+1,n+i+k]
+                triangles += [i+k,i+1+k,n+i+k+1]
             else:
                 triangles += [i+k,n+k,n+i+k]
                 triangles += [i+k,k,n+k]
 
     #triangle normals point inwards to object ...
-    data = {'type':'TriangleList', 'colors':colors, 'normals':normals, 'points':points, 'triangles':triangles}
+    data = {'type':'TriangleList', 'colors':colors, 
+            'normals':normals, 
+            'points':points, 'triangles':triangles}
 
     return data
 
@@ -1193,17 +1239,20 @@ def GraphicsDataSolidExtrusion(vertices, segments, height, rot = np.diag([1,1,1]
     
     for i in range(nt):
         #print(list(trigs[i]))
-        trigList[i] = list(trigs[i])
+        # trigList[i] = list(trigs[i])
+        t = list(trigs[i])
+        t.reverse()
+        trigList[i] = copy(t)
     for i in range(nt):
         t = list(trigs[i]+n)
-        t.reverse()
+        # t.reverse()
         trigList[i+nt] = copy(t)
         
     #print("ns=",ns)
     #print("nt=",nt)
     for i in range(ns):
-        trigList[2*nt+2*i  ] = [segments[i][0],segments[i][1]+n,segments[i][1]]
-        trigList[2*nt+2*i+1] = [segments[i][0],segments[i][0]+n,segments[i][1]+n]
+        trigList[2*nt+2*i  ] = [segments[i][0],segments[i][1],segments[i][1]+n]
+        trigList[2*nt+2*i+1] = [segments[i][0],segments[i][1]+n,segments[i][0]+n]
     #print("trigList=",trigList)
     triangles = []
     for t in trigList:

@@ -85,14 +85,9 @@ mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker],
 loadC = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, 
                            load = load0, loadUserFunction=userLoad))
 
-writeSensorFile = False
-if useGraphics:
-    writeSensorFile = True
-
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 2e-3  #output interval
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.displayStatistics = True

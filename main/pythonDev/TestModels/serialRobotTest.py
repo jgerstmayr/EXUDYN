@@ -1,7 +1,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Example of a serial robot with redundant coordinates
+# Details:  Test Example of a serial robot with redundant coordinates
+#           NOTE: more efficient version in serialRobotTSD.py and serialRobotKinematicTree.py using TorsionalSpringDamper
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-02-16

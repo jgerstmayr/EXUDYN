@@ -51,6 +51,26 @@ namespace py = pybind11;
 #include <initializer_list>
 #include <vector>
 
+
+////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+////for user function test
+//
+//#include "Main/MainSystem.h"
+//
+////test performance of user functions
+//Real TestSD(const MainSystemBase& mainSystem, Real t, Index itemIndex, Real relPos, Real relVel,
+//	Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
+//{
+//	return relPos * stiffness + relVel * damping;
+//	return 0.1 * stiffness * relPos + stiffness * EXUstd::Cube(relPos) + relVel * damping;
+//}
+//
+//this is slower than Python user functions due to pybind11 overhead in std::function, see pybind11 description; check alternatives!!!
+//std::function<Real(const MainSystem&, Real, Index, Real, Real, Real, Real, Real, Real, Real)> springForceUserFunction = &TestSD;
+//std::function<Real(const MainSystem&, Real, Index, Real, Real, Real, Real, Real, Real, Real)> GetTestSD() { return &TestSD; }
+
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //for Eigen tests:
@@ -62,20 +82,23 @@ namespace py = pybind11;
 
 //#include "Utilities/Parallel.h" //include after 
 
+
+
+
 void PyTest()
 {
-	if (1)
-	{
-		Vector4D c({ 3., 7.5, 2., 0.3 });
-		auto xList = { -4., -3., -2., -1., -0.5, 0., 0.5, 1., 2., 3., 4. };
+	//if (0)
+	//{
+	//	Vector4D c({ 3., 7.5, 2., 0.3 });
+	//	auto xList = { -4., -3., -2., -1., -0.5, 0., 0.5, 1., 2., 3., 4. };
 
-		for (Real x : xList)
-		{
-			pout << "x=" << x
-				<< ", P(x) =" << EXUmath::EvaluatePolynomial(c, x)
-				<< ", P'(x)=" << EXUmath::EvaluatePolynomial_x(c, x) << "\n";
-		}
-	}
+	//	for (Real x : xList)
+	//	{
+	//		pout << "x=" << x
+	//			<< ", P(x) =" << EXUmath::EvaluatePolynomial(c, x)
+	//			<< ", P'(x)=" << EXUmath::EvaluatePolynomial_x(c, x) << "\n";
+	//	}
+	//}
 	////contact testing
 	//if (1)
 	//{
@@ -309,73 +332,73 @@ void PyTest()
 
 	}*/
 	
-	if (0)
-	{
-		Vector v1({ 1.,2.,3. });
-		Vector v2({ 8.,7.,6. });
-		Matrix m(3, 2, { 1,2,3, 4,5,6 });
-		Vector r({ 0.,1. });
+	//if (0)
+	//{
+	//	Vector v1({ 1.,2.,3. });
+	//	Vector v2({ 8.,7.,6. });
+	//	Matrix m(3, 2, { 1,2,3, 4,5,6 });
+	//	Vector r({ 0.,1. });
 
-		EXUmath::MultMatrixVectorAdd(m, v1, r);
-		pout << "r1=" << r << "\n";				//=> (14, 33)
-		EXUmath::MultMatrixVectorAdd(m, v2, r);
-		pout << "r2=" << r << "\n";				//=> (54,136)
-	}
-	if (0)
-	{
-		//Matrix m(3, 3, { 1,1,1, 1,1,0, 0,0,1 });
-		Matrix m(3, 3, { 1,1,1, 0,1,0, 0,1,0 });
-		Matrix minv = m;
-		ResizableMatrix temp;
-		ArrayIndex rows;
-		//minv.Invert();
-		Index success = minv.InvertSpecial(temp, rows, true, 0, 0.);
-		pout << "success=" << success << "\n";
-		//pout << "Minv=" << minv << ", rows=" << rows << ", I=" << minv * m << "\n";
-		//pout << "Minv*[1,-2,3]=" << minv * Vector({1,-2,3}) << "\n";
+	//	EXUmath::MultMatrixVectorAdd(m, v1, r);
+	//	pout << "r1=" << r << "\n";				//=> (14, 33)
+	//	EXUmath::MultMatrixVectorAdd(m, v2, r);
+	//	pout << "r2=" << r << "\n";				//=> (54,136)
+	//}
+	//if (0)
+	//{
+	//	//Matrix m(3, 3, { 1,1,1, 1,1,0, 0,0,1 });
+	//	Matrix m(3, 3, { 1,1,1, 0,1,0, 0,1,0 });
+	//	Matrix minv = m;
+	//	ResizableMatrix temp;
+	//	ArrayIndex rows;
+	//	//minv.Invert();
+	//	Index success = minv.InvertSpecial(temp, rows, true, 0, 0.);
+	//	pout << "success=" << success << "\n";
+	//	//pout << "Minv=" << minv << ", rows=" << rows << ", I=" << minv * m << "\n";
+	//	//pout << "Minv*[1,-2,3]=" << minv * Vector({1,-2,3}) << "\n";
 
-		//minv = m;
-		//success = minv.Invert();
-		//pout << "success2=" << success << "\n";
-		//pout << "Minv2=" << minv << "\n";
-	}
-	if (0) //test if conversion to sensor and back works
-	{
-		Index mbsNumber = 0;
-		Index i = 0;
-		//ItemType myType = ItemType::Sensor;
-		ItemType myType = ItemType::Marker;
-		Index itemID = Index2ItemID(i, myType, mbsNumber);
-		pout << "itemID=" << itemID << "\n";
+	//	//minv = m;
+	//	//success = minv.Invert();
+	//	//pout << "success2=" << success << "\n";
+	//	//pout << "Minv2=" << minv << "\n";
+	//}
+	//if (0) //test if conversion to sensor and back works
+	//{
+	//	Index mbsNumber = 0;
+	//	Index i = 0;
+	//	//ItemType myType = ItemType::Sensor;
+	//	ItemType myType = ItemType::Marker;
+	//	Index itemID = Index2ItemID(i, myType, mbsNumber);
+	//	pout << "itemID=" << itemID << "\n";
 
-		Index iNew;
-		ItemType typeNew;
-		ItemID2IndexType(itemID, iNew, typeNew, mbsNumber);
-		pout << "type=" << typeNew << ", index="<< iNew << ", mbs=" << mbsNumber << "\n";
-	}
-	if (0)
-	{
-		////! access to internal module
-		//void PyGetInternalSysDictionary()
-		//{
-		//	//internalSystemDictionary["abc"] = 123;
-		//	//py::print(internalSystemDictionary["abc"]);
-		//	STDstring key = "aaa";
-		//	Real item = 1.23;
-		//	py::module exudynModule = py::module::import("exudyn");
-		//	exudynModule.attr("sys")[key.c_str()] = item;
-		//
-		//	pout << "test\n";
-		//}
-	}
-	if (0)
-	{
-		//SlimArray<Real, 3> a({ 3,5,1 });
-		//pout << "a=" << a << "\n";
-		//a.Sort();
-		//pout << "a sorted=" << a << "\n";
+	//	Index iNew;
+	//	ItemType typeNew;
+	//	ItemID2IndexType(itemID, iNew, typeNew, mbsNumber);
+	//	pout << "type=" << typeNew << ", index="<< iNew << ", mbs=" << mbsNumber << "\n";
+	//}
+	//if (0)
+	//{
+	//	//! access to internal module
+	//	void PyGetInternalSysDictionary()
+	//	{
+	//		//internalSystemDictionary["abc"] = 123;
+	//		//py::print(internalSystemDictionary["abc"]);
+	//		STDstring key = "aaa";
+	//		Real item = 1.23;
+	//		py::module exudynModule = py::module::import("exudyn");
+	//		exudynModule.attr("sys")[key.c_str()] = item;
+	//	
+	//		pout << "test\n";
+	//	}
+	//}
+	//if (0)
+	//{
+	//	SlimArray<Real, 3> a({ 3,5,1 });
+	//	pout << "a=" << a << "\n";
+	//	a.Sort();
+	//	pout << "a sorted=" << a << "\n";
 
-	}
+	//}
 }
 
 

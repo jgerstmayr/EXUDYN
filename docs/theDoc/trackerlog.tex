@@ -10,15 +10,72 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.3.0, 
-  \item last change =  2022-06-22, 
-  \item Number of issues = 1157, 
-  \item Number of resolved issues = 989 (0 in current version), 
+  \item Exudyn version = 1.3.8.dev1, 
+  \item last change =  2022-06-27, 
+  \item Number of issues = 1165, 
+  \item Number of resolved issues = 997 (8 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.3.8}:  resolved Issue 1164: {\bf OpenGL shadow}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: resolve issues with shadows drawing of many objects; added \_WRAP to stencil INCR and DECR operations to resolve overflows}
+    \item   date resolved: {\bf 2022-06-27 19:20},
+date raised: 2022-06-27 
+  \ei
+  \item {\bf Version 1.3.7}:  resolved Issue 1163: {\bf OpenGL normals}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: correct orientation of triangles and normals in GraphicsData functions}
+    \item   date resolved: {\bf 2022-06-27 16:22},
+date raised: 2022-06-27 
+  \ei
+  \item {\bf Version 1.3.6}:  resolved Issue 1162: {\bf OpenGL normals}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: correct normals in GraphicsDataSphere, GraphicsDataCylinder and GraphicsDataSolidOfRevolution to point outwards; turn off GL\_LIGHT\_MODEL\_TWO\_SIDE by default}
+    \item   date resolved: {\bf 2022-06-27 14:12},
+date raised: 2022-06-27 
+  \ei
+  \item {\bf Version 1.3.5}:  resolved Issue 1158: {\bf RigidBodyInertia}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add Transformed() function to return rigid body inertia transformed by homogeneous transformation; used in class Robot for certain transformations of link frame}
+    \item   date resolved: {\bf 2022-06-27 01:20},
+date raised: 2022-06-26 
+  \ei
+  \item {\bf Version 1.3.4}:  resolved Issue 1072: {\bf class Robot}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extend KinematicTree export in order to be able to create robots with localHT!=HT0()}
+    \item   date resolved: {\bf 2022-06-27 00:41},
+date raised: 2022-05-06 
+  \ei
+  \item {\bf Version 1.3.3}:  resolved Issue 1131: {\bf class Robot}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add list of graphicsDataLists to each body for individual graphics of links allowing also graphics for tools}
+    \item   date resolved: {\bf 2022-06-26 23:46},
+date raised: 2022-06-03 
+  \ei
+  \item {\bf Version 1.3.2}:  resolved Issue 1094: {\bf add links to other github repos}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: link more directly to ngsolve and openAI / stable\_baslines3 / etc.; refer to openAI in github links and add ref to theDoc.pdf ; add example/teaser?}
+    \item   date resolved: {\bf 2022-06-24 09:20},
+date raised: 2022-05-21 
+  \ei
+  \item {\bf Version 1.3.1}:  resolved Issue 1157: {\bf C++ user functions}
+(testing)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: check if linking C++ user functions directly boosts performance}
+    \item {\bf notes: C++ functions are translated by including pybind11/functional.h; workaround would be two user functions, one without MainSystem and without including functional.h; C++ functions could then be compiled in a very simple manner}
+    \item   date resolved: {\bf 2022-06-23 16:57},
+date raised: 2022-06-23 
+  \ei
   \item {\bf Version 1.3.0}: {\bf \color{warningRed}  resolved BUG 0677}: {\bf single threaded renderer}
   \begin{itemize}[label=$\bullet$]
     \item {description: correct crash with visualization dialog (MacOS)}

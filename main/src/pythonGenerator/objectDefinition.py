@@ -2233,7 +2233,7 @@ V,      CP,     linkMasses,                     ,               ,       Vector, 
 V,      CP,     linkForces,                     ,               ,       Vector3DList,"Vector3DList()",    ,       I,      "$\LU{0}{\Fm} in [\Rcal^{3}, ...]$list of 3D force vectors per link in global coordinates acting on joint frame origin; use force-torque couple to realize off-origin forces; defaults to empty list $[]$, adding no forces"
 V,      CP,     linkTorques,                    ,               ,       Vector3DList,"Vector3DList()",    ,       I,      "$\LU{0}{\Fm_\tau} in [\Rcal^{3}, ...]$list of 3D torque vectors per link in global coordinates; defaults to empty list $[]$, adding no torques"
 #forces and control: scalar values per joint:
-V,      CP,     jointForceVector,               ,               ,       Vector,"Vector()",                    ,       I,      "$\fv \in \Rcal^{n}$generalized force vector per coordinate added RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint $i$, the torque $f[i]$ acts positive (w.r.t.\ rotation axis) on link $i$ and negative on parent link $p_i$; must be either empty list/array $[]$ (default) or have size $n$"
+V,      CP,     jointForceVector,               ,               ,       Vector,"Vector()",                    ,       I,      "$\fv \in \Rcal^{n}$generalized force vector per coordinate added to RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint $i$, the torque $f[i]$ acts positive (w.r.t.\ rotation axis) on link $i$ and negative on parent link $p_i$; must be either empty list/array $[]$ (default) or have size $n$"
 V,      CP,     jointPositionOffsetVector,      ,               ,       Vector,"Vector()",                    ,       I,      "$\uv_o \in \Rcal^{n}$offset for joint coordinates used in P(D) control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array $[]$ (default) or have size $n$"
 V,      CP,     jointVelocityOffsetVector,      ,               ,       Vector,"Vector()",                    ,       I,      "$\vv_o \in \Rcal^{n}$velocity offset for joint coordinates used in (P)D control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array $[]$ (default) or have size $n$"
 V,      CP,     jointPControlVector,            ,               ,       Vector,"Vector()",                    ,       I,      "$\Pm \in \Rcal^{n}$proportional (P) control values per joint (multiplied with position error between joint value and offset $\uv_o$); note that more complicated control laws must be implemented with user functions; must be either empty list/array $[]$ (default) or have size $n$"
@@ -4812,6 +4812,7 @@ Fv,     M,      GetTypeName,                    ,               ,       const ch
 Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
 #+++helper functions+++
 F,      C,      ComputeSpringForce,             ,               ,       void,       , "const MarkerDataStructure& markerData, Index itemIndex, Real& relPos, Real& relVel, Real& force", CDI,    "compute spring damper force helper function" 
+F,      C,      EvaluateUserFunctionForce,      ,               ,       void,       , "Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real& relPos, Real& relVel", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
 #VISUALIZATION:
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
@@ -6128,8 +6129,8 @@ equations =
       \begin{center}
       \includegraphics[width=12cm]{figures/ContactFrictionCircleCable2D.pdf}
       \end{center}
-      \caption{Sketch of cable, contact segments and circle; case A shows contact with $|\dv_{g1}| > r$, 
-               while case B shows contact with $|\dv_{g1}| \le r$; the shortest distance vector $\dv_{g1}$
+      \caption{Sketch of cable, contact segments and circle; showing case without contact, $|\dv_{g1}| > r$, 
+               while contact occurs with $|\dv_{g1}| \le r$; the shortest distance vector $\dv_{g1}$
                is related to segment $s_1$ (which is perpendicular to the the segment line) and 
                $\dv_{g2}$ is the shortest distance to the end point of segment $s_2$, not being
                perpendicular.}
@@ -6143,8 +6144,9 @@ equations =
     The cable with reference length $L$ is discretized by splitting into $n_{cs}$ straight segments $s_i$, located between points $p_i$ and $p_{i+1}$.
     Note that these points can be placed with an offset from the cable centerline, see \texttt{verticalOffset} defined in \texttt{MarkerBodyCable2DShape}.
     In order to compute the gap function for a line segment, the shortest distance of one line segment with
-    points $\pv_i$, $\pv_{i+1}$, the circle centerpoint given by the marker $\pv_{m0}$ are computed, all in 
-    the global coordinates system (0), including edge points of every segment.
+    points $\pv_i$, $\pv_{i+1}$ to the circle's centerpoint given by the marker $\pv_{m0}$ is computed. 
+    All computations here are performed in the global coordinates system (0), 
+    including edge points of every segment.
 
     With the intermediate quantities (all of them related to segment $s_i$)\footnote{we omit $s_i$ in some terms for brevity!},
     \be
@@ -6253,16 +6255,20 @@ equations =
     Note that the \texttt{verticalOffset} from the cable center line, as defined in the related \texttt{MarkerBodyCable2DShape},
     influences the behavior significantly, which is why we recommend to use \texttt{verticalOffset=0} whenever this is an 
     appropriate assumption.
+    %include in paper:
+    %Even thought that we are convinced that this has some effect, especially for beams with larger height, a reduction of segment length reduces
+    %this effects as less (un-)winding occurs, a more consistent computation of this effect would require an
+    %integration of relative motion as stretch influences the local changes of the relative sticking position.
     Thus, the current sticking position $x_{curStick}$ is computed per segment as
     \be  \label{ObjectContactFrictionCircleCable2D:lastCurStick}
       x^*_{curStick} = x_{s,curStick} + x_{c,curStick}, \quad
     \ee
     %
-    Due to the possibility of switching of $\alpha+\phi$ between $-pi$ and $\pi$, the result is normalized to
+    Due to the possibility of switching of $\alpha+\phi$ between $-\pi$ and $\pi$, the result is normalized to
     \be \label{ObjectContactFrictionCircleCable2D:curStick}
       x_{curStick} = x^*_{curStick} - \mathrm{floor}\left(\frac{x^*_{curStick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r, \quad
     \ee
-    which gives $\bar x_{curStick} \in [-\pi \cdot r,\pi \cdot r]$ is stored in the 3rd data variable (per segment).
+    which gives $\bar x_{curStick} \in [-\pi \cdot r,\pi \cdot r]$, which is stored in the 3rd data variable (per segment).
     The function floor() is a standardized version of rounding, available in C and Python programming languages.
     In the \texttt{PostNewtonStep}, the last sticking position is computed, $x_{lastStick} = x_{curStick}$, and it is also available in the \texttt{startOfStep} state.
 
@@ -6307,7 +6313,7 @@ equations =
     
     The basic algorithm in the \texttt{PostNewtonStep}, with all operations given for any segment $s_i$, can be summarized as follows:
     \bi
-      \item [I.] Evaluated gap per segment $g$ using \eq{ObjectContactFrictionCircleCable2D:gap} and store in data variable: 
+      \item [I.] Evaluate gap per segment $g$ using \eq{ObjectContactFrictionCircleCable2D:gap} and store in data variable: 
             $x_{gap} = g$
       \item [II.] If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$):
       \bn
@@ -6365,7 +6371,7 @@ equations =
     discontinuous behavior, thus relating computations to data variables computed in the \texttt{PostNewtonStep}.
     For efficiency, the LHS computation is only performed, if the \texttt{PostNewtonStep} determined contact in any segment.
 
-    The algorithm reads is similar to the previous subsection. The following operations are performed for each segment $s_i$, if 
+    The operations are similar to the \texttt{PostNewtonStep}, but without switching. The following operations are performed for each segment $s_i$, if 
     $x_{gap, s_i} <= 0$:
     \bi
       \item[I.] Compute contact force $f_n$, \eq{ObjectContactFrictionCircleCable2D:contactForce}.
@@ -6392,7 +6398,7 @@ equations =
       \ei
     \ei
     %++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Computation of LHS terms for circle and circle}
+    \mysubsubsubsection{Computation of LHS terms for circle and ANCF cable element}
     If {\bf \texttt{activeConnector = True}}, 
     contact forces $\fv_i$ with $i \in [0,n_{cs}]$ -- these are $(n_{cs}+1)$ forces -- are applied at the points $p_i$, and they are computed for every contact segments (i.e., two segments may contribute to contact forces of one point).
     For every contact computation, first all contact forces at segment points are set to zero. 
@@ -6525,7 +6531,7 @@ visuParentClass = VisualizationObject
 pythonShortName = GenericJoint
 addProtectedC = "    static constexpr Index nConstraints = 6;\n"
 addIncludesC = 'class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
-outputVariables = "{'Position':'$\LU{0}{\pv}_{m0}$current global position of position marker $m0$', 'Velocity':'$\LU{0}{\vv}_{m0}$current global velocity of position marker $m0$', 'DisplacementLocal':'$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration', 'VelocityLocal':'$\LU{J0}{\Delta\vv}$relative translational velocity in local joint0 coordinates', 'Rotation':'$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); if all axes are fixed, this output represents the rotational drift; for a revolute joint, it contains the rotation of this axis', 'AngularVelocityLocal':'$\LU{J0}{\Delta\tomega}$relative angular velocity in local joint0 coordinates; if all axes are fixed, this output represents the angular velocity constraint error; for a revolute joint, it contains the angular velocity of this axis', 'ForceLocal':'$\LU{J0}{\fv}$joint force in local $J0$ coordinates', 'TorqueLocal':'$\LU{J0}{\mv}$joint torque in local $J0$ coordinates; depending on joint configuration, the result may not be the according torque vector'}"
+outputVariables = "{'Position':'$\LU{0}{\pv}_{m0}$current global position of position marker $m0$', 'Velocity':'$\LU{0}{\vv}_{m0}$current global velocity of position marker $m0$', 'DisplacementLocal':'$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration', 'VelocityLocal':'$\LU{J0}{\Delta\vv}$relative translational velocity in local joint0 coordinates', 'Rotation':'$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); if all axes are fixed, this output represents the rotational drift; for a revolute joint with free Z-axis, it contains the rotation in the Z-component', 'AngularVelocityLocal':'$\LU{J0}{\Delta\tomega}$relative angular velocity in local joint0 coordinates; if all axes are fixed, this output represents the angular velocity constraint error; for a revolute joint, it contains the angular velocity of this axis', 'ForceLocal':'$\LU{J0}{\fv}$joint force in local $J0$ coordinates', 'TorqueLocal':'$\LU{J0}{\mv}$joint torque in local $J0$ coordinates; depending on joint configuration, the result may not be the according torque vector'}"
 #check if this is possible: 'TorqueLocal':'$\LU{J0}{\mv}$joint torque in in local joint0 coordinates'}"
 classType = Object
 objectType = Joint
@@ -6725,7 +6731,7 @@ visuParentClass = VisualizationObject
 pythonShortName = RevoluteJointZ
 addProtectedC = "    static constexpr Index nConstraints = 5;\n"
 addIncludesC = 'class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
-outputVariables = "{'Position':'$\LU{0}{\pv}_{m0}$current global position of position marker $m0$', 'Velocity':'$\LU{0}{\vv}_{m0}$current global velocity of position marker $m0$', 'DisplacementLocal':'$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration', 'VelocityLocal':'$\LU{J0}{\Delta\vv}$relative translational velocity in local joint0 coordinates', 'Rotation':'$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); if all axes are fixed, this output represents the rotational drift; for a revolute joint, it contains the rotation of this axis', 'AngularVelocityLocal':'$\LU{J0}{\Delta\tomega}$relative angular velocity in local joint0 coordinates; if all axes are fixed, this output represents the angular velocity constraint error; for a revolute joint, it contains the angular velocity of this axis', 'ForceLocal':'$\LU{J0}{\fv}$joint force in local $J0$ coordinates', 'TorqueLocal':'$\LU{J0}{\mv}$joint torque in local $J0$ coordinates; depending on joint configuration, the result may not be the according torque vector'}"
+outputVariables = "{'Position':'$\LU{0}{\pv}_{m0}$current global position of position marker $m0$', 'Velocity':'$\LU{0}{\vv}_{m0}$current global velocity of position marker $m0$', 'DisplacementLocal':'$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration', 'VelocityLocal':'$\LU{J0}{\Delta\vv}$relative translational velocity in local joint0 coordinates', 'Rotation':'$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); Z component represents rotation of joint, other components represent constraint drift', 'AngularVelocityLocal':'$\LU{J0}{\Delta\tomega}$relative angular velocity in joint J0 coordinates, giving a vector with Z-component only', 'ForceLocal':'$\LU{J0}{\fv}$joint force in local $J0$ coordinates', 'TorqueLocal':'$\LU{J0}{\mv}$joint torques in local $J0$ coordinates; torque around Z is zero'}"
 classType = Object
 objectType = Joint
 #add input quantities

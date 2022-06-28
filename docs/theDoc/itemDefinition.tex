@@ -1080,8 +1080,8 @@ The item VNodeGenericData has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py}{\texttt{leggedRobot.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionTest.py}{\texttt{lugreFrictionTest.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py}{\texttt{serialRobotKinematicTree.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py}{\texttt{serialRobotTSD.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive.py}{\texttt{sliderCrank3DwithANCFbeltDrive.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
@@ -2500,7 +2500,7 @@ A special object to represent open kinematic trees using minimum coordinate form
     linkMasses &     Vector &      &     [] &     masses of links; must be always set\\ \hline
     linkForces &     Vector3DList &      &     [] &     list of 3D force vectors per link in global coordinates acting on joint frame origin; use force-torque couple to realize off-origin forces; defaults to empty list $[]$, adding no forces\\ \hline
     linkTorques &     Vector3DList &      &     [] &     list of 3D torque vectors per link in global coordinates; defaults to empty list $[]$, adding no torques\\ \hline
-    jointForceVector &     Vector &      &     [] &     generalized force vector per coordinate added RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint $i$, the torque $f[i]$ acts positive (w.r.t.\ rotation axis) on link $i$ and negative on parent link $p_i$; must be either empty list/array $[]$ (default) or have size $n$\\ \hline
+    jointForceVector &     Vector &      &     [] &     generalized force vector per coordinate added to RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint $i$, the torque $f[i]$ acts positive (w.r.t.\ rotation axis) on link $i$ and negative on parent link $p_i$; must be either empty list/array $[]$ (default) or have size $n$\\ \hline
     jointPositionOffsetVector &     Vector &      &     [] &     offset for joint coordinates used in P(D) control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array $[]$ (default) or have size $n$\\ \hline
     jointVelocityOffsetVector &     Vector &      &     [] &     velocity offset for joint coordinates used in (P)D control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array $[]$ (default) or have size $n$\\ \hline
     jointPControlVector &     Vector &      &     [] &     proportional (P) control values per joint (multiplied with position error between joint value and offset $\uv_o$); note that more complicated control laws must be implemented with user functions; must be either empty list/array $[]$ (default) or have size $n$\\ \hline
@@ -4115,7 +4115,7 @@ The item VObjectJointGeneric has the following parameters:\vspace{-1cm}\\
 \rowTable{Velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity of position marker $m0$}
 \rowTable{DisplacementLocal}{$\LU{J0}{\Delta\pv}$}{relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration}
 \rowTable{VelocityLocal}{$\LU{J0}{\Delta\vv}$}{relative translational velocity in local joint0 coordinates}
-\rowTable{Rotation}{$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$}{relative rotation parameters (Tait Bryan Rxyz); if all axes are fixed, this output represents the rotational drift; for a revolute joint, it contains the rotation of this axis}
+\rowTable{Rotation}{$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$}{relative rotation parameters (Tait Bryan Rxyz); if all axes are fixed, this output represents the rotational drift; for a revolute joint with free Z-axis, it contains the rotation in the Z-component}
 \rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\tomega}$}{relative angular velocity in local joint0 coordinates; if all axes are fixed, this output represents the angular velocity constraint error; for a revolute joint, it contains the angular velocity of this axis}
 \rowTable{ForceLocal}{$\LU{J0}{\fv}$}{joint force in local $J0$ coordinates}
 \rowTable{TorqueLocal}{$\LU{J0}{\mv}$}{joint torque in local $J0$ coordinates; depending on joint configuration, the result may not be the according torque vector}
@@ -4342,10 +4342,10 @@ The item VObjectJointRevoluteZ has the following parameters:\vspace{-1cm}\\
 \rowTable{Velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity of position marker $m0$}
 \rowTable{DisplacementLocal}{$\LU{J0}{\Delta\pv}$}{relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration}
 \rowTable{VelocityLocal}{$\LU{J0}{\Delta\vv}$}{relative translational velocity in local joint0 coordinates}
-\rowTable{Rotation}{$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$}{relative rotation parameters (Tait Bryan Rxyz); if all axes are fixed, this output represents the rotational drift; for a revolute joint, it contains the rotation of this axis}
-\rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\tomega}$}{relative angular velocity in local joint0 coordinates; if all axes are fixed, this output represents the angular velocity constraint error; for a revolute joint, it contains the angular velocity of this axis}
+\rowTable{Rotation}{$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$}{relative rotation parameters (Tait Bryan Rxyz); Z component represents rotation of joint, other components represent constraint drift}
+\rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\tomega}$}{relative angular velocity in joint J0 coordinates, giving a vector with Z-component only}
 \rowTable{ForceLocal}{$\LU{J0}{\fv}$}{joint force in local $J0$ coordinates}
-\rowTable{TorqueLocal}{$\LU{J0}{\mv}$}{joint torque in local $J0$ coordinates; depending on joint configuration, the result may not be the according torque vector}
+\rowTable{TorqueLocal}{$\LU{J0}{\mv}$}{joint torques in local $J0$ coordinates; torque around Z is zero}
 \finishTable
  \noindent
     \mysubsubsubsection{Definition of quantities}\label{sec:ObjectJointRevoluteZ:DefinitionOfQuantities}
@@ -6379,6 +6379,7 @@ The item VObjectConnectorTorsionalSpringDamper has the following parameters:\vsp
 %
 \noindent For examples on ObjectConnectorTorsionalSpringDamper see Examples and TestModels:
 \bi
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py}{\texttt{serialRobotKinematicTree.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py}{\texttt{serialRobotTSD.py}} (Examples/)
 \ei
 
@@ -7502,8 +7503,8 @@ The item VObjectContactFrictionCircleCable2D has the following parameters:\vspac
       \begin{center}
       \includegraphics[width=12cm]{figures/ContactFrictionCircleCable2D.pdf}
       \end{center}
-      \caption{Sketch of cable, contact segments and circle; case A shows contact with $|\dv_{g1}| > r$, 
-               while case B shows contact with $|\dv_{g1}| \le r$; the shortest distance vector $\dv_{g1}$
+      \caption{Sketch of cable, contact segments and circle; showing case without contact, $|\dv_{g1}| > r$, 
+               while contact occurs with $|\dv_{g1}| \le r$; the shortest distance vector $\dv_{g1}$
                is related to segment $s_1$ (which is perpendicular to the the segment line) and 
                $\dv_{g2}$ is the shortest distance to the end point of segment $s_2$, not being
                perpendicular.}
@@ -7517,8 +7518,9 @@ The item VObjectContactFrictionCircleCable2D has the following parameters:\vspac
     The cable with reference length $L$ is discretized by splitting into $n_{cs}$ straight segments $s_i$, located between points $p_i$ and $p_{i+1}$.
     Note that these points can be placed with an offset from the cable centerline, see \texttt{verticalOffset} defined in \texttt{MarkerBodyCable2DShape}.
     In order to compute the gap function for a line segment, the shortest distance of one line segment with
-    points $\pv_i$, $\pv_{i+1}$, the circle centerpoint given by the marker $\pv_{m0}$ are computed, all in 
-    the global coordinates system (0), including edge points of every segment.
+    points $\pv_i$, $\pv_{i+1}$ to the circle's centerpoint given by the marker $\pv_{m0}$ is computed. 
+    All computations here are performed in the global coordinates system (0), 
+    including edge points of every segment.
 
     With the intermediate quantities (all of them related to segment $s_i$)\footnote{we omit $s_i$ in some terms for brevity!},
     \be
@@ -7627,16 +7629,20 @@ The item VObjectContactFrictionCircleCable2D has the following parameters:\vspac
     Note that the \texttt{verticalOffset} from the cable center line, as defined in the related \texttt{MarkerBodyCable2DShape},
     influences the behavior significantly, which is why we recommend to use \texttt{verticalOffset=0} whenever this is an 
     appropriate assumption.
+    %include in paper:
+    %Even thought that we are convinced that this has some effect, especially for beams with larger height, a reduction of segment length reduces
+    %this effects as less (un-)winding occurs, a more consistent computation of this effect would require an
+    %integration of relative motion as stretch influences the local changes of the relative sticking position.
     Thus, the current sticking position $x_{curStick}$ is computed per segment as
     \be  \label{ObjectContactFrictionCircleCable2D:lastCurStick}
       x^*_{curStick} = x_{s,curStick} + x_{c,curStick}, \quad
     \ee
     %
-    Due to the possibility of switching of $\alpha+\phi$ between $-pi$ and $\pi$, the result is normalized to
+    Due to the possibility of switching of $\alpha+\phi$ between $-\pi$ and $\pi$, the result is normalized to
     \be \label{ObjectContactFrictionCircleCable2D:curStick}
       x_{curStick} = x^*_{curStick} - \mathrm{floor}\left(\frac{x^*_{curStick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r, \quad
     \ee
-    which gives $\bar x_{curStick} \in [-\pi \cdot r,\pi \cdot r]$ is stored in the 3rd data variable (per segment).
+    which gives $\bar x_{curStick} \in [-\pi \cdot r,\pi \cdot r]$, which is stored in the 3rd data variable (per segment).
     The function floor() is a standardized version of rounding, available in C and Python programming languages.
     In the \texttt{PostNewtonStep}, the last sticking position is computed, $x_{lastStick} = x_{curStick}$, and it is also available in the \texttt{startOfStep} state.
 
@@ -7681,7 +7687,7 @@ The item VObjectContactFrictionCircleCable2D has the following parameters:\vspac
     
     The basic algorithm in the \texttt{PostNewtonStep}, with all operations given for any segment $s_i$, can be summarized as follows:
     \bi
-      \item [I.] Evaluated gap per segment $g$ using \eq{ObjectContactFrictionCircleCable2D:gap} and store in data variable: 
+      \item [I.] Evaluate gap per segment $g$ using \eq{ObjectContactFrictionCircleCable2D:gap} and store in data variable: 
             $x_{gap} = g$
       \item [II.] If $x_{gap} < 0$ and ($\mu_v \neq 0$ or  $\mu_k \neq 0$):
       \bn
@@ -7739,7 +7745,7 @@ The item VObjectContactFrictionCircleCable2D has the following parameters:\vspac
     discontinuous behavior, thus relating computations to data variables computed in the \texttt{PostNewtonStep}.
     For efficiency, the LHS computation is only performed, if the \texttt{PostNewtonStep} determined contact in any segment.
 
-    The algorithm reads is similar to the previous subsection. The following operations are performed for each segment $s_i$, if 
+    The operations are similar to the \texttt{PostNewtonStep}, but without switching. The following operations are performed for each segment $s_i$, if 
     $x_{gap, s_i} <= 0$:
     \bi
       \item[I.] Compute contact force $f_n$, \eq{ObjectContactFrictionCircleCable2D:contactForce}.
@@ -7766,7 +7772,7 @@ The item VObjectContactFrictionCircleCable2D has the following parameters:\vspac
       \ei
     \ei
     %++++++++++++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Computation of LHS terms for circle and circle}
+    \mysubsubsubsection{Computation of LHS terms for circle and ANCF cable element}
     If {\bf \texttt{activeConnector = True}}, 
     contact forces $\fv_i$ with $i \in [0,n_{cs}]$ -- these are $(n_{cs}+1)$ forces -- are applied at the points $p_i$, and they are computed for every contact segments (i.e., two segments may contribute to contact forces of one point).
     For every contact computation, first all contact forces at segment points are set to zero. 
@@ -10478,9 +10484,8 @@ The item VSensorLoad has the following parameters:\vspace{-1cm}\\
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py}{\texttt{leggedRobot.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotOldTests.py}{\texttt{serialRobotOldTests.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py}{\texttt{serialRobotKinematicTree.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py}{\texttt{serialRobotTestDH2.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py}{\texttt{serialRobotTSD.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simulateInteractively.py}{\texttt{simulateInteractively.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/plotSensorTest.py}{\texttt{plotSensorTest.py}} (TestModels/)

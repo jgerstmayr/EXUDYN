@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-06-08  20:22:31 (last modified)
+* @date         2022-06-27  08:11:27 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -48,7 +48,7 @@ public: // AUTO:
     Vector linkMasses;                            //!< AUTO: masses of links; must be always set
     Vector3DList linkForces;                      //!< AUTO: list of 3D force vectors per link in global coordinates acting on joint frame origin; use force-torque couple to realize off-origin forces; defaults to empty list \f$[]\f$, adding no forces
     Vector3DList linkTorques;                     //!< AUTO: list of 3D torque vectors per link in global coordinates; defaults to empty list \f$[]\f$, adding no torques
-    Vector jointForceVector;                      //!< AUTO: generalized force vector per coordinate added RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint \f$i\f$, the torque \f$f[i]\f$ acts positive (w.r.t.\ rotation axis) on link \f$i\f$ and negative on parent link \f$p_i\f$; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
+    Vector jointForceVector;                      //!< AUTO: generalized force vector per coordinate added to RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint \f$i\f$, the torque \f$f[i]\f$ acts positive (w.r.t.\ rotation axis) on link \f$i\f$ and negative on parent link \f$p_i\f$; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
     Vector jointPositionOffsetVector;             //!< AUTO: offset for joint coordinates used in P(D) control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
     Vector jointVelocityOffsetVector;             //!< AUTO: velocity offset for joint coordinates used in (P)D control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
     Vector jointPControlVector;                   //!< AUTO: proportional (P) control values per joint (multiplied with position error between joint value and offset \f$\uv_o\f$); note that more complicated control laws must be implemented with user functions; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$

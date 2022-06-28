@@ -175,6 +175,21 @@ void CObjectConnectorTorsionalSpringDamper::EvaluateUserFunctionForce(Real& torq
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+void CObjectConnectorCoordinateSpringDamper::EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex,
+	Real& relPos, Real& relVel) const
+{
+	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
+	{
+		//user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
+		force = parameters.springForceUserFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, itemIndex,
+			relPos, relVel, parameters.stiffness, parameters.damping, parameters.offset, parameters.dryFriction, parameters.dryFrictionProportionalZone);
+	}, "ObjectConnectorCoordinateSpringDamper::springForceUserFunction");
+}
+
+
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
 void CObjectJointGeneric::EvaluateUserFunctionOffset(Vector6D& offset, const MainSystemBase& mainSystem, Real t, Index itemIndex) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block

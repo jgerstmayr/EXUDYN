@@ -60,38 +60,38 @@ newRobot = Robot(gravity=[0,0,9.81],
 link0={'stdDH':[0,0,0,pi/2], 
        'modKKDH':[0,0,0,0], 
         'mass':20,  #not needed!
-        'inertia':np.diag([1e-8,0.35,1e-8]), #w.r.t. COM!
-        'COM':[0,0,0]}
+        'inertia':np.diag([1e-8,0.35,1e-8]), #w.r.t. COM! in stdDH link frame
+        'COM':[0,0,0]} #in stdDH link frame
 
 link1={'stdDH':[0,0,0.4318,0],
        'modKKDH':[0.5*pi,0,0,0], 
         'mass':17.4, 
-        'inertia':np.diag([0.13,0.524,0.539]), #w.r.t. COM!
-        'COM':[-0.3638, 0.006, 0.2275]}
+        'inertia':np.diag([0.13,0.524,0.539]), #w.r.t. COM! in stdDH link frame
+        'COM':[-0.3638, 0.006, 0.2275]} #in stdDH link frame
 
 link2={'stdDH':[0,0.15,0.0203,-pi/2], 
        'modKKDH':[0,0.4318,0,0.15], 
         'mass':4.8, 
-        'inertia':np.diag([0.066,0.086,0.0125]), #w.r.t. COM!
-        'COM':[-0.0203,-0.0141,0.07]}
+        'inertia':np.diag([0.066,0.086,0.0125]), #w.r.t. COM! in stdDH link frame
+        'COM':[-0.0203,-0.0141,0.07]} #in stdDH link frame
 
 link3={'stdDH':[0,0.4318,0,pi/2], 
        'modKKDH':[-0.5*pi,0.0203,0,0.4318], 
         'mass':0.82, 
-        'inertia':np.diag([0.0018,0.0013,0.0018]), #w.r.t. COM!
-        'COM':[0,0.019,0]}
+        'inertia':np.diag([0.0018,0.0013,0.0018]), #w.r.t. COM! in stdDH link frame
+        'COM':[0,0.019,0]} #in stdDH link frame
 
 link4={'stdDH':[0,0,0,-pi/2], 
        'modKKDH':[0.5*pi,0,0,0], 
         'mass':0.34, 
-        'inertia':np.diag([0.0003,0.0004,0.0003]), #w.r.t. COM!
-        'COM':[0,0,0]}
+        'inertia':np.diag([0.0003,0.0004,0.0003]), #w.r.t. COM! in stdDH link frame
+        'COM':[0,0,0]} #in stdDH link frame
 
 link5={'stdDH':[0,0,0,0], 
        'modKKDH':[-0.5*pi,0,0,0], 
         'mass':0.09, 
-        'inertia':np.diag([0.00015,0.00015,4e-5]), #w.r.t. COM!
-        'COM':[0,0,0.032]}
+        'inertia':np.diag([0.00015,0.00015,4e-5]), #w.r.t. COM! in stdDH link frame
+        'COM':[0,0,0.032]} #in stdDH link frame
 linkList=[link0, link1, link2, link3, link4, link5]
 
 for link in linkList:
@@ -105,7 +105,8 @@ cnt = 0
 for link in newRobot.links:
     color = color4list[cnt]
     color[3] = 0.75 #make transparent
-    link.visualization = VRobotLink(jointRadius=0.06, jointWidth=0.05, showMBSjoint=True, linkWidth=0.05, linkColor=color, showCOM= True )
+    link.visualization = VRobotLink(jointRadius=0.06, jointWidth=0.05*2, showMBSjoint=False,
+                                    linkWidth=2*0.05, linkColor=color, showCOM= True )
     cnt+=1
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -190,28 +191,24 @@ loadList1 = robotDict['jointTorque1List'] #(right body)
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #control robot
 compensateStaticTorques = True
-useTSD = True
 torsionalSDlist = []
 
-if useTSD:
-    # jointK = 1e5
-    # jointD = jointK*0.01
-    for i in range(len(jointList)):
-        joint = jointList[i]
-        rot0 = mbs.GetObject(joint)['rotationMarker0']
-        rot1 = mbs.GetObject(joint)['rotationMarker1']
-        markers = mbs.GetObject(joint)['markerNumbers']
-        nGeneric=mbs.AddNode(NodeGenericData(initialCoordinates=[0], 
-                                             numberOfDataCoordinates=1)) #for infinite rotations
-        tsd = mbs.AddObject(TorsionalSpringDamper(markerNumbers=markers,
-                                            nodeNumber=nGeneric,
-                                            rotationMarker0=rot0,
-                                            rotationMarker1=rot1,                                            
-                                            stiffness=Pcontrol[i],
-                                            damping=Dcontrol[i],
-                                            visualization=VTorsionalSpringDamper(drawSize=0.1)
-                                            ))
-        torsionalSDlist += [tsd]
+for i in range(len(jointList)):
+    joint = jointList[i]
+    rot0 = mbs.GetObject(joint)['rotationMarker0']
+    rot1 = mbs.GetObject(joint)['rotationMarker1']
+    markers = mbs.GetObject(joint)['markerNumbers']
+    nGeneric=mbs.AddNode(NodeGenericData(initialCoordinates=[0], 
+                                         numberOfDataCoordinates=1)) #for infinite rotations
+    tsd = mbs.AddObject(TorsionalSpringDamper(markerNumbers=markers,
+                                        nodeNumber=nGeneric,
+                                        rotationMarker0=rot0,
+                                        rotationMarker1=rot1,                                            
+                                        stiffness=Pcontrol[i],
+                                        damping=Dcontrol[i],
+                                        visualization=VTorsionalSpringDamper(drawSize=0.1)
+                                        ))
+    torsionalSDlist += [tsd]
     
 
 #user function which is called only once per step, speeds up simulation drastically
@@ -232,22 +229,10 @@ def PreStepUF(mbs, t):
         #[u1,v1,a1] = MotionInterpolator(t, robotTrajectory, i)
         u1 = u[i]
         v1 = v[i]
-        if useTSD:
-            tsd = torsionalSDlist[i]
-            mbs.SetObjectParameter(tsd, 'offset', u1)
-            mbs.SetObjectParameter(tsd, 'velocityOffset', v1)
-            #mbs.SetObjectParameter(tsd, 'torque', Dcontrol[i]*v1 + staticTorques[i]) #additional torque from given velocity without velocityOffset
-            mbs.SetObjectParameter(tsd, 'torque', staticTorques[i]) #additional torque from given velocity 
-        else:
-            torque = -1*(Pcontrol[i]*(phi-u1) + Dcontrol[i]*(omega-v1)) #negative sign for feedback control!
-            torque -= staticTorques[i] #add static torque compensation
-            
-            load0 = torque * unitTorques0[i] #includes sign and correct unit-torque vector
-            load1 = torque * unitTorques1[i] #includes sign and correct unit-torque vector
-            
-            #write updated torque to joint loads, applied to left and right body
-            mbs.SetLoadParameter(loadList0[i], 'loadVector', list(load0))
-            mbs.SetLoadParameter(loadList1[i], 'loadVector', list(load1))
+        tsd = torsionalSDlist[i]
+        mbs.SetObjectParameter(tsd, 'offset', u1)
+        mbs.SetObjectParameter(tsd, 'velocityOffset', v1)
+        mbs.SetObjectParameter(tsd, 'torque', staticTorques[i]) #additional torque from given velocity 
     
     return True
 
@@ -257,35 +242,27 @@ mbs.SetPreStepUserFunction(PreStepUF)
 
 #add sensors:
 cnt = 0
+jointTorque0List = []
 for i in range(len(jointList)):
     jointLink = jointList[i]
-    if useTSD:
-        tsd = torsionalSDlist[i]
-        #using TSD:
-        sJointRot = mbs.AddSensor(SensorObject(objectNumber=tsd, 
-                                   fileName="solution/joint" + str(cnt) + "Rot.txt",
-                                   outputVariableType=exu.OutputVariableType.Rotation,
-                                   writeToFile = sensorWriteToFile))
-    else:
-        #old style: only +/- pi
-        sJointRot = mbs.AddSensor(SensorObject(objectNumber=jointLink, 
-                                   fileName="solution/joint" + str(cnt) + "Rot.txt",
-                                   outputVariableType=exu.OutputVariableType.Rotation,
-                                   writeToFile = sensorWriteToFile))
+    tsd = torsionalSDlist[i]
+    #using TSD:
+    sJointRot = mbs.AddSensor(SensorObject(objectNumber=tsd, 
+                               fileName="solution/joint" + str(i) + "Rot.txt",
+                               outputVariableType=exu.OutputVariableType.Rotation,
+                               writeToFile = sensorWriteToFile))
+
     sJointAngVel = mbs.AddSensor(SensorObject(objectNumber=jointLink, 
-                               fileName="solution/joint" + str(cnt) + "AngVel.txt",
+                               fileName="solution/joint" + str(i) + "AngVel.txt",
                                outputVariableType=exu.OutputVariableType.AngularVelocityLocal,
                                writeToFile = sensorWriteToFile))
-    cnt+=1
 
-cnt = 0
-jointTorque0List = []
-for load0 in robotDict['jointTorque0List']:
-    sTorque = mbs.AddSensor(SensorLoad(loadNumber=load0, fileName="solution/jointTorque" + str(cnt) + ".txt", 
-                                       writeToFile = sensorWriteToFile))
+    sTorque = mbs.AddSensor(SensorObject(objectNumber=tsd, 
+                            fileName="solution/joint" + str(i) + "Torque.txt",
+                            outputVariableType=exu.OutputVariableType.TorqueLocal,
+                            writeToFile = sensorWriteToFile))
+
     jointTorque0List += [sTorque]
-    cnt+=1
-
 
 
 mbs.Assemble()
@@ -317,7 +294,7 @@ simulationSettings.solutionSettings.binarySolutionFile = True
 # simulationSettings.timeIntegration.realtimeFactor = 0.25
 
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.displayComputationTime = True
+# simulationSettings.displayComputationTime = True
 simulationSettings.displayStatistics = True
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 
@@ -352,7 +329,7 @@ lastRenderState = SC.GetRenderState() #store model view
 #compute final torques:
 measuredTorques=[]
 for sensorNumber in jointTorque0List:
-    measuredTorques += [mbs.GetSensorValues(sensorNumber)[2]]
+    measuredTorques += [abs(mbs.GetSensorValues(sensorNumber))]
 exu.Print("torques at tEnd=", VSum(measuredTorques))
 
 #add larger test tolerance for 32/64bits difference
@@ -390,7 +367,7 @@ if True:
         for i in range(6):
             data = np.loadtxt("solution/joint" + str(i) + "Rot.txt", comments='#', delimiter=',')
             # data = np.loadtxt("solution/joint" + str(i) + "AngVel.txt", comments='#', delimiter=',')
-            plt.plot(data[:,0], data[:,3-2*int(useTSD)], PlotLineCode(i), label="joint"+str(i)) #z-rotation
+            plt.plot(data[:,0], data[:,1], PlotLineCode(i), label="joint"+str(i)) #z-rotation
             
         plt.xlabel("time (s)")
         plt.ylabel("joint angle (rad)")

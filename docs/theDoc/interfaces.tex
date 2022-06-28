@@ -647,7 +647,7 @@ VSettingsOpenGL has the following items:
     light1specular &     float &     1 &     0.6 &     specular value of GL\_LIGHT1\\ \hline
     lightModelAmbient &     Float4 &     4 &     [0.,0.,0.,1.] &     \tabnewline global ambient light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_AMBIENT,[r,g,b,a])\\ \hline
     lightModelLocalViewer &     bool &     1 &     False &     select local viewer for light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_LOCAL\_VIEWER,...)\\ \hline
-    lightModelTwoSide &     bool &     1 &     True &     enlighten also backside of object; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_TWO\_SIDE,...)\\ \hline
+    lightModelTwoSide &     bool &     1 &     False &     enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_TWO\_SIDE,...)\\ \hline
     lineSmooth &     bool &     1 &     True &     draw lines smooth\\ \hline
     lineWidth &     UFloat &     1 &     1. &     width of lines used for representation of lines, circles, points, etc.\\ \hline
     materialAmbientAndDiffuse &     Float4 &     4 &     [0.6,0.6,0.6,1.] &     \tabnewline 4f ambient color of material\\ \hline

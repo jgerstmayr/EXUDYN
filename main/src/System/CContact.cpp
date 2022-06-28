@@ -1425,7 +1425,7 @@ void GeneralContact::ComputeContactTrigsRigidBodyBased(TemporaryComputationDataA
 			const ContactRigidBodyMarkerBased& rigid = rigidBodyMarkerBased[trigJ.contactRigidBodyIndex];
 
 			//compute global points
-			for (Index k = 0; k < trigPoints.size(); k++)
+			for (Index k = 0; k < (Index)trigPoints.size(); k++)
 			{
 				trigPoints[k] = rigid.orientation * trigJ.points[k] + rigid.position;
 			}

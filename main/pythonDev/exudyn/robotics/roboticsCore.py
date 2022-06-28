@@ -87,13 +87,16 @@ class VRobotLink:
     #  linkWidth: width of link for default drawing
     #  linkColor: color of link for default drawing
     #  showCOM: if True, center of mass is marked with cube
-    def __init__(self, jointRadius = 0.06, jointWidth = 0.12, showMBSjoint = True, linkWidth = 0.1, linkColor = [0.4,0.4,0.4,1], showCOM = True ):
+    #  graphicsData: list of GraphicsData to represent link; if list is empty, link graphics will be generated from link geometry data; otherwise, drawing will be taken from graphicsData, and only showMBSjoint and showCOM flags will add additional graphics
+    def __init__(self, jointRadius = 0.06, jointWidth = 0.12, linkWidth = 0.1, showMBSjoint = True, showCOM = True, 
+                 linkColor = [0.4,0.4,0.4,1], graphicsData = [] ):
         self.jointRadius = jointRadius
         self.jointWidth = jointWidth 
         self.showMBSjoint = showMBSjoint
         self.linkWidth = linkWidth 
         self.linkColor = linkColor
         self.showCOM = showCOM
+        self.graphicsData = graphicsData
 
     def __str__(self):
         s = '  jointRadius = ' + str(self.jointRadius)
@@ -102,6 +105,10 @@ class VRobotLink:
         s += '\n  linkWidth = ' + str(self.linkWidth)
         s += '\n  linkColor = ' + str(self.linkColor)
         s += '\n  showCOM = ' + str(self.showCOM)
+        gDataStr = ''
+        if len(self.graphicsData) != 0:
+            gDataStr = '...'
+        s += '\n  graphicsData = [' + gDataStr + ']'
             
         return s
     def __repr__(self):
@@ -129,7 +136,7 @@ class RobotLink:
         self.preHT = np.array(preHT)
         self.jointType = jointType
         self.parent = parent
-        self.visualization = visualization
+        self.visualization = deepcopy(visualization)
         if PDcontrol[0] != None:
             self.PDcontrol = PDcontrol
 
@@ -507,8 +514,8 @@ class Robot:
             link = self.links[i]
             linkParents += [self.GetParentIndex(i)]
 
-            if np.linalg.norm(link.localHT - HT0()) >= 1e-14:
-                raise ValueError('CreateKinematicTree: can only convert robots with localHT = identity')
+            # if np.linalg.norm(link.localHT - HT0()) >= 1e-14: #now implemented
+            #     raise ValueError('CreateKinematicTree: can only convert robots with localHT = identity')
             if link.jointType not in dictJointType2Axis:
                 raise ValueError('CreateKinematicTree: found invalid joint type in link '+str(i)+':'+link.jointType)
 
@@ -523,12 +530,30 @@ class Robot:
             # com = link.COM
             #++++++++++++++++++++++++++++++++++
             jointTypesList += [dictJointTypeText2Exudyn[link.jointType]]
-            linkInertiasCOM += [link.inertia] #is already w.r.t. COM
-            linkCOMs += [link.COM]
-            linkMasses += [link.mass]
-            jointTransformations += [HT2rotationMatrix(link.preHT)] 
-            jointOffsets += [HT2translation(link.preHT)]
+            # jointTransformations += [HT2rotationMatrix(link.preHT)] 
+            # jointOffsets += [HT2translation(link.preHT)]
+            
+            # 
+            parentLinkLocalHT = HT0()
+            if self.HasParent(i):
+                parentLinkLocalHT = self.links[self.GetParentIndex(i)].localHT
+            jointTransformations += [HT2rotationMatrix(parentLinkLocalHT @ link.preHT)] 
+            jointOffsets += [HT2translation(parentLinkLocalHT @ link.preHT)]
 
+            #inertia is defined in link coordinates; but KinematicTree needs inertia w.r.t. joint coordinates:
+            rbi = RigidBodyInertia()
+            rbi.SetWithCOMinertia(link.mass, link.inertia, link.COM)
+    
+            rbi = rbi.Transformed((link.localHT)) #inertia parameters need to be transformed to joint frame
+            
+            linkInertiasCOM += [rbi.InertiaCOM()] #KinematicTree needs inertia w.r.t. COM
+            linkCOMs += [rbi.COM()] 
+            linkMasses += [rbi.Mass()]
+            # linkInertiasCOM += [link.inertia] #is already w.r.t. COM
+            # linkCOMs += [link.COM]
+            # linkMasses += [link.mass]
+
+            
             #++++++++++++++++++++++++++++++++++
             #visualization:
             linkVisualization = link.visualization
@@ -539,29 +564,33 @@ class Robot:
             color = linkVisualization.linkColor
             showCOM = linkVisualization.showCOM
 
-            graphicsData = []
+            graphicsDataLink = []
             #draw COM:
             if linkVisualization.showCOM:
                 dd = r*0.2
                 colorCOM = copy(color)
-                colorCOM[0] *= 0.8 #make COM a little darker
-                colorCOM[1] *= 0.8
-                colorCOM[2] *= 0.8
-                graphicsData += [GraphicsDataOrthoCubePoint(link.COM, [dd,dd,dd], colorCOM)]
+                colorCOM[0] *= 0.7 #make COM a little darker
+                colorCOM[1] *= 0.7
+                colorCOM[2] *= 0.7
+                graphicsDataLink += [GraphicsDataOrthoCubePoint(rbi.COM(), [dd,dd,dd], colorCOM)]
 
 
             #draw joint in this link
             if showMBSjoint:
                 gJoint = GraphicsDataCylinder(-0.5*wJ*axis, 0.5*wJ*axis, radius=r, color=color4grey)
-                graphicsData += [gJoint]
+                graphicsDataLink += [gJoint]
                 
             #draw link from parent link origin to this link origin, defined by preHT of this link
             if self.HasParent(i):
                 iParent = self.GetParentIndex(i)
                 parentLink = self.GetLink(iParent)
-                vParent = HT2translation(link.preHT)
-                gLink = GraphicsDataCylinder([0.,0.,0.], vParent, radius=0.5*wL, color=color)
-                graphicsDataList[iParent] += [gLink]
+                vParent = HT2translation(parentLinkLocalHT@link.preHT)
+                if len(linkVisualization.graphicsData) == 0:
+                    gLink = GraphicsDataCylinder([0.,0.,0.], vParent, radius=0.5*wL, color=color)
+                    graphicsDataList[iParent] += [gLink]
+
+            if len(linkVisualization.graphicsData) != 0:
+                graphicsDataLink += linkVisualization.graphicsData
 
             #add transformed graphicsData of tool to link graphics
             if (i==len(self.links)-1 and #tool
@@ -569,9 +598,9 @@ class Robot:
                 pOff = HT2translation(self.tool.HT)
                 Aoff = HT2rotationMatrix(self.tool.HT)
                 for data in self.tool.visualization.graphicsData:
-                    graphicsData += [MoveGraphicsData(data, pOff, Aoff)] 
+                    graphicsDataLink += [MoveGraphicsData(data, pOff, Aoff)] 
 
-            graphicsDataList += [graphicsData]
+            graphicsDataList += [graphicsDataLink]
         
         #create node for unknowns of KinematicTree
         nGeneric = mbs.AddNode(NodeGenericODE2(referenceCoordinates=qRef,
@@ -605,16 +634,7 @@ class Robot:
              }
         return d
 
-    # old:
-    # def CreateKinematicTree(self, mbs, name = '', jointForceVector = [], jointPositionOffsetVector = [], jointVelocityOffsetVector = [], 
-    #                         jointPControlVector = [], jointDControlVector = [], forceUserFunction = 0
-    #                         ):
-    #   jointForceVector: a constant vector on joint coordinates, transferred to KinematicTree, default = []
-    #   jointPositionOffsetVector: a vector defining the prescribed value for joint coordinates if PD control is used; transferred to KinematicTree, default = []
-    #   jointVelocityOffsetVector: a vector defining the prescribed velocity value for joint coordinates if PD control is used; transferred to KinematicTree, default = []
-    #   jointPControlVector: a vector defining the P control value per joint coordinate; if this vector is defined, P control is activated; transferred to KinematicTree, default = []
-    #   jointDControlVector: a vector defining the D control value per joint coordinate; if this vector is defined, D control is activated; transferred to KinematicTree, default = []
-                       
+                      
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #**classFunction: Add items to existing mbs from the robot structure inside this robot class; robot is attached to baseMarker (can be ground object or moving/deformable body);
@@ -682,7 +702,7 @@ class Robot:
         
         
             # T01 = DH2HT(DHparam) #transformation from last link to this link; it defines the orientation of the body
-            T01 = link.preHT @ dictJointType2HT[link.jointType](qRef[i]) @ link.localHT
+            T01 = link.preHT @ dictJointType2HT[link.jointType](qRef[i]) @ link.localHT #new bodies are placed at origin of link frame
             if not self.HasParent(i):
                 Tcurrent = self.GetBaseHT()
             else:
@@ -704,7 +724,7 @@ class Robot:
             
             
             #rigid body parameters:
-            com = link.COM
+            com = link.COM #is defined within link==body frame
         
             inertiaLink = RigidBodyInertia(mass=link.mass, inertiaTensor=link.inertia)
             inertiaLink = inertiaLink.Translated(com) #needs to be recomputed, because inertia in Robot is w.r.t. COM, but ObjectRigidBody needs inertia for reference point
@@ -720,7 +740,11 @@ class Robot:
                 pNext = HT2translation(nextLink.preHT) #this defines the position for the local of the axis for next link
                 axisNext = HT2rotationMatrix(nextLink.preHT) @ dictJointType2Axis[nextLink.jointType] 
 
-                graphicsList += self.GetLinkGraphicsData(i, pThis, pNext, axis0, axisNext, link.visualization)
+                if len(link.visualization.graphicsData) == 0:
+                    graphicsList += self.GetLinkGraphicsData(i, pThis, pNext, axis0, axisNext, link.visualization)
+
+            if len(link.visualization.graphicsData) != 0:
+                graphicsList += link.visualization.graphicsData
 
             #add transformed graphicsData of tool to link graphics
             if (i==len(self.links)-1 and #tool
@@ -783,8 +807,8 @@ class Robot:
                                                     constrainedAxes=constrainedAxes,
                                                     rotationMarker0=rotationMarker0,
                                                     rotationMarker1=rotationMarker1,
-                                                    visualization=VObjectJointGeneric(show=showMBSjoint, axesRadius = r, 
-                                                                  axesLength=wJ, color=color4red)))
+                                                    visualization=VObjectJointGeneric(show=showMBSjoint, axesRadius = r*0.25, 
+                                                                  axesLength=wJ*1.1, color=color4grey)))
 
             jointList+=[jointLink]
             objectSD = None #if not added
@@ -922,14 +946,14 @@ class Robot:
 
         #draw link:
         if r != 0:
-            h0 = wJ   #height of half axis, first joint
-            h1 = wJ   #height of half axis, second joint
+            h0 = 0.5*wJ   #height of half axis, first joint
+            h1 = 0.5*wJ   #height of half axis, second joint
             
             if i == 0: #draw full cylinder for first joint
                 h0 = wJ*2
             
             graphicsList += [GraphicsDataCylinder(pAxis=p0, vAxis=-h0*axis0, 
-                                                 radius=r, color=color)]
+                                                  radius=r, color=color)]
             
             graphicsList += [GraphicsDataCylinder(pAxis=p1, vAxis= h1*axis1, 
                                                       radius=r, color=color)]

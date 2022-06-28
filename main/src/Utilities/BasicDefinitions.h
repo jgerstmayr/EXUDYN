@@ -66,6 +66,8 @@
 #ifndef __NOGLFW //passed from compiler
   #define USE_GLFW_GRAPHICS		//!< set this flag to enable OpenGL graphics with glfw
 #endif
+//#define FLIP_NORMALS //!< lets flip normals to point inside objects in some internal triangle drawing functions (sphere, ...) (old mode before 2022-06-27)
+//#define FLIP_TRIANGLES  //!< lets flip triangle orientation in some internal triangle drawing functions (sphere, ...) (old mode before 2022-06-27)
 
 //#define PERFORM_UNIT_TESTS	//!< defined in preprocessor flags, in setup.py (only for certain versions)
 #define DoublePrecision

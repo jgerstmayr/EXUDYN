@@ -608,7 +608,7 @@ V,      materialSpecular,               ,                  4,    Float4,       "
 #lights:
 V,      enableLighting,                 ,                  1,    bool,         true,                   , P,      "generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL\_LIGHTING)"
 V,      lightModelLocalViewer,          ,                  1,    bool,         false,                  , P,      "select local viewer for light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_LOCAL\_VIEWER,...)"
-V,      lightModelTwoSide,              ,                  1,    bool,         true,                   , P,      "enlighten also backside of object; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_TWO\_SIDE,...)"
+V,      lightModelTwoSide,              ,                  1,    bool,         false,                  , P,      "enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_TWO\_SIDE,...)"
 V,      lightModelAmbient,              ,                  4,    Float4,       "Float4({0.f,0.f,0.f,1.f})",,P,"global ambient light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_AMBIENT,[r,g,b,a])"
 #
 V,      enableLight0,                   ,                  1,    bool,         true,                   , P,      "turn on/off light0"

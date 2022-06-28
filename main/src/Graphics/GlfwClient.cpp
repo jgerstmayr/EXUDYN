@@ -1130,7 +1130,10 @@ void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mou
 
 	float backgroundColor = 0.f;
 	glClearColor(backgroundColor, backgroundColor, backgroundColor, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glStencilMask(~0); //make sure that all stencil bits are cleared
+	//glDisable(GL_SCISSOR_TEST);
+	glClearStencil(0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	//++++++++++++++++++++++++++++++++++++++++
 	//from Render(...) / different to meshDoc implementation (uses Projection)
@@ -1746,7 +1749,9 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 
 	Float4 bg = visSettings->general.backgroundColor;
 	glClearColor(bg[0], bg[1], bg[2], bg[3]); //(float red, float green, float blue, float alpha);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glStencilMask(~0); //make sure that all stencil bits are cleared
+	glClearStencil(0);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -2520,6 +2525,7 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 			{
 				if (visSettings->openGL.enableLighting) { glEnable(GL_LIGHTING); } //only enabled when drawing triangle faces
 				glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+				//glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 				if (highlight)
 				{
 					for (const GLTriangle& trig : data->glTriangles)
@@ -2644,8 +2650,7 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 //following concepts of https://github.com/joshb/shadowvolumes
 void RenderTriangleShadowVolume(const GLTriangle& trig, const Float3& lightPos, float maxDist, float shadow)
 {
-	//glColor4f(0.6f,0.3f,0.3f,1);
-	bool computeNormals = false;
+	const bool computeNormals = false;
 	//glColor4f(0.f, 0.f, 0.f, shadow);//shadow
 
 	//check if triangle normal is looking in direction of light (otherwise no shadow is produced
@@ -2663,8 +2668,9 @@ void RenderTriangleShadowVolume(const GLTriangle& trig, const Float3& lightPos, 
 		for (Index i = 2; i >= 0; i--)
 		{
 			Float3 vecDist = trig.points[i] - lightPos;
-			float dist = vecDist.SumAbs()*0.577f; //cheaper than norm, but needs safety factor sqrt(3)
-			//float dist = vecDist.GetL2Norm(); //SumAbs()*0.577 would be cheaper and also on safe side
+			//Float3 vecDist = - lightPos;
+			//float dist = vecDist.SumAbs()*0.577f; //cheaper than norm, but needs safety factor sqrt(3)
+			float dist = vecDist.GetL2Norm(); //SumAbs()*0.577 would be cheaper and also on safe side
 			if (dist != 0)
 			{
 				vecDist *= maxDist / dist; //scale up to maximum distance in scene, will cover all objects
@@ -2718,56 +2724,76 @@ void DrawShadowPlane(float shadow)
 
 void GlfwRenderer::DrawTrianglesWithShadow(GraphicsData* data)
 {
+	//render triangle shadow using stencils
 	const Float4& lp = visSettings->openGL.light0position;
 	Float3 lightPos({ lp[0], lp[1], lp[2] });
-	float maxDist = state->maxSceneSize*1.5f;
+	float maxDist = state->maxSceneSize*1.5f; 
 	float shadow = EXUstd::Minimum(visSettings->openGL.shadow, 1.f);
 
-	//add shadow now:
-
-	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-	glDepthMask(GL_FALSE);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_STENCIL_TEST);
-	glEnable(GL_POLYGON_OFFSET_FILL);
-	glPolygonOffset(0.0f, visSettings->openGL.shadowPolygonOffset * state->maxSceneSize); //original: 100.0f, may be too big
-
-	glCullFace(GL_FRONT);
-	glStencilFunc(GL_ALWAYS, 0x0, 0xff);
-	glStencilOp(GL_KEEP, GL_INCR, GL_KEEP);
-	for (const GLTriangle& trig : data->glTriangles)
-	{ //draw faces
-		if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
-			|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
-		{
-			RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow);
+	if (false)
+	{
+		//test to show shadow volumes
+		glColor4f(0.6f, 0.3f, 0.3f, 1);
+		for (const GLTriangle& trig : data->glTriangles)
+		{ //draw faces
+			if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
+				|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
+			{
+				RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow);
+			}
 		}
 	}
-	glCullFace(GL_BACK);
-	glStencilFunc(GL_ALWAYS, 0x0, 0xff);
-	glStencilOp(GL_KEEP, GL_DECR, GL_KEEP);
-	for (const GLTriangle& trig : data->glTriangles)
-	{ //draw faces
-		if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
-			|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
-		{
-			RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow);
+	else
+	{
+		//add shadow now:
+
+		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+		glDepthMask(GL_FALSE);
+		//glDepthFunc(GL_ALWAYS); //added ...?
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_STENCIL_TEST);
+		glEnable(GL_POLYGON_OFFSET_FILL);
+		glPolygonOffset(0.0f, visSettings->openGL.shadowPolygonOffset * state->maxSceneSize); //original: 100.0f, may be too big
+
+		glCullFace(GL_FRONT);
+		glStencilFunc(GL_ALWAYS, 0x0, 0xff);
+		glStencilOp(GL_KEEP, GL_INCR_WRAP, GL_KEEP);
+		//glStencilOp(GL_KEEP, GL_INCR, GL_KEEP); //fails at 255 faces
+		for (const GLTriangle& trig : data->glTriangles)
+		{ //draw faces
+			if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
+				|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
+			{
+				RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow);
+			}
 		}
+		glCullFace(GL_BACK);
+		glStencilFunc(GL_ALWAYS, 0x0, 0xff);
+		glStencilOp(GL_KEEP, GL_DECR_WRAP, GL_KEEP);
+		//glStencilOp(GL_KEEP, GL_DECR, GL_KEEP); //fails at 255 faces
+		for (const GLTriangle& trig : data->glTriangles)
+		{ //draw faces
+			if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
+				|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
+			{
+				RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow);
+			}
+		}
+
+		glDisable(GL_POLYGON_OFFSET_FILL);
+		glDisable(GL_CULL_FACE);
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+		glDepthMask(GL_TRUE);
+
+		glStencilFunc(GL_NOTEQUAL, 0x0, 0xff);
+		glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+
+		DrawShadowPlane(shadow);
+
+		//glEnable(GL_POLYGON_OFFSET_FILL);
+		glDisable(GL_STENCIL_TEST);
+		
 	}
-
-	glDisable(GL_POLYGON_OFFSET_FILL);
-	glDisable(GL_CULL_FACE);
-	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-	glDepthMask(GL_TRUE);
-
-	glStencilFunc(GL_NOTEQUAL, 0x0, 0xff);
-	glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-
-	DrawShadowPlane(shadow);
-
-	glDisable(GL_STENCIL_TEST);
-
-
 }
 
 #endif //USE_GLFW_GRAPHICS

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-06-16  16:13:21 (last modified)
+* @date         2022-06-23  16:16:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -139,6 +139,9 @@ public: // AUTO:
 
     //! AUTO:  compute spring damper force helper function
     void ComputeSpringForce(const MarkerDataStructure& markerData, Index itemIndex, Real& relPos, Real& relVel, Real& force) const;
+
+    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
+    void EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real& relPos, Real& relVel) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

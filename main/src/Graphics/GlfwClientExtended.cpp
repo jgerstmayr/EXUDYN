@@ -254,6 +254,7 @@ void GlfwRenderer::SetGLLights()
 	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE); //do not use this!
 
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, visSettings->openGL.lightModelTwoSide);
+	//glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, true);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, visSettings->openGL.lightModelAmbient.GetDataPointer());
 	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, visSettings->openGL.lightModelLocalViewer);
 

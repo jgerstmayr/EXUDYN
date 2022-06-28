@@ -124,8 +124,8 @@ void case_template_purevector_test(lest::env & lest_env)
         SECTION("Normalize")
         {
             v1.Normalize();
-            EXPECT(v1[0] == 3. / sqrt(25.));
-            EXPECT(v1[1] == 4. / sqrt(25.));
+            EXPECT(v1[0] == 3. * (1. / sqrt(25.));
+            EXPECT(v1[1] == 4. * (1. / sqrt(25.));
         }
         SECTION("CopyFrom")
         {

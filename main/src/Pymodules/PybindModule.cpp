@@ -417,6 +417,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 	//m.def("SeeMatrix", &SeeMatrix, "SeeMatrix");
 #ifndef EXUDYN_RELEASE
 	m.def("Test", &PyTest, "internal test, do not use");
+	//m.def("GetTestSD", &GetTestSD, "test user function");
 #endif
 	//m.def("SetTestFunction2", &PySetTestFunction2, "Set the test function");
 	//m.def("EvaluateTestFunction", &PyEvaluateTestFunction, "Evaluate test function");

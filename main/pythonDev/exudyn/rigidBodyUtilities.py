@@ -741,16 +741,22 @@ def Inertia6D2InertiaTensor(inertia6D):
 #i1 = i0.Rotated(RotationMatrixX(np.pi/2))
 #i2 = i1.Translated([1,0,0])
 class RigidBodyInertia:
-    #**classFunction: initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor and center of mass com
+    #**classFunction: initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
+    #**input:
+    #  mass: mass of rigid body (dimensions need to be consistent, should be in SI-units)
+    #  inertiaTensor: tensor given w.r.t.\ reference point, NOT w.r.t.\ center of mass!
+    #  com: center of mass relative to reference point, in same coordinate system as inertiaTensor
     def __init__(self, mass=0, inertiaTensor=np.zeros([3,3]), com=np.zeros(3)):
         
-        if inertiaTensor.shape != (3,3): #shape is a tuple
-            raise ValueError('RigidBodyInertia: must have dimensions (3,3), but received'+str(inertiaTensor.shape))
+        if np.array(inertiaTensor).shape != (3,3): #shape is a tuple
+            raise ValueError('RigidBodyInertia: inertiaTensor must have shape (3,3), but received '+str(inertiaTensor.shape))
+        if np.array(com).shape != (3,): #shape is a tuple
+            raise ValueError('RigidBodyInertia: com must have 3 components, but received '+str(np.array(inertiaTensorCOM).shape))
         self.mass = mass
         self.inertiaTensor = np.array(inertiaTensor)
         self.com = np.array(com)
         
-    #**classFunction: add (+) operator allows adding another inertia information with SAME local coordinate system
+    #**classFunction: add (+) operator allows adding another inertia information with SAME local coordinate system and reference point!
     #only inertias with same center of rotation can be added!
     #**example: 
     #J = InertiaSphere(2,0.1) + InertiaRodX(1,2)
@@ -759,25 +765,27 @@ class RigidBodyInertia:
         return RigidBodyInertia(mass=sumMass,
                                 inertiaTensor = self.inertiaTensor + otherBodyInertia.inertiaTensor,
                                 com=1./sumMass*(self.mass*self.com + otherBodyInertia.mass*otherBodyInertia.com))
-        
-    #**classFunction: returns a RigidBodyInertia with center of mass com shifted by vec; $\ra$ transforms the returned inertiaTensor to the new center of rotation
-    def Translated(self, vec):
-        #transform inertia to com=[0,0,0]
-        inertia = self.inertiaTensor - self.mass*np.dot(Skew(self.com).transpose(),Skew(self.com))
-        try:
-            newCOM = self.com + vec
-        except:
-            raise ValueError("ERROR in RigidBodyInertia.Translated(vec): vec must be a vector with 3 components")
-        inertia += self.mass*np.dot(Skew(newCOM).transpose(),Skew(newCOM))
-        return RigidBodyInertia(mass=self.mass, 
-                                inertiaTensor=inertia,
-                                com=newCOM)
 
+    #**classFunction: set RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t.\ com) and center of mass com
+    #**input:
+    #  mass: mass of rigid body (dimensions need to be consistent, should be in SI-units)
+    #  inertiaTensorCOM: tensor given w.r.t.\ reference point, NOT w.r.t.\ center of mass!
+    #  com: center of mass relative to reference point, in same coordinate system as inertiaTensor
+    def SetWithCOMinertia(self, mass, inertiaTensorCOM, com):
+        if np.array(inertiaTensorCOM).shape != (3,3): #shape is a tuple
+            raise ValueError('RigidBodyInertia: inertiaTensorCOMmust have shape (3,3), but received '+str(np.array(inertiaTensorCOM).shape))
+        if np.array(com).shape != (3,): #shape is a tuple
+            raise ValueError('RigidBodyInertia: com must have 3 components, but received '+str(np.array(inertiaTensorCOM).shape))
+        self.mass = mass
+        self.com = np.array(com)
+        self.inertiaTensor = np.array(inertiaTensorCOM) + self.mass*np.dot(Skew(self.com).transpose(),Skew(self.com))
+        
+        
     #**classFunction: returns 3x3 inertia tensor with respect to chosen reference point (not necessarily COM)
     def Inertia(self):
         return self.inertiaTensor
 
-    #**classFunction: returns 3x3 inertia tensor with respect to chosen reference point (not necessarily COM)
+    #**classFunction: returns 3x3 inertia tensor with respect to COM
     def InertiaCOM(self):
         return self.inertiaTensor - self.mass*np.dot(Skew(self.com).transpose(),Skew(self.com))
 
@@ -788,6 +796,19 @@ class RigidBodyInertia:
     #**classFunction: returns mass
     def Mass(self):
         return self.mass
+
+    #**classFunction: returns a RigidBodyInertia with center of mass com shifted by vec; $\ra$ transforms the returned inertiaTensor to the new center of rotation
+    def Translated(self, vec):
+        #transform inertia to com=[0,0,0]
+        inertiaCOM = self.inertiaTensor - self.mass*np.dot(Skew(self.com).transpose(),Skew(self.com))
+        try:
+            newCOM = self.com + vec
+        except:
+            raise ValueError("ERROR in RigidBodyInertia.Translated(vec): vec must be a vector with 3 components")
+        inertiaCOM += self.mass*np.dot(Skew(newCOM).transpose(),Skew(newCOM))
+        return RigidBodyInertia(mass=self.mass, 
+                                inertiaTensor=inertiaCOM,
+                                com=newCOM)
 
     #**classFunction: returns a RigidBodyInertia rotated by 3x3 rotation matrix rot, such that for a given J, the new inertia tensor reads Jnew = rot*J*rot.T
     #**notes: only allowed if COM=0 !
@@ -803,16 +824,33 @@ class RigidBodyInertia:
                                 inertiaTensor=inertia,
                                 com=self.com)
 
+    #**classFunction: return rigid body inertia transformed by homogeneous transformation HT
+    def Transformed(self, HT):
+        A = HT2rotationMatrix(HT)
+        v = HT2translation(HT)
+        
+        inertiaCOM = self.inertiaTensor - self.mass*np.dot(Skew(self.com).transpose(),Skew(self.com))
+        inertiaCOM = A @ inertiaCOM @ A.T #tested with general rigid body and shifted reference point
+
+        newCOM = A @ self.com + v
+
+        inertiaCOM += self.mass*np.dot(Skew(newCOM).transpose(),Skew(newCOM))
+        return RigidBodyInertia(mass=self.mass, 
+                                inertiaTensor=inertiaCOM,
+                                com=newCOM)
+
     #**classFunction: get vector with 6 inertia components (Jxx, Jyy, Jzz, Jyz, Jxz, Jxy) as needed in ObjectRigidBody
     def GetInertia6D(self):
         return InertiaTensor2Inertia6D(self.inertiaTensor)
         # J = self.inertiaTensor
         # return [J[0][0], J[1][1], J[2][2],  J[1][2], J[0][2], J[0][1]]
 
+
     def __str__(self):
         s = 'mass = ' + str(self.mass)
         s += '\nCOM = ' + str(self.com)
         s += '\ninertiaTensorAtOrigin = \n' + str(self.inertiaTensor)
+        s += '\ninertiaTensorAtCOM = \n' + str(self.InertiaCOM())
         return s
     def __repr__(self):
         return str(self)
