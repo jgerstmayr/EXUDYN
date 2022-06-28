@@ -585,7 +585,7 @@ public:
 	{
 		T normInv = GetL2Norm();
 		CHECKandTHROW(normInv != 0., "ConstSizeVectorBase::Normalized() called with GetL2Norm() == 0.");
-		normInv = 1 / normInv;
+		normInv = (T)1 / normInv;
 		for (auto &item : *this) { item *= normInv; }
 	}
 

@@ -562,7 +562,7 @@ public:
     {
         T norm = GetL2Norm();
 		CHECKandTHROW(norm != 0., "VectorBase::Normalized() called with GetL2Norm() == 0.");
-		norm = 1 / norm; //if T=int, this would not work but anyway outcome would be int ...!
+		norm = (T)1 / norm; //if T=int, this would not work but anyway outcome would be int ...!
 
         for (auto &item : *this) { item *= norm; }
  	}
