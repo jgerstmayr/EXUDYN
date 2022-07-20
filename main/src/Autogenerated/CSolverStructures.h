@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,6 +39,7 @@ public: // AUTO:
   Real ODE1RHS;                                   //!< AUTO: time for residual evaluation of \hac{ODE1} right-hand-side
   Real ODE2RHS;                                   //!< AUTO: time for residual evaluation of \hac{ODE2} right-hand-side
   Real overhead;                                  //!< AUTO: overhead, such as initialization, copying and some matrix-vector multiplication
+  Real postNewton;                                //!< AUTO: discontinuous iteration / PostNewtonStep
   Real python;                                    //!< AUTO: time spent for Python functions
   Real reactionForces;                            //!< AUTO: CqT * lambda
   Real total;                                     //!< AUTO: total time measured between start and end of computation (static/dynamics)
@@ -65,6 +66,7 @@ public: // AUTO:
     ODE1RHS = 0.;
     ODE2RHS = 0.;
     overhead = 0.;
+    postNewton = 0.;
     python = 0.;
     reactionForces = 0.;
     total = 0.;
@@ -111,6 +113,7 @@ public: // AUTO:
     os << "  ODE1RHS = " << ODE1RHS << "\n";
     os << "  ODE2RHS = " << ODE2RHS << "\n";
     os << "  overhead = " << overhead << "\n";
+    os << "  postNewton = " << postNewton << "\n";
     os << "  python = " << python << "\n";
     os << "  reactionForces = " << reactionForces << "\n";
     os << "  total = " << total << "\n";
@@ -136,7 +139,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -154,22 +157,22 @@ public: // AUTO:
 class SolverLocalData // AUTO: 
 {
 public: // AUTO: 
-  ResizableVector aAlgorithmic;                   //!< AUTO: additional term needed for generalized alpha (current state)
+  ResizableVectorParallel aAlgorithmic;           //!< AUTO: additional term needed for generalized alpha (current state)
   Index nAE;                                      //!< AUTO: number of algebraic coordinates
   Index nData;                                    //!< AUTO: number of data coordinates
-  ResizableVector newtonSolution;                 //!< AUTO: Newton decrement (computed from residual and jacobian)
+  ResizableVectorParallel newtonSolution;         //!< AUTO: Newton decrement (computed from residual and jacobian)
   Index nODE1;                                    //!< AUTO: number of first order ordinary diff. eq. coordinates
   Index nODE2;                                    //!< AUTO: number of second order ordinary diff. eq. coordinates
   Index nSys;                                     //!< AUTO: number of system (unknown) coordinates = nODE2+nODE1+nAE
   Index startAE;                                  //!< AUTO: start of algebraic coordinates, but set to zero if nAE==0
-  ResizableVector startOfStepStateAAlgorithmic;   //!< AUTO: additional term needed for generalized alpha (startOfStep state)
-  ResizableVector systemResidual;                 //!< AUTO: system residual vector (vectors will be linked to this vector!)
-  ResizableVector temp2ODE2;                      //!< AUTO: second temporary vector for \hac{ODE2} quantities; use in static computation
-  ResizableVector tempODE1F0;                     //!< AUTO: temporary vector for \hac{ODE1} Jacobian
-  ResizableVector tempODE1F1;                     //!< AUTO: temporary vector for \hac{ODE1} Jacobian
-  ResizableVector tempODE2;                       //!< AUTO: temporary vector for \hac{ODE2} quantities; use in initial accelerations and during Newton
-  ResizableVector tempODE2F0;                     //!< AUTO: temporary vector for \hac{ODE2} Jacobian
-  ResizableVector tempODE2F1;                     //!< AUTO: temporary vector for \hac{ODE2} Jacobian
+  ResizableVectorParallel startOfStepStateAAlgorithmic;//!< AUTO: additional term needed for generalized alpha (startOfStep state)
+  ResizableVectorParallel systemResidual;         //!< AUTO: system residual vector (vectors will be linked to this vector!)
+  ResizableVectorParallel temp2ODE2;              //!< AUTO: second temporary vector for \hac{ODE2} quantities; use in static computation
+  ResizableVectorParallel tempODE1F0;             //!< AUTO: temporary vector for \hac{ODE1} Jacobian
+  ResizableVectorParallel tempODE1F1;             //!< AUTO: temporary vector for \hac{ODE1} Jacobian
+  ResizableVectorParallel tempODE2;               //!< AUTO: temporary vector for \hac{ODE2} quantities; use in initial accelerations and during Newton
+  ResizableVectorParallel tempODE2F0;             //!< AUTO: temporary vector for \hac{ODE2} Jacobian
+  ResizableVectorParallel tempODE2F1;             //!< AUTO: temporary vector for \hac{ODE2} Jacobian
   GeneralMatrix* jacobianAE;                      //!< AUTO: link to dense or sparse algebraic equations jacobian
   GeneralMatrix* systemJacobian;                  //!< AUTO: link to dense or sparse system jacobian
   GeneralMatrix* systemMassMatrix;                //!< AUTO: link to dense or sparse system mass matrix; in explicit solver, after a step, this will contain the factorized mass matrix
@@ -199,7 +202,7 @@ public: // AUTO:
     startAE = 0;
     systemJacobian = nullptr;
     systemMassMatrix = nullptr;
-    SetLinearSolverType(LinearSolverType::EXUdense); //for safety, data is linked initially
+    SetLinearSolverType(LinearSolverType::EXUdense, false); //for safety, data is linked initially
   };
 
   // AUTO: access functions
@@ -211,7 +214,7 @@ public: // AUTO:
   }
 
   //! AUTO: set linear solver type and matrix version: links system matrices to according dense/sparse versions
-  void SetLinearSolverType(LinearSolverType linearSolverType);
+  void SetLinearSolverType(LinearSolverType linearSolverType, bool reuseAnalyzedPattern);
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -260,7 +263,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -374,7 +377,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -420,7 +423,7 @@ public: // AUTO:
     lastResidual = 0.;
     linearSolverCausingRow = -1;
     linearSolverFailed = false;
-    massMatrixNotInvertible = true;
+    massMatrixNotInvertible = false;
     newtonConverged = false;
     newtonSolutionDiverged = false;
     residual = 0.;
@@ -470,7 +473,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -498,6 +501,8 @@ public: // AUTO:
   Real lastSensorsWritten;                        //!< AUTO: simulation time when last sensors have been written
   Real lastSolutionWritten;                       //!< AUTO: simulation time when last solution has been written
   Index lastVerboseStepIndex;                     //!< AUTO: step index when last time written to console (or file)
+  Index multiThreadingMode;                       //!< AUTO: multithreading mode that has been used: 0=None (serial), 1=NGsolve taskmanager, 2=MicroThreading (Exudyn)
+  Index numberOfThreadsUsed;                      //!< AUTO: number of threads that have been used in simulation
   ResizableVector sensorValuesTemp;               //!< AUTO: temporary vector for per sensor values (overwritten for every sensor; usually contains last sensor values)
   ResizableVector sensorValuesTemp2;              //!< AUTO: additional temporary vector for per sensor values (overwritten for every sensor; usually contains time+last sensor values)
   Index stepInformation;                          //!< AUTO: this is a copy of the solvers stepInformation used for console output
@@ -521,6 +526,8 @@ public: // AUTO:
     lastSensorsWritten = 0.;
     lastSolutionWritten = 0.;
     lastVerboseStepIndex = 0;
+    multiThreadingMode = 0;
+    numberOfThreadsUsed = 0;
     stepInformation = 0;
     verboseMode = 0;
     verboseModeFile = 0;
@@ -548,6 +555,8 @@ public: // AUTO:
     os << "  lastSensorsWritten = " << lastSensorsWritten << "\n";
     os << "  lastSolutionWritten = " << lastSolutionWritten << "\n";
     os << "  lastVerboseStepIndex = " << lastVerboseStepIndex << "\n";
+    os << "  multiThreadingMode = " << multiThreadingMode << "\n";
+    os << "  numberOfThreadsUsed = " << numberOfThreadsUsed << "\n";
     os << "  sensorValuesTemp = " << sensorValuesTemp << "\n";
     os << "  sensorValuesTemp2 = " << sensorValuesTemp2 << "\n";
     os << "  stepInformation = " << stepInformation << "\n";
@@ -573,7 +582,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

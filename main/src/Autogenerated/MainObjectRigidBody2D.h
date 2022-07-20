@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:58 (last modified)
+* @date         2022-07-04  22:03:14 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -120,12 +120,12 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "VgraphicsDataUserFunction")) { if (EPyUtils::CheckForValidFunction(d["VgraphicsDataUserFunction"])) 
             { visualizationObjectRigidBody2D->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&, Index)>>((py::function)d["VgraphicsDataUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
             else {visualizationObjectRigidBody2D->GetGraphicsDataUserFunction() = 0;  /*AUTO: otherwise assign with zero!*/ }} 
-        if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsData(d, "VgraphicsData", visualizationObjectRigidBody2D->GetGraphicsData()); /*! AUTO: convert dict to BodyGraphicsData*/} 
+        if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsDataList(d, "VgraphicsData", visualizationObjectRigidBody2D->GetGraphicsData()); /*! AUTO: convert dict to BodyGraphicsData*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
     //! AUTO:  dictionary read access
-    virtual py::dict GetDictionary() const override
+    virtual py::dict GetDictionary(bool addGraphicsData=false) const override
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
@@ -139,7 +139,7 @@ public: // AUTO:
         else
             {d["VgraphicsDataUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
-        d["VgraphicsData"] = PyGetBodyGraphicsDataDictionary(visualizationObjectRigidBody2D->GetGraphicsData()); //! AUTO: generate dictionary with special function
+        d["VgraphicsData"] = PyGetBodyGraphicsDataList(visualizationObjectRigidBody2D->GetGraphicsData(), addGraphicsData); //! AUTO: generate dictionary with special function
         return d; 
     }
 

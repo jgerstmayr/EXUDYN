@@ -97,7 +97,7 @@ bool CheckPathAndCreateDirectories(const STDstring& pathAndFileName)
 	if (pos != std::string::npos)
 	{
 		STDstring pathStr = pathAndFileName.substr(0, pos);
-		returnValue = filesystemNamespace::create_directories(pathStr);
+		returnValue = !filesystemNamespace::create_directories(pathStr);
 	}
 #endif
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-16  11:24:35 (last modified)
+* @date         2022-07-04  22:03:13 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,12 +113,12 @@ public: // AUTO:
             { visualizationObjectGround->GetGraphicsDataUserFunction() = py::cast<std::function<py::object(const MainSystem&, Index)>>((py::function)d["VgraphicsDataUserFunction"]); /* AUTO:  read out dictionary and cast to C++ type*/}
             else {visualizationObjectGround->GetGraphicsDataUserFunction() = 0;  /*AUTO: otherwise assign with zero!*/ }} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectGround->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsData(d, "VgraphicsData", visualizationObjectGround->GetGraphicsData()); /*! AUTO: convert dict to BodyGraphicsData*/} 
+        if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsDataList(d, "VgraphicsData", visualizationObjectGround->GetGraphicsData()); /*! AUTO: convert dict to BodyGraphicsData*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
     //! AUTO:  dictionary read access
-    virtual py::dict GetDictionary() const override
+    virtual py::dict GetDictionary(bool addGraphicsData=false) const override
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
@@ -131,7 +131,7 @@ public: // AUTO:
             {d["VgraphicsDataUserFunction"] = 0;}
  //! AUTO: cast variables into python (not needed for standard types) 
         d["Vcolor"] = (std::vector<float>)visualizationObjectGround->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["VgraphicsData"] = PyGetBodyGraphicsDataDictionary(visualizationObjectGround->GetGraphicsData()); //! AUTO: generate dictionary with special function
+        d["VgraphicsData"] = PyGetBodyGraphicsDataList(visualizationObjectGround->GetGraphicsData(), addGraphicsData); //! AUTO: generate dictionary with special function
         return d; 
     }
 

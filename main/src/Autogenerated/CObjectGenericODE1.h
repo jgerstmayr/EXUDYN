@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-06-15  15:30:28 (last modified)
+* @date         2022-07-04  11:58:23 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -128,7 +128,7 @@ public: // AUTO:
     virtual void GetAccessFunction(AccessFunctionType accessType, Matrix& value) const override;
 
     //! AUTO:  provide according output variable in 'value'
-    virtual void GetOutputVariable(OutputVariableType variableType, Vector& value) const override;
+    virtual void GetOutputVariable(OutputVariableType variableType, Vector& value, ConfigurationType configuration, Index objectNumber) const override;
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override

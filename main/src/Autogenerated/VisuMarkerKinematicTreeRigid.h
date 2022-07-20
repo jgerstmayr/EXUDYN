@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-06-05  15:30:50 (last modified)
+* @date         2022-07-03  20:15:16 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,10 +35,7 @@ public: // AUTO:
 
     // AUTO: access functions
     //! AUTO:  Update visualizationSystem -> graphicsData for item; index shows item Number in CData
-    virtual void UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber) override
-    {
-        
-    }
+    virtual void UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber) override;
 
 };
 

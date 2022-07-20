@@ -76,7 +76,10 @@ bool CObjectContactFrictionCircleCable2D::IsContactActive() const
 	}
 	return false;
 }
-#define CObjectContactFrictionCircleCable2DuseL
+
+#define CObjectContactFrictionCircleCable2DuseL //for sticking position, uses reference length instead of distance of points (did not show big differences in tests)
+#define CObjectContactFrictionCircleCable2DoffsetALEfact -1. //-1. is correct, but does not propagate strains
+
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //  MODEL: f
 void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
@@ -137,6 +140,7 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 					if (length != 0.) { pointNormals[i] *= 1. / length; }
 				}
 			}
+			Real offsetALE = CObjectContactFrictionCircleCable2DoffsetALEfact*markerData1.GetHelper2(); //only in case of ALE, but always exists; negative, because adds up on wheel side!
 
 			for (Index i = 0; i < parameters.numberOfContactSegments; i++)
 			{
@@ -146,8 +150,13 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 					//velocity terms:
 					Vector2D v0({ markerData1.vectorValue_t[i * 2], markerData1.vectorValue_t[i * 2 + 1] });	 //markerdata.value stores the x/y velocities of the contact points
 					Vector2D v1({ markerData1.vectorValue_t[i * 2 + 2], markerData1.vectorValue_t[i * 2 + 1 + 2] }); //markerdata.value stores the x/y velocities of the contact points
-
 					Vector2D cableContactVel = (1. - referenceCoordinatePerSegment[i])*v0 + referenceCoordinatePerSegment[i] * v1; //this is the velocity at the point of shortest distance (interpolated from the contact segment)
+
+					//Vector2D rx0({ markerData1.GetHelperMatrix()(i,0), markerData1.GetHelperMatrix()(i,1) }); //stored per contact point
+					//Vector2D rx1({ markerData1.GetHelperMatrix()(i + 1,0), markerData1.GetHelperMatrix()(i + 1,1) });
+					//Vector2D cableSlope = (1. - referenceCoordinatePerSegment[i])*rx0 + referenceCoordinatePerSegment[i] * rx1; //this is the velocity at the point of shortest distance (interpolated from the contact segment)
+					//Real cableSlopeNorm = 1.;// cableSlope.GetL2Norm();
+
 					Vector2D n({ xDirectionGap[i], yDirectionGap[i] }); //contact normal vector;  already normalized vector!
 					Vector2D t({ -n[1], n[0] }); //contact tangent vector
 
@@ -187,7 +196,7 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 						Real segmentLength = (p1 - p0).GetL2Norm();
 #endif
 						
-						Real segmentPos = referenceCoordinatePerSegment[i] * segmentLength;
+						Real segmentPos = referenceCoordinatePerSegment[i] * segmentLength+offsetALE; //offsetALE is not fully correct; it cannot transport strain distributions over the circle
 						Real sign = 1.; //depends whether circle tangent has same direction as cable tangent
 						if (t*(p1 - p0) > 0.)
 						{
@@ -272,10 +281,10 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 
 				forceSum *= -1; //negative force on marker0
 				torqueSum *= -1; //negative force on marker0
-				ConstSizeVector<CObjectContactFrictionCircleCable2DmaxObject0Coordinates> temp(ldv0.NumberOfItems()); //possible crash, if rigid body has more than 12 DOF --> check above
+				//ConstSizeVector<CObjectContactFrictionCircleCable2DmaxObject0Coordinates> temp(ldv0.NumberOfItems()); //possible crash, if rigid body has more than 12 DOF --> check above
 				EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).positionJacobian, forceSum, ldv0);
-				EXUmath::MultMatrixTransposedVectorTemplate(markerData.GetMarkerData(0).rotationJacobian, torqueSum, temp);
-				ldv0 += temp;
+				EXUmath::MultMatrixTransposedVectorAddTemplate(markerData.GetMarkerData(0).rotationJacobian, torqueSum, ldv0);
+				//ldv0 += temp;
 			}
 		}
 	}
@@ -307,6 +316,7 @@ Real CObjectContactFrictionCircleCable2D::PostNewtonStep(const MarkerDataStructu
 		ConstSizeVector<CObjectContactFrictionCircleCable2DmaxNumberOfSegments> yDirectionGap;
 		
 		ComputeGap(markerDataCurrent, currentGapPerSegment, referenceCoordinatePerSegment, xDirectionGap, yDirectionGap);
+		Real offsetALE = CObjectContactFrictionCircleCable2DoffsetALEfact*markerData1.GetHelper2(); //only in case of ALE, but always exists
 
 		for (Index i = 0; i < parameters.numberOfContactSegments; i++)
 		{
@@ -323,8 +333,13 @@ Real CObjectContactFrictionCircleCable2D::PostNewtonStep(const MarkerDataStructu
 				//velocity terms:
 				Vector2D v0({ markerData1.vectorValue_t[i * 2], markerData1.vectorValue_t[i * 2 + 1] });	 //markerdata.value stores the x/y velocities of the contact points
 				Vector2D v1({ markerData1.vectorValue_t[i * 2 + 2], markerData1.vectorValue_t[i * 2 + 1 + 2] }); //markerdata.value stores the x/y velocities of the contact points
-
 				Vector2D cableContactVel = (1. - referenceCoordinatePerSegment[i])*v0 + referenceCoordinatePerSegment[i] * v1; //this is the velocity at the point of shortest distance (interpolated from the contact segment)
+
+				//Vector2D rx0({ markerData1.GetHelperMatrix()(i,0), markerData1.GetHelperMatrix()(i,1) }); //stored per contact point
+				//Vector2D rx1({ markerData1.GetHelperMatrix()(i + 1,0), markerData1.GetHelperMatrix()(i + 1,1) });
+				//Vector2D cableSlope = (1. - referenceCoordinatePerSegment[i])*rx0 + referenceCoordinatePerSegment[i] * rx1; //this is the velocity at the point of shortest distance (interpolated from the contact segment)
+				//Real cableSlopeNorm = 1.;// cableSlope.GetL2Norm();
+
 				Vector2D n({ xDirectionGap[i], yDirectionGap[i] }); //contact normal vector;  already normalized vector!
 				Vector2D t({ -n[1], n[0] }); //contact tangent vector
 
@@ -357,7 +372,7 @@ Real CObjectContactFrictionCircleCable2D::PostNewtonStep(const MarkerDataStructu
 #else
 					Real segmentLength = (p1 - p0).GetL2Norm();
 #endif
-					Real segmentPos = referenceCoordinatePerSegment[i] * segmentLength;
+					Real segmentPos = referenceCoordinatePerSegment[i] * segmentLength + offsetALE; //offsetALE is not fully correct; it cannot transport strain distributions over the circle
 					Real sign = 1.; //depends whether circle tangent has same direction as cable tangent
 					if (t*(p1 - p0) > 0.)
 					{
@@ -475,6 +490,7 @@ void CObjectContactFrictionCircleCable2D::GetOutputVariableConnector(OutputVaria
 	{
 		ComputeGap(markerData, gapPerSegment, referenceCoordinatePerSegment, xDirectionGap, yDirectionGap);
 
+		Real offsetALE = CObjectContactFrictionCircleCable2DoffsetALEfact*markerData1.GetHelper2(); //only in case of ALE, but always exists; negative, because adds up on wheel side!
 
 		for (Index i = 0; i < parameters.numberOfContactSegments; i++)
 		{
@@ -484,8 +500,13 @@ void CObjectContactFrictionCircleCable2D::GetOutputVariableConnector(OutputVaria
 				//velocity terms:
 				Vector2D v0({ markerData1.vectorValue_t[i * 2], markerData1.vectorValue_t[i * 2 + 1] });	 //markerdata.value stores the x/y velocities of the contact points
 				Vector2D v1({ markerData1.vectorValue_t[i * 2 + 2], markerData1.vectorValue_t[i * 2 + 1 + 2] }); //markerdata.value stores the x/y velocities of the contact points
-
 				Vector2D cableContactVel = (1. - referenceCoordinatePerSegment[i])*v0 + referenceCoordinatePerSegment[i] * v1; //this is the velocity at the point of shortest distance (interpolated from the contact segment)
+
+				//Vector2D rx0({ markerData1.GetHelperMatrix()(i,0), markerData1.GetHelperMatrix()(i,1) }); //stored per contact point
+				//Vector2D rx1({ markerData1.GetHelperMatrix()(i+1,0), markerData1.GetHelperMatrix()(i+1,1) });
+				//Vector2D cableSlope = (1. - referenceCoordinatePerSegment[i])*rx0 + referenceCoordinatePerSegment[i] * rx1; //this is the velocity at the point of shortest distance (interpolated from the contact segment)
+				//Real cableSlopeNorm = 1.;// cableSlope.GetL2Norm();
+
 				Vector2D n({ xDirectionGap[i], yDirectionGap[i] }); //contact normal vector;  already normalized vector!
 				Vector2D t({ -n[1], n[0] }); //contact tangent vector
 
@@ -522,7 +543,7 @@ void CObjectContactFrictionCircleCable2D::GetOutputVariableConnector(OutputVaria
 #else
 					Real segmentLength = (p1 - p0).GetL2Norm();
 #endif
-					Real segmentPos = referenceCoordinatePerSegment[i] * segmentLength;
+					Real segmentPos = referenceCoordinatePerSegment[i] * segmentLength + offsetALE; //offsetALE is not fully correct; it cannot transport strain distributions over the circle
 					Real sign = 1.; //depends whether circle tangent has same direction as cable tangent
 					if (t*(p1 - p0) > 0.)
 					{

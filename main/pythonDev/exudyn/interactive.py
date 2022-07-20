@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details:  Utilities for interactive simulation and results monitoring
+# Details:  Utilities for interactive simulation and results monitoring; NOTE: does not work on MacOS!
 #
 # Author:   Johannes Gerstmayr
 # Date:     2021-01-17 (created)
@@ -13,7 +13,7 @@
 
 import numpy as np #LoadSolutionFile
 from math import sin, pi #for animation
-import time        
+#import time        
 import tkinter
 import tkinter.font as tkFont
 import copy		   #copy numpy objects
@@ -92,13 +92,15 @@ class InteractiveDialog:
     #  runOnStart: immediately activate 'Run' button on start
     #  addLabelStringVariables: True: adds a list labelStringVariables containing the (modifiable) list of string variables for label (text) widgets
     #  addSliderVariables: True: adds a list sliderVariables containing the (modifiable) list of variables for slider (=tkinter scale) widgets; this is not necessarily needed for changing slider values, as they can also be modified with dialog.widgets[..].set(...) method
+    #  checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
     #**notes: detailed description of dialogItems and plots list/dictionary is given in commented the example below
     def __init__(self, mbs, simulationSettings, simulationFunction, 
                  dialogItems, plots = [], period = 0.04, 
                  realtimeFactor = 1, userStartSimulation=False,
                  title='',  showTime=False, fontSize = 12,
                  doTimeIntegration = True, runOnStart = False, 
-                 addLabelStringVariables=False, addSliderVariables=False):
+                 addLabelStringVariables=False, addSliderVariables=False, 
+                 checkRenderEngineStopFlag = True):
         #store init arguments
         self.mbs = mbs
         self.simulationFunction = simulationFunction
@@ -114,6 +116,12 @@ class InteractiveDialog:
         self.userStartSimulation = userStartSimulation
         self.showTime = showTime
         self.fontSize = fontSize
+        
+        self.checkRenderStop = checkRenderEngineStopFlag
+
+        if self.mbs.GetRenderEngineStopFlag() and self.checkRenderStop: #avoid immediate quit
+            self.mbs.SetRenderEngineStopFlag(False)
+
 
         #create tkinter instance
         root = self.root = tkinter.Tk()
@@ -352,6 +360,9 @@ class InteractiveDialog:
             self.ProcessWidgetStates()
             exudyn.DoRendererIdleTasks() #for MacOS, but also to open visualization dialog, etc.
             #print(".")
+            if self.mbs.GetRenderEngineStopFlag() and self.checkRenderStop:
+                self.OnQuit()
+                
             t = self.RunSimulationPeriod()
             if self.showTime:
                 self.currentTime.set('t = '+str(round(t,6)))
@@ -682,6 +693,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #  timeout: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second
 #  runOnStart: immediately go into 'Run' mode
 #  runMode: 0=continuous run, 1=one cycle, 2=static (use slider/mouse to vary time steps)
+#  checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
 #**output: updates current visualization state, renders the scene continuously (after pressing button 'Run')
 #**example:
 ##HERE, mbs must contain same model as solution stored in coordinatesSolution.txt
@@ -693,7 +705,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #sol = LoadSolutionFile('coordinatesSolution.txt') #load solution: adjust to your file name
 #SolutionViewer(mbs, sol)
 
-def SolutionViewer(mainSystem, solution=[], rowIncrement = 1, timeout=0.04, runOnStart = True, runMode=2):
+def SolutionViewer(mainSystem, solution=[], rowIncrement = 1, timeout=0.04, runOnStart = True, runMode=2, checkRenderEngineStopFlag=True):
     from exudyn.utilities import SetSolutionState, LoadSolutionFile
     
     mbs = mainSystem
@@ -820,7 +832,7 @@ def SolutionViewer(mainSystem, solution=[], rowIncrement = 1, timeout=0.04, runO
                       dialogItems=dialogItems,
                       title='Solution Viewer',
                       doTimeIntegration=False, period=timeout,
-                      showTime=True, runOnStart=runOnStart
+                      showTime=True, runOnStart=runOnStart, checkRenderEngineStopFlag=checkRenderEngineStopFlag
                       )
 
     

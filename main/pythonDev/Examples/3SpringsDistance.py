@@ -3,6 +3,7 @@
 #
 # Details:  File to test ConnectorDistance and ConnectorSpringDamper with point mass
 #           Remark: check, why generalized alpha does work so badly for this example
+#           NOTE: this is a very old example, still using dictionaries! check other examples, which use itemInterface!
 #
 # Author:   Johannes Gerstmayr
 # Date:     2019-07-15

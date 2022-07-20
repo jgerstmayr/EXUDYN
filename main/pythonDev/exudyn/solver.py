@@ -33,8 +33,6 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
     causingRow = solver.conv.linearSolverCausingRow
     newtonFailed = solver.conv.stepReductionFailed or solver.conv.newtonSolutionDiverged
 
-    
-
     if showHints:
         s += '  POSSIBLE REASONS for solver abort:\n'
         if linearSolverFailed:
@@ -96,7 +94,6 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
             s+="algebraic variable (Lagrange multiplier)"
         s+='\n'
 
-        import numpy as np
         if showCausingObjects:
             for objectIndex in range(mbs.systemData.NumberOfObjects()):
                 ltg = mbs.systemData.GetObjectLTGODE2(objectIndex)
@@ -117,6 +114,8 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
                 oDict = mbs.GetObject(i)
                 s += "    object "+str(i)+", name='"+oDict['name']+"', type="+ str(oDict['objectType']) +"\n"
 
+    if massMatrixNotInvertible:
+        s+='The mass matrix is not to invertable; check that every node/coordinate has appropriate mass!'
 
     return s
 
@@ -269,6 +268,7 @@ def SolveDynamic(mbs,
             solverType == exudyn.DynamicSolverType.DOPRI5
             ):
         simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType = solverType
+        #print('solverType=', simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType)
         dynamicSolver = exudyn.MainSolverExplicit()
         if storeSolver:
             mbs.sys['dynamicSolver'] = dynamicSolver #copy solver structure to sys variable
@@ -304,7 +304,7 @@ def SolveDynamic(mbs,
 def ComputeLinearizedSystem(mbs, 
                             simulationSettings = exudyn.SimulationSettings(),
                             useSparseSolver = False):
-    import numpy as np
+    #import numpy as np
     #use static solver, as it does not include factors from time integration (and no velocity derivatives) in the jacobian
     staticSolver = exudyn.MainSolverStatic()
 

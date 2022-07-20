@@ -1,9 +1,11 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details:  Lie group integration methods (experimental!)
+# Details:  Lie group integration methods in Python; this is available for tests and research; 
+#           these methods are integrated into the C++ kernel as a larger set of explicit Lie group methods 
+#           and automatically used, if Lie group Nodes are used
 #               
-# Author:   Stefan Holzinger
+# Author:   Stefan Holzinger, Johannes Gerstmayr
 # Date:     2020-09-11
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
@@ -12,8 +14,8 @@
 
 
 import exudyn as exu
-from exudyn.lieGroupBasics import *
-
+import exudyn.lieGroupBasics as elg
+import numpy as np
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -25,35 +27,35 @@ from exudyn.lieGroupBasics import *
 def ComputeStepWithRK1(ODE2RHS, v0, w0, h):
     w     = w0 + h*ODE2RHS(v0, w0)
     Omega = h*w
-    v     = CompositionRuleForRotationVectors(v0, Omega)
+    v     = elg.CompositionRuleForRotationVectors(v0, Omega)
     return [v, w]
 
 def ComputeStepWithRK1FromAcceleration(v0_t, v0, w0, h):
     w     = w0 + h*v0_t
     Omega = h*w
-    v     = CompositionRuleForRotationVectors(v0, Omega)
+    v     = elg.CompositionRuleForRotationVectors(v0, Omega)
     return [v, w]
 
 def ComputeStepWithRK4(ODE2RHS, v0, w0, h):
     
     # compute slope estimations
     k1 = h*ODE2RHS( v0, w0 )
-    K1 = h*np.dot( TExpSO3Inv(np.zeros(3)), w0 )
+    K1 = h*np.dot( elg.TExpSO3Inv(np.zeros(3)), w0 )
     
-    k2 = h*ODE2RHS( CompositionRuleForRotationVectors(v0, 0.5*K1), w0+0.5*k1 )
-    K2 = h*np.dot( TExpSO3Inv(0.5*K1), w0+0.5*k1 )
+    k2 = h*ODE2RHS( elg.CompositionRuleForRotationVectors(v0, 0.5*K1), w0+0.5*k1 )
+    K2 = h*np.dot( elg.TExpSO3Inv(0.5*K1), w0+0.5*k1 )
     
-    k3 = h*ODE2RHS( CompositionRuleForRotationVectors(v0, 0.5*K2), w0+0.5*k2 )
-    K3 = h*np.dot( TExpSO3Inv(0.5*K2), w0+0.5*k2 )
+    k3 = h*ODE2RHS( elg.CompositionRuleForRotationVectors(v0, 0.5*K2), w0+0.5*k2 )
+    K3 = h*np.dot( elg.TExpSO3Inv(0.5*K2), w0+0.5*k2 )
     
     #k4 = h*ODE2RHS( v0, w0+k3 )
-    k4 = h*ODE2RHS( CompositionRuleForRotationVectors(v0, K3), w0+k3 )
-    K4 = h*np.dot( TExpSO3Inv(K3), w0+k3 )
+    k4 = h*ODE2RHS( elg.CompositionRuleForRotationVectors(v0, K3), w0+k3 )
+    K4 = h*np.dot( elg.TExpSO3Inv(K3), w0+k3 )
     
     # compute update
     w     = w0 + 1/6 * (k1 + 2*k2 + 2*k3 + k4)
     Omega = 1/6 * (K1 + 2*K2 + 2*K3 + K4)
-    v     = CompositionRuleForRotationVectors(v0, Omega)
+    v     = elg.CompositionRuleForRotationVectors(v0, Omega)
     
     # return step solution
     return [v, w]
@@ -194,7 +196,7 @@ def LieGroupComputeKstage(mainSys, u0, v0, h, nODE2, Kprev, kprev, factK):
         omega0 = v0[i1:i2]
         K0 = Kprev[i1:i2]
         k0 = kprev[i1:i2]
-        K[i1:i2] = h*np.dot(TExpSO3Inv(factK*K0), omega0 + factK*k0)
+        K[i1:i2] = h*np.dot(elg.TExpSO3Inv(factK*K0), omega0 + factK*k0)
         
     return K
 
@@ -233,7 +235,7 @@ def LieGroupUpdateStageSystemCoordinates(mainSys, u0, v0, nODE2, Kprev, kprev, f
         omega0 = v0[i1:i2]
         K = Kprev[i1:i2]
         k = kprev[i1:i2]
-        u[i1:i2] = CompositionRuleForRotationVectors(vec0, factK*K) - vecRef
+        u[i1:i2] = elg.CompositionRuleForRotationVectors(vec0, factK*K) - vecRef
         #print("k=",k, ",factK=", factK, ",omega0=", omega0)
         v[i1:i2] = omega0+factK*k #could be omitted
         cnt += 1
@@ -303,7 +305,7 @@ def UserFunctionNewtonLieGroupRK4(mainSolver, mainSys, sims):
         vec0 = vecRef + u0[i1:i2]
         #vec0 = u0[i1:i2]
         incrRotVec = deltaU[i1:i2]
-        uStep[i1:i2] = CompositionRuleForRotationVectors(vec0, incrRotVec) - vecRef
+        uStep[i1:i2] = elg.CompositionRuleForRotationVectors(vec0, incrRotVec) - vecRef
         cnt += 1
         
     mainSys.systemData.SetODE2Coordinates(uStep)

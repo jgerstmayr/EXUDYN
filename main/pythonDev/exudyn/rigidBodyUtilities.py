@@ -14,10 +14,10 @@
 
 #constants and fixed structures:
 import numpy as np #LoadSolutionFile
-from exudyn.itemInterface import *
+import exudyn.itemInterface as eii
 import exudyn as exu #do not import! causes troubles with exudynFast, etc.!!
 from exudyn.basicUtilities import NormL2
-from math import sin, cos, sqrt, atan2
+from math import sin, cos #, sqrt, atan2
 
 import copy
 
@@ -269,14 +269,12 @@ def ComputeRotationAxisFromRotationVector(rotationVector):
 #**input: vector of rotation vector (len=3) as list or np.array
 #**output: 3x3 matrix G as np.array
 def RotationVector2G(rotationVector):
-    v = eulerParameters
     return RotationVector2RotationMatrix(rotationVector)
 
 #**function: convert rotation vector (parameters) (v) to local G-matrix (=$\partial \LU{b}{\tomega}   / \partial \vv_t$)
 #**input: vector of rotation vector (len=3) as list or np.array
 #**output: 3x3 matrix G as np.array
 def RotationVector2GLocal(eulerParameters):
-    ep = eulerParameters
     return np.eye(3)
 
 
@@ -732,10 +730,10 @@ def Inertia6D2InertiaTensor(inertia6D):
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**class: helper class for rigid body inertia (see also derived classes Inertia...).
-#Provides a structure to define mass, inertia and center of mass (com) of a rigid body.
+#Provides a structure to define mass, inertia and center of mass (COM) of a rigid body.
 #The inertia tensor and center of mass must correspond when initializing the body!
 #**notes:
-#   It is recommended to start with com=[0,0,0] and then to use Translated(...) and Rotated(...) to get transformed inertia parameters.
+#   in the default mode, inertiaTensorAtCOM = False, the inertia tensor must be provided with respect to the reference point; otherwise, it is given at COM; internally, the inertia tensor is always with respect to the reference point, not w.r.t. to COM!
 #**example:
 #i0 = RigidBodyInertia(10,np.diag([1,2,3]))
 #i1 = i0.Rotated(RotationMatrixX(np.pi/2))
@@ -746,15 +744,17 @@ class RigidBodyInertia:
     #  mass: mass of rigid body (dimensions need to be consistent, should be in SI-units)
     #  inertiaTensor: tensor given w.r.t.\ reference point, NOT w.r.t.\ center of mass!
     #  com: center of mass relative to reference point, in same coordinate system as inertiaTensor
-    def __init__(self, mass=0, inertiaTensor=np.zeros([3,3]), com=np.zeros(3)):
+    def __init__(self, mass=0, inertiaTensor=np.zeros([3,3]), com=np.zeros(3), inertiaTensorAtCOM = False):
         
         if np.array(inertiaTensor).shape != (3,3): #shape is a tuple
             raise ValueError('RigidBodyInertia: inertiaTensor must have shape (3,3), but received '+str(inertiaTensor.shape))
         if np.array(com).shape != (3,): #shape is a tuple
-            raise ValueError('RigidBodyInertia: com must have 3 components, but received '+str(np.array(inertiaTensorCOM).shape))
+            raise ValueError('RigidBodyInertia: com must have 3 components, but received '+str(np.array(inertiaTensor).shape))
         self.mass = mass
         self.inertiaTensor = np.array(inertiaTensor)
         self.com = np.array(com)
+        if inertiaTensorAtCOM:
+            self.inertiaTensor = self.inertiaTensor + self.mass*np.dot(Skew(self.com).transpose(),Skew(self.com))
         
     #**classFunction: add (+) operator allows adding another inertia information with SAME local coordinate system and reference point!
     #only inertias with same center of rotation can be added!
@@ -960,7 +960,7 @@ def GetRigidBodyNode(nodeType,
             ep0 = rotationParameters
            
         ep_t0 = AngularVelocity2EulerParameters_t(angularVelocity, ep0)
-        nodeItem = NodeRigidBodyEP(referenceCoordinates=list(position)+list(ep0),
+        nodeItem = eii.NodeRigidBodyEP(referenceCoordinates=list(position)+list(ep0),
                                    initialVelocities=list(velocity)+list(ep_t0))       
     elif strNodeType == 'NodeType.RotationRxyz':
         if len(rotationParameters) == 0:
@@ -969,7 +969,7 @@ def GetRigidBodyNode(nodeType,
             rot0 = rotationParameters
 
         rot_t0 = AngularVelocity2RotXYZ_t(angularVelocity, rot0)
-        nodeItem = NodeRigidBodyRxyz(referenceCoordinates=list(position)+list(rot0),
+        nodeItem = eii.NodeRigidBodyRxyz(referenceCoordinates=list(position)+list(rot0),
                                      initialVelocities=list(velocity)+list(rot_t0))
     elif strNodeType == 'NodeType.RotationRotationVector':
         if len(rotationParameters) == 0:
@@ -981,7 +981,7 @@ def GetRigidBodyNode(nodeType,
         rotMatrix = RotationVector2RotationMatrix(rot0) #rotationMatrix needed!
         angularVelocityLocal = np.dot(rotMatrix.transpose(),angularVelocity)
             
-        nodeItem = NodeRigidBodyRotVecLG(referenceCoordinates=list(position) + list(rot0), 
+        nodeItem = eii.NodeRigidBodyRotVecLG(referenceCoordinates=list(position) + list(rot0), 
                                          initialVelocities=list(velocity)+list(angularVelocityLocal))
     else:
         raise ValueError("GetRigidBodyNode: invalid node type:"+strNodeType)
@@ -1017,14 +1017,14 @@ def AddRigidBody(mainSys, inertia, nodeType,
     nodeItem = GetRigidBodyNode(nodeType, position, velocity, rotationMatrix, rotationParameters, angularVelocity)
     nodeNumber = mainSys.AddNode(nodeItem)
     
-    bodyNumber = mainSys.AddObject(ObjectRigidBody(physicsMass=inertia.mass, physicsInertia=inertia.GetInertia6D(), 
+    bodyNumber = mainSys.AddObject(eii.ObjectRigidBody(physicsMass=inertia.mass, physicsInertia=inertia.GetInertia6D(), 
                                                    physicsCenterOfMass=inertia.com,
                                                    nodeNumber=nodeNumber, 
-                                                   visualization=VObjectRigidBody(graphicsData=graphicsDataList)))
+                                                   visualization=eii.VObjectRigidBody(graphicsData=graphicsDataList)))
     
     if NormL2(gravity) != 0.:
-        markerNumber = mainSys.AddMarker(MarkerBodyMass(bodyNumber=bodyNumber))
-        mainSys.AddLoad(LoadMassProportional(markerNumber=markerNumber, loadVector=gravity))
+        markerNumber = mainSys.AddMarker(eii.MarkerBodyMass(bodyNumber=bodyNumber))
+        mainSys.AddLoad(eii.LoadMassProportional(markerNumber=markerNumber, loadVector=gravity))
     
     return [nodeNumber, bodyNumber]
 
@@ -1078,13 +1078,13 @@ def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True,
     MR0 = A0.T @ AJ  
     MR1 = A1.T @ AJ  
     
-    mBody0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body0, localPosition=pJ0))
-    mBody1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body1, localPosition=pJ1))
+    mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=body0, localPosition=pJ0))
+    mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=body1, localPosition=pJ1))
     
-    oJoint = mbs.AddObject(ObjectJointRevoluteZ(markerNumbers=[mBody0,mBody1],
+    oJoint = mbs.AddObject(eii.ObjectJointRevoluteZ(markerNumbers=[mBody0,mBody1],
                                                 rotationMarker0=MR0,
                                                 rotationMarker1=MR1,
-             visualization=VRevoluteJointZ(show=showJoint, axisRadius=axisRadius, axisLength=axisLength) ))
+             visualization=eii.VRevoluteJointZ(show=showJoint, axisRadius=axisRadius, axisLength=axisLength) ))
 
     return [oJoint, mBody0, mBody1]
 
@@ -1132,13 +1132,13 @@ def AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame=True,
     MR0 = A0.T @ AJ  
     MR1 = A1.T @ AJ  
     
-    mBody0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body0, localPosition=pJ0))
-    mBody1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body1, localPosition=pJ1))
+    mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=body0, localPosition=pJ0))
+    mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=body1, localPosition=pJ1))
     
-    oJoint = mbs.AddObject(ObjectJointPrismaticX(markerNumbers=[mBody0,mBody1],
+    oJoint = mbs.AddObject(eii.ObjectJointPrismaticX(markerNumbers=[mBody0,mBody1],
                                                 rotationMarker0=MR0,
                                                 rotationMarker1=MR1,
-             visualization=VPrismaticJointX(show=showJoint, axisRadius=axisRadius, axisLength=axisLength) ))
+             visualization=eii.VPrismaticJointX(show=showJoint, axisRadius=axisRadius, axisLength=axisLength) ))
 
     return [oJoint, mBody0, mBody1]
 

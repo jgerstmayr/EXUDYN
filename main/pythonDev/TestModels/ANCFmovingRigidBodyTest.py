@@ -65,11 +65,14 @@ suspensionCableTemplate=Cable2D(physicsMassPerLength=20.87, physicsBendingStiffn
 nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0], initialCoordinates=[0], initialCoordinates_t=[vALE]))
 mALE = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nALE, coordinate=0)) #ALE velocity  marker
 
-haulageCableTemplate=ALECable2D(physicsMassPerLength=6.96, physicsBendingStiffness=5956*complianceFactBend, physicsAxialStiffness=96725000*complianceFactAxial)
+haulageCableTemplate=ALECable2D(physicsMassPerLength=6.96, physicsBendingStiffness=5956*complianceFactBend, 
+                                physicsAxialStiffness=96725000*complianceFactAxial,
+                                physicsAddALEvariation=False) #for compatibility with test suite results
 haulageCableTemplate.nodeNumbers[2]=nALE
 
-[haulageCableNodeList, haulageCableObjectList, haulageLoadList, haulageCableNodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, positionOfNode0=[0,offset,0], positionOfNode1=[L,offset,0], numberOfElements=nEl, cableTemplate=haulageCableTemplate,
-                                                                  massProportionalLoad=[0,-gravityFieldConstant,0], fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
+[haulageCableNodeList, haulageCableObjectList, haulageLoadList, haulageCableNodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, 
+                     positionOfNode0=[0,offset,0], positionOfNode1=[L,offset,0], numberOfElements=nEl, cableTemplate=haulageCableTemplate,
+                     massProportionalLoad=[0,-gravityFieldConstant,0], fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
 
 cAleConstraint=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGlobalGround,mALE]))
 ##################################################################################################################################################################################################################################################

@@ -25,6 +25,7 @@ except:
     exudynTestGlobals = ExudynTestGlobals()
     exudynTestGlobals.isPerformanceTest = False
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+useGraphics = False #without test
 
 
 from math import sin, cos, pi
@@ -122,6 +123,7 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 simulationSettings.displayComputationTime = True
 simulationSettings.displayStatistics = True
+simulationSettings.parallel.numberOfThreads = 4
 
 SC.visualizationSettings.nodes.show = True
 SC.visualizationSettings.nodes.drawNodesAsPoint  = False

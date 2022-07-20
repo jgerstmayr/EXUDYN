@@ -527,8 +527,8 @@ const lest::test linkedDataVector_specific_test[] =
             SECTION("Normalize")
             {
                 v1.Normalize();
-                EXPECT(v1[0] == 3. / sqrt(25.));
-                EXPECT(v1[1] == 4. / sqrt(25.));
+                EXPECT(v1[0] == 3. * (1. / sqrt(25.)) );
+                EXPECT(v1[1] == 4. * (1. / sqrt(25.)) );
             }
             SECTION("MultAdd and Sum, SetVector")
             {

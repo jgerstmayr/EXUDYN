@@ -1136,7 +1136,7 @@ class VObjectALEANCFCable2D:
     def __repr__(self):
         return str(dict(self))
 class ObjectALEANCFCable2D:
-    def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsMovingMassFactor = 1., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., physicsUseCouplingTerms = True, nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, strainIsRelativeToReference = 0., visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsMovingMassFactor = 1., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., physicsUseCouplingTerms = True, physicsAddALEvariation = True, nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, strainIsRelativeToReference = 0., visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.physicsLength = CheckForValidUReal(physicsLength,"physicsLength","ObjectALEANCFCable2D")
         self.physicsMassPerLength = CheckForValidUReal(physicsMassPerLength,"physicsMassPerLength","ObjectALEANCFCable2D")
@@ -1148,6 +1148,7 @@ class ObjectALEANCFCable2D:
         self.physicsReferenceAxialStrain = physicsReferenceAxialStrain
         self.physicsReferenceCurvature = physicsReferenceCurvature
         self.physicsUseCouplingTerms = physicsUseCouplingTerms
+        self.physicsAddALEvariation = physicsAddALEvariation
         self.nodeNumbers = nodeNumbers
         self.useReducedOrderIntegration = useReducedOrderIntegration
         self.strainIsRelativeToReference = strainIsRelativeToReference
@@ -1166,6 +1167,7 @@ class ObjectALEANCFCable2D:
         yield 'physicsReferenceAxialStrain', self.physicsReferenceAxialStrain
         yield 'physicsReferenceCurvature', self.physicsReferenceCurvature
         yield 'physicsUseCouplingTerms', self.physicsUseCouplingTerms
+        yield 'physicsAddALEvariation', self.physicsAddALEvariation
         yield 'nodeNumbers', self.nodeNumbers
         yield 'useReducedOrderIntegration', self.useReducedOrderIntegration
         yield 'strainIsRelativeToReference', self.strainIsRelativeToReference
@@ -1459,7 +1461,7 @@ class VObjectConnectorLinearSpringDamper:
     def __repr__(self):
         return str(dict(self))
 class ObjectConnectorLinearSpringDamper:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., axisMarker0 = [0], offset = 0., velocityOffset = 0., force = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'drawAsCylinder': False, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., axisMarker0 = [1,0,0], offset = 0., velocityOffset = 0., force = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'drawAsCylinder': False, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.stiffness = stiffness

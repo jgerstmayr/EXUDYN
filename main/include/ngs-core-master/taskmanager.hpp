@@ -53,15 +53,15 @@ namespace ngstd
 
     atomic<int> jobnr;
 
-    atomic<int> complete[8];   // max nodes
+    atomic<int> complete[4];   // max nodes
     atomic<int> done;
     atomic<int> active_workers;
-    atomic<int> workers_on_node[8];   // max nodes
+    atomic<int> workers_on_node[4];   // max nodes
     Array<atomic<int>*> sync;
     int sleep_usecs;
     bool sleep;
 
-    NodeData *nodedata[8];
+    NodeData *nodedata[4];
 
     int num_nodes;
     NGS_DLL_HEADER static int num_threads;

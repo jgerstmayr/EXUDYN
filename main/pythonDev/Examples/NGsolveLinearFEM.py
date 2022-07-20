@@ -22,6 +22,7 @@ mbs = SC.AddSystem()
 
 import numpy as np
 import sys
+import time
 
 #adjust path to your ngsolve installation (if not added to global path)
 sys.path.append('C:/ProgramData/ngsolve/lib/site-packages')

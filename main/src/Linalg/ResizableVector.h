@@ -33,6 +33,8 @@
 #include "Linalg/Vector.h"
 #include "Linalg/ConstSizeVector.h"
 
+typedef std::vector<Real> StdVector; //needed for user functions
+
 template<typename T>
 class ResizableVectorBase: public VectorBase<T>
 {
@@ -63,7 +65,17 @@ public:
 	//! constructor with copy from VectorBase<T>; compile-time error, if dataSize mismatch!; copies only in range [0,vector.numberOfItems items]
 	ResizableVectorBase(const VectorBase<T>&& vector) noexcept : VectorBase<T>(vector), maxNumberOfItems(vector.NumberOfItems()) {}
 
-    //! delete[] of VectorBase<T> called which does the job
+
+	//! constructor with std::vector
+	ResizableVectorBase(const std::vector<T> vector)
+	{
+		maxNumberOfItems = (Index)vector.size();
+		this->AllocateMemory((Index)vector.size());
+
+		std::copy(vector.begin(), vector.end(), this->begin());
+	}
+
+	//! delete[] of VectorBase<T> called which does the job
     virtual ~ResizableVectorBase() {}
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -97,53 +109,36 @@ public:
 		this->data = nullptr;
 	}
 
-	//available in Vector, not needed! 2022-05-04
-	////! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
-	//void CopyFrom(const VectorBase<T>& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
-	//{
-	//	CHECKandTHROW((thisPosition + numberOfCopiedItems <= this->NumberOfItems()), "ResizableVectorBase::CopyFrom(...): thisPosition index mismatch");
-	//	CHECKandTHROW((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()), "ResizableVectorBase::CopyFrom(...): vectorPosition index mismatch");
+	//! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
+	template<class TVector>
+	void CopyFrom(const TVector& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
+	{
+		CHECKandTHROW((thisPosition + numberOfCopiedItems <= this->NumberOfItems()), "ResizableVectorBase::CopyFrom(...): thisPosition index mismatch");
+		CHECKandTHROW((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()), "ResizableVectorBase::CopyFrom(...): vectorPosition index mismatch");
 
-	//	for (Index i = 0; i < numberOfCopiedItems; i++)
-	//	{
-	//		(*this)[i + thisPosition] = vector[i + vectorPosition];
-	//	}
-	//}
+		for (Index i = 0; i < numberOfCopiedItems; i++)
+		{
+			this->GetUnsafe(i + thisPosition) = vector.GetUnsafe(i + vectorPosition);
+		}
+	}
 
-	////! copy numberOfCopiedItems items of a vector at vectorPosition to VectorBase(*this) at thisPosition, 
-	////template<Index dataSize>
-	////void CopyFrom(const ConstSizeVectorBase<T, dataSize>& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
-	//template<class Tvector>
-	//void CopyFrom(const Tvector& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
-	//{
-	//	//CHECKandTHROW((vectorPosition >= 0), "VectorBase::CopyFrom(...): vectorPosition < 0");
-	//	//CHECKandTHROW((thisPosition >= 0), "VectorBase::CopyFrom(...): thisPosition < 0");
-	//	CHECKandTHROW((thisPosition + numberOfCopiedItems <= this->NumberOfItems()), "ResizableVectorBase::CopyFrom(ConstSizeVectorBase<T, dataSize>, ...): thisPosition index mismatch");
-	//	CHECKandTHROW((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()), "ResizableVectorBase::CopyFrom(ConstSizeVectorBase<T, dataSize>, ...): vectorPosition index mismatch");
+	//! copy from other vector (or even array) and perform type conversion (e.g. for graphics)
+	template<class TVector>
+	void CopyFrom(const TVector& vector)
+	{
+		SetNumberOfItems(vector.NumberOfItems());
 
-	//	for (Index i = 0; i < numberOfCopiedItems; i++)
-	//	{
-	//		this->GetUnsafe(i + thisPosition) = vector.GetUnsafe(i + vectorPosition);
-	//		//this->GetUnsafe(i + thisPosition) = vector[i + vectorPosition];
-	//	}
-	//}
-
-	////! copy from other vector (or even array) and perform type conversion (e.g. for graphics)
-	//template<class TVector>
-	//void CopyFrom(const TVector& vector)
-	//{
-	//	SetNumberOfItems(vector.NumberOfItems());
-
-	//	Index cnt = 0;
-	//	for (auto val : vector) {
-	//		this->GetUnsafe(cnt++) = (T)val;
-	//	}
-	//}
+		Index cnt = 0;
+		for (auto val : vector) {
+			this->GetUnsafe(cnt++) = (T)val;
+		}
+	}
 
     //! @todo: ResizableVectorBase: check if operator+,-,* need to be overloaded (compare ConstSizeVectorBase)
 
 	//! overloaded operator=, because it needs to return a ResizableVectorBase
-	ResizableVectorBase& operator=(const ResizableVectorBase& vector)
+	template <class TVector>
+	ResizableVectorBase& operator=(const TVector& vector)
 	{
 		if (this == &vector) { return *this; }
 
@@ -151,33 +146,33 @@ public:
 
 		Index cnt = 0;
 		for (auto item : vector) {
-			(*this)[cnt++] = item;
+			this->GetUnsafe(cnt++) = item;
 		}
 		return *this;
 	}
 
 	//! add vector v to *this vector (for each component); both vectors must have same size
 	//ResizableVectorBase& operator+=(const ResizableVectorBase& v)
-	template <class Tvector>
-	ResizableVectorBase& operator+=(const Tvector& v)
+	template <class TVector>
+	ResizableVectorBase& operator+=(const TVector& v)
 	{
 		CHECKandTHROW((this->NumberOfItems() == v.NumberOfItems()), "ResizableVectorBase::operator+=: incompatible size of vectors");
 		Index cnt = 0;
 		for (auto item : v) {
-			(*this)[cnt++] += item;
+			this->GetUnsafe(cnt++) += item;
 		}
 		return *this;
 	}
 
 	//! substract vector v from *this vector (for each component); both vectors must have same size
 	//ResizableVectorBase& operator-=(const ResizableVectorBase& v)
-	template <class Tvector>
-	ResizableVectorBase& operator-=(const Tvector& v)
+	template <class TVector>
+	ResizableVectorBase& operator-=(const TVector& v)
 	{
 		CHECKandTHROW((this->NumberOfItems() == v.NumberOfItems()), "ResizableVectorBase::operator-=: incompatible size of vectors");
 		Index cnt = 0;
 		for (auto item : v) {
-			(*this)[cnt++] -= item;
+			this->GetUnsafe(cnt++) -= item;
 		}
 		return *this;
 	}
@@ -203,5 +198,16 @@ public:
 
 typedef ResizableVectorBase<Real> ResizableVector;
 typedef ResizableVectorBase<float> ResizableVectorF; //always float, used for graphics
+
+
+////! constructor with std::vector
+//template<typename T>
+//ResizableVectorBase<T>::ResizableVectorBase(const std::vector<T> vector)
+//{
+//	maxNumberOfItems = (Index)vector.size();
+//	AllocateMemory((Index)vector.size());
+//
+//	std::copy(vector.begin(), vector.end(), this->begin());
+//}
 
 #endif

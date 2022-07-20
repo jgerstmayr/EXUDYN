@@ -106,16 +106,12 @@ void CObjectGenericODE1::GetAccessFunction(AccessFunctionType accessType, Matrix
 }
 
 //! provide according output variable in "value"
-void CObjectGenericODE1::GetOutputVariable(OutputVariableType variableType, /*ConfigurationType configuration, */
-	Vector& value) const
+void CObjectGenericODE1::GetOutputVariable(OutputVariableType variableType, Vector& value, ConfigurationType configuration, Index objectNumber) const
 {
 	Index nODE1 = GetODE1Size();
 	tempCoordinates.SetNumberOfItems(nODE1);
 	tempCoordinates_t.SetNumberOfItems(nODE1);
-	ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t, ConfigurationType::Current);
-	//Vector coordinates(nODE1);
-	//Vector coordinates_t(nODE1);
-	//ComputeObjectCoordinates(coordinates, coordinates_t, ConfigurationType::Current); //only current configuration
+	ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t, configuration);
 
 	switch (variableType)
 	{

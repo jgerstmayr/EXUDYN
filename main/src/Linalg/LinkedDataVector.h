@@ -234,6 +234,18 @@ public:
 		this->numberOfItems = numberOfItemsInit;
 	}
 
+	//! copy from other vector (or even array) and perform type conversion (e.g. for graphics)
+	template<class TVector>
+	void CopyFrom(const TVector& vector)
+	{
+		CHECKandTHROW(this->numberOfItems == vector.NumberOfItems(), "ERROR: LinkedDataVectorBase::CopyFrom(const TVector&), size mismatch");
+
+		Index cnt = 0;
+		for (auto item : vector) {
+			(*this)[cnt++] = (T)item;
+		}
+	}
+
 protected: //functions cannot be called from outside 
     //! call to LinkedDataVectorBase::AllocateMemory is not called, but for safety add assertion
     virtual void AllocateMemory(Index numberOfRealsInit) override

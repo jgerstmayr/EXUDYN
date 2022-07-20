@@ -123,8 +123,7 @@ void CObjectJointRollingDisc::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, 
 		//markerData contains already the correct jacobians ==> transformed to constraint jacobian
 		Index nColumnsJac0 = markerData.GetMarkerData(0).positionJacobian.NumberOfColumns();
 		Index nColumnsJac1 = markerData.GetMarkerData(1).positionJacobian.NumberOfColumns();
-		//jacobian_ODE2.SetNumberOfRowsAndColumns(nConstraints, nColumnsJac0 + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-		//jacobian_ODE2.SetAll(0);
+
 		jacobian_ODE2_t.SetNumberOfRowsAndColumns(nConstraints, nColumnsJac0 + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
 		jacobian_ODE2_t.SetAll(0);
 
@@ -192,7 +191,7 @@ void CObjectJointRollingDisc::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, 
 
 		//pout << "jac=" << jacobian_ODE2_t << "\n";
 
-		jacobian_ODE2.SetNumberOfRowsAndColumns(0, 0); //for safety? check that this cannot happen ...
+		//jacobian_ODE2.SetNumberOfRowsAndColumns(0, 0); 
 	}
 	else
 	{

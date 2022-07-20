@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-06-08  20:22:31 (last modified)
+* @date         2022-07-04  22:03:15 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -140,12 +140,12 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "VshowLinks")) { visualizationObjectKinematicTree->GetShowLinks() = py::cast<bool>(d["VshowLinks"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VshowJoints")) { visualizationObjectKinematicTree->GetShowJoints() = py::cast<bool>(d["VshowJoints"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectKinematicTree->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VgraphicsDataList")) { PyWriteBodyGraphicsDataList(d, "VgraphicsDataList", visualizationObjectKinematicTree->GetGraphicsDataList()); /*! AUTO: convert dict to BodyGraphicsDataList*/} 
+        if (EPyUtils::DictItemExists(d, "VgraphicsDataList")) { PyWriteBodyGraphicsDataListOfLists(d, "VgraphicsDataList", visualizationObjectKinematicTree->GetGraphicsDataList()); /*! AUTO: convert dict to BodyGraphicsDataList*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
     //! AUTO:  dictionary read access
-    virtual py::dict GetDictionary() const override
+    virtual py::dict GetDictionary(bool addGraphicsData=false) const override
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
@@ -183,7 +183,7 @@ public: // AUTO:
         d["VshowLinks"] = (bool)visualizationObjectKinematicTree->GetShowLinks(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VshowJoints"] = (bool)visualizationObjectKinematicTree->GetShowJoints(); //! AUTO: cast variables into python (not needed for standard types) 
         d["Vcolor"] = (std::vector<float>)visualizationObjectKinematicTree->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["VgraphicsDataList"] = PyGetBodyGraphicsDataList(visualizationObjectKinematicTree->GetGraphicsDataList()); //! AUTO: generate dictionary with special function
+        d["VgraphicsDataList"] = PyGetBodyGraphicsDataListOfLists(visualizationObjectKinematicTree->GetGraphicsDataList(), addGraphicsData); //! AUTO: generate dictionary with special function
         return d; 
     }
 

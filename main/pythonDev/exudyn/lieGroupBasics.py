@@ -19,17 +19,9 @@ import numpy as np
 from numpy.linalg import norm
 from math import sin, cos, tan, atan2, acos, sqrt
 
-import exudyn as exu
-from exudyn.rigidBodyUtilities import EulerParameters2RotationMatrix
-from exudyn.rigidBodyUtilities import RotXYZ2RotationMatrix
-from exudyn.rigidBodyUtilities import HT2rotationMatrix
-from exudyn.rigidBodyUtilities import HT2translation
-from exudyn.rigidBodyUtilities import HomogeneousTransformation
-from exudyn.rigidBodyUtilities import Skew, Skew2Vec
-from exudyn.rigidBodyUtilities import ComputeRotationAxisFromRotationVector 
-
-
-
+#import exudyn as exu
+from exudyn.rigidBodyUtilities import EulerParameters2RotationMatrix, RotXYZ2RotationMatrix, HT2rotationMatrix, HT2translation, \
+            HomogeneousTransformation, Skew, Skew2Vec, ComputeRotationAxisFromRotationVector 
 
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

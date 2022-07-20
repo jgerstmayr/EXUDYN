@@ -534,12 +534,12 @@ ObjectIndex MainSystem::PyGetObjectNumber(STDstring itemName)
 }
 
 //! hook to read object's dictionary
-py::dict MainSystem::PyGetObject(const py::object& itemIndex)
+py::dict MainSystem::PyGetObject(const py::object& itemIndex, bool addGraphicsData)
 {
 	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 	{
-		return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetDictionary();
+		return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetDictionary(addGraphicsData);
 	}
 	else
 	{
@@ -618,7 +618,7 @@ py::dict MainSystem::PyGetObjectDefaults(STDstring typeName)
 //}
 
 //! Get specific output variable with variable type
-py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, OutputVariableType variableType) const
+py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, OutputVariableType variableType, ConfigurationType configuration) const
 {
 	RaiseIfNotConsistent("GetObjectOutput");
 	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
@@ -626,6 +626,7 @@ py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, Ou
 	{
 		if ((Index)mainSystemData.GetMainObjects().GetItem(itemNumber)->GetCObject()->GetType() & (Index)CObjectType::Connector)
 		{
+			CHECKandTHROW(configuration == ConfigurationType::Current, "GetObjectOutputVariable may only be called for connectors with Current configuration");
 			MarkerDataStructure markerDataStructure;
 			const bool computeJacobian = false; //not needed for OutputVariables
 			CObjectConnector* connector = (CObjectConnector*)(mainSystemData.GetMainObjects().GetItem(itemNumber)->GetCObject());
@@ -635,7 +636,7 @@ py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, Ou
 
 		} else
 		{
-			return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariable(variableType);
+			return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariable(variableType, configuration, itemNumber);
 		}
 	}
 	else

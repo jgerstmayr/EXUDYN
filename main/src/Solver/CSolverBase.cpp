@@ -40,12 +40,14 @@ extern STDstring GetExudynBuildVersionString(bool addDetails); //for sensor/solu
 
 namespace py = pybind11;	//for py::object
 
-#ifdef USE_NGSOLVE_TASKMANAGER
-#include "ngs-core-master/ngs_core.hpp"
-#include <thread>         // std::thread
-#include <mutex>          // std::mutex, std::unique_lock, std::defer_lock
-//using namespace ngstd;
-#endif
+#include "Utilities/Parallel.h" //include after 
+//
+//#ifdef USE_NGSOLVE_TASKMANAGER
+//#include "ngs-core-master/ngs_core.hpp"
+//#include <thread>         // std::thread
+//#include <mutex>          // std::mutex, std::unique_lock, std::defer_lock
+////using namespace ngstd;
+//#endif
 
 //! initialize all data,it,conv; set/compute initial conditions (solver-specific!); initialize output files
 bool CSolverBase::InitializeSolver(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
@@ -256,14 +258,15 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 			PyWarning("The number of total coordinates (unknowns) is larger than 1000. Consider a sparse solver (SimulationSettings().linearSolverType) to reduce memory consumption and computation time.", file.solverFile);
 		}
 	}
-	else if (simulationSettings.linearSolverType == LinearSolverType::EigenSparse)
+	else if (simulationSettings.linearSolverType == LinearSolverType::EigenSparse ||
+		simulationSettings.linearSolverType == LinearSolverType::EigenSparseSymmetric)
 	{
 		EXUstd::AssignParallelizationParameters(simulationSettings);
 	}
 	else
 	{
 		PyError("CSolverBase::InitializeSolverPreChecks: Unsupported simulationSettings.linearSolverType", file.solverFile);
-		data.SetLinearSolverType(LinearSolverType::_None);
+		data.SetLinearSolverType(LinearSolverType::_None, false);
 		return false;
 	}
 
@@ -281,15 +284,39 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 {
 	conv.InitializeData();
 
-	if (simulationSettings.linearSolverType == LinearSolverType::EXUdense)
+	if ((simulationSettings.linearSolverType == LinearSolverType::EXUdense) ||
+		(simulationSettings.linearSolverType == LinearSolverType::EigenSparse) ||
+		(simulationSettings.linearSolverType == LinearSolverType::EigenSparseSymmetric))
 	{
-		data.SetLinearSolverType(LinearSolverType::EXUdense);
+		data.SetLinearSolverType(simulationSettings.linearSolverType, simulationSettings.linearSolverSettings.reuseAnalyzedPattern);
 	}
+	//else if (simulationSettings.linearSolverType == LinearSolverType::EigenSparse)
+	//{
+	//	data.SetLinearSolverType(LinearSolverType::EigenSparse);
+	//}
+	//else if (simulationSettings.linearSolverType == LinearSolverType::EigenSparseSymmetric)
+	//{
+	//	data.SetLinearSolverType(LinearSolverType::EigenSparseSymmetric);
+	//}
 	else
 	{
-		data.SetLinearSolverType(LinearSolverType::EigenSparse);
+		PyError("CSolverBase::InitializeSolverData: Unsupported simulationSettings.linearSolverType", file.solverFile);
 	}
+
+	//++++++++++++++++++++++++++++++
+	computationalSystem.GetSolverData().multithreadedLLimitLoads = simulationSettings.parallel.multithreadedLLimitLoads;
+	computationalSystem.GetSolverData().multithreadedLLimitResiduals = simulationSettings.parallel.multithreadedLLimitResiduals;
+	computationalSystem.GetSolverData().multithreadedLLimitJacobians = simulationSettings.parallel.multithreadedLLimitJacobians;
+	computationalSystem.GetSolverData().multithreadedLLimitMassMatrix = simulationSettings.parallel.multithreadedLLimitMassMatrices;
+
+	computationalSystem.GetSolverData().taskSplitMinItems = simulationSettings.parallel.taskSplitMinItems;
+	computationalSystem.GetSolverData().taskSplitTasksPerThread = simulationSettings.parallel.taskSplitTasksPerThread;
 	
+
+
+
+	//++++++++++++++++++++++++++++++
+	//initialize system vectors and matrices
 	data.systemMassMatrix->SetNumberOfRowsAndColumns(data.nODE2, data.nODE2);
 	data.systemJacobian->SetNumberOfRowsAndColumns(data.nSys, data.nSys);
 	data.jacobianAE->SetNumberOfRowsAndColumns(data.nODE2, data.nAE);
@@ -334,35 +361,56 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//parallelization started
 	Index taskmanagerNumthreads = 1;
+	output.multiThreadingMode = 0; //no multithreading
+	output.numberOfThreadsUsed = 1;
 
-#ifdef USE_NGSOLVE_TASKMANAGER
 	//Eigen::initParallel(); //with C++11 and eigen 3.3 optional
 	Index nThreads = simulationSettings.parallel.numberOfThreads;
-	//pout << "numThreads before init=" << ngstd::TaskManager::GetNumThreads() << "\n";
+	//pout << "numThreads before init=" << exuThreading::TaskManager::GetNumThreads() << "\n";
 	if (nThreads > 1)
 	{
 		//verboseMode not defined at this point ==> this part needs to move to initialization of solver!
 		//VerboseWrite(1, STDstring("TaskManager::SetNumThreads = ") + EXUstd::ToString(simulationSettings.parallel.numberOfThreads) + "\n");
-		ngstd::TaskManager::SetNumThreads(simulationSettings.parallel.numberOfThreads);
+		exuThreading::TaskManager::SetNumThreads(simulationSettings.parallel.numberOfThreads);
 
 		//for checking where time is lost
 		//TaskManager::SetPajeTrace(true);
 		//PajeTrace::SetMaxTracefileSize(100000000);
 
-		taskmanagerNumthreads = ngstd::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
-		//VerboseWrite(1, "EnterTaskManager with " + EXUstd::ToString(taskmanagerNumthreads) + " threads\n");
-		VerboseWrite(0, STDstring("Enter TaskManager with ") + EXUstd::ToString(ngstd::TaskManager::GetNumThreads()) + " threads\n");
+		taskmanagerNumthreads = exuThreading::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
+
+		if (exuThreading::TaskManager::GetNumThreads() == 1) //this reflects that taskmanager is not running!
+		{
+			PyWarning("Initialize Solver: requested " + EXUstd::ToString(nThreads) + " threads, but taskmanager not available (Exudyn maybe not built with taskmanager?)");
+		}
+		else
+		{
+			//VerboseWrite(1, "EnterTaskManager with " + EXUstd::ToString(taskmanagerNumthreads) + " threads\n");
+			STDstring strThreading;
+#ifdef USE_MICROTHREADING
+			strThreading = " (tiny threading)";
+#endif 
+			VerboseWrite(1, STDstring("Start multi-threading with ") + 
+				EXUstd::ToString(exuThreading::TaskManager::GetNumThreads()) + " threads" + strThreading + "\n");
+
+			output.multiThreadingMode = exuThreading::TaskManager::GetNumThreads(); //no multithreading
+#ifdef USE_MICROTHREADING
+			output.numberOfThreadsUsed = 2; //mode 2 = microthreading
+#else
+			output.numberOfThreadsUsed = 1; //mode 1 = NGsolve original
+#endif
+
+		}
 	}
 	else
 	{
 		//this is needed to set back number of threads to 0, which otherwise causes that CSystem functions are still using parallel mode if there was a parallel run before
-		ngstd::TaskManager::SetNumThreads(1); //necessary in order that computation functions have reserved correct size of arrays
-		taskmanagerNumthreads = ngstd::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
-		ngstd::ExitTaskManager(taskmanagerNumthreads);
+		exuThreading::TaskManager::SetNumThreads(1); //necessary in order that computation functions have reserved correct size of arrays
+		taskmanagerNumthreads = exuThreading::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
+		exuThreading::ExitTaskManager(taskmanagerNumthreads);
 	}
-	//pout << "numThreads after init=" << ngstd::TaskManager::GetNumThreads() << "\n";
+	//pout << "numThreads after init=" << exuThreading::TaskManager::GetNumThreads() << "\n";
 
-#endif
 	data.tempCompData = TemporaryComputationData();		//totally reset; for safety for now!
 	data.tempCompDataArray.EraseData();		//totally reset; for safety for now!
 	data.tempCompDataArray.SetNumberOfItems(taskmanagerNumthreads);
@@ -505,14 +553,12 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 //! main solver part: calls multiple InitializeStep(...)/PerformStep(...); do step reduction if necessary; return true if success, false else
 void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
-#ifdef USE_NGSOLVE_TASKMANAGER
 	Index nThreads = simulationSettings.parallel.numberOfThreads;
-	if (nThreads > 1 && ngstd::TaskManager::GetNumThreads() > 1)
+	if (nThreads > 1 && exuThreading::TaskManager::GetNumThreads() > 1)
 	{
-		VerboseWrite(1, "Exit TaskManager\n");
-		ngstd::ExitTaskManager(ngstd::TaskManager::GetNumThreads());
+		VerboseWrite(1, "Stop multi-threading\n");
+		exuThreading::ExitTaskManager(exuThreading::TaskManager::GetNumThreads());
 	}
-#endif
 
 	if (IsVerboseCheck(1))
 	{
@@ -1012,7 +1058,12 @@ bool CSolverBase::DiscontinuousIteration(CSystem& computationalSystem, const Sim
 		{
 			FinalizeNewton(computationalSystem, simulationSettings);
 			//conv.discontinuousIterationError = computationalSystem.PostNewtonStep(data.tempCompData);
+			
+			if (computationalSystem.GetSystemData().listDiscontinuousIteration.NumberOfItems() != 0)
+			{ STARTTIMER(timer.postNewton); }
 			conv.discontinuousIterationError = PostNewton(computationalSystem, simulationSettings);
+			if (computationalSystem.GetSystemData().listDiscontinuousIteration.NumberOfItems() != 0)
+			{ STOPTIMER(timer.postNewton); }
 
 
 			if (IsVerbose(2))

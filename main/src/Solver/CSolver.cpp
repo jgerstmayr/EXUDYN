@@ -32,7 +32,7 @@
 Real CSolverTimer::Sum() const
 {
 	return factorization + newtonIncrement + integrationFormula + ODE2RHS + ODE1RHS + AERHS + totalJacobian + massMatrix + reactionForces +
-		/*postNewton +*/ errorEstimator + writeSolution + overhead + python + visualization;
+		postNewton + errorEstimator + writeSolution + overhead + python + visualization;
 }
 
 STDstring CSolverTimer::ToString() const
@@ -64,9 +64,10 @@ STDstring CSolverTimer::ToString() const
 		if (reactionForces / sum > limit) ostr << "  reactionForces    = " << reactionForces / sum << "%\n";
 		//not computed, implemented as special timer: if (postNewton / sum > limit) ostr << "  postNewtonStep    = " << postNewton / sum << "%\n";
 		if (errorEstimator / sum > limit) ostr << "  errorEstimator    = " << errorEstimator / sum << "%\n";
+		if (postNewton / sum > limit) ostr << "  postNewton    = " << postNewton / sum << "%\n";
+		if (python / sum > limit) ostr << "  __python          = " << python / sum << "%\n";
 		if (writeSolution / sum > limit) ostr << "  writeSolution     = " << writeSolution / sum << "%\n";
 		if (overhead / sum > limit) ostr << "  overhead          = " << overhead / sum << "%\n";
-		if (python / sum > limit) ostr << "  __python          = " << python / sum << "%\n";
 		if (visualization / sum > limit) ostr << "  visualization/user= " << visualization / sum << "%\n";
 	}
 	else
@@ -116,7 +117,7 @@ void SolverLocalData::CleanUpMemory()
 }
 
 //! function links system matrices to according dense/sparse versions
-void SolverLocalData::SetLinearSolverType(LinearSolverType linearSolverType)
+void SolverLocalData::SetLinearSolverType(LinearSolverType linearSolverType, bool reuseAnalyzedPattern)
 {
 	if (linearSolverType == LinearSolverType::EXUdense)
 	{
@@ -124,11 +125,27 @@ void SolverLocalData::SetLinearSolverType(LinearSolverType linearSolverType)
 		systemMassMatrix = &systemMassMatrixDense;
 		jacobianAE = &jacobianAEdense;
 	}
-	else
+	else if (linearSolverType == LinearSolverType::EigenSparse)
 	{
 		systemJacobian = &systemJacobianSparse;
 		systemMassMatrix = &systemMassMatrixSparse;
 		jacobianAE = &jacobianAEsparse;
+	}
+	else if (linearSolverType == LinearSolverType::EigenSparseSymmetric)
+	{
+		systemJacobian = &systemJacobianSparse;
+		systemMassMatrix = &systemMassMatrixSparse;
+		jacobianAE = &jacobianAEsparse;
+
+		systemJacobian->AssumeSymmetric();
+		systemMassMatrix->AssumeSymmetric();
+		jacobianAE->AssumeSymmetric();
+	}
+	if (!(linearSolverType == LinearSolverType::EXUdense))
+	{
+		systemJacobian->SetReuseAnalyzedPattern(reuseAnalyzedPattern);
+		systemMassMatrix->SetReuseAnalyzedPattern(reuseAnalyzedPattern);
+		jacobianAE->SetReuseAnalyzedPattern(reuseAnalyzedPattern);
 	}
 }
 

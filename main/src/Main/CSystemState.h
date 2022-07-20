@@ -20,16 +20,20 @@
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
 
+//typedef ResizableVector StateVectorsType;
+#include "Linalg/ResizableVectorParallel.h"	 
+typedef ResizableVectorParallel StateVectorsType;
+
 class CSystemState // 
 {
 public: // 
-	Vector ODE1Coords;                              //!< first order differential equations (ODE1) (displacement) coordinates
-	Vector ODE1Coords_t;                            //!< first order differential equations (ODE1) (velocity) coordinates
-	Vector ODE2Coords;                              //!< second order differential equations (ODE2) displacement coordinates; in static mode: (unknown) displacement coordinates
-	Vector ODE2Coords_t;                            //!< second order differential equations (ODE2) velocity coordinates
-	Vector ODE2Coords_tt;                           //!< second order differential equations (ODE2) acceleration coordinates
-	Vector AECoords;                                //!< algebraic equations coordinates (e.g. Lagrange multipliers)
-	Vector dataCoords;                              //!< data coordinates (e.g. contact state or other non-DAE coordinates)
+	StateVectorsType ODE1Coords;                              //!< first order differential equations (ODE1) (displacement) coordinates
+	StateVectorsType ODE1Coords_t;                            //!< first order differential equations (ODE1) (velocity) coordinates
+	StateVectorsType ODE2Coords;                              //!< second order differential equations (ODE2) displacement coordinates; in static mode: (unknown) displacement coordinates
+	StateVectorsType ODE2Coords_t;                            //!< second order differential equations (ODE2) velocity coordinates
+	StateVectorsType ODE2Coords_tt;                           //!< second order differential equations (ODE2) acceleration coordinates
+	StateVectorsType AECoords;                                //!< algebraic equations coordinates (e.g. Lagrange multipliers)
+	StateVectorsType dataCoords;                              //!< data coordinates (e.g. contact state or other non-DAE coordinates)
 	Real time;										//!< time or quasi-time (static solver) to which the data is linked to
 
 public: // 
@@ -52,45 +56,45 @@ public: //
 	}
 
 	//! Write access to: first order differential equations (ODE1) coordinates
-	void SetODE1Coords(const Vector& ODE1CoordsInit) { ODE1Coords = ODE1CoordsInit; }
+	void SetODE1Coords(const StateVectorsType& ODE1CoordsInit) { ODE1Coords = ODE1CoordsInit; }
 	//! Read (Reference) access to: first order differential equations (ODE1) coordinates
-	const Vector& GetODE1Coords() const { return ODE1Coords; }
+	const StateVectorsType& GetODE1Coords() const { return ODE1Coords; }
 	//const std::vector<Real> GetODE1CoordsStdVec() const { return ODE1Coords; }
 
 	//! Write access to: first order differential equations (ODE1) velocity coordinates
-	void SetODE1Coords_t(const Vector& ODE1Coords_tInit) { ODE1Coords_t = ODE1Coords_tInit; }
+	void SetODE1Coords_t(const StateVectorsType& ODE1Coords_tInit) { ODE1Coords_t = ODE1Coords_tInit; }
 	//! Read (Reference) access to: first order differential equations (ODE1) velocity coordinates
-	const Vector& GetODE1Coords_t() const { return ODE1Coords_t; }
+	const StateVectorsType& GetODE1Coords_t() const { return ODE1Coords_t; }
 	//const std::vector<Real> GetODE1Coords_tStdVec() const { return ODE1Coords_t; }
 
 	//! Write access to: second order differential equations (ODE2) displacement coordinates; in static mode: (unknown) displacement coordinates
-	void SetODE2Coords(const Vector& ODE2CoordsInit) { ODE2Coords = ODE2CoordsInit; }
+	void SetODE2Coords(const StateVectorsType& ODE2CoordsInit) { ODE2Coords = ODE2CoordsInit; }
 	//! Read (Reference) access to: second order differential equations (ODE2) displacement coordinates; in static mode: (unknown) displacement coordinates
-	const Vector& GetODE2Coords() const { return ODE2Coords; }
+	const StateVectorsType& GetODE2Coords() const { return ODE2Coords; }
 	//const std::vector<Real> GetODE2CoordsStdVec() const { return ODE2Coords; }
 
 	//! Write access to: second order differential equations (ODE2) velocity coordinates
-	void SetODE2Coords_t(const Vector& ODE2Coords_tInit) { ODE2Coords_t = ODE2Coords_tInit; }
+	void SetODE2Coords_t(const StateVectorsType& ODE2Coords_tInit) { ODE2Coords_t = ODE2Coords_tInit; }
 	//! Read (Reference) access to: second order differential equations (ODE2) velocity coordinates
-	const Vector& GetODE2Coords_t() const { return ODE2Coords_t; }
+	const StateVectorsType& GetODE2Coords_t() const { return ODE2Coords_t; }
 	//const std::vector<Real> GetODE2Coords_tStdVec() const { return ODE2Coords_t; }
 
 	//! Write access to: second order differential equations (ODE2) acceleration coordinates
-	void SetODE2Coords_tt(const Vector& ODE2Coords_ttInit) { ODE2Coords_tt = ODE2Coords_ttInit; }
+	void SetODE2Coords_tt(const StateVectorsType& ODE2Coords_ttInit) { ODE2Coords_tt = ODE2Coords_ttInit; }
 	//! Read (Reference) access to: second order differential equations (ODE2) acceleration coordinates
-	const Vector& GetODE2Coords_tt() const { return ODE2Coords_tt; }
+	const StateVectorsType& GetODE2Coords_tt() const { return ODE2Coords_tt; }
 	//const std::vector<Real> GetODE2Coords_ttStdVec() const { return ODE2Coords_tt; }
 
 	//! Write access to: algebraic equations coordinates (e.g. Lagrange multipliers)
-	void SetAECoords(const Vector& AECoordsInit) { AECoords = AECoordsInit; }
+	void SetAECoords(const StateVectorsType& AECoordsInit) { AECoords = AECoordsInit; }
 	//! Read (Reference) access to: algebraic equations coordinates (e.g. Lagrange multipliers)
-	const Vector& GetAECoords() const { return AECoords; }
+	const StateVectorsType& GetAECoords() const { return AECoords; }
 	//const std::vector<Real> GetAECoordsStdVec() const { return AECoords; }
 
 	//! Write access to: data coordinates (e.g. contact state or other non-DAE coordinates)
-	void SetDataCoords(const Vector& dataCoordsInit) { dataCoords = dataCoordsInit; }
+	void SetDataCoords(const StateVectorsType& dataCoordsInit) { dataCoords = dataCoordsInit; }
 	//! Read (Reference) access to: data coordinates (e.g. contact state or other non-DAE coordinates)
-	const Vector& GetDataCoords() const { return dataCoords; }
+	const StateVectorsType& GetDataCoords() const { return dataCoords; }
 	//const std::vector<Real> GetDataCoordsStdVec() const { return dataCoords; }
 
 	void Print(std::ostream& os) const

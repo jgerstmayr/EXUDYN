@@ -26,7 +26,8 @@
 	typedef size_t NGSsizeType;
 	#include "ngs-core-master/ngs_core.hpp"
 #else
-	typedef Index NGSsizeType;
+	#include "Linalg/Use_avx.h" 
+typedef Index NGSsizeType;
 //replace used functions with dummy functions
 namespace ngstd {
 	template <typename TFUNC>
@@ -50,7 +51,15 @@ namespace ngstd {
 	};
 };
 #endif
-
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#include "Utilities/Threading.h"
+
+#ifdef USE_MICROTHREADING //if this is defined, use MicroThreading instead of NGsolve taskmanager
+namespace exuThreading = MicroThreading; //this works better for smaller systems
+#else
+namespace exuThreading = ngstd; //NGsolve; this works better for larger systems; much better for contact!
 #endif
+
+#endif //PARALLEL__H
+

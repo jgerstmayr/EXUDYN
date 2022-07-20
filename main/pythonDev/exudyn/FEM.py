@@ -12,9 +12,9 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #constants and fixed structures:
-from exudyn.itemInterface import *
-from exudyn.utilities import RoundMatrix, ComputeSkewMatrix, FillInSubMatrix, PlotLineCode, GetRigidBodyNode
-from exudyn.rigidBodyUtilities import AngularVelocity2EulerParameters_t, EulerParameters2GLocal, RotationVector2GLocal, RotXYZ2GLocal, RotXYZ2GLocal_t, Skew
+import exudyn.itemInterface as eii
+from exudyn.utilities import RoundMatrix, ComputeSkewMatrix, PlotLineCode, GetRigidBodyNode#, FillInSubMatrix
+from exudyn.rigidBodyUtilities import AngularVelocity2EulerParameters_t, EulerParameters2GLocal, RotationVector2GLocal, RotXYZ2GLocal, RotXYZ2GLocal_t, Skew, eulerParameters0
 import numpy as np #LoadSolutionFile
 from enum import Enum #for class HCBstaticModeSelection
 
@@ -98,7 +98,7 @@ def CSRtoScipySparseCSR(sparseMatrixCSR):
 
 #**function: convert scipy.sparse csr matrix to internal compressed CSR 
 def ScipySparseCSRtoCSR(scipyCSR):
-    from scipy.sparse import csr_matrix
+    #from scipy.sparse import csr_matrix
     data=scipyCSR.tocoo()
     sparseData = [data.row,data.col,data.data]
     return np.array(sparseData).T
@@ -400,7 +400,8 @@ def ReadMatrixDOFmappingVectorFromAnsysTxt(fileName):
         raise ValueError("ReadMatrixDOFmappingVectorFromAnsysTxt: invalid value in line " + str(lineOffset+1) + ", expected 1 column")
 
     if int(rowStr[0]) != nLines-lineOffset-1:
-        raise ValueError("ReadMatrixDOFmappingVectorFromAnsysTxt: number of lines do not match the number of DOF: nDOF="+str(nDOF)+", #data lines=", arg_str(nLines-lineOffset-1))
+        raise ValueError("ReadMatrixDOFmappingVectorFromAnsysTxt: number of lines do not match the number of DOF: nDOF="+str(nDOF)+
+                         ", #data lines="+ str(nLines-lineOffset-1)) #removed arg_str() => Stefan
 
     lineOffset+=1
 
@@ -670,7 +671,7 @@ class Tet4(FiniteElement):
         #following routines implemented according to implementation in AMFE (TU-Munich):
         X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4 = nodalReferenceCoordinates
         Umat = nodalDisplacements.reshape(-1, 3)
-        Xmat = nodalReferenceCoordinates.reshape(-1, 3)
+        #Xmat = nodalReferenceCoordinates.reshape(-1, 3)
 
         det = (-X1*Y2*Z3 + X1*Y2*Z4 + X1*Y3*Z2 - X1*Y3*Z4 - X1*Y4*Z2 + X1*Y4*Z3 
               + X2*Y1*Z3 - X2*Y1*Z4 - X2*Y3*Z1 + X2*Y3*Z4 + X2*Y4*Z1 - X2*Y4*Z3 
@@ -746,7 +747,7 @@ class ObjectFFRFinterface:
         self.nODE2rigid = self.dim3D + self.nODE2rot
         self.nODE2FF = self.nNodes * self.dim3D
         self.nODE2FFRF = self.nODE2rigid + self.nODE2FF
-        nNodesFFRF = self.nNodes+1                          #including rigid body node
+        # nNodesFFRF = self.nNodes+1                          #including rigid body node
 
         #self.massMatrixFFRF = np.zeros((self.nODE2FFRF,self.nODE2FFRF)) #create larger FFRF mass matrix
         #self.stiffnessMatrixFFRF = np.zeros((self.nODE2FFRF,self.nODE2FFRF)) #create larger FFRF mass matrix
@@ -789,12 +790,12 @@ class ObjectFFRFinterface:
         self.eulerParameters0 = eulerParametersRef
 
         #rigid body node for ObjectFFRF
-        self.nRigidBody = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=list(positionRef)+list(eulerParametersRef), 
+        self.nRigidBody = mbs.AddNode(eii.NodeRigidBodyEP(referenceCoordinates=list(positionRef)+list(eulerParametersRef), 
                                             initialVelocities=list(initialVelocity)+list(self.eulerParameters_t0)))
 
         self.nodeList = [] #list of nodenumbers in mbs
         for node in self.nodeArray:
-            nMBS = mbs.AddNode(Point(referenceCoordinates = list(node), visualization=VNodePoint(show = False))) 
+            nMBS = mbs.AddNode(eii.Point(referenceCoordinates = list(node), visualization=eii.VNodePoint(show = False))) 
             self.nodeList += [nMBS]
 
         stiffnessMatrixMC = exu.MatrixContainer()
@@ -813,7 +814,7 @@ class ObjectFFRFinterface:
             dampingMatrixMC=[]
         
         #add body for FFRF-Object:
-        self.oFFRF = mbs.AddObject(ObjectFFRF(nodeNumbers = [self.nRigidBody] + self.nodeList, 
+        self.oFFRF = mbs.AddObject(eii.ObjectFFRF(nodeNumbers = [self.nRigidBody] + self.nodeList, 
                                                             massMatrixFF=massMatrixMC,
                                                             stiffnessMatrixFF=stiffnessMatrixMC, 
                                                             dampingMatrixFF=dampingMatrixMC,
@@ -822,16 +823,17 @@ class ObjectFFRFinterface:
                                                             #forceUserFunction=UFforce,
                                                             #computeFFRFterms=True,
                                                             #massMatrixUserFunction=UFmassGenericODE2,
-                                                            visualization=VObjectFFRF(triangleMesh = self.trigList, 
+                                                            visualization=eii.VObjectFFRF(triangleMesh = self.trigList, 
                                                                                       color=color,
                                                                                       showNodes = True)))
 
 
         self.oRigidBodyConstraint = -1
         if constrainRigidBodyMotion:
-            mObjectCoordinates = mbs.AddMarker(MarkerObjectODE2Coordinates(objectNumber=self.oFFRF))
-            nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0], visualization = VNodePointGround(show=False))) #ground node for coordinate constraint
-            mGroundCoordinate = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber = nGround)) #Ground node ==> no action
+            mObjectCoordinates = mbs.AddMarker(eii.MarkerObjectODE2Coordinates(objectNumber=self.oFFRF))
+            nGround = mbs.AddNode(eii.NodePointGround(referenceCoordinates=[0,0,0], 
+                                                      visualization = eii.VNodePointGround(show=False))) #ground node for coordinate constraint
+            mGroundCoordinate = mbs.AddMarker(eii.MarkerNodeCoordinates(nodeNumber = nGround)) #Ground node ==> no action
 
             X1 = np.zeros((6, self.nODE2FFRF))
             X1rot = ComputeSkewMatrix(self.xRef).T @ self.massMatrixCSR
@@ -841,7 +843,7 @@ class ObjectFFRFinterface:
             offset[0:3] = self.PhitTM @ self.xRef #constrain current COM to reference COM
 
             #add constraint: X1*qObjectFFRF - offset = 0
-            self.oRigidBodyConstraint = mbs.AddObject(CoordinateVectorConstraint(markerNumbers=[mGroundCoordinate, mObjectCoordinates], 
+            self.oRigidBodyConstraint = mbs.AddObject(eii.CoordinateVectorConstraint(markerNumbers=[mGroundCoordinate, mObjectCoordinates], 
                                                                                  scalingMarker1 = X1, offset=offset))
 
         dictReturn = {'nRigidBody':self.nRigidBody,
@@ -860,7 +862,7 @@ class ObjectFFRFinterface:
         A = Avec.reshape((3,3))
 
         #implementation for Euler Parameters (Glocal_t*theta_t=0)
-        ep = np.array(q[self.dim3D:self.nODE2rigid]) + ep0 #add reference values, q are only the change w.r.t. reference values!
+        ep = np.array(q[self.dim3D:self.nODE2rigid]) + eulerParameters0 #add reference values, q are only the change w.r.t. reference values!
         G = EulerParameters2GLocal(ep)
     
         cF_t = np.array(q_t[self.nODE2rigid:])         #velocities of flexible coordinates
@@ -869,8 +871,8 @@ class ObjectFFRFinterface:
 
         omega3D = G @ np.array(q_t[self.dim3D:self.nODE2rigid])
         omega3Dtilde = Skew(omega3D)
-        omega = np.array(list(omega3D)*self.nNodes)
-        omegaTilde = np.kron(np.eye(nNodes),omega3Dtilde)
+        #omega = np.array(list(omega3D)*self.nNodes)
+        omegaTilde = np.kron(np.eye(self.nNodes),omega3Dtilde)
 
         #squared angul. vel. matrix:
         omega3Dtilde2 = Skew(omega3D) @ Skew(omega3D)
@@ -891,9 +893,9 @@ class ObjectFFRFinterface:
         force[self.nODE2rigid:] = fFlex
 
         #add gravity:
-        if False:
-            fGrav = np.array(fGravRigid + list(self.PhitTM.T @ (A.T @ self.gravity)) ) #only local vector, without rotation
-            force += fGrav
+        # if False:
+        #     fGrav = np.array(fGravRigid + list(self.PhitTM.T @ (A.T @ self.gravity)) ) #only local vector, without rotation
+        #     force += fGrav
 
         return force
 
@@ -902,11 +904,13 @@ class ObjectFFRFinterface:
         print("UFmassGenericODE2: not tested and not integrated into FFRFinterface!")
         Avec = mbs.GetNodeOutput(self.nRigidBody,  exu.OutputVariableType.RotationMatrix)
         A = Avec.reshape((3,3))
-        ep = q[self.dim3D:self.nODE2rigid] + ep0 #add reference values, q are only the change w.r.t. reference values!
+        ep = q[self.dim3D:self.nODE2rigid] + eulerParameters0 #add reference values, q are only the change w.r.t. reference values!
         G = EulerParameters2GLocal(ep)
 
         rF = self.xRef + q[self.nODE2rigid:] #nodal position
         rfTilde = ComputeSkewMatrix(rF) #rfTilde
+        
+        Mnew = np.zeros((len(q), len(q)))
 
         #Mtr:
         Mtr = -A @ self.PhitTM @ rfTilde @ G
@@ -950,7 +954,7 @@ def CMSObjectComputeNorm(mbs, objectNumber, outputVariableType, norm='max', node
         X = mbs.GetObjectParameter(objectNumber,'outputVariableModeBasis')
         values = np.zeros((X.shape[0], 6))
         #compute stresses in nodes
-        nc = len(c)
+        #nc = len(c)
         for i in range(len(c)):
             for j in range(6): #6 stress components
                 values[:,j] += X[:,6*i+j] * c[i] #
@@ -1087,7 +1091,7 @@ class ObjectFFRFreducedOrderInterface:
     #  rotationMatrixRef: reference rotation of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder); if [], it becomes the unit matrix
     #  initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
     #  eulerParametersRef: DEPRECATED, use rotationParametersRef or rotationMatrixRef in future: reference euler parameters of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
-    #  gravity: ONLY available if user functions are applied; otherwise use LoadMassProportional and add to ObjectFFRFreducedOrder; set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
+    #  gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
     #  UFforce: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(mbs, t, qReduced, qReduced\_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
     #  UFmassMatrix: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFmassFFRFreducedOrder(mbs, t, qReduced, qReduced\_t):\\  \phantom{XXXX}return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
     #  massProportionalDamping: Rayleigh damping factor for mass proportional damping (multiplied with reduced mass matrix), added to floating frame/modal coordinates only
@@ -1118,7 +1122,7 @@ class ObjectFFRFreducedOrderInterface:
             self.rotationParameters0 = eulerParametersRef
     
             #rigid body node for ObjectFFRFreducedOrder
-            self.nRigidBody = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=list(positionRef)+list(eulerParametersRef), 
+            self.nRigidBody = mbs.AddNode(eii.NodeRigidBodyEP(referenceCoordinates=list(positionRef)+list(eulerParametersRef), 
                                                 initialVelocities=list(initialVelocity)+list(self.rotationParameters_t0)))
             self.rigidBodyNodeType = exu.NodeType.RotationEulerParameters
         else:
@@ -1135,6 +1139,7 @@ class ObjectFFRFreducedOrderInterface:
         #print("self.rotationParameters_t0 =",self.rotationParameters_t0 )
 
         self.gravity = gravity
+        self.loadGravity = None #only defined if LoadMassProportional is added
         #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         #check if postProcessingModes exist
         outputVariableModeBasis = []
@@ -1154,7 +1159,7 @@ class ObjectFFRFreducedOrderInterface:
             
         #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         #generic node for modal coordinates in ObjectFFRFreducedOrder
-        self.nGenericODE2 = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=self.nModes,
+        self.nGenericODE2 = mbs.AddNode(eii.NodeGenericODE2(numberOfODE2Coordinates=self.nModes,
                                           referenceCoordinates=[0]*self.nModes,
                                           initialCoordinates=[0]*self.nModes,
                                           initialCoordinates_t=[0]*self.nModes))
@@ -1178,15 +1183,12 @@ class ObjectFFRFreducedOrderInterface:
         #massMatrixMC.SetWithDenseMatrix(factMass*self.massMatrixReduced,useDenseMatrix=False)
         
         massMatrixMC.SetWithDenseMatrix(self.massMatrixReduced,useDenseMatrix=False)
-        emptyMC = exu.MatrixContainer()
+        #emptyMC = exu.MatrixContainer()
 
         #add generic body for FFRF-Object:
         if UFmassMatrix == 0 or UFforce == 0:
             
-            if np.array(gravity) @ np.array(gravity) != 0.:
-                raise ValueError("AddObjectFFRFreducedOrderWithUserFunctions: C++ version only implemented for gravity=[0,0,0]; set both user functions or use LoadMassProportional")
-
-            self.oFFRFreducedOrder = mbs.AddObject(ObjectFFRFreducedOrder(nodeNumbers = [self.nRigidBody, self.nGenericODE2], 
+            self.oFFRFreducedOrder = mbs.AddObject(eii.ObjectFFRFreducedOrder(nodeNumbers = [self.nRigidBody, self.nGenericODE2], 
                                                                 stiffnessMatrixReduced=stiffnessMatrixMC, 
                                                                 massMatrixReduced=massMatrixMC,
                                                                 dampingMatrixReduced=dampingMatrixMC,
@@ -1207,12 +1209,16 @@ class ObjectFFRFreducedOrderInterface:
                                                                 forceUserFunction=UFforce,
                                                                 massMatrixUserFunction=UFmassMatrix,
                                                                 computeFFRFterms=True, #only compute user function, no internal components ...
-                                                                visualization=VObjectFFRF(triangleMesh = self.trigList, 
+                                                                visualization=eii.VObjectFFRF(triangleMesh = self.trigList, 
                                                                                             color=color,
                                                                                             showNodes = True)))
 
+            if np.array(gravity) @ np.array(gravity) != 0.:
+                mBody = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=self.oFFRFreducedOrder))
+                self.loadGravity = mbs.AddLoad(eii.LoadMassProportional(markerNumber=mBody, loadVector= gravity))
+
         else:
-            self.oFFRFreducedOrder = mbs.AddObject(ObjectFFRFreducedOrder(nodeNumbers = [self.nRigidBody, self.nGenericODE2], 
+            self.oFFRFreducedOrder = mbs.AddObject(eii.ObjectFFRFreducedOrder(nodeNumbers = [self.nRigidBody, self.nGenericODE2], 
                                                                 stiffnessMatrixReduced=stiffnessMatrixMC, 
                                                                 massMatrixReduced=massMatrixMC,
                                                                 dampingMatrixReduced=dampingMatrixMC,
@@ -1221,13 +1227,14 @@ class ObjectFFRFreducedOrderInterface:
                                                                 forceUserFunction=UFforce,
                                                                 massMatrixUserFunction=UFmassMatrix,
                                                                 computeFFRFterms=False, #only compaute user function, no internal components ...
-                                                                visualization=VObjectFFRF(triangleMesh = self.trigList, 
+                                                                visualization=eii.VObjectFFRF(triangleMesh = self.trigList, 
                                                                                             color=color,
                                                                                             showNodes = True)))
 
         dictReturn = {'nRigidBody':self.nRigidBody,
                       'nGenericODE2':self.nGenericODE2,
-                      'oFFRFreducedOrder':self.oFFRFreducedOrder}
+                      'oFFRFreducedOrder':self.oFFRFreducedOrder,
+                      'loadGravity':self.loadGravity}
 
         #not needed any more; Euler parameter constraint included now in ObjectFFRFreducedOrder
         #if self.nODE2rot == 4: #for euler parameters --> add body to constrain EP
@@ -1375,18 +1382,20 @@ class ObjectFFRFreducedOrderInterface:
     #  initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
     #  massProportionalDamping: Rayleigh damping factor for mass proportional damping, added to floating frame/modal coordinates only
     #  stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only
+    #  gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
     #  color: provided as list of 4 RGBA values
     def AddObjectFFRFreducedOrder(self, mbs, 
                                   positionRef=[0,0,0], initialVelocity=[0,0,0], 
                                   rotationMatrixRef=[], initialAngularVelocity=[0,0,0],
                                   massProportionalDamping = 0, stiffnessProportionalDamping = 0,
+                                  gravity = [0,0,0],
                                   color=[0.1,0.9,0.1,1.]):
         import exudyn as exu
         return self.AddObjectFFRFreducedOrderWithUserFunctions(exu=exu, mbs=mbs, 
                                                   positionRef=positionRef, initialVelocity=initialVelocity, rotationMatrixRef=rotationMatrixRef, 
                                                   initialAngularVelocity=initialAngularVelocity,
                                                   massProportionalDamping = massProportionalDamping, stiffnessProportionalDamping = stiffnessProportionalDamping,
-                                                  color=color)
+                                                  gravity = gravity, color=color)
     
         
 
@@ -1911,7 +1920,7 @@ class FEMinterface:
         
         nNodeLists = len(boundaryNodesList)
         #sizes of internal and boundary nodes:
-        M = bfM.mat
+        #M = bfM.mat
         K = bfK.mat
         n = K.height
         nNodes = int(n/3)
@@ -1925,7 +1934,7 @@ class FEMinterface:
         addRotationModes = 1
         rbSize = 3 + 3*addRotationModes #size of rigid body coordinates (3 for translation, 6 for translation+rotation)
         nbRBE2 = (nNodeLists-1)*rbSize #number of chosen static modes, 6 DOF per rigid body interface; exclude first rigid body boundary in order to suppress rigid body motion of static modes
-        DOFeig = np.arange(nbRBE2,nbRBE2+nEigenModes) #for final mapping of eigenmode coordinates
+        #DOFeig = np.arange(nbRBE2,nbRBE2+nEigenModes) #for final mapping of eigenmode coordinates
 
         modeBasis = np.zeros((n, nbRBE2+nEigenModes))
 
@@ -1941,7 +1950,7 @@ class FEMinterface:
             mvRB[i][nNodes*i:nNodes*(i+1)] = 1
                         
         #create list of mappings between average rigid body motion and boundary DOF matrix
-        rigidBodyMappings = [[]]*nNodeLists #list of mappings
+        #rigidBodyMappings = [[]]*nNodeLists #list of mappings
         cntBoundary = 0 #counter for boundaryNodeLists / number of interfaces
         for cntBoundary, boundaryNodes in enumerate(boundaryNodesList):
             nbn = len(boundaryNodes)
@@ -2061,44 +2070,6 @@ class FEMinterface:
         else:
             raise ValueError('ComputePostProcessingModes invoked with invalid outputVariableType')
 
-        # if material == 0:
-        #     material=KirchhoffMaterial(1, 0, 1)
-        #     if not computeStrains:
-        #         raise ValueError('ComputePostProcessingModes: if material=0, outputVariableType must be StrainLocal')
-
-        # nNodes = int(fes.ndof/3)
-        # modeBasis = self.modeBasis['matrix']
-        # [mu, lam] = material.LameParameters()
-                
-        # nModeVectors = modeBasis.shape[1]
-        # stressModesMatrix = np.zeros((nNodes,6*nModeVectors))
-    
-        # fesStress = ngs.MatrixValued(ngs.H1(fes.mesh, order=fes.globalorder), symmetric=True)
-        # #order of stresses (per node) = xx,xy,xz,yy,yz,zz (in order xx xx xx xy xy xy...)
-        # gfStress = ngs.GridFunction(fesStress)
-        # gfu = ngs.GridFunction(fes)
-    
-        # #map ngsolve stress components xx,xy,yy,xz,yz,zz to Exudyn xx,yy,zz,yz,xz,xy
-        # ngsStressMap = [0,2,5,4,3,1] #stressModeExu[i] = stressModeNGS[ngsStressMap[i]]
-    
-        # with ngs.TaskManager():
-        #     for i in range(nModeVectors):
-        #         if verbose: print('compute stress mode ', i, 'of', nModeVectors)
-        #         v = modeBasis[:,i]
-        #         gfu.vec.FV()[:] = ResortIndicesExudyn2NGvector(v)
-        #         # print(StressFunction(ngs.Sym(ngs.Grad(gfu)), mu, lam))
-        #         # t1 = time.time()
-        #         # gfStress.Interpolate(StressFunction(ngs.Sym(ngs.Grad(gfu)), mu, lam))
-        #         gfStress.Interpolate(StressFunction(ngs.Sym(ngs.Grad(gfu)), mu, lam).Compile())
-        #         #gfStress.Set(StressFunction(ngs.Sym(ngs.Grad(gfu)), mu, lam))
-        #         # print(time.time() - t1)
-                
-        #         sv = gfStress.vec.FV()
-        #         for j in range(6):
-        #             stressModesMatrix[:,i*6+j] = sv[ngsStressMap[j]*nNodes:(ngsStressMap[j]+1)*nNodes]
-        
-        # self.postProcessingModes = {'matrix': stressModesMatrix, 
-        #                            'outputVariableType': outputVariableType}
         if material == 0:
             material=KirchhoffMaterial(1, 0, 1)
             if not computeStrains:
@@ -2406,7 +2377,7 @@ class FEMinterface:
                                     surfaceListTrigs += [actSurface]
                         elementCnt += 1
         
-        if verbose: print("surfaceListQuad length=",len(surfaceListQuad))
+        if verbose: print("surfaceListQuad length=",len(surfaceListQuads))
         for quad in surfaceListQuads:
             surfaceListTrigs += [[quad[0],quad[1],quad[2]]]
             surfaceListTrigs += [[quad[0],quad[2],quad[3]]]
@@ -2498,7 +2469,7 @@ class FEMinterface:
         nodeSize = self.coordinatesPerNodeType[nodeTypeName]
 
         nCoordinate = nodeNumber * nodeSize
-        supports = []
+        #supports = []
         for i in range(nodeSize):
             #supports += [[nCoordinate+i,nCoordinate+i,addedMass]]
             self.massMatrix = AddEntryToCompressedRowSparseArray(self.massMatrix, nCoordinate+i,nCoordinate+i,addedMass)
@@ -2516,7 +2487,7 @@ class FEMinterface:
         #add nodes:
         allNodeList = [] #create node list
         for node in femNodes:
-            allNodeList += [mbs.AddNode(NodePoint(referenceCoordinates=node))]
+            allNodeList += [mbs.AddNode(eii.NodePoint(referenceCoordinates=node))]
         
         nRows = self.NumberOfCoordinates()
         Mcsr = exu.MatrixContainer()
@@ -2525,12 +2496,12 @@ class FEMinterface:
         Kcsr.SetWithSparseMatrixCSR(nRows,nRows,self.GetStiffnessMatrix(sparse=True), useDenseMatrix=False)
         
         #now add generic body built from FEM model with mass and stiffness matrix (optional damping could be added):
-        oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers = allNodeList, 
+        oGenericODE2 = mbs.AddObject(eii.ObjectGenericODE2(nodeNumbers = allNodeList, 
                                                         massMatrix=Mcsr, 
                                                         stiffnessMatrix=Kcsr,
                                                         #forceVector=np.zeros(nRows), 
                                                         #forceUserFunction=UFforce,
-                                                        visualization=VObjectGenericODE2(triangleMesh = self.GetSurfaceTriangles(), 
+                                                        visualization=eii.VObjectGenericODE2(triangleMesh = self.GetSurfaceTriangles(), 
                                                                                          color=color)
                                                         ))
         return [oGenericODE2, allNodeList]
@@ -2587,7 +2558,7 @@ class FEMinterface:
         #do not add boundary conditions here, otherwise stiffness matrix cannot be exported!
         fes = ngs.NodalFESpace(mesh, order=meshOrder)**3
         uu = fes.TrialFunction()
-        v = fes.TestFunction()
+        #v = fes.TestFunction()
     
         a = ngs.BilinearForm(fes)
         a += ngs.Variation(DeformationEnergy(GLstrain(uu), mu, lam).Compile()*ngs.dx)
@@ -2610,7 +2581,7 @@ class FEMinterface:
         #add nodes:
         allNodeList = [] #create node list
         for node in femNodes:
-            allNodeList += [mbs.AddNode(NodePoint(referenceCoordinates=node))]
+            allNodeList += [mbs.AddNode(eii.NodePoint(referenceCoordinates=node))]
         
         nRows = fem.NumberOfCoordinates()
         Mcsr = exu.MatrixContainer()
@@ -2641,11 +2612,11 @@ class FEMinterface:
             return MCK
         
         #now add generic body built from FEM model with mass and stiffness matrix (optional damping could be added):
-        oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers = allNodeList, 
+        oGenericODE2 = mbs.AddObject(eii.ObjectGenericODE2(nodeNumbers = allNodeList, 
                                                         massMatrix=Mcsr, 
                                                         forceUserFunction=UFforce,
                                                         jacobianUserFunction=UFjacobian,
-                                                        visualization=VObjectGenericODE2(triangleMesh = fem.GetSurfaceTriangles(), color=color)
+                                                        visualization=eii.VObjectGenericODE2(triangleMesh = fem.GetSurfaceTriangles(), color=color)
                                                         ))
 
         return [oGenericODE2, allNodeList]
@@ -2661,7 +2632,7 @@ class FEMinterface:
     def ComputeEigenmodes(self, nModes, excludeRigidBodyModes = 0, useSparseSolver = True):
         if not useSparseSolver:
             #unsorted, dense eigen vectors
-            from scipy.linalg import solve, eigh, eig #eigh for symmetric matrices, positive definite
+            from scipy.linalg import eigh#, solve, eig #eigh for symmetric matrices, positive definite
 
             K = self.GetStiffnessMatrix(sparse=False)
             M = self.GetMassMatrix(sparse=False)
@@ -2708,7 +2679,7 @@ class FEMinterface:
                                       useSparseSolver = True):
         if not useSparseSolver:
             #unsorted, dense eigen vectors
-            from scipy.linalg import solve, eigh, eig #eigh for symmetric matrices, positive definite
+            from scipy.linalg import eigh#, solve, eig #eigh for symmetric matrices, positive definite
     
             K = self.GetStiffnessMatrix(sparse=False)
             M = self.GetMassMatrix(sparse=False)
@@ -2765,7 +2736,7 @@ class FEMinterface:
     
             else:
                 [eigVals, eigVecs] = eigh(K,M) #this gives omega^2 ... squared eigen frequencies (rad/s)
-                self.modeBasis = {'matrix':eigVecs[:,excludeRigidBodyModes:excludeRigidBodyModes + nEigenModes], 'type':'NormalNodes'}
+                self.modeBasis = {'matrix':eigVecs[:,0:nEigenModes], 'type':'NormalNodes'}
                 self.eigenValues = abs(eigVals)
         else:
             raise ValueError("ComputeEigenModesWithBoundaryNodes: only implemented for dense mode")
@@ -2791,7 +2762,7 @@ class FEMinterface:
         #only makes sense for RBE3 modes:  positionOnlyModes: provide empty list [] to compute rigid body interfaces for all boundary node lists, or a boolean list [False, False, True, ...] to indicate which modes only have 3 position but no rotation modes; only valid for computationMode = RBE2 
     
         #unsorted, dense eigen vectors
-        from scipy.linalg import solve, eigh, eig #eigh for symmetric matrices, positive definite
+        from scipy.linalg import eigh#, solve, eig #eigh for symmetric matrices, positive definite
         from scipy.linalg import block_diag
         import time #for some timers
 
@@ -2837,7 +2808,7 @@ class FEMinterface:
     
             #print("midpoints=",boundaryNodesMidPoints)
     
-            ni = n-nb
+            #ni = n-nb
     
             #compute boundary and internal DOF numbers:
             DOFb = np.array(DOFb)
@@ -3223,7 +3194,7 @@ class FEMinterface:
         #SPARSE version:
         else: 
             from scipy import sparse
-            from scipy.sparse.linalg import factorized, eigs
+            from scipy.sparse.linalg import eigs #, factorized
             #[M, 0][q_tt] + [omega*G, 0] [q_t] = [0]
             #[0, 0][q_t ] + [       , K] [q  ] = [0]
  

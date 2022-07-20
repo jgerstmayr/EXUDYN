@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1165, 
-Number of resolved issues = 997 (8 in current minor version), 
-Exudyn version = 1.3.8.dev1, 
-last change =  2022-06-27
+Number of issues = 1218, 
+Number of resolved issues = 1048 (59 in current minor version), 
+Exudyn version = 1.3.59, 
+last change =  2022-07-20
 
 
 <table style = "width:100%">
@@ -39,15 +39,175 @@ last change =  2022-06-27
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>1161</td>
-    <td>KinematicTree       </td>
+    <td>1209</td>
+    <td>parallel            </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> change GetObjectOutputBody to GetObjectOutput as localPosition does not make sense here</td>
-    <td>CHANGE</td>
+    <td> C++: add multithreaded parallelization for PostNewton</td>
+    <td>EXTENSION</td>
     <td></td>
-    <td>2022-06-27</td>
-    <td>2022-08-26</td>
+    <td>2022-07-14</td>
+    <td>2022-09-12</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1206</td>
+    <td>parallel            </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> C++: parallelize important vector-vector and matrix-vector (MultMatrix, MultAdd, ...) operations with optional commands</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-12</td>
+    <td>2022-09-10</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1205</td>
+    <td>LinkedDataVectorParallel</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> C++: check if LinkedDataVector can obtain performance mode from ResizableVectorParallel</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-07-12</td>
+    <td>2022-09-10</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1203</td>
+    <td>parallel / multithreaded</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> C++: add multithreading for JacobianODE2 (analytic jacobians)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-12</td>
+    <td>2022-09-10</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1202</td>
+    <td>parallel / multithreaded</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> C++: add multithreading for JacobianAE</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-12</td>
+    <td>2022-09-10</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1196</td>
+    <td>ObjectFFRFreducedOrder sparse</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add sparse option for ObjectFFRFreducedOrder, filling in flexible-flexible mass terms into sparse mass matrix</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-11</td>
+    <td>2022-09-09</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1194</td>
+    <td>generalizedAlpha scaling</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> turn on/off scaling in interface to test symmetric solver speedup</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-11</td>
+    <td>2022-09-09</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1192</td>
+    <td>ExplicitSolver      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> Newton / startOfStep: check if dataCoords should also be copied</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-07-10</td>
+    <td>2022-09-08</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1189</td>
+    <td>ContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add velocity offset to MarkerCable2DShape</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-08</td>
+    <td>2022-09-06</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1187</td>
+    <td>ALEANCFCable2D      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add missing terms related to damping terms coupled with delta qALE</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-06</td>
+    <td>2022-09-04</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1167</td>
+    <td>user functions      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check https://pybind11.readthedocs.io/en/stable/advanced/cast/functional.html regarding stateless functions and test performance with C++ functions for simple spring-damper</td>
+    <td>CHEKCK</td>
+    <td></td>
+    <td>2022-06-29</td>
+    <td>2022-08-28</td>
     <td></td>
     <td></td>
     <td></td>
@@ -61,22 +221,6 @@ last change =  2022-06-27
     <td>RAISED  </td>
     <td> change conversion behavior for Vector3D and Matrix3D, automatically transformed into numpy arrays instead of std::vector which gives a list right now</td>
     <td>CHANGE</td>
-    <td></td>
-    <td>2022-06-26</td>
-    <td>2022-08-25</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1159</td>
-    <td>BodyGraphicsData    </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add method to convert bodyGraphicsData into dictionary; add flag to GetObject to by default not show graphicsData</td>
-    <td>EXTENSION</td>
     <td></td>
     <td>2022-06-26</td>
     <td>2022-08-25</td>
@@ -230,23 +374,7 @@ last change =  2022-06-27
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1099</td>
-    <td>TriangleList        </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> extend GraphicsData TriangleList with two optional lists (which may be empty) containing edges (tuples of point numbers) as well as edgeColors; allows to easily add edges to graphics representation</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-05-22</td>
-    <td>2022-07-21</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1088</td>
     <td>ANCFBeam3D          </td>
     <td>JG</td>
@@ -262,7 +390,7 @@ last change =  2022-06-27
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1087</td>
     <td>ANCFBeam3D          </td>
     <td>JG</td>
@@ -278,7 +406,7 @@ last change =  2022-06-27
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1085</td>
     <td>GeneralContact      </td>
     <td>JG</td>
@@ -294,7 +422,7 @@ last change =  2022-06-27
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1078</td>
     <td>BeamSectionGeometry </td>
     <td>JG</td>
@@ -310,7 +438,7 @@ last change =  2022-06-27
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1075</td>
     <td>ANCFCable3D         </td>
     <td>JG</td>
@@ -326,7 +454,7 @@ last change =  2022-06-27
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1061</td>
     <td>Reference and copy  </td>
     <td>JG</td>
@@ -375,22 +503,6 @@ last change =  2022-06-27
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>1035</td>
-    <td>TestModels          </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> change modelUnitTests imports in TestModels such that they also work in case that example is run outside TestModels directory</td>
-    <td>CHANGE</td>
-    <td></td>
-    <td>2022-04-07</td>
-    <td>2022-06-06</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>1032</td>
     <td>ObjectConnectorCoordinateVector</td>
     <td>JG</td>
@@ -416,38 +528,6 @@ last change =  2022-06-27
     <td></td>
     <td>2022-04-02</td>
     <td>2022-06-01</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>1018</td>
-    <td>MacOS               </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> adjust mouse scroll factor in case of Apple/Mac OS compilation (e.g. multiply with 0.05 by default)</td>
-    <td>CHANGE</td>
-    <td></td>
-    <td>2022-03-29</td>
-    <td>2022-05-28</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>1016</td>
-    <td>TestSuite           </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add example of reeving system</td>
-    <td>TESTING</td>
-    <td></td>
-    <td>2022-03-28</td>
-    <td>2022-05-27</td>
     <td></td>
     <td></td>
     <td></td>
@@ -576,22 +656,6 @@ last change =  2022-06-27
     <td></td>
     <td>2022-02-28</td>
     <td>2022-04-29</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0954</td>
-    <td>ObjectContactFrictionCircleCable2D</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Add exception in PreAssembleChecks if marker is not a MarkerBody, as implementation only works for MarkerBody but not for MarkerNode</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-02-27</td>
-    <td>2022-04-28</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1415,22 +1479,6 @@ last change =  2022-06-27
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0821</td>
-    <td>include numpy-stl   </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> include library to import stl files; add Warning to GraphicsDataFromSTLfileTxt for large file sizes and check if is ascii; in binary case, try switching to numpy-stl; add example to load binary files; add example to convert stl ascii to binary files</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-12-06</td>
-    <td>2022-02-04</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0792</td>
     <td>test Pardiso integration</td>
     <td>JG</td>
@@ -1648,22 +1696,6 @@ last change =  2022-06-27
     <td></td>
     <td>2021-07-31</td>
     <td>2021-09-29</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0720</td>
-    <td>AddObjectFFRFreducedOrder</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add gravity as with user functions version, similar to AddRigidBody</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-07-12</td>
-    <td>2021-09-10</td>
     <td></td>
     <td></td>
     <td></td>
@@ -2727,6 +2759,678 @@ last change =  2022-06-27
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1217</td>
+    <td>GraphicsData        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add functions for drawing text, line and circle: GraphicsDataLine, GraphicsDataText, GraphicsDataCircle</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-20</td>
+    <td>2022-09-18</td>
+    <td>2022-07-20 09:45</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1216</td>
+    <td>renderer: Circle    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> circles drawn wrongly, not closed for circleTiling <= 6 and producing overly many lines</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-07-19</td>
+    <td>2022-09-17</td>
+    <td>2022-07-19 20:11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1215</td>
+    <td>GraphicsData addEdges</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> some examples still in a previous state expecting wrong GraphicsData format</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-07-19</td>
+    <td>2022-09-17</td>
+    <td>2022-07-19 12:14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1214</td>
+    <td>Export lines        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to export all lines from renderer similar to RenderImage, however, just exporting the raw line information (2 points, RGBA color)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-19</td>
+    <td>2022-09-17</td>
+    <td>2022-07-19 18:39</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1213</td>
+    <td>mbs.systemData.Info()</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> mbs.systemData.Info() gives error for KinematicTree</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-07-15</td>
+    <td>2022-09-13</td>
+    <td>2022-07-15 15:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1212</td>
+    <td>DynamicSolverType::RK67</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> shows DynamicSolverType::invalid</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-07-15</td>
+    <td>2022-09-13</td>
+    <td>2022-07-15 15:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1211</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add listMarkerStyles and listMarkerStylesFilled to exudyn.plot for use in loops</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-15</td>
+    <td>2022-09-13</td>
+    <td>2022-07-15 09:28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1210</td>
+    <td>microThread          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check if threading can be optimized by only using sync atomic variables</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-07-14</td>
+    <td>2022-09-12</td>
+    <td>2022-07-14 20:40</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>no big improvement found, also using bit-wise thread communication and saving some atomic operations</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1208</td>
+    <td>timer PostNewton    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add timer for PostNewtonStep</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-14</td>
+    <td>2022-09-12</td>
+    <td>2022-07-14 00:15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1207</td>
+    <td>microThreading       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add micro threading library which already takes effect for small systems (10-20 3D rigid bodies); currently included with separate compile option in BasicDefinitions.h</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-13</td>
+    <td>2022-09-11</td>
+    <td>2022-07-13 13:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1204</td>
+    <td>parallel / multithreaded</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> C++: add multithreading for AlgebraicEquations</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-12</td>
+    <td>2022-09-10</td>
+    <td>2022-07-12 15:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1201</td>
+    <td>parallel / multithreaded</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> C++: add multithreading for ProjectedReactionForces</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-12</td>
+    <td>2022-09-10</td>
+    <td>2022-07-12 13:04</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1200</td>
+    <td>CSystem::Jacobians  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> C++: removed single flags for jacobians and replaced by JacobianType; check your results (bugs may happen)</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-07-12</td>
+    <td>2022-09-10</td>
+    <td>2022-07-12 10:55</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1199</td>
+    <td>adjust testSuite    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> due to change of state vector to ResizableVectorParallel with AVX arithmetic, minor changes in reference solutions happened</td>
+    <td>TESTING</td>
+    <td></td>
+    <td>2022-07-11</td>
+    <td>2022-09-09</td>
+    <td>2022-07-12 17:06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1198</td>
+    <td>parallel MassMatrix </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> use multithreading to compute mass matrix; treat objects with user functions separately</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-11</td>
+    <td>2022-09-09</td>
+    <td>2022-07-11 23:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1197</td>
+    <td>ResizableArray      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> C++: copy of illegal parts of memory when enlarging array</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-07-11</td>
+    <td>2022-09-09</td>
+    <td>2022-07-11 22:58</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1195</td>
+    <td>remove openmp       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove openmp compile options from setup.py as it is not used for now</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-07-11</td>
+    <td>2022-09-09</td>
+    <td>2022-07-11 19:02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1193</td>
+    <td>SparseSolver analyzePattern</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to reuse result of analyzePattern() for successive computations; especially in time integration, using the number of non-zeros as indicator is something has changed; add some initializationFunctions to reset, especially after non-convergence</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-10</td>
+    <td>2022-09-08</td>
+    <td>2022-07-12 17:06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1191</td>
+    <td>SystemState         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> C++: replace Vector state with ResizableVector(Parallel)</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-07-10</td>
+    <td>2022-09-08</td>
+    <td>2022-07-10 14:50</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1190</td>
+    <td>ContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> now adapted to work in general with ALECable2D, however, only for tangential frictionStiffness=0</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-09</td>
+    <td>2022-09-07</td>
+    <td>2022-07-09 14:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1188</td>
+    <td>beam.py             </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> missing eii structure before Point2DS1</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-07-08</td>
+    <td>2022-09-06</td>
+    <td>2022-07-08 16:22</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1186</td>
+    <td>ALEANCFCable2D      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add missing terms related to curvature and strain coupling with delta qALE</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-06</td>
+    <td>2022-09-04</td>
+    <td>2022-07-09 21:25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1185</td>
+    <td>ContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add ALE term to marker and contact element</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-06</td>
+    <td>2022-09-04</td>
+    <td>2022-07-06 15:30</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1184</td>
+    <td>exudyn.utilities    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove import of time and copy; needs to be included separately into models</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-07-06</td>
+    <td>2022-09-04</td>
+    <td>2022-07-06 11:55</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>check your models!</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1183</td>
+    <td>star imports        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove * imports from all .py modules except utilities.py</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-07-06</td>
+    <td>2022-09-04</td>
+    <td>2022-07-06 11:56</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>also fixed some undetected bugs in unused functions in exudyn.* utilities</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1182</td>
+    <td>roboticsCore.py     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove * import of many exudyn packages</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-07-06</td>
+    <td>2022-09-04</td>
+    <td>2022-07-06 10:58</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1181</td>
+    <td>setup.py            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> due to deprecation warning, use namespace_packages instead of packages in setup(...); remove include_package_data=True</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-07-06</td>
+    <td>2022-09-04</td>
+    <td>2022-07-06 09:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1180</td>
+    <td>AddEdgesAndSmoothenNormals</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> specialized function for STL file enhancement</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-05</td>
+    <td>2022-09-03</td>
+    <td>2022-07-05 20:51</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1179</td>
+    <td>show lines          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add separate visualization.openGL flag for showing/hiding lines</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-05</td>
+    <td>2022-09-03</td>
+    <td>2022-07-05 11:20</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1178</td>
+    <td>STL import/export   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to invert triangles and/or normls on import or export of STL meshes</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-05</td>
+    <td>2022-09-03</td>
+    <td>2022-07-05 08:38</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1177</td>
+    <td>selection right mouse</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> now also showing GraphicsData optionally with visualizationSettings.interactive.selectionRightMouseGraphicsData</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-05</td>
+    <td>2022-09-03</td>
+    <td>2022-07-05 08:38</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1176</td>
+    <td>GraphicsDataCylinder...()</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> returns always a GraphicsData dictionary, independently of addEdges is True or False</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-07-04</td>
+    <td>2022-09-02</td>
+    <td>2022-07-04 23:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1175</td>
+    <td>GraphicsDataOrthoCube...()</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> returns always a GraphicsData dictionary, independently of adding edges or not</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-07-04</td>
+    <td>2022-09-02</td>
+    <td>2022-07-04 23:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1174</td>
+    <td>mbs.GetObject       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to receive graphicsData (or not)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-04</td>
+    <td>2022-09-02</td>
+    <td>2022-07-04 23:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>default behavior kept same, not returning graphicsData in dict</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1173</td>
+    <td>GetObjectOutputBody </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add default argument localPosition=[0,0,0]</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-07-04</td>
+    <td>2022-09-02</td>
+    <td>2022-07-04 11:45</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1172</td>
+    <td>GetObjectOutput     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> include configurationType in interface (default: Current); not available in connectors; add objectNumber in C++ interface</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-07-04</td>
+    <td>2022-09-02</td>
+    <td>2022-07-04 11:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1171</td>
+    <td>MarkerKinematicTreeRigid</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> incorrect GetPosition, GetVelocity, GetAngularVelocity, ...</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-07-03</td>
+    <td>2022-09-01</td>
+    <td>2022-07-04 11:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1170</td>
+    <td>MarkerKinematicTreeRigid</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add visualization</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-03</td>
+    <td>2022-09-01</td>
+    <td>2022-07-03 20:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1169</td>
+    <td>conversion to STL   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function to convert graphicsData triangle meshes into STL; allows import into other tools</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-07-03</td>
+    <td>2022-09-01</td>
+    <td>2022-07-04 20:55</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1168</td>
+    <td>left mouse          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> deactivate mouse select if renderer is showing mouse coordinates (and doing measuring)</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-07-02</td>
+    <td>2022-08-31</td>
+    <td>2022-07-02 11:29</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1166</td>
+    <td>InteractiveDialog   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> In all interactive dialogs, especially the SolutionViewer now stopping the render window (with Q or Escape) also stops the interactive dialog; behavior changed with checkRenderEngineStopFlag</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-29</td>
+    <td>2022-08-28</td>
+    <td>2022-06-29 10:15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1165</td>
+    <td>class Robot         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> drawing of cylinder for first body in robot removed; this part must be drawn manually at base (or not drawn)</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-06-29</td>
+    <td>2022-08-28</td>
+    <td>2022-06-29 10:02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1164</td>
     <td>OpenGL shadow       </td>
     <td>JG</td>
@@ -2769,6 +3473,38 @@ last change =  2022-06-27
     <td>2022-06-27</td>
     <td>2022-08-26</td>
     <td>2022-06-27 14:12</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1161</td>
+    <td>KinematicTree       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change GetObjectOutputBody to GetObjectOutput as localPosition does not make sense here</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-06-27</td>
+    <td>2022-08-26</td>
+    <td>2022-07-04 11:39</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1159</td>
+    <td>BodyGraphicsData    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add method to convert bodyGraphicsData into dictionary; add flag to GetObject to by default not show graphicsData</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-26</td>
+    <td>2022-08-25</td>
+    <td>2022-07-04 23:59</td>
     <td>JG</td>
     <td></td>
     <td></td>
@@ -3573,6 +4309,22 @@ last change =  2022-06-27
     <td></td>
     <td></td>
     <td>Duplicate of issue 1102</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1099</td>
+    <td>TriangleList        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend GraphicsData TriangleList with two optional lists (which may be empty) containing edges (tuples of point numbers) as well as edgeColors; allows to easily add edges to graphics representation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-05-22</td>
+    <td>2022-07-21</td>
+    <td>2022-07-05 00:04</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1098</td>
@@ -4455,6 +5207,22 @@ last change =  2022-06-27
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1035</td>
+    <td>TestModels          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change modelUnitTests imports in TestModels such that they also work in case that example is run outside TestModels directory</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-04-07</td>
+    <td>2022-06-06</td>
+    <td>2022-07-20 14:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>done earlier</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1034</td>
     <td>solution and sensor files</td>
     <td>JG</td>
@@ -4679,6 +5447,22 @@ last change =  2022-06-27
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1018</td>
+    <td>MacOS               </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> adjust mouse scroll factor in case of Apple/Mac OS compilation (e.g. multiply with 0.05 by default)</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-03-29</td>
+    <td>2022-05-28</td>
+    <td>2022-06-28 15:30</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>changed way to compute zoomFactor for larger yOffsets in scroll callback</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1017</td>
     <td>ContactFrictionCircleCable2D</td>
     <td>JG</td>
@@ -4693,6 +5477,22 @@ last change =  2022-06-27
     <td></td>
     <td></td>
     <td>switched to reference length in computation of relative sticking position as given in theDoc; leads to improved results</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1016</td>
+    <td>TestSuite           </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add example of reeving system</td>
+    <td>TESTING</td>
+    <td></td>
+    <td>2022-03-28</td>
+    <td>2022-05-27</td>
+    <td>2022-07-20 14:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>done earlier</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1015</td>
@@ -5541,6 +6341,22 @@ last change =  2022-06-27
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0954</td>
+    <td>ObjectContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add exception in PreAssembleChecks if marker is not a MarkerBody, as implementation only works for MarkerBody but not for MarkerNode</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-27</td>
+    <td>2022-04-28</td>
+    <td>2022-07-05 21:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>resolved, as now a MarkerNodeRigid may also be used</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0953</td>
@@ -6837,6 +7653,22 @@ last change =  2022-06-27
     <td></td>
     <td></td>
     <td>currently slows down for larger meshes due to elimination of duplicate points!</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0821</td>
+    <td>include numpy-stl   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> include library to import stl files; add Warning to GraphicsDataFromSTLfileTxt for large file sizes and check if is ascii; in binary case, try switching to numpy-stl; add example to load binary files; add example to convert stl ascii to binary files</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-06</td>
+    <td>2022-02-04</td>
+    <td>2022-07-04 20:55</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>example for stl import added: Examples/stlFileImport.py</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0820</td>
@@ -8209,6 +9041,22 @@ last change =  2022-06-27
     <td>2021-07-12</td>
     <td>2021-09-10</td>
     <td>2021-07-12 16:35</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0720</td>
+    <td>AddObjectFFRFreducedOrder</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add gravity as with user functions version, similar to AddRigidBody</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-07-12</td>
+    <td>2021-09-10</td>
+    <td>2022-06-29 09:27</td>
     <td>JG</td>
     <td></td>
     <td></td>

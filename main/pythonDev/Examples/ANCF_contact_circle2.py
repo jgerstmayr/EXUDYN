@@ -11,23 +11,36 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.itemInterface import *
+from exudyn.utilities import *
+
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
+L=2                     # length of ANCF element in m
+pCircle = [0.65*L,-0.5,0]
+pCircle2 =  [0.25*L,-0.15,0]
+circleRadius=0.3
+circleRadius2=0.1
+
 #background
 rect = [-0.5,-1,2.5,1] #xmin,ymin,xmax,ymax
-background0 = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]} #background
 background1 = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[0,-1,0, 2,-1,0]} #background
-oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [background0, background1])))
+
+
+background  = [GraphicsDataRectangle(-0.5,-1,2.5,1, color=color4blue)]
+background += [GraphicsDataLine([[0,-1,0], [2,-1,0]], color=color4green)]
+background += [GraphicsDataCircle(point=pCircle, radius = circleRadius-0.002, color=color4blue)] #not necessary, as it is drawn by connector
+background += [GraphicsDataCircle(point=pCircle2, radius = circleRadius2-0.002, color=color4blue)] #not necessary, as it is drawn by connector
+background += [GraphicsDataText(point=[0.,0.2,0], text = 'ANCF contact with circle', color=color4black)]
+
+oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= background)))
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #cable:
 mypi = 3.141592653589793
 
-L=2                     # length of ANCF element in m
 #L=mypi                 # length of ANCF element in m
 E=2.07e11               # Young's modulus of ANCF element in N/m^2
 rho=7800                # density of ANCF element in kg/m^3
@@ -111,9 +124,8 @@ useCircleContact = True
 if useCircleContact:
     nSegments = 8 #4; number of contact segments; must be consistent between nodedata and contact element
     initialGapList = [0.1]*nSegments #initial gap of 0.1
-
-    mGroundCircle = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, localPosition=[0.65*L,-0.5,0])) 
-    mGroundCircle2 = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, localPosition=[0.25*L,-0.15,0])) 
+    mGroundCircle = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, localPosition=pCircle)) 
+    mGroundCircle2 = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, localPosition=pCircle2)) 
 
     #mCable = mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=elem, numberOfSegments = nSegments))
     #nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments))
@@ -127,11 +139,11 @@ if useCircleContact:
         nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments))
         mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mGroundCircle, mCable], nodeNumber = nodeDataContactCable, 
                                                  numberOfContactSegments=nSegments, contactStiffness = cStiffness, contactDamping=cDamping, 
-                                                 circleRadius = 0.3, offset = 0))
+                                                 circleRadius = circleRadius, offset = 0))
         nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments))
         mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mGroundCircle2, mCable], nodeNumber = nodeDataContactCable, 
                                                  numberOfContactSegments=nSegments, contactStiffness = cStiffness, contactDamping=cDamping, 
-                                                 circleRadius = 0.1, offset = 0))
+                                                 circleRadius = circleRadius2, offset = 0))
 
 
 #mbs.systemData.Info()
@@ -172,6 +184,7 @@ SC.visualizationSettings.markers.defaultSize = 0.01
 SC.visualizationSettings.connectors.defaultSize = 0.01
 SC.visualizationSettings.contact.contactPointsDefaultSize = 0.005
 SC.visualizationSettings.connectors.showContact = 1
+SC.visualizationSettings.general.circleTiling = 64
 
 simulationSettings.solutionSettings.solutionInformation = "ANCF cable with imposed curvature or applied tip force/torque"
 

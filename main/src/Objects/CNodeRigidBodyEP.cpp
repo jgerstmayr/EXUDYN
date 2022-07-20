@@ -395,12 +395,11 @@ void CNodeRigidBodyEP::ComputeAlgebraicEquations(Vector& algebraicEquations, boo
 
 //! Compute jacobians of algebraic equations part of rigid body w.r.t. ODE2
 void CNodeRigidBodyEP::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t,
-	ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const
+	ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE,
+	JacobianType::Type& filledJacobians) const
 {
 	jacobian_ODE2.SetNumberOfRowsAndColumns(GetNumberOfAECoordinates(), GetNumberOfODE2Coordinates());
-	jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
-	jacobian_ODE1.SetNumberOfRowsAndColumns(0, 0); //for safety!
-	jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
+	filledJacobians = JacobianType::AE_ODE2;
 
 	ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> ep = GetRotationParameters();
 
@@ -410,7 +409,6 @@ void CNodeRigidBodyEP::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Resizab
 	{
 		jacobian_ODE2(0, 3 + i) = 2.*ep[i];
 	}
-	//pout << "jacRB=" << jacobian_ODE2 << "\n";
 }
 
 

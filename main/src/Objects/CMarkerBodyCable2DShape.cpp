@@ -75,6 +75,15 @@ void CMarkerBodyCable2DShape::ComputeMarkerData(const CSystemData& cSystemData, 
 	CHECKandTHROW(!(isALE && verticalOffset != 0.), "CMarkerBodyCable2DShape::ComputeMarkerData: for ALEANCFCable2D elements, the verticalOffset must be zero");
 
 	markerData.GetHelper() = L; //store reference length of element in helper
+	markerData.GetHelper2() = 0.; //ALE coordinate
+	if (isALE)
+	{
+		//store ALE coordinate:
+		markerData.GetHelper2() = ((CNodeODE2*)(((CObjectALEANCFCable2D*)cable)->GetCNode(2)))->GetCurrentCoordinate(0);
+		markerData.GetHelper2() += ((CNodeODE2*)(((CObjectALEANCFCable2D*)cable)->GetCNode(2)))->GetReferenceCoordinateVector()[0];
+		
+		markerData.GetHelperMatrix().SetNumberOfRowsAndColumns(nPoints, 2); //stores r_x per segment point
+	}
 
 	for (Index i = 0; i < nPoints; i++) //iterate over nPoints, including endpoints!
 	{
@@ -89,11 +98,13 @@ void CMarkerBodyCable2DShape::ComputeMarkerData(const CSystemData& cSystemData, 
 		{
 			SVx = cable->ComputeShapeFunctions_x(x, L); //could be precomputed and stored!
 			r_x = cable->MapCoordinates(SVx, q0, q1);
+			markerData.GetHelperMatrix()(0, 0) = r_x[0];
+			markerData.GetHelperMatrix()(0, 1) = r_x[1];
 		}
 		if (isALE)
 		{
 			Real vALE = ((CNodeODE2*)(((CObjectALEANCFCable2D*)cable)->GetCNode(2)))->GetCurrentCoordinateVector_t()[0];
-			
+
 			vel[0] += vALE * r_x[0]; //add Eulerian term
 			vel[1] += vALE * r_x[1]; //add Eulerian term
 		}

@@ -272,6 +272,7 @@ LinearSolverSettings has the following items:
     ignoreRedundantConstraints &     bool &      &     False &     [ONLY implemented for dense matrices] False: standard way, fails if redundant equations or singular matrices occur; True: if redundant constraints appear, the solver tries to resolve them by setting according Lagrange multipliers to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour\\ \hline
     ignoreSingularJacobian &     bool &      &     False &     [ONLY implemented for dense matrices] False: standard way, fails if jacobian is singular; True: if singularities appear in jacobian (e.g. no equation attributed to a node, redundant equations, zero mass matrix, zero eigenvalue for static problem, etc.), the jacobian inverse is resolved such that according solution variables are set to zero; this may help, but it MAY LEAD TO ERRONEOUS BEHAVIOUR; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!\\ \hline
     pivotTreshold &     PReal &      &     0 &     treshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity\\ \hline
+    reuseAnalyzedPattern &     bool &      &     False &     [ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(...) and should be handled with care!\\ \hline
     showCausingItems &     bool &      &     True &     False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -287,13 +288,13 @@ Parallel has the following items:
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    multithreadedLLimitJacobians &     PInt &      &     20 &     compute jacobians (ODE2, AE, ...) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)\\ \hline
+    multithreadedLLimitLoads &     PInt &      &     20 &     compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)\\ \hline
+    multithreadedLLimitMassMatrices &     \tabnewline PInt &      &     20 &     compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)\\ \hline
+    multithreadedLLimitResiduals &     PInt &      &     20 &     compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)\\ \hline
     numberOfThreads &     PInt &      &     1 &     number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores)\\ \hline
-    parallelizeJacobians &     bool &      &     True &     (not available yet) compute jacobians multi-threaded (only makes sense for medium to large systems!)\\ \hline
-    parallelizeMassMatrix &     bool &      &     True &     (not available yet) compute mass matrix multi-threaded (only makes sense for medium to large systems!)\\ \hline
-    parallelizeResiduals &     bool &      &     True &     (not available yet) compute RHS vectors of objects and connectors and loads multi-threaded (only makes sense for medium to large systems!)\\ \hline
-    stopThreadsInSerialSections &     bool &      &     True &     (not available yet) for large scale problems, if steps take longer than 5 ms, parallel threads are stopped in serial regions (etc. for solver) to improve overall performance\\ \hline
-    useMTforSolver &     bool &      &     True &     (not available yet) use multi-threaded optimized vector, vector-matrix and matrix-matrix operations for solver and system operations (only makes sense for medium to large systems!)\\ \hline
-    useSIMDforSolver &     bool &      &     True &     (not available yet) use AVX optimized vector, vector-matrix and matrix-matrix operations for solver and system operations (may already speedup for 16 coordinates)\\ \hline
+    taskSplitMinItems &     PInt &      &     50 &     number of items from which on the tasks are split into subtasks (which slightly increases threading performance; this may be critical for smaller number of objects, should be roughly between 50 and 5000; flag is copied into MainSystem internal flag at InitializeSolverData(...)\\ \hline
+    taskSplitTasksPerThread &     PInt &      &     16 &     this is the number of subtasks that every thread receives; minimum is 1, the maximum should not be larger than 100; this factor is 1 as long as the taskSplitMinItems is not reached; flag is copied into MainSystem internal flag at InitializeSolverData(...)\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -660,6 +661,7 @@ VSettingsOpenGL has the following items:
     shadowPolygonOffset &     PFloat &      &     10. &     some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize\\ \hline
     showFaceEdges &     bool &     1 &     False &     show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
     showFaces &     bool &     1 &     True &     show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
+    showLines &     bool &     1 &     True &     show lines (different from edges of faces)\\ \hline
     showMeshEdges &     bool &     1 &     True &     show edges of finite elements; independent of showFaceEdges\\ \hline
     showMeshFaces &     bool &     1 &     True &     show faces of finite elements; independent of showFaces\\ \hline
     textLineSmooth &     bool &     1 &     False &     draw lines for representation of text smooth\\ \hline
@@ -679,9 +681,12 @@ VSettingsExportImages has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     heightAlignment &     PInt &      &     2 &     alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)\\ \hline
+    saveImageAsTextLines &     bool &      &     True &     export lines in save image (only in TXT format)\\ \hline
+    saveImageAsTextTexts &     bool &      &     False &     export text in save image (only in TXT format)\\ \hline
+    saveImageAsTextTriangles &     bool &      &     False &     export triangles in save image (only in TXT format)\\ \hline
     saveImageFileCounter &     UInt &      &     0 &     current value of the counter which is used to consecutively save frames (images) with consecutive numbers\\ \hline
     saveImageFileName &     FileName &      &     'images/frame' &     filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.png, frame0001.png,...); ; directory will be created if it does not exist\\ \hline
-    saveImageFormat &     String &      &     'PNG' &     format for exporting figures: currently only PNG and TGA available; PNG is not available for Ubuntu18.04 (check  use TGA has highest compatibility with all platforms\\ \hline
+    saveImageFormat &     String &      &     'PNG' &     format for exporting figures: currently only PNG, TGA and TXT available; while PNG and TGA represent the according image file formats, the TXT format results in a text file containing the 3D graphics data information as lists of lines, triangles, etc; PNG is not available for Ubuntu18.04 (check  use TGA has highest compatibility with all platforms\\ \hline
     saveImageSingleFile &     bool &      &     False &     True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName\\ \hline
     saveImageTimeOut &     PInt &      &     5000 &     timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes\\ \hline
     widthAlignment &     PInt &      &     4 &     alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)\\ \hline
@@ -712,6 +717,7 @@ VSettingsInteractive has the following items:
     selectionHighlights &     bool &      &     True &     True: mouse click highlights item (default: red)\\ \hline
     selectionLeftMouse &     bool &      &     True &     True: left mouse click on items and show basic information\\ \hline
     selectionRightMouse &     bool &      &     True &     True: right mouse click on items and show dictionary (read only!)\\ \hline
+    selectionRightMouseGraphicsData &     \tabnewline bool &      &     False &     True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)\\ \hline
     useJoystickInput &     bool &      &     True &     True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ...\\ \hline
     zoomStepFactor &     float &      &     1.15 &     change of zoom per keypress (keypad +/-) or mouse wheel increment\\ \hline
 	  \end{longtable}
@@ -772,6 +778,7 @@ CSolverTimer has the following items:
     ODE1RHS &     Real &      &     0. &     time for residual evaluation of \hac{ODE1} right-hand-side\\ \hline
     ODE2RHS &     Real &      &     0. &     time for residual evaluation of \hac{ODE2} right-hand-side\\ \hline
     overhead &     Real &      &     0. &     overhead, such as initialization, copying and some matrix-vector multiplication\\ \hline
+    postNewton &     Real &      &     0. &     discontinuous iteration / PostNewtonStep\\ \hline
     python &     Real &      &     0. &     time spent for Python functions\\ \hline
     reactionForces &     Real &      &     0. &     CqT * lambda\\ \hline
     Reset(...) &     void &      &     useSolverTimer &     reset solver timings to initial state by assigning default values; useSolverTimer sets the useTimer flag\\ \hline
@@ -798,25 +805,25 @@ SolverLocalData has the following items:
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
-    aAlgorithmic &     ResizableVector &      &      &     additional term needed for generalized alpha (current state)\\ \hline
+    aAlgorithmic &     ResizableVectorParallel &      &      &     additional term needed for generalized alpha (current state)\\ \hline
     CleanUpMemory() &     void &      &      &     if desired, temporary data is cleaned up to safe memory\\ \hline
     GetLinearSolverType() &     LinearSolverType &      &      &     return current linear solver type (dense/sparse)\\ \hline
     nAE &     Index &      &     0 &     number of algebraic coordinates\\ \hline
     nData &     Index &      &     0 &     number of data coordinates\\ \hline
-    newtonSolution &     ResizableVector &      &      &     Newton decrement (computed from residual and jacobian)\\ \hline
+    newtonSolution &     ResizableVectorParallel &      &      &     Newton decrement (computed from residual and jacobian)\\ \hline
     nODE1 &     Index &      &     0 &     number of first order ordinary diff. eq. coordinates\\ \hline
     nODE2 &     Index &      &     0 &     number of second order ordinary diff. eq. coordinates\\ \hline
     nSys &     Index &      &     0 &     number of system (unknown) coordinates = nODE2+nODE1+nAE\\ \hline
-    SetLinearSolverType(...) &     void &      &     linearSolverType &     set linear solver type and matrix version: links system matrices to according dense/sparse versions\\ \hline
+    SetLinearSolverType(...) &     void &      &     linearSolverType, reuseAnalyzedPattern &     set linear solver type and matrix version: links system matrices to according dense/sparse versions\\ \hline
     startAE &     Index &      &     0 &     start of algebraic coordinates, but set to zero if nAE==0\\ \hline
-    startOfStepStateAAlgorithmic &     ResizableVector &      &      &     additional term needed for generalized alpha (startOfStep state)\\ \hline
-    systemResidual &     ResizableVector &      &      &     system residual vector (vectors will be linked to this vector!)\\ \hline
-    temp2ODE2 &     ResizableVector &      &      &     second temporary vector for \hac{ODE2} quantities; use in static computation\\ \hline
-    tempODE1F0 &     ResizableVector &      &      &     temporary vector for \hac{ODE1} Jacobian\\ \hline
-    tempODE1F1 &     ResizableVector &      &      &     temporary vector for \hac{ODE1} Jacobian\\ \hline
-    tempODE2 &     ResizableVector &      &      &     temporary vector for \hac{ODE2} quantities; use in initial accelerations and during Newton\\ \hline
-    tempODE2F0 &     ResizableVector &      &      &     temporary vector for \hac{ODE2} Jacobian\\ \hline
-    tempODE2F1 &     ResizableVector &      &      &     temporary vector for \hac{ODE2} Jacobian\\ \hline
+    startOfStepStateAAlgorithmic &     ResizableVectorParallel &      &      &     additional term needed for generalized alpha (startOfStep state)\\ \hline
+    systemResidual &     ResizableVectorParallel &      &      &     system residual vector (vectors will be linked to this vector!)\\ \hline
+    temp2ODE2 &     ResizableVectorParallel &      &      &     second temporary vector for \hac{ODE2} quantities; use in static computation\\ \hline
+    tempODE1F0 &     ResizableVectorParallel &      &      &     temporary vector for \hac{ODE1} Jacobian\\ \hline
+    tempODE1F1 &     ResizableVectorParallel &      &      &     temporary vector for \hac{ODE1} Jacobian\\ \hline
+    tempODE2 &     ResizableVectorParallel &      &      &     temporary vector for \hac{ODE2} quantities; use in initial accelerations and during Newton\\ \hline
+    tempODE2F0 &     ResizableVectorParallel &      &      &     temporary vector for \hac{ODE2} Jacobian\\ \hline
+    tempODE2F1 &     ResizableVectorParallel &      &      &     temporary vector for \hac{ODE2} Jacobian\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -876,7 +883,7 @@ SolverConvergenceData has the following items:
     lastResidual &     Real &      &     0. &     last Newton residual to determine contractivity\\ \hline
     linearSolverCausingRow &     Index &      &     -1 &     -1 if successful, 0 ... n-1, the system equation (=coordinate) index which may have caused the problem, at which the linear solver failed\\ \hline
     linearSolverFailed &     bool &      &     False &     true, if linear solver failed to factorize\\ \hline
-    massMatrixNotInvertible &     bool &      &     True &     true, if mass matrix is not invertable during initialization or solution (explicit solver)\\ \hline
+    massMatrixNotInvertible &     bool &      &     False &     true, if mass matrix is not invertable during initialization or solution (explicit solver)\\ \hline
     newtonConverged &     bool &      &     False &     true, if Newton has (finally) converged\\ \hline
     newtonSolutionDiverged &     bool &      &     False &     true, if Newton diverged (may be recovered)\\ \hline
     residual &     Real &      &     0. &     current Newton residual\\ \hline
@@ -907,6 +914,8 @@ SolverOutputData has the following items:
     lastSensorsWritten &     Real &      &     0. &     simulation time when last sensors have been written\\ \hline
     lastSolutionWritten &     Real &      &     0. &     simulation time when last solution has been written\\ \hline
     lastVerboseStepIndex &     Index &      &     0 &     step index when last time written to console (or file)\\ \hline
+    multiThreadingMode &     Index &      &     0 &     multithreading mode that has been used: 0=None (serial), 1=NGsolve taskmanager, 2=MicroThreading (Exudyn)\\ \hline
+    numberOfThreadsUsed &     Index &      &     0 &     number of threads that have been used in simulation\\ \hline
     sensorValuesTemp &     ResizableVector &      &      &     temporary vector for per sensor values (overwritten for every sensor; usually contains last sensor values)\\ \hline
     sensorValuesTemp2 &     ResizableVector &      &      &     additional temporary vector for per sensor values (overwritten for every sensor; usually contains time+last sensor values)\\ \hline
     stepInformation &     Index &      &     0 &     this is a copy of the solvers stepInformation used for console output\\ \hline

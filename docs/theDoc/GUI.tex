@@ -18,7 +18,7 @@ The following table includes the mouse functions.
 	\hline
   \bf Button & action & \bf remarks \\ \hline
   \bf left mouse button & move model & keep left mouse button pressed to move the model in the current x/y plane\\ \hline
-  \bf left mouse button & select item & mouse click on any node, object, etc.\ to see its basic information in status line \\ \hline
+  \bf left mouse button & select item & mouse click on any node, object, etc.\ to see its basic information in status line; selection is deactivated if mouse coordinates are shown (see button F3) \\ \hline
   \bf right mouse button & rotate model & keep right mouse button pressed to rotate model around current current $X_1$/$X_2$ axes\\
 	\bf right mouse button & show item dictionary & [EXPERIMENTAL, must be activated in visualizationSettings.interactive] (short) press and release right mouse button \\ \hline
 \hline
@@ -112,7 +112,9 @@ Special keys:
 All graphics objects are defined by a \texttt{GraphicsData} structure.%, see \refSection{sec:graphicsData}.
 Note that currently the visualization is based on a very simple and ancient OpenGL implementation, as there is currently no simple platform independent alternative. However, most of the heavy load triangle-based operations are implemented in C++ and are realized by very efficient OpenGL commands. However, note that the number of triangles to represent the object should be kept in a feasible range ($<1000000$) in order to obtain a fast response of the renderer.
 
-Many objects include a \texttt{GraphicsData} dictionary structure for definition of attached visualization of the object. Typically, you can use primitives (cube, sphere, ...) or \ac{STL} data to define the objects appearance.
+Many objects include a \texttt{GraphicsData} dictionary structure for definition of attached visualization of the object.
+Note that objects expect a list of \texttt{GraphicsData}, which can be produced with \texttt{GraphicsData...(...)} functions. Note that if reading out the \texttt{GraphicsData} from the object again, it usually has a different structure sorted by types of \texttt{GraphicsData}.
+Typically, you can use primitives (cube, sphere, ...) or \ac{STL} data to define the objects appearance.
 \texttt{GraphicsData} dictionaries can be created with functions provided in the utilities module \texttt{exudyn.graphicsDataUtilities.py}, see \refSection{sec:module:graphicsDataUtilities}.
 
 \texttt{GraphicsData} can be transformed into points and triangles (mesh) and can be used for contact computation, as well.
@@ -138,12 +140,17 @@ the normal $\nv$ then points to the outside region of the mesh or body; the dire
   color & list & [0,0,0,1] & list of 4 floats to define RGB-color and transparency\\ \hline
   data & list &  mandatory & list of float triples of x,y,z coordinates of the line floats to define RGB-color and transparency; Example: data=[0,0,0, 1,0,0, 1,1,0, 0,1,0, 0,0,0] ... draws a rectangle with side length 1\\ \hline
 %
+%LINES
+	\multicolumn{3}{l}{\parbox{8cm}{\bf type = 'Lines': }} & \multicolumn{1}{l}{\parbox{7.5cm}{\it draws a list of $n$ lines defined by 2 points each}}\\ \hline
+  colors & list & mandatory & list [R0,G0,B0,A0, R1,G2,B1,A1, ...] of $2\times n$ x 4 floats to define RGB-color and transparency of line points\\ \hline
+  points & list &  mandatory & list of $2 \times n$ float triples of x,y,z coordinates of the line points; Example: data=[0,0,0, 1,0,0, 1,0,0, 1,1,0] ... draws a L-shape with side length 1\\ \hline
+%
 %CIRCLE
 	\multicolumn{3}{l}{\parbox{8cm}{\bf type = 'Circle': }} & \multicolumn{1}{l}{\parbox{7.5cm}{\it draws a circle with center point, normal (defines plane of circle) and radius}}\\ \hline
   color & list & [0,0,0,1] & list of 4 floats to define RGB-color and transparency\\ \hline
   radius & float & mandatory & radius\\ \hline
   position & list & mandatory & list of float triples of x,y,z coordinates of center point of the circle\\ \hline
-  normal & list & [0,0,1] & list of float triples of x,y,z coordinates of normal to the plane of the circle; the default value gives a circle in the ($x,y$)-plane\\ \hline
+%not implemented!  normal & list & [0,0,1] & list of float triples of x,y,z coordinates of normal to the plane of the circle; the default value gives a circle in the ($x,y$)-plane\\ \hline
 %TEXT
 	\multicolumn{3}{l}{\parbox{8cm}{\bf type = 'Text': }} & \multicolumn{1}{l}{\parbox{7.5cm}{\it places the given text at position}}\\ \hline
   color & list & [0,0,0,1] & list of 4 floats to define RGB-color and transparency\\ \hline
@@ -152,9 +159,11 @@ the normal $\nv$ then points to the outside region of the mesh or body; the dire
 %TRIANGLELIST
 	\multicolumn{3}{l}{\parbox{8cm}{\bf type = 'TriangleList': }} & \multicolumn{1}{l}{\parbox{7.5cm}{\it draws a flat triangle mesh for given points and connectivity}}\\ \hline
   points & list & mandatory & list [x0,y0,z0, x1,y1,z1, ...] containing $n \times 3$ floats (grouped x0,y0,z0, x1,y1,z1, ...) to define x,y,z coordinates of points, $n$ being the number of points (=vertices)\\ \hline
-  colors & list & empty & list [R0,G0,B0,A0, R1,G2,B1,A1, ...] containing $n \times 4$ floats to define RGB-color and transparency A, where $n$ must be according to number of points; if field 'colors' does not exist, default colors will be used\\ \hline
+  colors & list & empty & list [R0,G0,B0,A0, R1,G2,B1,A1, ...] containing $n \times 4$ floats to define RGB-color and transparency A of triangle vertices (points), where $n$ must be according to number of points; if field 'colors' does not exist, default colors will be used\\ \hline
   normals & list & empty & list [n0x,n0y,n0z, ...] containing $n \times 3$ floats to define normal direction of triangles per point, where $n$ must be according to number of points; if field 'normals' does not exist, default normals [0,0,0] will be used\\ \hline
-  triangles & list &  mandatory & list [T0point0, T0point1, T0point2, ...] containing $n_{trig} \times 3$ floats to define point indices of each vertex of the triangles (=connectivity); point indices start with index 0; the maximum index must be $\le$ points.size()\\ \hline
+  triangles & list &  mandatory & list [T0point0, T0point1, T0point2, ...] containing $n_{trig} \times 3$ integers to define point indices of each vertex of the triangles (=connectivity); point indices start with index 0; the maximum index must be $\le$ points.size()\\ \hline
+  edges & list &  empty & list [L0point0, L0point1, L1point0, L1point1, ...] containing $n_{lines} \times 2$ integers to define point indices of edges drawn on triangle mesh\\ \hline
+ edgeColor & list &  [0,0,0,1] & list of 4 floats to define RGB-color and transparency of edges \\ \hline
 \end{longtable}
 %
 \end{center}

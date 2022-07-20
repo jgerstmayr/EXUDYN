@@ -47,13 +47,13 @@ enum class RendererMode {
 	_None, Move, Rotate, ZoomView, Select
 };
 
-//! size for bitmap fonts
-enum class FontSizeType {
-	small = 1,		//small text, e.g., for contour numbers
-	normal = 2,		//regular text
-	large = 4,		//large text
-	userText = 8,	//size of user texts
-};
+////! size for bitmap fonts
+//enum class FontSizeType {
+//	small = 1,		//small text, e.g., for contour numbers
+//	normal = 2,		//regular text
+//	large = 4,		//large text
+//	userText = 8,	//size of user texts
+//};
 
 
 

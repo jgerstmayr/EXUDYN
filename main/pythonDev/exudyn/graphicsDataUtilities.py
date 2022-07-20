@@ -16,7 +16,7 @@
 #			Additionally, a list of 16 colors 'color4list' is available, which is intended to be used, e.g., for creating n bodies with different colors
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-from exudyn.basicUtilities import *
+import exudyn.basicUtilities as ebu
 from exudyn.rigidBodyUtilities import ComputeOrthonormalBasisVectors
 
 #constants and fixed structures:
@@ -63,6 +63,7 @@ color4list = [color4red, color4green, color4blue,
               color4grey, color4darkgrey, color4lightgrey,
               #color4lightred, color4lightgreen, color4steelblue, 
               color4brown]
+
 color4listSize = len(color4list) #maximum number of colors in color4list
 
 normalsFactor = 1. #this is a factor being either -1. [original normals pointing inside; until 2022-06-27], while +1. gives corrected normals pointing outside
@@ -91,6 +92,12 @@ def ComputeTriangleNormal(p0,p1,p2):
         n /= ln
     return n
 
+#**function: compute area of triangle given by 3 points
+#**input: 3D vector as list or as np.array
+#**output: area as float
+def ComputeTriangleArea(p0,p1,p2):
+    return 0.5*np.linalg.norm(np.cross(np.array(p1) - np.array(p0), np.array(p2) - np.array(p0)))
+
 #************************************************
 #**function: convert graphics data into list of points and list of triangle indices (triplets)
 #**input: g contains a GraphicsData with type TriangleList
@@ -107,7 +114,8 @@ def GraphicsData2PointsAndTrigs(g):
         for i in range(nTrigs):
             triangles[i] = np.array(g['triangles'][i*3:i*3+3], dtype=int)
     else:
-        raise ValueError ('ERROR: GraphicsData2TrigsAndPoints(...) only takes GraphicsData of type TriangleList but found: '+gNew['type'] )
+        raise ValueError ('ERROR: GraphicsData2TrigsAndPoints(...) only takes GraphicsData of type TriangleList but found: '+
+                          g['type'] )
 
     return [points, triangles]
 
@@ -221,39 +229,62 @@ def ShrinkMeshNormalToSurface(points, triangles, distance):
 
 
 #************************************************
-#**function: add rigid body transformation to GraphicsData, using position offset (global) pOff (list or np.array) and rotation Aoff (transforms local to global coordinates; list of lists or np.array)
-#**notes: transformation corresponds to HomogeneousTransformation(Aoff, pOff)
+#**function: add rigid body transformation to GraphicsData, using position offset (global) pOff (list or np.array) and rotation Aoff (transforms local to global coordinates; list of lists or np.array); see Aoff how to scale coordinates!
+#**input:
+#  g: graphicsData to be transformed
+#  pOff: 3D offset as list or numpy.array added to rotated points
+#  Aoff: 3D rotation matrix as list of lists or numpy.array with shape (3,3); if A is scaled by factor, e.g. using 0.001*np.eye(3), you can also scale the coordinates!!!
+#**output: returns new graphcsData object to be used for drawing in objects
+#**notes: transformation corresponds to HomogeneousTransformation(Aoff, pOff), transforming original coordinates v into vNew = pOff + Aoff @ v
 def MoveGraphicsData(g, pOff, Aoff):
-    gNew = copy.deepcopy(g)
     p0 = np.array(pOff)
     A0 = np.array(Aoff)
     
-    if gNew['type'] == 'TriangleList':
+    if g['type'] == 'TriangleList':
+        gNew = {'type':'TriangleList'}
+        gNew['colors'] = copy.copy(g['colors'])
+        gNew['triangles'] = copy.copy(g['triangles'])
+
         n=int(len(g['points'])/3)
-        for i in range(n):
-            v = gNew['points'][i*3:i*3+3]
-            v = p0 + A0 @ v
-            gNew['points'][i*3:i*3+3] = list(v)
-        if 'normals' in gNew:
-            n=int(len(g['normals'])/3)
-            for i in range(n):
-                v = gNew['normals'][i*3:i*3+3]
-                v = A0 @ v
-                gNew['normals'][i*3:i*3+3] = list(v)
-    elif gNew['type'] == 'Line':
+        v0 = np.array(g['points'])
+        v = np.kron(np.ones(n),p0) + (A0 @ v0.reshape((n,3)).T).T.flatten()
+        
+        gNew['points'] = list(v)
+        if 'normals' in g:
+            n0 = np.array(g['normals'])
+            gNew['normals'] = list((A0 @ n0.reshape((n,3)).T).T.flatten() )
+        
+        # #original, slow:
+        # for i in range(n):
+        #     v = gNew['points'][i*3:i*3+3]
+        #     v = p0 + A0 @ v
+        #     gNew['points'][i*3:i*3+3] = list(v)
+        # if 'normals' in gNew:
+        #     n=int(len(g['normals'])/3)
+        #     for i in range(n):
+        #         v = gNew['normals'][i*3:i*3+3]
+        #         v = A0 @ v
+        #         gNew['normals'][i*3:i*3+3] = list(v)
+    elif g['type'] == 'Line':
+        gNew = copy.deepcopy(g)
         n=int(len(g['data'])/3)
         for i in range(n):
             v = gNew['data'][i*3:i*3+3]
             v = p0 + A0 @ v
             gNew['data'][i*3:i*3+3] = list(v)
-    elif gNew['type'] == 'Text':
+    elif g['type'] == 'Text':
+        gNew = copy.deepcopy(g)
         v = p0 + A0 @ gNew['position']
         gNew['position'] = list(v)
-    elif gNew['type'] == 'Circle':
+    elif g['type'] == 'Circle':
+        gNew = copy.deepcopy(g)
         v = p0 + A0 @ gNew['position']
         gNew['position'] = list(v)
-        v = A0 @ gNew['normal']
-        gNew['normal'] = list(v)
+        if 'normal' in gNew:
+            v = A0 @ gNew['normal']
+            gNew['normal'] = list(v)
+    else:
+        raise ValueError('MoveGraphicsData: unsupported graphics data type')
     return gNew
 
 #************************************************
@@ -288,6 +319,43 @@ def MergeGraphicsDataTriangleList(g1,g2):
 
     return data
 
+
+#************************************************
+#**function: generate graphics data for lines, given by list of points and color; transforms to GraphicsData dictionary
+#**input: 
+#  pList: list of3D numpy arrays or lists (to achieve closed curve, set last point equal to first point)
+#  color: provided as list of 4 RGBA values
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
+def GraphicsDataLine(pList, color=[0.,0.,0.,1.]): 
+    data = [0]*(len(pList)*3)
+    for i, p in enumerate(pList):
+        data[i*3:i*3+3] = list(p)
+    dataRect = {'type':'Line', 'color': color, 
+                'data':data}
+
+    return dataRect
+
+#************************************************
+#**function: generate graphics data for a single circle; currently the plane normal = [0,0,1], just allowing to draw planar circles -- this may be extended in future!
+#**input: 
+#  point: center point of circle
+#  radius: radius of circle
+#  color: provided as list of 4 RGBA values
+#**notes: the tiling (number of segments to draw circle) can be adjusted by visualizationSettings.general.circleTiling
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
+def GraphicsDataCircle(point=[0,0,0], radius=1, color=[0.,0.,0.,1.]): 
+    return {'type':'Circle', 'color': color, 'radius': radius, 'position':list(point)}
+
+#************************************************
+#**function: generate graphics data for a text drawn at a 3D position
+#**input: 
+#  point: position of text
+#  text: string representing text
+#  color: provided as list of 4 RGBA values
+#**nodes: text size can be adjusted with visualizationSettings.general.textSize, which affects the text size (=font size) globally
+#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
+def GraphicsDataText(point=[0,0,0], text='', color=[0.,0.,0.,1.]): 
+    return {'type':'Text', 'color': color, 'text':text, 'position':list(point)}
 
 #************************************************
 #**function: generate graphics data for 2D rectangle
@@ -328,9 +396,9 @@ def GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.
 #  color: list of 4 RGBA values
 #  addNormals: add face normals to triangle information
 #  addEdges: if True, the function returns a list of GraphicsData: one with the 3D triangles and one with the edges
-#  colorEdges: optional color for edges
+#  edgeColor: optional color for edges
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects; if addEdges=True, it returns a list of two dictionaries
-def GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0.,0.,0.,1.], addNormals=False, addEdges=False, colorEdges=color4black): 
+def GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0.,0.,0.,1.], addNormals=False, addEdges=False, edgeColor=color4black): 
     
     xMin = centerPoint[0] - 0.5*size[0]
     yMin = centerPoint[1] - 0.5*size[1]
@@ -339,11 +407,12 @@ def GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0
     yMax = centerPoint[1] + 0.5*size[1]
     zMax = centerPoint[2] + 0.5*size[2]
 
-    if not addEdges:
-        return GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color, addNormals)
-    else:
-        return [GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color, addNormals), 
-                GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, colorEdges)]
+    gCube = GraphicsDataOrthoCube(xMin, yMin, zMin, xMax, yMax, zMax, color, addNormals)
+    if addEdges:
+        gCube['edgeColor'] = edgeColor
+        gCube['edges'] = [0,1, 1,2, 2,3, 3,0,  0,4, 1,5, 2,6, 3,7,  4,5, 5,6, 6,7, 7,4]
+        #print('new2')
+    return gCube
 
 #**function: generate graphics data for general cube with endpoints, according to given vertex definition
 #**input: 
@@ -455,7 +524,7 @@ def GraphicsDataSphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 
             vv = x*e0 + y*e1 + z*e2
             points += list(p + vv)
             
-            n = Normalize(list(vv)) #2022-06-27: corrected to (vv) to point outwards
+            n = ebu.Normalize(list(vv)) #2022-06-27: corrected to (vv) to point outwards
             #print(n)
             normals += n
             
@@ -493,10 +562,12 @@ def GraphicsDataSphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 
 #  angleRange: given in rad, to draw only part of cylinder (halfcylinder, etc.); for full range use [0..2 * pi]
 #  lastFace: if angleRange != [0,2*pi], then the faces of the open cylinder are shown with lastFace = True
 #  cutPlain: only used for angleRange != [0,2*pi]; if True, a plane is cut through the part of the cylinder; if False, the cylinder becomes a cake shape ...
+#  addEdges: if True, the function returns a list of GraphicsData: one with the 3D triangles and one with the edges
+#  edgeColor: optional color for edges
 #  alternatingColor: if given, optionally another color in order to see rotation of solid; only works, if angleRange=[0,2*pi]
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTiles = 16, 
-                         angleRange=[0,2*np.pi], lastFace = True, cutPlain = True, addEdges=False, colorEdges=color4black, **kwargs):  
+                         angleRange=[0,2*np.pi], lastFace = True, cutPlain = True, addEdges=False, edgeColor=color4black, **kwargs):  
 
     if nTiles < 3: print("WARNING: GraphicsDataCylinder: nTiles < 3: set nTiles=3")
     
@@ -517,8 +588,8 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
     nf = normalsFactor #-1 original; -1 points inside
 
     #create normals at left and right face (pointing inwards)
-    normals0 = Normalize([-vAxis[0],-vAxis[1],-vAxis[2]])
-    normals1 = Normalize(vAxis)
+    normals0 = ebu.Normalize([-vAxis[0],-vAxis[1],-vAxis[2]])
+    normals1 = ebu.Normalize(vAxis)
 
     points2 = []
     points3 = []
@@ -530,8 +601,8 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
     if alpha < 2.*np.pi: 
         fact = nTiles-1
 
-    pointsCyl0 = []
-    pointsCyl1 = []
+    # pointsCyl0 = []
+    # pointsCyl1 = []
     
     for i in range(nTiles):
         phi = alpha0 + i*alpha/fact
@@ -544,9 +615,9 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
         points1 += list(pz1)
         points2 += list(pz0) #other points for side faces (different normals)
         points3 += list(pz1) #other points for side faces (different normals)
-        pointsCyl0 += list(pz0) #for edges
-        pointsCyl1 += list(pz1) #for edges
-        n = Normalize(list(nf*vv))
+        # pointsCyl0 += list(pz0) #for edges
+        # pointsCyl1 += list(pz1) #for edges
+        n = ebu.Normalize(list(nf*vv))
         normals0 = normals0 + n
         normals1 = normals1 + n
         
@@ -555,9 +626,9 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
     normals0 += normals1
 
     for i in range(nTiles):
-        normals0 += Normalize([-nf*vAxis[0],-nf*vAxis[1],-nf*vAxis[2]])
+        normals0 += ebu.Normalize([-nf*vAxis[0],-nf*vAxis[1],-nf*vAxis[2]])
     for i in range(nTiles):
-        normals0 += Normalize([nf*vAxis[0],nf*vAxis[1],nf*vAxis[2]])
+        normals0 += ebu.Normalize([nf*vAxis[0],nf*vAxis[1],nf*vAxis[2]])
 
     n = nTiles+1 #number of points of one ring+midpoint
     color2 = color #alternating color
@@ -624,10 +695,10 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
         p4 = points2[len(points2)-3:len(points2)]
         p5 = points3[len(points3)-3:len(points3)]
         points0 += pAxis + pAxis1 + p2 + p3 + pAxis + pAxis1 + p4 + p5
-        n1=np.cross(VSub(pAxis,pAxis1),VSub(p3,pAxis))
-        n1=list(Normalize(-nf*n1))
-        n2=np.cross(VSub(pAxis1,pAxis),VSub(p4,pAxis))
-        n2=list(Normalize(-nf*n2))
+        n1=np.cross(ebu.VSub(pAxis,pAxis1),ebu.VSub(p3,pAxis))
+        n1=list(ebu.Normalize(-nf*n1))
+        n2=np.cross(ebu.VSub(pAxis1,pAxis),ebu.VSub(p4,pAxis))
+        n2=list(ebu.Normalize(-nf*n2))
         normals0 += n1+n1+n1+n1+n2+n2+n2+n2  #8 additional normals
         if switchTriangleOrder:
             triangles += [s+0,s+3,s+1, s+0,s+2,s+3, 
@@ -646,20 +717,22 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
     data = {'type':'TriangleList', 'colors':colors, 
             'normals':normals0, 
             'points':points0, 'triangles':triangles}
-    
-    if addEdges: #add edges for two cylinder faces:
-        pointsList0 = list(pointsCyl0[-3:]) #start with last point
-        for i in range(int(len(pointsCyl0)/3)):
-            pointsList0 += list(pointsCyl0[i*3:i*3+3])
 
-        pointsList1 = list(pointsCyl1[-3:]) #start with last point
-        for i in range(int(len(pointsCyl1)/3)):
-            pointsList1 += list(pointsCyl1[i*3:i*3+3])
-
-        #return a list of 3 GraphicsData:
-        data = [data, 
-                {'type':'Line', 'color': colorEdges, 'data':pointsList0},
-                {'type':'Line', 'color': colorEdges, 'data':pointsList1}]
+    if addEdges:
+        data['edgeColor'] = edgeColor
+        
+        edges = []
+        pLast = nTiles
+        for i in range(nTiles):
+            edges += [pLast, i+1]
+            pLast = i+1
+        
+        pLast = nTiles + (nTiles+1)
+        for i in range(nTiles):
+            edges += [pLast, i+1+(nTiles+1)]
+            pLast = i+1+(nTiles+1)
+        
+        data['edges'] = edges
 
     return data
 
@@ -677,8 +750,8 @@ def GraphicsDataCylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataRigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1], 
                           thickness=0.05, width=[0.05,0.05], color=[0.,0.,0.,1.], nTiles = 16):
-    linkAxis = VSub(p1,p0)
-    linkAxis0 = Normalize(linkAxis)
+    linkAxis = ebu.VSub(p1,p0)
+    #linkAxis0 = ebu.Normalize(linkAxis)
     a0=copy.deepcopy(axis0)
     a1=copy.deepcopy(axis1)
     
@@ -686,18 +759,18 @@ def GraphicsDataRigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
     data1 = {}
     data2 = {}
 
-    if NormL2(axis0) == 0:
+    if ebu.NormL2(axis0) == 0:
         data1 = GraphicsDataSphere(p0, radius[0], color, nTiles)
     else:
-        a0=Normalize(a0)
+        a0=ebu.Normalize(a0)
         data1 = GraphicsDataCylinder(list(np.array(p0)-0.5*width[0]*np.array(a0)), 
                                      list(width[0]*np.array(a0)), 
                                      radius[0], color, nTiles)
         
-    if NormL2(axis1) == 0:
+    if ebu.NormL2(axis1) == 0:
         data2 = GraphicsDataSphere(p1, radius[1], color, nTiles)
     else:
-        a1=Normalize(a1)
+        a1=ebu.Normalize(a1)
         data2 = GraphicsDataCylinder(list(np.array(p1)-0.5*width[1]*np.array(a1)), 
                                      list(width[1]*np.array(a1)), radius[1], color, nTiles)
 
@@ -724,13 +797,15 @@ def GraphicsDataRigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
     return data
 
 
-#**function: generate graphics data from STL file (text format!) and use color for visualization
+#**function: generate graphics data from STL file (text format!) and use color for visualization; this function is slow, use stl binary files with GraphicsDataFromSTLfile(...)
 #**input:
 #  fileName: string containing directory and filename of STL-file (in text / SCII format) to load
 #  color: provided as list of 4 RGBA values
 #  verbose: if True, useful information is provided during reading
-#**output: interchanged 2nd and 3rd component of list
-def GraphicsDataFromSTLfileTxt(fileName, color=[0.,0.,0.,1.], verbose=False): 
+#  invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
+#  invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
+#**output: creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index)
+def GraphicsDataFromSTLfileTxt(fileName, color=[0.,0.,0.,1.], verbose=False, invertNormals=True, invertTriangles=True): 
 #file format, just one triangle, using GOMinspect:
 #solid solidName
 #facet normal -0.979434 0.000138 -0.201766
@@ -756,11 +831,17 @@ def GraphicsDataFromSTLfileTxt(fileName, color=[0.,0.,0.,1.], verbose=False):
     normals = []
     triangles = []
 
+    nf = 1.-2.*int(invertNormals) #+1 or -1 (inverted)
+    indOff = int(invertTriangles) #0 or 1 (inverted)
+
     nLines = len(fileLines)
     lineCnt = 0
     if fileLines[lineCnt][0:5] != 'solid':
         raise ValueError("GraphicsDataFromSTLfileTxt: expected 'solid ...' in first line, but received: " + fileLines[lineCnt])
     lineCnt+=1
+    
+    if nLines > 500000:
+        print('large ascii STL file; switch to numpy-stl and binary format for faster loading!')
 
     while lineCnt < nLines and fileLines[lineCnt].strip().split()[0] != 'endsolid':
         if lineCnt%100000 == 0 and lineCnt !=0: 
@@ -772,7 +853,7 @@ def GraphicsDataFromSTLfileTxt(fileName, color=[0.,0.,0.,1.], verbose=False):
         if len(normalLine) != 5:
             raise ValueError("GraphicsDataFromSTLfileTxt: expected 'facet normal n0 n1 n2' in line "+str(lineCnt)+", but received: " + fileLines[lineCnt])
         
-        normal = [-float(normalLine[2]),-float(normalLine[3]),-float(normalLine[4])]
+        normal = [nf*float(normalLine[2]),nf*float(normalLine[3]),nf*float(normalLine[4])]
 
         lineCnt+=1
         loopLine = fileLines[lineCnt].strip()
@@ -794,7 +875,7 @@ def GraphicsDataFromSTLfileTxt(fileName, color=[0.,0.,0.,1.], verbose=False):
             colors+=color
             lineCnt+=1
             
-        triangles+=[ind,ind+2,ind+1] #indices of points; flip indices to match definition in EXUDYN
+        triangles+=[ind,ind+1+indOff,ind+2-indOff] #indices of points; flip indices to match definition in EXUDYN
 
         loopLine = fileLines[lineCnt].strip()
         if loopLine != 'endloop':
@@ -807,6 +888,262 @@ def GraphicsDataFromSTLfileTxt(fileName, color=[0.,0.,0.,1.], verbose=False):
     
     data = {'type':'TriangleList', 'colors':colors, 'normals':normals, 'points':points, 'triangles':triangles}
     return data
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: generate graphics data from STL file, allowing text or binary format; requires numpy-stl to be installed; additionally can scale, rotate and translate
+#**input:
+#  fileName: string containing directory and filename of STL-file (in text / SCII format) to load
+#  color: provided as list of 4 RGBA values
+#  verbose: if True, useful information is provided during reading
+#  density: if given and if verbose, mass, volume, inertia, etc. are computed
+#  scale: point coordinates are transformed by scaling factor
+#  invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
+#  invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
+#**output: creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index)
+#**notes: the model is first scaled, then rotated, then the offset pOff is added; finally min, max, mass, volume, inertia, com are computed!
+def GraphicsDataFromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=1., Aoff=[], pOff=[], invertNormals=True, invertTriangles=True):
+    
+    try:
+        from stl import mesh
+    except:
+        raise ValueError('GraphicsDataFromSTLfile requires installation of numpy-stl; try "pip install numpy-stl"')
+    
+    data=mesh.Mesh.from_file(fileName)
+    nPoints = len(data.points)*3 #data.points has shape (nTrigs,9)
+    
+    if scale != 1.:
+        data.points *= scale
+    
+    p = copy.copy(pOff)
+    A = copy.copy(Aoff)
+    
+    if p != [] or A != []:
+        from exudyn.rigidBodyUtilities import HomogeneousTransformation
+        if p == []: p=[0,0,0]
+        if A == []: A=np.eye(3)
+        HT = HomogeneousTransformation(A, p)
+        
+        data.transform(HT)
+        
+    dictData = {}
+    if verbose:
+        print('GraphicsDataFromSTLfile:')
+        print('  max point=', list(data.max_))
+        print('  min point=', list(data.min_))
+    if density != 0:
+        [volume, mass, COM, inertia] = data.get_mass_properties_with_density(density)
+        dictData = {'minPos':data.min_,
+                    'maxPos':data.max_,
+                    'volume':volume,
+                    'mass':mass,
+                    'COM':COM,
+                    'inertia':inertia
+                    }
+    if verbose:
+        print('  volume =', volume)
+        print('  center of mass =', list(COM))
+        print('  inertia =', list(inertia))
+    
+    colors = color*nPoints
+    #triangles = list(np.arange(0,nPoints))#wrong orientation ==> reverse
+    if invertTriangles:
+        triangles = list(np.arange(nPoints-1,-1,-1))#inverted sorting
+    else:
+        triangles = list(np.arange(0,nPoints))      #unmodified sorting of indices
+    points = list(data.points.flatten())
+    nf = 1.-2.*int(invertNormals) #+1 or -1 (inverted)
+    normals = list(np.kron([nf,nf,nf],data.normals).flatten()) #normals must be per point
+
+    dictGraphics = {'type':'TriangleList', 'colors':colors, 'normals':normals, 'points':points, 'triangles':triangles}
+    if density == 0:
+        return dictGraphics 
+    else:
+        return [dictGraphics, dictData]
+
+
+#**function: compute and return GraphicsData with edges and smoothend normals for mesh consisting of points and triangles (e.g., as returned from GraphicsData2PointsAndTrigs)
+#  graphicsData: single GraphicsData object of type TriangleList; existing edges are ignored
+#  edgeColor: optional color for edges
+#  edgeAngle: angle above which edges are added to geometry
+#  roundDigits: number of digits, relative to max dimensions of object, at which points are assumed to be equal
+#  smoothNormals: if True, algorithm tries to smoothen normals at vertices; otherwise, uses triangle normals
+#  addEdges: if True, the function returns a list of GraphicsData: one with the 3D triangles and one with the edges
+#**output: returns GraphicsData with added edges and smoothed normals
+#**notes: this function is suitable for STL import; it assumes that all colors in graphicsData are the same and only takes the first color!
+def AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color4black, edgeAngle = 0.25*np.pi,
+                           pointTolerance=5, addEdges=True, smoothNormals=True, roundDigits=5):
+    from math import acos # ,sin, cos
+
+    oldColor = graphicsData['colors'][0:4]    
+    [points, trigs]=GraphicsData2PointsAndTrigs(graphicsData)
+    # [points, trigs]=RefineMesh(points, trigs)
+    
+    points = np.array(points)
+    trigs = np.array(trigs)
+    pMax = np.max(points, axis=0)
+    pMin = np.min(points, axis=0)
+    maxDim = np.linalg.norm(pMax-pMin)
+    if maxDim == 0: maxDim = 1.
+
+    points = maxDim * np.round(points*(1./maxDim),roundDigits)
+    nPoints = len(points)
+    #print('np=', nPoints)
+    
+    sortIndices = np.lexsort((points[:,2], points[:,1], points[:,0]))
+    #sortedPoints = points[sortIndices]
+    
+    #now eliminate duplicate points:
+    remap = np.zeros(nPoints,dtype=int)#np.int64)
+    remap[0] = 0
+    newPoints = [points[sortIndices[0],:]]
+    
+    cnt = 0
+    for i in range(len(sortIndices)-1):
+        nextIndex = sortIndices[i+1]
+        if (points[nextIndex] != points[sortIndices[i]]).any():
+            # newIndices.append(nextIndex)
+            cnt+=1
+            remap[nextIndex] = cnt#i+1
+            newPoints.append(points[nextIndex,:])
+        else:
+            remap[nextIndex] = cnt#newIndices[sortIndices[i]]
+            # newIndices.append(newIndices[-1])
+    newPoints = np.array(newPoints)
+    newTrigs = remap[trigs]
+    
+    #==> now we (hopefully have connected triangle lists)
+    
+    nPoints = len(newPoints)
+    nTrigs = len(newTrigs)
+    
+    #create points2trigs lists:
+    points2trigs = [[] for i in range(nPoints)] #[[]]*nPoints does not work!!!!
+    for cntTrig, trig in enumerate(newTrigs):
+        for ind in trig:
+            points2trigs[ind].append(cntTrig)
+    
+    #now find neighbours, compute triangle normals:
+    neighbours = np.zeros((nTrigs,3),dtype=int)
+    # neighbours[:,:] = -1#check if all neighbours found
+    normals = np.zeros((nTrigs,3)) #per triangle
+    areas = np.zeros(nTrigs)
+    for cntTrig, trig in enumerate(newTrigs):
+        normals[cntTrig,:] = ComputeTriangleNormal(newPoints[trig[0]], newPoints[trig[1]], newPoints[trig[2]])
+        areas[cntTrig] = ComputeTriangleArea(newPoints[trig[0]], newPoints[trig[1]], newPoints[trig[2]])
+        for cntNode in range(3):
+            ind  = trig[cntNode]
+            ind2 = trig[(cntNode+1)%3]
+            for t in points2trigs[ind]:
+                #if t <= cntTrig: continue #too much sorted out; check why
+                trig2=newTrigs[t]
+                found = False
+                for cntNode2 in range(3):
+                    if trig2[cntNode2] == ind2 and trig2[(cntNode2+1)%3] == ind:
+                        neighbours[cntTrig, cntNode] = t
+                        found = True
+                        #print('neighbours ', cntTrig, t)
+                        break
+                if found: break
+    
+    #create edges:
+    edges = [] #list of edge points
+    pointHasEdge = [False]*nPoints
+    for cntTrig, trig in enumerate(newTrigs):
+        for cntNode in range(3):
+            ind1  = trig[cntNode]
+            ind2 = trig[(cntNode+1)%3]
+            if ind1 > ind2:
+                val = normals[cntTrig] @ normals[neighbours[cntTrig,cntNode]]
+                if abs(val) > 1: val = np.sign(val) #because of float32 problems
+                angle = acos(val)
+                if angle >= edgeAngle:
+                    edges+=[ind1, ind2]
+                    pointHasEdge[ind1] = True
+                    pointHasEdge[ind2] = True
+    
+    
+    #smooth normals:
+    #we simply do not smooth at points that have edges
+    if smoothNormals:
+        pointNormals = np.zeros((nPoints,3))
+        for i in range(nPoints):
+            if not pointHasEdge[i]:
+                normal = np.zeros(3)
+                for t in points2trigs[i]:
+                    normal += areas[t]*normals[t]
+                
+                pointNormals[i] = ebu.Normalize(normal)
+
+        
+        finalTrigs = []
+        newPoints = list(newPoints)
+        pointNormals = list(pointNormals)
+        for cnt, trig in enumerate(newTrigs):
+            trigNew = [0,0,0]
+            for i in range(3):
+                if not pointHasEdge[trig[i]]:
+                    trigNew[i] = trig[i]
+                else:
+                    trigNew[i] = len(newPoints)
+                    newPoints.append(newPoints[trig[i]])
+                    pointNormals.append(normals[cnt])
+            finalTrigs += [trigNew]
+    else:
+        finalTrigs = newTrigs
+    
+    graphicsData = GraphicsDataFromPointsAndTrigs(newPoints, finalTrigs, oldColor)
+    if addEdges:
+        graphicsData['edges'] = edges
+        graphicsData['edgeColor'] = list(edgeColor)
+
+    if smoothNormals:
+        graphicsData['normals'] = list(np.array(pointNormals).flatten())
+    
+    return graphicsData
+
+#**function: export given graphics data (only type TriangleList allowed!) to STL ascii file using fileName
+#**input:
+#  graphicsData: a single GraphicsData dictionary with type='TriangleList', no list of GraphicsData
+#  fileName: file name including (local) path to export STL file
+#  solidName: optional name used in STL file
+#  invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
+#  invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
+def ExportGraphicsData2STL(graphicsData, fileName, solidName='ExudynSolid', invertNormals=True, invertTriangles=True):
+    if graphicsData['type'] != 'TriangleList':
+        raise ValueError('ExportGraphicsData2STL: invalid graphics data type; only TriangleList allowed')
+        
+    with open(fileName, 'w') as f:
+        f.write('solid '+solidName+'\n')
+
+        nTrig = int(len(graphicsData['triangles'])/3)
+        triangles = graphicsData['triangles']
+    
+        for k in range(nTrig):
+            p = [] #triangle points
+            for i in range(3):
+                ind = triangles[k*3+i]
+                p += [np.array(graphicsData['points'][ind*3:ind*3+3])]
+   
+            n = ComputeTriangleNormal(p[0], p[1], p[2])
+            
+            f.write('facet normal '+str(-n[0]) + ' ' + str(-n[1]) + ' ' + str(-n[2]) + '\n') #normals inverted
+            f.write('outer loop\n')
+            f.write('vertex '+str(p[0][0]) + ' ' + str(p[0][1]) + ' ' + str(p[0][2]) + '\n')
+            f.write('vertex '+str(p[2][0]) + ' ' + str(p[2][1]) + ' ' + str(p[2][2]) + '\n') #point index reversed!
+            f.write('vertex '+str(p[1][0]) + ' ' + str(p[1][1]) + ' ' + str(p[1][2]) + '\n')
+                
+            f.write('endloop\n')
+            f.write('endfacet\n')
+
+        f.write('endsolid '+solidName+'\n')
+
+            
+    # data = {'type':'TriangleList', 'colors':colors, 
+    #         'normals':normals, 
+    #         'points':points, 'triangles':triangles}
+
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #   unused argument yet: contourNormals: if provided as list of 2D vectors, they prescribe the normals to the contour for smooth visualization; otherwise, contour is drawn flat
@@ -859,14 +1196,14 @@ def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nT
         pc0 = np.array(contour[j])
         pc1 = np.array(contour[j+1])
         vc = pc1-pc0
-        nc = Normalize([-vc[1],vc[0]])
+        nc = ebu.Normalize([-vc[1],vc[0]])
         contourNormals += [nc]
     contourNormals += [contourNormals[-1]] #normal for last point same as previous
 
     if smoothContour:
         contourNormals2 = [contourNormals[0]]
         for j in range(len(contour)-1):
-            ns = Normalize(np.array(contourNormals[j]) + np.array(contourNormals[j+1])) #not fully correct, but sufficient
+            ns = ebu.Normalize(np.array(contourNormals[j]) + np.array(contourNormals[j+1])) #not fully correct, but sufficient
             contourNormals2 += [list(ns)]
         contourNormals = contourNormals2
 
@@ -901,11 +1238,11 @@ def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nT
             #vc = pc1-pc0
             #nc = [-vc[1],vc[0]]
             nc0 = contourNormals[j]
-            nUnit0 = Normalize(nf*nc0[1]*np.sin(phi)*n1 + nf*nc0[1]*np.cos(phi)*n2+nf*nc0[0]*v)
+            nUnit0 = ebu.Normalize(nf*nc0[1]*np.sin(phi)*n1 + nf*nc0[1]*np.cos(phi)*n2+nf*nc0[0]*v)
             nUnit1 = nUnit0
             if smoothContour:
                 nc1 = contourNormals[j+1]
-                nUnit1 = Normalize(nf*nc1[1]*np.sin(phi)*n1 + nf*nc1[1]*np.cos(phi)*n2+nf*nc1[0]*v)
+                nUnit1 = ebu.Normalize(nf*nc1[1]*np.sin(phi)*n1 + nf*nc1[1]*np.cos(phi)*n2+nf*nc1[0]*v)
 
             normals0 = normals0 + nUnit0
             normals1 = normals1 + nUnit1
@@ -947,7 +1284,7 @@ def GraphicsDataSolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nT
 #  nTiles: used to determine resolution of arrow (of revolution object) >=3; use larger values for finer resolution
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def GraphicsDataArrow(pAxis, vAxis, radius, color=[0.,0.,0.,1.], headFactor = 2, headStretch = 4, nTiles = 12):  
-    L = NormL2(vAxis)
+    L = ebu.NormL2(vAxis)
     rHead = radius * headFactor
     xHead = L - headStretch*rHead
     contour=[[0,0],[0,radius],[xHead,radius],[xHead,rHead],[L,0]]
@@ -1136,7 +1473,7 @@ def ComputeTriangularMesh(vertices, segments):
         for j in range(3):
             i0 = trigs[i,j]
             i1 = trigs[i,(j+1)%3]
-            actSeg = [i0, i1]
+            #actSeg = [i0, i1]
             listTest = vertices2simplices[i0] + vertices2simplices[i1]
             for trigIndex in listTest:
                 if trigIndex < i:
@@ -1260,4 +1597,5 @@ def GraphicsDataSolidExtrusion(vertices, segments, height, rot = np.diag([1,1,1]
    
     data = {'type':'TriangleList', 'colors': colors, 'points':pointsTransformed, 'triangles':triangles}
     return data
+
 

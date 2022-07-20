@@ -44,10 +44,10 @@ massRigid = 12*10
 inertiaRigid = massRigid/12*(L)**2
 g = 9.81    # gravity
 
-graphicsList = GraphicsDataOrthoCubePoint(size= [L,b,0.1*b], color= color4dodgerblue, addEdges=True)
+graphicsList = [GraphicsDataOrthoCubePoint(size= [L,b,0.1*b], color= color4dodgerblue, addEdges=True)]
 
-graphicsList += GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.55*b, 
-                                     color= color4lightgrey, addEdges=True, nTiles=32)
+graphicsList += [GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.55*b, 
+                                     color= color4lightgrey, addEdges=True, nTiles=32)]
 #print(graphicsList[2])
 nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[0.5*L,0,0], initialVelocities=[0,0,0]));
 oRigid = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid,

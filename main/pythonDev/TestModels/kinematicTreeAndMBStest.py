@@ -63,8 +63,8 @@ def CompareKinematicTreeAndRobot(newRobot, locPos):
     #from exudyn.kinematicTree import *
     global jacobian
     #get coordinates (), INCLUDES reference values:
-    q = mbs.GetObjectOutputBody(oKT,exu.OutputVariableType.Coordinates,[0,0,0])
-    q_t = mbs.GetObjectOutputBody(oKT,exu.OutputVariableType.Coordinates_t,[0,0,0])
+    q = mbs.GetObjectOutput(oKT,exu.OutputVariableType.Coordinates)
+    q_t = mbs.GetObjectOutput(oKT,exu.OutputVariableType.Coordinates_t)
     #print('q=',q)
 
     baseHT = newRobot.GetBaseHT()

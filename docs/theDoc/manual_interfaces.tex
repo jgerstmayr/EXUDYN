@@ -198,7 +198,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
   GetObjectNumber(objectName) & get object's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{n = mbs.GetObjectNumber({\textquotesingle}heavy object{\textquotesingle})}}\\ \hline 
-  GetObject(objectNumber) & get object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'\tabnewline 
+  GetObject(objectNumber, addGraphicsData = false) & get object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'; in order to also get graphicsData written, use addGraphicsData=True (which is by default False, as it would spoil the information)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{objectDict = mbs.GetObject(0)}}\\ \hline 
   ModifyObject(objectNumber, objectDict) & modify object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'\tabnewline 
@@ -208,17 +208,17 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{objectType = {\textquotesingle}MassPoint{\textquotesingle}\tabnewline
     objectDict = mbs.GetObjectDefaults(objectType)}}\\ \hline 
-  GetObjectOutput(objectNumber, variableType) & get object's current output variable from object number (type ObjectIndex) and OutputVariableType; can only be computed for exu.ConfigurationType.Current configuration!\\ \hline 
-  GetObjectOutputBody(objectNumber, variableType, localPosition, configuration = ConfigurationType.Current) & get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition as defined in the body, and as used in MarkerBody and SensorBody\tabnewline 
+  GetObjectOutput(objectNumber, variableType, configuration = ConfigurationType.Current) & get object's current output variable from object number (type ObjectIndex) and OutputVariableType; for connectors, it can only be computed for exu.ConfigurationType.Current configuration!\\ \hline 
+  GetObjectOutputBody(objectNumber, variableType, localPosition = (std.vector<Real>)Vector3D({0,0,0}), configuration = ConfigurationType.Current) & get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition as defined in the body, and as used in MarkerBody and SensorBody\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)}}\\ \hline 
   GetObjectOutputSuperElement(objectNumber, variableType, meshNodeNumber, configuration = ConfigurationType.Current) & get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType; the meshNodeNumber is the object's local node number, not the global node number!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{u = mbs.GetObjectOutputSuperElement(objectNumber = 1, variableType = exu.OutputVariableType.Position, meshNodeNumber = 12, configuration = exu.ConfigurationType.Initial)}}\\ \hline 
-  GetObjectParameter(objectNumber, parameterName) & get objects's parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix\tabnewline 
+  GetObjectParameter(objectNumber, parameterName) & get objects's parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix; NOTE that BodyGraphicsData cannot be get or set, use dictionary access instead\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.GetObjectParameter(objectNumber = 0, parameterName = {\textquotesingle}nodeNumber{\textquotesingle})}}\\ \hline 
-  SetObjectParameter(objectNumber, parameterName, value) & set parameter 'parameterName' of object with object number (type ObjectIndex) to value;; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix\tabnewline 
+  SetObjectParameter(objectNumber, parameterName, value) & set parameter 'parameterName' of object with object number (type ObjectIndex) to value;; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix; NOTE that BodyGraphicsData cannot be get or set, use dictionary access instead\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.SetObjectParameter(objectNumber = 0, parameterName = {\textquotesingle}Vshow{\textquotesingle}, value=True)}}\\ \hline 
 \end{longtable}
@@ -913,5 +913,6 @@ This section shows the LinearSolverType structure, which is used for selecting l
   \_None & no value; used, e.g., if no solver is selected\\ \hline 
   EXUdense & use dense matrices and according solvers for densly populated matrices (usually the CPU time grows cubically with the number of unknowns)\\ \hline 
   EigenSparse & use sparse matrices and according solvers; additional overhead for very small systems; specifically, memory allocation is performed during a factorization process\\ \hline 
+  EigenSparseSymmetric & use sparse matrices and according solvers; NOTE: this is the symmetric mode, which assumes symmetric system matrices; this is EXPERIMENTAL and should only be used of user knows that the system matrices are (nearly) symmetric; does not work with scaled GeneralizedAlpha matrices; does not work with constraints, as it must be symmetric positive definite\\ \hline 
 \end{longtable}
 \end{center}

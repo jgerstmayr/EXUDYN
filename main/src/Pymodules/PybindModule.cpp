@@ -386,6 +386,36 @@ MySignal registerSignal;
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+//DELETE:
+//#ifndef EXUDYN_RELEASE
+////#include "Main/MainSystem.h"
+////
+//////test performance of user functions
+//Real TestSD(const MainSystem& mainSystem, Real t, Index itemIndex, Real relPos, Real relVel,
+//		Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
+//{
+//	return relPos * stiffness + relVel * damping;
+//	//return 0.1 * stiffness * relPos + stiffness * EXUstd::Cube(relPos) + relVel * damping;
+//}
+//
+////typedef int(*ptr)(int*);
+//typedef Real(*ptrTestSD)(const MainSystem&, Real, Index, Real, Real, Real, Real, Real, Real, Real);
+//
+////ptrTestSD GetTestSD() { return &TestSD; }
+//void* GetTestSD() { return (void*)&TestSD; }
+//
+////Real TestSD(Real a, Real t)
+////{
+////	//return 13.;
+////}
+////
+////this is slower than Python user functions due to pybind11 overhead in std::function, see pybind11 description; check alternatives!!!
+////std::function<Real(const MainSystem&, Real, Index, Real, Real, Real, Real, Real, Real, Real)> springForceUserFunction = &TestSD;
+////std::function<Real(const MainSystem&, Real, Index, Real, Real, Real, Real, Real, Real, Real)> GetTestSD() { return &TestSD; }
+//
+////GetTestSD() { return &TestSD; }
+//
+//#endif
 
 #ifdef __FAST_EXUDYN_LINALG
 PYBIND11_MODULE(exudynCPPfast, m) {

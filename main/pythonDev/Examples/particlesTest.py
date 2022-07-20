@@ -28,7 +28,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 np.random.seed(1) #always get same results
 
 L = 1
-n = 4*32000 #*8*4 #32*8*8
+n = 32000 #*8*4 #32*8*8
 a = 0.2*L*0.5
 radius = 0.35*a
 m = 0.05
@@ -152,7 +152,7 @@ if False:
     SC.visualizationSettings.general.graphicsUpdateInterval=2
 
 
-simulate=False
+simulate=True
 if simulate:
     useGraphics = True
     if useGraphics:
@@ -168,7 +168,7 @@ if simulate:
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
-    exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+    exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.RK67)
     print(gContact)
     #p = mbs.GetNodeOutput(n, variableType=exu.OutputVariableType.Position)
     #print("pEnd =", p[0], p[1])

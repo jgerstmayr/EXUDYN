@@ -44,21 +44,6 @@ using namespace EXUstd;
 using namespace EXUmath;
 
 
-//#include "Utilities/BasicFunctions.h"
-//#include "Tests/UnitTestBase.h" 
-//using namespace EXUstd;
-//
-//#include "Linalg/ConstSizeVector.h" 
-//#include "Utilities/ResizableArray.h" 
-//#include "Utilities/ObjectContainer.h" 
-//
-//#include "Linalg/SlimVector.h"
-//#include "Linalg/LinkedDataVector.h"
-//#include "Linalg/ResizableVector.h"
-//
-//#include "Linalg/Matrix.h"
-//using namespace EXUmath;
-
 #ifdef PerformUnitTests
     #include "AllVectorUnitTests.h" 
     #include "AllArrayUnitTests.h" 

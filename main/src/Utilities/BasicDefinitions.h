@@ -82,7 +82,26 @@
 	#define SinglePrecision // added from SH. needed to switch between double/float AVX instructions
 #endif // DoublePrecision
 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//MULTITHREADED computation using ngsolve taskmanager; thanks to Joachim Schöberl
+#if !defined(__APPLE__) //currently simd makes problems on different Apple platforms - needs sse2neon.h
+#define USE_NGSOLVE_TASKMANAGER //!< for multithreaded computation
+#endif
+//#undef USE_NGSOLVE_TASKMANAGER //!< for multithreaded computation
 
+#define USE_RESIZABLE_VECTOR_PARALLEL //activating this flag, will replace some vectors in solver with parallelized vector for improved parallel performance
+
+//#define USE_MICROTHREADING //if this is defined, use MicroThreading instead of NGsolve taskmanager
+
+#ifdef USE_MICROTHREADING
+#define	ResizableVectorParallelThreadingLimit 10000
+#else
+#define	ResizableVectorParallelThreadingLimit 100000 //for ngsolve
+#endif
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+//#define __AVX2__
 #ifdef __AVX2__				//enabled by compiler; will also create many intrinsics automatically (e.g. for SlimVector<4>)
 	#define use_AVX2		//!< this is used for specific vector operations, e.g., in Vector.AddLarge(...)
 	//#define use_AVX512
@@ -112,14 +131,6 @@
 //Define empty argument (used for some macros)
 #define EXU_NOARG 
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//MULTITHREADED computation using ngsolve taskmanager; thanks to Joachim Schöberl
-#if !defined(__APPLE__) //currently simd makes problems on different Apple platforms - needs sse2neon.h
-#define USE_NGSOLVE_TASKMANAGER //!< for multithreaded computation
-#endif
-//#undef USE_NGSOLVE_TASKMANAGER //!< for multithreaded computation
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

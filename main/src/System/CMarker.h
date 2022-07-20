@@ -41,7 +41,7 @@ public: //
 
 	//! if body marker: get object number (otherwise assertion)
 	virtual Index GetObjectNumber() const {
-		CHECKandTHROWstring("Invalid call to CMarker::GetBodyNumber");
+		CHECKandTHROWstring("Invalid call to CMarker::GetObjectNumber");
 		return EXUstd::InvalidIndex;
 	}
 

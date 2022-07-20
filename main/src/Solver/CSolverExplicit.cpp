@@ -93,7 +93,7 @@ void CSolverExplicitTimeInt::PostInitializeSolverSpecific(CSystem& computational
 		//compute mass matrix
 		STARTTIMER(timer.massMatrix);
 		data.systemMassMatrix->SetAllZero();
-		computationalSystem.ComputeMassMatrix(data.tempCompData, *(data.systemMassMatrix));
+		computationalSystem.ComputeMassMatrix(data.tempCompDataArray, *(data.systemMassMatrix));
 		STOPTIMER(timer.massMatrix);
 
 		//factorize mass matrix
@@ -155,70 +155,7 @@ void CSolverExplicitTimeInt::InitializeSolverData(CSystem& computationalSystem, 
 	data.jacobianAE->SetNumberOfRowsAndColumns(0, 0);
 	data.startOfStepStateAAlgorithmic.SetNumberOfItems(0);
 
-	//DELETE:
-	//due to error, this function was a duplicate of CSolverBase:
-
-	////UPDATE: system size is the size of first order variables
-	//data.newtonSolution.SetNumberOfItems(data.nSys);
-
-	//conv.InitializeData();
-	//if (simulationSettings.linearSolverType == LinearSolverType::EXUdense)
-	//{
-	//	data.SetLinearSolverType(LinearSolverType::EXUdense);
-	//}
-	//else
-	//{
-	//	data.SetLinearSolverType(LinearSolverType::EigenSparse);
-	//}
-
-	//data.systemMassMatrix->SetNumberOfRowsAndColumns(data.nODE2, data.nODE2);
-	
-	//not needed, but done to have them here:
-	//data.systemJacobian->SetNumberOfRowsAndColumns(0, 0);
-	//data.jacobianAE->SetNumberOfRowsAndColumns(0, 0);
-
-	//data.systemResidual.SetNumberOfItems(0);
-	//data.newtonSolution.SetNumberOfItems(0);	//temporary vector for Newton
-	//data.tempODE2F0.SetNumberOfItems(0);		//temporary vector for ODE2 Jacobian; not needed in explicit solver
-	//data.tempODE2F1.SetNumberOfItems(0);		//temporary vector for ODE2 Jacobian; not needed in explicit solver
-	//data.tempODE1F0.SetNumberOfItems(0);		//temporary vector for ODE1 Jacobian; not needed in explicit solver
-	//data.tempODE1F1.SetNumberOfItems(0);		//temporary vector for ODE1 Jacobian; not needed in explicit solver
-
-	//data.tempODE2.SetNumberOfItems(data.nODE2);			//temporary vector for ODE2 quantities
-	//data.tempODE1.SetNumberOfItems(data.nODE1);			//temporary vector for ODE2 quantities
-
-	//data.tempCompData = TemporaryComputationData();		//totally reset; for safety for now!
-
-	////temp. structure to store start of discontinous iteration state:
-	////  done in CleanUpMemory(): data.startOfDiscIteration.Reset();
-	//data.startOfStepStateAAlgorithmic.SetNumberOfItems(0);
-
-	////for Newton, not used here:
-	//it.newtonStepsCount = 0;				//count total number of Newton iterations
-	//it.newtonJacobiCount = 0;				//count total number of Jacobian computations and factorizations
-	//it.rejectedModifiedNewtonSteps = 0;		//count number of rejections of modifiedNewtonMethod
-	//it.newtonSteps = 0;						//consistently initialize
-	//conv.errorCoordinateFactor = 1.;
-
-	//used for discontinuous problems:
-	//it.discontinuousIterationsCount = 0;	//count total number of discontinuous iterations
-	//it.discontinuousIteration = 0;			//consistently initialize
-
-	//initialize some of the variables, which are usually defined in Newton, but not used in explicit integrator
-	//data.newtonSolution.SetAll(0.);
-	//it.newtonSteps = 0;
-	//conv.residual = 0;
-	//conv.lastResidual = 0;
-	//conv.contractivity = 0;
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -230,12 +167,14 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 {
 	STARTTIMER(timer.overhead);
 
+	//typedef Vector CastVectorType;
+	typedef ResizableVectorParallel CastVectorType;
 	//link current system vectors for ODE2
-	Vector& solutionODE2 = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords;
-	Vector& solutionODE2_t = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t;
-	Vector& solutionODE2_tt = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_tt;
-	Vector& solutionODE1 = computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords;
-	Vector& solutionODE1_t = computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords_t;
+	CastVectorType& solutionODE2 =    computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords;
+	CastVectorType& solutionODE2_t =  computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t;
+	CastVectorType& solutionODE2_tt = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_tt;
+	CastVectorType& solutionODE1 =    computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords;
+	CastVectorType& solutionODE1_t =  computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords_t;
 
 	//Vector& solutionData = computationalSystem.GetSystemData().GetCData().currentState.dataCoords;
 
@@ -632,7 +571,7 @@ bool CSolverExplicitTimeInt::ComputeODE2Acceleration(CSystem& computationalSyste
 	{
 		STARTTIMER(timer.massMatrix);
 		massMatrix->SetAllZero();
-		computationalSystem.ComputeMassMatrix(data.tempCompData, *massMatrix);
+		computationalSystem.ComputeMassMatrix(data.tempCompDataArray, *massMatrix);
 		STOPTIMER(timer.massMatrix);
 	}
 	STARTTIMER(timer.ODE2RHS);

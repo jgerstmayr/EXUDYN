@@ -82,15 +82,11 @@ void CObjectConnectorCoordinate::ComputeJacobianAE(ResizableMatrix& jacobian_ODE
 		usedJac->SetSubmatrix(markerData.GetMarkerData(1).jacobian, 0,
 			markerData.GetMarkerData(0).jacobian.NumberOfColumns(), parameters.factorValue1);
 
-		//jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
 	}
 	else
 	{
 		jacobian_AE.SetNumberOfRowsAndColumns(1, 1);
 		jacobian_AE(0, 0) = 1; //represents derivative of algebraic equation 'lambdaCoordinate = 0'
-
-		//jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety!
-		//jacobian_ODE2.SetNumberOfRowsAndColumns(0, 0);//for safety!
 	}
 
 }

@@ -151,7 +151,7 @@ Real CSolverStatic::ComputeNewtonResidual(CSystem& computationalSystem, const Si
 	STOPTIMER(timer.ODE2RHS);
 
 	STARTTIMER(timer.AERHS);
-	computationalSystem.ComputeAlgebraicEquations(data.tempCompData, aeResidual, false);
+	computationalSystem.ComputeAlgebraicEquations(data.tempCompDataArray, aeResidual, false);
 	STOPTIMER(timer.AERHS);
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -164,7 +164,7 @@ Real CSolverStatic::ComputeNewtonResidual(CSystem& computationalSystem, const Si
 		STARTTIMER(timer.massMatrix);
 		data.systemMassMatrix->SetNumberOfRowsAndColumns(data.nODE2, data.nODE2);
 		data.systemMassMatrix->SetAllZero();
-		computationalSystem.ComputeMassMatrix(data.tempCompData, *(data.systemMassMatrix));
+		computationalSystem.ComputeMassMatrix(data.tempCompDataArray, *(data.systemMassMatrix));
 		STOPTIMER(timer.massMatrix);
 
 		//this could be optimized, avoiding new during static computation:
@@ -188,7 +188,7 @@ Real CSolverStatic::ComputeNewtonResidual(CSystem& computationalSystem, const Si
 
 	//compute CqT*lambda:
 	timer.reactionForces -= EXUstd::GetTimeInSeconds();
-	computationalSystem.ComputeODE2ProjectedReactionForces(data.tempCompData, solutionAE, ode2Residual); //add the forces directly!
+	computationalSystem.ComputeODE2ProjectedReactionForces(data.tempCompDataArray, solutionAE, ode2Residual); //add the forces directly!
 	timer.reactionForces += EXUstd::GetTimeInSeconds();
 
 	return data.systemResidual.GetL2Norm() / conv.errorCoordinateFactor;
@@ -221,7 +221,7 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
 
 	STARTTIMER(timer.jacobianAE);
 	//add jacobian algebraic equations part to system jacobian:
-	computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), 1., 1., 1., false);// , true);
+	computationalSystem.JacobianAE(data.tempCompDataArray, newton, *(data.systemJacobian), 1., 1., 1., false);// , true);
 	STOPTIMER(timer.jacobianAE);
 
 	//pout << "stabilizerODE2term=" << simulationSettings.staticSolver.stabilizerODE2term << "\n";
@@ -233,7 +233,7 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
 		STARTTIMER(timer.massMatrix);
 		data.systemMassMatrix->SetNumberOfRowsAndColumns(data.nODE2, data.nODE2);
 		data.systemMassMatrix->SetAllZero();
-		computationalSystem.ComputeMassMatrix(data.tempCompData, *(data.systemMassMatrix));
+		computationalSystem.ComputeMassMatrix(data.tempCompDataArray, *(data.systemMassMatrix));
 		data.systemMassMatrix->MultiplyWithFactor(-currentODE2stabilizer);
 
 		data.systemJacobian->AddSubmatrix(*(data.systemMassMatrix));

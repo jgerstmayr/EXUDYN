@@ -15,17 +15,6 @@
 *
 ************************************************************************************************ */
 
-//#include <initializer_list> //for initializer_list in constructor
-//#include <ostream>          //ostream for matrix output as text
-//#include <iostream>         //! for cout @todo remove cout from class matrix ==> add Error handling
-//
-//#include "Utilities/ReleaseAssert.h"
-//#include "Utilities/BasicDefinitions.h"
-//#include "Utilities/BasicFunctions.h"
-//#include "Linalg/ConstSizeVector.h"
-//#include "Linalg/ResizableVector.h"
-//#include "Linalg/Matrix.h"
-//#include "Linalg/ResizableMatrix.h"
 
 #include "Linalg/BasicLinalg.h" //for Resizable Vector
 

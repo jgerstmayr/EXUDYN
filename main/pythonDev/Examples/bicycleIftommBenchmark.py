@@ -112,10 +112,10 @@ omegaFy0 = -vX0/rF*sZ   #initial angular velocity of front wheel
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++
 #visualization:
-dY = 0.05
+dY = 0.02
 #graphicsFrame = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0],size=[dFoot*1.1,0.7*rFoot,0.7*rFoot], color=color4lightred)
-graphicsR = GraphicsDataCylinder(pAxis=[-0.55*dY,0,0], vAxis=[dY*1.1,0,0], radius=rR, color=color4steelblue, nTiles=4)
-graphicsF = GraphicsDataCylinder(pAxis=[-0.55*dY,0,0], vAxis=[dY*1.1,0,0], radius=rF, color=color4steelblue, nTiles=4)
+graphicsR = GraphicsDataCylinder(pAxis=[-1*dY,0,0], vAxis=[dY*2,0,0], radius=rR, color=color4steelblue, nTiles=4)
+graphicsF = GraphicsDataCylinder(pAxis=[-1*dY,0,0], vAxis=[dY*2,0,0], radius=rF, color=color4steelblue, nTiles=4)
 graphicsB = GraphicsDataCylinder(pAxis=P1-bCOM, vAxis=P2-P1, radius=dY*1.5, color=color4lightred)
 graphicsB2 = GraphicsDataSphere(point=[0,0,0], radius=3*dY, color=color4lightgrey)
 graphicsH = GraphicsDataCylinder(pAxis=P3-hCOM, vAxis=P2-P3, radius=dY*1.3, color=color4lightgreen)
@@ -241,7 +241,8 @@ if False:
                                                               contactStiffness=cStiffness, 
                                                               contactDamping=cDamping,
                                                               #activeConnector = False, #set to false to deactivated
-                                                              visualization=VObjectConnectorRollingDiscPenalty(show=True, discWidth=dY, color=color4blue)))
+                                                              visualization=VObjectConnectorRollingDiscPenalty(show=True, 
+                                                                                                               discWidth=dY, color=color4blue)))
     
     nGenericF = mbs.AddNode(NodeGenericData(initialCoordinates=[0,0,0], numberOfDataCoordinates=3))
     oRollingF=mbs.AddObject(ObjectConnectorRollingDiscPenalty(markerNumbers=[markerGround, markerF], 

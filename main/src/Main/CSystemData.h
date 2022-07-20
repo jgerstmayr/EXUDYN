@@ -57,20 +57,26 @@ protected: //
 
 public:
 	//use lists that are directly accessible for now; performance?
-	ResizableArray<Index> objectsBodyWithODE2Coords;//!< list of objects that are bodies with ODE2 coordinates (e.g., no ground objects)
+	ResizableArray<Index> objectsBodyWithODE2Coords;	//!< list of objects that are bodies with ODE2 coordinates (e.g., no ground objects), ALL
+	ResizableArray<Index> objectsBodyWithODE2CoordsUF;	//!< list of objects that are bodies with ODE2 coordinates (e.g., no ground objects), with user function
+	ResizableArray<Index> objectsBodyWithODE2CoordsNoUF;//!< list of objects that are bodies with ODE2 coordinates (e.g., no ground objects), has no user function
 	ResizableArray<Index> listComputeObjectODE2Lhs;		//!< list of objects that need to evaluate ComputeObjectODE2Lhs (ALL)
-	ResizableArray<Index> listComputeObjectODE2LhsNoUF;	//!< list of objects that need to evaluate ComputeObjectODE2Lhs, but have no user function
 	ResizableArray<Index> listComputeObjectODE2LhsUF;	//!< list of objects that need to evaluate ComputeObjectODE2Lhs with user functions
+	ResizableArray<Index> listComputeObjectODE2LhsNoUF;	//!< list of objects that need to evaluate ComputeObjectODE2Lhs, but have no user function
 	ResizableArray<Index> listComputeObjectODE1Rhs;		//!< list of objects that need to evaluate ComputeObjectODE1Rhs
 	ResizableArray<Index> listDiscontinuousIteration;	//!< list of objects that need discontinuous iteration (PostNewtonStep, PostDiscontinuousIteration)
-	ResizableArray<Index> listOfLoads;					//!< list of loads without user functions (can be processes multithreaded)
+	ResizableArray<Index> listOfLoadsNoUF;					//!< list of loads without user functions (can be processes multithreaded)
 	ResizableArray<Index> listOfLoadsUF;				//!< list of loads WITH user functions (must be processed serially)
 
 	ResizableArray<Index> objectsBodyWithAE;			//!< list of objects that are bodies and have AE
 	ResizableArray<Index> nodesODE2WithAE;					//!< list of nodes that have AE (Euler parameters)
-	ResizableArray<Index> objectsConstraintWithAE;		//!< list of objects that are constraints and have AE
 	ResizableArray<Index> objectsWithAlgebraicEquations;//!< list of objects that have algebraic equations (AE)
+	ResizableArray<Index> objectsConstraintWithAE;		//!< list of objects that are constraints and have AE
+	ResizableArray<Index> objectsConstraintWithAEUF;		//!< list of objects that are constraints and have AE
+	ResizableArray<Index> objectsConstraintWithAENoUF;		//!< list of objects that are constraints and have AE
 	ResizableArray<Index> listObjectProjectedReactionForcesODE2;//!< list of objects that produce projected reaction forces for constraints
+	ResizableArray<Index> listObjectProjectedReactionForcesODE2UF;//!< list of objects that produce projected reaction forces for constraints
+	ResizableArray<Index> listObjectProjectedReactionForcesODE2NoUF;//!< list of objects that produce projected reaction forces for constraints
 
 public: //
 

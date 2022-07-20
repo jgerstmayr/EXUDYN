@@ -191,8 +191,8 @@ void CObjectJointPrismaticX::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, R
 			jacobian_ODE2(4, i + nColumnsJac0) = vx0 * (RigidBodyMath::Vector2SkewMatrix(vy1) * Gvec1);
 		}
 
-		jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety? check that this cannot happen ...
-		//jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
+		//jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); 
+		//jacobian_AE.SetNumberOfRowsAndColumns(0, 0);
 	}
 	else
 	{

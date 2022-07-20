@@ -48,7 +48,7 @@ public:
 	virtual const STDstring& GetName() const { return name; }
 
 	virtual void SetWithDictionary(const py::dict& d) { SysError("Illegal call to MainObject::SetWithDictionary"); }
-	virtual py::dict GetDictionary() const { SysError("Illegal call to MainObject::GetDictionary");  return py::dict(); }
+	virtual py::dict GetDictionary(bool addGraphicsData = false) const { SysError("Illegal call to MainObject::GetDictionary");  return py::dict(); }
 
 	//! Get const pointer to computational base class object
 	virtual CObject* GetCObject() const { SysError("Illegal call to MainObject::GetCObject");  return NULL; }
@@ -61,7 +61,7 @@ public:
 	virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { SysError("Illegal call to MainObject::SetVisualizationObject"); }
 
 	//! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CObject GetOutputVariable(...)
-	virtual py::object GetOutputVariable(OutputVariableType variableType) const;
+	virtual py::object GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Index objectNumber) const;
 	//! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CObject GetOutputVariable(...)
 	virtual py::object GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index objectNumber) const;
 

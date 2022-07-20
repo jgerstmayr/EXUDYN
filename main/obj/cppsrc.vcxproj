@@ -168,6 +168,8 @@
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalOptions>/bigobj /Zc:twoPhase-</AdditionalOptions>
       <OmitFramePointers>false</OmitFramePointers>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)\libs\libs64;C:\ProgramData\Anaconda3_64b37\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -282,9 +284,9 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/Zc:twoPhase-</AdditionalOptions>
-      <OpenMPSupport>true</OpenMPSupport>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
+      <FloatingPointModel>Precise</FloatingPointModel>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -398,7 +400,9 @@
     <ClCompile Include="..\src\Objects\VisuNodePoint.cpp" />
     <ClCompile Include="..\src\Pymodules\PybindModule.cpp" />
     <ClCompile Include="..\src\Pymodules\PyMatrixContainer.cpp" />
-    <ClCompile Include="..\src\Pymodules\pythonTests.cpp" />
+    <ClCompile Include="..\src\Pymodules\pythonTests.cpp">
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Default</BasicRuntimeChecks>
+    </ClCompile>
     <ClCompile Include="..\src\Solver\CSolver.cpp" />
     <ClCompile Include="..\src\Solver\CSolverBase.cpp" />
     <ClCompile Include="..\src\Solver\CSolverExplicit.cpp" />
@@ -416,6 +420,7 @@
     <ClCompile Include="..\src\System\MainObject.cpp" />
     <ClCompile Include="..\src\tests\UnitTestBase.cpp" />
     <ClCompile Include="..\src\Utilities\BasicFunctions.cpp" />
+    <ClCompile Include="..\src\Utilities\Threading.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ngs-core-master\array.hpp" />
@@ -712,6 +717,7 @@
     <ClInclude Include="..\src\Linalg\MatrixContainer.h" />
     <ClInclude Include="..\src\Linalg\ResizableMatrix.h" />
     <ClInclude Include="..\src\linalg\ResizableVector.h" />
+    <ClInclude Include="..\src\Linalg\ResizableVectorParallel.h" />
     <ClInclude Include="..\src\Linalg\RigidBodyMath.h" />
     <ClInclude Include="..\src\Linalg\SearchTree.h" />
     <ClInclude Include="..\src\linalg\SlimVector.h" />
@@ -788,6 +794,7 @@
     <ClInclude Include="..\src\utilities\ReleaseAssert.h" />
     <ClInclude Include="..\src\utilities\ResizableArray.h" />
     <ClInclude Include="..\src\utilities\SlimArray.h" />
+    <ClInclude Include="..\src\Utilities\Threading.h" />
     <ClInclude Include="..\src\Utilities\TimerStructure.h" />
   </ItemGroup>
   <ItemGroup>

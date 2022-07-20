@@ -402,7 +402,8 @@ public:
 	virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, bool useIndex2 = false) const { CHECKandTHROWstring("ERROR: illegal call to CNodeODE2::ComputeAlgebraicEquations"); }
 
 	//! ONLY for nodes with AE / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();
-	virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const { CHECKandTHROWstring("ERROR: illegal call to CNodeODE2::ComputeJacobianAE"); }
+	virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE,
+		JacobianType::Type& filledJacobians) const { CHECKandTHROWstring("ERROR: illegal call to CNodeODE2::ComputeJacobianAE"); }
 };
 
 //! node with ODE1 variables: for first order differential equations, e.g., linear state space systems

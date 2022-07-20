@@ -74,7 +74,7 @@ JacobianType::Type CObjectKinematicTree::GetAvailableJacobians() const
 }
 
 //! provide according output variable in "value"
-void CObjectKinematicTree::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
+void CObjectKinematicTree::GetOutputVariable(OutputVariableType variableType, Vector& value, ConfigurationType configuration, Index objectNumber) const
 {
 	switch (variableType)
 	{
@@ -85,7 +85,11 @@ void CObjectKinematicTree::GetOutputVariableBody(OutputVariableType variableType
 		value.CopyFrom(((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector_tt());
 		break;
 	}
-	case OutputVariableType::Force:			ComputeODE2LHS(value, objectNumber);	break;
+	case OutputVariableType::Force:
+	{
+		CHECKandTHROW(configuration == ConfigurationType::Current, "ObjectKinematicTree::GetOutputVariable: OutputVariableType::Force can only be computed for Current configuration");
+		ComputeODE2LHS(value, objectNumber);	break;
+	}
 	default:
 		SysError("CObjectKinematicTree::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

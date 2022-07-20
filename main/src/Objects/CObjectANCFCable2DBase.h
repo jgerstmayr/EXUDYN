@@ -51,21 +51,24 @@ public:
 	//!  precompute mass terms if it has not been done yet
 	virtual void PreComputeMassTerms() const;
 
+	//! access to parameters.useReducedOrderIntegration of derived class
+	virtual bool AddALEvariation() const { return false; }
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//TEMPLATED FUNCTIONS
-	template<class TReal>
-	void ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF_t) const;
+	template<class TReal, Index ancfSize>
+	void ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, ancfSize>& qANCF, 
+		const ConstSizeVectorBase<TReal, ancfSize>& qANCF_t) const;
 
 	//!  map element coordinates (position or veloctiy level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc.
-	template<class TReal>
-	SlimVectorBase<TReal, 2> MapCoordinates(const Vector4D& SV, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF) const
+	template<class TReal, Index ancfSize>
+	SlimVectorBase<TReal, 2> MapCoordinates(const Vector4D& SV, const ConstSizeVectorBase<TReal, ancfSize>& qANCF) const
 	{
 		SlimVectorBase<TReal, 2> v;
 		v[0] = 0;
 		v[1] = 0;
-		for (Index i = 0; i < 4; i++)
+		for (Index i = 0; i < SV.NumberOfItems(); i++)
 		{
 			v[0] += SV[i] * qANCF[2 * i];
 			v[1] += SV[i] * qANCF[2 * i + 1];
@@ -148,6 +151,8 @@ public:
     //!  get second derivative of compressed shape function vector \f$\frac{\partial^2 \Sm_v}{\partial^2 x}\f$, depending local position \f$x \in [0,L]\f$
     static Vector4D ComputeShapeFunctions_xx(Real x, Real L);
 
+	//!  get third derivative of compressed shape function vector \f$\frac{\partial^3 \Sm_v}{\partial^3 x}\f$, depending local position \f$x \in [0,L]\f$
+	static Vector4D ComputeShapeFunctions_xxx(Real x, Real L);
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//new functions needed for contact:
 
@@ -202,10 +207,12 @@ public:
     void ComputeCurrentNodeVelocities(ConstSizeVector<4>& qNode0, ConstSizeVector<4>& qNode1) const;
 
     //!  Compute object (finite element) coordinates in current configuration including reference coordinates
-    void ComputeCurrentObjectCoordinates(ConstSizeVector<8>& qANCF) const;
+	template<Index ancfSize>
+	void ComputeCurrentObjectCoordinates(ConstSizeVector<ancfSize>& qANCF) const;
 
     //!  Compute object (finite element) velocities in current configuration
-    void ComputeCurrentObjectVelocities(ConstSizeVector<8>& qANCF_t) const;
+	template<Index ancfSize>
+	void ComputeCurrentObjectVelocities(ConstSizeVector<ancfSize>& qANCF_t) const;
 
 	//!  compute the slope vector at a certain position, for given configuration
 	Vector2D ComputeSlopeVector(Real x, ConfigurationType configuration) const;

@@ -139,12 +139,12 @@ void CObjectConnectorCoordinateVector::ComputeJacobianAE(ResizableMatrix& jacobi
 		if (parameters.velocityLevel) //in this case, always the jacobian_ODE2_t must be used
 		{
 			usedJac = &jacobian_ODE2_t;
-			jacobian_ODE2.SetNumberOfRowsAndColumns(0, 0); 
+			//jacobian_ODE2.SetNumberOfRowsAndColumns(0, 0); 
 		}
 		else
 		{
 			usedJac = &jacobian_ODE2;
-			jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); 
+			//jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); 
 		}
 
 		Index sizeOfCoordinates = markerData.GetMarkerData(0).jacobian.NumberOfColumns() + markerData.GetMarkerData(1).jacobian.NumberOfColumns();

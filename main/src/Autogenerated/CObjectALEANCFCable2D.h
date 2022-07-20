@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-14  23:29:22 (last modified)
+* @date         2022-07-09  20:46:45 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,6 +38,7 @@ public: // AUTO:
     Real physicsReferenceAxialStrain;             //!< AUTO:  [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value
     Real physicsReferenceCurvature;               //!< AUTO:  [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value
     bool physicsUseCouplingTerms;                 //!< AUTO: true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then)
+    bool physicsAddALEvariation;                  //!< AUTO: true: correct case, where additional terms related to variation of strain and curvature are added
     Index3 nodeNumbers;                           //!< AUTO: two node numbers ANCF cable element, third node=ALE GenericODE2 node
     Index useReducedOrderIntegration;             //!< AUTO: 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
     Real strainIsRelativeToReference;             //!< AUTO:  if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of \f$\varepsilon_0\f$ and \f$\kappa_0\f$ serve as a reference geometry; allows also values between 0. and 1.
@@ -54,6 +55,7 @@ public: // AUTO:
         physicsReferenceAxialStrain = 0.;
         physicsReferenceCurvature = 0.;
         physicsUseCouplingTerms = true;
+        physicsAddALEvariation = true;
         nodeNumbers = Index3({EXUstd::InvalidIndex, EXUstd::InvalidIndex, EXUstd::InvalidIndex});
         useReducedOrderIntegration = 0;
         strainIsRelativeToReference = 0.;
@@ -125,6 +127,12 @@ public: // AUTO:
     virtual Real StrainIsRelativeToReference() const override
     {
         return parameters.strainIsRelativeToReference;
+    }
+
+    //! AUTO:  access to physicsAddALEvariation
+    virtual bool AddALEvariation() const override
+    {
+        return parameters.physicsAddALEvariation;
     }
 
     //! AUTO:  Computational function: compute mass matrix

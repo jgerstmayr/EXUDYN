@@ -43,11 +43,15 @@ else:
 mode='newDH'
 mode='newModDH' #needs to be further tested
 
+jointWidth=0.1
+jointRadius=0.06
+linkWidth=0.1
 
 graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.3], [0.2,0.2,0.4], color4grey)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
+graphicsBaseList +=[GraphicsDataCylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, color4list[0])] #belongs to first body
 graphicsBaseList +=[GraphicsDataCheckerBoard([0,0,-0.5], size=4)]
 #newRobot.base.visualization['graphicsData']=graphicsBaseList
 
@@ -152,7 +156,7 @@ cnt = 0
 for link in newRobot.links:
     color = color4list[cnt]
     color[3] = 0.75 #make transparent
-    link.visualization = VRobotLink(jointRadius=0.06, jointWidth=0.05*2, showMBSjoint=False, linkWidth=0.05*2,
+    link.visualization = VRobotLink(jointRadius=jointRadius, jointWidth=jointWidth, showMBSjoint=False, linkWidth=linkWidth,
                                     linkColor=color, showCOM= True )
     cnt+=1
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

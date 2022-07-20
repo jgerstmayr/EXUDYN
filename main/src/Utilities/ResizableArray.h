@@ -74,7 +74,19 @@ public:
 		numberOfItems = 0;
 		maxNumberOfItems = maxNumberOfItemsInit;
 
-		if (maxNumberOfItems > 0) { data = new T[maxNumberOfItems]; }
+		if (maxNumberOfItems > 0) 
+		{ 
+			try
+			{
+				data = new T[maxNumberOfItems];
+			}
+			catch (const std::bad_alloc& e) {
+				pout << "Allocation failed: " << e.what() << '\n';
+				pout << "requested memory = " << sizeof(T)*maxNumberOfItems / pow(2, 20) << " MB, number of items = " << maxNumberOfItems << "\n";
+
+				CHECKandTHROWstring("ResizableArray(maxNumberOfItems): Allocation failed");
+			}
+		}
 	}
 
 	//! initializer list (CHECK PERFORMANCE?)
@@ -223,9 +235,17 @@ protected:
 
 public:
 	//! set number of items to 'n'; used to reset array with 'SetNumberOfItems(0)', does not allocated memory/delete if newNumberOfItems<=maxNumberOfItems; copies data if array is enlarged
-	void SetNumberOfItems(Index newNumberOfItems) {
+	void SetNumberOfItems(Index newNumberOfItems) 
+	{ 
+		if (newNumberOfItems > maxNumberOfItems)
+		{ 
+			EnlargeMaxNumberOfItemsTo(newNumberOfItems);
+		};
 		numberOfItems = newNumberOfItems;
-		if (numberOfItems > maxNumberOfItems) { EnlargeMaxNumberOfItemsTo(numberOfItems); };
+
+		//WRONG: 2022-07-11: numberOfItems is needed in SetMaxNumberOfItems; set hereafter anyway!
+		//numberOfItems = newNumberOfItems;
+		//if (numberOfItems > maxNumberOfItems) { EnlargeMaxNumberOfItemsTo(numberOfItems); };
 	}
 
 	//! reset function without argument (needed in contact, but may be erased?)
@@ -236,8 +256,21 @@ public:
 	//! check if an index is in range of valid items
 	bool IsValidIndex(Index index) const { return (index >= 0) && (index < NumberOfItems()); }
 
-	//! if maxNumberOfItems is smaller than minSize, enlarge array to fit at least 'minSize'; NOTE(different from HOTINT1): only 'numberOfItems' copied; this function corresponds to old TArray::ReSize(); NOTE: numberOfItems stays UNCHANGED; copies data if array is enlarged
-	void EnlargeMaxNumberOfItemsTo(Index minSize);
+	void EnlargeMaxNumberOfItemsTo(Index minSize)
+	{
+		if (minSize <= maxNumberOfItems || minSize == 0) { return; } //do nothing if size fits!
+
+		////current array too small, try to double size
+		//Index newSize = 2 * maxNumberOfItems;
+
+		////check if array fits now, otherwise enlarge
+		//if (newSize < minSize) { newSize = minSize; }
+
+		//SetMaxNumberOfItems(newSize);
+
+		SetMaxNumberOfItems(std::max(2 * maxNumberOfItems, minSize));
+	}
+
 
 	//! set allocated memory/maxNumberOfItems exactly to given value; if (newNumberOfItems!=maxNumberOfItems) it results in memory delete and allocation; NOTE: numberOfItems is reduced to fit newNumberOfItems, otherwise unchanged; data is copied in the range up to to min(newNumberOfItems, maxNumberOfItems).  
 	void SetMaxNumberOfItems(Index newNumberOfItems);
@@ -471,7 +504,7 @@ void ResizableArray<T>::CopyFrom(const ResizableArray<T>& array, Index beginPosi
 
     if ((endPosition - beginPosition) > maxNumberOfItems) { EnlargeMaxNumberOfItemsTo(endPosition - beginPosition); }
 
-    std::memcpy(data, &array.data[beginPosition], (endPosition - beginPosition) * sizeof(T));
+    std::memcpy(data, &array.data[beginPosition], (size_t)(endPosition - beginPosition) * sizeof(T));
     numberOfItems = endPosition - beginPosition;
 }
 
@@ -483,20 +516,20 @@ void ResizableArray<T>::Flush()
     Init();
 }
 
-//! if maxNumberOfItems is smaller than minSize, enlarge array to fit at least 'minSize'; NOTE(different from HOTINT1): only 'numberOfItems' copied; this function corresponds to old TArray::ReSize(); NOTE: numberOfItems stays UNCHANGED; copies data if array is enlarged
-template <class T>
-void ResizableArray<T>::EnlargeMaxNumberOfItemsTo(Index minSize)
-{
-    if (minSize == 0 || minSize <= maxNumberOfItems) { return; } //do nothing if size fits!
-
-    //current array too small, try to double size
-    Index newSize = 2 * maxNumberOfItems;
-
-    //check if array fits now, otherwise enlarge
-    if (newSize < minSize) { newSize = minSize; }
-
-    SetMaxNumberOfItems(newSize);
-}
+////! if maxNumberOfItems is smaller than minSize, enlarge array to fit at least 'minSize'; NOTE(different from HOTINT1): only 'numberOfItems' copied; this function corresponds to old TArray::ReSize(); NOTE: numberOfItems stays UNCHANGED; copies data if array is enlarged
+//template <class T>
+//void ResizableArray<T>::EnlargeMaxNumberOfItemsTo(Index minSize)
+//{
+//    if (minSize == 0 || minSize <= maxNumberOfItems) { return; } //do nothing if size fits!
+//
+//    //current array too small, try to double size
+//    Index newSize = 2 * maxNumberOfItems;
+//
+//    //check if array fits now, otherwise enlarge
+//    if (newSize < minSize) { newSize = minSize; }
+//
+//    SetMaxNumberOfItems(newSize);
+//}
 
 //! set allocated memory/maxNumberOfItems exactly to given value; if (newNumberOfItems!=maxNumberOfItems) it results in memory delete and allocation; NOTE: numberOfItems is reduced to fit newNumberOfItems, otherwise unchanged; data is copied in the range up to to min(newNumberOfItems, maxNumberOfItems).  
 template <class T>
@@ -504,14 +537,25 @@ void ResizableArray<T>::SetMaxNumberOfItems(Index newNumberOfItems)
 {
     if (newNumberOfItems != 0)
     {
-        T* ndata = new T[newNumberOfItems];
+		T* ndata = nullptr;
+		try
+		{
+			ndata = new T[newNumberOfItems];
+		}
+		catch (const std::bad_alloc& e) {
+			pout << "Allocation failed: " << e.what() << '\n';
+			pout << "requested memory = " << sizeof(T)*newNumberOfItems / pow(2, 20) << " MB, number of items = " << newNumberOfItems << "\n";
+
+			CHECKandTHROWstring("ResizableArray: Allocation failed");
+		}
+
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 		array_new_counts++;
 #endif
 
-        if (data != nullptr && (std::max)(maxNumberOfItems, newNumberOfItems) != 0)
+        if (data != nullptr && std::max(maxNumberOfItems, newNumberOfItems) != 0)
         {
-            std::memcpy(ndata, data, (std::min)(numberOfItems, newNumberOfItems) * sizeof(T)); //only copy available items
+            std::memcpy(ndata, data, (size_t)(std::min(numberOfItems, newNumberOfItems)) * sizeof(T)); //only copy available items
         }
         if (data != nullptr) 
 		{
@@ -533,7 +577,7 @@ void ResizableArray<T>::SetMaxNumberOfItems(Index newNumberOfItems)
         data = nullptr;
     }
     maxNumberOfItems = newNumberOfItems;
-    numberOfItems = (std::min)(newNumberOfItems, numberOfItems); //in case of size reduction, numberOfItems is decreased
+    numberOfItems = std::min(newNumberOfItems, numberOfItems); //in case of size reduction, numberOfItems is decreased
 }
 
 

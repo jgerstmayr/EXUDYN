@@ -245,6 +245,7 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
 [s1,sL1] = AddEnumValue(pyClass, '_None', 'no value; used, e.g., if no solver is selected'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'EXUdense', 'use dense matrices and according solvers for densly populated matrices (usually the CPU time grows cubically with the number of unknowns)'); s+=s1; sLenum+=sL1
 [s1,sL1] = AddEnumValue(pyClass, 'EigenSparse', 'use sparse matrices and according solvers; additional overhead for very small systems; specifically, memory allocation is performed during a factorization process'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(pyClass, 'EigenSparseSymmetric', 'use sparse matrices and according solvers; NOTE: this is the symmetric mode, which assumes symmetric system matrices; this is EXPERIMENTAL and should only be used of user knows that the system matrices are (nearly) symmetric; does not work with scaled GeneralizedAlpha matrices; does not work with constraints, as it must be symmetric positive definite'); s+=s1; sLenum+=sL1
 
 s +=	'		.export_values();\n\n'
 sLenum += DefLatexFinishClass()
@@ -661,8 +662,9 @@ sL += DefLatexStartClass(classStr+': Object', '\label{sec:mainsystem:object}\n T
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObject', cName='PyGetObject', 
-                                description="get object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'",
-                                argList=['objectNumber'],
+                                description="get object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'; in order to also get graphicsData written, use addGraphicsData=True (which is by default False, as it would spoil the information)",
+                                argList=['objectNumber','addGraphicsData'],
+                                defaultArgs=['','false'],
                                 example = "objectDict = mbs.GetObject(0)"
                                 ); s+=s1; sL+=sL1
 
@@ -685,14 +687,15 @@ sL += DefLatexStartClass(classStr+': Object', '\label{sec:mainsystem:object}\n T
 #                                ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectOutput', cName='PyGetObjectOutputVariable', 
-                                description="get object's current output variable from object number (type ObjectIndex) and OutputVariableType; can only be computed for exu.ConfigurationType.Current configuration!",
-                                argList=['objectNumber', 'variableType']
+                                description="get object's current output variable from object number (type ObjectIndex) and OutputVariableType; for connectors, it can only be computed for exu.ConfigurationType.Current configuration!",
+                                argList=['objectNumber', 'variableType', 'configuration'],
+                                defaultArgs=['','','ConfigurationType::Current'],
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectOutputBody', cName='PyGetObjectOutputVariableBody', 
                                 description="get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition as defined in the body, and as used in MarkerBody and SensorBody",
                                 argList=['objectNumber', 'variableType', 'localPosition', 'configuration'],
-                                defaultArgs=['','','','ConfigurationType::Current'],
+                                defaultArgs=['','','(std::vector<Real>)Vector3D({0,0,0})','ConfigurationType::Current'],
                                 example = "u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)"
                                 ); s+=s1; sL+=sL1
 
@@ -704,13 +707,13 @@ sL += DefLatexStartClass(classStr+': Object', '\label{sec:mainsystem:object}\n T
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObjectParameter', cName='PyGetObjectParameter', 
-                                description="get objects's parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix",
+                                description="get objects's parameter from object number (type ObjectIndex) and parameterName; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix; NOTE that BodyGraphicsData cannot be get or set, use dictionary access instead",
                                 argList=['objectNumber', 'parameterName'],
                                 example = "mbs.GetObjectParameter(objectNumber = 0, parameterName = 'nodeNumber')",
                                 ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetObjectParameter', cName='PySetObjectParameter', 
-                                description="set parameter 'parameterName' of object with object number (type ObjectIndex) to value;; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix",
+                                description="set parameter 'parameterName' of object with object number (type ObjectIndex) to value;; parameter names can be found for the specific items in the reference manual; for visualization parameters, use a 'V' as a prefix; NOTE that BodyGraphicsData cannot be get or set, use dictionary access instead",
                                 argList=['objectNumber', 'parameterName', 'value'],
                                 example = "mbs.SetObjectParameter(objectNumber = 0, parameterName = 'Vshow', value=True)",
                                 ); s+=s1; sL+=sL1

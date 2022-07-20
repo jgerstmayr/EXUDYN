@@ -49,7 +49,7 @@ void VisualizationObjectGround::CallUserFunction(const VisualizationSettings& vi
 	refPos3DF.CopyFrom(refPos3D); // ({ (float)pos3D[0], (float)pos3D[1], (float)pos3D[2] });
 
 	BodyGraphicsData bodyGraphicsData;
-	PyWriteBodyGraphicsData(pyBodyGraphicsData, bodyGraphicsData);
+	PyWriteBodyGraphicsDataList(pyBodyGraphicsData, bodyGraphicsData);
 	EXUvis::AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemNumber);
 
 }
@@ -71,7 +71,7 @@ void VisualizationObjectRigidBody::CallUserFunction(const VisualizationSettings&
 	Matrix3DF A; A.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
 
 	BodyGraphicsData bodyGraphicsData;
-	PyWriteBodyGraphicsData(pyBodyGraphicsData, bodyGraphicsData);
+	PyWriteBodyGraphicsDataList(pyBodyGraphicsData, bodyGraphicsData);
 	EXUvis::AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, A, itemNumber);
 
 }
@@ -93,7 +93,7 @@ void VisualizationObjectRigidBody2D::CallUserFunction(const VisualizationSetting
 	Matrix3DF A; A.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
 
 	BodyGraphicsData bodyGraphicsData;
-	PyWriteBodyGraphicsData(pyBodyGraphicsData, bodyGraphicsData);
+	PyWriteBodyGraphicsDataList(pyBodyGraphicsData, bodyGraphicsData);
 	EXUvis::AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, A, itemNumber);
 
 }
@@ -112,7 +112,7 @@ void VisualizationObjectGenericODE2::CallUserFunction(const VisualizationSetting
 	Float3 refPos3DF = Float3(0);
 
 	BodyGraphicsData bodyGraphicsData;
-	PyWriteBodyGraphicsData(pyBodyGraphicsData, bodyGraphicsData);
+	PyWriteBodyGraphicsDataList(pyBodyGraphicsData, bodyGraphicsData);
 	EXUvis::AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, itemNumber);
 
 }

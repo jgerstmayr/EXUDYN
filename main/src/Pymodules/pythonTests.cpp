@@ -25,6 +25,15 @@
 //#include <signal.h>
 ////++++++++++++++++++++++++++
 
+//#if !defined(__AVX2__)
+//#define __AVX2__
+//#endif
+//#undef __AVX2__
+
+#include "Utilities/BasicDefinitions.h"
+//#include "Linalg/Use_avx.h"
+
+
 // pybind11 includes
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -59,7 +68,7 @@ namespace py = pybind11;
 //#include "Main/MainSystem.h"
 //
 ////test performance of user functions
-//Real TestSD(const MainSystemBase& mainSystem, Real t, Index itemIndex, Real relPos, Real relVel,
+//Real TestSD(const MainSystem& mainSystem, Real t, Index itemIndex, Real relPos, Real relVel,
 //	Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
 //{
 //	return relPos * stiffness + relVel * damping;
@@ -80,13 +89,218 @@ namespace py = pybind11;
 //#include "../Eigen/src/Eigenvalues/ComplexEigenSolver.h"
 //#include "ngs-core-master/ngs_core.hpp"
 
-//#include "Utilities/Parallel.h" //include after 
+#include "Utilities/Parallel.h" //ParallelFor
+//#include "Linalg/ResizableVectorParallel.h"	 
 
 
+//namespace multiThreading = ngstd;
+namespace multiThreading = MicroThreading;
 
+template<typename T>
+class ResizableVectorParallelBase2 : public ResizableVectorBase<T>
+{
+private:
+	static Index constexpr multithreadingLimit = 1; //lower limit below which multithreading acceleration will not be used; measured for i7-8650U 4core; using more cores just makes sense for larger systems!
+
+//public:
+//	Index multithreadingLimit;
+//	Index factorThreads; //set to 1 by default; set to 8 above 100.000
+
+public:
+	//! default constructor
+	ResizableVectorParallelBase2() : ResizableVectorBase<T>() {}
+
+	//! initialize ResizableVectorBase numberOfItemsInit
+	ResizableVectorParallelBase2(Index numberOfItemsInit) : ResizableVectorBase<T>(numberOfItemsInit) {}
+
+	//! initialize ResizableVectorBase with numberOfItemsInit Reals; assign all data items with 'initializationValue'
+	ResizableVectorParallelBase2(Index numberOfItemsInit, T initializationValue) : ResizableVectorBase<T>(numberOfItemsInit, initializationValue) {}
+
+	//! constructor with initializer list; memory allocation!
+	ResizableVectorParallelBase2(std::initializer_list<T> listOfReals) : ResizableVectorBase<T>(listOfReals) {}
+
+	template <class Tvector>
+	ResizableVectorParallelBase2& operator+=(const Tvector& v)
+	{
+		CHECKandTHROW((this->NumberOfItems() == v.NumberOfItems()), "ResizableVectorParallelBase2::operator+=: incompatible size of vectors");
+
+		if (this->numberOfItems < multithreadingLimit || multiThreading::TaskManager::GetNumThreads() == 1)
+		{
+			Index nAVX = this->numberOfItems >> AVXRealShift;
+
+			PReal* ptrData = (PReal*)(this->data);
+			PReal* ptrVector = (PReal*)(v.GetDataPointer());
+			for(Index i=0; i < nAVX; i++)
+			{
+				ptrData[i] += ptrVector[i]; //AVX operation, gives ~4 time speedup for AVX2 in chached operations
+			}
+
+			//process remaining items:
+			for (Index i = (nAVX << AVXRealShift); i < this->numberOfItems; i++)
+			{
+				this->data[i] += v[i];
+			}
+		}
+		else
+		{
+			Index nThreads = multiThreading::TaskManager::GetNumThreads();
+
+			Index nAVX = this->numberOfItems >> AVXRealShift;
+			PReal* ptrData = (PReal*)(this->data);
+			PReal* ptrVector = (PReal*)(v.GetDataPointer());
+
+			multiThreading::ParallelFor((int)(nAVX), [this, &nAVX, &ptrData, &ptrVector](NGSsizeType i)
+			{
+				ptrData[i] += ptrVector[i]; //AVX operation, gives ~4 time speedup for AVX2 in chached operations
+			}, nThreads); //for numberOfItems=400.000, ideal factor=32, numberOfItems=100.000, ideal factor=8;
+
+			//process remaining items:
+			for (Index i = (nAVX << AVXRealShift); i < this->numberOfItems; i++)
+			{
+				this->data[i] += v[i];
+			}
+		}
+
+		return *this;
+	}
+
+	template <class Tvector>
+	ResizableVectorParallelBase2& operator-=(const Tvector& v)
+	{
+		CHECKandTHROW((this->NumberOfItems() == v.NumberOfItems()), "ResizableVectorParallelBase2::operator-=: incompatible size of vectors");
+
+		if (this->numberOfItems < multithreadingLimit || multiThreading::TaskManager::GetNumThreads() == 1)
+		{
+			Index nAVX = this->numberOfItems >> AVXRealShift;
+
+			PReal* ptrData = (PReal*)(this->data);
+			PReal* ptrVector = (PReal*)(v.GetDataPointer());
+			for (Index i = 0; i < nAVX; i++)
+			{
+				ptrData[i] -= ptrVector[i]; //AVX operation, gives ~4 time speedup for AVX2 in chached operations
+			}
+
+			//process remaining items:
+			for (Index i = (nAVX << AVXRealShift); i < this->numberOfItems; i++)
+			{
+				this->data[i] -= v[i];
+			}
+		}
+		else
+		{
+			Index nThreads = multiThreading::TaskManager::GetNumThreads();
+			//multiThreading::ParallelFor((int)(this->numberOfItems), [this, &v](NGSsizeType j)
+			//{
+			//	this->data[j] -= v[j];
+			//}, nThreads*factorThreads); //for numberOfItems=400.000, ideal factor=32, numberOfItems=100.000, ideal factor=8
+
+			Index nAVX = this->numberOfItems >> AVXRealShift;
+			PReal* ptrData = (PReal*)(this->data);
+			PReal* ptrVector = (PReal*)(v.GetDataPointer());
+
+			multiThreading::ParallelFor((int)(nAVX), [&nAVX, &ptrData, &ptrVector](NGSsizeType i)
+			{
+				ptrData[i] -= ptrVector[i]; //AVX operation, gives ~4 time speedup for AVX2 in chached operations
+			}, nThreads); //for numberOfItems=400.000, ideal factor=32, numberOfItems=100.000, ideal factor=8;
+
+			//process remaining items:
+			for (Index i = (nAVX << AVXRealShift); i < this->numberOfItems; i++)
+			{
+				this->data[i] -= v[i];
+			}
+		}
+
+		return *this;
+	}
+
+};
 
 void PyTest()
 {
+	//parallelization tests:
+	if (1)
+	{
+		pout << "AVXsize= " << AVXRealSize << "\n";
+		pout << "AVXRealShift= " << AVXRealShift << "\n";
+		double d = 12;
+		PReal P;
+		P = _mm_set1_(d);
+
+		Index f = 256;
+		Index n = f*800+1; //on Surface, cache limit around n=200000
+		Index its = 1000000 / f;
+		//Index its = 2 / f;
+
+
+		//Vector x(n);
+		//Vector z(n, 0.);
+		ResizableVectorParallelBase2<Real> x(n);
+		ResizableVectorParallelBase2<Real> z(n, 0.);
+
+		ResizableVectorParallelBase2<Real> xpar(n);
+		ResizableVectorParallelBase2<Real> zpar(n, 0.);
+
+		for (Index i = 0; i < n; i++)
+		{
+			x[i] = 0.1*i;
+			xpar[i] = 0.1*i;
+		}
+
+		Real ts, tm;
+		if (1)
+		{
+			ts = EXUstd::GetTimeInSeconds();
+			for (Index k = 0; k < its; k++)
+			{
+				z += x;
+			}
+			tm = EXUstd::GetTimeInSeconds() - ts;
+			pout << "vector operations needed=" << tm << ", GFlops=" << ((Real)n*its) / (1e9*tm)
+				<< ", result=" << z.GetL2Norm() << "\n";
+		}
+
+		multiThreading::TaskManager::SetNumThreads(4); //necessary in order that computation functions have reserved correct size of arrays
+		Index taskmanagerNumthreads = multiThreading::EnterTaskManager(); //this is needed in order that any ParallelFor is executed in parallel during solving
+
+		for (Index ii = 0; ii < 14; ii++)
+		{
+			Index f = 1<<ii;
+			Index n = f * 200 + 1; //on Surface, cache limit around n=200000
+			Index its = 1000000 / f;
+			
+			//its = 1;
+			//n = 10;
+
+
+			ResizableVectorParallelBase2<Real> xpar(n);
+			ResizableVectorParallelBase2<Real> zpar(n, 0.);
+			Vector xref(n);
+
+			for (Index i = 0; i < n; i++)
+			{
+				xpar[i] = 0.1*i;
+				xref[i] = 0.1*i;
+			}
+
+			Index factorThreads = 1;
+			pout << "factor threads = " << factorThreads << ", ";
+			pout << "vector size = " << n << "\n";
+			zpar.SetAll(0.);
+			//zpar.factorThreads = factorThreads;
+			//zpar.multithreadingLimit = 100000000;
+			ts = EXUstd::GetTimeInSeconds();
+			for (Index k = 0; k < its; k++)
+			{
+				zpar += xpar;
+			}
+			tm = EXUstd::GetTimeInSeconds() - ts;
+			pout << "  parallel vector operations needed=" << tm << ", GFlops=" << ((Real)n*its) / (1e9*tm)
+				<< ", error=" << (zpar - its*xref).GetL2Norm() << "\n";
+		}
+		multiThreading::ExitTaskManager(taskmanagerNumthreads);
+	}
+
+	
 	//if (0)
 	//{
 	//	Vector4D c({ 3., 7.5, 2., 0.3 });

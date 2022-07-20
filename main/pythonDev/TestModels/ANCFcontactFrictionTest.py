@@ -115,6 +115,7 @@ if useCircleContact:
     nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=posRoll2))
     oRigid = mbs.AddObject(RigidBody2D(nodeNumber = nRigid, physicsMass = 1, physicsInertia=0.001, visualization=vRigidBody))
     mRigid = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRigid, localPosition=[0,0,0]))
+    # mRigid = mbs.AddMarker(MarkerNodeRigid(nodeNumber = nRigid)) #gives identical result
 
     mbs.AddLoad(Torque(markerNumber=mRigid, loadVector=[0,0,-0.1]))
 

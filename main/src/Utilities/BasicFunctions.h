@@ -325,7 +325,7 @@ namespace EXUstd {
 		flag.clear(std::memory_order_release);
 	}
 
-	
+	//!for testing only
 	inline void WaitAndLockSemaphoreIgnore(std::atomic_flag& flag)
 	{
 		; //do nothing, to check if semaphore is needed or causing deadlock

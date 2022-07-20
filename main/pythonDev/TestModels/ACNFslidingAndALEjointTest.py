@@ -104,7 +104,8 @@ nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinat
 mALE = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nALE, coordinate=0)) #ALE velocity  marker
 
 cable1Template=ALECable2D(physicsMassPerLength=3, physicsBendingStiffness=4000*complianceFactBend, 
-							physicsAxialStiffness=5e7*complianceFactAxial,physicsUseCouplingTerms=False)
+						  physicsAxialStiffness=5e7*complianceFactAxial,physicsUseCouplingTerms=False,
+                          physicsAddALEvariation=False) #for compatibility with test suite results
 cable1Template.nodeNumbers[2]=nALE
 
 [cable1NodeList, cable1ObjectList, haulageLoadList, cable1NodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, 

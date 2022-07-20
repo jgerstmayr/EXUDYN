@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-03-17  19:12:10 (last modified)
+* @date         2022-07-13  13:43:41 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -89,6 +89,12 @@ public: // AUTO:
     virtual CObjectConnectorCoordinateVectorParameters& GetParameters() { return parameters; }
     //! AUTO: Read access to parameters
     virtual const CObjectConnectorCoordinateVectorParameters& GetParameters() const { return parameters; }
+
+    //! AUTO:  return true, if object has a computation user function
+    virtual bool HasUserFunction() const override
+    {
+        return (parameters.constraintUserFunction!=0) || (parameters.jacobianUserFunction!=0);
+    }
 
     //! AUTO:  default function to return Marker numbers
     virtual const ArrayIndex& GetMarkerNumbers() const override

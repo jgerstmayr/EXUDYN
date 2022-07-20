@@ -94,7 +94,7 @@ bool GlfwRenderer::PySetRendererSelectionDict(Index itemID)
 		break;
 	case ItemType::Object:
 		if (itemIndex < mainSystem->mainSystemData.GetMainObjects().NumberOfItems()) {
-			itemDict = mainSystem->mainSystemData.GetMainObjects().GetItem(itemIndex)->GetDictionary();
+			itemDict = mainSystem->mainSystemData.GetMainObjects().GetItem(itemIndex)->GetDictionary(visSettings->interactive.selectionRightMouseGraphicsData);
 			//itemTypeName = "Object" + py::cast<STDstring>(itemDict["objectType"]);
 			//itemName = py::cast<STDstring>(itemDict["name"]);
 		}

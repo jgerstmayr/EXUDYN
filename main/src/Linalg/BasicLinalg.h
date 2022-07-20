@@ -26,6 +26,7 @@
 #include "Utilities/ResizableArray.h"	//includes SlimArray.h and BasicFunctions.h
 #include "Linalg/LinkedDataVector.h"	//includes SlimVector.h and Vector.h
 #include "Linalg/ResizableVector.h"	//includes SlimVector.h and Vector.h
+//#include "Linalg/ResizableVectorParallel.h"	 //this raises compilation time significantly!!!
 #include "Linalg/ConstSizeVector.h"	
 #include "Linalg/ConstSizeMatrix.h"		//includes Matrix.h
 #include "Linalg/ResizableMatrix.h"	

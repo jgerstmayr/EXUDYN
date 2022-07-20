@@ -53,6 +53,8 @@ public:
 
 	ArrayIndex ltg;						//!< local to global coordinate mapping; ArrayIndex is also resizable
 	EXUmath::SparseVector sparseVector;		//!< used for temporary assembly of ode2RHS, contact, etc.
+
+	//these sparsetriplets are either filled directly or as a buffer, if the regular section in the global sparse matrix is full
 	SparseTripletVector sparseTriplets;		//!< used for temporary assembly of jacobian, mass matrix, etc.
 
 	MarkerDataStructure markerDataStructure;
@@ -120,6 +122,18 @@ public:
 
 		return *data[i];
 	}
+
+	////! call this at beginning of computation function; clears all sparseTriplets
+	//void ClearSparseMatrices(Index nThreads)
+	//{
+	//	SetNumberOfItems(nThreads); //only affected if changed; will be moved to CSystem!
+
+	//	for (auto item : data) 
+	//	{ 
+	//		item->sparseTriplets.SetNumberOfItems(0); 
+	//	}
+
+	//}
 };
 
 

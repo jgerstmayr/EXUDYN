@@ -26,7 +26,7 @@
 
 
 //! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CObject GetOutputVariable(...)
-py::object MainObject::GetOutputVariable(OutputVariableType variableType) const
+py::object MainObject::GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Index objectNumber) const
 {
 	if ((Index)GetCObject()->GetType() & (Index)CObjectType::Connector)
 	{
@@ -38,7 +38,7 @@ py::object MainObject::GetOutputVariable(OutputVariableType variableType) const
 	//check if type is valid:
 	if ((Index)GetCObject()->GetOutputVariableTypes() & (Index)variableType)
 	{
-		GetCObject()->GetOutputVariable(variableType, value);
+		GetCObject()->GetOutputVariable(variableType, value, configuration, objectNumber);
 		//now check if it is scalar or a vector-valued:
 		if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
 		else { return py::array_t<Real>(value.NumberOfItems(), value.GetDataPointer()); }

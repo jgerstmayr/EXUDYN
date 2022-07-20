@@ -222,7 +222,7 @@ public:
 	//! get object's dictionary by name; does not throw a error message
 	ObjectIndex PyGetObjectNumber(STDstring itemName);
 	//! hook to read object's dictionary
-	py::dict PyGetObject(const py::object& itemIndex);
+	py::dict PyGetObject(const py::object& itemIndex, bool addGraphicsData = false);
 	////! get object's dictionary by name
 	//py::dict PyGetObjectByName(STDstring itemName);
 	//! modify object's dictionary
@@ -233,9 +233,10 @@ public:
 	////! call pybind object function, possibly with arguments
 	//py::object PyCallObjectFunction(Index itemNumber, STDstring functionName, py::dict args);
 	//! Get specific output variable with variable type; as this will involve MarkerDataStructure for constraints, this call may be slower than other calls
-	py::object PyGetObjectOutputVariable(const py::object& itemIndex, OutputVariableType variableType) const;
+	py::object PyGetObjectOutputVariable(const py::object& itemIndex, OutputVariableType variableType, ConfigurationType configuration=ConfigurationType::Current) const;
 	//! Get specific output variable with variable type; ONLY for bodies;
-	py::object PyGetObjectOutputVariableBody(const py::object& itemIndex, OutputVariableType variableType, const std::vector<Real>& localPosition, ConfigurationType configuration) const;
+	py::object PyGetObjectOutputVariableBody(const py::object& itemIndex, OutputVariableType variableType, 
+		const std::vector<Real>& localPosition, ConfigurationType configuration = ConfigurationType::Current) const;
 	//! get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType
 	py::object PyGetObjectOutputVariableSuperElement(const py::object& itemIndex, OutputVariableType variableType, Index meshNodeNumber, ConfigurationType configuration) const;
 

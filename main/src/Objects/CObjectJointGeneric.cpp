@@ -525,8 +525,8 @@ void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Resi
 			}
 		}
 
-		jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety? check that this cannot happen ...
-		//jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
+		//jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); 
+		//jacobian_AE.SetNumberOfRowsAndColumns(0, 0);
 	}
 	else
 	{

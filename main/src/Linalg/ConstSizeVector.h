@@ -562,7 +562,7 @@ public:
 		CHECKandTHROW((v.NumberOfItems() == NumberOfItems()), "ConstSizeVectorBase::MultComponentWise: incompatible size of vectors");
 		for (Index i = 0; i < NumberOfItems(); i++)
 		{
-			data[i] *= v[i];
+			data[i] *= v.GetUnsafe(i);
 		}
 	}
 

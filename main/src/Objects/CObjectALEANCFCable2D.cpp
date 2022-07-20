@@ -223,26 +223,27 @@ void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) 
 	//}
 
 	ode2Lhs.SetNumberOfItems(nODE2coordinates + 1);
-	LinkedDataVector ode2LhsANCF(ode2Lhs, 0, nODE2coordinates);
+	//LinkedDataVector ode2LhsANCF(ode2Lhs, 0, nODE2coordinates);
 
-	ConstSizeVector<nODE2coordinates> temp;
-	CObjectANCFCable2DBase::ComputeODE2LHS(ode2LhsANCF, objectNumber); //compute stiffness terms
+
+	//ConstSizeVector<nODE2coordinates +1> qANCF;
+	//ConstSizeVector<nODE2coordinates +1> qANCF_t;
+	//ComputeCurrentObjectCoordinates(qANCFALE);
+	//ComputeCurrentObjectVelocities(qANCFALE_t);
+	//ComputeODE2LHStemplate<Real>(ode2Lhs, qANCFALE, qANCFALE_t);
+	CObjectANCFCable2DBase::ComputeODE2LHS(ode2Lhs, objectNumber); //compute stiffness terms
 	
 	//ode2Lhs.SetNumberOfItems(nODE2coordinates + 1);
 	//ode2Lhs.CopyFrom(temp, 0, 0, nODE2coordinates); //copies 8 terms
 	
-	Real vALE = ((CNodeODE2*)GetCNode(2))->GetCurrentCoordinateVector_t()[0];
+	Real vALE = ((CNodeODE2*)GetCNode(2))->GetCurrentCoordinate_t(0);
 
 	ConstSizeVector<nODE2coordinates> qANCF;
 	ConstSizeVector<nODE2coordinates> qANCF_t;
 	ComputeCurrentObjectCoordinates(qANCF);
 	ComputeCurrentObjectVelocities(qANCF_t);
 
-	//vALE = 2.3;
-	//qANCF.CopyFrom(Vector({ 0, 0, 0.9, 0.1, 2.05, 0.13, 1, -0.2 }));
-	////qANCF_t.CopyFrom(Vector({ 0, 0, 0, 0, 0, 0, 0, 0 }));
-	//qANCF_t.CopyFrom(Vector({ 0.1, -0.1, 0.15, 0.04, 0.03, -0.07, 0.12, -0.09 }));
-
+	ConstSizeVector<nODE2coordinates> temp;
 	//++++++++++++++++++++++++++++++
 	//Term Q_vq_t (scalar): 2*v*\dot q^T M'' q + 0.5*v^2*q^T B'' q
 	EXUmath::MultMatrixVector(preComputedM2, qANCF, temp);
@@ -252,7 +253,7 @@ void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) 
 	Qvqt += 0.5*vALE*vALE*(qANCF*temp);
 	//pout << "QV=" << Qvqt << "\n";
 
-	ode2Lhs[nODE2coordinates] = Qvqt; //this term is not added, because it does not exist in standard ANCF
+	ode2Lhs[nODE2coordinates] += Qvqt; //this term is not added, because it does not exist in standard ANCF
 
 	//++++++++++++++++++++++++++++++
 	//Term Q_q_tv (1x8 vector): 2*v*M' \dot q + v^2(B'-M'')q

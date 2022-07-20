@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-03-10  20:04:24 (last modified)
+* @date         2022-07-09  20:46:45 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -124,6 +124,7 @@ public: // AUTO:
         cObjectALEANCFCable2D->GetParameters().physicsReferenceAxialStrain = py::cast<Real>(d["physicsReferenceAxialStrain"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectALEANCFCable2D->GetParameters().physicsReferenceCurvature = py::cast<Real>(d["physicsReferenceCurvature"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectALEANCFCable2D->GetParameters().physicsUseCouplingTerms = py::cast<bool>(d["physicsUseCouplingTerms"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectALEANCFCable2D->GetParameters().physicsAddALEvariation = py::cast<bool>(d["physicsAddALEvariation"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectALEANCFCable2D->GetParameters().nodeNumbers = EPyUtils::GetNodeIndex3Safely(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectALEANCFCable2D->GetParameters().useReducedOrderIntegration = py::cast<Index>(d["useReducedOrderIntegration"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectALEANCFCable2D->GetParameters().strainIsRelativeToReference = py::cast<Real>(d["strainIsRelativeToReference"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -135,7 +136,7 @@ public: // AUTO:
     }
 
     //! AUTO:  dictionary read access
-    virtual py::dict GetDictionary() const override
+    virtual py::dict GetDictionary(bool addGraphicsData=false) const override
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
@@ -149,6 +150,7 @@ public: // AUTO:
         d["physicsReferenceAxialStrain"] = (Real)cObjectALEANCFCable2D->GetParameters().physicsReferenceAxialStrain; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsReferenceCurvature"] = (Real)cObjectALEANCFCable2D->GetParameters().physicsReferenceCurvature; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsUseCouplingTerms"] = (bool)cObjectALEANCFCable2D->GetParameters().physicsUseCouplingTerms; //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsAddALEvariation"] = (bool)cObjectALEANCFCable2D->GetParameters().physicsAddALEvariation; //! AUTO: cast variables into python (not needed for standard types) 
         d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectALEANCFCable2D->GetParameters().nodeNumbers)); //! AUTO: cast variables into python (not needed for standard types) 
         d["useReducedOrderIntegration"] = (Index)cObjectALEANCFCable2D->GetParameters().useReducedOrderIntegration; //! AUTO: cast variables into python (not needed for standard types) 
         d["strainIsRelativeToReference"] = (Real)cObjectALEANCFCable2D->GetParameters().strainIsRelativeToReference; //! AUTO: cast variables into python (not needed for standard types) 
@@ -173,6 +175,7 @@ public: // AUTO:
         else if (parameterName.compare("physicsReferenceAxialStrain") == 0) { return py::cast((Real)cObjectALEANCFCable2D->GetParameters().physicsReferenceAxialStrain);} //! AUTO: get parameter
         else if (parameterName.compare("physicsReferenceCurvature") == 0) { return py::cast((Real)cObjectALEANCFCable2D->GetParameters().physicsReferenceCurvature);} //! AUTO: get parameter
         else if (parameterName.compare("physicsUseCouplingTerms") == 0) { return py::cast((bool)cObjectALEANCFCable2D->GetParameters().physicsUseCouplingTerms);} //! AUTO: get parameter
+        else if (parameterName.compare("physicsAddALEvariation") == 0) { return py::cast((bool)cObjectALEANCFCable2D->GetParameters().physicsAddALEvariation);} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectALEANCFCable2D->GetParameters().nodeNumbers)));} //! AUTO: get parameter
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { return py::cast((Index)cObjectALEANCFCable2D->GetParameters().useReducedOrderIntegration);} //! AUTO: get parameter
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { return py::cast((Real)cObjectALEANCFCable2D->GetParameters().strainIsRelativeToReference);} //! AUTO: get parameter
@@ -198,6 +201,7 @@ public: // AUTO:
         else if (parameterName.compare("physicsReferenceAxialStrain") == 0) { cObjectALEANCFCable2D->GetParameters().physicsReferenceAxialStrain = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsReferenceCurvature") == 0) { cObjectALEANCFCable2D->GetParameters().physicsReferenceCurvature = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsUseCouplingTerms") == 0) { cObjectALEANCFCable2D->GetParameters().physicsUseCouplingTerms = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsAddALEvariation") == 0) { cObjectALEANCFCable2D->GetParameters().physicsAddALEvariation = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { cObjectALEANCFCable2D->GetParameters().nodeNumbers = EPyUtils::GetNodeIndex3Safely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { cObjectALEANCFCable2D->GetParameters().useReducedOrderIntegration = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { cObjectALEANCFCable2D->GetParameters().strainIsRelativeToReference = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

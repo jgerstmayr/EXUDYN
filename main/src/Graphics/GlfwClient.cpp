@@ -755,9 +755,10 @@ void GlfwRenderer::scroll_callback(GLFWwindow* window, double xoffset, double yo
 	//rendererOut << "scroll: x=" << xoffset << ", y=" << yoffset << "\n";
 	float zoomStep = visSettings->interactive.zoomStepFactor;
 
-	if (yoffset > 0) { state->zoom /= zoomStep * (float)yoffset; }
-	if (yoffset < 0) { state->zoom *= zoomStep * (float)(-yoffset); }
-
+	//if (yoffset > 0) { state->zoom /= zoomStep * (float)yoffset; }
+	//if (yoffset < 0) { state->zoom *= zoomStep * (float)(-yoffset); }
+	if (yoffset*(double)zoomStep > 0) { state->zoom /= pow(fabs(zoomStep), fabs((float)yoffset)); }
+	if (yoffset*(double)zoomStep < 0) { state->zoom *= pow(fabs(zoomStep), fabs((float)yoffset)); }
 	//rendererOut << "zoom=" << state->zoom << "\n";
 }
 
@@ -784,7 +785,8 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 		//check, if it was a regular mouse press without moving
 		if (stateMachine.lastMousePressedX == stateMachine.mousePositionX &&
 			stateMachine.lastMousePressedY == stateMachine.mousePositionY &&
-			visSettings->interactive.selectionLeftMouse)
+			visSettings->interactive.selectionLeftMouse &&
+			!visSettings->window.showMouseCoordinates) //but not done if mouse coordinates shown
 		{
 			//rendererOut << "mouse pressed!\n";
 			//MouseSelect(window, stateMachine.mousePositionX, stateMachine.mousePositionY);
@@ -2139,6 +2141,10 @@ void GlfwRenderer::SaveImage()
 		{
 			filename += ".png"; //image format ending
 		}
+		else if (visSettings->exportImages.saveImageFormat == "TXT")
+		{
+			filename += ".txt"; //this is the (internal) text format; used then to postprocess in Python
+		}
 		else if (visSettings->exportImages.saveImageFormat == "TGA" || !pngAvailable)
 		{
 			filename += ".tga"; //image format ending
@@ -2220,7 +2226,114 @@ void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 		stbi_write_png(filename.c_str(), windowWidth, windowHeight, nrChannels, pixelBufferFlip.GetDataPointer(), stride);
 #endif
 	}
-	else if (visSettings->exportImages.saveImageFormat == "TGA" || !pngAvailable)
+	else if (visSettings->exportImages.saveImageFormat == "TXT")
+	{
+		//export text
+		std::ofstream imageFile;
+
+		std::ios_base::openmode fileMode = std::ofstream::out; //int does not work in linux!
+
+		//if (solutionSettings.binarySolutionFile) { fileMode = std::ofstream::binary; } //no append right now!
+
+		//if (solutionSettings.appendToFile) { file.solutionFile.open(solutionFileName, std::ofstream::app); }
+		//else { file.solutionFile.open(solutionFileName, std::ofstream::out); }
+		bool checkPath = CheckPathAndCreateDirectories(filename);
+
+		if (checkPath)
+		{
+			imageFile.open(filename, fileMode);
+		}
+
+		if (!imageFile.is_open()) //failed to open file ...  e.g. invalid file name
+		{
+			SysError(STDstring("failed to open image file '") + filename + "'; check path and file name");
+		}
+		imageFile.precision(8); //more accuracy is not available from float values!
+		imageFile << "#Exudyn text image export file\n";
+		imageFile << "# export of lines, triangles, texts, etc.\n";
+		imageFile << "# \n";
+
+		if (visSettings->exportImages.saveImageAsTextLines)
+		{
+			imageFile << "# SECTION LINES (consisting of X0, Y0, Z0, X1, Y1, Z1, ...  coordinates for 3D line points)\n";
+			//circles are currently transformed into lines
+			for (auto data : *graphicsDataList)
+			{
+				for (const GLCircleXY& item : data->glCirclesXY)
+				{
+					bool isFirst = true;
+					imageFile << "#COLOR\n";
+					imageFile << item.color[0] << ", " << item.color[1] << ", " << item.color[2] << ", " << item.color[3] << "\n";
+
+					imageFile << "#LINE\n";
+					const Float3& p = item.point;
+					float r = item.radius;
+
+					float nSeg = (float)item.numberOfSegments;
+					if (nSeg == 0.f) { nSeg = (float)visSettings->general.circleTiling; }
+
+					//for (float i = 0; i <= nSeg; i += 2.f*EXUstd::pi_f / nSeg)
+					for (float i = 0; i <= 2.f*EXUstd::pi_f + 1e-5; i += 2.f*EXUstd::pi_f / nSeg)
+					{
+						Float3 p({ p[0] + r * sin(i), p[1] + r * cos(i), p[2] });
+						if (!isFirst) { imageFile << ", "; }
+						else { isFirst = false; }
+						imageFile << p[0] << ", " << p[1] << ", " << p[2];
+					}
+					if (!isFirst) { imageFile << "\n"; }
+				}
+
+				//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+				//DRAW LINES
+				for (const GLLine& item : data->glLines)
+				{
+					imageFile << "#COLOR\n";
+					imageFile << item.color1[0] << ", " << item.color1[1] << ", " << item.color1[2] << ", " << item.color1[3] << "\n";
+					//second color item.color2 ignored!
+
+					imageFile << "#LINE\n";
+					imageFile << item.point1[0] << ", " << item.point1[1] << ", " << item.point1[2] << ", ";
+					imageFile << item.point2[0] << ", " << item.point2[1] << ", " << item.point2[2] << "\n";
+				}
+			}
+		}
+
+		if (visSettings->exportImages.saveImageAsTextTriangles)
+		{
+			imageFile << "# SECTION TRIANGLES (consisting of X0, Y0, Z0, X1, Y1, Z1, X2, Y2, Z2  coordinates for 3D triangle points)\n";
+			for (auto data : *graphicsDataList)
+			{
+				for (const GLTriangle& trig : data->glTriangles)
+				{ //draw lines
+					imageFile << "#COLOR\n";
+					const Float4& color = trig.colors[0]; //other colors ignored!
+					imageFile << color[0] << ", " << color[1] << ", " << color[2] << ", " << color[3] << "\n";
+
+					imageFile << "#TRIANGLE\n";
+					glColor4f(0.2f, 0.2f, 0.2f, 1.f);
+					for (Index i = 0; i < 3; i++)
+					{
+						Index j = i + 1;
+						if (j >= 3) { j = 0; }
+						const Float3& p0 = trig.points[i];
+						const Float3& p1 = trig.points[j];
+						imageFile << p0[0] << ", " << p0[1] << ", " << p0[2];
+						if (i != 2) { imageFile << ", "; }
+						else { imageFile << "\n"; }
+					}
+				}
+			}
+		}
+		if (visSettings->exportImages.saveImageAsTextTexts)
+		{
+			PrintDelayed("SageImage: Text export not yet implemented!");
+		}
+		imageFile << "#END\n"; //for safety add file end
+
+		//FINALLY: close
+		imageFile.close();
+	}
+	else if (visSettings->exportImages.saveImageFormat == "TGA" || !pngAvailable) //for all remaining scenarios
 	{
 		Index windowWidth = state->currentWindowSize[0];
 		Index windowHeight = state->currentWindowSize[1];
@@ -2396,7 +2509,8 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 				float nSeg = (float)item.numberOfSegments;
 				if (nSeg == 0.f) { nSeg = (float)visSettings->general.circleTiling; }
 
-				for (float i = 0; i <= nSeg; i += 2.f*EXUstd::pi_f / nSeg)
+				//for (float i = 0; i <= nSeg; i += 2.f*EXUstd::pi_f / nSeg)
+				for (float i = 0; i <= 2.f*EXUstd::pi_f+1e-5; i += 2.f*EXUstd::pi_f / nSeg)
 				{
 					glVertex3f(p[0] + r * sin(i), p[1] + r * cos(i), p[2]);
 				}
@@ -2406,33 +2520,36 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//DRAW LINES
-			if (!highlight)
+			if (visSettings->openGL.showLines)
 			{
-				for (const GLLine& item : data->glLines)
+				if (!highlight)
 				{
-					if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
-					glBegin(GL_LINES);
-					glColor4f(item.color1[0], item.color1[1], item.color1[2], item.color1[3]);
-					glVertex3f(item.point1[0], item.point1[1], item.point1[2]);
-					glColor4f(item.color2[0], item.color2[1], item.color2[2], item.color2[3]);
-					glVertex3f(item.point2[0], item.point2[1], item.point2[2]);
-					glEnd();
+					for (const GLLine& item : data->glLines)
+					{
+						if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
+						glBegin(GL_LINES);
+						glColor4f(item.color1[0], item.color1[1], item.color1[2], item.color1[3]);
+						glVertex3f(item.point1[0], item.point1[1], item.point1[2]);
+						glColor4f(item.color2[0], item.color2[1], item.color2[2], item.color2[3]);
+						glVertex3f(item.point2[0], item.point2[1], item.point2[2]);
+						glEnd();
+					}
 				}
-			}
-			else
-			{
-				for (const GLLine& item : data->glLines)
+				else
 				{
-					if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
-					glBegin(GL_LINES);
-					if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
-					else { glColor4fv(highlightColor2.GetDataPointer()); }
-					glVertex3f(item.point1[0], item.point1[1], item.point1[2]);
+					for (const GLLine& item : data->glLines)
+					{
+						if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
+						glBegin(GL_LINES);
+						if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
+						else { glColor4fv(highlightColor2.GetDataPointer()); }
+						glVertex3f(item.point1[0], item.point1[1], item.point1[2]);
 
-					if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
-					else { glColor4fv(highlightColor2.GetDataPointer()); }
-					glVertex3f(item.point2[0], item.point2[1], item.point2[2]);
-					glEnd();
+						if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
+						else { glColor4fv(highlightColor2.GetDataPointer()); }
+						glVertex3f(item.point2[0], item.point2[1], item.point2[2]);
+						glEnd();
+					}
 				}
 			}
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-03-16  23:54:37 (last modified)
+* @date         2022-07-04  22:03:18 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -130,7 +130,7 @@ public: // AUTO:
     }
 
     //! AUTO:  dictionary read access
-    virtual py::dict GetDictionary() const override
+    virtual py::dict GetDictionary(bool addGraphicsData=false) const override
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();

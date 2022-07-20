@@ -21,6 +21,7 @@
 #define CSOLVEREXPLICITTIMEINT__H
 
 #include "Solver/CSolverBase.h" 
+#include "Linalg/ResizableVectorParallel.h"	 
 
 static constexpr Index cSolverExplicitTimeIntMaxStages = 7; //for RK67
 
@@ -30,16 +31,16 @@ class RKdata
 public:
 
 	//stage temporary data, Ki=f(t,gi)
-	ResizableVector stageDerivODE2[cSolverExplicitTimeIntMaxStages]; //!< temporary k-vector for RK stages
-	//ResizableVector stageDerivLieODE2[cSolverExplicitTimeIntMaxStages]; //!< temporary K-vector for Lie groups for RK stages
-	ResizableVector stageDerivODE2_t[cSolverExplicitTimeIntMaxStages]; //!< temporary k-vector for RK stages
-	ResizableVector stageDerivODE1[cSolverExplicitTimeIntMaxStages]; //!< temporary k-vector for RK stages
-	ResizableVector solutionSecondApproxODE2; //second approximation for error estimator
-	ResizableVector solutionSecondApproxODE2_t; //second approximation for error estimator
-	ResizableVector solutionSecondApproxODE1; //second approximation for error estimator
-	ResizableVector startOfStepODE2;   //temporary vector for stage computation and final evaluation
-	ResizableVector startOfStepODE2_t; //temporary vector for stage computation and final evaluation
-	ResizableVector startOfStepODE1;   //temporary vector for stage computation and final evaluation
+	ResizableVectorParallel stageDerivODE2[cSolverExplicitTimeIntMaxStages]; //!< temporary k-vector for RK stages
+	//ResizableVectorParallel stageDerivLieODE2[cSolverExplicitTimeIntMaxStages]; //!< temporary K-vector for Lie groups for RK stages
+	ResizableVectorParallel stageDerivODE2_t[cSolverExplicitTimeIntMaxStages]; //!< temporary k-vector for RK stages
+	ResizableVectorParallel stageDerivODE1[cSolverExplicitTimeIntMaxStages]; //!< temporary k-vector for RK stages
+	ResizableVectorParallel solutionSecondApproxODE2; //second approximation for error estimator
+	ResizableVectorParallel solutionSecondApproxODE2_t; //second approximation for error estimator
+	ResizableVectorParallel solutionSecondApproxODE1; //second approximation for error estimator
+	ResizableVectorParallel startOfStepODE2;   //temporary vector for stage computation and final evaluation
+	ResizableVectorParallel startOfStepODE2_t; //temporary vector for stage computation and final evaluation
+	ResizableVectorParallel startOfStepODE1;   //temporary vector for stage computation and final evaluation
 
 	Matrix A;		//RK tableau, A in Butcher tableau
 	Vector time;	//RK relative stage times, c in Butcher tableau

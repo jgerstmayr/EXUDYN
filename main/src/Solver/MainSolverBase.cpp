@@ -197,7 +197,7 @@ void MainSolverBase::ComputeMassMatrix(MainSystem& mainSystem/*, const Simulatio
 	CheckInitialized(mainSystem);
 
 	GetCSolver().data.systemMassMatrix->SetAllZero();
-	mainSystem.cSystem->ComputeMassMatrix(GetCSolver().data.tempCompData, *(GetCSolver().data.systemMassMatrix));
+	mainSystem.cSystem->ComputeMassMatrix(GetCSolver().data.tempCompDataArray, *(GetCSolver().data.systemMassMatrix));
 	if (scalarFactor != 1.) { GetCSolver().data.systemMassMatrix->MultiplyWithFactor(scalarFactor); }
 }
 
@@ -243,7 +243,7 @@ void MainSolverBase::ComputeJacobianAE(MainSystem& mainSystem,
 	CheckInitialized(mainSystem);
 
 	//only add terms!
-	mainSystem.cSystem->JacobianAE(GetCSolver().data.tempCompData, GetCSolver().newton, *(GetCSolver().data.systemJacobian), 
+	mainSystem.cSystem->JacobianAE(GetCSolver().data.tempCompDataArray, GetCSolver().newton, *(GetCSolver().data.systemJacobian), 
 		scalarFactor_ODE2, scalarFactor_ODE2_t, scalarFactor_ODE1, velocityLevel);// , true);
 }
 
@@ -275,7 +275,7 @@ void MainSolverBase::ComputeAlgebraicEquations(MainSystem& mainSystem/*, const S
 		Index nODE21 = GetCSolver().data.nODE2 + GetCSolver().data.nODE1;
 		LinkedDataVector linkAEresidual(GetCSolver().data.systemResidual, nODE21, nODE21 + GetCSolver().data.nAE);
 
-		mainSystem.cSystem->ComputeAlgebraicEquations(GetCSolver().data.tempCompData, linkAEresidual, velocityLevel); //in staticsolver use always index2constraints simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints);
+		mainSystem.cSystem->ComputeAlgebraicEquations(GetCSolver().data.tempCompDataArray, linkAEresidual, velocityLevel); //in staticsolver use always index2constraints simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints);
 	}
 }
 

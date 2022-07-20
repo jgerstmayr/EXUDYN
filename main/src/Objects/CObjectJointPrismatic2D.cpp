@@ -121,7 +121,7 @@ void CObjectJointPrismatic2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, 
 		}
 
 		//pout << "jac=" << jacobian << "\n";
-		jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety? check that this cannot happen ...
+		//jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); 
 		
 		if (!parameters.constrainRotation)
 		{

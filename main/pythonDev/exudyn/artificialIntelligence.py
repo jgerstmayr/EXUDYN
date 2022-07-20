@@ -13,17 +13,17 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+#to be able to use this library, please:
 #pip install gym
-#pip install pygame
+##optional: pip install pygame
 
 import exudyn as exu
-from typing import Optional, Union
+from typing import Optional #, Union
 
 import numpy as np
 
-import gym
-from gym import logger, spaces
-#from gym.error import DependencyNotInstalled
+#import gym #not needed here
+from gym import logger, spaces 
 
 
 #**class: interface class to set up Exudyn model which can be used as model in open AI gym;

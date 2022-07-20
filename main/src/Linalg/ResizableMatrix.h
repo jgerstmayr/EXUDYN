@@ -176,6 +176,12 @@ protected:
 
 
 public:
+	//! set rows and columns to zero, without changing anything else; this "empties" the matrix
+	void Flush()
+	{
+		this->numberOfRows = 0;		
+		this->numberOfColumns = 0;
+	}
 
 	//! append a row given by Vector; if allocated matrix size is insufficient, a resize is performed (including memory allocation)
 	virtual void AppendRow(const VectorBase<T>& vector)

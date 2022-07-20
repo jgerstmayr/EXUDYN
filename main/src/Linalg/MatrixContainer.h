@@ -88,16 +88,11 @@ namespace EXUmath {
 			}
 		}
 
-		//unused:
-		////! set all matrix items to zero (in dense matrix, all entries are set 0, in sparse matrix, the vector of items is erased)
-		//void SetAllZero() {
-		//	if (useDenseMatrix) { denseMatrix.SetAll(0); }
-		//	else { sparseTripletMatrix.SetAllZero(); }
-		//}
 
-		//! set both matrices to zero (in dense matrix, all entries are set 0, in sparse matrix, the vector of items is erased)
-		void SetAllMatricesZero() {
-			denseMatrix.SetAll(0);
+		//! set both matrices to zero (in dense matrix, cols=rows=0; in sparse matrix, the vector of items is erased)
+		void ClearAllMatrices() {
+			//denseMatrix.SetAll(0); //this would be very slow if repeatedly called
+			denseMatrix.Flush();
 			sparseTripletMatrix.SetAllZero();
 		}
 

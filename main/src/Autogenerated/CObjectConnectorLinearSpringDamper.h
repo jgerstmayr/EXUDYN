@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-06-01  21:59:33 (last modified)
+* @date         2022-07-12  00:06:26 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -44,7 +44,7 @@ public: // AUTO:
         markerNumbers = ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex });
         stiffness = 0.;
         damping = 0.;
-        axisMarker0 = Vector3D(0);
+        axisMarker0 = Vector3D({1,0,0});
         offset = 0.;
         velocityOffset = 0.;
         force = 0.;

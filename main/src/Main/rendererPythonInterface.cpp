@@ -351,7 +351,7 @@ if 'tkinterRoot' not in exudyn.sys: #avoid crash if tkinter running
 	msg = """
 Mouse action:
 left mouse button     ... hold and drag: move model
-left mouse button     ... click: select item
+left mouse button     ... click: select item (deactivated if mouse coordinates shown)
 right mouse button    ... hold and drag: rotate model
 right mouse button    ... click: open edit dialog (if activated in visualizationSettings)
 mouse wheel           ... zoom

@@ -122,13 +122,13 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 		//+++++++++++++++++++++++++++++
 		//Jacobian of algebraic equations
 		//Real factorAE = EXUstd::Square(stepSize) * newmarkBeta; //Index3
-		computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, velocityLevel);// , fillIntoSystemMatrix);
+		computationalSystem.JacobianAE(data.tempCompDataArray, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, velocityLevel);// , fillIntoSystemMatrix);
 
 		//Mass matrix - may also be directly filled into data.systemJacobian?
 		if (!hasConstantMassMatrix) //not yet set at this point, done in PostInitializeSolverSpecific; default=false
 		{
 			data.systemMassMatrix->SetAllZero();
-			computationalSystem.ComputeMassMatrix(data.tempCompData, *(data.systemMassMatrix));
+			computationalSystem.ComputeMassMatrix(data.tempCompDataArray, *(data.systemMassMatrix));
 		}
 		data.systemJacobian->AddSubmatrix(*(data.systemMassMatrix));
 
@@ -287,7 +287,7 @@ void CSolverImplicitSecondOrderTimeInt::PreInitializeSolverSpecific(CSystem& com
 		alphaF = spectralRadius / (spectralRadius + 1);				//alphaF = 0.5 for rho=1
 		factJacAlgorithmic = (1. - alphaF) / (1. - alphaM);
 	}
-	useScaling = true; 
+	useScaling = true;
 
 
 	//std::cout << "spectralRadius=" << spectralRadius << "\n";
@@ -332,7 +332,7 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 		//compute mass matrix
 		STARTTIMER(timer.massMatrix);
 		data.systemMassMatrix->SetAllZero();
-		computationalSystem.ComputeMassMatrix(data.tempCompData, *(data.systemMassMatrix));
+		computationalSystem.ComputeMassMatrix(data.tempCompDataArray, *(data.systemMassMatrix));
 		STOPTIMER(timer.massMatrix);
 	}
 }
@@ -371,22 +371,23 @@ Real CSolverImplicitSecondOrderTimeInt::ComputeNewtonResidual(CSystem& computati
 	{
 		STARTTIMER(timer.massMatrix);
 		data.systemMassMatrix->SetAllZero();
-		computationalSystem.ComputeMassMatrix(data.tempCompData, *(data.systemMassMatrix));
+		computationalSystem.ComputeMassMatrix(data.tempCompDataArray, *(data.systemMassMatrix));
 		STOPTIMER(timer.massMatrix);
 	}
 
 	STARTTIMER(timer.ODE2RHS);
 	computationalSystem.ComputeSystemODE2RHS(data.tempCompDataArray, data.tempODE2); //tempODE2 contains ODE2 RHS (linear case: tempODE2 = F_applied - K*u - D*v)
-	STOPTIMER(timer.ODE2RHS);
+
 	//systemMassMatrix.FinalizeMatrix(); //MultMatrixVector is faster? if directly applied to triplets ...
 	data.systemMassMatrix->MultMatrixVector(solutionODE2_tt, ode2Residual);
 	//EXUmath::MultMatrixVector(systemMassMatrix, solutionODE2_tt, ode2Residual);
 	ode2Residual -= data.tempODE2; //systemResidual contains residual (linear: residual = M*a + K*u+D*v-F )
+	STOPTIMER(timer.ODE2RHS); //include also M*a computation, otherwise not counted!
 
 	Vector& solutionAE = computationalSystem.GetSystemData().GetCData().currentState.AECoords;
 	//compute CqT*lambda:
 	STARTTIMER(timer.reactionForces);
-	computationalSystem.ComputeODE2ProjectedReactionForces(data.tempCompData, solutionAE, ode2Residual); //add the forces directly!
+	computationalSystem.ComputeODE2ProjectedReactionForces(data.tempCompDataArray, solutionAE, ode2Residual); //add the forces directly!
 	STOPTIMER(timer.reactionForces);
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -399,7 +400,7 @@ Real CSolverImplicitSecondOrderTimeInt::ComputeNewtonResidual(CSystem& computati
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//AE:
 	STARTTIMER(timer.AERHS);
-	computationalSystem.ComputeAlgebraicEquations(data.tempCompData, aeResidual, simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints);
+	computationalSystem.ComputeAlgebraicEquations(data.tempCompDataArray, aeResidual, simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints);
 	STOPTIMER(timer.AERHS);
 
 	Real scalarResidual = data.systemResidual.GetL2Norm(); //compute residual BEFORE scaling, otherwise residual shrinks with h^2!!!
@@ -416,12 +417,13 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 	//std::cout << "ComputeNewtonUpdate(" << initial << ")\n";
 
 	STARTTIMER(timer.integrationFormula);
-	Vector& solutionODE2 = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords;
-	Vector& solutionODE2_t = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t;
-	Vector& solutionODE2_tt = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_tt;
-	Vector& solutionODE1 = computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords;
-	Vector& solutionODE1_t = computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords_t;
-	Vector& solutionAE = computationalSystem.GetSystemData().GetCData().currentState.AECoords;
+	typedef ResizableVectorParallel CastVectorType;
+	CastVectorType& solutionODE2 = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords;
+	CastVectorType& solutionODE2_t = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t;
+	CastVectorType& solutionODE2_tt = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_tt;
+	CastVectorType& solutionODE1 = computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords;
+	CastVectorType& solutionODE1_t = computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords_t;
+	CastVectorType& solutionAE = computationalSystem.GetSystemData().GetCData().currentState.AECoords;
 
 	LinkedDataVector newtonSolutionODE2(data.newtonSolution, 0, data.nODE2); //temporary subvector for ODE2 solution
 	LinkedDataVector newtonSolutionODE1(data.newtonSolution, data.nODE2, data.nODE1); //temporary subvector for ODE1 solution
@@ -571,7 +573,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 
 	STARTTIMER(timer.jacobianAE);
 	//add jacobian algebraic equations part to system jacobian:
-	computationalSystem.JacobianAE(data.tempCompData, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, false, 
+	computationalSystem.JacobianAE(data.tempCompDataArray, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, false, 
 		factorODE2_AE, factorODE1_AE, factorAE_AE);
 	STOPTIMER(timer.jacobianAE);
 

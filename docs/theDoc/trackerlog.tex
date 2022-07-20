@@ -10,15 +10,376 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.3.8.dev1, 
-  \item last change =  2022-06-27, 
-  \item Number of issues = 1165, 
-  \item Number of resolved issues = 997 (8 in current version), 
+  \item Exudyn version = 1.3.59, 
+  \item last change =  2022-07-20, 
+  \item Number of issues = 1218, 
+  \item Number of resolved issues = 1048 (59 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.3.59}:  resolved Issue 1035: {\bf TestModels}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: change modelUnitTests imports in TestModels such that they also work in case that example is run outside TestModels directory}
+    \item {\bf notes: done earlier}
+    \item   date resolved: {\bf 2022-07-20 14:33},
+date raised: 2022-04-07 
+  \ei
+  \item {\bf Version 1.3.58}:  resolved Issue 1016: {\bf TestSuite}
+(testing)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add example of reeving system}
+    \item {\bf notes: done earlier}
+    \item   date resolved: {\bf 2022-07-20 14:33},
+date raised: 2022-03-28 
+  \ei
+  \item {\bf Version 1.3.57}:  resolved Issue 1217: {\bf GraphicsData}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add functions for drawing text, line and circle: GraphicsDataLine, GraphicsDataText, GraphicsDataCircle}
+    \item   date resolved: {\bf 2022-07-20 09:45},
+date raised: 2022-07-20 
+  \ei
+  \item {\bf Version 1.3.56}: {\bf \color{warningRed}  resolved BUG 1216}: {\bf renderer: Circle}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: circles drawn wrongly, not closed for circleTiling <= 6 and producing overly many lines}
+    \item   date resolved: {\bf 2022-07-19 20:11},
+date raised: 2022-07-19 
+  \ei
+  \item {\bf Version 1.3.55}:  resolved Issue 1214: {\bf Export lines}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to export all lines from renderer similar to RenderImage, however, just exporting the raw line information (2 points, RGBA color)}
+    \item   date resolved: {\bf 2022-07-19 18:39},
+date raised: 2022-07-19 
+  \ei
+  \item {\bf Version 1.3.54}:  resolved Issue 1215: {\bf GraphicsData addEdges}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: some examples still in a previous state expecting wrong GraphicsData format}
+    \item   date resolved: {\bf 2022-07-19 12:14},
+date raised: 2022-07-19 
+  \ei
+  \item {\bf Version 1.3.53}: {\bf \color{warningRed}  resolved BUG 1213}: {\bf mbs.systemData.Info()}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: mbs.systemData.Info() gives error for KinematicTree}
+    \item   date resolved: {\bf 2022-07-15 15:34},
+date raised: 2022-07-15 
+  \ei
+  \item {\bf Version 1.3.52}:  resolved Issue 1212: {\bf DynamicSolverType::RK67}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: shows DynamicSolverType::invalid}
+    \item   date resolved: {\bf 2022-07-15 15:00},
+date raised: 2022-07-15 
+  \ei
+  \item {\bf Version 1.3.51}:  resolved Issue 1211: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add listMarkerStyles and listMarkerStylesFilled to exudyn.plot for use in loops}
+    \item   date resolved: {\bf 2022-07-15 09:28},
+date raised: 2022-07-15 
+  \ei
+  \item {\bf Version 1.3.50}:  resolved Issue 1210: {\bf microThread}
+(check)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: check if threading can be optimized by only using sync atomic variables}
+    \item {\bf notes: no big improvement found, also using bit-wise thread communication and saving some atomic operations}
+    \item   date resolved: {\bf 2022-07-14 20:40},
+date raised: 2022-07-14 
+  \ei
+  \item {\bf Version 1.3.49}:  resolved Issue 1208: {\bf timer PostNewton}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add timer for PostNewtonStep}
+    \item   date resolved: {\bf 2022-07-14 00:15},
+date raised: 2022-07-14 
+  \ei
+  \item {\bf Version 1.3.48}:  resolved Issue 1207: {\bf microThreading}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add micro threading library which already takes effect for small systems (10-20 3D rigid bodies); currently included with separate compile option in BasicDefinitions.h}
+    \item   date resolved: {\bf 2022-07-13 13:43},
+date raised: 2022-07-13 
+  \ei
+  \item {\bf Version 1.3.47}:  resolved Issue 1199: {\bf adjust testSuite}
+(testing)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: due to change of state vector to ResizableVectorParallel with AVX arithmetic, minor changes in reference solutions happened}
+    \item   date resolved: {\bf 2022-07-12 17:06},
+date raised: 2022-07-11 
+  \ei
+  \item {\bf Version 1.3.46}:  resolved Issue 1193: {\bf SparseSolver analyzePattern}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to reuse result of analyzePattern() for successive computations; especially in time integration, using the number of non-zeros as indicator is something has changed; add some initializationFunctions to reset, especially after non-convergence}
+    \item   date resolved: {\bf 2022-07-12 17:06},
+date raised: 2022-07-10 
+  \ei
+  \item {\bf Version 1.3.45}:  resolved Issue 1204: {\bf parallel / multithreaded}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: add multithreading for AlgebraicEquations}
+    \item   date resolved: {\bf 2022-07-12 15:03},
+date raised: 2022-07-12 
+  \ei
+  \item {\bf Version 1.3.44}:  resolved Issue 1201: {\bf parallel / multithreaded}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: add multithreading for ProjectedReactionForces}
+    \item   date resolved: {\bf 2022-07-12 13:04},
+date raised: 2022-07-12 
+  \ei
+  \item {\bf Version 1.3.43}:  resolved Issue 1200: {\bf CSystem::Jacobians}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: removed single flags for jacobians and replaced by JacobianType; check your results (bugs may happen)}
+    \item   date resolved: {\bf 2022-07-12 10:55},
+date raised: 2022-07-12 
+  \ei
+  \item {\bf Version 1.3.42}:  resolved Issue 1198: {\bf parallel MassMatrix}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: use multithreading to compute mass matrix; treat objects with user functions separately}
+    \item   date resolved: {\bf 2022-07-11 23:18},
+date raised: 2022-07-11 
+  \ei
+  \item {\bf Version 1.3.41}: {\bf \color{warningRed}  resolved BUG 1197}: {\bf ResizableArray}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: copy of illegal parts of memory when enlarging array}
+    \item   date resolved: {\bf 2022-07-11 22:58},
+date raised: 2022-07-11 
+  \ei
+  \item {\bf Version 1.3.40}:  resolved Issue 1195: {\bf remove openmp}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: remove openmp compile options from setup.py as it is not used for now}
+    \item   date resolved: {\bf 2022-07-11 19:02},
+date raised: 2022-07-11 
+  \ei
+  \item {\bf Version 1.3.39}:  resolved Issue 1191: {\bf SystemState}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: replace Vector state with ResizableVector(Parallel)}
+    \item   date resolved: {\bf 2022-07-10 14:50},
+date raised: 2022-07-10 
+  \ei
+  \item {\bf Version 1.3.38}:  resolved Issue 1186: {\bf ALEANCFCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add missing terms related to curvature and strain coupling with delta qALE}
+    \item   date resolved: {\bf 2022-07-09 21:25},
+date raised: 2022-07-06 
+  \ei
+  \item {\bf Version 1.3.37}:  resolved Issue 1190: {\bf ContactFrictionCircleCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: now adapted to work in general with ALECable2D, however, only for tangential frictionStiffness=0}
+    \item   date resolved: {\bf 2022-07-09 14:33},
+date raised: 2022-07-09 
+  \ei
+  \item {\bf Version 1.3.36}: {\bf \color{warningRed}  resolved BUG 1188}: {\bf beam.py}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: missing eii structure before Point2DS1}
+    \item   date resolved: {\bf 2022-07-08 16:22},
+date raised: 2022-07-08 
+  \ei
+  \item {\bf Version 1.3.35}:  resolved Issue 1185: {\bf ContactFrictionCircleCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add ALE term to marker and contact element}
+    \item   date resolved: {\bf 2022-07-06 15:30},
+date raised: 2022-07-06 
+  \ei
+  \item {\bf Version 1.3.34}:  resolved Issue 1183: {\bf star imports}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: remove * imports from all .py modules except utilities.py}
+    \item {\bf notes: also fixed some undetected bugs in unused functions in exudyn.* utilities}
+    \item   date resolved: {\bf 2022-07-06 11:56},
+date raised: 2022-07-06 
+  \ei
+  \item {\bf Version 1.3.33}:  resolved Issue 1184: {\bf exudyn.utilities}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: remove import of time and copy; needs to be included separately into models}
+    \item {\bf notes: check your models!}
+    \item   date resolved: {\bf 2022-07-06 11:55},
+date raised: 2022-07-06 
+  \ei
+  \item {\bf Version 1.3.32}:  resolved Issue 1182: {\bf roboticsCore.py}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: remove * import of many exudyn packages}
+    \item   date resolved: {\bf 2022-07-06 10:58},
+date raised: 2022-07-06 
+  \ei
+  \item {\bf Version 1.3.31}:  resolved Issue 1181: {\bf setup.py}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: due to deprecation warning, use namespace\_packages instead of packages in setup(...); remove include\_package\_data=True}
+    \item   date resolved: {\bf 2022-07-06 09:43},
+date raised: 2022-07-06 
+  \ei
+  \item {\bf Version 1.3.30}:  resolved Issue 0954: {\bf ObjectContactFrictionCircleCable2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: Add exception in PreAssembleChecks if marker is not a MarkerBody, as implementation only works for MarkerBody but not for MarkerNode}
+    \item {\bf notes: resolved, as now a MarkerNodeRigid may also be used}
+    \item   date resolved: {\bf 2022-07-05 21:18},
+date raised: 2022-02-27 
+  \ei
+  \item {\bf Version 1.3.29}:  resolved Issue 1180: {\bf AddEdgesAndSmoothenNormals}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: specialized function for STL file enhancement}
+    \item   date resolved: {\bf 2022-07-05 20:51},
+date raised: 2022-07-05 
+  \ei
+  \item {\bf Version 1.3.28}:  resolved Issue 1179: {\bf show lines}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add separate visualization.openGL flag for showing/hiding lines}
+    \item   date resolved: {\bf 2022-07-05 11:20},
+date raised: 2022-07-05 
+  \ei
+  \item {\bf Version 1.3.27}:  resolved Issue 1178: {\bf STL import/export}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to invert triangles and/or normls on import or export of STL meshes}
+    \item   date resolved: {\bf 2022-07-05 08:38},
+date raised: 2022-07-05 
+  \ei
+  \item {\bf Version 1.3.26}:  resolved Issue 1177: {\bf selection right mouse}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: now also showing GraphicsData optionally with visualizationSettings.interactive.selectionRightMouseGraphicsData}
+    \item   date resolved: {\bf 2022-07-05 08:38},
+date raised: 2022-07-05 
+  \ei
+  \item {\bf Version 1.3.25}:  resolved Issue 1099: {\bf TriangleList}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extend GraphicsData TriangleList with two optional lists (which may be empty) containing edges (tuples of point numbers) as well as edgeColors; allows to easily add edges to graphics representation}
+    \item   date resolved: {\bf 2022-07-05 00:04},
+date raised: 2022-05-22 
+  \ei
+  \item {\bf Version 1.3.24}:  resolved Issue 1174: {\bf mbs.GetObject}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to receive graphicsData (or not)}
+    \item {\bf notes: default behavior kept same, not returning graphicsData in dict}
+    \item   date resolved: {\bf 2022-07-04 23:59},
+date raised: 2022-07-04 
+  \ei
+  \item {\bf Version 1.3.23}:  resolved Issue 1159: {\bf BodyGraphicsData}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add method to convert bodyGraphicsData into dictionary; add flag to GetObject to by default not show graphicsData}
+    \item   date resolved: {\bf 2022-07-04 23:59},
+date raised: 2022-06-26 
+  \ei
+  \item {\bf Version 1.3.22}:  resolved Issue 1176: {\bf GraphicsDataCylinder...()}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: returns always a GraphicsData dictionary, independently of addEdges is True or False}
+    \item   date resolved: {\bf 2022-07-04 23:33},
+date raised: 2022-07-04 
+  \ei
+  \item {\bf Version 1.3.21}:  resolved Issue 1175: {\bf GraphicsDataOrthoCube...()}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: returns always a GraphicsData dictionary, independently of adding edges or not}
+    \item   date resolved: {\bf 2022-07-04 23:33},
+date raised: 2022-07-04 
+  \ei
+  \item {\bf Version 1.3.20}:  resolved Issue 1169: {\bf conversion to STL}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add function to convert graphicsData triangle meshes into STL; allows import into other tools}
+    \item   date resolved: {\bf 2022-07-04 20:55},
+date raised: 2022-07-03 
+  \ei
+  \item {\bf Version 1.3.19}:  resolved Issue 0821: {\bf include numpy-stl}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: include library to import stl files; add Warning to GraphicsDataFromSTLfileTxt for large file sizes and check if is ascii; in binary case, try switching to numpy-stl; add example to load binary files; add example to convert stl ascii to binary files}
+    \item {\bf notes: example for stl import added: Examples/stlFileImport.py}
+    \item   date resolved: {\bf 2022-07-04 20:55},
+date raised: 2021-12-06 
+  \ei
+  \item {\bf Version 1.3.18}:  resolved Issue 1173: {\bf GetObjectOutputBody}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add default argument localPosition=[0,0,0]}
+    \item   date resolved: {\bf 2022-07-04 11:45},
+date raised: 2022-07-04 
+  \ei
+  \item {\bf Version 1.3.17}:  resolved Issue 1172: {\bf GetObjectOutput}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: include configurationType in interface (default: Current); not available in connectors; add objectNumber in C++ interface}
+    \item   date resolved: {\bf 2022-07-04 11:43},
+date raised: 2022-07-04 
+  \ei
+  \item {\bf Version 1.3.16}: {\bf \color{warningRed}  resolved BUG 1171}: {\bf MarkerKinematicTreeRigid}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: incorrect GetPosition, GetVelocity, GetAngularVelocity, ...}
+    \item   date resolved: {\bf 2022-07-04 11:43},
+date raised: 2022-07-03 
+  \ei
+  \item {\bf Version 1.3.15}:  resolved Issue 1161: {\bf KinematicTree}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: change GetObjectOutputBody to GetObjectOutput as localPosition does not make sense here}
+    \item   date resolved: {\bf 2022-07-04 11:39},
+date raised: 2022-06-27 
+  \ei
+  \item {\bf Version 1.3.14}:  resolved Issue 1170: {\bf MarkerKinematicTreeRigid}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add visualization}
+    \item   date resolved: {\bf 2022-07-03 20:23},
+date raised: 2022-07-03 
+  \ei
+  \item {\bf Version 1.3.13}:  resolved Issue 1168: {\bf left mouse}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: deactivate mouse select if renderer is showing mouse coordinates (and doing measuring)}
+    \item   date resolved: {\bf 2022-07-02 11:29},
+date raised: 2022-07-02 
+  \ei
+  \item {\bf Version 1.3.12}:  resolved Issue 1166: {\bf InteractiveDialog}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: In all interactive dialogs, especially the SolutionViewer now stopping the render window (with Q or Escape) also stops the interactive dialog; behavior changed with checkRenderEngineStopFlag}
+    \item   date resolved: {\bf 2022-06-29 10:15},
+date raised: 2022-06-29 
+  \ei
+  \item {\bf Version 1.3.11}:  resolved Issue 1165: {\bf class Robot}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: drawing of cylinder for first body in robot removed; this part must be drawn manually at base (or not drawn)}
+    \item   date resolved: {\bf 2022-06-29 10:02},
+date raised: 2022-06-29 
+  \ei
+  \item {\bf Version 1.3.10}:  resolved Issue 0720: {\bf AddObjectFFRFreducedOrder}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add gravity as with user functions version, similar to AddRigidBody}
+    \item   date resolved: {\bf 2022-06-29 09:27},
+date raised: 2021-07-12 
+  \ei
+  \item {\bf Version 1.3.9}:  resolved Issue 1018: {\bf MacOS}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: adjust mouse scroll factor in case of Apple/Mac OS compilation (e.g. multiply with 0.05 by default)}
+    \item {\bf notes: changed way to compute zoomFactor for larger yOffsets in scroll callback}
+    \item   date resolved: {\bf 2022-06-28 15:30},
+date raised: 2022-03-29 
+  \ei
   \item {\bf Version 1.3.8}:  resolved Issue 1164: {\bf OpenGL shadow}
 (fix)
   \begin{itemize}[label=$\bullet$]

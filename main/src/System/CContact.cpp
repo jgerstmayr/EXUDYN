@@ -535,7 +535,7 @@ void GeneralContact::ComputeContactDataAndBoundingBoxes(const CSystem& cSystem, 
 	STARTGLOBALTIMERmain(TSboundingBoxes);
 
 	if (verboseMode >= 2) pout << "  **update Data, BB=" << updateBoundingBoxes << ", ST=" << addToSearchTree << "\n";
-	Index nThreads = ngstd::TaskManager::GetNumThreads(); //must agree with tempArray
+	Index nThreads = exuThreading::TaskManager::GetNumThreads(); //must agree with tempArray
 
 	ComputeDataAndBBmarkerBasedSpheres(cSystem.GetSystemData(), tempArray, nThreads, updateBoundingBoxes);
 	ComputeDataAndBBancfCable2D(cSystem.GetSystemData(), tempArray, nThreads, updateBoundingBoxes);
@@ -573,12 +573,12 @@ void GeneralContact::ComputeDataAndBBmarkerBasedSpheres(const CSystemData& syste
 	Index taskSplit = nThreads; //shall be multiple of number of treads (Default=nThreads), but better 8*nThreads or larger for large problems
 	if ((Index)nItems > 400 * nThreads) { taskSplit = 100 * nThreads; }
 
-	ngstd::ParallelFor(nItems, [this, &systemData, &tempArray, &updateBoundingBoxes, &nItems](NGSsizeType j) //(NGSsizeType j)
+	exuThreading::ParallelFor(nItems, [this, &systemData, &tempArray, &updateBoundingBoxes, &nItems](NGSsizeType j) //(NGSsizeType j)
 	//for (auto& item : spheresMarkerBased)
 	{
 		const bool computeJacobian = true; //good question, if jacobians should be precomputed; if many active contacts, this is better
 		auto& item = spheresMarkerBased[(Index)j];
-		Index threadID = ngstd::TaskManager::GetThreadId();
+		Index threadID = exuThreading::TaskManager::GetThreadId();
 
 		MarkerData& markerData = tempArray[threadID].markerDataStructure.GetMarkerData(0);
 		Index gi = (Index)j + globalJacobianIndexOffsets[spheresMarkerBasedIndex]; //
@@ -629,11 +629,11 @@ void GeneralContact::ComputeDataAndBBancfCable2D(const CSystemData& systemData, 
 	Index taskSplit = nThreads; //shall be multiple of number of treads (Default=nThreads), but better 8*nThreads or larger for large problems
 	if ((Index)nItems > 400 * nThreads) { taskSplit = 100 * nThreads; }
 
-	ngstd::ParallelFor(nItems, [this, &systemData, &tempArray, &updateBoundingBoxes, &nItems](NGSsizeType j) //(NGSsizeType j)
+	exuThreading::ParallelFor(nItems, [this, &systemData, &tempArray, &updateBoundingBoxes, &nItems](NGSsizeType j) //(NGSsizeType j)
 	//for (auto& item : spheresMarkerBased)
 	{
 		auto& item = ancfCable2D[(Index)j];
-		//Index threadID = ngstd::TaskManager::GetThreadId();
+		//Index threadID = exuThreading::TaskManager::GetThreadId();
 
 		//MarkerData& markerData = tempArray[threadID].markerDataStructure.GetMarkerData(0);
 		Index gj = (Index)j + globalJacobianIndexOffsets[ancfCable2DIndex]; //
@@ -728,10 +728,10 @@ void GeneralContact::ComputeDataAndBBtrigsRigidBodyBased(const CSystemData& syst
 		Index taskSplit = nThreads; //shall be multiple of number of treads (Default=nThreads), but better 8*nThreads or larger for large problems
 		if ((Index)nItems > 400 * nThreads) { taskSplit = 100 * nThreads; }
 
-		ngstd::ParallelFor(nItems, [this, &systemData, &tempArray, &updateBoundingBoxes, &nItems](NGSsizeType j) //(NGSsizeType j)
+		exuThreading::ParallelFor(nItems, [this, &systemData, &tempArray, &updateBoundingBoxes, &nItems](NGSsizeType j) //(NGSsizeType j)
 		{
 			const ContactTriangleRigidBodyBased& item = trigsRigidBodyBased[(Index)j];
-			//Index threadID = ngstd::TaskManager::GetThreadId();
+			//Index threadID = exuThreading::TaskManager::GetThreadId();
 			Index gi = (Index)j + globalJacobianIndexOffsets[trigsRigidBodyBasedIndex]; //
 
 			const ContactRigidBodyMarkerBased& rigidMarker = rigidBodyMarkerBased[item.contactRigidBodyIndex];
@@ -758,7 +758,7 @@ void GeneralContact::ComputeDataAndBBtrigsRigidBodyBased(const CSystemData& syst
 template<Index opMode>
 void GeneralContact::ComputeContact(const CSystem& cSystem, TemporaryComputationDataArray& tempArray, Vector& systemODE2Rhs)
 {
-	Index nThreads = ngstd::TaskManager::GetNumThreads();
+	Index nThreads = exuThreading::TaskManager::GetNumThreads();
 	SetNumberOfThreads(nThreads);
 
 	//not needed if CCode2rhsFromActiveSets:
@@ -828,12 +828,12 @@ void GeneralContact::ComputeContactMarkerBasedSpheres(TemporaryComputationDataAr
 	}
 
 
-	ngstd::ParallelFor(nItems, [this, &tempArray, &nItems](NGSsizeType i)
+	exuThreading::ParallelFor(nItems, [this, &tempArray, &nItems](NGSsizeType i)
 		//for (Index i = 0; i < spheresMarkerBased.NumberOfItems(); i++)
 	{
 		//+++++++++++++++++++++++++++++
 		//went inside parallel loop:
-		Index threadID = ngstd::TaskManager::GetThreadId();
+		Index threadID = exuThreading::TaskManager::GetThreadId();
 		ResizableVector& ode2Lhs = tempArray[threadID].localODE2LHS;
 		Index index2JacIndex = globalJacobianIndexOffsets[spheresMarkerBasedIndex] - globalContactIndexOffsets[spheresMarkerBasedIndex];
 
@@ -1031,12 +1031,12 @@ void GeneralContact::ComputeContactANCFCable2D(const CSystem& cSystem, Temporary
 
 
 	//run over all ancf elements (precomputation for some parts possible if there is contact...)
-	ngstd::ParallelFor(nItems, [this, &tempArray, &cSystem, &nItems](NGSsizeType i)
+	exuThreading::ParallelFor(nItems, [this, &tempArray, &cSystem, &nItems](NGSsizeType i)
 	//for (Index i = 0; i < ancfCable2D.NumberOfItems(); i++)
 	{
 		//+++++++++++++++++++++++++++++
 		//went inside parallel loop:
-		Index threadID = ngstd::TaskManager::GetThreadId();
+		Index threadID = exuThreading::TaskManager::GetThreadId();
 		//Index threadID = 0;
 
 		ResizableVector& ode2Lhs = tempArray[threadID].localODE2LHS;
@@ -1262,11 +1262,11 @@ void GeneralContact::ComputeContactTrigsRigidBodyBased(TemporaryComputationDataA
 
 	//pout << "compute contact **********\n";
 	//run through all spheres; spheres may contact with planes (trigs or with edges); however, only one plane at a time allowed to reduce artifacts
-	ngstd::ParallelFor(nItems, [this, &tempArray, &nItems](NGSsizeType i)
+	exuThreading::ParallelFor(nItems, [this, &tempArray, &nItems](NGSsizeType i)
 	{
 		//+++++++++++++++++++++++++++++
 		//went inside parallel loop:
-		Index threadID = ngstd::TaskManager::GetThreadId();
+		Index threadID = exuThreading::TaskManager::GetThreadId();
 		ResizableVector& ode2Lhs = tempArray[threadID].localODE2LHS;
 		//Index index2JacIndex = globalJacobianIndexOffsets[trigsRigidBodyBasedIndex] - globalContactIndexOffsets[trigsRigidBodyBasedIndex];
 		std::array<Vector3D, 3> trigPoints; //global triangle points
@@ -1568,7 +1568,7 @@ void GeneralContact::JacobianODE2LHS(const CSystem& cSystem, TemporaryComputatio
 
 	ComputeContactDataAndBoundingBoxes(cSystem, tempArray, false, false);
 
-	Index nThreads = ngstd::TaskManager::GetNumThreads();
+	Index nThreads = exuThreading::TaskManager::GetNumThreads();
 	SetNumberOfThreads(nThreads);
 
 	tempArray.SetNumberOfItems(nThreads); //only affected if changed; will be moved to CSystem!
@@ -1585,11 +1585,11 @@ void GeneralContact::JacobianODE2LHS(const CSystem& cSystem, TemporaryComputatio
 
 	Index taskSplit = nThreads; //shall be multiple of number of treads (Default=nThreads), but better 8*nThreads or larger for large problems
 	if ((Index)nItems > 400 * nThreads) { taskSplit = 100 * nThreads; }
-	ngstd::ParallelFor(nItems, [this, &cSystem, &tempArray, &factorODE2, &factorODE2_t, &nItems](NGSsizeType i)
+	exuThreading::ParallelFor(nItems, [this, &cSystem, &tempArray, &factorODE2, &factorODE2_t, &nItems](NGSsizeType i)
 	{
 		//+++++++++++++++++++++++++++++
 		//went inside parallel loop:
-		Index threadID = ngstd::TaskManager::GetThreadId();
+		Index threadID = exuThreading::TaskManager::GetThreadId();
 
 	//for (NGSsizeType i = 0; i < nItems; i++)
 	//{
@@ -1897,11 +1897,11 @@ void GeneralContact::JacobianODE2LHS(const CSystem& cSystem, TemporaryComputatio
 	NGSsizeType nItemsANCF = (NGSsizeType)ancfCable2D.NumberOfItems();
 	taskSplit = nThreads; //shall be multiple of number of treads (Default=nThreads), but better 8*nThreads or larger for large problems
 	if ((Index)nItemsANCF > 8 * nThreads) { taskSplit = 8 * nThreads; }
-	ngstd::ParallelFor(nItemsANCF, [this, &cSystem, &tempArray, &factorODE2, &factorODE2_t, &nItems](NGSsizeType i)
+	exuThreading::ParallelFor(nItemsANCF, [this, &cSystem, &tempArray, &factorODE2, &factorODE2_t, &nItems](NGSsizeType i)
 	{
 		//+++++++++++++++++++++++++++++
 		//went inside parallel loop:
-		Index threadID = ngstd::TaskManager::GetThreadId();
+		Index threadID = exuThreading::TaskManager::GetThreadId();
 
 	//for (NGSsizeType i = 0; i < nItemsANCF; i++)
 	//{

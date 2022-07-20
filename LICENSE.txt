@@ -79,9 +79,6 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-This program contains SuperLU 5.0, ExtGL, BLAS 3.5.0, LAPACK 3.5.0, Spectra 
-and Eigen covered under the following licenses:
-
 
 ======================================
 NGsolve / NETGEN:

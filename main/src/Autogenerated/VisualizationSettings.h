@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -185,7 +185,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -277,7 +277,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -368,7 +368,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -459,7 +459,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -520,7 +520,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -598,7 +598,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -687,7 +687,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -756,7 +756,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -834,7 +834,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -903,7 +903,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -989,7 +989,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1076,7 +1076,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1134,6 +1134,7 @@ public: // AUTO:
   float shadowPolygonOffset;                      //!< AUTO: some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize
   bool showFaceEdges;                             //!< AUTO: show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation
   bool showFaces;                                 //!< AUTO: show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation
+  bool showLines;                                 //!< AUTO: show lines (different from edges of faces)
   bool showMeshEdges;                             //!< AUTO: show edges of finite elements; independent of showFaceEdges
   bool showMeshFaces;                             //!< AUTO: show faces of finite elements; independent of showFaces
   bool textLineSmooth;                            //!< AUTO: draw lines for representation of text smooth
@@ -1184,6 +1185,7 @@ public: // AUTO:
     shadowPolygonOffset = 10.f;
     showFaceEdges = false;
     showFaces = true;
+    showLines = true;
     showMeshEdges = true;
     showMeshFaces = true;
     textLineSmooth = false;
@@ -1312,6 +1314,7 @@ public: // AUTO:
     os << "  shadowPolygonOffset = " << shadowPolygonOffset << "\n";
     os << "  showFaceEdges = " << showFaceEdges << "\n";
     os << "  showFaces = " << showFaces << "\n";
+    os << "  showLines = " << showLines << "\n";
     os << "  showMeshEdges = " << showMeshEdges << "\n";
     os << "  showMeshFaces = " << showMeshFaces << "\n";
     os << "  textLineSmooth = " << textLineSmooth << "\n";
@@ -1334,7 +1337,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1353,9 +1356,12 @@ class VSettingsExportImages // AUTO:
 {
 public: // AUTO: 
   Index heightAlignment;                          //!< AUTO: alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)
+  bool saveImageAsTextLines;                      //!< AUTO: export lines in save image (only in TXT format)
+  bool saveImageAsTextTexts;                      //!< AUTO: export text in save image (only in TXT format)
+  bool saveImageAsTextTriangles;                  //!< AUTO: export triangles in save image (only in TXT format)
   Index saveImageFileCounter;                     //!< AUTO: current value of the counter which is used to consecutively save frames (images) with consecutive numbers
   std::string saveImageFileName;                  //!< AUTO: filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.png, frame0001.png,...); ; directory will be created if it does not exist
-  std::string saveImageFormat;                    //!< AUTO: format for exporting figures: currently only PNG and TGA available; PNG is not available for Ubuntu18.04 (check  use TGA has highest compatibility with all platforms
+  std::string saveImageFormat;                    //!< AUTO: format for exporting figures: currently only PNG, TGA and TXT available; while PNG and TGA represent the according image file formats, the TXT format results in a text file containing the 3D graphics data information as lists of lines, triangles, etc; PNG is not available for Ubuntu18.04 (check  use TGA has highest compatibility with all platforms
   bool saveImageSingleFile;                       //!< AUTO: True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName
   Index saveImageTimeOut;                         //!< AUTO: timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes
   Index widthAlignment;                           //!< AUTO: alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)
@@ -1366,6 +1372,9 @@ public: // AUTO:
   VSettingsExportImages()
   {
     heightAlignment = 2;
+    saveImageAsTextLines = true;
+    saveImageAsTextTexts = false;
+    saveImageAsTextTriangles = false;
     saveImageFileCounter = 0;
     saveImageFileName = "images/frame";
     saveImageFormat = "PNG";
@@ -1400,6 +1409,9 @@ public: // AUTO:
   {
     os << "VSettingsExportImages" << ":\n";
     os << "  heightAlignment = " << heightAlignment << "\n";
+    os << "  saveImageAsTextLines = " << saveImageAsTextLines << "\n";
+    os << "  saveImageAsTextTexts = " << saveImageAsTextTexts << "\n";
+    os << "  saveImageAsTextTriangles = " << saveImageAsTextTriangles << "\n";
     os << "  saveImageFileCounter = " << saveImageFileCounter << "\n";
     os << "  saveImageFileName = " << saveImageFileName << "\n";
     os << "  saveImageFormat = " << saveImageFormat << "\n";
@@ -1424,7 +1436,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1455,6 +1467,7 @@ public: // AUTO:
   bool selectionHighlights;                       //!< AUTO: True: mouse click highlights item (default: red)
   bool selectionLeftMouse;                        //!< AUTO: True: left mouse click on items and show basic information
   bool selectionRightMouse;                       //!< AUTO: True: right mouse click on items and show dictionary (read only!)
+  bool selectionRightMouseGraphicsData;           //!< AUTO: True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)
   bool useJoystickInput;                          //!< AUTO: True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ...
   float zoomStepFactor;                           //!< AUTO: change of zoom per keypress (keypad +/-) or mouse wheel increment
 
@@ -1476,6 +1489,7 @@ public: // AUTO:
     selectionHighlights = true;
     selectionLeftMouse = true;
     selectionRightMouse = true;
+    selectionRightMouseGraphicsData = false;
     useJoystickInput = true;
     zoomStepFactor = 1.15f;
   };
@@ -1513,6 +1527,7 @@ public: // AUTO:
     os << "  selectionHighlights = " << selectionHighlights << "\n";
     os << "  selectionLeftMouse = " << selectionLeftMouse << "\n";
     os << "  selectionRightMouse = " << selectionRightMouse << "\n";
+    os << "  selectionRightMouseGraphicsData = " << selectionRightMouseGraphicsData << "\n";
     os << "  useJoystickInput = " << useJoystickInput << "\n";
     os << "  zoomStepFactor = " << zoomStepFactor << "\n";
     os << "\n";
@@ -1533,7 +1548,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

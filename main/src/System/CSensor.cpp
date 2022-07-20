@@ -67,7 +67,7 @@ void CSensorObject::GetSensorValues(const CSystemData& cSystemData, Vector& valu
 	if (((Index)cObject->GetType() & (Index)CObjectType::Connector) == 0)
 	{
 		//must be object ==> may leed to illegal call, if not implemented
-		cObject->GetOutputVariable(parameters.outputVariableType, values);
+		cObject->GetOutputVariable(parameters.outputVariableType, values, configuration, parameters.objectNumber);
 	}
 	else
 	{

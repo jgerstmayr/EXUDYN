@@ -919,12 +919,13 @@ bool MainObjectContactFrictionCircleCable2D::CheckPreAssembleConsistency(const M
 		return false;
 	}
 
-	Index object0Index = mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]).GetObjectNumber();
-	if (mainSystem.GetCSystem()->GetSystemData().GetCObjects()[object0Index]->GetNumberOfCoordinates() > CObjectContactFrictionCircleCable2DmaxObject0Coordinates)
-	{
-		errorString = STDstring("ObjectContactFrictionCircleCable2D: Marker 0 must refer to an object which has no more than ") + EXUstd::ToString(CObjectContactFrictionCircleCable2DmaxObject0Coordinates) + " coordinates";
-		return false;
-	}
+	//DELETE: (not needed because of templated function avoiding temporary vector
+	//Index object0Index = mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]).GetObjectNumber();
+	//if (mainSystem.GetCSystem()->GetSystemData().GetCObjects()[object0Index]->GetNumberOfCoordinates() > CObjectContactFrictionCircleCable2DmaxObject0Coordinates)
+	//{
+	//	errorString = STDstring("ObjectContactFrictionCircleCable2D: Marker 0 must refer to an object which has no more than ") + EXUstd::ToString(CObjectContactFrictionCircleCable2DmaxObject0Coordinates) + " coordinates";
+	//	return false;
+	//}
 
 
 	if (STDstring(mainSystem.GetMainSystemData().GetMainMarkers()[nMarkers[1]]->GetTypeName()) != STDstring("BodyCable2DShape"))

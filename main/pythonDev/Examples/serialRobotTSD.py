@@ -31,15 +31,17 @@ sensorWriteToFile = True
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#now in the new structure
-
 mode='newDH'
+
+jointWidth=0.1
+jointRadius=0.06
+linkWidth=0.1
 
 graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.15], [0.12,0.12,0.1], color4grey)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
-#newRobot.base.visualization['graphicsData']=graphicsBaseList
+graphicsBaseList +=[GraphicsDataCylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, color4list[0])] #belongs to first body
 
 ty = 0.03
 tz = 0.04
@@ -105,8 +107,8 @@ cnt = 0
 for link in newRobot.links:
     color = color4list[cnt]
     color[3] = 0.75 #make transparent
-    link.visualization = VRobotLink(jointRadius=0.06, jointWidth=0.05*2, showMBSjoint=False,
-                                    linkWidth=2*0.05, linkColor=color, showCOM= True )
+    link.visualization = VRobotLink(jointRadius=jointRadius, jointWidth=jointWidth, showMBSjoint=False,
+                                    linkWidth=linkWidth, linkColor=color, showCOM= True )
     cnt+=1
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

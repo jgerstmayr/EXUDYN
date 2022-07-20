@@ -80,24 +80,24 @@ typedef ObjectContainer<BodyGraphicsData> BodyGraphicsDataList;
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! python function to read BodyGraphicsData from dictionary, e.g. for body or ground graphics
-bool PyWriteBodyGraphicsData(const py::dict& d, const char* item, BodyGraphicsData& data);
+bool PyWriteBodyGraphicsDataList(const py::dict& d, const char* item, BodyGraphicsData& data);
 
 //! python function to read BodyGraphicsData from py::object, which must be a list of graphicsData dictionaries
-bool PyWriteBodyGraphicsData(const py::object object, BodyGraphicsData& data);
+bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data);
 
 //! python function to write BodyGraphicsData to dictionary, e.g. for testing; 
-py::dict PyGetBodyGraphicsDataDictionary(const BodyGraphicsData& data);
+py::list PyGetBodyGraphicsDataList(const BodyGraphicsData& data, bool addGraphicsData);
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //for BodyGraphicsData lists (KinematicTree)
 //! python function to read BodyGraphicsDataList from dictionary, e.g. for body or ground graphics
-bool PyWriteBodyGraphicsDataList(const py::dict& d, const char* item, BodyGraphicsDataList& data);
+bool PyWriteBodyGraphicsDataListOfLists(const py::dict& d, const char* item, BodyGraphicsDataList& data);
 
 //! python function to read BodyGraphicsDataList from py::object, which must be a list of lists of graphicsData dictionaries
-bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsDataList& data);
+bool PyWriteBodyGraphicsDataListOfLists(const py::object object, BodyGraphicsDataList& data);
 
 //! python function to write BodyGraphicsDataList to dictionary, e.g. for testing; 
-py::list PyGetBodyGraphicsDataList(const BodyGraphicsDataList& data);
+py::list PyGetBodyGraphicsDataListOfLists(const BodyGraphicsDataList& data, bool addGraphicsData);
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

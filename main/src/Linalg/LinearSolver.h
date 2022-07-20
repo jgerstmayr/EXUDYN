@@ -19,7 +19,14 @@
 #include <iostream>
 
 #define USE_EIGEN
+
+#ifdef EXUDYN_RELEASE
+//for tests with symmetric solver:
 #define EIGEN_MPL2_ONLY //add this line at the place of 'USE_EIGEN'; it guaranties to raise a compilation error, if non-MPL2 licensed parts of Eigen are used (see also LICENSE.txt file and COPYING.README of Eigen)
+#else
+#define USE_SYMMETRIC_SOLVER
+#endif
+
 
 #ifdef USE_EIGEN
 	#define USE_EIGEN_SPARSE_SOLVER
@@ -27,10 +34,13 @@
 	#include "../Eigen/Dense"
 	//#include "Eigen/SuperLUSupport"
 	#include "../Eigen/SparseLU"
+#ifdef USE_SYMMETRIC_SOLVER
+	#include "../Eigen/SparseCholesky"
+#endif
 	//#include <Eigen/Core>
-#ifdef EIGEN_HAS_OPENMP
-    #include <omp.h> //for eigen omp support
-#endif // EIGEN_HAS_OPENMP
+//#ifdef EIGEN_HAS_OPENMP
+//    #include <omp.h> //for eigen omp support
+//#endif // EIGEN_HAS_OPENMP
 
 //#define useMatrixContainerTriplets
 //#ifdef useMatrixContainerTriplets
@@ -104,6 +114,12 @@ public:
 	virtual LinearSolverType GetSystemMatrixType() const = 0;
 	virtual bool IsMatrixIsFactorized() const { return matrixIsFactorized; };
 	virtual void SetMatrixIsFactorized(bool flag) { matrixIsFactorized = flag; };
+
+	//! functions only used for Sparse mode; no problem, if called for dense matrix
+	virtual void AssumeSymmetric(bool flag = true) {};
+	virtual bool IsSymmetric() const { return false; }
+	virtual void SetReuseAnalyzedPattern(bool flag) { }
+	virtual bool GetReuseAnalyzedPattern() const { return false; }
 
 	//don't do the following; use casting!
 	////! get (read) matrix as dense exudyn Matrix; this function should be used rarly, as it disables the compatibility to other matrix formats
@@ -201,7 +217,6 @@ class GeneralMatrixEXUdense : public GeneralMatrix
 {
 private:
 	ResizableMatrix matrix; //!< internal dense matrix storage:
-
 public:
 	GeneralMatrixEXUdense() { SetMatrixIsFactorized(false); }
 
@@ -390,32 +405,63 @@ public:
 class GeneralMatrixEigenSparse : public GeneralMatrix
 {
 private:
+	bool isSymmetric;       //!< mode to assume symmetric matrices with faster solver
 	bool matrixBuiltFromTriplets;	//!< flag is set true as soon as the matrix is built from triplets; false, as soon as the triplets are modified
 	Index numberOfRows;				//!< as the triplet structure does not provide this information, it must be stored separately
 	Index numberOfColumns;			//!< as the triplet structure does not provide this information, it must be stored separately
 
+	Index analyzedPatternLastNNZ;   //!< number of non-zeros of last analyzedPattern computation
+	bool reuseAnalyzedPattern;      //!< True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; 
 	//data for Eigen sparse matrix storage:
 #ifdef USE_EIGEN_SPARSE_SOLVER
 	EigenSparseMatrix matrix;	 //this is the sparse matrix built from triplets
 	SparseTripletVector triplets; //this contains a redundant set of matrix entries
 	Eigen::SparseLU<Eigen::SparseMatrix<Real>, Eigen::COLAMDOrdering<int> >   solver; //this is the solver for the matrix
+#ifdef USE_SYMMETRIC_SOLVER
+	Eigen::SimplicialLDLT<Eigen::SparseMatrix<Real>, 1>   solverSymmetric; //this is the symmetric solver for the matrix
+	//Eigen::SimplicialLLT<Eigen::SparseMatrix<Real>, 0>   solverSymmetric; //this is the symmetric solver for the matrix
+#else
+	Eigen::SparseLU<Eigen::SparseMatrix<Real>, Eigen::COLAMDOrdering<int> >   solverSymmetric; //replacement, for consistent functionality
+#endif
+
 #endif
 
 public:
 	GeneralMatrixEigenSparse() 
 	{ 
+		isSymmetric = false;
 		SetMatrixIsFactorized(false); 
 		SetMatrixBuiltFromTriplets(false);
 		numberOfRows = 0;
 		numberOfColumns = 0;
+		analyzedPatternLastNNZ = 0;
+		reuseAnalyzedPattern = false;
 	}
 
 	//! information on storage type
-	virtual LinearSolverType GetSystemMatrixType() const { return LinearSolverType::EigenSparse; };
+	virtual LinearSolverType GetSystemMatrixType() const 
+	{
+		if (!isSymmetric) { return LinearSolverType::EigenSparse; }
+		else { return LinearSolverType::EigenSparseSymmetric; }
+	};
 
 	//! flag which help to check if invalid matrix operations are performed:
 	virtual void SetMatrixBuiltFromTriplets(bool flag = true) { matrixBuiltFromTriplets = flag; }
 	virtual bool IsMatrixBuiltFromTriplets() const { return matrixBuiltFromTriplets; }
+
+	//! flag to check if is symmetric:
+	virtual void AssumeSymmetric(bool flag = true) 
+	{ 
+#if !defined(USE_SYMMETRIC_SOLVER)
+		CHECKandTHROW(flag == false, "LinearSolver::EigenSparseSymmetric: (yet) not available; use EigenSparse");
+#endif
+		isSymmetric = flag; 
+	}
+	virtual bool IsSymmetric() const { return isSymmetric; }
+
+	//! reuse pattern for faster computation [experimental]
+	virtual void SetReuseAnalyzedPattern(bool flag) { reuseAnalyzedPattern = flag; }
+	virtual bool GetReuseAnalyzedPattern() const { return reuseAnalyzedPattern; }
 
 	//! get (read) matrix as dense exudyn Matrix
 	const SparseTripletVector& GetSparseTriplets() const { return triplets; }
@@ -518,21 +564,6 @@ public:
 		os << GetEXUdenseMatrix();
 	}
 };
-
-//std::ostream& operator<<(std::ostream& os, const GeneralMatrix& matrix)
-//{
-//	if (matrix.GetSystemMatrixType() == LinearSolverType::EXUdense)
-//	{
-//		os << (GeneralMatrixEXUdense&)matrix;
-//	}
-//	else if (matrix.GetSystemMatrixType() == LinearSolverType::EXUdense)
-//	{
-//		os << (GeneralMatrixEigenSparse&)matrix;
-//	}
-//	else { CHECKandTHROWstring("friend std::ostream& operator<<(std::ostream& os, const GeneralMatrix& matrix)"); }
-//
-//	return os;
-//}
 
 #else
 class GeneralMatrixEigenSparse : public GeneralMatrixEXUdense

@@ -284,6 +284,7 @@ classDescription = "Settings for linear solver, both dense and sparse (Eigen)."
 V,  pivotTreshold,                  ,               , PReal,                0,    ,P    , "treshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity"
 V,  ignoreRedundantConstraints,     ,               , bool,                 false,,P    , "[ONLY implemented for dense matrices] False: standard way, fails if redundant equations or singular matrices occur; True: if redundant constraints appear, the solver tries to resolve them by setting according Lagrange multipliers to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour"
 V,  ignoreSingularJacobian,         ,               , bool,                 false,,P    , "[ONLY implemented for dense matrices] False: standard way, fails if jacobian is singular; True: if singularities appear in jacobian (e.g. no equation attributed to a node, redundant equations, zero mass matrix, zero eigenvalue for static problem, etc.), the jacobian inverse is resolved such that according solution variables are set to zero; this may help, but it MAY LEAD TO ERRONEOUS BEHAVIOUR; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!"
+V,  reuseAnalyzedPattern,           ,               , bool,                 false,,P    , "[ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(...) and should be handled with care!"
 V,  showCausingItems,               ,               , bool,                 true,, P    , "False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!"
 #
 writeFile=SimulationSettings.h
@@ -295,12 +296,15 @@ writePybindIncludes = True
 classDescription = "Settings for linear solver, both dense and sparse (Eigen)."
 #V|F, pythonName,          cplusplusName,  size,   type,                    defaultValue,args,cFlags,   parameterDescription
 V,  numberOfThreads,                ,                 , PInt,                 1,    ,P    , "number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores)"
-V,  stopThreadsInSerialSections,    ,                 , bool,                 true, ,P    , "(not available yet) for large scale problems, if steps take longer than 5 ms, parallel threads are stopped in serial regions (etc. for solver) to improve overall performance"
-V,  useSIMDforSolver,               ,                 , bool,                 true, ,P    , "(not available yet) use AVX optimized vector, vector-matrix and matrix-matrix operations for solver and system operations (may already speedup for 16 coordinates)"
-V,  useMTforSolver,                 ,                 , bool,                 true, ,P    , "(not available yet) use multi-threaded optimized vector, vector-matrix and matrix-matrix operations for solver and system operations (only makes sense for medium to large systems!)"
-V,  parallelizeResiduals,           ,                 , bool,                 true, ,P    , "(not available yet) compute RHS vectors of objects and connectors and loads multi-threaded (only makes sense for medium to large systems!)"
-V,  parallelizeMassMatrix,          ,                 , bool,                 true, ,P    , "(not available yet) compute mass matrix multi-threaded (only makes sense for medium to large systems!)"
-V,  parallelizeJacobians,           ,                 , bool,                 true, ,P    , "(not available yet) compute jacobians multi-threaded (only makes sense for medium to large systems!)"
+#V,  stopThreadsInSerialSections,    ,                 , bool,                 true, ,P    , "(not available yet) for large scale problems, if steps take longer than 5 ms, parallel threads are stopped in serial regions (etc. for solver) to improve overall performance"
+#V,  useSIMDforSolver,               ,                 , bool,                 true, ,P    , "(not available yet) use AVX optimized vector, vector-matrix and matrix-matrix operations for solver and system operations (may already speedup for 16 coordinates)"
+#V,  useMTforSolver,                 ,                 , bool,                 true, ,P    , "(not available yet) use multi-threaded optimized vector, vector-matrix and matrix-matrix operations for solver and system operations (only makes sense for medium to large systems!)"
+V,  multithreadedLLimitLoads,       ,                 , PInt,                 20, ,P  , "compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)"
+V,  multithreadedLLimitResiduals,   ,                 , PInt,                 20, ,P  , "compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)"
+V,  multithreadedLLimitJacobians,   ,                 , PInt,                 20, ,P  , "compute jacobians (ODE2, AE, ...) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)"
+V,  multithreadedLLimitMassMatrices,,                 , PInt,                 20, ,P  , "compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)"
+V,  taskSplitMinItems,              ,                 , PInt,                 50,  ,P  , "number of items from which on the tasks are split into subtasks (which slightly increases threading performance; this may be critical for smaller number of objects, should be roughly between 50 and 5000; flag is copied into MainSystem internal flag at InitializeSolverData(...)"
+V,  taskSplitTasksPerThread,        ,                 , PInt,                 16,  ,P  , "this is the number of subtasks that every thread receives; minimum is 1, the maximum should not be larger than 100; this factor is 1 as long as the taskSplitMinItems is not reached; flag is copied into MainSystem internal flag at InitializeSolverData(...)"
 #
 writeFile=SimulationSettings.h
 
@@ -598,6 +602,7 @@ V,      textLineSmooth,                 ,                  1,    bool,         f
 V,      facesTransparent,               ,                  1,    bool,         false,                  , P,      "True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers"
 V,      showFaces,                      ,                  1,    bool,         true,                   , P,      "show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation"
 V,      showFaceEdges,                  ,                  1,    bool,         false,                  , P,      "show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation"
+V,      showLines,                      ,                  1,    bool,         true,                   , P,      "show lines (different from edges of faces)"
 V,      showMeshFaces,                  ,                  1,    bool,         true,                   , P,      "show faces of finite elements; independent of showFaces"
 V,      showMeshEdges,                  ,                  1,    bool,         true,                   , P,      "show edges of finite elements; independent of showFaceEdges"
 #
@@ -646,7 +651,11 @@ V,      saveImageTimeOut,               ,                  ,     PInt,         "
 V,      saveImageFileName,              ,                  ,     FileName,     "images/frame",         , P,      "filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.png, frame0001.png,...); ; directory will be created if it does not exist"
 V,      saveImageFileCounter,           ,                  ,     UInt,         0,                      , P,      "current value of the counter which is used to consecutively save frames (images) with consecutive numbers"
 V,      saveImageSingleFile,            ,                  ,     bool,         false,                  , P,      "True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName"
-V,      saveImageFormat,                ,                  ,     String,       "PNG",                  , P,      "format for exporting figures: currently only PNG and TGA available; PNG is not available for Ubuntu18.04 (check  use TGA has highest compatibility with all platforms"
+V,      saveImageFormat,                ,                  ,     String,       "PNG",                  , P,      "format for exporting figures: currently only PNG, TGA and TXT available; while PNG and TGA represent the according image file formats, the TXT format results in a text file containing the 3D graphics data information as lists of lines, triangles, etc; PNG is not available for Ubuntu18.04 (check  use TGA has highest compatibility with all platforms"
+V,      saveImageAsTextCircles,         ,                  ,     bool,         true,                   , P,      "export circles in save image (only in TXT format)"
+V,      saveImageAsTextLines,           ,                  ,     bool,         true,                   , P,      "export lines in save image (only in TXT format)"
+V,      saveImageAsTextTriangles,       ,                  ,     bool,         false,                  , P,      "export triangles in save image (only in TXT format)"
+V,      saveImageAsTextTexts,           ,                  ,     bool,         false,                  , P,      "export text in save image (only in TXT format)"
 V,      widthAlignment,                 ,                  ,     PInt,         4,                      , P,      "alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)"
 V,      heightAlignment,                ,                  ,     PInt,         2,                      , P,      "alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)"
 #
@@ -674,6 +683,7 @@ V,      highlightOtherColor,            ,                  4,    Float4,       "
 V,      selectionHighlights,            ,                  ,     bool,         true,                  , P,      "True: mouse click highlights item (default: red)"
 V,      selectionLeftMouse,             ,                  ,     bool,         true,                  , P,      "True: left mouse click on items and show basic information"
 V,      selectionRightMouse,            ,                  ,     bool,         true,                  , P,      "True: right mouse click on items and show dictionary (read only!)"
+V,      selectionRightMouseGraphicsData,,                  ,     bool,         false,                 , P,      "True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)"
 V,      useJoystickInput,               ,                  ,     bool,         true,                  , P,      "True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ..."
 V,      joystickScaleTranslation,       ,                  ,     float,        "6.f",                 , P,      "translation scaling factor for joystick input"
 V,      joystickScaleRotation,          ,                  ,     float,        "200.f",               , P,      "rotation scaling factor for joystick input"
@@ -738,6 +748,7 @@ V,      jacobianODE2_t,             ,                  ,     Real,         0.,  
 V,      jacobianAE,                 ,                  ,     Real,         0.,                     ,   P,    "jacobian of algebraic equations (not counted in sum)"
 V,      massMatrix,                 ,                  ,     Real,         0.,                     ,   P,    "mass matrix computation"
 V,      reactionForces,             ,                  ,     Real,         0.,                     ,   P,    "CqT * lambda"
+V,      postNewton,                 ,                  ,     Real,         0.,                     ,   P,    "discontinuous iteration / PostNewtonStep"
 #not used, for efficiency (added as special/global timer): V,      postNewton,                 ,                  ,     Real,         0.,                     ,   P,    "post newton step"
 V,      errorEstimator,             ,                  ,     Real,         0.,                     ,   P,    "for explicit solvers, additional evaluation"
 V,      writeSolution,              ,                  ,     Real,         0.,                     ,   P,    "time for writing solution"
@@ -756,7 +767,7 @@ writeFile=CSolverStructures.h
 class = SolverLocalData
 appendToFile=True
 writePybindIncludes = True
-addConstructor = "    SetLinearSolverType(LinearSolverType::EXUdense); //for safety, data is linked initially\n"
+addConstructor = "    SetLinearSolverType(LinearSolverType::EXUdense, false); //for safety, data is linked initially\n"
 classDescription = "Solver local data structure for solution vectors, system matrices and temporary vectors and data structures."
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,            args,           cFlags, parameterDescription
 V,      nODE2,                      ,                  ,     Index,        0,                      ,   P,    "number of second order ordinary diff. eq. coordinates"
@@ -770,18 +781,18 @@ V,      systemJacobian,             ,                  ,     GeneralMatrix*, nul
 V,      systemMassMatrix,           ,                  ,     GeneralMatrix*, nullptr,             ,    ,    "link to dense or sparse system mass matrix; in explicit solver, after a step, this will contain the factorized mass matrix"
 V,      jacobianAE,                 ,                  ,     GeneralMatrix*, nullptr,             ,    ,    "link to dense or sparse algebraic equations jacobian"
 #
-V,      systemResidual,             ,                  ,     ResizableVector, ,                    ,   P,    "system residual vector (vectors will be linked to this vector!)"
-V,      newtonSolution,             ,                  ,     ResizableVector, ,                    ,   P,    "Newton decrement (computed from residual and jacobian)"
-V,      tempODE2,                   ,                  ,     ResizableVector, ,                    ,   P,    "temporary vector for \hac{ODE2} quantities; use in initial accelerations and during Newton"
-V,      temp2ODE2,                  ,                  ,     ResizableVector, ,                    ,   P,    "second temporary vector for \hac{ODE2} quantities; use in static computation"
-V,      tempODE2F0,                 ,                  ,     ResizableVector, ,                    ,   P,    "temporary vector for \hac{ODE2} Jacobian"
-V,      tempODE2F1,                 ,                  ,     ResizableVector, ,                    ,   P,    "temporary vector for \hac{ODE2} Jacobian"
-V,      tempODE1F0,                 ,                  ,     ResizableVector, ,                    ,   P,    "temporary vector for \hac{ODE1} Jacobian"
-V,      tempODE1F1,                 ,                  ,     ResizableVector, ,                    ,   P,    "temporary vector for \hac{ODE1} Jacobian"
-#V,      tempODE1,                   ,                  ,     ResizableVector, ,                    ,   P,    "temporary vector for \hac{ODE1} quantities"
+V,      systemResidual,             ,                  ,     ResizableVectorParallel, ,            ,   P,    "system residual vector (vectors will be linked to this vector!)"
+V,      newtonSolution,             ,                  ,     ResizableVectorParallel, ,            ,   P,    "Newton decrement (computed from residual and jacobian)"
+V,      tempODE2,                   ,                  ,     ResizableVectorParallel, ,            ,   P,    "temporary vector for \hac{ODE2} quantities; use in initial accelerations and during Newton"
+V,      temp2ODE2,                  ,                  ,     ResizableVectorParallel, ,            ,   P,    "second temporary vector for \hac{ODE2} quantities; use in static computation"
+V,      tempODE2F0,                 ,                  ,     ResizableVectorParallel, ,            ,   P,    "temporary vector for \hac{ODE2} Jacobian"
+V,      tempODE2F1,                 ,                  ,     ResizableVectorParallel, ,            ,   P,    "temporary vector for \hac{ODE2} Jacobian"
+V,      tempODE1F0,                 ,                  ,     ResizableVectorParallel, ,            ,   P,    "temporary vector for \hac{ODE1} Jacobian"
+V,      tempODE1F1,                 ,                  ,     ResizableVectorParallel, ,            ,   P,    "temporary vector for \hac{ODE1} Jacobian"
+#V,      tempODE1,                   ,                  ,     ResizableVectorParallel, ,            ,   P,    "temporary vector for \hac{ODE1} quantities"
 #
-V,      startOfStepStateAAlgorithmic,,                  ,     ResizableVector, ,                    ,   P,    "additional term needed for generalized alpha (startOfStep state)"
-V,      aAlgorithmic,               ,                  ,     ResizableVector, ,                    ,   P,    "additional term needed for generalized alpha (current state)"
+V,      startOfStepStateAAlgorithmic,,                 ,     ResizableVectorParallel, ,            ,   P,    "additional term needed for generalized alpha (startOfStep state)"
+V,      aAlgorithmic,               ,                  ,     ResizableVectorParallel, ,            ,   P,    "additional term needed for generalized alpha (current state)"
 #
 V,      tempCompData,               ,                  ,     TemporaryComputationData, ,           ,    ,    "temporary data used during item-related residual and jacobian computation; duplicated for serial computation, will be removed in future"
 V,      tempCompDataArray,          ,                  ,     TemporaryComputationDataArray, ,      ,    ,    "temporary data per thread, used during item-related residual and jacobian computation; for parallel computation"
@@ -798,7 +809,7 @@ Vp,     jacobianAEsparse,           ,                  ,     GeneralMatrixEigenS
 #
 #now done with addConstructor flag; F,      SolverLocalData,            ,                ,     ,             "SetLinearSolverType(LinearSolverType::EXUdense);", ,   P,  "for safety, data is linked immediately to dense matrices"
 F,      CleanUpMemory,              ,                ,     void,         ,                       ,    DP,  "if desired, temporary data is cleaned up to safe memory"
-F,      SetLinearSolverType,        ,                ,     void,         ,                       "LinearSolverType linearSolverType",   DP,  "set linear solver type and matrix version: links system matrices to according dense/sparse versions"
+F,      SetLinearSolverType,        ,                ,     void,         ,                       "LinearSolverType linearSolverType, bool reuseAnalyzedPattern",   DP,  "set linear solver type and matrix version: links system matrices to according dense/sparse versions"
 F,      GetLinearSolverType,        ,                ,     LinearSolverType, "return linearSolverType;", ,   CPV,  "return current linear solver type (dense/sparse)"
 #
 writeFile=CSolverStructures.h
@@ -855,7 +866,7 @@ V,      stopNewton,                 ,                  ,     bool,         false
 V,      newtonConverged,            ,                  ,     bool,         false,                       ,   P,    "true, if Newton has (finally) converged"
 V,      newtonSolutionDiverged,     ,                  ,     bool,         false,                       ,   P,    "true, if Newton diverged (may be recovered)"
 V,      jacobianUpdateRequested,    ,                  ,     bool,         true,                        ,   P,    "true, if a jacobian update is requested in modified Newton (determined in previous step)"
-V,      massMatrixNotInvertible,    ,                  ,     bool,         true,                        ,   P,    "true, if mass matrix is not invertable during initialization or solution (explicit solver)"
+V,      massMatrixNotInvertible,    ,                  ,     bool,         false,                       ,   P,    "true, if mass matrix is not invertable during initialization or solution (explicit solver)"
 #RESIDUALS and ERRORS:
 V,      discontinuousIterationError,,                  ,     Real,         0.,                          ,   P,    "error of discontinuous iterations (contact, friction, ...) outside of Newton iteration"
 V,      residual,                   ,                  ,     Real,         0.,                          ,   P,    "current Newton residual"
@@ -892,7 +903,10 @@ V,      cpuLastTimePrinted,         ,                  ,     Real,         0.,  
 V,      lastVerboseStepIndex,       ,                  ,     Index,        0,                      ,   P,    "step index when last time written to console (or file)"
 V,      lastNewtonStepsCount,       ,                  ,     Index,        0,                      ,   P,    "newton steps count when written to console (or file) last time"
 V,      lastNewtonJacobiCount,      ,                  ,     Index,        0,                      ,   P,    "jacobian update count when written to console (or file) last time"
-V,      lastDiscontinuousIterationsCount, ,          ,     Index,        0,                      ,   P,    "discontinuous iterations count when written to console (or file) last time"
+V,      lastDiscontinuousIterationsCount, ,            ,     Index,        0,                      ,   P,    "discontinuous iterations count when written to console (or file) last time"
+#for parallel
+V,      numberOfThreadsUsed,        ,                  ,     Index,        0,                      ,   P,    "number of threads that have been used in simulation"
+V,      multiThreadingMode,         ,                  ,     Index,        0,                      ,   P,    "multithreading mode that has been used: 0=None (serial), 1=NGsolve taskmanager, 2=MicroThreading (Exudyn)"
 #
 F,      InitializeData,             ,                ,     void,         "*this = SolverOutputData();",,P, "initialize SolverOutputData by assigning default values"
 #

@@ -27,7 +27,7 @@
 # author:  author, if to be mentioned
 # miniExample':'',      #mini Python example (without headers and typical setup); code in separate lines, ended with '/end' in separate line
 # equations':'',        #latex style equations, direct latex code; latex code in separate lines, ended with '/end' in separate line
-# classType:        type of class: node, object, marker, load, sensor, ...
+# classType:        type of class: Node, Object, Marker, Load, Sensor, ...
 # objectType:  for objects: Body, Connector, Constraint, Joint, SuperElement, FiniteElement, Object
 #
 # **********************************************
@@ -246,7 +246,7 @@ Fv,     C,      GetOutputVariable,              ,               ,       void,   
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, bool useIndex2 = false", CDI,     "ONLY for nodes with \hac{AE} / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();" 
-Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE", CDI,     "ONLY for nodes with \hac{AE} / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();" 
+Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,                           "ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, JacobianType::Type& filledJacobians", CDI,     "ONLY for nodes with \hac{AE} / Euler parameters: compute algebraic equations to 'algebraicEquations', which has dimension GetNumberOfAECoordinates();" 
 #helper functions for rotation parameters:
 #F,      C,      GetEulerParameters,             ,               ,       ConstSizeVector<nRotationCoordinates>, ,"ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute vector to of 4 Euler Parameters from reference and configuration coordinates"  
 #F,      C,      GetEulerParameters_t,           ,               ,       ConstSizeVector<nRotationCoordinates>, ,"ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute vector to time derivative of 4 Euler Parameters in given configuration"  
@@ -2046,7 +2046,7 @@ Fv,     C,      ComputeODE1RHS,                 ,               ,       void,   
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE1_ODE1);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunction,              ,               ,       void,       ,                           "AccessFunctionType accessType, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
-Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value",          DC, "provide according output variable in 'value'" 
+Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value, ConfigurationType configuration, Index objectNumber",          DC, "provide according output variable in 'value'" 
 #
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'GenericODE1';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
@@ -2260,7 +2260,8 @@ Fv,     C,      ComputeODE2LHS,                 ,               ,       void,   
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type,  ,                  ,          CDI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
-Fv,     C,      GetOutputVariableBody,          ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber",          DC, "provide according output variable in 'value'" 
+#Fv,     C,      GetOutputVariableBody,          ,               ,       void,       ,                           "OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber",          DC, "provide according output variable in 'value'" 
+Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value, ConfigurationType configuration, Index objectNumber",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetPosition,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
 Fv,     C,      GetDisplacement,                ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
 Fv,     C,      GetVelocity,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of 'localPosition' according to configuration type" 
@@ -2315,7 +2316,7 @@ F,      C,      ComputeJacobian,                ,               ,       void,   
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,       "true",                         ,   IO,      "set true, if item is shown in visualization and false if it is not shown"
 #for future, we may use a graphicsDataList with twice length to allow showing links/joints separately?
-V,      V,      showLinks,                      ,               ,       Bool,       "true",                         ,   IO,      "set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link"
+V,      V,      showLinks,                      ,               ,       Bool,       "true",                         ,   IO,      "set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link; NOTE visualization of joint and COM frames can be modified via visualizationSettings.bodies.kinematicTree"
 V,      V,      showJoints,                     ,               ,       Bool,       "true",                         ,   IO,      "set true, if joints shall be shown; if graphicsDataList is empty, a standard drawing for joints is used (drawing a cylinder for revolute joints; size relative to frame size in KinematicTree visualization settings)"
 #; else if size of graphicsDataList is 2 times the number of links (n), graphicsData [n,n+1,...] are used to draw joints
 V,      V,      color,                          ,               4,      Float4,     "Float4({-1.f,-1.f,-1.f,-1.f})", ,  IO,      "RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used"
@@ -3437,6 +3438,7 @@ V,      CP,     physicsReferenceAxialStrain,    ,               ,       Real,   
 V,      CP,     physicsReferenceCurvature,      ,               ,       Real,       "0.",                       ,       I,      "$\kappa_0$ [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value"
 #
 V,      CP,     physicsUseCouplingTerms,        ,               ,       Bool,       "true",                     ,       I,      "true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then)"
+V,      CP,     physicsAddALEvariation,         ,               ,       Bool,       "true",                     ,       I,      "true: correct case, where additional terms related to variation of strain and curvature are added"
 V,      CP,     nodeNumbers,                    ,               ,       NodeIndex3,     "Index3({EXUstd::InvalidIndex, EXUstd::InvalidIndex, EXUstd::InvalidIndex})",       ,       I,      "two node numbers ANCF cable element, third node=ALE GenericODE2 node"
 V,      CP,     useReducedOrderIntegration,     ,               ,       Index,      0,                          ,       I,      "0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments"
 V,      CP,     strainIsRelativeToReference,    ,               ,       Real,       "0.",                       ,       I,      "$f\cRef$ if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1."
@@ -3446,6 +3448,7 @@ Fv,     C,      GetMassPerLength,               ,               ,       Real,   
 Fv,     C,      GetMaterialParameters,          ,               ,       void,       "physicsBendingStiffness = parameters.physicsBendingStiffness; physicsAxialStiffness = parameters.physicsAxialStiffness; physicsBendingDamping = parameters.physicsBendingDamping; physicsAxialDamping = parameters.physicsAxialDamping; physicsReferenceAxialStrain = parameters.physicsReferenceAxialStrain; physicsReferenceCurvature = parameters.physicsReferenceCurvature;", "Real& physicsBendingStiffness, Real& physicsAxialStiffness, Real& physicsBendingDamping, Real& physicsAxialDamping, Real& physicsReferenceAxialStrain, Real& physicsReferenceCurvature", IC,  "access to individual element paramters for base class functions" 
 Fv,     C,      UseReducedOrderIntegration,     ,               ,       Index,      "return parameters.useReducedOrderIntegration;", , IC,  "access to useReducedOrderIntegration from derived class" 
 Fv,     C,      StrainIsRelativeToReference,    ,               ,       Real,       "return parameters.strainIsRelativeToReference;", , IC,  "access to strainIsRelativeToReference from derived class" 
+Fv,     C,      AddALEvariation,                ,               ,       bool,       "return parameters.physicsAddALEvariation;", , IC,  "access to physicsAddALEvariation" 
 #
 Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
@@ -4456,7 +4459,7 @@ miniExample =
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, 
                                             localPosition = [0,0,0]))
     mbs.AddObject(PrismaticJointX(markerNumbers = [mGround, mBody])) #motion along ground X-axis
-    mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody], 
+    mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody], axisMarker0=[1,0,0],
                                      stiffness = k, damping = k*0.01, offset = 0))
 
     #force along x-axis; expect approx. Delta x = 1/k=0.0005
@@ -4476,7 +4479,7 @@ Vp,     M,      name,                           ,               ,       String, 
 V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,\, m1]$list of markers used in connector"
 V,      CP,     stiffness,                      ,               ,       Real,   "0.",       ,       I,      "$k$torsional stiffness [SI:Nm/rad] against relative rotation"
 V,      CP,     damping,                        ,               ,       Real,   "0.",       ,       I,      "$d$torsional damping [SI:Nm/(rad/s)]"
-V,      CP,     axisMarker0,                    ,               ,       Vector3D,   "Vector3D(0)", ,I,      "$\LU{m0}{\dv}$local axis of spring-damper in marker 0 coordinates; this axis will co-move with marker $m0$; if marker m0 is attached to ground, the spring-damper represents linear equations"
+V,      CP,     axisMarker0,                    ,               ,       Vector3D,   "Vector3D({1,0,0})", ,I,      "$\LU{m0}{\dv}$local axis of spring-damper in marker 0 coordinates; this axis will co-move with marker $m0$; if marker m0 is attached to ground, the spring-damper represents linear equations"
 V,      CP,     offset,                         ,               ,       Real,   "0.", ,   IO,     "$x_\mathrm{off}$translational offset considered in the spring force calculation (this can be used as position control input!)"
 V,      CP,     velocityOffset,                 ,               ,       Real,   "0.", ,   IO,     "$v_\mathrm{off}$velocity offset considered in the damper force calculation (this can be used as velocity control input!)"
 V,      CP,     force,                          ,               ,       Real,   "0.", ,   IO,     "$f_c$additional constant force [SI:Nm] added to spring-damper; this can be used to prescribe a force between the two attached bodies (e.g., for actuation and control)"
@@ -5407,7 +5410,6 @@ Fv,     C,      ComputeJacobianAE,              ,               ,       void,   
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                   ,       CDI,    "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags; available jacobians is switched depending on velocity level and on activeConnector condition"
 #Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI,    "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
-#Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::Coordinate;", ,   CI,     "provide requested markerType for connector" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);", , CI,    "return object type (for node treatment in computation)" 
 Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      "return 1;",                ,       CI,     "number of algebraic equations; independent of node/body coordinates" 
@@ -5594,6 +5596,7 @@ V,      CP,     jacobianUserFunction,           ,               ,       PyFuncti
 #V,      CP,     offsetUserFunction_t,           ,               ,       PyFunctionMbsScalarIndexScalar, 0,                   ,       IO,     "$\mathrm{UF}_t \in \Rcal$time derivative of offsetUserFunction; needed for 'velocityLevel=True', or for index2 time integration and for computation of initial accelerations in SecondOrderImplicit integrators; see description below"
 V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
 #
+Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return (parameters.constraintUserFunction!=0) || (parameters.jacobianUserFunction!=0);", "", CI,  "return true, if object has a computation user function"  
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
 Fv,     C,      IsTimeDependent,                ,               ,       Bool,       "return false;", ,      CI,    "connector is time dependent if user functions are defined" 
@@ -5605,7 +5608,6 @@ Fv,     C,      ComputeJacobianAE,              ,               ,       void,   
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                   ,       CDI,    "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags; available jacobians is switched depending on velocity level and on activeConnector condition"
 #Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI,    "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
-#Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::Coordinates;", ,   CI,     "provide requested markerType for connector" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);", , CI,    "return object type (for node treatment in computation)" 
 Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      ,                           ,       CDI,     "number of algebraic equations; independent of node/body coordinates" 
@@ -6020,7 +6022,6 @@ Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,   
 Fv,     C,      IsPenaltyConnector,            	,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
 Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI, "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
-#Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::Coordinate;", ,   CI,     "provide requested markerType for connector" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,     "return object type (for node treatment in computation)" 
@@ -6080,7 +6081,6 @@ Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,   
 Fv,     C,      IsPenaltyConnector,            	,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
 Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI, "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
-#Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::_None;", ,   CI,     "provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::\_None" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,     "return object type (for node treatment in computation)" 
@@ -6100,11 +6100,11 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectContactFrictionCircleCable2D
-classDescription = "A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a Rigid-Body Marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with 3$\times$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position]."
+classDescription = "A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a RigidBody Marker, from node or object) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with 3$\times$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position]. The connector works with Cable2D and ALECable2D, HOWEVER, due to conceptual differences the (tangential) frictionStiffness cannot be used with ALECable2D; if using, it gives wrong tangential stresses, even though it may work in general."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
-addIncludesC = 'constexpr Index CObjectContactFrictionCircleCable2DmaxNumberOfSegments = 12; //maximum number of contact segments\nconstexpr Index CObjectContactFrictionCircleCable2DmaxObject0Coordinates = 12; //this is a non-optimal solution; used for a constsizevector in the computation of the action on the body of marker0\n'
+addIncludesC = 'constexpr Index CObjectContactFrictionCircleCable2DmaxNumberOfSegments = 12; //maximum number of contact segments\n'
 addPublicC = "    static const Index isStickCase = 0; //AUTO: value which represents stick\n    static const Index isUndefinedCase = -2; //AUTO: value which represents undefined stick/slip\n    static const Index absValueSlipCase = 1; //AUTO: slip may be +-1 !\n"
 outputVariables = "{'Coordinates':'$[u_{t,0},\, g_0,\, u_{t,1},\, g_1,\, \ldots,\, u_{t,n_{cs}},\, g_{n_{cs}}]\tp$local (relative) displacement in tangential ($\tv$) and normal ($\nv$) direction per segment ($n_{cs}$); values are only provided in case of contact, otherwise zero; tangential displacement is only non-zero in case of sticking!', 'Coordinates_t':'$[v_{t,0},\, v_{n,0},\, v_{t,1},\, v_{n,1},\, \ldots,\, v_{t,n_{cs}},\, v_{n,n_{cs}}]\tp$local (relative) velocity in tangential ($\tv$) and normal ($\nv$) direction per segment ($n_{cs}$); values are only provided in case of contact, otherwise zero', 'ForceLocal':'$[f_{t,0},\, f_{n,0},\, f_{t,1},\, f_{n,1},\, \ldots,\, f_{t,n_{cs}},\, f_{n,n_{cs}}]\tp$local contact forces in tangential ($\tv$) and normal ($\nv$) direction per segment ($n_{cs}$)'}"
 classType = Object
@@ -6323,7 +6323,7 @@ equations =
         difference in sticking position\footnote{in case that $x_{isSlipStick} = -2$, meaning that there is no stored sticking position, we set $\Delta x_{stick} = 0$}:
         \be
           \Delta x^*_{stick} = x_{curStick} - x^{startOfStep}_{lastStick}, \quad
-          \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
+          \Delta x_{stick} = \Delta x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
         \ee
         \item Compute linear tangential force for friction stiffness and velocity penalty: 
           \be 
@@ -6472,7 +6472,7 @@ equations =
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "connector's unique name"
-V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$a marker $m0$ with position and orientation  and a marker $m1$ of type BodyCable2DShape; together defining the contact geometry"
+V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$a marker $m0$ with position and orientation and a marker $m1$ of type BodyCable2DShape; together defining the contact geometry"
 V,      CP,     nodeNumber,                     ,               ,       NodeIndex,      "EXUstd::InvalidIndex",  ,       I,      "$n_g$node number of a NodeGenericData with 3 $\times n_{cs}$  dataCoordinates (used for active set strategy $\ra$ hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*$n_{cs}$+[-2]*$n_{cs}$+[0.]*$n_{cs}$, meaning that there is no initial contact with undefined slip/stick"
 V,      CP,     numberOfContactSegments,        ,               ,       PInt,       "3",                         ,       I,      "$n_{cs}$number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker"
 V,      CP,     contactStiffness,               ,               ,       UReal,      0.,                          ,       I,      "$k_c$contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_n$ act in contact normal direction only upon penetration"
@@ -6503,7 +6503,6 @@ Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,   
 Fv,     C,      IsPenaltyConnector,            	,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
 #Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI, "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
-#Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::_None;", ,   CI,     "provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::\_None" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,     "return object type (for node treatment in computation)" 
@@ -7436,7 +7435,6 @@ Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,   
 #
 #Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI,    "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
-#Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::_None;", ,   CI,     "provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::\_None" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);", , CI,    "return object type (for node treatment in computation)" 
@@ -7598,7 +7596,6 @@ Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,   
 #
 #Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI,    "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
-#Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::_None;", ,   CI,     "provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::\_None" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::_None;", ,         CI,     "must be checked in CheckPreAssembleConsistency(...); provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);", , CI,    "return object type (for node treatment in computation)" 
@@ -8312,7 +8309,7 @@ Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,   
 # F,      C,      GetWeightedAngularVelocity,     ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& weightedAngularVelocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return weighted angular velocity from local mesh velocities" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,       "true",                     ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
-Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                          "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", I,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                          "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
 #file names automatically determined from class name
 writeFile = True
 
@@ -9123,7 +9120,6 @@ Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,   
 Fv,     C,      IsPenaltyConnector,            	,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
 Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI, "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
-#Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::_None;", ,   CI,     "provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::\_None" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,     "return object type (for node treatment in computation)" 

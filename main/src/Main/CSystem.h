@@ -46,6 +46,14 @@ public:
 
 	bool doPostNewtonIteration; //!< default=true; set false for explicit solvers to deactivate Post Newton step e.g. for contact, which directly compute contact conditions
 
+	Index taskSplitMinItems;      //limit at which task is split into sub-tasks; 
+	Index taskSplitTasksPerThread; //this is the amount of bunches into which the tasks are split; for 4 threads, this gives 4*16 total tasks
+
+	Index multithreadedLLimitLoads; //! absolute lower limit below which, no multithreading will be active
+	Index multithreadedLLimitResiduals; //! absolute lower lower limit below which, no multithreading will be active
+	Index multithreadedLLimitJacobians; //! absolute lower lower limit below which, no multithreading will be active
+	Index multithreadedLLimitMassMatrix; //! absolute lower lower limit below which, no multithreading will be active
+
 	SolverData()
 	{
 		Reset();
@@ -57,13 +65,21 @@ public:
 		loadFactor = 1;
 		signalJacobianUpdate = false;
 		doPostNewtonIteration = true;
+
+		//default values for parallelization
+		taskSplitMinItems = 50;      //limit at which task is split into sub-tasks; 
+		taskSplitTasksPerThread = 16; //this is the amount of bunches into which the tasks are split; for 4 threads, this gives 4*16 total tasks
+
+		multithreadedLLimitLoads = 100; //! absolute lower limit below which, no multithreading will be active
+		multithreadedLLimitResiduals = 100; //! for ODE2, [ODE1], AE and CqT*lambda; absolute lower lower limit below which, no multithreading will be active
+		multithreadedLLimitJacobians = 100; //! absolute lower lower limit below which, no multithreading will be active
+		multithreadedLLimitMassMatrix = 100; //! absolute lower lower limit below which, no multithreading will be active
+
 	}
 };
 
-//call to pointer to member function (std::invoke) did not work
-////memberfunction pointers follow idea of https://isocpp.org/wiki/faq/pointers-to-members
-//typedef  void (CSystem::*CSystemDifferentiableFunction)(TemporaryComputationData& temp, Vector& systemODE2Rhs);
-
+//! computation system class; holds most methods for assemble, computation of residuals and system matrices
+//! this is the computational CORE of Exudyn
 class CSystem
 {
 protected:
@@ -133,6 +149,12 @@ public:
 		if (flag == false) { postProcessData.postProcessDataReady = flag; }	//do not draw system anymore
 	}
 
+	//! helper function to have unique task-split for parallel computations for CSystem computations; include parameters into solver?
+	Index GetTaskSplit(Index nItems, Index nThreads) 
+	{ 
+		return (nItems >= solverData.taskSplitMinItems * nThreads) ? solverData.taskSplitTasksPerThread * nThreads : nThreads;
+	}
+
 	//merged with SetSystemIsConsistent //! Function called e.g. by AddNode/Object/..., ModifyNode/Object/... to signal that the system has changed and consistency is not guaranteed
 	void SystemHasChanged() 
 	{
@@ -150,15 +172,6 @@ public:
 
 		//postProcessData.updateCounter = 1; //done synchronized with visualizationSystem.graphicsData.visualizationCounter
 	}
-
-//	Index GetNumberOfThreads() const
-//	{
-//#ifdef USE_NGSOLVE_TASKMANAGER
-//		return ngstd::TaskManager::GetNumThreads();
-//#else
-//		return 1;
-//#endif
-//	}
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // CSystem computational functions
@@ -198,7 +211,7 @@ public:
     // CSystem computation functions
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //! compute system massmatrix and ADD to given massMatrix; matrix needs to have according size; set entries to zero beforehand, if only the mass matrix is required
-	void ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& massMatrix);
+	void ComputeMassMatrix(TemporaryComputationDataArray& temp, GeneralMatrix& massMatrix);
 	//! run through all bodies and check if has constant mass matrix; used for solver
 	bool HasConstantMassMatrix();
 	//void ComputeMassMatrixOLD(TemporaryComputationData& temp, Matrix& massMatrix);
@@ -226,7 +239,7 @@ public:
 
 	//! add the projected action of Lagrange multipliers (reaction forces) to the ODE2 coordinates and add it to the ode2ReactionForces residual:
 	//! ode2ReactionForces += C_{q2}^T * \lambda
-	void ComputeODE2ProjectedReactionForces(TemporaryComputationData& temp, const Vector& reactionForces, Vector& ode2ReactionForces);
+	void ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& tempArray, const Vector& reactionForces, Vector& ode2ReactionForces);
 
 	//! compute numerically the derivative of (C_{q2} * v), v being an arbitrary vector
 	//! jacobianCqV = scalarFactor*d/dq2(C_{q2} * v)
@@ -244,7 +257,7 @@ public:
 	void PostDiscontinuousIterationStep();
 
 	//! compute system right-hand-side (RHS) of algebraic equations (AE) to vector 'AERhs'
-	void ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& algebraicEquations, bool velocityLevel = false);
+	void ComputeAlgebraicEquations(TemporaryComputationDataArray& tempArray, Vector& algebraicEquations, bool velocityLevel = false);
 
 	//directly called via cSystemData
 	////! compute MarkerDataStructure for a given connector (using its markers); used in ComputeSystemODE2RHS, GetOutputVariableConnector, etc.
@@ -273,7 +286,7 @@ public:
 	//! always true: fillIntoSystemMatrix=true: fill in g_q_ODE2, g_q_ODE2^T AND g_q_AE into system matrix at according positions
 	//! DEPRECATED: fillIntoSystemMatrix=false: fill in g_q_ODE2 into jacobian matrix at (0,0)
 	template<class TGeneralMatrix>
-	void NumericalJacobianAE(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
+	void NumericalJacobianAE(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
 		Vector& f0, Vector& f1, TGeneralMatrix& jacobianGM, Real factorAE_ODE2, Real factorAE_ODE2_t, 
 		Real factorAE_ODE1, bool velocityLevel = false, Real factorODE2_AE = 1., Real factorODE1_AE = 1., Real factorAE_AE = 1.);// , bool fillIntoSystemMatrix = false); //ResizableMatrix& jacobian
 
@@ -291,7 +304,8 @@ public:
 	//!compute per-object jacobians for object j, providing TemporaryComputationData;
 	//! the jacobian computed in according temp structure
 	void ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
-		bool& objectUsesVelocityLevel, bool& flagAE_ODE2filled, bool& flagAE_ODE2_tFilled, bool& flagAE_ODE1filled, bool& flagAE_AEfilled);
+		bool& objectUsesVelocityLevel, JacobianType::Type& filledJacobians
+		/*, bool& flagAE_ODE2filled, bool& flagAE_ODE2_tFilled, bool& flagAE_ODE1filled, bool& flagAE_AEfilled*/);
 
 	//implemented direcly in JacobianAE
 	////!compute per-node jacobians for node j, providing TemporaryComputationData;
@@ -307,7 +321,7 @@ public:
 	//! velocityLevel = velocityLevel constraints are used, if available; 
 	//! ALWAYS TRUE: fillIntoSystemMatrix=true: fill in g_q_ODE2, g_q_ODE2^T AND g_q_AE into system matrix at according positions
 	//! DEPRECATED: fillIntoSystemMatrix=false: fill in g_q_ODE2 into jacobian matrix at (0,0)
-	void JacobianAE(TemporaryComputationData& temp, const NewtonSettings& newton, GeneralMatrix& jacobianGM,
+	void JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonSettings& newton, GeneralMatrix& jacobianGM,
 		Real factorAE_ODE2, Real factorAE_ODE2_t, Real factorAE_ODE1, bool velocityLevel = false, 
 		Real factorODE2_AE = 1., Real factorODE1_AE = 1., Real factorAE_AE=1.);// , bool fillIntoSystemMatrix = false);
 

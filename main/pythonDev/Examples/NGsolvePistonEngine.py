@@ -19,6 +19,7 @@ from exudyn.utilities import *
 from exudyn.rigidBodyUtilities import *
 from exudyn.FEM import *
 
+import time
 import sys
 sys.path.append('C:/ProgramData/ngsolve/lib/site-packages')
 
@@ -40,8 +41,8 @@ import numpy as np
 import timeit
 
 verbose = True
-meshSize = 0.005*2 #standard: 0.005; 0.0011: memory limit (96GB) for NGsolve; < 0.0015 makes problems with scipy eigensolver
-meshOrder = 2
+meshSize = 0.005*2*2 #fast: 0.005*2; standard:0.005; fine: 0.0011: memory limit (96GB) for NGsolve; < 0.0015 makes problems with scipy eigensolver
+meshOrder = 1 #2 for stresses!
 showStresses = True #may take very long for large number of modes/nodes
 
 #++++++++++++++++++++++++++++++++++++
@@ -252,7 +253,7 @@ geoCrank = CSGeometry()
 #crankConfig = [0,np.pi*2./3.,2.*np.pi*2./3.] #3-piston
 #crankConfig = [0,np.pi,np.pi,0] #4-piston
 crankConfig = [0,np.pi*2./3.,2.*np.pi*2./3.,2.*np.pi*2./3.,np.pi*2./3.,0] #6-piston
-crankConfig = crankConfig*2
+#crankConfig = crankConfig*2 #12-piston
 
 nPistons = len(crankConfig)
 
@@ -725,9 +726,11 @@ if True:
 
     stopTotal = timeit.default_timer()
     print("\ntotal elapsed time=", stopTotal-startTotal)
+    mbs.Assemble()
+
     #now simulate model in exudyn:
+    #%%+++++++++++++++++++++
     if True:
-        mbs.Assemble()
         print("totalFEcoordinates=",totalFEcoordinates)
         
         simulationSettings = exu.SimulationSettings()
@@ -775,13 +778,14 @@ if True:
         
         simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
         simulationSettings.timeIntegration.endTime = tEnd
-        simulationSettings.solutionSettings.solutionWritePeriod = h
+        simulationSettings.solutionSettings.solutionWritePeriod = h*10 #writing already costs much time
         simulationSettings.timeIntegration.verboseMode = 1
         #simulationSettings.timeIntegration.verboseModeFile = 3
         simulationSettings.timeIntegration.newton.useModifiedNewton = True
         
         simulationSettings.solutionSettings.sensorsWritePeriod = h
         #simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/coordinatesSolution.txt"
+        simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse #faster, because system size already quite large
         
         simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
         simulationSettings.displayStatistics = True
@@ -793,22 +797,10 @@ if True:
             simulationSettings.solutionSettings.recordImagesInterval = 0.001
             SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
             SC.visualizationSettings.window.renderWindowSize=[1920,1080]
-        #%%
+
         exu.StartRenderer()
         if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
-        # exu.StartRenderer()
-        # lastRenderState = {'renderState': {'centerPoint': [-0.1360926777124405,   -0.012394198216497898,   0.17600969970226288],
-        #       'maxSceneSize': 0.10000000149011612,
-        #       'zoom': 0.1513097584247589,
-        #       'currentWindowSize': [1024, 768],
-        #       'modelRotation': [[0.03042728640139103,
-        #         0.8777410387992859,
-        #         0.4781683087348938],
-        #        [-0.6386303901672363, 0.38508182764053345, -0.6662305593490601],
-        #        [-0.7689120173454285, -0.2851012349128723, 0.572269082069397]],
-        #       'mouseCoordinates': [713.0, 395.0],
-        #       'openGLcoordinates': [-0.05689147603698075, -0.01672859233804047]}}
-    
+
         mbs.WaitForUserToContinue() #press space to continue
         
         simulate = True #set false to show last stored solution
@@ -818,12 +810,31 @@ if True:
             SC.visualizationSettings.general.autoFitScene = False
             sol = LoadSolutionFile('coordinatesSolution.txt')
             if False: #directly show animation
-                AnimateSolution(mbs, solution=sol, rowIncrement = 5, timeout=0.01, 
+                AnimateSolution(mbs, solution=sol, rowIncrement = 1, timeout=0.01, 
                                 createImages = False, runLoop = True)
             else: #interact with animation
                 from exudyn.interactive import SolutionViewer
-                SolutionViewer(mbs, sol, rowIncrement=5, timeout=0.02)
-        
+                SolutionViewer(mbs, sol, rowIncrement=1, timeout=0.02)
+
+
+        if False: #draw with matplotlib, export as pdf
+            SC.visualizationSettings.exportImages.saveImageFormat = "TXT"
+            SC.visualizationSettings.exportImages.saveImageAsTextTriangles=True
+            SC.RedrawAndSaveImage() #uses default filename
+            
+            from exudyn.plot import LoadImage, PlotImage
+
+            # plot 2D
+            # data = LoadImage('images/frame00000.txt', trianglesAsLines=True)
+            # PlotImage(data, HT=HomogeneousTransformation(RotationMatrixZ(0.5*pi)@RotationMatrixX(0.5*pi), [0,0,0]), 
+            #           lineWidths=0.5, lineStyles='-', title='', closeAll=True, plot3D=False,
+            #           fileName='images/test.pdf')
+            
+            data = LoadImage('images/frame00000.txt', trianglesAsLines=False)
+            PlotImage(data, HT=HomogeneousTransformation(2.5*RotationMatrixZ(0.5*pi)@RotationMatrixY(-0.5*pi), [0,1,0.25]), 
+                      lineWidths=0.5, lineStyles='-', triangleEdgeColors='black', triangleEdgeWidths=0.25, title='', closeAll=True, plot3D=True,
+                      fileName='images/test3D.pdf')
+                    
         SC.WaitForRenderEngineStopFlag()
         exu.StopRenderer() #safely close rendering window!
         lastRenderState = SC.GetRenderState() #store model view for next simulation

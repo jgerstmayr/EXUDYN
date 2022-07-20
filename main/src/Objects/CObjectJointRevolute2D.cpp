@@ -65,8 +65,8 @@ void CObjectJointRevolute2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, R
 			jacobian_ODE2(0, i + columnsOffset) = markerData.GetMarkerData(1).positionJacobian(0, i);
 			jacobian_ODE2(1, i + columnsOffset) = markerData.GetMarkerData(1).positionJacobian(1, i);
 		}
-		jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); //for safety? check that this cannot happen ...
-		//jacobian_AE.SetNumberOfRowsAndColumns(0, 0);//for safety!
+		//jacobian_ODE2_t.SetNumberOfRowsAndColumns(0, 0); 
+		//jacobian_AE.SetNumberOfRowsAndColumns(0, 0);
 	}
 	else
 	{

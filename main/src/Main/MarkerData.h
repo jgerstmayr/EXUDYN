@@ -49,6 +49,10 @@ public:
 	//! helper function for e.g. CMarkerBodyCable2DCoordinates:
 	const Real& GetHelper() const { return angularVelocityLocal[0]; }
 	Real& GetHelper() { return angularVelocityLocal[0]; }
+	const Real& GetHelper2() const { return angularVelocityLocal[1]; }
+	Real& GetHelper2() { return angularVelocityLocal[1]; }
+	const ResizableMatrix& GetHelperMatrix() const { return jacobianDerivative; }
+	ResizableMatrix& GetHelperMatrix() { return jacobianDerivative; }
 };
 
 //this class contains several MarkerData structures ==> derive from this class for special connectors

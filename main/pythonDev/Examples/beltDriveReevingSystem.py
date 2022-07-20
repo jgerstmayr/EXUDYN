@@ -380,6 +380,7 @@ if useContact:
         else:
             cableList = ancf[1]
             mCircleBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oMass))
+            #mCircleBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMass))
             for k in range(len(cableList)):
                 initialGapList = [0.1]*nSegments + [-2]*(nSegments) + [0]*(nSegments) #initial gap of 0., isStick (0=slip, +-1=stick, -2 undefined initial state), lastStickingPosition (0)
 

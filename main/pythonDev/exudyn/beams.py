@@ -11,12 +11,11 @@
 # Notes:	For a list of plot colors useful for matplotlib, see also utilities.PlotLineCode(...)
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-from math import sin, cos, pi, sqrt , asin, acos, atan2
+from math import sin, cos, pi, asin, atan2 #, sqrt, acos
 import copy 
 import numpy as np #for loading
 import exudyn #for sensor index
-from exudyn.itemInterface import *
-# from exudyn.basicUtilities import NormL2, Normalize, VSub #for GenerateStraightLineANCFCable2D
+import exudyn.itemInterface as eii
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -68,7 +67,7 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
         cableNodeList+=[nodeNumber0]
         nCable0=nodeNumber0
     else:
-        nCable0 = mbs.AddNode(Point2DS1(referenceCoordinates=[positionOfNode0[0],positionOfNode0[1],cableSlopeVec[0],cableSlopeVec[1]])) 
+        nCable0 = mbs.AddNode(eii.Point2DS1(referenceCoordinates=[positionOfNode0[0],positionOfNode0[1],cableSlopeVec[0],cableSlopeVec[1]])) 
         cableNodeList+=[nCable0]
     
     cableTemplate.physicsLength = cableLength
@@ -84,7 +83,7 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
         if (i==numberOfElements-1 and nodeNumber1!=-1):
             nCableLast = nodeNumber1
         else:
-            nCableLast = mbs.AddNode(Point2DS1(referenceCoordinates=[positionOfCurrentNode[0],positionOfCurrentNode[1],cableSlopeVec[0],cableSlopeVec[1]]))
+            nCableLast = mbs.AddNode(eii.Point2DS1(referenceCoordinates=[positionOfCurrentNode[0],positionOfCurrentNode[1],cableSlopeVec[0],cableSlopeVec[1]]))
         
         cableNodeList+=[nCableLast]
         
@@ -94,30 +93,30 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
         cableObjectList+=[oCable]
 
         if np.linalg.norm(massProportionalLoad) != 0:
-            mBodyMassLast = mbs.AddMarker(MarkerBodyMass(bodyNumber=oCable))
-            lLoadLast=mbs.AddLoad(Gravity(markerNumber=mBodyMassLast,loadVector=massProportionalLoad))
+            mBodyMassLast = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=oCable))
+            lLoadLast=mbs.AddLoad(eii.Gravity(markerNumber=mBodyMassLast,loadVector=massProportionalLoad))
             loadList+=[lLoadLast]
         
     
     if (np.linalg.norm(list(fixedConstraintsNode0)+list(fixedConstraintsNode1)) ) != 0:
         # ground "node" at 0,0,0:
-        nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) 
+        nGround = mbs.AddNode(eii.NodePointGround(referenceCoordinates=[0,0,0])) 
         # add marker to ground "node": 
-        mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0))
+        mGround = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0))
     
 
         for j in range(4):            
             if fixedConstraintsNode0[j] != 0:            
                 #fix ANCF coordinates of first node
-                mCableCoordinateConstraint0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nCable0, coordinate=j)) #add marker
-                cBoundaryCondition=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint0])) #add constraint
+                mCableCoordinateConstraint0 = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber = nCable0, coordinate=j)) #add marker
+                cBoundaryCondition=mbs.AddObject(eii.CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint0])) #add constraint
                 cableCoordinateConstraintList+=[cBoundaryCondition]
             
         for j in range(4):            
             if fixedConstraintsNode1[j] != 0:                 
                 # fix right end position coordinates, i.e., add markers and constraints:
-                mCableCoordinateConstraint1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nCableLast, coordinate=j))#add marker
-                cBoundaryCondition=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint1])) #add constraint  
+                mCableCoordinateConstraint1 = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber = nCableLast, coordinate=j))#add marker
+                cBoundaryCondition=mbs.AddObject(eii.CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint1])) #add constraint  
                 cableCoordinateConstraintList+=[cBoundaryCondition]
             
     
@@ -187,7 +186,7 @@ def GenerateCircularArcANCFCable2D(mbs, positionOfNode0, radius, startAngle, arc
     if (nodeNumber0!=-1):
         cableNodeList+=[nodeNumber0]
     else:
-        nCable0 = mbs.AddNode(Point2DS1(referenceCoordinates=[positionOfNode0[0],positionOfNode0[1],cableSlopeVec[0],cableSlopeVec[1]])) 
+        nCable0 = mbs.AddNode(eii.Point2DS1(referenceCoordinates=[positionOfNode0[0],positionOfNode0[1],cableSlopeVec[0],cableSlopeVec[1]])) 
         cableNodeList+=[nCable0]
         if verboseMode:
             exudyn.Print('  node 0: pos=', positionOfNode0[0],',',positionOfNode0[1],', slope=',cableSlopeVec[0],',',cableSlopeVec[1])
@@ -217,7 +216,7 @@ def GenerateCircularArcANCFCable2D(mbs, positionOfNode0, radius, startAngle, arc
         if (i==numberOfElements-1 and nodeNumber1!=-1):
             nCableLast = nodeNumber1
         else:
-            nCableLast = mbs.AddNode(Point2DS1(referenceCoordinates=[positionOfCurrentNode[0],positionOfCurrentNode[1],
+            nCableLast = mbs.AddNode(eii.Point2DS1(referenceCoordinates=[positionOfCurrentNode[0],positionOfCurrentNode[1],
                                                                      vArc[0],vArc[1]]))
 
         # exudyn.Print('cableNodeList=',cableNodeList)
@@ -230,30 +229,30 @@ def GenerateCircularArcANCFCable2D(mbs, positionOfNode0, radius, startAngle, arc
         cableObjectList+=[oCable]
 
         if np.linalg.norm(massProportionalLoad) != 0:
-            mBodyMassLast = mbs.AddMarker(MarkerBodyMass(bodyNumber=oCable))
-            lLoadLast=mbs.AddLoad(Gravity(markerNumber=mBodyMassLast,loadVector=massProportionalLoad))
+            mBodyMassLast = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=oCable))
+            lLoadLast=mbs.AddLoad(eii.Gravity(markerNumber=mBodyMassLast,loadVector=massProportionalLoad))
             loadList+=[lLoadLast]
         
     
     if (np.linalg.norm(list(fixedConstraintsNode0)+list(fixedConstraintsNode1)) ) != 0:
         # ground "node" at 0,0,0:
-        nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) 
+        nGround = mbs.AddNode(eii.NodePointGround(referenceCoordinates=[0,0,0])) 
         # add marker to ground "node": 
-        mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0))
+        mGround = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0))
     
 
         for j in range(4):            
             if fixedConstraintsNode0[j] != 0:            
                 #fix ANCF coordinates of first node
-                mCableCoordinateConstraint0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nCable0, coordinate=j)) #add marker
-                cBoundaryCondition=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint0])) #add constraint
+                mCableCoordinateConstraint0 = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber = nCable0, coordinate=j)) #add marker
+                cBoundaryCondition=mbs.AddObject(eii.CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint0])) #add constraint
                 cableCoordinateConstraintList+=[cBoundaryCondition]
             
         for j in range(4):            
             if fixedConstraintsNode1[j] != 0:                 
                 # fix right end position coordinates, i.e., add markers and constraints:
-                mCableCoordinateConstraint1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nCableLast, coordinate=j))#add marker
-                cBoundaryCondition=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint1])) #add constraint  
+                mCableCoordinateConstraint1 = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber = nCableLast, coordinate=j))#add marker
+                cBoundaryCondition=mbs.AddObject(eii.CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint1])) #add constraint  
                 cableCoordinateConstraintList+=[cBoundaryCondition]
 
      
@@ -536,7 +535,7 @@ def PointsAndSlopes2ANCFCable2D(mbs, ancfPointsSlopes, elementLengths, cableTemp
     cableCoordinateConstraintList=[]
     
     # add first ANCF node (straight reference configuration):
-    nodeNumber0 = mbs.AddNode(Point2DS1(referenceCoordinates=ancfPointsSlopes[0])) 
+    nodeNumber0 = mbs.AddNode(eii.Point2DS1(referenceCoordinates=ancfPointsSlopes[0])) 
     cableNodeList+=[nodeNumber0]
     cableNodePositionList+=[ancfPointsSlopes[0][0],ancfPointsSlopes[0][1],0] #3D
     numberOfElements = len(ancfPointsSlopes)-1
@@ -553,7 +552,7 @@ def PointsAndSlopes2ANCFCable2D(mbs, ancfPointsSlopes, elementLengths, cableTemp
         if (i==numberOfElements-1 and firstNodeIsLastNode):
             nodeNumberLast = nodeNumber0
         else:
-            nodeNumberLast = mbs.AddNode(Point2DS1(referenceCoordinates=ancfPointsSlopes[i+1]))
+            nodeNumberLast = mbs.AddNode(eii.Point2DS1(referenceCoordinates=ancfPointsSlopes[i+1]))
         cableNodeList+=[nodeNumberLast]
 
         cableNodePositionList+=[ancfPointsSlopes[i+1][0],ancfPointsSlopes[i+1][1],0] #3D
@@ -565,16 +564,16 @@ def PointsAndSlopes2ANCFCable2D(mbs, ancfPointsSlopes, elementLengths, cableTemp
         cableObjectList+=[oCable]
 
         if np.linalg.norm(massProportionalLoad) != 0:
-            mBodyMassLast = mbs.AddMarker(MarkerBodyMass(bodyNumber=oCable))
-            lLoadLast=mbs.AddLoad(Gravity(markerNumber=mBodyMassLast,loadVector=massProportionalLoad))
+            mBodyMassLast = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=oCable))
+            lLoadLast=mbs.AddLoad(eii.Gravity(markerNumber=mBodyMassLast,loadVector=massProportionalLoad))
             loadList+=[lLoadLast]
         
     
     if (np.linalg.norm(list(fixedConstraintsNode0)+list(fixedConstraintsNode1)) ) != 0:
         # ground "node" at 0,0,0:
-        nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) 
+        nGround = mbs.AddNode(eii.NodePointGround(referenceCoordinates=[0,0,0])) 
         # add marker to ground "node": 
-        mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0))
+        mGround = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0))
     
         if (firstNodeIsLastNode and
             np.linalg.norm(fixedConstraintsNode1)  != 0):
@@ -583,18 +582,18 @@ def PointsAndSlopes2ANCFCable2D(mbs, ancfPointsSlopes, elementLengths, cableTemp
         for j in range(4):            
             if fixedConstraintsNode0[j] != 0:            
                 #fix ANCF coordinates of first node
-                mCableCoordinateConstraint0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nodeNumber0, coordinate=j)) #add marker
-                cBoundaryCondition=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint0],
-                                                                      visualization=VCoordinateConstraint(drawSize=graphicsSizeConstraints))) #add constraint
+                mCableCoordinateConstraint0 = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber = nodeNumber0, coordinate=j)) #add marker
+                cBoundaryCondition=mbs.AddObject(eii.CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint0],
+                                                                      visualization=eii.VCoordinateConstraint(drawSize=graphicsSizeConstraints))) #add constraint
                 cableCoordinateConstraintList+=[cBoundaryCondition]
             
         for j in range(4):            
             if fixedConstraintsNode1[j] != 0:                 
                 # fix right end position coordinates, i.e., add markers and constraints:
-                mCableCoordinateConstraint1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nodeNumberLast, 
+                mCableCoordinateConstraint1 = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber = nodeNumberLast, 
                                                                                  coordinate=j))#add marker
-                cBoundaryCondition=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint1],
-                                                                      visualization=VCoordinateConstraint(drawSize=graphicsSizeConstraints))) #add constraint
+                cBoundaryCondition=mbs.AddObject(eii.CoordinateConstraint(markerNumbers=[mGround,mCableCoordinateConstraint1],
+                                                                      visualization=eii.VCoordinateConstraint(drawSize=graphicsSizeConstraints))) #add constraint
                 cableCoordinateConstraintList+=[cBoundaryCondition]
             
     
@@ -616,14 +615,14 @@ def GenerateSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,loc
     offset = 0          #first cable element has offset 0
     
     for item in cableObjectList: #create markers for cable elements
-        m = mbs.AddMarker(MarkerBodyCable2DCoordinates(bodyNumber = item))
+        m = mbs.AddMarker(eii.MarkerBodyCable2DCoordinates(bodyNumber = item))
         cableMarkerList += [m]
         offsetList += [offset]  
         offset += mbs.GetObjectParameter(item,'physicsLength')
     
-    nodeDataSlidingJoint = mbs.AddNode(NodeGenericData(initialCoordinates=[localMarkerIndexOfStartCable,slidingCoordinateStartPosition],numberOfDataCoordinates=2)) #initial index in cable list
+    nodeDataSlidingJoint = mbs.AddNode(eii.NodeGenericData(initialCoordinates=[localMarkerIndexOfStartCable,slidingCoordinateStartPosition],numberOfDataCoordinates=2)) #initial index in cable list
     
-    oSlidingJoint = mbs.AddObject(ObjectJointSliding2D(markerNumbers=[markerBodyPositionOfSlidingBody,cableMarkerList[localMarkerIndexOfStartCable]], 
+    oSlidingJoint = mbs.AddObject(eii.ObjectJointSliding2D(markerNumbers=[markerBodyPositionOfSlidingBody,cableMarkerList[localMarkerIndexOfStartCable]], 
                                                       slidingMarkerNumbers=cableMarkerList, 
                                                       slidingMarkerOffsets=offsetList, 
                                                       nodeNumber=nodeDataSlidingJoint))
@@ -645,13 +644,13 @@ def GenerateAleSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,
     usePenalty = (penaltyStiffness!=0) #penaltyStiffness=0 ==> no penalty formulation!
     
     for item in cableObjectList: #create markers for cable elements
-        m = mbs.AddMarker(MarkerBodyCable2DCoordinates(bodyNumber = item))
+        m = mbs.AddMarker(eii.MarkerBodyCable2DCoordinates(bodyNumber = item))
         cableMarkerList += [m]
         offsetList += [offset]  
         offset += mbs.GetObjectParameter(item,'physicsLength')
     
-    nodeDataAleSlidingJoint = mbs.AddNode(NodeGenericData(initialCoordinates=[localMarkerIndexOfStartCable],numberOfDataCoordinates=1)) #initial index in cable list   
-    oAleSlidingJoint = mbs.AddObject(ObjectJointALEMoving2D(markerNumbers=[markerBodyPositionOfSlidingBody,cableMarkerList[localMarkerIndexOfStartCable]], 
+    nodeDataAleSlidingJoint = mbs.AddNode(eii.NodeGenericData(initialCoordinates=[localMarkerIndexOfStartCable],numberOfDataCoordinates=1)) #initial index in cable list   
+    oAleSlidingJoint = mbs.AddObject(eii.ObjectJointALEMoving2D(markerNumbers=[markerBodyPositionOfSlidingBody,cableMarkerList[localMarkerIndexOfStartCable]], 
                                                       slidingMarkerNumbers=cableMarkerList, slidingMarkerOffsets=offsetList,
                                                       nodeNumbers=[nodeDataAleSlidingJoint, AleNode], slidingOffset=AleSlidingOffset,activeConnector=activeConnector,
                                                       usePenaltyFormulation = usePenalty, penaltyStiffness=penaltyStiffness))

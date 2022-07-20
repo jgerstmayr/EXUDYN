@@ -29,7 +29,7 @@ Currently, the module structure is simple:
     \item[--] \texttt{exudyn.basicUtilities}: contains basic helper classes, without importing numpy
     \item[--] \texttt{exudyn.rigidBodyUtilities}: contains important helper classes for creation of rigid body inertia, rigid bodies, and rigid body joints; includes helper functions for rotation parameterization, rotation matrices, homogeneous transformations, etc.
     \item[--] \texttt{exudyn.graphicsDataUtilities}: provides some basic drawing utilities, definition of colors and basic drawing objects (including \acs{STL} import); rotation/translation of graphicsData objects
-    \item[--] \texttt{exudyn.plot}: containing helper functions, which are physics related such as friction
+    \item[--] \texttt{exudyn.plot}: contains PlotSensor(...), a very versatile interface to matplotlib and other valuable helper functions
     \item[--] \texttt{exudyn.processing}: methods for optimization, parameter variation, sensitivity analysis, etc.
     \item[--] \texttt{exudyn.FEM}: everything related to finite element import and creation of model order reduction flexible bodies
     \item[--] \texttt{exudyn.robotics}: submodule containing several helper modules related to manipulators (\texttt{robotics}, \texttt{robotics.models}), mobile robots (\texttt{robotics.mobile}), trajectory generation (\texttt{robotics.motion}), etc.
@@ -568,7 +568,7 @@ We are trying hard to achieve error-free algorithms of physically correct models
 \mysubsubsection{Contact problems}
 %
 Since Q4 2021 a contact module is available in \codeName. 
-This separate module \texttt{GeneralContact} is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
+This separate module \texttt{GeneralContact} \[still under developement, consider with care!\] is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
 \onlyRST{
 
 .. |cpic1| image:: docs/theDoc/figures/contactTests.png
@@ -595,7 +595,7 @@ This separate module \texttt{GeneralContact} is highly optimized and implemented
 
 \noindent \mybold{Note}:
 \bi
-\item \texttt{GeneralContact} is (in most cases) restricted to dynamic simulation (explicit or implicit) if friction is used; without friction, it also works in the static case
+\item \texttt{GeneralContact} is (in most cases) restricted to dynamic simulation (explicit or implicit \[still under developement, consider with care!\]) if friction is used; without friction, it also works in the static case
 \item in addition to \texttt{GeneralContact} there are special objects, in particular for rolling and simple 1D contacts, that are available as single objects, cf.\ \texttt{ObjectConnectorRollingDiscPenalty}
 \item \texttt{GeneralContact} is recommended to be used for large numbers of contacts, while the single objects are integrated more directly into mbs.
 \ei
@@ -603,8 +603,8 @@ This separate module \texttt{GeneralContact} is highly optimized and implemented
 \noindent Currently, \texttt{GeneralContact} includes:
 \bi
   \item Sphere-Sphere contact (attached to any marker); may represent circle-circle contact in 2D
-  \item Triangles mounted on rigid bodies, in contact with Spheres
-  \item ANCFCable2D contacting with spheres (which then represent circles in 2D)
+  \item Triangles mounted on rigid bodies, in contact with Spheres [only explicit]
+  \item ANCFCable2D contacting with spheres (which then represent circles in 2D) [partially implicit, needs revision]
 \ei
 For details on the contact formulations, see \refSection{secContactTheory}.
 

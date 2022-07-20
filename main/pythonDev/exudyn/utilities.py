@@ -14,9 +14,9 @@
 # Utility functions and structures for Exudyn
 
 import numpy as np #LoadSolutionFile
-import time        #AnimateSolution
-import copy as copy #to be able to copy e.g. lists
-from math import sin, cos, pi
+#import time        #AnimateSolution
+#import copy as copy #to be able to copy e.g. lists
+from math import sin, cos, pi, sqrt
 
 import exudyn
 from exudyn.basicUtilities import *

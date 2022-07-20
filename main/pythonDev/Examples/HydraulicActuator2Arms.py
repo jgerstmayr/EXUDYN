@@ -12,10 +12,9 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
-from exudyn.itemInterface import *
 from exudyn.utilities import *
 
-import numpy as np
+#import numpy as np
 from math import sin, cos, sqrt,pi
 
 SC = exu.SystemContainer()
@@ -28,8 +27,8 @@ addArm2 = True
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #one arm mechanism
 background = [GraphicsDataCheckerBoard(point=[L,0,-2*b],size=5)]
-background += GraphicsDataCylinder(pAxis=[0,-0.25*L-0.5*b,-0.5*b], vAxis= [0,0,1.*b], radius = 0.25*b, 
-                                     color= color4grey, addEdges=True, nTiles=32)
+background += [GraphicsDataCylinder(pAxis=[0,-0.25*L-0.5*b,-0.5*b], vAxis= [0,0,1.*b], radius = 0.25*b, 
+                                     color= color4grey, addEdges=True, nTiles=32)]
 
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= background)))
 massRigid = 12*10
@@ -42,31 +41,31 @@ g = 9.81    # gravity
 #graphics for arm1
 colCyl = color4orange
 colArm = color4dodgerblue
-graphicsList = GraphicsDataOrthoCubePoint(size= [L,0.75*b,1.4*b], color= colArm, addEdges=True)
+graphicsList = [GraphicsDataOrthoCubePoint(size= [L,0.75*b,1.4*b], color= colArm, addEdges=True)]
 
-graphicsList += GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.75*b], vAxis= [0,0,1.5*b], radius = 0.55*b, 
-                                     color= colArm, addEdges=True, nTiles=32)
+graphicsList += [GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.75*b], vAxis= [0,0,1.5*b], radius = 0.55*b, 
+                                     color= colArm, addEdges=True, nTiles=32)]
 
-graphicsList += GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.8*b], vAxis= [0,0,1.6*b], radius = 0.25*b, 
-                                     color= color4grey, addEdges=True, nTiles=32)
+graphicsList += [GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.8*b], vAxis= [0,0,1.6*b], radius = 0.25*b, 
+                                     color= color4grey, addEdges=True, nTiles=32)]
 
 #bolt
-graphicsList += GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.15*b, 
-                                     color= color4grey, addEdges=True, nTiles=32)
+graphicsList += [GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.15*b, 
+                                     color= color4grey, addEdges=True, nTiles=32)]
 
-graphicsList += GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b,-0.6*b], vAxis= [0,0,0.25*b], radius = 0.3*b, 
-                                     color= colArm, addEdges=True, nTiles=32)
-graphicsList += GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b, 0.6*b], vAxis= [0,0,-0.25*b], radius = 0.3*b, 
-                                     color= colArm, addEdges=True, nTiles=32)
+graphicsList += [GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b,-0.6*b], vAxis= [0,0,0.25*b], radius = 0.3*b, 
+                                     color= colArm, addEdges=True, nTiles=32)]
+graphicsList += [GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b, 0.6*b], vAxis= [0,0,-0.25*b], radius = 0.3*b, 
+                                     color= colArm, addEdges=True, nTiles=32)]
 
 if addArm2:
-    graphicsList += GraphicsDataCylinder(pAxis=[ 0.25*L,-0.5*b,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.15*b, 
-                                         color= color4grey, addEdges=True, nTiles=32)
+    graphicsList += [GraphicsDataCylinder(pAxis=[ 0.25*L,-0.5*b,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.15*b, 
+                                         color= color4grey, addEdges=True, nTiles=32)]
 
-    graphicsList += GraphicsDataCylinder(pAxis=[ 0.25*L,-0.5*b,-0.6*b], vAxis= [0,0,0.25*b], radius = 0.3*b, 
-                                         color= colArm, addEdges=True, nTiles=32)
-    graphicsList += GraphicsDataCylinder(pAxis=[ 0.25*L,-0.5*b, 0.6*b], vAxis= [0,0,-0.25*b], radius = 0.3*b, 
-                                         color= colArm, addEdges=True, nTiles=32)
+    graphicsList += [GraphicsDataCylinder(pAxis=[ 0.25*L,-0.5*b,-0.6*b], vAxis= [0,0,0.25*b], radius = 0.3*b, 
+                                         color= colArm, addEdges=True, nTiles=32)]
+    graphicsList += [GraphicsDataCylinder(pAxis=[ 0.25*L,-0.5*b, 0.6*b], vAxis= [0,0,-0.25*b], radius = 0.3*b, 
+                                         color= colArm, addEdges=True, nTiles=32)]
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -132,22 +131,22 @@ oHA = mbs.AddObject(HydraulicActuatorSimple(markerNumbers=[mGH, mRH],
 #graphics for arm2
 oHA2 = -1
 if addArm2:
-    graphicsList = GraphicsDataOrthoCubePoint(size= [L,0.75*b,1.4*b], color= colArm, addEdges=True)
+    graphicsList = [GraphicsDataOrthoCubePoint(size= [L,0.75*b,1.4*b], color= colArm, addEdges=True)]
 
-    graphicsList += GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.75*b], vAxis= [0,0,1.5*b], radius = 0.55*b, 
-                                         color= colArm, addEdges=True, nTiles=32)
+    graphicsList += [GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.75*b], vAxis= [0,0,1.5*b], radius = 0.55*b, 
+                                         color= colArm, addEdges=True, nTiles=32)]
 
-    graphicsList += GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.8*b], vAxis= [0,0,1.6*b], radius = 0.25*b, 
-                                         color= color4grey, addEdges=True, nTiles=32)
+    graphicsList += [GraphicsDataCylinder(pAxis=[-0.5*L,0,-0.8*b], vAxis= [0,0,1.6*b], radius = 0.25*b, 
+                                         color= color4grey, addEdges=True, nTiles=32)]
 
     #bolt
-    graphicsList += GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.15*b, 
-                                         color= color4grey, addEdges=True, nTiles=32)
+    graphicsList += [GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b,-0.7*b], vAxis= [0,0,1.4*b], radius = 0.15*b, 
+                                         color= color4grey, addEdges=True, nTiles=32)]
 
-    graphicsList += GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b,-0.6*b], vAxis= [0,0,0.25*b], radius = 0.3*b, 
-                                         color= colArm, addEdges=True, nTiles=32)
-    graphicsList += GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b, 0.6*b], vAxis= [0,0,-0.25*b], radius = 0.3*b, 
-                                         color= colArm, addEdges=True, nTiles=32)
+    graphicsList += [GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b,-0.6*b], vAxis= [0,0,0.25*b], radius = 0.3*b, 
+                                         color= colArm, addEdges=True, nTiles=32)]
+    graphicsList += [GraphicsDataCylinder(pAxis=[-0.25*L,-0.5*b, 0.6*b], vAxis= [0,0,-0.25*b], radius = 0.3*b, 
+                                         color= colArm, addEdges=True, nTiles=32)]
     #+++++++++++++++++++++++++++++++++++++++++++++++++++
 
     #print(graphicsList)
@@ -264,6 +263,7 @@ SC.visualizationSettings.window.renderWindowSize = [1600,1200]
 exu.StartRenderer()
 mbs.WaitForUserToContinue()
 
+#use %timeit to measure time!
 exu.SolveDynamic(mbs, simulationSettings, showHints=False)
 
 

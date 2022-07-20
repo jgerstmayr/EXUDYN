@@ -5,6 +5,7 @@
 #
 # Author:   Johannes Gerstmayr 
 # Date:     2021-04-20
+# Update:   2022-07-11: runs now with pip installed ngsolve on Python 3.10
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
@@ -21,7 +22,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 import numpy as np
-
+import time
 #import timeit
 
 import exudyn.basicUtilities as eb
@@ -64,10 +65,7 @@ Emodulus=1e7*10
 nu=0.3
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
-if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
-    import sys
-    #adjust path to your ngsolve installation (if not added to global path)
-    sys.path.append('C:/ProgramData/ngsolve/lib/site-packages') 
+if True: #needs netgen/ngsolve to be installed with pip install; to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
 
     import ngsolve as ngs
     import netgen
@@ -91,7 +89,9 @@ if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https:
         # import netgen
         import netgen.gui
         ngs.Draw (mesh)
-        netgen.Redraw()
+        for i in range(10000000):
+            netgen.Redraw() #this makes the window interactive
+            time.sleep(0.05)
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #Use fem to import FEM model and create FFRFreducedOrder object
@@ -159,6 +159,7 @@ if True: #now import mesh as mechanical model to EXUDYN
     objFFRF = cms.AddObjectFFRFreducedOrder(mbs, positionRef=[0,0,0], 
                                                   initialVelocity=[0,0,0], 
                                                   initialAngularVelocity=[0,0,0],
+                                                  gravity=[0,-9.81,0],
                                                   color=[0.1,0.9,0.1,1.],
                                                   )
     
@@ -185,10 +186,6 @@ if True: #now import mesh as mechanical model to EXUDYN
         import sys
         sys.exit()
 
-    #add gravity (not necessary if user functions used)
-    oFFRF = objFFRF['oFFRFreducedOrder']
-    mBody = mbs.AddMarker(MarkerBodyMass(bodyNumber=oFFRF))
-    mbs.AddLoad(LoadMassProportional(markerNumber=mBody, loadVector= [0,-9.81,0]))
     
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #add markers and joints
@@ -220,6 +217,8 @@ if True: #now import mesh as mechanical model to EXUDYN
                              fileName=fileDir+'nMidDisplacementCMS'+str(nModes)+'Test.txt', 
                              outputVariableType = exu.OutputVariableType.Displacement))
         
+    # mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[GraphicsDataOrthoCubeLines(0, 0, 0, 1, 1, 1)])))
+    # mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[GraphicsDataOrthoCubeLines(0.2, 0.2, 0.2, 0.8, 0.8, 0.8)], color=color4red)))
     mbs.Assemble()
     
     simulationSettings = exu.SimulationSettings()
@@ -290,11 +289,27 @@ if True: #now import mesh as mechanical model to EXUDYN
             
         uTip = mbs.GetSensorValues(sensTipDispl)[1]
         print("nModes=", nModes, ", tip displacement=", uTip)
+
+        if False:
+            # SC.visualizationSettings.exportImages.saveImageFileName = "images/test"
+            SC.visualizationSettings.exportImages.saveImageFormat = "TXT"
+            SC.visualizationSettings.exportImages.saveImageAsTextTriangles=True
+            SC.RedrawAndSaveImage() #uses default filename
+            
+            from exudyn.plot import LoadImage, PlotImage
+            data = LoadImage('images/frame00000.txt', trianglesAsLines=True)
+            #PlotImage(data)
+            PlotImage(data, HT=HomogeneousTransformation(RotationMatrixZ(0.*pi)@RotationMatrixX(0.*pi), [0,0,0]), lineWidths=0.5, lineStyles='-', 
+                      triangleEdgeColors='b', triangleEdgeWidths=0.1, title='', closeAll=True, plot3D=True)
+            # PlotImage(data, HT=HomogeneousTransformation(RotationMatrixZ(0.5*pi)@RotationMatrixX(0.5*pi), [0,0,0]), lineWidths=0.5, title='', closeAll=True, fileName='images/test.pdf')
+
             
         if useGraphics:
             SC.WaitForRenderEngineStopFlag()
             exu.StopRenderer() #safely close rendering window!
-    
+
+
+   
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #convergence of static tip-displacement with free-free eigenmodes:

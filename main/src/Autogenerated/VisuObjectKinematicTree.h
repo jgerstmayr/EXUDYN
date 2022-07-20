@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectKinematicTree
-* @brief        A special object to represent open kinematic trees using minimum coordinate formulation (UNDER DEVELOPMENT!). The kinematic tree is defined by lists of joint types, parents, inertia parameters, etc.\ per link (body). Every link is defined by a previous joint and a coordinate transformation from the previous link to this link's joint coordinates. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.
+* @brief        A special object to represent open kinematic trees using minimum coordinate formulation (NOT FULLY TESTED!). The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.\ per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl.\ translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-05  09:56:57 (last modified)
+* @date         2022-07-03  17:32:55 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -25,7 +25,7 @@
 class VisualizationObjectKinematicTree: public VisualizationObjectSuperElement // AUTO: 
 {
 protected: // AUTO: 
-    bool showLinks;                               //!< AUTO: set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link
+    bool showLinks;                               //!< AUTO: set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link; NOTE visualization of joint and COM frames can be modified via visualizationSettings.bodies.kinematicTree
     bool showJoints;                              //!< AUTO: set true, if joints shall be shown; if graphicsDataList is empty, a standard drawing for joints is used (drawing a cylinder for revolute joints; size relative to frame size in KinematicTree visualization settings)
     Float4 color;                                 //!< AUTO: RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used
     MatrixI triangleMesh;                         //!< AUTO: unused in KinematicTree
@@ -45,11 +45,11 @@ public: // AUTO:
     };
 
     // AUTO: access functions
-    //! AUTO:  Write (Reference) access to:set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link
+    //! AUTO:  Write (Reference) access to:set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link; NOTE visualization of joint and COM frames can be modified via visualizationSettings.bodies.kinematicTree
     void SetShowLinks(const bool& value) { showLinks = value; }
-    //! AUTO:  Read (Reference) access to:set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link
+    //! AUTO:  Read (Reference) access to:set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link; NOTE visualization of joint and COM frames can be modified via visualizationSettings.bodies.kinematicTree
     const bool& GetShowLinks() const { return showLinks; }
-    //! AUTO:  Read (Reference) access to:set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link
+    //! AUTO:  Read (Reference) access to:set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link; NOTE visualization of joint and COM frames can be modified via visualizationSettings.bodies.kinematicTree
     bool& GetShowLinks() { return showLinks; }
 
     //! AUTO:  Write (Reference) access to:set true, if joints shall be shown; if graphicsDataList is empty, a standard drawing for joints is used (drawing a cylinder for revolute joints; size relative to frame size in KinematicTree visualization settings)

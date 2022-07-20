@@ -16,6 +16,7 @@
 #include "Utilities/TimerStructure.h" //for local CPU time measurement
 
 #include "Linalg/MatrixContainer.h"	
+#include "Utilities/Parallel.h" //for local CPU time measurement
 
 //#ifdef useMatrixContainerTriplets
 //	#define APPEND_TO_TRIPLETS AppendPure
@@ -81,6 +82,7 @@ void GeneralMatrixEigenSparse::Reset()
 {
 	SetAllZero();
 	triplets.Flush();
+	analyzedPatternLastNNZ = 0;
 //#ifdef useMatrixContainerTriplets
 //	SetAllZero();
 //	triplets.Flush();
@@ -289,7 +291,7 @@ void GeneralMatrixEigenSparse::AddSubmatrixTransposedWithFactor(const Matrix& su
 }
 
 
-//! add possibly GeneralMatrix to this matrix; in case of sparse matrices, only the triplets (row,col,value) are added
+//! add possibly smaller GeneralMatrix to this matrix; in case of sparse matrices, only the triplets (row,col,value) are added
 //! matrix types of submatrix and *this must be same
 //! operations must be both in triplet mode!
 void GeneralMatrixEigenSparse::AddSubmatrix(const GeneralMatrix& submatrix, Index rowOffset, Index columnOffset)
@@ -382,28 +384,74 @@ void GeneralMatrixEigenSparse::FinalizeMatrix()
 //Index TSeigenAnalyzePattern;
 //TimerStructureRegistrator TSReigenAnalyzePattern("eigenAnalyzePattern", TSeigenAnalyzePattern, globalTimers);
 
+#define LinearSolverSuspendWorkers false //maybe this gives better results for large systems, but needs to be adjusted
+#define LinearSolverSuspendWorkersTimeUS 20 //could not find good value; large values raise effort of other functions (mostly subsequent computation of mass matrix)
+
 //! factorize matrix (invert, SparseLU, etc.); -1=success
 Index GeneralMatrixEigenSparse::FactorizeNew(bool ignoreRedundantEquation, Index redundantEquationsStart)
 {
 	CHECKandTHROW(IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::Factorize(): matrix must be built before factorization!");
+	Index nThreads = exuThreading::TaskManager::GetNumThreads();
+	if (LinearSolverSuspendWorkers && nThreads > 1) { exuThreading::task_manager->SuspendWorkers(LinearSolverSuspendWorkersTimeUS); }
 
-	//STARTGLOBALTIMER(TSeigenAnalyzePattern);
-	solver.analyzePattern(matrix);
-	//STOPGLOBALTIMER(TSeigenAnalyzePattern);
+	Index rv = 0;
+	if (!IsSymmetric())
+	{
+		bool reuseFailed = false;
+		if (GetReuseAnalyzedPattern())
+		{
+			if (analyzedPatternLastNNZ != matrix.nonZeros())
+			{
+				solver.analyzePattern(matrix);
+			}
 
-	// Compute the numerical factorization 
-	//STARTGLOBALTIMER(TSeigenFactorize);
-	solver.factorize(matrix);
-	//STOPGLOBALTIMER(TSeigenFactorize);
+			// Compute the numerical factorization 
+			solver.factorize(matrix);
+			rv = solver.info();
+		}
+		//if factorize failed with reuced pattern, repeat step!
+		if (!GetReuseAnalyzedPattern() || (analyzedPatternLastNNZ == matrix.nonZeros() && rv > 0))
+		{
+			reuseFailed = true;
+			solver.analyzePattern(matrix);
+			solver.factorize(matrix);
+		}
 
-	//0: successful factorization
-	//if info = i, and i is
-	//<= A->ncol : U(i, i) is exactly zero.The factorization has been completed, but the factor U is exactly singular, and division by zero will occur if it is used to solve a system of equations.
-	//> A->ncol: number of bytes allocated when memory allocation failure occurred, plus A->ncol.If lwork = -1, it is the estimated amount of space needed, plus A->ncol.
-	Index rv = solver.info();
-	if (!rv) { SetMatrixIsFactorized(true); return -1; }
-	else if (rv <= NumberOfRows()) { return rv - 1;  } //causing row
-	else { return NumberOfRows(); } //undefined error
+		if (LinearSolverSuspendWorkers && nThreads > 1) { exuThreading::task_manager->ResumeWorkers(); }
+
+		//0: successful factorization
+		//if info = i, and i is
+		//<= A->ncol : U(i, i) is exactly zero.The factorization has been completed, but the factor U is exactly singular, and division by zero will occur if it is used to solve a system of equations.
+		//> A->ncol: number of bytes allocated when memory allocation failure occurred, plus A->ncol.If lwork = -1, it is the estimated amount of space needed, plus A->ncol.
+		rv = solver.info();
+		if (!rv)  //success
+		{ 
+			if (reuseFailed) { analyzedPatternLastNNZ = 0; } //for next iteration, do not repeat once if failed
+			else { analyzedPatternLastNNZ = (Index)matrix.nonZeros(); }
+			SetMatrixIsFactorized(true); 
+			return -1; 
+		}
+		analyzedPatternLastNNZ = 0;
+		if (rv <= NumberOfRows()) { return rv - 1; } //causing row
+		else { return NumberOfRows(); } //undefined error
+
+	}
+	else
+	{
+		//STARTGLOBALTIMER(TSeigenAnalyzePattern);
+		solverSymmetric.analyzePattern(matrix);
+		//STOPGLOBALTIMER(TSeigenAnalyzePattern);
+
+		// Compute the numerical factorization 
+		//STARTGLOBALTIMER(TSeigenFactorize);
+		solverSymmetric.factorize(matrix);
+		//STOPGLOBALTIMER(TSeigenFactorize);
+
+		//0: successful factorization; 1: numerical issue
+		rv = solverSymmetric.info();
+		if (rv == 0) { SetMatrixIsFactorized(true); return -1; }
+		else { return NumberOfRows(); } //undefined error; symmetric solver does not determine causing row!
+	}
 }
 
 //! multiply matrix with vector: solution = A*x
@@ -516,6 +564,9 @@ void GeneralMatrixEigenSparse::Solve(const Vector& rhs, Vector& solution)
 {
 	CHECKandTHROW(IsMatrixIsFactorized(), "GeneralMatrixEigenSparse::Solve( ...): matrix is not factorized!");
 
+	//Index nThreads = exuThreading::TaskManager::GetNumThreads();
+	//if (LinearSolverSuspendWorkers && nThreads > 1) { exuThreading::task_manager->SuspendWorkers(1); }
+
 	//will only work for Real==double!!! ==> make type check!
 	Real test=0;
 	Real* testPtr = &test;
@@ -535,14 +586,26 @@ void GeneralMatrixEigenSparse::Solve(const Vector& rhs, Vector& solution)
 	solution.SetNumberOfItems(n);
 	//Eigen::VectorXd x = Eigen::Map<Eigen::VectorXd>(solution.GetDataPointer(), n);
 
+
 	Eigen::VectorXd x;
-	x = solver.solve(b);
+	if (!IsSymmetric())
+	{
+		x = solver.solve(b);
+	}
+	else
+	{
+		x = solverSymmetric.solve(b);
+	}
+
 
 	//STARTGLOBALTIMER(TStimer1);
 	for (Index i = 0; i < n; i++)
 	{
 		solution[i] = x[i];
 	}
+
+	//if (LinearSolverSuspendWorkers && nThreads > 1) { exuThreading::task_manager->ResumeWorkers(); }
+
 	//STOPGLOBALTIMER(TStimer1);
 }
 

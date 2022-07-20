@@ -42,12 +42,15 @@ if useGraphics:
 else:
     sensorWriteToFile = False
 
+jointWidth=0.1
+jointRadius=0.06
+linkWidth=0.1
 
-#changed to new robot structure July 2021:
 graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.15], [0.4,0.4,0.1], color4grey)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
+graphicsBaseList +=[GraphicsDataCylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, color4list[0])] #belongs to first body
 
 ty = 0.03
 tz = 0.04

@@ -45,6 +45,10 @@ __plotSensorDefaults.majorTicksX = 10
 __plotSensorDefaults.majorTicksY = 10
 __plotSensorDefaults.sizeInches=[6.4,4.8]
 
+#practical list of marker styles to be used as list:
+listMarkerStyles = ['x ', '+ ', '* ', '. ', 'd ', 'D ', 's ', 'X ', 'P ', 'v ', '^ ', '< ', '> ', 'o ', 'p ', 'h ', 'H ']
+listMarkerStylesFilled = ['x','+','*','.','d','D','s','X','P','v','^','<','>','o','p','h','H']
+
 #this is the value for a component which indicates to show the norm (e.g. of a vector) instead of the component
 componentNorm = -2 #
 
@@ -163,7 +167,7 @@ def PlotSensorDefaults():
 #  colors: color is automatically selected from colorCodeOffset if colors=[]; otherwise chose from 'b', 'g', 'r', 'c', 'm', 'y', 'k' and many other colors see https://matplotlib.org/stable/gallery/color/named\_colors.html
 #  lineStyles: line style is automatically selected from colorCodeOffset if lineStyles=[]; otherwise define for all lines with string or with list of strings, chosing from '-', '--', '-.', ':', or '' 
 #  lineWidths: float to define line width by float (default=1); either use single float for all sensors or list of floats with length >= number of sensors
-#  markerStyles: if different from [], marker styles are defined as list of marker style strings or single string for one sensor; chose from '.', 'o', 'x', '+', '*', 'd', 'D', 's', 'v', '\^{}', '<', '>', 'p', 'h', 'H', 'X', 'P', and many others, see https://matplotlib.org/stable/api/markers\_api.html ; ADD a space to markers to make them empty (transparent), e.g. 'o ' will create an empty circle 
+#  markerStyles: if different from [], marker styles are defined as list of marker style strings or single string for one sensor; chose from '.', 'o', 'x', '+' ... check listMarkerStylesFilled and listMarkerStyles in exudyn.plot and see https://matplotlib.org/stable/api/markers\_api.html ; ADD a space to markers to make them empty (transparent), e.g. 'o ' will create an empty circle 
 #  markerSizes: float to define marker size by float (default=6); either use single float for all sensors or list of floats with length >= number of sensors 
 #  markerDensity: if int, it defines approx. the total number of markers used along each graph; if float, this defines the distance of markers relative to the diagonal of the plot (default=0.08); if None, it adds a marker to every data point if marker style is specified for sensor
 #  newFigure: if True, a new matplotlib.pyplot figure is created; otherwise, existing figures are overwritten
@@ -216,8 +220,9 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
     #CC = ['k-','g-','b-','r-','c-','m-','y-','k:','g:','b:','r:','c:','m:','y:','k--','g--','b--','r--','c--','m--','y--','k-.','g-.','b-.','r-.','c-.','m-.','y-.']
     
     for key in kwargs:
-        if (key!='minorTicksXon' and key!='minorTicksYon' and key!='sizeInches' and
-            key!='fileCommentChar' and key!='fileDelimiterChar'):
+        if (key!='minorTicksXon' and key!='minorTicksYon' and key!='sizeInches' 
+            and key!='fileCommentChar' and key!='fileDelimiterChar'
+            and key!='logScaleX'  and key!='logScaleY'):
             raise ValueError('PlotSensor: invalid argument: '+key)
 
     if xLabel == 'time (s)':
@@ -282,6 +287,13 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
     
     if closeAll:
         plt.close('all')
+
+    logScaleX = False
+    if 'logScaleX' in kwargs:
+        logScaleX = kwargs['logScaleX']
+    logScaleY = False
+    if 'logScaleY' in kwargs:
+        logScaleY = kwargs['logScaleY']
         
     #increase font size as default is rather small
     plt.rcParams.update({'font.size': fontSize})
@@ -584,6 +596,11 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
         ax.xaxis.set_major_locator(ticker.MaxNLocator(majorTicksX)) 
         ax.yaxis.set_major_locator(ticker.MaxNLocator(majorTicksY)) 
 
+        if logScaleX:
+            plt.xscale('log')
+        if logScaleY:
+            plt.yscale('log')
+
         if 'minorTicksOn' in kwargs:
             if kwargs['minorTicksOn']:
                 ax.minorticks_on()
@@ -729,5 +746,207 @@ def DataArrayFromSensorList(mbs, sensorNumbers, positionList=[], time=''):
             data[i,0] = i
         data[i,1:] = values
     return data
+
+
+#**function: import image text file as exported from RedrawAndSaveImage() with exportImages.saveImageFormat='TXT'; triangles are converted to lines
+#**input: fileName includes directory
+#**output: returns dictionary with according structures
+def LoadImage(fileName, trianglesAsLines = True, verbose=False):
+        
+    with open(fileName) as file:
+        lines = file.readlines()
+
+    if len(lines) == 0:
+        raise ValueError('LoadImage: empty file')
+
+    if lines[0][:-1] != '#Exudyn text image export file':
+        print('WARNING: LoadImage found inconsistent file header:',lines[0])
+    
+    if lines[-1][:-1] != '#END':
+        print('WARNING: LoadImage found inconsistent file ending; expected "END"')
+    
+    i = 1
+    listLines = []
+    listLineColors = [] #line colors as tuples
+    listTriangles = []
+    nSegments = 0
+    actColor = (0,0,0,1)
+    while i < len(lines)-1: #there will be always 1 extra line (or file end)!
+        lineType = lines[i][:-1]
+        data = lines[i+1]
+        if lineType == '#COLOR':
+            actColor = tuple(np.array(data.split(','), dtype=float))
+            # print('color', actColor)
+        elif lineType == '#LINE':
+            splitLine = np.array(data.split(','), dtype=float)
+            listLines += [list(splitLine)]
+            listLineColors += [actColor] #per line
+            nSegments +=int(len(splitLine)/3)-1
+            # print('line', listLines)
+        elif lineType == '#TRIANGLE':
+            splitLine = np.array(data.split(','), dtype=float)
+            linePoints = list(np.array(data.split(','), dtype=float))
+            if trianglesAsLines:
+                linePoints += linePoints[0:3] #add first point as last point
+                listLines += [linePoints]
+                listLineColors += [actColor] #per line
+            else:
+               listTriangles += [(list(splitLine), actColor)]
+        else:
+            i -= 1 #this may be a comment line; just increment by 1
+        
+        i += 2 #always increment by 2
+
+    if verbose:
+        print('number of lines:', len(listLines))
+        print('number of line segments:', nSegments)
+        print('number of triangles:', len(listTriangles))
+        
+    return {'linePoints':listLines, 'lineColors':listLineColors, 'triangles':listTriangles}
+
+#**function: plot image data as provided by LoadImage(...) using matplotlib; (currently) only plots lines; triangles are not processed
+#**input:
+#  imageData: dictionary as provided by LoadImage(...) 
+#  HT: homogeneous transformation, used to transform coordinates; lines are drawn in (x,y) plane
+#  axesEqual: for 2D mode, axis are set equal, otherwise model is distorted
+#  plot3D: in this mode, a 3D visualization is used; triangles are only be displayed in this mode!
+#  lineWidths: width of lines
+#  lineStyles: matplotlib codes for lines
+#  triangleEdgeColors: color for triangle edges as tuple of rgb colors or matplotlib color code strings 'black', 'r', ...
+#  triangleEdgeWidths: width of triangle edges; set to 0 if edges shall not be shown
+#  title: optional string representing plot title 
+#  figureName: optional name for figure, if newFigure=True
+#  fileName: if this string is non-empty, figure will be saved to given path and filename (use figName.pdf to safe as PDF or figName.png to save as PNG image); use matplotlib.use('Agg') in order not to open figures if you just want to save them
+#  fontSize: change general fontsize of axis, labels, etc. (matplotlib default is 12, default in PlotSensor: 16)
+#  closeAll: if True, close all figures before opening new one (do this only in first PlotSensor command!)
+#  azim, elev: for 3D plots: the initial angles for the 3D view in degrees
+def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidths=1, lineStyles='-', 
+              triangleEdgeColors='black', triangleEdgeWidths=0.5,
+              title = '', figureName='', fileName = '', fontSize = 16, closeAll = False,
+              azim=0., elev=0.):
+    from matplotlib import collections  as mc #plot does not accept colors
+    from exudyn.rigidBodyUtilities import HT2rotationMatrix, HT2translation
+    linePoints = imageData['linePoints']
+    lineColors = imageData['lineColors']
+    triangles = imageData['triangles']
+
+    if closeAll:
+        plt.close('all')
+
+    plt.rcParams.update({'font.size': fontSize})
+    fig = plt.figure()
+
+    if figureName!='':
+        if plt.fignum_exists(figureName):
+            plt.close(figureName)
+        fig = plt.figure(figureName)
+    
+    #optional transformation
+    A = HT2rotationMatrix(HT)
+    p0 = HT2translation(HT)
+
+    if not plot3D: #plot in 2D
+        ax = fig.gca()
+        plotData = []
+        colors = []
+        
+        for i, line3D in enumerate(linePoints):
+            # print('line3D:', line3D)
+            nPoints = int(len(line3D)/3)
+    
+            line = (A @ np.array(line3D).reshape((nPoints,3)).T).T.flatten()
+            color = lineColors[i]
+            x = np.zeros(nPoints)
+            y = np.zeros(nPoints)
+            z = np.zeros(nPoints)
+            for j in range(nPoints):
+                x[j] = float(line[j*3+0]+p0[0])
+                y[j] = float(line[j*3+1]+p0[0])
+                z[j] = float(line[j*3+2]+p0[0])
+                
+            for j in range(nPoints-1):
+                plotData += [[(x[j], y[j]), (x[j+1], y[j+1])]] #for plot
+                colors += [color]
+    
+        if plotData != []:
+            collLines = mc.LineCollection(plotData, colors=colors, 
+                                   linewidths=lineWidths, linestyles=lineStyles)
+            ax.add_collection(collLines)
+            ax.set_aspect('equal', 'box') #for 2D only
+
+        if len(triangles) != 0:
+            print('WARNING: PlotImage: triangles are ignored; they can only be plotted if plot3D=True')
+            
+    else: #plot in 3D
+        ax = fig.gca(projection='3d')
+        plotData = []
+        colors = []
+        from mpl_toolkits.mplot3d.art3d import Line3DCollection
+
+        for i, line3D in enumerate(linePoints):
+            # print('line3D:', line3D)
+            nPoints = int(len(line3D)/3)
+
+            line = (A @ np.array(line3D).reshape((nPoints,3)).T).T.flatten()
+            color = lineColors[i]
+            x = np.zeros(nPoints)
+            y = np.zeros(nPoints)
+            z = np.zeros(nPoints)
+            for j in range(nPoints):
+                x[j] = float(line[j*3+0]+p0[0])
+                y[j] = float(line[j*3+1]+p0[1])
+                z[j] = float(line[j*3+2]+p0[2])
+                
+            for j in range(nPoints-1):
+                plotData += [[(x[j], y[j], z[j]), (x[j+1], y[j+1], z[j])]] #for plot
+                colors += [color]
+
+        if plotData != []:
+            collLines = Line3DCollection(plotData, colors=colors, 
+                                   linewidths=lineWidths, linestyles=lineStyles)
+            ax.add_collection3d(collLines)
+
+        ##Poly3DCollection seems not to work!
+        if len(triangles) != 0:
+            triangle_vertices = []
+            colors = []
+            #from mpl_toolkits.mplot3d import Axes3D
+            from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+            pOff = np.array([list(p0),list(p0),list(p0)]).T
+            for i, trig in enumerate(triangles):
+                trigPoints = (A @ np.array(trig[0]).reshape(3,3).T+pOff).T
+                #trigPoints = np.array(trig[0]).reshape(3,3)
+                triangle_vertices += [trigPoints]
+                colors += [np.array(trig[1][0:3])]
+    
+            # fig = plt.figure()
+            # ax = fig.gca(projection='3d')
+            edgeColors = triangleEdgeColors
+            if lineWidths == 0:
+                edgeColors = 'none'
+            collTrigs = Poly3DCollection(triangle_vertices, facecolors=colors, 
+                                         edgecolors=edgeColors, linewidths=triangleEdgeWidths)
+            collTrigs._facecolors2d = ax._facecolor
+            ax.add_collection(collTrigs)
+
+        ax.view_init(elev=0., azim=0.)
+        ax.set_proj_type('ortho') #this is better for e.g. xy view
+        ax.autoscale()
+    #end 3D plotting
+
+    if title!='':
+        plt.title(title)
+
+    plt.autoscale()
+    # plt.margins(0.1)
+
+    plt.tight_layout() #not needed
+    if matplotlib.get_backend() != 'agg': #this is used to avoid showing the figures, if they are just saved
+        plt.show() 
+    
+    if fileName != '':
+        plt.savefig(fileName)
+
+
 
 

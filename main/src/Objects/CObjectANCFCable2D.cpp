@@ -53,11 +53,25 @@ Vector4D CObjectANCFCable2DBase::ComputeShapeFunctions_xx(Real x, Real L)
 	//Real L = GetLength();
 	Real L2 = L * L;
 	Real L3 = L2 * L;
-	return Vector4D({ (12. * x) / L3 - 6. / L2, 
-					 (6. * x) / L2 - 4. / L, 
+	return Vector4D({ (12. * x) / L3 - 6. / L2,
+					 (6. * x) / L2 - 4. / L,
 					 6. / L2 - (12. * x) / L3,
 					 (6. * x) / L2 - 2. / L });
 }
+
+//! get third derivative of compressed shape function vector for slopes
+Vector4D CObjectANCFCable2DBase::ComputeShapeFunctions_xxx(Real x, Real L)
+{
+	//Real L = GetLength();
+	Real L2 = L * L;
+	Real L3 = L2 * L;
+	return Vector4D({ 12. / L3,
+					 6. / L2,
+					 -12. / L3,
+					 6. / L2 });
+}
+
+
 
 //! map element coordinates (position or veloctiy level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc.
 Vector2D CObjectANCFCable2DBase::MapCoordinates(const Vector4D& SV, const LinkedDataVector& q0, const LinkedDataVector& q1)
@@ -91,7 +105,8 @@ void CObjectANCFCable2DBase::ComputeCurrentNodeVelocities(ConstSizeVector<4>& qN
 	qNode1.CopyFrom(((CNodeODE2*)GetCNode(1))->GetCurrentCoordinateVector_t()); //velocity coordinates node 1
 }
 
-void CObjectANCFCable2DBase::ComputeCurrentObjectCoordinates(ConstSizeVector<8>& qANCF) const
+template<Index ancfSize>
+void CObjectANCFCable2DBase::ComputeCurrentObjectCoordinates(ConstSizeVector<ancfSize>& qANCF) const
 {
 	const int ns = 4; //number of shape functions
 	LinkedDataVector qNode0(qANCF, 0, ns);		//link node values to element vector
@@ -102,9 +117,17 @@ void CObjectANCFCable2DBase::ComputeCurrentObjectCoordinates(ConstSizeVector<8>&
 
 	qNode0 += ((CNodeODE2*)GetCNode(0))->GetReferenceCoordinateVector(); //reference coordinates + displacements
 	qNode1 += ((CNodeODE2*)GetCNode(1))->GetReferenceCoordinateVector();
+
+	if (ancfSize > ns * 2) //for ALE-ANCF
+	{
+		CHECKandTHROW(ancfSize == ns * 2 + 1, "CObjectANCFCable2DBase::ComputeCurrentObjectCoordinates: invalid size");
+		LinkedDataVector qALE(qANCF, 2*ns, 1);
+		((CNodeODE2*)GetCNode(2))->GetCurrentAndReferenceODE2CoordinateVector(qALE); 
+	}
 }
 
-void CObjectANCFCable2DBase::ComputeCurrentObjectVelocities(ConstSizeVector<8>& qANCF_t) const
+template<Index ancfSize>
+void CObjectANCFCable2DBase::ComputeCurrentObjectVelocities(ConstSizeVector<ancfSize>& qANCF_t) const
 {
 	const int ns = 4; //number of shape functions
 	LinkedDataVector qNode0(qANCF_t, 0, ns);		//link node values to element vector
@@ -112,6 +135,11 @@ void CObjectANCFCable2DBase::ComputeCurrentObjectVelocities(ConstSizeVector<8>& 
 
 	qNode0 = ((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector_t(); //displacement coordinates node 0
 	qNode1 = ((CNodeODE2*)GetCNode(1))->GetCurrentCoordinateVector_t(); //displacement coordinates node 1
+
+	if (ancfSize > ns * 2) //for ALE-ANCF
+	{
+		qANCF_t[ancfSize-1] = ((CNodeODE2*)GetCNode(2))->GetCurrentCoordinate_t(0);
+	}
 }
 
 //! Computational function: compute mass matrix
@@ -159,11 +187,24 @@ void CObjectANCFCable2DBase::ComputeMassMatrix(EXUmath::MatrixContainer& massMat
 void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
 	const Index ns = 4;   //number of shape functions
-	ConstSizeVector<2 * ns> qANCF;
-	ConstSizeVector<2 * ns> qANCF_t;
-	ComputeCurrentObjectCoordinates(qANCF);
-	ComputeCurrentObjectVelocities(qANCF_t);
-	ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t);
+	//pout << "GetNumberOfNodes() =" << GetNumberOfNodes() << "\n";
+	if (GetNumberOfNodes() == 2)
+	{
+		ConstSizeVector<2 * ns> qANCF;
+		ConstSizeVector<2 * ns> qANCF_t;
+		ComputeCurrentObjectCoordinates(qANCF);
+		ComputeCurrentObjectVelocities(qANCF_t);
+		ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t);
+	}
+	else //ALE
+	{
+		ConstSizeVector<2 * ns+1> qANCF;
+		ConstSizeVector<2 * ns+1> qANCF_t;
+		ComputeCurrentObjectCoordinates(qANCF);
+		ComputeCurrentObjectVelocities(qANCF_t);
+		ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t);
+
+	}
 }
 
 ////does not resolve problem in general; find other ways!
@@ -187,16 +228,18 @@ void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber)
 //}
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-template<class TReal>
+template<class TReal, Index ancfSize>
 void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, 
-	const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF_t) const
+	const ConstSizeVectorBase<TReal, ancfSize>& qANCF, const ConstSizeVectorBase<TReal, ancfSize>& qANCF_t) const
 {
-	ode2Lhs.SetNumberOfItems(nODE2coordinates);
+	ode2Lhs.SetNumberOfItems(ancfSize); //works both for ANCF and ALE-ANCF
 	ode2Lhs.SetAll(0.);
 	//compute work of elastic forces:
 
 	const Index dim = 2;  //2D finite element
 	const Index ns = 4;   //number of shape functions
+
+	bool isALE = (ancfSize == nODE2coordinates+1); //simple check to see, if ale terms shall be added
 
 	Real L = GetLength();
 	Real EA, EI, axialStrain0, curvature0, bendingDamping, axialDamping;
@@ -215,7 +258,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 		qNode1ref = ((CNodeODE2*)GetCNode(1))->GetReferenceCoordinateVector();
 	}
 
-	ConstSizeVectorBase<TReal, ns*dim> elasticForces;
+	ConstSizeVectorBase<TReal, ancfSize> elasticForces;
 
 	//numerical integration:
 	//accurate integration: axialStrain = order9, curvature = order5
@@ -253,9 +296,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 		Vector4D SVx = ComputeShapeFunctions_x(x, L);
 		Real integrationFactor = (0.5*(b - a)*integrationWeights[cnt++]);
 
-		//Vector2D rx = MapCoordinates(SVx, q0, q1);
 		SlimVectorBase<TReal, dim> rx = MapCoordinates<TReal>(SVx, qANCF);
-
 
 		TReal rxNorm2 = rx.GetL2NormSquared();
 		TReal rxNorm = sqrt(rxNorm2);
@@ -277,6 +318,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 			axialStrain_t = (rx * rx_t) / rxNorm; //rate of axial strain
 		}
 
+		//term due to variation of axialStrain
 		for (Index i = 0; i < dim; i++)
 		{
 			for (Index j = 0; j < ns; j++)
@@ -284,6 +326,22 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 				elasticForces[j*dim + i] = 1. / rxNorm * SVx[j] * rx[i];
 			}
 		}
+
+		if (isALE)
+		{
+			if (AddALEvariation())
+			{
+				Vector4D SVxx = ComputeShapeFunctions_xx(x, L);
+				SlimVectorBase<TReal, dim> rxx = MapCoordinates<TReal>(SVxx, qANCF);
+
+				elasticForces[ancfSize - 1] = (rx * rxx) / rxNorm;
+			}
+			else
+			{
+				elasticForces[ancfSize - 1] = 0.; //must be set to zero!
+			}
+		}
+
 		//elasticForces *= integrationFactor * GetParameters().physicsAxialStiffness * (axialStrain - GetParameters().physicsReferenceAxialStrain);
 		elasticForces *= integrationFactor * (EA * (axialStrain - axialStrainRef) + axialDamping * axialStrain_t);
 
@@ -349,7 +407,6 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 			curvatureRef += StrainIsRelativeToReference()*(rxCrossRxxRef / rxNorm2ref);
 		}
 
-
 		TReal inv2RxNorm2 = 1. / (rxNorm2*rxNorm2);			//g2inv
 		TReal tempF = 2. * rxCrossRxx*inv2RxNorm2;			//fn; f ... fraction numerator
 		TReal tempG = rxNorm2 * inv2RxNorm2;				//gn; g ... fraction denominator
@@ -388,6 +445,22 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 				elasticForces[j*dim + i] = df * tempG - tempF * dg;
 			}
 		}
+		if (isALE)
+		{
+			if (AddALEvariation())
+			{
+				Vector4D SVxxx = ComputeShapeFunctions_xxx(x, L);
+				SlimVectorBase<TReal, dim> rxxx = MapCoordinates<TReal>(SVxxx, qANCF);
+
+				elasticForces[ancfSize - 1] = inv2RxNorm2 * (rxNorm2*rx.CrossProduct2D(rxxx) - 2.*rxCrossRxx*(rx*rxx));
+			}
+			else
+			{
+				elasticForces[ancfSize - 1] = 0.; //must be set to zero!
+			}
+		}
+
+
 		//elasticForces *= integrationFactor * GetParameters().physicsBendingStiffness * (curvature - GetParameters().physicsReferenceCurvature);
 		elasticForces *= integrationFactor * (EI * (curvature - curvatureRef) + bendingDamping * curvature_t);
 

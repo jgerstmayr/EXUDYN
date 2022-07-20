@@ -21,6 +21,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 import numpy as np
+import time
 
 #import timeit
 
@@ -28,7 +29,6 @@ import exudyn.basicUtilities as eb
 import exudyn.rigidBodyUtilities as rb
 import exudyn.utilities as eu
 
-import numpy as np
 
 useGraphics = True
 fileName = 'testData/netgenHinge' #for load/save of FEM data

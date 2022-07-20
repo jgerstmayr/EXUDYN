@@ -51,36 +51,6 @@ enum class CObjectType {
 //keep these lists synchronized with PybindModule.cpp lists
 };
 
-
-namespace JacobianType {
-//! used mainly to show which jacobians are available analytically in objects; can be combined binary to see, which jacobian is available
-	enum Type {
-		_None = 0,				//marks that no type is available
-		ODE2_ODE2 = 1 << 1,		//derivative of ODE2 equations with respect to ODE2 variables
-		ODE2_ODE2_t = 1 << 2,	//derivative of ODE2 equations with respect to ODE2_t (velocity) variables
-		ODE1_ODE1 = 1 << 3,		//derivative of ODE1 equations with respect to ODE1 variables
-		ODE1_ODE2 = 1 << 4,		//derivative of ODE1 equations with respect to ODE2 variables
-		ODE1_ODE2_t = 1 << 5,	//derivative of ODE1 equations with respect to ODE2_t variables
-		ODE2_ODE1 = 1 << 6,		//derivative of ODE2 equations with respect to ODE1 variables
-		AE_ODE2 = 1 << 7,		//derivative of AE (algebraic) equations with respect to ODE2 variables
-		AE_ODE2_t = 1 << 8,		//derivative of AE (algebraic) equations with respect to ODE2_t (velocity) variables
-		AE_ODE1 = 1 << 9,		//derivative of AE (algebraic) equations with respect to ODE1 variables
-		AE_AE = 1 << 10,			//derivative of AE (algebraic) equations with respect to AE variables
-		//
-		ODE2_ODE2_function = 1 << 11,	//function available for derivative of ODE2 equations with respect to ODE2 variables
-		ODE2_ODE2_t_function = 1 << 12,	//function available for derivative of ODE2 equations with respect to ODE2_t (velocity) variables; MUST exist, if ODE2_ODE2_function exists!
-		ODE1_ODE1_function = 1 << 13,	//function available for derivative of ODE1 equations with respect to ODE1 variables
-		ODE1_ODE2_function = 1 << 14,	//...
-		ODE1_ODE2_t_function = 1 << 15,	//...
-		ODE2_ODE1_function = 1 << 16,	//...
-
-		AE_ODE2_function = 1 << 17,		//function available for derivative of AE (algebraic) equations with respect to ODE2 variables
-		AE_ODE2_t_function = 1 << 18,	//function available for derivative of AE (algebraic) equations with respect to ODE2_t (velocity) variables
-		AE_ODE1_function = 1 << 19,		//function available for derivative of AE (algebraic) equations with respect to ODE1 variables
-		AE_AE_function = 1 << 20,		//function available for derivative of AE (algebraic) equations with respect to AE variables
-	};
-}
-
 //! temporary structure for computation of jacobian (e.g. temporary matrices or vectors)
 class JacobianTemp {
 public:
@@ -228,7 +198,7 @@ public:
 	//! get access function 'accessType' in (matrix) value
 	virtual void GetAccessFunction(AccessFunctionType accessType, Matrix& value) const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetAccessFunction"); }
 	//! get output variable 'variableType' in (vector) value
-	virtual void GetOutputVariable(OutputVariableType variableType, Vector& value) const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetOutputVariable"); } //configuration not needed in general objects!
+	virtual void GetOutputVariable(OutputVariableType variableType, Vector& value, ConfigurationType configuration, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObject::GetOutputVariable"); } //configuration not needed in general objects!
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // OTHER FUNCTIONS

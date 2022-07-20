@@ -170,6 +170,39 @@ inline const char* GetSensorTypeString(SensorType var)
 	}
 }
 
+//! used mainly to show which jacobians are available analytically in objects; can be combined binary to see, which jacobian is available
+namespace JacobianType {
+	//! used mainly to show which jacobians are available analytically in objects; can be combined binary to see, which jacobian is available
+	enum Type {
+		_None = 0,				//marks that no type is available
+		ODE2_ODE2 = 1 << 1,		//derivative of ODE2 equations with respect to ODE2 variables
+		ODE2_ODE2_t = 1 << 2,	//derivative of ODE2 equations with respect to ODE2_t (velocity) variables
+		ODE1_ODE1 = 1 << 3,		//derivative of ODE1 equations with respect to ODE1 variables
+		ODE1_ODE2 = 1 << 4,		//derivative of ODE1 equations with respect to ODE2 variables
+		ODE1_ODE2_t = 1 << 5,	//derivative of ODE1 equations with respect to ODE2_t variables
+		ODE2_ODE1 = 1 << 6,		//derivative of ODE2 equations with respect to ODE1 variables
+		AE_ODE2 = 1 << 7,		//derivative of AE (algebraic) equations with respect to ODE2 variables
+		AE_ODE2_t = 1 << 8,		//derivative of AE (algebraic) equations with respect to ODE2_t (velocity) variables
+		AE_ODE1 = 1 << 9,		//derivative of AE (algebraic) equations with respect to ODE1 variables
+		AE_AE = 1 << 10,			//derivative of AE (algebraic) equations with respect to AE variables
+		//
+		ODE2_ODE2_function = 1 << 11,	//function available for derivative of ODE2 equations with respect to ODE2 variables
+		ODE2_ODE2_t_function = 1 << 12,	//function available for derivative of ODE2 equations with respect to ODE2_t (velocity) variables; MUST exist, if ODE2_ODE2_function exists!
+		ODE1_ODE1_function = 1 << 13,	//function available for derivative of ODE1 equations with respect to ODE1 variables
+		ODE1_ODE2_function = 1 << 14,	//...
+		ODE1_ODE2_t_function = 1 << 15,	//...
+		ODE2_ODE1_function = 1 << 16,	//...
+
+		AE_ODE2_function = 1 << 17,		//function available for derivative of AE (algebraic) equations with respect to ODE2 variables
+		AE_ODE2_t_function = 1 << 18,	//function available for derivative of AE (algebraic) equations with respect to ODE2_t (velocity) variables
+		AE_ODE1_function = 1 << 19,		//function available for derivative of AE (algebraic) equations with respect to ODE1 variables
+		AE_AE_function = 1 << 20,		//function available for derivative of AE (algebraic) equations with respect to AE variables
+
+		ALL_AE_DERIV = AE_ODE2 + AE_ODE2_t + AE_ODE1 + AE_AE //sums up all bits for AE derivatives ==> for ObjectJacobianAE
+	};
+
+}
+
 
 //! OutputVariable used for output data in objects, nodes, loads, ...
 //enum class OutputVariableType : unsigned __int64 { //or uint64_t from stdint.h; should work for larger enums...
@@ -574,7 +607,8 @@ typedef std::vector<Joint::Type> JointTypeList;
 enum class LinearSolverType {
 	_None = 0,			//marks that no type is used
 	EXUdense = 1,		//use internal dense matrix (e.g. matrix inverse for factorization)
-	EigenSparse = 2		//use Eigen::SparseMatrix
+	EigenSparse = 2,	//use Eigen::SparseMatrix
+	EigenSparseSymmetric = 3	//use Eigen::SparseMatrix, symmetric mode (faster)
 };
 
 //! ostream operator for printing of enum class
@@ -585,6 +619,7 @@ inline std::ostream& operator<<(std::ostream& os, LinearSolverType value)
 	case LinearSolverType::_None:			return os << "_None"; break;
 	case LinearSolverType::EXUdense:			return os << "EXUdense"; break;
 	case LinearSolverType::EigenSparse:		return os << "EigenSparse"; break;
+	case LinearSolverType::EigenSparseSymmetric:		return os << "EigenSparseSymmetric"; break;
 	default: 		return os << "LinearSolverType::invalid";
 	}
 }
@@ -624,6 +659,7 @@ inline std::ostream& operator<<(std::ostream& os, DynamicSolverType value)
 	case DynamicSolverType::ExplicitMidpoint:	return os << "ExplicitMidpoint"; break;
 	case DynamicSolverType::RK33:				return os << "RK33"; break;
 	case DynamicSolverType::RK44:				return os << "RK44"; break;
+	case DynamicSolverType::RK67:				return os << "RK67"; break;
 	case DynamicSolverType::ODE23:				return os << "ODE23"; break;
 	case DynamicSolverType::DOPRI5:				return os << "DOPRI5"; break;
 	case DynamicSolverType::DVERK6:				return os << "DVERK6"; break;

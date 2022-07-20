@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -153,7 +153,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -233,7 +233,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -301,7 +301,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -431,7 +431,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -513,7 +513,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -574,7 +574,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -787,7 +787,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -953,7 +953,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -974,6 +974,7 @@ public: // AUTO:
   bool ignoreRedundantConstraints;                //!< AUTO: [ONLY implemented for dense matrices] False: standard way, fails if redundant equations or singular matrices occur; True: if redundant constraints appear, the solver tries to resolve them by setting according Lagrange multipliers to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour
   bool ignoreSingularJacobian;                    //!< AUTO: [ONLY implemented for dense matrices] False: standard way, fails if jacobian is singular; True: if singularities appear in jacobian (e.g. no equation attributed to a node, redundant equations, zero mass matrix, zero eigenvalue for static problem, etc.), the jacobian inverse is resolved such that according solution variables are set to zero; this may help, but it MAY LEAD TO ERRONEOUS BEHAVIOUR; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!
   Real pivotTreshold;                             //!< AUTO: treshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity
+  bool reuseAnalyzedPattern;                      //!< AUTO: [ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(...) and should be handled with care!
   bool showCausingItems;                          //!< AUTO: False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!
 
 
@@ -984,6 +985,7 @@ public: // AUTO:
     ignoreRedundantConstraints = false;
     ignoreSingularJacobian = false;
     pivotTreshold = 0;
+    reuseAnalyzedPattern = false;
     showCausingItems = true;
   };
 
@@ -1000,6 +1002,7 @@ public: // AUTO:
     os << "  ignoreRedundantConstraints = " << ignoreRedundantConstraints << "\n";
     os << "  ignoreSingularJacobian = " << ignoreSingularJacobian << "\n";
     os << "  pivotTreshold = " << pivotTreshold << "\n";
+    os << "  reuseAnalyzedPattern = " << reuseAnalyzedPattern << "\n";
     os << "  showCausingItems = " << showCausingItems << "\n";
     os << "\n";
   }
@@ -1019,7 +1022,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1037,45 +1040,75 @@ public: // AUTO:
 class Parallel // AUTO: 
 {
 public: // AUTO: 
+  Index multithreadedLLimitJacobians;             //!< AUTO: compute jacobians (ODE2, AE, ...) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index multithreadedLLimitLoads;                 //!< AUTO: compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index multithreadedLLimitMassMatrices;          //!< AUTO: compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index multithreadedLLimitResiduals;             //!< AUTO: compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
   Index numberOfThreads;                          //!< AUTO: number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores)
-  bool parallelizeJacobians;                      //!< AUTO: (not available yet) compute jacobians multi-threaded (only makes sense for medium to large systems!)
-  bool parallelizeMassMatrix;                     //!< AUTO: (not available yet) compute mass matrix multi-threaded (only makes sense for medium to large systems!)
-  bool parallelizeResiduals;                      //!< AUTO: (not available yet) compute RHS vectors of objects and connectors and loads multi-threaded (only makes sense for medium to large systems!)
-  bool stopThreadsInSerialSections;               //!< AUTO: (not available yet) for large scale problems, if steps take longer than 5 ms, parallel threads are stopped in serial regions (etc. for solver) to improve overall performance
-  bool useMTforSolver;                            //!< AUTO: (not available yet) use multi-threaded optimized vector, vector-matrix and matrix-matrix operations for solver and system operations (only makes sense for medium to large systems!)
-  bool useSIMDforSolver;                          //!< AUTO: (not available yet) use AVX optimized vector, vector-matrix and matrix-matrix operations for solver and system operations (may already speedup for 16 coordinates)
+  Index taskSplitMinItems;                        //!< AUTO: number of items from which on the tasks are split into subtasks (which slightly increases threading performance; this may be critical for smaller number of objects, should be roughly between 50 and 5000; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index taskSplitTasksPerThread;                  //!< AUTO: this is the number of subtasks that every thread receives; minimum is 1, the maximum should not be larger than 100; this factor is 1 as long as the taskSplitMinItems is not reached; flag is copied into MainSystem internal flag at InitializeSolverData(...)
 
 
 public: // AUTO: 
   //! AUTO: default constructor with parameter initialization
   Parallel()
   {
+    multithreadedLLimitJacobians = 20;
+    multithreadedLLimitLoads = 20;
+    multithreadedLLimitMassMatrices = 20;
+    multithreadedLLimitResiduals = 20;
     numberOfThreads = 1;
-    parallelizeJacobians = true;
-    parallelizeMassMatrix = true;
-    parallelizeResiduals = true;
-    stopThreadsInSerialSections = true;
-    useMTforSolver = true;
-    useSIMDforSolver = true;
+    taskSplitMinItems = 50;
+    taskSplitTasksPerThread = 16;
   };
 
   // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: compute jacobians (ODE2, AE, ...) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  void PySetMultithreadedLLimitJacobians(const Index& multithreadedLLimitJacobiansInit) { multithreadedLLimitJacobians = EXUstd::GetSafelyPInt(multithreadedLLimitJacobiansInit,"multithreadedLLimitJacobians"); }
+  //! AUTO: Read (Copy) access to: compute jacobians (ODE2, AE, ...) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index PyGetMultithreadedLLimitJacobians() const { return Index(multithreadedLLimitJacobians); }
+
+  //! AUTO: Set function (needed in pybind) for: compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  void PySetMultithreadedLLimitLoads(const Index& multithreadedLLimitLoadsInit) { multithreadedLLimitLoads = EXUstd::GetSafelyPInt(multithreadedLLimitLoadsInit,"multithreadedLLimitLoads"); }
+  //! AUTO: Read (Copy) access to: compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index PyGetMultithreadedLLimitLoads() const { return Index(multithreadedLLimitLoads); }
+
+  //! AUTO: Set function (needed in pybind) for: compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  void PySetMultithreadedLLimitMassMatrices(const Index& multithreadedLLimitMassMatricesInit) { multithreadedLLimitMassMatrices = EXUstd::GetSafelyPInt(multithreadedLLimitMassMatricesInit,"multithreadedLLimitMassMatrices"); }
+  //! AUTO: Read (Copy) access to: compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index PyGetMultithreadedLLimitMassMatrices() const { return Index(multithreadedLLimitMassMatrices); }
+
+  //! AUTO: Set function (needed in pybind) for: compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  void PySetMultithreadedLLimitResiduals(const Index& multithreadedLLimitResidualsInit) { multithreadedLLimitResiduals = EXUstd::GetSafelyPInt(multithreadedLLimitResidualsInit,"multithreadedLLimitResiduals"); }
+  //! AUTO: Read (Copy) access to: compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index PyGetMultithreadedLLimitResiduals() const { return Index(multithreadedLLimitResiduals); }
+
   //! AUTO: Set function (needed in pybind) for: number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores)
   void PySetNumberOfThreads(const Index& numberOfThreadsInit) { numberOfThreads = EXUstd::GetSafelyPInt(numberOfThreadsInit,"numberOfThreads"); }
   //! AUTO: Read (Copy) access to: number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores)
   Index PyGetNumberOfThreads() const { return Index(numberOfThreads); }
 
+  //! AUTO: Set function (needed in pybind) for: number of items from which on the tasks are split into subtasks (which slightly increases threading performance; this may be critical for smaller number of objects, should be roughly between 50 and 5000; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  void PySetTaskSplitMinItems(const Index& taskSplitMinItemsInit) { taskSplitMinItems = EXUstd::GetSafelyPInt(taskSplitMinItemsInit,"taskSplitMinItems"); }
+  //! AUTO: Read (Copy) access to: number of items from which on the tasks are split into subtasks (which slightly increases threading performance; this may be critical for smaller number of objects, should be roughly between 50 and 5000; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index PyGetTaskSplitMinItems() const { return Index(taskSplitMinItems); }
+
+  //! AUTO: Set function (needed in pybind) for: this is the number of subtasks that every thread receives; minimum is 1, the maximum should not be larger than 100; this factor is 1 as long as the taskSplitMinItems is not reached; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  void PySetTaskSplitTasksPerThread(const Index& taskSplitTasksPerThreadInit) { taskSplitTasksPerThread = EXUstd::GetSafelyPInt(taskSplitTasksPerThreadInit,"taskSplitTasksPerThread"); }
+  //! AUTO: Read (Copy) access to: this is the number of subtasks that every thread receives; minimum is 1, the maximum should not be larger than 100; this factor is 1 as long as the taskSplitMinItems is not reached; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index PyGetTaskSplitTasksPerThread() const { return Index(taskSplitTasksPerThread); }
+
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
     os << "Parallel" << ":\n";
+    os << "  multithreadedLLimitJacobians = " << multithreadedLLimitJacobians << "\n";
+    os << "  multithreadedLLimitLoads = " << multithreadedLLimitLoads << "\n";
+    os << "  multithreadedLLimitMassMatrices = " << multithreadedLLimitMassMatrices << "\n";
+    os << "  multithreadedLLimitResiduals = " << multithreadedLLimitResiduals << "\n";
     os << "  numberOfThreads = " << numberOfThreads << "\n";
-    os << "  parallelizeJacobians = " << parallelizeJacobians << "\n";
-    os << "  parallelizeMassMatrix = " << parallelizeMassMatrix << "\n";
-    os << "  parallelizeResiduals = " << parallelizeResiduals << "\n";
-    os << "  stopThreadsInSerialSections = " << stopThreadsInSerialSections << "\n";
-    os << "  useMTforSolver = " << useMTforSolver << "\n";
-    os << "  useSIMDforSolver = " << useSIMDforSolver << "\n";
+    os << "  taskSplitMinItems = " << taskSplitMinItems << "\n";
+    os << "  taskSplitTasksPerThread = " << taskSplitTasksPerThread << "\n";
     os << "\n";
   }
 
@@ -1094,7 +1127,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-06-27 (last modfied)
+* @date         AUTO: 2022-07-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

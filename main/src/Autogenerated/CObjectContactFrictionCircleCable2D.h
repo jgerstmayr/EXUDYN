@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-03-28  18:54:30 (last modified)
+* @date         2022-07-09  14:42:35 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -23,13 +23,12 @@
 #include "System/ItemIndices.h"
 
 constexpr Index CObjectContactFrictionCircleCable2DmaxNumberOfSegments = 12; //maximum number of contact segments
-constexpr Index CObjectContactFrictionCircleCable2DmaxObject0Coordinates = 12; //this is a non-optimal solution; used for a constsizevector in the computation of the action on the body of marker0
 
 //! AUTO: Parameters for class CObjectContactFrictionCircleCable2DParameters
 class CObjectContactFrictionCircleCable2DParameters // AUTO: 
 {
 public: // AUTO: 
-    ArrayIndex markerNumbers;                     //!< AUTO: a marker \f$m0\f$ with position and orientation  and a marker \f$m1\f$ of type BodyCable2DShape; together defining the contact geometry
+    ArrayIndex markerNumbers;                     //!< AUTO: a marker \f$m0\f$ with position and orientation and a marker \f$m1\f$ of type BodyCable2DShape; together defining the contact geometry
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with 3 \f$\times n_{cs}\f$  dataCoordinates (used for active set strategy \f$\ra\f$ hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*\f$n_{cs}\f$+[-2]*\f$n_{cs}\f$+[0.]*\f$n_{cs}\f$, meaning that there is no initial contact with undefined slip/stick
     Index numberOfContactSegments;                //!< AUTO: number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker
     Real contactStiffness;                        //!< AUTO: contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) \f$f_n\f$ act in contact normal direction only upon penetration
@@ -60,7 +59,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectContactFrictionCircleCable2D
-* @brief        A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a Rigid-Body Marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with 3\f$\times\f$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position].
+* @brief        A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a RigidBody Marker, from node or object) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with 3\f$\times\f$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position]. The connector works with Cable2D and ALECable2D, HOWEVER, due to conceptual differences the (tangential) frictionStiffness cannot be used with ALECable2D; if using, it gives wrong tangential stresses, even though it may work in general.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

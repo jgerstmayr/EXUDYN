@@ -743,6 +743,14 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         sList[3]+=space4+'//! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)\n'
         sList[3]+=space4+'virtual void Set' + visuBaseClass + '(' + visuBaseClass + '* p' + visuBaseClass + ') { ' + visuClassVariable + ' = (' + visuClassStr + '*)p' + visuBaseClass + '; }\n\n'
 
+    addGraphicsData = ''
+    boolAddGraphicsData = ''
+
+    if baseClass == 'Object':
+        addGraphicsData = ', addGraphicsData'
+        boolAddGraphicsData = 'bool addGraphicsData=false'
+
+
     #print(cntParameters)
     #add parameter structures and access functions
     for i in range(2): # 0...comp parameters, 1...main parameters
@@ -832,14 +840,15 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 destStr = destFolder + 'Get' + pstr[0].upper() + pstr[1:] + '()'
             
             typeCastStr = ConvertParameter2Python(TypeConversion(parameter['type'], typeCasts)) #conversion for Matrix3DList => PyMatrix3DList
+
             #dictionary access:
             if parameter['cFlags'].find('I') != -1: #'I' means add dictionary access
                 parRead = '' #used for dictionary read and for parameter read
                 parWrite = '' #used for dictionary write and for parameter write
                 if parameter['type'] == 'BodyGraphicsData': #special conversion routine
-                    dictListRead[i] +=space8+'d["' + pyName + '"] = PyGetBodyGraphicsDataDictionary(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
+                    dictListRead[i] +=space8+'d["' + pyName + '"] = PyGetBodyGraphicsDataList(' + destStr + addGraphicsData+'); //! AUTO: generate dictionary with special function\n'
                 elif parameter['type'] == 'BodyGraphicsDataList': #special conversion routine
-                    dictListRead[i] +=space8+'d["' + pyName + '"] = PyGetBodyGraphicsDataList(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
+                    dictListRead[i] +=space8+'d["' + pyName + '"] = PyGetBodyGraphicsDataListOfLists(' + destStr + addGraphicsData+'); //! AUTO: generate dictionary with special function\n'                    
                 elif IsInternalSetGetParameter(parameter['type']):
                     parRead = 'GetInternal'+ parameter['type'] +'()'                    
                 elif parameter['type'] == 'Matrix6D':
@@ -899,9 +908,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     elif IsInternalSetGetParameter(parameter['type']):
                         dictListWrite[i]+='SetInternal' + parameter['type'] + '(d["' +  pyName + '"]); /*! AUTO:  safely cast to C++ type*/'
                     elif parameter['type'] == 'BodyGraphicsData': #special conversion routine
-                        dictListWrite[i]+='PyWriteBodyGraphicsData(d, "' +  pyName + '", ' + destStr + '); /*! AUTO: convert dict to BodyGraphicsData*/'
+                        dictListWrite[i]+='PyWriteBodyGraphicsDataList(d, "' +  pyName + '", ' + destStr + '); /*! AUTO: convert dict to BodyGraphicsData*/'
                     elif parameter['type'] == 'BodyGraphicsDataList': #special conversion routine
-                        dictListWrite[i]+='PyWriteBodyGraphicsDataList(d, "' +  pyName + '", ' + destStr + '); /*! AUTO: convert dict to BodyGraphicsDataList*/'
+                        dictListWrite[i]+='PyWriteBodyGraphicsDataListOfLists(d, "' +  pyName + '", ' + destStr + '); /*! AUTO: convert dict to BodyGraphicsDataList*/'
                     else:
                         dictStr = 'd["' + pyName + '"]'
                         if isPyFunction: #in case of function, special conversion and tests are necessary (function is either 0 or a python function)
@@ -1031,7 +1040,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 
     #+++++++++++++++++++++++++++++++++++++++++++++++
     sList[3] += space4+'//! AUTO:  dictionary read access\n'
-    sList[3] += space4+'virtual py::dict GetDictionary() const override\n'
+    sList[3] += space4+'virtual py::dict GetDictionary('+boolAddGraphicsData+') const override\n'
     sList[3] += space4+'{\n'
     sList[3] += space8+'auto d = py::dict();\n'
     sList[3] += space8+'d["' + typeStr + '"] = (std::string)GetTypeName();\n'

@@ -15,12 +15,12 @@
 
 #constants and fixed structures:
 import numpy as np
-from math import pi, sin, cos#, sqrt
-from copy import copy, deepcopy
+#from math import pi, sin, cos#, sqrt
+from copy import deepcopy
 
-import exudyn as exu
-from exudyn.rigidBodyUtilities import Skew, Skew2Vec
-from exudyn.robotics import *
+#import exudyn as exu
+import exudyn.rigidBodyUtilities as erb
+#from exudyn.robotics import *
 
 #check with Corke Toolbox:
 # https://github.com/petercorke/spatialmath-python
@@ -30,29 +30,29 @@ from exudyn.robotics import *
 #the following functions are defined here to fit into the original Featherstone algorithm
 #rotations are transposed / inverse
 def RotationX2T66Inverse(angle):
-    return RotationX2T66(angle).T
+    return erb.RotationX2T66(angle).T
 
 #the following functions are defined here to fit into the original Featherstone algorithm
 #rotations are transposed / inverse
 def RotationY2T66Inverse(angle):
-    return RotationY2T66(angle).T
+    return erb.RotationY2T66(angle).T
 
 #the following functions are defined here to fit into the original Featherstone algorithm
 #rotations are transposed / inverse
 def RotationZ2T66Inverse(angle):
-    return RotationZ2T66(angle).T
+    return erb.RotationZ2T66(angle).T
 
 #compute inverse 6x6 transformation matrix for translation along X axis; output: first 3 components for rotation, second 3 components for translation!
 def TranslationX2T66Inverse(translation):
-    return Translation2T66([-translation,0,0])
+    return erb.Translation2T66([-translation,0,0])
 
 #compute inverse 6x6 transformation matrix for translation along Y axis; output: first 3 components for rotation, second 3 components for translation!
 def TranslationY2T66Inverse(translation):
-    return Translation2T66([0,-translation,0])
+    return erb.Translation2T66([0,-translation,0])
 
 #compute inverse 6x6 transformation matrix for translation along Z axis; output: first 3 components for rotation, second 3 components for translation!
 def TranslationZ2T66Inverse(translation):
-    return Translation2T66([0,0,-translation])
+    return erb.Translation2T66([0,0,-translation])
 
 
 
@@ -63,7 +63,7 @@ def TranslationZ2T66Inverse(translation):
 #  inertia: 3x3 matrix (list of lists / 2D array) w.r.t. center of mass
 #**output: 6x6 numpy array for further use in minimum coordinates formulation
 def MassCOMinertia2T66(mass, centerOfMass, inertia):
-    C = Skew(centerOfMass)
+    C = erb.Skew(centerOfMass)
     return np.block([
         [inertia + mass*(C @ C.T), mass*C],
         [mass*C.T, mass*np.eye(3) ]])
@@ -72,7 +72,7 @@ def MassCOMinertia2T66(mass, centerOfMass, inertia):
 #**notes: within the 6x6 matrix, the inertia tensor is defined w.r.t.\ the center of mass, while RigidBodyInertia defines the inertia tensor w.r.t.\ the reference point; however, this function correctly transforms all quantities of inertia.
 #**output: 6x6 numpy array for further use in minimum coordinates formulation
 def Inertia2T66(inertia):
-    C = Skew(inertia.com)
+    C = erb.Skew(inertia.com)
     mass = inertia.mass
     #inertiaCOM = inertia.Translated(-inertia.com).inertiaTensor
     inertiaCOM = inertia.InertiaCOM()
@@ -90,7 +90,7 @@ def Inertia2T66(inertia):
 def Inertia66toMassCOMinertia(inertia66):
     mass = inertia66[5,5]
     massCOM = inertia66[0:3,3:6]
-    centerOfMass = Skew2Vec(massCOM)/mass
+    centerOfMass = erb.Skew2Vec(massCOM)/mass
     inertia = inertia66[0:3,0:3] - massCOM @ massCOM.T/mass;
 
     return [mass, centerOfMass, inertia]
@@ -120,9 +120,9 @@ def JointTransformMotionSubspace66(jointType, q):
 #define dictionary for joint transformations, as there is no switch case statement in Python
 #using rotation matrix, translation (for prismatic joints), joint axes (rot, trans)
 dictOfJointRotationMatrixAxis = {
-    'Rx':[RotationMatrixX, np.array([0,0,0]), np.array([1,0,0]), np.array([0,0,0])], #revolute joint for local X axis
-    'Ry':[RotationMatrixY, np.array([0,0,0]), np.array([0,1,0]), np.array([0,0,0])], #revolute joint for local Y axis
-    'Rz':[RotationMatrixZ, np.array([0,0,0]), np.array([0,0,1]), np.array([0,0,0])], #revolute joint for local Z axis
+    'Rx':[erb.RotationMatrixX, np.array([0,0,0]), np.array([1,0,0]), np.array([0,0,0])], #revolute joint for local X axis
+    'Ry':[erb.RotationMatrixY, np.array([0,0,0]), np.array([0,1,0]), np.array([0,0,0])], #revolute joint for local Y axis
+    'Rz':[erb.RotationMatrixZ, np.array([0,0,0]), np.array([0,0,1]), np.array([0,0,0])], #revolute joint for local Z axis
     'Px':[0,               np.array([1,0,0]), np.array([0,0,0]), np.array([1,0,0])], #prismatic joint for local X axis
     'Py':[0,               np.array([0,1,0]), np.array([0,0,0]), np.array([0,1,0])], #prismatic joint for local Y axis
     'Pz':[0,               np.array([0,0,1]), np.array([0,0,0]), np.array([0,0,1])], #prismatic joint for local Z axis
@@ -239,8 +239,8 @@ class KinematicTree33:
         n = self.Size()
         
         #initialize termporary matrices
-        Rot = [np.zeros((3,3))]*n       #store rotation matrices
-        Trans = [np.zeros(3)]*n     #store translation vectors
+        #Rot = [np.zeros((3,3))]*n       #store rotation matrices
+        #Trans = [np.zeros(3)]*n     #store translation vectors
         MSrot = [np.zeros(3)]*n     #motion subspace for rotation
         MStrans = [np.zeros(3)]*n   #motion subspace for translation
         XupRot = [np.zeros((3,3))]*n    #store link-joint rotation matrices
@@ -325,7 +325,7 @@ class KinematicTree33:
         ICm = [0]*n    
 
         for i in range(n):
-            ICinertia[i] = deepcopy(self.listOfInertia3D[i])
+            ICinertia[i] = deepcopy(self.listOfInertia3D[i]) #deepcopy very slow!
             ICm[i] = deepcopy(self.listOfMass[i])
             ICh[i] = ICm[i] * deepcopy(self.listOfCOM[i])
 
@@ -339,7 +339,7 @@ class KinematicTree33:
                 p = XupTrans[i]
                 ICm[self.listOfParents[i]] += ICm[i]
                 ICh[self.listOfParents[i]] += R.T @ ICh[i] + ICm[i]*p
-                ICinertia[self.listOfParents[i]] += R.T @ ICinertia[i] @ R - Skew(p)@Skew(R.T @ ICh[i]) - Skew(R.T@ICh[i] + ICm[i]*p) @ Skew(p)
+                ICinertia[self.listOfParents[i]] += R.T @ ICinertia[i] @ R - erb.Skew(p)@erb.Skew(R.T @ ICh[i]) - erb.Skew(R.T@ICh[i] + ICm[i]*p) @ erb.Skew(p)
 
         # for i in range(n):
         #     print('IC'+str(i)+'m=',ICm[i])

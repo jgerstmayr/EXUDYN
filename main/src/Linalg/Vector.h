@@ -109,7 +109,6 @@ public:
 	VectorBase(const std::vector<T> vector);
 	
 	//! constructor with initializer list; memory allocation!
-    //! @todo check if data[cnt++] is faster than (*this)[cnt++]
 	VectorBase(std::initializer_list<T> listOfReals);
 
     //! constructor with SlimVector; VALUES ARE LINKED; memory allocation ==> SLOW!
@@ -158,7 +157,17 @@ protected:
         if (numberOfItems == 0) { data = nullptr; }//for case that list is zero length? ==> TEST CASE
         else
         {
-            data = new T[numberOfItems];
+			try 
+			{
+				data = new T[numberOfItems];
+			}
+			catch (const std::bad_alloc& e) {
+				pout << "Allocation failed: " << e.what() << '\n';
+				pout << "requested memory = " << sizeof(T)*numberOfItems / pow(2, 20) << " MB, number of items = " << numberOfItems << "\n";
+
+				CHECKandTHROWstring("VectorBase::Allocation failed");
+			}
+
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 			vector_new_counts++;
 #endif
@@ -288,7 +297,7 @@ public:
 
         Index cnt = 0;
         for (auto item : vector) {
-            (*this)[cnt++] = item;
+            this->GetUnsafe(cnt++) = item;
         }
         return *this;
     }
@@ -301,7 +310,7 @@ public:
 
 		Index cnt = 0;
 		for (auto item : vector) {
-			(*this)[cnt++] = item;
+			this->GetUnsafe(cnt++) = item;
 		}
 		return *this;
 	}
@@ -314,7 +323,7 @@ public:
         Index cnt = 0;
         for (auto item : v)
         {
-            if (item != (*this)[cnt++]) { return false; }
+            if (item != this->GetUnsafe(cnt++)) { return false; }
         }
         return true;
     }
@@ -336,7 +345,7 @@ public:
 		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator+=(Tvector): incompatible size of vectors");
 		Index cnt = 0;
 		for (auto item : v) {
-			(*this)[cnt++] += item;
+			this->GetUnsafe(cnt++) += item;
 		}
 		return *this;
 	}
@@ -347,7 +356,7 @@ public:
 	//	CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator+=(ConstSizeVectorBase): incompatible size of vectors");
 	//	Index cnt = 0;
 	//	for (auto item : v) {
-	//		(*this)[cnt++] += item;
+	//		this->GetUnsafe(cnt++) += item;
 	//	}
 	//	return *this;
 	//}
@@ -360,7 +369,7 @@ public:
 		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator-=: incompatible size of vectors");
         Index cnt = 0;
         for (auto item : v) {
-            (*this)[cnt++] -= item;
+            this->GetUnsafe(cnt++) -= item;
         }
         return *this;
     }
@@ -372,7 +381,7 @@ public:
 		CHECKandTHROW((NumberOfItems() == v.NumberOfItems()), "VectorBase::operator-=(SlimVectorBase): incompatible size of vectors");
 		Index cnt = 0;
 		for (auto item : v) {
-			(*this)[cnt++] -= item;
+			this->GetUnsafe(cnt++) -= item;
 		}
 		return *this;
 	}
@@ -688,7 +697,7 @@ VectorBase<T>::VectorBase(const std::vector<T> vector)
 }
 
 //! constructor with initializer list; memory allocation!
-//! @todo check if data[cnt++] is faster than (*this)[cnt++]
+//! @todo check if data[cnt++] is faster than this->GetUnsafe(cnt++)
 template<typename T>
 VectorBase<T>::VectorBase(std::initializer_list<T> listOfReals)
 {
@@ -696,7 +705,7 @@ VectorBase<T>::VectorBase(std::initializer_list<T> listOfReals)
 
 	Index cnt = 0;
 	for (auto value : listOfReals) {
-		//(*this)[cnt++] = value;
+		//this->GetUnsafe(cnt++) = value;
 		data[cnt++] = value; //faster???
 	}
 }

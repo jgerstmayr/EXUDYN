@@ -41,11 +41,6 @@
 
 #include "Utilities/Parallel.h" //include after 
 
-//not needed, as these structures moved to TemporaryComputationDataArray
-//#if defined(USE_NGSOLVE_TASKMANAGER)
-//TemporaryComputationData tempParallel[MAX_NUMBER_OF_THREADS];
-//GeneralMatrixEigenSparse matSparse[MAX_NUMBER_OF_THREADS];
-//#endif
 
 //! Prepare a newly created System of nodes, objects, loads, ... for computation
 void CSystem::Assemble(const MainSystem& mainSystem)
@@ -238,6 +233,18 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 					{
 						PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
 							": Internal error: connector JacobianType::AE_ODE2 must be consistent with JacobianType::AE_ODE2_function");
+						systemIsInteger = false;
+					}
+					if (((connector->GetAvailableJacobians() & JacobianType::AE_ODE2_t) != 0) != ((connector->GetAvailableJacobians() & JacobianType::AE_ODE2_t_function) != 0))
+					{
+						PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
+							": Internal error: connector JacobianType::AE_ODE2_t must be consistent with JacobianType::AE_ODE2_t_function");
+						systemIsInteger = false;
+					}
+					if (((connector->GetAvailableJacobians() & JacobianType::AE_ODE1) != 0) != ((connector->GetAvailableJacobians() & JacobianType::AE_ODE1_function) != 0))
+					{
+						PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
+							": Internal error: connector JacobianType::AE_ODE1 must be consistent with JacobianType::AE_ODE1_function");
 						systemIsInteger = false;
 					}
 					if (((connector->GetAvailableJacobians() & JacobianType::AE_AE) != 0) != ((connector->GetAvailableJacobians() & JacobianType::AE_AE_function) != 0))
@@ -834,19 +841,25 @@ void CSystem::AssembleObjectLTGLists(Index objectIndex, ArrayIndex& ltgListODE2,
 void CSystem::PreComputeItemLists()
 {
 	cSystemData.objectsBodyWithODE2Coords.Flush();
+	cSystemData.objectsBodyWithODE2CoordsUF.Flush();
+	cSystemData.objectsBodyWithODE2CoordsNoUF.Flush();
 	cSystemData.listComputeObjectODE2Lhs.Flush();
 	cSystemData.listComputeObjectODE2LhsUF.Flush();
 	cSystemData.listComputeObjectODE2LhsNoUF.Flush();
 	cSystemData.listComputeObjectODE1Rhs.Flush();
 	cSystemData.listDiscontinuousIteration.Flush();
-	cSystemData.listOfLoads.Flush();
+	cSystemData.listOfLoadsNoUF.Flush();
 	cSystemData.listOfLoadsUF.Flush();
 
 	cSystemData.objectsBodyWithAE.Flush();
 	cSystemData.nodesODE2WithAE.Flush();
-	cSystemData.objectsConstraintWithAE.Flush();
 	cSystemData.objectsWithAlgebraicEquations.Flush();
+	cSystemData.objectsConstraintWithAE.Flush();
+	cSystemData.objectsConstraintWithAEUF.Flush();
+	cSystemData.objectsConstraintWithAENoUF.Flush();
 	cSystemData.listObjectProjectedReactionForcesODE2.Flush();
+	cSystemData.listObjectProjectedReactionForcesODE2UF.Flush();
+	cSystemData.listObjectProjectedReactionForcesODE2NoUF.Flush();
 
 
 	//compute localToGlobalODE2 coordinate indices
@@ -897,7 +910,8 @@ void CSystem::PreComputeItemLists()
 			if (cSystemData.GetLocalToGlobalODE2()[i].NumberOfItems() != 0)
 			{
 				cSystemData.objectsBodyWithODE2Coords.Append(i);
-				//pout << "body+ODE2=" << i << "\n";
+				if (object->HasUserFunction()) { cSystemData.objectsBodyWithODE2CoordsUF.Append(i); }
+				else { cSystemData.objectsBodyWithODE2CoordsNoUF.Append(i); }
 			}
 		}
 		//ComputeAlgebraicEquations:
@@ -908,14 +922,22 @@ void CSystem::PreComputeItemLists()
 				object->GetAlgebraicEquationsSize() != 0)
 			{
 				AEavailable = true;
-				cSystemData.objectsBodyWithAE.Append(i);
 				cSystemData.objectsWithAlgebraicEquations.Append(i);
+				cSystemData.objectsBodyWithAE.Append(i);
 			}
 			else if (EXUstd::IsOfType(object->GetType(), CObjectType::Constraint))
 			{
 				AEavailable = true;
-				cSystemData.objectsConstraintWithAE.Append(i);
 				cSystemData.objectsWithAlgebraicEquations.Append(i);
+				cSystemData.objectsConstraintWithAE.Append(i);
+				if (object->HasUserFunction()) 
+				{
+					cSystemData.objectsConstraintWithAEUF.Append(i); //with UserFunctoin
+				}
+				else 
+				{
+					cSystemData.objectsConstraintWithAENoUF.Append(i); //without UserFunctoin
+				}
 			}
 			//NOT AVAILABLE NOW: connectors or pure objects
 			else if (EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
@@ -931,6 +953,14 @@ void CSystem::PreComputeItemLists()
 			if (AEavailable && cSystemData.GetLocalToGlobalODE2()[i].NumberOfItems() != 0)
 			{
 				cSystemData.listObjectProjectedReactionForcesODE2.Append(i); //for constraints, reaction forces on ODE2 coordinates
+				if (object->HasUserFunction()) 
+				{
+					cSystemData.listObjectProjectedReactionForcesODE2UF.Append(i); //with UserFunctoin
+				} 
+				else 
+				{
+					cSystemData.listObjectProjectedReactionForcesODE2NoUF.Append(i); //without UserFunctoin
+				}
 			}
 
 		}
@@ -969,7 +999,7 @@ void CSystem::PreComputeItemLists()
 		}
 		else
 		{
-			cSystemData.listOfLoads.Append(i);
+			cSystemData.listOfLoadsNoUF.Append(i);
 		}
 	}
 
@@ -1092,124 +1122,18 @@ void CSystem::AssembleSystemInitialize(const MainSystem& mainSystem)
 	}
 }
 
-//#define USE_NGSOLVE_TASKMANAGER_MASS //not implemented generally!
-#ifdef USE_NGSOLVE_TASKMANAGER_MASS
-////timer structures for PajeTracer:
-//ngstd::Timer t0(STDstring("CSystem::ComputeMassMatrix0")); //timer name and importance
-//ngstd::Timer t1(STDstring("CSystem::ComputeMassMatrix1"), 2); //timer name and importance
-//ngstd::Timer t2(STDstring("CSystem::ComputeMassMatrix2"), 2); //timer name and importance
-//Index TScomputeMM0;
-//TimerStructureRegistrator TSRcomputeMM0("computeMassMatrix0", TScomputeMM0, globalTimers);
-//Index TScomputeMM1;
-//TimerStructureRegistrator TSRcomputeMM1("computeMassMatrix1", TScomputeMM1, globalTimers);
-//Index TScomputeMM2;
-//TimerStructureRegistrator TSRcomputeMM2("computeMassMatrix2", TScomputeMM2, globalTimers);
-
-
-void CSystem::ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& massMatrix)
-{
-
-	//size needs to be set accordingly in the caller function; components are addd to massMatrix!
-	Index nThreadsTaskmanager = ngstd::task_manager->GetNumThreads();
-
-	for (Index i = 0; i < nThreadsTaskmanager; i++)
-	{
-		matSparse[i].SetAllZero();
-	}
-
-	//#pragma omp parallel num_threads(maxThreads)
-	//#pragma omp for
-
-	//for improved parallel version: split into listComputeObjectODE2LhsNoUF and listComputeObjectODE2LhsUF !!!
-	int nItems = (int)(cSystemData.GetCObjects().NumberOfItems());
-	outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
-	
-	STARTGLOBALTIMER(TScomputeMM0);
-
-	ngstd::ParallelFor(nItems, [this, &nItems](NGSsizeType j) //&temp,&systemODE2Rhs,&cSystemData
-	{
-		//ngstd::RegionTracer regtr(ngstd::TaskManager::GetThreadId(), t1);
-
-		Index threadID = ngstd::TaskManager::GetThreadId();
-		TemporaryComputationData& myTemp = tempParallel[threadID];
-		//work over bodies, connectors, etc.
-		CObject& object = *(cSystemData.GetCObjects()[j]);
-
-		//if object is a body, it must have a mass matrix
-		if ((Index)object.GetType() & (Index)CObjectType::Body)
-		{
-			ArrayIndex& ltg = cSystemData.GetLocalToGlobalODE2()[j];
-			if (ltg.NumberOfItems() != 0) //to exclude bodies attached to ground nodes
-			{
-				((CObjectBody&)object).ComputeMassMatrix(myTemp.localMass);
-
-				//ngstd::RegionTracer regtr(ngstd::TaskManager::GetThreadId(), t2);
-				matSparse[threadID].AddSubmatrix(myTemp.localMass, 1., ltg, ltg);
-			}
-		}
-	}, nThreadsTaskmanager*3);
-	STOPGLOBALTIMER(TScomputeMM0);
-
-	CHECKandTHROW(massMatrix.GetSystemMatrixType() == LinearSolverType::EigenSparse,
-		"CSystem::ComputeMassMatrix in USE_NGSOLVE_TASKMANAGER only sparse mode allowed");
-
-	GeneralMatrixEigenSparse& massMatrixSparse = (GeneralMatrixEigenSparse&)massMatrix;
-	EigenTripletVector& triplets = massMatrixSparse.GetEigenTriplets();
-
-	Index totalTriplets = 0;
-	SlimArray<Index, MAX_NUMBER_OF_THREADS> tripletIndex;
-	for (Index i = 0; i < nThreadsTaskmanager; i++)
-	{
-		tripletIndex[i] = totalTriplets;
-		totalTriplets += (Index)matSparse[i].GetEigenTriplets().size();
-	}
-
-	//STARTGLOBALTIMER(TScomputeMM1);
-	////triplets.reserve(totalTriplets+ triplets.size()); //this guarantees that vector size is large enough
-	//triplets.resize(totalTriplets);
-	//STOPGLOBALTIMER(TScomputeMM1);
-	
-	STARTGLOBALTIMER(TScomputeMM2);
-	//Index iTriplet = 0;
-	for (Index i = 0; i < nThreadsTaskmanager; i++)
-	{
-		//for (Index j = 0; j < (Index)matSparse[i].GetEigenTriplets().size(); i++)
-		for (auto& item : matSparse[i].GetEigenTriplets())
-		{
-			triplets.push_back(item);
-			//triplets[iTriplet++] = item;
-		}
-	}
-	//for (Index i = 0; i < nThreadsTaskmanager; i++)
-	//{
-	//	copy(matSparse[i].GetEigenTriplets().begin(), matSparse[i].GetEigenTriplets().end(),
-	//		triplets[tripletIndex[i]]);
-	//}
-
-	//ngstd::ParallelFor(nThreadsTaskmanager, [&triplets, &tripletIndex](NGSsizeType j) //&temp,&systemODE2Rhs,&cSystemData
-	//{
-	//	Index matSparseSize = (Index)matSparse[j].GetEigenTriplets().size();
-	//	for (Index k = 0; k < matSparseSize; ++k)
-	//	{
-	//		triplets[tripletIndex[j] + k] = matSparse[j].GetEigenTriplets()[k];
-	//	}
-	//});
-	STOPGLOBALTIMER(TScomputeMM2);
-	outputBuffer.SetSuspendWriting(false); //may not write to python during parallel computation
-
-}
-#else
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // CSystem computation functions
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//! compute system massmatrix; massmatrix must have according size
-void CSystem::ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& massMatrix)
+//! compute system massmatrix; massmatrix must have according size; must be set to zero before calling!
+void CSystem::ComputeMassMatrix(TemporaryComputationDataArray& tempArray, GeneralMatrix& massMatrix)
 {
 	//size needs to be set accordingly in the caller function; components are addd to massMatrix!
 	//only call bodies with ODE2
-	temp.massMatrix.SetAllMatricesZero(); //this resets both matrices (no new)
 	if (massMatrix.GetSystemMatrixType() == LinearSolverType::EXUdense)
 	{
+		TemporaryComputationData& temp = tempArray[0]; //always exists
+		temp.massMatrix.ClearAllMatrices(); //this resets both matrices (no new)
 
 		for (Index j : cSystemData.objectsBodyWithODE2Coords)
 		{
@@ -1222,9 +1146,6 @@ void CSystem::ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& m
 			{
 				massMatrix.AddSubmatrix(temp.massMatrix.GetInternalDenseMatrix(), 1., ltg, ltg);
 			}
-			//else //object switched to sparse matrix and added sparse matrix to sparseTriplets ==> action only needed at the end
-			//{
-			//}
 		}
 		//add sparse triplets to the dense matrix
 		temp.massMatrix.SetUseDenseMatrix(false); //for next operation needed
@@ -1239,47 +1160,132 @@ void CSystem::ComputeMassMatrix(TemporaryComputationData& temp, GeneralMatrix& m
 	}
 	else //GeneralMatrix is sparse matrix
 	{
-		//exchange GeneralMatrix and MatrixContainer triplets ==> mass matrix directly filled by objects!
-		SparseTripletVector& generalMatrixTriplets = ((GeneralMatrixEigenSparse&)massMatrix).GetSparseTriplets();
+		Index nThreads = exuThreading::TaskManager::GetNumThreads();
+		bool doParallel = (nThreads > 1) && (cSystemData.objectsBodyWithODE2CoordsNoUF.NumberOfItems() >= solverData.multithreadedLLimitMassMatrix);
+		const ArrayIndex& processObjectsSerial = doParallel ? cSystemData.objectsBodyWithODE2CoordsUF : cSystemData.objectsBodyWithODE2Coords;
+		//const ArrayIndex& processObjectsSerial = cSystemData.objectsBodyWithODE2Coords;
 
-		temp.massMatrix.SetUseDenseMatrix(false); //for next 2 operations needed
-		generalMatrixTriplets.Swap(temp.massMatrix.GetInternalSparseTripletMatrix().GetTriplets());
-		SparseTripletVector& sparseTriplets = temp.massMatrix.GetInternalSparseTripletMatrix().GetTriplets(); //link to current triplets in temp.massMatrix:
-
-		temp.massMatrix.SetUseDenseMatrix(true); //for next operation needed
-		Matrix& denseMatrix = temp.massMatrix.GetInternalDenseMatrix();
-
-		for (Index j : cSystemData.objectsBodyWithODE2Coords)
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//SERIAL PART   SERIAL PART   SERIAL PART; also done in parallel mode:
 		{
-			temp.massMatrix.SetUseDenseMatrix(true); //this is default, mass matrix must either switch to sparse or 
+			TemporaryComputationData& temp = tempArray[0]; //always exists
+			temp.massMatrix.ClearAllMatrices(); //this resets both matrices (no new)
 
-			ArrayIndex& ltg = cSystemData.GetLocalToGlobalODE2()[j];
-			((CObjectBody*)(cSystemData.GetCObjects()[j]))->ComputeMassMatrix(temp.massMatrix, ltg, j); //ltg only used in sparse mode
+			//exchange GeneralMatrix and MatrixContainer triplets ==> mass matrix directly filled by objects!
+			SparseTripletVector& generalMatrixTriplets = ((GeneralMatrixEigenSparse&)massMatrix).GetSparseTriplets();
 
-			if (temp.massMatrix.UseDenseMatrix()) //dense matrix filled in and this is now transferred to dense system matrix
+			temp.massMatrix.SetUseDenseMatrix(false); //for next 2 operations needed
+			generalMatrixTriplets.Swap(temp.massMatrix.GetInternalSparseTripletMatrix().GetTriplets());
+			SparseTripletVector& sparseTriplets = temp.massMatrix.GetInternalSparseTripletMatrix().GetTriplets(); //link to current triplets in temp.massMatrix:
+
+			temp.massMatrix.SetUseDenseMatrix(true); //for next operation needed
+			Matrix& denseMatrix = temp.massMatrix.GetInternalDenseMatrix();
+
+			for (Index j : processObjectsSerial) //cSystemData.objectsBodyWithODE2Coords)
 			{
-				for (Index i = 0; i < denseMatrix.NumberOfRows(); i++)
+				temp.massMatrix.SetUseDenseMatrix(true); //this is default, mass matrix must either switch to sparse or just fill in
+
+				ArrayIndex& ltg = cSystemData.GetLocalToGlobalODE2()[j];
+				((CObjectBody*)(cSystemData.GetCObjects()[j]))->ComputeMassMatrix(temp.massMatrix, ltg, j); //ltg only used in sparse mode
+
+				if (temp.massMatrix.UseDenseMatrix()) //dense matrix filled in and this is now transferred to dense system matrix
 				{
-					for (Index j = 0; j < denseMatrix.NumberOfColumns(); j++)
+					for (Index i = 0; i < denseMatrix.NumberOfRows(); i++)
 					{
-						Real value = denseMatrix(i, j);
-						if (value != 0.)
+						for (Index j = 0; j < denseMatrix.NumberOfColumns(); j++)
 						{
-							sparseTriplets.AppendPure(SparseTriplet(ltg[i], ltg[j], value));
+							Real value = denseMatrix(i, j);
+							if (value != 0.)
+							{
+								sparseTriplets.AppendPure(SparseTriplet(ltg[i], ltg[j], value));
+							}
 						}
 					}
 				}
+				//else: already added to sparse triplets!
 			}
-			//else: already added to sparse triplets!
-		}
 
-		//exchange back GeneralMatrix and MatrixContainer triplets
-		temp.massMatrix.SetUseDenseMatrix(false); //for next operation needed
-		generalMatrixTriplets.Swap(temp.massMatrix.GetInternalSparseTripletMatrix().GetTriplets());
+			//exchange back GeneralMatrix and MatrixContainer triplets
+			temp.massMatrix.SetUseDenseMatrix(false); //for next operation needed
+			generalMatrixTriplets.Swap(temp.massMatrix.GetInternalSparseTripletMatrix().GetTriplets());
+		}
+		
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//PARALLEL PART
+		if (doParallel)
+		{
+			//parallel section, only for objects without user functions!
+			//fill data into tempArray[i].massMatrix directly (sparse+dense)
+
+			outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
+
+			tempArray.SetNumberOfItems(nThreads); //only affected, if nThreads changed
+			//tempArray.ClearSparseMatrices(nThreads); //clears sparseTriplets, etc.
+
+			////link all matrices
+			for (Index i = 0; i < nThreads; i++)
+			{
+				//tempArray[i].massMatrix.SetUseDenseMatrix(false); //for next 2 operations needed
+				//tempArray[i].sparseTriplets.Swap(tempArray[i].massMatrix.GetInternalSparseTripletMatrix().GetTriplets());
+				tempArray[i].massMatrix.ClearAllMatrices(); //this resets both matrices (no new)
+			}
+
+			Index nItems = cSystemData.objectsBodyWithODE2CoordsNoUF.NumberOfItems();
+			Index taskSplit = GetTaskSplit(nItems, nThreads);
+
+			exuThreading::ParallelFor(nItems, [this, &tempArray, &nItems](NGSsizeType i) //&temp,&systemODE2Rhs,&cSystemData
+			{
+				Index j = cSystemData.objectsBodyWithODE2CoordsNoUF[(Index)i];
+				Index threadID = exuThreading::TaskManager::GetThreadId();
+
+				TemporaryComputationData& temp = tempArray[threadID];
+
+				temp.massMatrix.SetUseDenseMatrix(true); //this is default, mass matrix must either switch to sparse or just fill in
+
+				ArrayIndex& ltg = cSystemData.GetLocalToGlobalODE2()[j];
+				((CObjectBody*)(cSystemData.GetCObjects()[j]))->ComputeMassMatrix(temp.massMatrix, ltg, j); //ltg only used in sparse mode
+
+				if (temp.massMatrix.UseDenseMatrix()) //dense matrix filled in and this is now transferred to dense system matrix
+				{
+					ResizableMatrix& denseMatrix = temp.massMatrix.GetInternalDenseMatrix();
+					temp.massMatrix.SetUseDenseMatrix(false); //now copy items to sparse matrix
+					SparseTripletVector& sparseTriplets = temp.massMatrix.GetInternalSparseTripletMatrix().GetTriplets();
+					for (Index i = 0; i < denseMatrix.NumberOfRows(); i++)
+					{
+						for (Index j = 0; j < denseMatrix.NumberOfColumns(); j++)
+						{
+							Real value = denseMatrix(i, j);
+							if (value != 0.)
+							{
+								sparseTriplets.AppendPure(SparseTriplet(ltg[i], ltg[j], value));
+							}
+						}
+					}
+					denseMatrix.Flush(); //for safety, could be omitted as local matrices are always overwritten!
+				}
+				//else: already added to sparse triplets!
+			}, taskSplit);
+
+			outputBuffer.SetSuspendWriting(false); //may not write to python during parallel computation
+
+
+			SparseTripletVector& generalMatrixTriplets = ((GeneralMatrixEigenSparse&)massMatrix).GetSparseTriplets();
+
+			//finally, we need to collect all triplets and fill into generalMatrix
+			for (Index i = 0; i < nThreads; i++)
+			{
+				tempArray[i].massMatrix.SetUseDenseMatrix(false);
+				generalMatrixTriplets.AppendArray(tempArray[i].massMatrix.GetInternalSparseTripletMatrix().GetTriplets());
+				//const SparseTripletVector& sparseTriplets = tempArray[i].massMatrix.GetInternalSparseTripletMatrix().GetTriplets();
+				//for (const SparseTriplet& item: sparseTriplets)
+				//{
+				//	generalMatrixTriplets.AppendPure(item);
+				//}
+			}
+		}
 	}
 
 }
-#endif
 
 //! run through all bodies and check if has constant mass matrix; used for solver
 bool CSystem::HasConstantMassMatrix()
@@ -1302,10 +1308,14 @@ bool CSystem::HasConstantMassMatrix()
 //TimerStructureRegistrator TSRcomputeODE2LHSconnector("computeODE2LHSconnector", TScomputeODE2LHSconnector, globalTimers);
 //Index TScomputeODE2LHSmarkerData;
 //TimerStructureRegistrator TSRcomputeODE2LHSmarkerData("computeODE2LHSmarkerData", TScomputeODE2LHSmarkerData, globalTimers);
-//Index TScomputeLoads;
-//TimerStructureRegistrator TSRcomputeLoads("computeLoads", TScomputeLoads, globalTimers);
-//Index TScomputeObjectODE2;
-//TimerStructureRegistrator TSRcomputeObjectODE2("computeObjectODE2", TScomputeObjectODE2, globalTimers);
+Index TScomputeLoads;
+TimerStructureRegistrator TSRcomputeLoads("computeLoads", TScomputeLoads, globalTimers);
+
+Index TScomputeObjectODE2;
+TimerStructureRegistrator TSRcomputeObjectODE2("computeObjectODE2", TScomputeObjectODE2, globalTimers);
+//Index TScomputeObjectODE2b;
+//TimerStructureRegistrator TSRcomputeObjectODE2b("computeObjectODE2b", TScomputeObjectODE2b, globalTimers);
+
 //Index TScomputeLoadsMarkerData;
 //TimerStructureRegistrator TSRcomputeLoadsMarkerData("computeLoadsMarkerData", TScomputeLoadsMarkerData, globalTimers);
 Index TScomputeConnectorsMarkerData;
@@ -1314,9 +1324,6 @@ TimerStructureRegistrator TSRcomputeConnectorsMarkerData("connectorsMarkerData",
 Index TScomputeAlgebraicEquations;
 TimerStructureRegistrator TSRcomputeAlgebraicEquations("computeAlgebraicEquations", TScomputeAlgebraicEquations, globalTimers);
 
-
-Index TSpostNewtonStep;
-TimerStructureRegistrator TSRpostNewtonStep("PostNewtonStep", TSpostNewtonStep, globalTimers, true); //true=this timer should always be considered
 
 Index TScomputeGeneralContact;
 TimerStructureRegistrator TSRcomputeGeneralContact("Contact:overall", TScomputeGeneralContact, globalTimers);
@@ -1356,9 +1363,9 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vec
 	//STARTGLOBALTIMER(TScomputeObjectODE2);
 	systemODE2Rhs.SetAll(0.);
 
-#ifdef USE_NGSOLVE_TASKMANAGER
-	Index nThreads = ngstd::TaskManager::GetNumThreads();
-	if (nThreads > 1)
+	int nItems = cSystemData.listComputeObjectODE2LhsNoUF.NumberOfItems();
+	Index nThreads = exuThreading::TaskManager::GetNumThreads();
+	if (nThreads > 1 && (nItems >= solverData.multithreadedLLimitResiduals) )
 	{
 		//std::mutex mtx;           // mutex for critical section
 		outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
@@ -1368,13 +1375,12 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vec
 			tempArray[i].sparseVector.SetAllZero();
 		}
 
-		int nItems = cSystemData.listComputeObjectODE2LhsNoUF.NumberOfItems();
-		Index taskSplit = nThreads; //shall be multiple of number of treads (Default=nThreads), but better 8*nThreads or larger for large problems
-		if (nItems >= 500 * nThreads) { taskSplit = 100 * nThreads; }
-		ngstd::ParallelFor(nItems, [this, &systemODE2Rhs, &tempArray, &nItems](NGSsizeType j) //&temp,&systemODE2Rhs,&cSystemData
+		//STARTGLOBALTIMER(TScomputeObjectODE2);
+		Index taskSplit = GetTaskSplit(nItems, nThreads);
+		exuThreading::ParallelFor(nItems, [this, &systemODE2Rhs, &tempArray, &nItems](NGSsizeType j) //&temp,&systemODE2Rhs,&cSystemData
 		{
 			Index i = cSystemData.listComputeObjectODE2Lhs[(Index)j];
-			Index threadID = ngstd::TaskManager::GetThreadId();
+			Index threadID = exuThreading::TaskManager::GetThreadId();
 
 			TemporaryComputationData& temp = tempArray[threadID];
 			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[i];
@@ -1388,9 +1394,11 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vec
 					//systemODE2Rhs[ltgODE2[k]] -= temp.localODE2LHS[k]; //negative sign ==> stiffness/damping on LHS of equations
 				}
 			}
-
 		}, taskSplit);
-		//serial section for writing into system vector
+		//STOPGLOBALTIMER(TScomputeObjectODE2);
+		outputBuffer.SetSuspendWriting(false);
+
+		//serial section for writing into system vector //for 3D bodies, using 12 threads, this is still less than 1% of overall time!
 		for (Index i = 0; i < nThreads; i++)
 		{
 			for (const EXUmath::IndexValue& item : tempArray[i].sparseVector.GetSparseIndexValues())
@@ -1416,10 +1424,10 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vec
 				}
 			}
 		}
+		//STOPGLOBALTIMER(TScomputeObjectODE2);
 
 	}
 	else
-#endif
 	{	//conventional SERIAL version:
 		TemporaryComputationData& temp = tempArray[0]; //always exists
 		//STARTGLOBALTIMER(TScomputeObjectODE2);
@@ -1457,7 +1465,6 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vec
 	ComputeODE2Loads(tempArray, systemODE2Rhs);
 	//STOPGLOBALTIMER(TScomputeLoads);
 
-	outputBuffer.SetSuspendWriting(false);
 }
 
 ////+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1556,26 +1563,28 @@ void CSystem::ComputeODE2Loads(TemporaryComputationDataArray& tempArray, Vector&
 	//Index nLoads = cSystemData.GetCLoads().NumberOfItems();
 	Real currentTime = cSystemData.GetCData().currentState.time;
 
-//#define USE_NGSOLVE_TASKMANAGER_LOADS
-	Index nThreads = ngstd::TaskManager::GetNumThreads();
+	Index nThreads = exuThreading::TaskManager::GetNumThreads();
+	Index nItems = cSystemData.listOfLoadsNoUF.NumberOfItems(); 
 
-	if (nThreads > 1)
+	if (nThreads > 1 && nItems >= solverData.multithreadedLLimitLoads)
 	{
 		for (Index i = 0; i < nThreads; i++)
 		{
 			tempArray[i].sparseVector.SetAllZero();
 		}
+		outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
 
-		int nItems = cSystemData.listOfLoads.NumberOfItems();
-		Index taskSplit = nThreads; //shall be multiple of number of treads (Default=nThreads), but better 8*nThreads or larger for large problems
-		if (nItems >= 500 * nThreads) { taskSplit = 100 * nThreads; }
-		ngstd::ParallelFor(nItems, [this, &systemODE2Rhs, &tempArray, &currentTime, &nItems](NGSsizeType i) //&temp,&systemODE2Rhs,&cSystemData
+
+		Index taskSplit = GetTaskSplit(nItems, nThreads);
+		exuThreading::ParallelFor(nItems, [this, &systemODE2Rhs, &tempArray, &currentTime, &nItems](NGSsizeType i) //&temp,&systemODE2Rhs,&cSystemData
 		{
-			Index threadID = ngstd::TaskManager::GetThreadId();
+			Index threadID = exuThreading::TaskManager::GetThreadId();
 			const bool fillSparseVector = true;
 
-			ComputeODE2SingleLoad(cSystemData.listOfLoads[(Index)i], tempArray[threadID], currentTime, systemODE2Rhs, fillSparseVector);
+			ComputeODE2SingleLoad(cSystemData.listOfLoadsNoUF[(Index)i], tempArray[threadID], currentTime, systemODE2Rhs, fillSparseVector);
 		}, taskSplit);
+		outputBuffer.SetSuspendWriting(false); //may not write to python during parallel computation
+
 		//serial section for writing sparseVectors into system vector
 		for (Index i = 0; i < nThreads; i++)
 		{
@@ -1584,6 +1593,8 @@ void CSystem::ComputeODE2Loads(TemporaryComputationDataArray& tempArray, Vector&
 				systemODE2Rhs[item.GetIndex()] += item.GetValue(); //minus: LHS->RHS
 			}
 		}
+
+		//serial section for remaining loads with UF
 		const bool fillSparseVector = false;
 		TemporaryComputationData& temp = tempArray[0];
 		for (Index j: cSystemData.listOfLoadsUF)
@@ -1595,8 +1606,8 @@ void CSystem::ComputeODE2Loads(TemporaryComputationDataArray& tempArray, Vector&
 	{
 		//serial version, directly writes into systemODE2Rhs
 		const bool fillSparseVector = false;
-		int nLoads = cSystemData.GetCLoads().NumberOfItems();
 		TemporaryComputationData& temp = tempArray[0];
+		Index nLoads = cSystemData.GetCLoads().NumberOfItems();
 		for (Index j = 0; j < nLoads; j++)
 		{
 			ComputeODE2SingleLoad(j, temp, currentTime, systemODE2Rhs, fillSparseVector);
@@ -1851,14 +1862,14 @@ void CSystem::ComputeODE1Loads(TemporaryComputationData& temp, Vector& systemODE
 }
 
 //! compute system right-hand-side (RHS) of algebraic equations (AE) to vector 'AERhs'
-void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& algebraicEquations, bool velocityLevel)
+void CSystem::ComputeAlgebraicEquations(TemporaryComputationDataArray& tempArray, Vector& algebraicEquations, bool velocityLevel)
 {
 	//Still needed? algebraicEquations.SetNumberOfItems(cSystemData.GetNumberOfCoordinatesAE()); //needed for numerical differentiation
 	algebraicEquations.SetAll(0.);
+	TemporaryComputationData& temp = tempArray[0];
 
-	//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
-
-	//for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
+	//+++++++++++++++++++++++++++++++++++++++++++++++++
+	//usually does not exist / rare!
 	for (Index j : cSystemData.objectsBodyWithAE)
 	{
 		//work over bodies, connectors, etc.
@@ -1870,43 +1881,145 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationData& temp, Vector& 
 		//now add RHS to system vector
 		for (Index k = 0; k < temp.localAE.NumberOfItems(); k++)
 		{
-			algebraicEquations[ltg[k]] += temp.localAE[k]; 
+			algebraicEquations[ltg[k]] += temp.localAE[k];
 		}
 	}
-	for (Index j : cSystemData.nodesODE2WithAE)
+	//+++++++++++++++++++++++++++++++++++++++++++++++++
+
+	//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
+
+	int nItemsObjectsNoUF = cSystemData.objectsConstraintWithAENoUF.NumberOfItems();
+	int nItemsNodes = cSystemData.nodesODE2WithAE.NumberOfItems();
+	int nItemsNodesObjectsNoUF = nItemsObjectsNoUF + nItemsNodes;
+
+	Index nThreads = exuThreading::TaskManager::GetNumThreads();
+	bool doParallel = (nThreads > 1) && (nItemsNodesObjectsNoUF >= solverData.multithreadedLLimitResiduals);
+
+	//+++++++++++++++++++++++++++++++++++++++
+	//parallel objects, no user function
+	if (doParallel)
 	{
-		//pout << "add algebraic equations for nodes\n";
-		//work over bodies, connectors, etc.
-		Index aeIndex = cSystemData.GetCNode(j).GetGlobalAECoordinateIndex();
+		//std::mutex mtx;           // mutex for critical section
+		outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
 
-		((CNodeODE2&)(cSystemData.GetCNode(j))).ComputeAlgebraicEquations(temp.localAE, velocityLevel); 
-
-		CHECKandTHROW(cSystemData.GetCNode(j).GetNumberOfAECoordinates() == temp.localAE.NumberOfItems(), "CSystem::ComputeAlgebraicEquations: nodesODE2WithAE: size mismatch");
-		//now add RHS to system vector
-		for (Index k = 0; k < temp.localAE.NumberOfItems(); k++)
+		for (Index i = 0; i < nThreads; i++)
 		{
-			algebraicEquations[k+aeIndex] += temp.localAE[k]; 
+			tempArray[i].sparseVector.SetAllZero();
+		}
+
+		//gives factor 7.5 for 12 threads with taskSplit nThreads*16, 100 bodies-revolute joint chain
+		Index taskSplit = GetTaskSplit(nItemsNodesObjectsNoUF, nThreads);
+		exuThreading::ParallelFor(nItemsNodesObjectsNoUF, [this, &algebraicEquations, &velocityLevel, &tempArray, 
+			&nItemsNodes, &nItemsObjectsNoUF, &nItemsNodesObjectsNoUF](NGSsizeType j) 
+		{
+			Index threadID = exuThreading::TaskManager::GetThreadId();
+			TemporaryComputationData& temp = tempArray[threadID];
+
+			if ((Index)j < nItemsNodes)
+			{
+				Index i = cSystemData.nodesODE2WithAE[(Index)j];
+				//for (Index i : cSystemData.nodesODE2WithAE)
+				{
+					Index aeIndex = cSystemData.GetCNode(i).GetGlobalAECoordinateIndex();
+
+					((CNodeODE2&)(cSystemData.GetCNode(i))).ComputeAlgebraicEquations(temp.localAE, velocityLevel);
+
+					//now add RHS to system vector
+					for (Index k = 0; k < temp.localAE.NumberOfItems(); k++)
+					{
+						//algebraicEquations[k + aeIndex] += temp.localAE[k];
+						tempArray[threadID].sparseVector.AddIndexAndValue(k + aeIndex, temp.localAE[k]);
+					}
+				}
+			}
+			else
+			{
+				Index i = cSystemData.objectsConstraintWithAENoUF[(Index)j - nItemsNodes];
+				//for (Index j : listObjectsSerial)
+				{
+					CObjectConstraint* constraint = (CObjectConstraint*)(cSystemData.GetCObjects()[i]);
+					ArrayIndex& ltg = cSystemData.GetLocalToGlobalAE()[i];
+
+					const bool computeJacobian = false;
+					cSystemData.ComputeMarkerDataStructure(constraint, computeJacobian, temp.markerDataStructure);
+
+					constraint->ComputeAlgebraicEquations(temp.localAE, temp.markerDataStructure, cSystemData.GetCData().currentState.time, i, velocityLevel);
+
+					//CHECKandTHROW(ltg.NumberOfItems() == temp.localAE.NumberOfItems(), "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
+					//now add RHS to system vector
+					for (Index k = 0; k < temp.localAE.NumberOfItems(); k++)
+					{
+						//algebraicEquations[ltg[k]] += temp.localAE[k]; //negative sign ==> check sign of Lagrange multipliers
+						tempArray[threadID].sparseVector.AddIndexAndValue(ltg[k], temp.localAE[k]);
+					}
+				}
+			}
+
+		}, taskSplit);
+
+
+		outputBuffer.SetSuspendWriting(false);
+
+		//STARTGLOBALTIMER(TSreactionForces1);
+		//serial section for writing into system vector //currently makes up 6 percent of total time for 1000 body-revolute chain!
+		for (Index i = 0; i < nThreads; i++)
+		{
+			for (const EXUmath::IndexValue& item : tempArray[i].sparseVector.GetSparseIndexValues())
+			{
+				algebraicEquations[item.GetIndex()] += item.GetValue(); //minus: LHS->RHS
+			}
+		}
+		//STOPGLOBALTIMER(TSreactionForces1);
+
+	}
+
+
+
+
+
+	if (!doParallel) //SERIAL
+	{
+
+		for (Index i : cSystemData.nodesODE2WithAE)
+		{
+			//pout << "add algebraic equations for nodes\n";
+			//work over bodies, connectors, etc.
+			Index aeIndex = cSystemData.GetCNode(i).GetGlobalAECoordinateIndex();
+
+			((CNodeODE2&)(cSystemData.GetCNode(i))).ComputeAlgebraicEquations(temp.localAE, velocityLevel);
+
+			CHECKandTHROW(cSystemData.GetCNode(i).GetNumberOfAECoordinates() == temp.localAE.NumberOfItems(), "CSystem::ComputeAlgebraicEquations: nodesODE2WithAE: size mismatch");
+			//now add RHS to system vector
+			for (Index k = 0; k < temp.localAE.NumberOfItems(); k++)
+			{
+				algebraicEquations[k + aeIndex] += temp.localAE[k];
+			}
 		}
 	}
-	for (Index j : cSystemData.objectsConstraintWithAE)
+
+	//SERIAL / PARALLEL: either with user functions or all (serial):
+	const ArrayIndex& listObjectsSerial = doParallel ? cSystemData.objectsConstraintWithAEUF : cSystemData.objectsConstraintWithAE;
 	{
-		CObjectConstraint* constraint = (CObjectConstraint*)(cSystemData.GetCObjects()[j]);
-		ArrayIndex& ltg = cSystemData.GetLocalToGlobalAE()[j];
-
-		const bool computeJacobian = false;
-		//STARTGLOBALTIMER(TScomputeConnectorsMarkerData);
-		cSystemData.ComputeMarkerDataStructure(constraint, computeJacobian, temp.markerDataStructure);
-		//STOPGLOBALTIMER(TScomputeConnectorsMarkerData);
-
-		//STARTGLOBALTIMER(TScomputeAlgebraicEquations);
-		constraint->ComputeAlgebraicEquations(temp.localAE, temp.markerDataStructure, cSystemData.GetCData().currentState.time, j, velocityLevel);
-		//STOPGLOBALTIMER(TScomputeAlgebraicEquations);
-
-		CHECKandTHROW(ltg.NumberOfItems() == temp.localAE.NumberOfItems(), "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
-		//now add RHS to system vector
-		for (Index k = 0; k < temp.localAE.NumberOfItems(); k++)
+		for (Index i : listObjectsSerial)
 		{
-			algebraicEquations[ltg[k]] += temp.localAE[k]; //negative sign ==> check sign of Lagrange multipliers
+			CObjectConstraint* constraint = (CObjectConstraint*)(cSystemData.GetCObjects()[i]);
+			ArrayIndex& ltg = cSystemData.GetLocalToGlobalAE()[i];
+
+			const bool computeJacobian = false;
+			//STARTGLOBALTIMER(TScomputeConnectorsMarkerData);
+			cSystemData.ComputeMarkerDataStructure(constraint, computeJacobian, temp.markerDataStructure);
+			//STOPGLOBALTIMER(TScomputeConnectorsMarkerData);
+
+			//STARTGLOBALTIMER(TScomputeAlgebraicEquations);
+			constraint->ComputeAlgebraicEquations(temp.localAE, temp.markerDataStructure, cSystemData.GetCData().currentState.time, i, velocityLevel);
+			//STOPGLOBALTIMER(TScomputeAlgebraicEquations);
+
+			CHECKandTHROW(ltg.NumberOfItems() == temp.localAE.NumberOfItems(), "CSystem::ComputeAlgebraicEquations: ltg size mismatch");
+			//now add RHS to system vector
+			for (Index k = 0; k < temp.localAE.NumberOfItems(); k++)
+			{
+				algebraicEquations[ltg[k]] += temp.localAE[k]; //negative sign ==> check sign of Lagrange multipliers
+			}
 		}
 	}
 
@@ -1942,7 +2055,9 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 	//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
 	TemporaryComputationData& temp = tempArray[0]; //always exists
 
-	if (cSystemData.listDiscontinuousIteration.NumberOfItems() != 0) { STARTGLOBALTIMER(TSpostNewtonStep); }
+	//done in solver timer
+	//if (cSystemData.listDiscontinuousIteration.NumberOfItems() != 0) 
+	//{ STARTGLOBALTIMER(TSpostNewtonStep); }
 
 	//for (Index objectIndex = 0; objectIndex < cSystemData.GetCObjects().NumberOfItems(); objectIndex++)
 	for (Index j : cSystemData.listDiscontinuousIteration)
@@ -1971,7 +2086,8 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 			}
 		}
 	}
-	if (cSystemData.listDiscontinuousIteration.NumberOfItems() != 0) { STOPGLOBALTIMER(TSpostNewtonStep); }
+	//if (cSystemData.listDiscontinuousIteration.NumberOfItems() != 0) 
+	//{ STOPGLOBALTIMER(TSpostNewtonStep); }
 
 	//this part is anyway done in parallel:
 	for (GeneralContact* gc : generalContacts) //usually only 1
@@ -2017,7 +2133,7 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 	GeneralMatrix& jacobianGM, Real factorODE2, Real factorODE2_t, Real factorODE1)
 {
 	TemporaryComputationData& temp = tempArray[0]; //always exists
-	temp.jacobianODE2Container.SetAllMatricesZero();
+	temp.jacobianODE2Container.ClearAllMatrices();
 
 	ResizableVector& f0 = temp.numericalJacobianf0;
 	ResizableVector& f1 = temp.numericalJacobianf1;
@@ -2335,7 +2451,7 @@ void CSystem::NumericalJacobianODE1RHS(TemporaryComputationDataArray& tempArray,
 {
 	//size needs to be set accordingly in the caller function; components are added to jacobian!
 	TemporaryComputationData& temp = tempArray[0]; //first array does always exist!
-	temp.jacobianODE2Container.SetAllMatricesZero();
+	temp.jacobianODE2Container.ClearAllMatrices();
 
 	ResizableVector& f0 = temp.numericalJacobianf0;
 	ResizableVector& f1 = temp.numericalJacobianf1;
@@ -2546,10 +2662,11 @@ void CSystem::NumericalJacobianODE1RHS(TemporaryComputationDataArray& tempArray,
 //! fillIntoSystemMatrix=true: fill in g_q_ODE2, g_q_ODE2^T AND g_q_AE into system matrix at according positions
 //! fillIntoSystemMatrix=false: fill in g_q_ODE2 into jacobian matrix at (0,0) ???REALLY
 template<class TGeneralMatrix>
-void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff,
+void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
 	Vector& f0, Vector& f1, TGeneralMatrix& jacobianGM, Real factorAE_ODE2, Real factorAE_ODE2_t, Real factorAE_ODE1,
 	bool velocityLevel, Real factorODE2_AE, Real factorODE1_AE, Real factorAE_AE)
 {
+	TemporaryComputationData& temp = tempArray[0];
 	Real relEps = numDiff.relativeEpsilon;			//relative differentiation parameter
 	Real minCoord = numDiff.minimumCoordinateSize;	//absolute differentiation parameter is limited to this minimum
 	Real eps, epsInv; //coordinate(column)-wise differentiation parameter; depends on size of coordinate
@@ -2582,7 +2699,7 @@ void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const Numerica
 	f0.SetNumberOfItems(nAE);
 	f1.SetNumberOfItems(nAE);
 
-	ComputeAlgebraicEquations(temp, f0, velocityLevel); //compute nominal value for jacobian
+	ComputeAlgebraicEquations(tempArray, f0, velocityLevel); //compute nominal value for jacobian
 
 	//differentiation w.r.t. ODE2 coordinates
 	for (Index i = 0; i < nODE2; i++)
@@ -2592,7 +2709,7 @@ void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const Numerica
 
 		xStore = x[i];
 		x[i] += eps;
-		ComputeAlgebraicEquations(temp, f1, velocityLevel);
+		ComputeAlgebraicEquations(tempArray, f1, velocityLevel);
 		x[i] = xStore;
 
 		epsInv = 1. / eps;
@@ -2613,7 +2730,7 @@ void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const Numerica
 
 		xStore = x_t[i];
 		x_t[i] += eps;
-		ComputeAlgebraicEquations(temp, f1, velocityLevel);
+		ComputeAlgebraicEquations(tempArray, f1, velocityLevel);
 		x_t[i] = xStore;
 
 		epsInv = 1. / eps;
@@ -2641,7 +2758,7 @@ void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const Numerica
 
 		yStore = y[i];
 		y[i] += eps;
-		ComputeAlgebraicEquations(temp, f1, velocityLevel);
+		ComputeAlgebraicEquations(tempArray, f1, velocityLevel);
 		y[i] = yStore;
 
 		epsInv = 1. / eps;
@@ -2662,7 +2779,7 @@ void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const Numerica
 
 		zStore = z[i];
 		z[i] += eps;
-		ComputeAlgebraicEquations(temp, f1, velocityLevel);
+		ComputeAlgebraicEquations(tempArray, f1, velocityLevel);
 		z[i] = zStore;
 		epsInv = 1. / eps;
 
@@ -2729,16 +2846,21 @@ void CSystem::NumericalJacobianAE(TemporaryComputationData& temp, const Numerica
 //! returns ltgAE and ltgODE2 lists, and several flags on object velocity level equation and which jacobian parts have been computed
 //! returns true, if jacobian is available, or false if not (e.g. body or ground object)
 void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
-	bool& objectUsesVelocityLevel, bool& flagAE_ODE2filled, bool& flagAE_ODE2_tFilled, bool& flagAE_ODE1filled, bool& flagAE_AEfilled)
+	bool& objectUsesVelocityLevel, JacobianType::Type& filledJacobians/*,
+	bool& flagAE_ODE2filled, bool& flagAE_ODE2_tFilled, bool& flagAE_ODE1filled, bool& flagAE_AEfilled*/)
 {
+	//TemporaryComputationData& temp = tempArray[0];
+
 	objectUsesVelocityLevel = false;
+	filledJacobians = JacobianType::_None;
+
 	CObject& object = *(cSystemData.GetCObjects()[j]);
 
 	//Index markerType[2]; //markertypes stored; NOT USED
-	flagAE_ODE2filled = false; //true, if the jacobian AE_ODE2 is inserted
-	flagAE_ODE2_tFilled = false; //true, if the jacobian AE_ODE2 is inserted
-	flagAE_ODE1filled = false; //true, if the jacobian AE_ODE1 is inserted
-	flagAE_AEfilled = false;   //true, if the jacobian AE_AE is inserted
+	//flagAE_ODE2filled = false; //true, if the jacobian AE_ODE2 is inserted
+	//flagAE_ODE2_tFilled = false; //true, if the jacobian AE_ODE2 is inserted
+	//flagAE_ODE1filled = false; //true, if the jacobian AE_ODE1 is inserted
+	//flagAE_AEfilled = false;   //true, if the jacobian AE_AE is inserted
 	Real currentTime = cSystemData.GetCData().currentState.time;
 
 	//for body, evaluate algebraic equations directly --> depend only on body coordinates
@@ -2747,11 +2869,12 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 		//this is currently only used, if Euler Parameter constraints are attached to bodies (deprecated mode)
 		if (object.GetAlgebraicEquationsSize()) //either body or constraint
 		{
+			filledJacobians = object.GetAvailableJacobians();
 			object.ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, temp.localJacobianAE_AE); //for objects, all jacobians need to be set!
-			if (temp.localJacobianAE_ODE2.NumberOfColumns()   * temp.localJacobianAE_ODE2.NumberOfRows() != 0) { flagAE_ODE2filled = true; }
-			if (temp.localJacobianAE_ODE2_t.NumberOfColumns() * temp.localJacobianAE_ODE2_t.NumberOfRows() != 0) { flagAE_ODE2_tFilled = true; }
-			if (temp.localJacobianAE_ODE1.NumberOfColumns()   * temp.localJacobianAE_ODE1.NumberOfRows() != 0) { flagAE_ODE1filled = true; }
-			if (temp.localJacobianAE_AE.NumberOfColumns()* temp.localJacobianAE_AE.NumberOfRows() != 0) { flagAE_AEfilled = true; }
+			//if (temp.localJacobianAE_ODE2.NumberOfColumns()   * temp.localJacobianAE_ODE2.NumberOfRows() != 0) { flagAE_ODE2filled = true; }
+			//if (temp.localJacobianAE_ODE2_t.NumberOfColumns() * temp.localJacobianAE_ODE2_t.NumberOfRows() != 0) { flagAE_ODE2_tFilled = true; }
+			//if (temp.localJacobianAE_ODE1.NumberOfColumns()   * temp.localJacobianAE_ODE1.NumberOfRows() != 0) { flagAE_ODE1filled = true; }
+			//if (temp.localJacobianAE_AE.NumberOfColumns()* temp.localJacobianAE_AE.NumberOfRows() != 0) { flagAE_AEfilled = true; }
 		}
 	}
 	//for constraint, algebraic equations depend on Markers 
@@ -2760,41 +2883,35 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 		CObjectConstraint& constraint = (CObjectConstraint&)object;
 
 		const bool computeJacobian = true; //why needed for PostNewtonStep?==> check Issue #241
-		//STARTGLOBALTIMER(TScomputeConnectorsMarkerData);
 		cSystemData.ComputeMarkerDataStructure(&constraint, computeJacobian, temp.markerDataStructure);
-		//STOPGLOBALTIMER(TScomputeConnectorsMarkerData);
 
+		filledJacobians = constraint.GetAvailableJacobians();
 
-		if (constraint.GetAvailableJacobians() & JacobianType::AE_ODE2)
-		{
-			flagAE_ODE2filled = true;
-			CHECKandTHROW((constraint.GetAvailableJacobians() & JacobianType::AE_ODE2_function), "CSystem::JacobianAE: jacobian AE_ODE2 not implemented");
-		}
-		if (constraint.GetAvailableJacobians() & JacobianType::AE_ODE2_t)
-		{
-			flagAE_ODE2_tFilled = true;
-			CHECKandTHROW((constraint.GetAvailableJacobians() & JacobianType::AE_ODE2_t_function), "CSystem::JacobianAE: jacobian AE_ODE2_t not implemented");
-		}
-		if (constraint.GetAvailableJacobians() & JacobianType::AE_ODE1)
-		{
-			flagAE_ODE1filled = true;
-			CHECKandTHROW((constraint.GetAvailableJacobians() & JacobianType::AE_ODE1_function), "CSystem::JacobianAE: jacobian AE_ODE1 not implemented");
-		}
-		if (constraint.GetAvailableJacobians() & JacobianType::AE_AE)
-		{
-			flagAE_AEfilled = true;
-			CHECKandTHROW((constraint.GetAvailableJacobians() & JacobianType::AE_AE_function), "CSystem::JacobianAE: jacobian AE_AE not implemented");
-		}
+		//if (constraint.GetAvailableJacobians() & JacobianType::AE_ODE2)
+		//{
+		//	flagAE_ODE2filled = true;
+		//}
+		//if (constraint.GetAvailableJacobians() & JacobianType::AE_ODE2_t)
+		//{
+		//	flagAE_ODE2_tFilled = true;
+		//}
+		//if (constraint.GetAvailableJacobians() & JacobianType::AE_ODE1)
+		//{
+		//	flagAE_ODE1filled = true;
+		//}
+		//if (constraint.GetAvailableJacobians() & JacobianType::AE_AE)
+		//{
+		//	flagAE_AEfilled = true;
+		//}
 
-		if (flagAE_ODE2filled || flagAE_ODE2_tFilled || flagAE_ODE1filled || flagAE_AEfilled)
+		//if (flagAE_ODE2filled || flagAE_ODE2_tFilled || flagAE_ODE1filled || flagAE_AEfilled)
+		if (filledJacobians & JacobianType::ALL_AE_DERIV)
 		{
 			constraint.ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1,
 				temp.localJacobianAE_AE, temp.markerDataStructure, currentTime, j);
 			objectUsesVelocityLevel = constraint.UsesVelocityLevel();
 			//if (constraint.UsesVelocityLevel()) {factorVelocityLevel = factorAE_ODE2_t; } //in this case, always use the velocity level factor; then, the jacobian is interpreted as diff(AE_t, ODE2_t)
 		}
-		//else
-		//{} //FUTURE: alternatively compute numerically ==> currently only analytical computation possible!!!
 
 	}
 	else
@@ -2836,14 +2953,16 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 //! velocityLevel = velocityLevel constraints are used, if available; 
 //template<class TGeneralMatrix>
 //bool warnedCSystemJacobianAE = false;
-void CSystem::JacobianAE(TemporaryComputationData& temp, const NewtonSettings& newton, GeneralMatrix& jacobianGM,
+void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonSettings& newton, GeneralMatrix& jacobianGM,
 	Real factorAE_ODE2, Real factorAE_ODE2_t, Real factorAE_ODE1, bool velocityLevel, Real factorODE2_AE, Real factorODE1_AE, Real factorAE_AE)
 {
 	//size needs to be set accordingly in the caller function; components are addd to massMatrix!
+	JacobianType::Type filledJacobians;
+	TemporaryComputationData& temp = tempArray[0];
 
 	if (newton.numericalDifferentiation.forAE)
 	{
-		NumericalJacobianAE(temp, newton.numericalDifferentiation, temp.numericalJacobianf0, temp.numericalJacobianf1, jacobianGM,
+		NumericalJacobianAE(tempArray, newton.numericalDifferentiation, temp.numericalJacobianf0, temp.numericalJacobianf1, jacobianGM,
 			factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, velocityLevel);// , fillIntoSystemMatrix);
 	}
 	else
@@ -2869,42 +2988,42 @@ void CSystem::JacobianAE(TemporaryComputationData& temp, const NewtonSettings& n
 			ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
 
 			bool objectUsesVelocityLevel;// = false;
-			bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted
-			bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
-			bool flagAE_ODE1filled; //true, if the jacobian AE_ODE1 is inserted
-			bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
+			//bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted
+			//bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
+			//bool flagAE_ODE1filled; //true, if the jacobian AE_ODE1 is inserted
+			//bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
 
 			CHECKandTHROW(ltgODE1.NumberOfItems() == 0, "CSystem::JacobianAE: not implemented for constraints/joints with ODE1 coordinates");
 
-			ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_ODE1filled, flagAE_AEfilled);
+			ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, filledJacobians/*, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_ODE1filled, flagAE_AEfilled*/);
 
-			if (flagAE_ODE2filled)
+			if (filledJacobians & JacobianType::AE_ODE2) //(flagAE_ODE2filled)
 			{
 				jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE2, factorAE_ODE2, ltgAE, ltgODE2, offsetAE);//depends, if velocity or position level is used
 			}
-			if (flagAE_ODE2_tFilled) //velocity or mixed pos/vel constraints
+			if (filledJacobians & JacobianType::AE_ODE2_t) //(flagAE_ODE2_tFilled) //velocity or mixed pos/vel constraints
 			{
 				jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE2_t, factorAE_ODE2_t, ltgAE, ltgODE2, offsetAE); //depends, if velocity or position level is used 
 			}
 
 			//this is either the dC/dq or the dC_t/dq_t matrix for reaction forces ==> may only be added once for ODE2 OR ODE2_t(e.g. for non-holonomic constraints such as rolling wheel)
-			if (flagAE_ODE2filled && !objectUsesVelocityLevel)
+			if ((filledJacobians & JacobianType::AE_ODE2) && !objectUsesVelocityLevel) //(flagAE_ODE2filled && !objectUsesVelocityLevel)
 			{
 				jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE2, factorODE2_AE, ltgODE2, ltgAE, 0, offsetAE); //this is the dC/dq^T part, which is independent of index reduction
 			}
-			else if (flagAE_ODE2_tFilled) //newly added
+			else if (filledJacobians & JacobianType::AE_ODE2_t) //(flagAE_ODE2_tFilled) //newly added
 			{
 				jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE2_t, factorODE2_AE, ltgODE2, ltgAE, 0, offsetAE); //this is the dC_t/dq_t^T part, which is independent of index reduction
 			}
 			//else  //for pure algebraic constraints(e.g. if joints are deactivated) this is OK! {CHECKandTHROWstring("CSystem::JacobianAE(...): constraint jacobian must be consistent with UsesVelocityLevel flag"); }
 
-			if (flagAE_ODE1filled)
+			if (filledJacobians & JacobianType::AE_ODE1) //(flagAE_ODE1filled)
 			{
 				jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE1, factorAE_ODE1, ltgAE, ltgODE1, nODE2);
 				jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE1, factorODE1_AE, ltgODE1, ltgAE, 0, nODE2);
 			}
 
-			if (flagAE_AEfilled) //pure algebraic equations: only depend on their algebraic part ...
+			if (filledJacobians & JacobianType::AE_AE) //(flagAE_AEfilled) //pure algebraic equations: only depend on their algebraic part ...
 			{
 				jacobianGM.AddSubmatrix(temp.localJacobianAE_AE, factorAE_AE, ltgAE, ltgAE, offsetAE, offsetAE);
 			}
@@ -2913,152 +3032,251 @@ void CSystem::JacobianAE(TemporaryComputationData& temp, const NewtonSettings& n
 
 		for (Index j : cSystemData.nodesODE2WithAE)
 		{
-			bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted
-			bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
-			bool flagAE_ODE1filled; //true, if the jacobian AE_ODE1 is inserted
-			bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
+			//bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted
+			//bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
+			//bool flagAE_ODE1filled; //true, if the jacobian AE_ODE1 is inserted
+			//bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
 
 			CNode& node = *(cSystemData.GetCNodes()[j]);
 
 			if (node.GetAlgebraicEquationsSize()) //currently, only used for Euler Parameter constraints
 			{
-				((CNodeODE2&)node).ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, temp.localJacobianAE_AE); //for objects, all jacobians need to be set!
-				flagAE_ODE2filled = temp.localJacobianAE_ODE2.NumberOfColumns()   * temp.localJacobianAE_ODE2.NumberOfRows() != 0;
-				flagAE_ODE2_tFilled = temp.localJacobianAE_ODE2_t.NumberOfColumns() * temp.localJacobianAE_ODE2_t.NumberOfRows() != 0;
-				flagAE_ODE1filled = temp.localJacobianAE_ODE1.NumberOfColumns()   * temp.localJacobianAE_ODE1.NumberOfRows() != 0;
-				flagAE_AEfilled = temp.localJacobianAE_AE.NumberOfColumns()* temp.localJacobianAE_AE.NumberOfRows() != 0;
+				((CNodeODE2&)node).ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, temp.localJacobianAE_AE, 
+					filledJacobians); //for objects, all jacobians need to be set!
+				//flagAE_ODE2filled = temp.localJacobianAE_ODE2.NumberOfColumns()   * temp.localJacobianAE_ODE2.NumberOfRows() != 0;
+				//flagAE_ODE2_tFilled = temp.localJacobianAE_ODE2_t.NumberOfColumns() * temp.localJacobianAE_ODE2_t.NumberOfRows() != 0;
+				//flagAE_ODE1filled = temp.localJacobianAE_ODE1.NumberOfColumns()   * temp.localJacobianAE_ODE1.NumberOfRows() != 0;
+				//flagAE_AEfilled = temp.localJacobianAE_AE.NumberOfColumns()* temp.localJacobianAE_AE.NumberOfRows() != 0;
 
-				if (flagAE_ODE2filled) //must have ODE size
+				if (filledJacobians & JacobianType::AE_ODE2) //(flagAE_ODE2filled) //must have ODE size
 				{
-					//jacobianGM.AddSubmatrix(temp.localJacobianAE_ODE2, factorAE_ODE2, ltgAE, ltgODE2, offsetAE);//depends, if velocity or position level is used
-					//jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE2, factorODE2_AE, ltgODE2, ltgAE, 0, offsetAE); //this is the dC/dq^T part, which is independent of index reduction
-
 					Index rowOffset = node.GetGlobalAECoordinateIndex();
 					Index columnOffset = node.GetGlobalODE2CoordinateIndex();
 					jacobianGM.AddSubmatrixWithFactor(temp.localJacobianAE_ODE2, factorAE_ODE2, rowOffset + offsetAE, columnOffset);//depends, if velocity or position level is used
 					jacobianGM.AddSubmatrixTransposedWithFactor(temp.localJacobianAE_ODE2, factorODE2_AE, columnOffset, rowOffset + offsetAE);
 				}
 				//remaining part could be integrated according to code above: for (Index j: cSystemData.objectsWithAlgebraicEquations) {...}
-				CHECKandTHROW(!(flagAE_ODE2_tFilled || flagAE_ODE1filled || flagAE_AEfilled), "CSystem: JacobianAE(...): mode not implemented for node algebraic equations");
+				//CHECKandTHROW(!(flagAE_ODE2_tFilled || flagAE_ODE1filled || flagAE_AEfilled), "CSystem: JacobianAE(...): mode not implemented for node algebraic equations");
+				CHECKandTHROW(!(filledJacobians & (JacobianType::AE_ODE2_t + JacobianType::AE_ODE1 + JacobianType::AE_AE)),
+					"CSystem: JacobianAE(...): mode not implemented for node algebraic equations");
 			}
 		}//for cSystemData.nodesODE2WithAE
 	}//if(newton.useNumericalDifferentiationAE)
 
 }
 
-//Index TSreactionForces1;
-//TimerStructureRegistrator TSRreactionForces1("TSreactionForces1", TSreactionForces1, globalTimers);
-//Index TSreactionForces2;
-//TimerStructureRegistrator TSRreactionForces2("TSreactionForces2", TSreactionForces2, globalTimers);
+Index TSreactionForces1;
+TimerStructureRegistrator TSRreactionForces1("TSreactionForces1", TSreactionForces1, globalTimers);
+Index TSreactionForces2;
+TimerStructureRegistrator TSRreactionForces2("TSreactionForces2", TSreactionForces2, globalTimers);
 
 //! add the projected action of Lagrange multipliers (reaction forces) to the ODE2 coordinates and add it to the ode2ReactionForces residual:
 //! ode2ReactionForces += C_{q2}^T * \lambda
-void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationData& temp, const Vector& reactionForces, Vector& ode2ReactionForces)
+void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& tempArray, const Vector& reactionForces, Vector& ode2ReactionForces)
 {
 	Index nAE = cSystemData.GetNumberOfCoordinatesAE();
 	Index nODE2 = cSystemData.GetNumberOfCoordinatesODE2();
 	//Index nODE1 = cSystemData.GetNumberOfCoordinatesODE1();
+	TemporaryComputationData& temp = tempArray[0];
 
 	CHECKandTHROW(reactionForces.NumberOfItems() == nAE, "CSystem::ComputeODE2ProjectedReactionForces: reactionForces size mismatch!");
 	CHECKandTHROW(ode2ReactionForces.NumberOfItems() == nODE2, "CSystem::ComputeODE2ProjectedReactionForces: ode2ReactionForces size mismatch!");
 
-	//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
-	//for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
-	for (Index j : cSystemData.listObjectProjectedReactionForcesODE2)
-	{
-		//work over bodies, connectors, etc.
-		ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[j];
-		ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
-		//ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
+	int nItemsObjectsNoUF = cSystemData.listObjectProjectedReactionForcesODE2NoUF.NumberOfItems();
+	int nItemsNodesObjectsNoUF = nItemsObjectsNoUF + cSystemData.nodesODE2WithAE.NumberOfItems();
 
-		bool objectUsesVelocityLevel;// = false;
-		bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted
-		bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
-		bool flagAE_ODE1filled; //true, if the jacobian AE_ODE1 is inserted
-		bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
+	Index nThreads = exuThreading::TaskManager::GetNumThreads();
+	bool doParallel = (nThreads > 1) && (nItemsNodesObjectsNoUF >= solverData.multithreadedLLimitResiduals);
+
+	//+++++++++++++++++++++++++++++++++++++++
+	//parallel objects, no user function
+	if (doParallel)
+	{
+		//std::mutex mtx;           // mutex for critical section
+		outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
+
+		for (Index i = 0; i < nThreads; i++)
+		{
+			tempArray[i].sparseVector.SetAllZero();
+		}
+
+		//gives factor 7.5 for 12 threads with taskSplit nThreads*16, 100 bodies-revolute joint chain
+		Index taskSplit = GetTaskSplit(nItemsNodesObjectsNoUF, nThreads);
+		exuThreading::ParallelFor(nItemsNodesObjectsNoUF, [this, &reactionForces, &ode2ReactionForces, &tempArray, &nItemsNodesObjectsNoUF, &nItemsObjectsNoUF](NGSsizeType j) //&temp,&systemODE2Rhs,&cSystemData
+		{
+			JacobianType::Type filledJacobians;
+			Index threadID = exuThreading::TaskManager::GetThreadId();
+			TemporaryComputationData& temp = tempArray[threadID];
+
+			//OBJECTS WITH AE
+			if ((Index)j < nItemsObjectsNoUF)
+			{
+				Index i = cSystemData.listObjectProjectedReactionForcesODE2NoUF[(Index)j];
+
+				ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[i];
+				ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[i];
+				//ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[i];
+
+				bool objectUsesVelocityLevel;// = false;
+
+				ComputeObjectJacobianAE(i, temp, objectUsesVelocityLevel, filledJacobians/*, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_ODE1filled, flagAE_AEfilled*/);
+
+				if (filledJacobians & (JacobianType::AE_ODE2 + JacobianType::AE_ODE2_t)) //(flagAE_ODE2filled || flagAE_ODE2_tFilled) //otherwise, no jacobians exist
+				{
+					if (((filledJacobians & JacobianType::AE_ODE2) && !objectUsesVelocityLevel) || (filledJacobians & JacobianType::AE_ODE2_t)) //((flagAE_ODE2filled && !objectUsesVelocityLevel) || flagAE_ODE2_tFilled) //must be consistent
+					{
+						const ResizableMatrix& jac = (filledJacobians & JacobianType::AE_ODE2) ? temp.localJacobianAE_ODE2 : temp.localJacobianAE_ODE2_t;
+
+						//multiply Cq^T * lambda:
+						for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
+						{
+							Real total = 0.;
+							for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
+							{
+								total += reactionForces[ltgAE[ii]] * jac(ii, jj);
+								//ode2ReactionForces[ltgODE2[jj]] += reactionForces[ltgAE[ii]] * jac(ii, jj);  //add terms to existing residual forces
+							}
+							tempArray[threadID].sparseVector.AddIndexAndValue(ltgODE2[jj], total);
+						}
+					}
+				}
+				else if (filledJacobians & JacobianType::AE_ODE1)//(flagAE_ODE1filled)
+				{
+					CHECKandTHROWstring("ComputeODE2ProjectedReactionForces: not implemented for ODE1 jacobian of algebraic equations");
+				}
+			}
+			else //NODES WITH AE
+			{
+				Index i = cSystemData.nodesODE2WithAE[(Index)j- nItemsObjectsNoUF];
+				CNode& node = *(cSystemData.GetCNodes()[i]);
+
+				if (node.GetAlgebraicEquationsSize()) //currently, only used for Euler Parameter constraints
+				{
+					((CNodeODE2&)node).ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, temp.localJacobianAE_AE,
+						filledJacobians); //for objects, all jacobians need to be set!
+
+					if (filledJacobians & JacobianType::AE_ODE2) //must have ODE size
+					{
+						Index rowOffset = node.GetGlobalAECoordinateIndex();
+						Index columnOffset = node.GetGlobalODE2CoordinateIndex();
+
+						const ResizableMatrix& jac = temp.localJacobianAE_ODE2;
+						for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
+						{
+							Real total = 0.;
+							for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
+							{
+								total += reactionForces[rowOffset + ii] * jac(ii, jj);  //add terms to existing residual forces
+								//ode2ReactionForces[columnOffset + jj] += reactionForces[rowOffset + ii] * jac(ii, jj);  //add terms to existing residual forces
+							}
+							tempArray[threadID].sparseVector.AddIndexAndValue(columnOffset + jj, total);
+						}
+					}
+				}
+			}
+
+		}, taskSplit);
+
+		outputBuffer.SetSuspendWriting(false);
 
 		//STARTGLOBALTIMER(TSreactionForces1);
-		ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_ODE1filled, flagAE_AEfilled);
+		//serial section for writing into system vector //currently makes up 6 percent of total time for 1000 body-revolute chain!
+		for (Index i = 0; i < nThreads; i++)
+		{
+			for (const EXUmath::IndexValue& item : tempArray[i].sparseVector.GetSparseIndexValues())
+			{
+				ode2ReactionForces[item.GetIndex()] += item.GetValue(); //minus: LHS->RHS
+			}
+		}
 		//STOPGLOBALTIMER(TSreactionForces1);
 
-		//STARTGLOBALTIMER(TSreactionForces2);
-		if (flagAE_ODE2filled || flagAE_ODE2_tFilled) //otherwise, no jacobians exist
-		{
-			if ((flagAE_ODE2filled && !objectUsesVelocityLevel) || flagAE_ODE2_tFilled) //must be consistent
-			{
-				const ResizableMatrix& jac = flagAE_ODE2filled ? temp.localJacobianAE_ODE2 : temp.localJacobianAE_ODE2_t;
-
-				//multiply Cq^T * lambda:
-				for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
-				{
-					for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
-					{
-						ode2ReactionForces[ltgODE2[jj]] += reactionForces[ltgAE[ii]] * jac(ii, jj);  //add terms to existing residual forces
-					}
-				}
-			}
-		}
-		else if (flagAE_ODE1filled)
-		{
-			CHECKandTHROWstring("ComputeODE2ProjectedReactionForces: not implemented for ODE1 jacobian of algebraic equations");
-			
-			//use following code, but add ode1ReactionForces first to function interface ...
-
-			//const ResizableMatrix& jac = temp.localJacobianAE_ODE1;
-
-			////multiply Cq^T * lambda:
-			//for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
-			//{
-			//	for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
-			//	{
-			//		ode1ReactionForces[ltgODE1[jj]] += reactionForces[ltgAE[ii]] * jac(ii, jj);  //add terms to existing residual forces
-			//	}
-			//}
-
-		}
-		//STOPGLOBALTIMER(TSreactionForces2);
-
-		//else  //for pure algebraic constraints(e.g. if joints are deactivated), no projected reaction forces ...! 
 	}
 
-	//nodes with AE: usually only Euler Parameters
-	for (Index j : cSystemData.nodesODE2WithAE)
+	
+	JacobianType::Type filledJacobians;
+	//+++++++++++++++++++++++++++++++++++++++
+	//(remaining) serial objects; with user functions
+	//STARTGLOBALTIMER(TSreactionForces2);
 	{
-		bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted
-		bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
-		bool flagAE_ODE1filled; //true, if the jacobian AE_ODE1 is inserted
-		bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
+		const ArrayIndex& listObjectsSerial = doParallel ? cSystemData.listObjectProjectedReactionForcesODE2UF : cSystemData.listObjectProjectedReactionForcesODE2;
 
-		CNode& node = *(cSystemData.GetCNodes()[j]);
-
-		if (node.GetAlgebraicEquationsSize()) //currently, only used for Euler Parameter constraints
+		//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
+		//for (Index i = 0; i < cSystemData.GetCObjects().NumberOfItems(); i++)
+		for (Index i : listObjectsSerial)
 		{
-			((CNodeODE2&)node).ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, temp.localJacobianAE_AE); //for objects, all jacobians need to be set!
-			flagAE_ODE2filled = temp.localJacobianAE_ODE2.NumberOfColumns()   * temp.localJacobianAE_ODE2.NumberOfRows() != 0;
-			flagAE_ODE2_tFilled = temp.localJacobianAE_ODE2_t.NumberOfColumns() * temp.localJacobianAE_ODE2_t.NumberOfRows() != 0;
-			flagAE_ODE1filled = temp.localJacobianAE_ODE1.NumberOfColumns()   * temp.localJacobianAE_ODE1.NumberOfRows() != 0;
-			flagAE_AEfilled = temp.localJacobianAE_AE.NumberOfColumns()* temp.localJacobianAE_AE.NumberOfRows() != 0;
+			//work over bodies, connectors, etc.
+			ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[i];
+			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[i];
+			//ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[i];
 
-			if (flagAE_ODE2filled) //must have ODE size
+			bool objectUsesVelocityLevel;// = false;
+
+			ComputeObjectJacobianAE(i, temp, objectUsesVelocityLevel, filledJacobians/*, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_ODE1filled, flagAE_AEfilled*/);
+
+			if (filledJacobians & (JacobianType::AE_ODE2 + JacobianType::AE_ODE2_t)) //(flagAE_ODE2filled || flagAE_ODE2_tFilled) //otherwise, no jacobians exist
 			{
-				Index rowOffset = node.GetGlobalAECoordinateIndex();
-				Index columnOffset = node.GetGlobalODE2CoordinateIndex();
-
-				const ResizableMatrix& jac = temp.localJacobianAE_ODE2;
-				for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
+				if (((filledJacobians & JacobianType::AE_ODE2) && !objectUsesVelocityLevel) || (filledJacobians & JacobianType::AE_ODE2_t)) //((flagAE_ODE2filled && !objectUsesVelocityLevel) || flagAE_ODE2_tFilled) //must be consistent
 				{
-					for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
+					const ResizableMatrix& jac = (filledJacobians & JacobianType::AE_ODE2) ? temp.localJacobianAE_ODE2 : temp.localJacobianAE_ODE2_t;
+
+					//multiply Cq^T * lambda:
+					for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
 					{
-						ode2ReactionForces[columnOffset + jj] += reactionForces[rowOffset + ii] * jac(ii, jj);  //add terms to existing residual forces
+						for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
+						{
+							ode2ReactionForces[ltgODE2[jj]] += reactionForces[ltgAE[ii]] * jac(ii, jj);  //add terms to existing residual forces
+						}
 					}
 				}
 			}
-			//remaining part could be integrated according to code above: for (Index j: cSystemData.objectsWithAlgebraicEquations) {...}
-			CHECKandTHROW(!(flagAE_ODE2_tFilled || flagAE_ODE1filled || flagAE_AEfilled), "CSystem: JacobianAE(...): mode not implemented for node algebraic equations");
+			else if (filledJacobians & JacobianType::AE_ODE1)//(flagAE_ODE1filled)
+			{
+				CHECKandTHROWstring("ComputeODE2ProjectedReactionForces: not implemented for ODE1 jacobian of algebraic equations");
+
+				//use following code, but add ode1ReactionForces first to function interface ...
+				//const ResizableMatrix& jac = temp.localJacobianAE_ODE1;
+				////multiply Cq^T * lambda:
+				//for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
+				//{
+				//	for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
+				//	{
+				//		ode1ReactionForces[ltgODE1[jj]] += reactionForces[ltgAE[ii]] * jac(ii, jj);  //add terms to existing residual forces
+				//	}
+				//}
+
+			}
 		}
+	}
+	//nodes with AE: usually only Euler Parameters
+	if (!doParallel)
+	{
+		for (Index i : cSystemData.nodesODE2WithAE)
+		{
+			CNode& node = *(cSystemData.GetCNodes()[i]);
 
+			if (node.GetAlgebraicEquationsSize()) //currently, only used for Euler Parameter constraints
+			{
+				((CNodeODE2&)node).ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, temp.localJacobianAE_AE,
+					filledJacobians); //for objects, all jacobians need to be set!
 
+				if (filledJacobians & JacobianType::AE_ODE2) //must have ODE size
+				{
+					Index rowOffset = node.GetGlobalAECoordinateIndex();
+					Index columnOffset = node.GetGlobalODE2CoordinateIndex();
+
+					const ResizableMatrix& jac = temp.localJacobianAE_ODE2;
+					for (Index ii = 0; ii < jac.NumberOfRows(); ii++)
+					{
+						for (Index jj = 0; jj < jac.NumberOfColumns(); jj++)
+						{
+							ode2ReactionForces[columnOffset + jj] += reactionForces[rowOffset + ii] * jac(ii, jj);  //add terms to existing residual forces
+						}
+					}
+				}
+			}
+		}
 	}//for cSystemData.nodesODE2WithAE
+	//STOPGLOBALTIMER(TSreactionForces2);
 }
 
 //! compute numerically the derivative of (C_{q2} * v), v being an arbitrary vector
@@ -3127,6 +3345,8 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 	result.SetNumberOfItems(nAE);
 	result.SetAll(0.);
 
+	JacobianType::Type filledJacobians;
+
 	//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
 	for (Index j = 0; j < cSystemData.GetCObjects().NumberOfItems(); j++)
 	{
@@ -3136,18 +3356,18 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 		ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
 
 		bool objectUsesVelocityLevel;// = false;
-		bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted
-		bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
-		bool flagAE_ODE1filled; //true, if the jacobian AE_ODE1 is inserted
-		bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
+		//bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted
+		//bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
+		//bool flagAE_ODE1filled; //true, if the jacobian AE_ODE1 is inserted
+		//bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
 
 		if (ltgAE.NumberOfItems() && ltgODE2.NumberOfItems() && cSystemData.GetCObjects()[j]->GetAlgebraicEquationsSize()) //omit bodies and ground objects ...
 		{
-			ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_ODE1filled, flagAE_AEfilled);
+			ComputeObjectJacobianAE(j, temp, objectUsesVelocityLevel, filledJacobians/*, flagAE_ODE2filled, flagAE_ODE2_tFilled, flagAE_ODE1filled, flagAE_AEfilled*/);
 			
 			if (!objectUsesVelocityLevel) //for velocity constraints, only Ct_t would be needed!
 			{
-				if (flagAE_ODE2filled)
+				if (filledJacobians & JacobianType::AE_ODE2) //(flagAE_ODE2filled)
 				{
 					//ResizableMatrix& jac = flagAE_ODE2filled ? temp.localJacobianAE_ODE2 : temp.localJacobianAE_ODE2_t;
 					const ResizableMatrix& jac = temp.localJacobianAE_ODE2;
@@ -3163,7 +3383,7 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 				}
 			}
 
-			if (flagAE_ODE1filled) //could be just ignored ==> check as soon as first ODE1 constraint jacobian exists
+			if (filledJacobians & JacobianType::AE_ODE1) //(flagAE_ODE1filled) //could be just ignored ==> check as soon as first ODE1 constraint jacobian exists
 			{
 				STDstring str = "CSystem::ComputeConstraintJacobianTimesVector(...) : not implemented for ODE1 coordinates, objectNr = ";
 				str += EXUstd::ToString(j);
@@ -3174,22 +3394,24 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 
 	for (Index j : cSystemData.nodesODE2WithAE)
 	{
-		bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted
-		bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
-		bool flagAE_ODE1filled; //true, if the jacobian AE_ODE1 is inserted
-		bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
+		//bool flagAE_ODE2filled; //true, if the jacobian AE_ODE2 is inserted
+		//bool flagAE_ODE2_tFilled; //true, if the jacobian AE_ODE2 is inserted
+		//bool flagAE_ODE1filled; //true, if the jacobian AE_ODE1 is inserted
+		//bool flagAE_AEfilled;   //true, if the jacobian AE_AE is inserted
 
 		CNode& node = *(cSystemData.GetCNodes()[j]);
 
 		if (node.GetAlgebraicEquationsSize()) //currently, only used for Euler Parameter constraints
 		{
-			((CNodeODE2&)node).ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, temp.localJacobianAE_AE); //for objects, all jacobians need to be set!
-			flagAE_ODE2filled = temp.localJacobianAE_ODE2.NumberOfColumns()   * temp.localJacobianAE_ODE2.NumberOfRows() != 0;
-			flagAE_ODE2_tFilled = temp.localJacobianAE_ODE2_t.NumberOfColumns() * temp.localJacobianAE_ODE2_t.NumberOfRows() != 0;
-			flagAE_ODE1filled = temp.localJacobianAE_ODE1.NumberOfColumns()   * temp.localJacobianAE_ODE1.NumberOfRows() != 0;
-			flagAE_AEfilled = temp.localJacobianAE_AE.NumberOfColumns()* temp.localJacobianAE_AE.NumberOfRows() != 0;
 
-			if (flagAE_ODE2filled)
+			((CNodeODE2&)node).ComputeJacobianAE(temp.localJacobianAE_ODE2, temp.localJacobianAE_ODE2_t, temp.localJacobianAE_ODE1, temp.localJacobianAE_AE,
+				filledJacobians); //for objects, all jacobians need to be set!
+			//flagAE_ODE2filled = temp.localJacobianAE_ODE2.NumberOfColumns()   * temp.localJacobianAE_ODE2.NumberOfRows() != 0;
+			//flagAE_ODE2_tFilled = temp.localJacobianAE_ODE2_t.NumberOfColumns() * temp.localJacobianAE_ODE2_t.NumberOfRows() != 0;
+			//flagAE_ODE1filled = temp.localJacobianAE_ODE1.NumberOfColumns()   * temp.localJacobianAE_ODE1.NumberOfRows() != 0;
+			//flagAE_AEfilled = temp.localJacobianAE_AE.NumberOfColumns()* temp.localJacobianAE_AE.NumberOfRows() != 0;
+
+			if (filledJacobians & JacobianType::AE_ODE2)
 			{
 				//ResizableMatrix& jac = flagAE_ODE2filled ? temp.localJacobianAE_ODE2 : temp.localJacobianAE_ODE2_t;
 				const ResizableMatrix& jac = temp.localJacobianAE_ODE2;
@@ -3206,7 +3428,9 @@ void CSystem::ComputeConstraintJacobianTimesVector(TemporaryComputationData& tem
 				}
 			}
 			//remaining part could be integrated according to code above: for (Index j: cSystemData.objectsWithAlgebraicEquations) {...}
-			CHECKandTHROW(!(flagAE_ODE2_tFilled || flagAE_ODE1filled || flagAE_AEfilled), "CSystem: JacobianAE(...): mode not implemented for node algebraic equations");
+			//CHECKandTHROW(!(flagAE_ODE2_tFilled || flagAE_ODE1filled || flagAE_AEfilled), "CSystem: ComputeConstraintJacobianTimesVector(...): mode not implemented for node algebraic equations");
+			CHECKandTHROW(!(filledJacobians & (JacobianType::AE_ODE2_t + JacobianType::AE_ODE1 + JacobianType::AE_AE)),
+				"CSystem: ComputeConstraintJacobianTimesVector(...): mode not implemented for node algebraic equations");
 		}
 	}
 
@@ -3220,7 +3444,9 @@ void CSystem::UpdatePostProcessData(bool recordImage)
 	Index timerMilliseconds = 2; //this is a hard-coded value, as visualizationSettings are not available here ...
 
 	Index i = 0;
+
 	//wait with new update until last image recording has been finished
+	//this loop does not get caught except for we do recording of images
 	while (i++ < timeOut && (postProcessData.recordImageCounter == postProcessData.updateCounter))
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(timerMilliseconds));

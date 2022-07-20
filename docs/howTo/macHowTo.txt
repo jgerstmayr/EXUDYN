@@ -14,6 +14,9 @@ visualizationSettings.h:
 
 basicLinalg.h:
 - inline auto NumIntegrate ==> inline does not work, put #ifndef __APPLE__
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#tkinter issue:
+python.org/download/mac/tcltk
 
 
 
@@ -24,7 +27,6 @@ basicLinalg.h:
 #clone downloads the whole repo and may take some time depending on your internet connection (>300MB)
 git clone https://github.com/jgerstmayr/EXUDYN --depth 1
 
-#
 
 #do following steps to compile:
 
@@ -43,6 +45,19 @@ pip install dist/exudyn-1.0.215- ... .whl
 
 ==> go to Examples
 python stiffFlyballGovernor2.py
+
+#switch between arm and x86 environments:
+#activate
+source opt/anaconda3/bin/activate or similar to activate anaconda3/bin/activate
+
+#when compiling in x86 mode, resulting 
+...-macosx_11_0_x86_64.whl 
+#needs to be renamed into
+...-macosx_10_9_x86_64.whl 
+#according to .egg name (which is 10.9)
+
+
+
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

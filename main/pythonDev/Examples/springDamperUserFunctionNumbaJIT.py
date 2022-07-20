@@ -26,8 +26,22 @@ import numpy as np
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #NUMBA PART; mainly, we need to register MainSystem mbs in numba to get user functions work
 #import numba jit for compilation of functions:
-from numba import jit, cfunc, types, njit
-from numba.types import float64, void, int64 #for signatures of user functions!
+from numba import jit
+# from numba import jit, cfunc, types, njit
+# from numba.types import float64, void, int64 #for signatures of user functions!
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#create identity operator for replacement of jit:
+# try: 
+#     from numba import jit
+# except: #define replacement operator
+#     def jit(ob):
+#         return ob
+
+# @jit
+# def myfunc():
+#     print("my function")
+
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -75,6 +89,7 @@ def Sweep(t, t1, f0, f1):
     return np.sin(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
 
 #user function for load; void replaces mbs, which then may not be used!!!
+#most time lost due to pybind11 std::function capturing; no simple way to overcome problem at this point (avoid many function calls!)
 #@cfunc(float64(void, float64, float64)) #possible, but does not lead to speed up
 #@jit #not possible because of mbs not recognized by numba
 def userLoad(mbs, t, load):
@@ -179,4 +194,4 @@ exu.Print('JIT, displacement=',u[0])
 # tCPU=5.58 seconds (on average)
 #==>speedup of user function part: 16.7/(5.58-1.15)=4.43
 #speedup will be much larger if Python functions are larger!
-
+#approx. 400.000 Python function calls/second!

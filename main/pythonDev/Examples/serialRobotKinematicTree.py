@@ -38,12 +38,15 @@ useKinematicTree = True
 mode='newDH'
 # mode='newModDH' #modified DH parameters #position agrees for all digits: 1.846440411790352
 
+jointWidth=0.1
+jointRadius=0.06
+linkWidth=0.1
 
 graphicsBaseList = [GraphicsDataOrthoCubePoint([0,0,-0.15], [0.12,0.12,0.1], color4grey)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0.5,0,0], 0.0025, color4red)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0.5,0], 0.0025, color4green)]
 graphicsBaseList +=[GraphicsDataCylinder([0,0,0], [0,0,0.5], 0.0025, color4blue)]
-#robot.base.visualization['graphicsData']=graphicsBaseList
+graphicsBaseList +=[GraphicsDataCylinder([0,0,-jointWidth], [0,0,jointWidth], linkWidth*0.5, color4list[0])] #belongs to first body
 
 ty = 0.03
 tz = 0.04
@@ -110,32 +113,15 @@ linkList=[link0, link1, link2, link3, link4, link5]
 s0=0.08
 wj = 0.12
 rj = 0.06
-gLink0 = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[s0,s0,1.2*s0], color=color4list[0], addEdges=True)
-gLink0 += GraphicsDataCylinder(pAxis=[0,-1*wj,0], vAxis=[0,wj,0], radius=rj, color=color4list[0], addEdges=True) #base joint
-gLink0 += GraphicsDataCylinder(pAxis=[0,0,-0.5*wj], vAxis=[0,0,wj], radius=rj, color=color4list[0], addEdges=True)
-gLink1 = GraphicsDataOrthoCubePoint(centerPoint=[-0.5*0.4318,0,0], size=[0.4318,s0,s0], color=color4list[1], addEdges=True)
-gLink1 += GraphicsDataCylinder(pAxis=[0,0,-0.5*wj], vAxis=[0,0,wj], radius=rj, color=color4list[1], addEdges=True)
-gLink2 = GraphicsDataOrthoCubePoint(centerPoint=[0, 0.5*0.15,0], size=[s0,0.15,s0], color=color4list[2], addEdges=True)
-gLink2 += GraphicsDataCylinder(pAxis=[0,0,-0.5*wj], vAxis=[0,0,wj], radius=rj, color=color4list[2], addEdges=True)
-
-gLink3 = GraphicsDataOrthoCubePoint(centerPoint=[0,-0.5*0.4318, 0], size=[s0,0.4318,s0], color=color4list[3], addEdges=True)
-gLink3 += GraphicsDataCylinder(pAxis=[0,0,-0.5*wj], vAxis=[0,0,wj], radius=rj, color=color4list[3], addEdges=True)
-gLink4 = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[s0,s0,s0], color=color4list[4], addEdges=True)
-gLink4 += GraphicsDataCylinder(pAxis=[0,0,-0.5*wj], vAxis=[0,0,wj], radius=rj, color=color4list[4], addEdges=True)
-gLink5 = GraphicsDataOrthoCubePoint(centerPoint=[0,0,0], size=[s0,s0,s0], color=color4list[5], addEdges=True)
-
-gLinkList=[gLink0, gLink1, gLink2, gLink3, gLink4, gLink5]
 
 if mode=='newDH':
     for cnt, link in enumerate(linkList):
-        vLink = VRobotLink(showCOM=True, showMBSjoint=False, graphicsData=gLinkList[cnt])
         robot.AddLink(RobotLink(mass=link['mass'], 
                                    COM=link['COM'], 
                                    inertia=link['inertia'], 
                                    localHT=StdDH2HT(link['stdDH']),
                                    PDcontrol=(Pcontrol[cnt], Dcontrol[cnt]),
                                    visualization=VRobotLink(linkColor=color4list[cnt])
-                                   #visualization=VRobotLink(showCOM=True, showMBSjoint=False, graphicsData=gLinkList[cnt])
                                    ))
 elif mode=='newModDH': #computes preHT and localHT, but ALSO converts inertia parameters from stdDH to modDHKK (NEEDED!)
     for cnt, link in enumerate(linkList): 
@@ -148,7 +134,6 @@ elif mode=='newModDH': #computes preHT and localHT, but ALSO converts inertia pa
 
         rbi = rbi.Transformed(InverseHT(HT)) #inertia parameters need to be transformed to new modKKDH link frame
         
-        vLink = VRobotLink(showCOM=True, showMBSjoint=False, graphicsData=gLinkList[cnt])
         robot.AddLink(RobotLink(mass=rbi.mass,
                                    COM=rbi.COM(), 
                                    inertia=rbi.InertiaCOM(),
@@ -331,7 +316,7 @@ SC.visualizationSettings.openGL.multiSampling=4
     
 # tEnd = 1.25
 # h = 0.002
-tEnd = 0.4
+tEnd = 1.25
 h = 0.001#*0.1*0.01
 
 #mbs.WaitForUserToContinue()
@@ -394,7 +379,7 @@ if not useKinematicTree:
     exu.Print("rotations at tEnd=", VSum(measuredRot), ',', measuredRot)
 
 else:
-    q = mbs.GetObjectOutputBody(oKT, exu.OutputVariableType.Coordinates, localPosition=[0,0,0])
+    q = mbs.GetObjectOutput(oKT, exu.OutputVariableType.Coordinates)
     exu.Print("rotations at tEnd=", VSum(q), ',', q)
     
 

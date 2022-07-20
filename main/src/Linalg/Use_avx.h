@@ -35,6 +35,8 @@
 	#define useAVX
 	#ifdef DoublePrecision
 		#define AVXRealSize 4 // number of doubles in a AVXvector
+		#define AVXRealShift 2 // logarithm of AVXRealSize; used to perform faster shift of integer sizes for iterations;
+
 		#define PReal __m256d // packed double, 256-bit vector containing 4 doubles
 		#define _mm_add_ _mm256_add_pd 
 		#define _mm_sub_ _mm256_sub_pd
@@ -51,6 +53,7 @@
 		#define _mm_xor_ _mm256_xor_pd
 	#else
 		#define AVXRealSize 8 // number of floats in a AVXvector
+		#define AVXRealShift 3 // logarithm of AVXRealSize; used to perform faster shift of integer sizes for iterations;
 		#define PReal __m256  // packed float, 256-bit vector containing 8 floats
 		#define _mm_add_ _mm256_add_ps
 		#define _mm_sub_ _mm256_sub_ps
@@ -70,6 +73,7 @@
 	#define useAVX
 	#ifdef DoublePrecision
 		#define AVXRealSize 8 // number of doubles in a AVXvector
+		#define AVXRealShift 3 // logarithm of AVXRealSize; used to perform faster shift of integer sizes for iterations;
 		#define PReal __m512d // packed double, 256-bit vector containing 8 double
 		#define _mm_add_ _mm512_add_pd
 		#define _mm_sub_ _mm512_sub_pd
@@ -86,6 +90,7 @@
 		#define _mm_xor_ _mm512_xor_pd
 	#else
 		#define AVXRealSize 16 // number of floats in a AVXvector
+		#define AVXRealShift 4 // logarithm of AVXRealSize; used to perform faster shift of integer sizes for iterations;
 		#define PReal __m512   // packed float, 256-bit vector containing 16 floats
 		#define _mm_add_ _mm512_add_ps
 		#define _mm_sub_ _mm512_sub_ps
@@ -103,7 +108,10 @@
 	#endif
 #else //use Real instead
 	#define AVXRealSize 1	// number of Real in a AVXvector
+	#define AVXRealShift 0  // logarithm of AVXRealSize; used to perform faster shift of integer sizes for iterations;
 	#define PReal Real		// packed Real = Real (may be float or double)
+	#define _mm_set1_ Real  //
+	EXUINLINE Real _mm_fmadd_(Real a, Real b, Real c) { return a * b + c; }
 	#undef useAVX
 #endif
 
@@ -122,7 +130,7 @@
 	EXUINLINE PReal operator* (PReal b, Real a) { return _mm_set1_(a)*b; }
 	EXUINLINE PReal operator+= (PReal &a, PReal b) { return a = a + b; }
 	EXUINLINE PReal operator-= (PReal &a, PReal b) { return a = a - b; }
-	EXUINLINE PReal operator*= (PReal &a, PReal b) { return a = a*b; }
+	EXUINLINE PReal operator*= (PReal &a, PReal b) { return a = a * b; }
 	EXUINLINE PReal operator/= (PReal &a, PReal b) { return a = a / b; }
 #endif
 
