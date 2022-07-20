@@ -28,8 +28,6 @@ namespace MicroThreading {
 	typedef Index SizeType;
 	typedef SizeType TotalCosts;
 	extern class TaskManager * task_manager;
-	extern std::mutex copyex_mutex;
-	extern std::mutex printexception_mutex;
 
 	class Exception : public std::exception
 	{
@@ -55,22 +53,6 @@ namespace MicroThreading {
 		/// implement virtual function of std::exception
 		virtual const char* what() const noexcept override { return m_what.c_str(); }
 	};
-
-	inline Exception::Exception(const std::string & s)
-		: m_what(s)
-	{
-		{
-			std::lock_guard<std::mutex> guard(printexception_mutex);
-		}
-	}
-
-	inline Exception::Exception(const char * s)
-		: m_what(s)
-	{
-		{
-			std::lock_guard<std::mutex> guard(printexception_mutex);
-		}
-	}
 
 	inline Exception :: ~Exception()
 	{

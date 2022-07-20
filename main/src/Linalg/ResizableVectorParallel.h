@@ -100,7 +100,7 @@ public:
 	template<class TVector>
 	void CopyFrom(const TVector& vector, Index vectorPosition, Index thisPosition, Index numberOfCopiedItems)
 	{
-		CHECKandTHROW((thisPosition + numberOfCopiedItems <= NumberOfItems()), "ResizableVectorBase::CopyFrom(...): thisPosition index mismatch");
+		CHECKandTHROW((thisPosition + numberOfCopiedItems <= this->NumberOfItems()), "ResizableVectorBase::CopyFrom(...): thisPosition index mismatch");
 		CHECKandTHROW((vectorPosition + numberOfCopiedItems <= vector.NumberOfItems()), "ResizableVectorBase::CopyFrom(...): vectorPosition index mismatch");
 
 		for (Index i = 0; i < numberOfCopiedItems; i++)

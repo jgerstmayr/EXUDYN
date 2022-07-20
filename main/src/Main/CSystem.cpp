@@ -2666,7 +2666,7 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 	Vector& f0, Vector& f1, TGeneralMatrix& jacobianGM, Real factorAE_ODE2, Real factorAE_ODE2_t, Real factorAE_ODE1,
 	bool velocityLevel, Real factorODE2_AE, Real factorODE1_AE, Real factorAE_AE)
 {
-	TemporaryComputationData& temp = tempArray[0];
+	//TemporaryComputationData& temp = tempArray[0];
 	Real relEps = numDiff.relativeEpsilon;			//relative differentiation parameter
 	Real minCoord = numDiff.minimumCoordinateSize;	//absolute differentiation parameter is limited to this minimum
 	Real eps, epsInv; //coordinate(column)-wise differentiation parameter; depends on size of coordinate

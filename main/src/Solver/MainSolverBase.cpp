@@ -220,7 +220,7 @@ void MainSolverBase::ComputeJacobianODE1RHS(MainSystem& mainSystem, Real scalarF
 {
 	CheckInitialized(mainSystem);
 
-	Index nSys = initializedSystemSizes[0] + initializedSystemSizes[1] + initializedSystemSizes[2]; //nODE2+nODE1+nAE; check initialized guarantees that this is same as in mainSystem
+	//Index nSys = initializedSystemSizes[0] + initializedSystemSizes[1] + initializedSystemSizes[2]; //nODE2+nODE1+nAE; check initialized guarantees that this is same as in mainSystem
 
 	mainSystem.cSystem->JacobianODE1RHS(GetCSolver().data.tempCompDataArray, GetCSolver().newton.numericalDifferentiation,
 		*(GetCSolver().data.systemJacobian), scalarFactor_ODE2, scalarFactor_ODE2_t, scalarFactor_ODE1); 

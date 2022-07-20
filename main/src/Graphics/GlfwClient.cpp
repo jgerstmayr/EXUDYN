@@ -2266,7 +2266,7 @@ void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 					imageFile << item.color[0] << ", " << item.color[1] << ", " << item.color[2] << ", " << item.color[3] << "\n";
 
 					imageFile << "#LINE\n";
-					const Float3& p = item.point;
+					const Float3& pItem = item.point;
 					float r = item.radius;
 
 					float nSeg = (float)item.numberOfSegments;
@@ -2275,7 +2275,7 @@ void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 					//for (float i = 0; i <= nSeg; i += 2.f*EXUstd::pi_f / nSeg)
 					for (float i = 0; i <= 2.f*EXUstd::pi_f + 1e-5; i += 2.f*EXUstd::pi_f / nSeg)
 					{
-						Float3 p({ p[0] + r * sin(i), p[1] + r * cos(i), p[2] });
+						Float3 p({ pItem[0] + r * sin(i), pItem[1] + r * cos(i), pItem[2] });
 						if (!isFirst) { imageFile << ", "; }
 						else { isFirst = false; }
 						imageFile << p[0] << ", " << p[1] << ", " << p[2];
@@ -2316,7 +2316,7 @@ void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 						Index j = i + 1;
 						if (j >= 3) { j = 0; }
 						const Float3& p0 = trig.points[i];
-						const Float3& p1 = trig.points[j];
+						//const Float3& p1 = trig.points[j];
 						imageFile << p0[0] << ", " << p0[1] << ", " << p0[2];
 						if (i != 2) { imageFile << ", "; }
 						else { imageFile << "\n"; }

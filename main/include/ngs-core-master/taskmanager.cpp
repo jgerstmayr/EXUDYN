@@ -645,8 +645,7 @@ namespace ngstd
             SharedLoop2 sl(1000);
             ParallelJob ( [&sl] (TaskInfo ti)
                           {
-                            for (auto i : sl)
-                              ; 
+							for (auto i : sl) {}
                           } );
             steps += 1000;
           }

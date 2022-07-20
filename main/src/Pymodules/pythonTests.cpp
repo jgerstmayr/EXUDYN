@@ -222,9 +222,9 @@ void PyTest()
 	{
 		pout << "AVXsize= " << AVXRealSize << "\n";
 		pout << "AVXRealShift= " << AVXRealShift << "\n";
-		double d = 12;
-		PReal P;
-		P = _mm_set1_(d);
+		//double d = 12;
+		//PReal P;
+		//P = _mm_set1_(d);
 
 		Index f = 256;
 		Index n = f*800+1; //on Surface, cache limit around n=200000

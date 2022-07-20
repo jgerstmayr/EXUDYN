@@ -48,15 +48,32 @@ namespace MicroThreading
 
 	const std::function<void(TaskInfo&)> * TaskManager::func;
 
+	static std::mutex copyex_mutex;
+	static std::mutex printexception_mutex;
 
 };
-static std::mutex MicroThreading::copyex_mutex;
-static std::mutex MicroThreading::printexception_mutex;
 
 
 //! a very slim and efficient multithreading approach for small loops
 namespace MicroThreading
 {
+	inline Exception::Exception(const std::string & s)
+		: m_what(s)
+	{
+		{
+			std::lock_guard<std::mutex> guard(printexception_mutex);
+		}
+	}
+
+	inline Exception::Exception(const char * s)
+		: m_what(s)
+	{
+		{
+			std::lock_guard<std::mutex> guard(printexception_mutex);
+		}
+	}
+
+
 	void TaskManager::CreateJob(const std::function<void(TaskInfo&)> & afunc,
 		Index numberOfJobTasks) //numberOfJobTasks == numberOfThreads
 	{
