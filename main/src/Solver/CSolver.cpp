@@ -65,7 +65,7 @@ STDstring CSolverTimer::ToString() const
 		//not computed, implemented as special timer: if (postNewton / sum > limit) ostr << "  postNewtonStep    = " << postNewton / sum << "%\n";
 		if (errorEstimator / sum > limit) ostr << "  errorEstimator    = " << errorEstimator / sum << "%\n";
 		if (postNewton / sum > limit) ostr << "  postNewton    = " << postNewton / sum << "%\n";
-		if (python / sum > limit) ostr << "  __python          = " << python / sum << "%\n";
+		if (python / sum > limit) ostr << "  Python          = " << python / sum << "%\n";
 		if (writeSolution / sum > limit) ostr << "  writeSolution     = " << writeSolution / sum << "%\n";
 		if (overhead / sum > limit) ostr << "  overhead          = " << overhead / sum << "%\n";
 		if (visualization / sum > limit) ostr << "  visualization/user= " << visualization / sum << "%\n";

@@ -85,8 +85,8 @@ Fv,     C,      GetRotationJacobianTTimesVector_q,,             ,       void,   
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'Point';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #**Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,    "return internally stored reference coordinates of node" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
-Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     M,      GetInitialCoordinateVector_t,   ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
@@ -139,8 +139,8 @@ Fv,     C,      GetRotationJacobianTTimesVector_q,,             ,       void,   
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'Point2D';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #**Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,    "return internally stored reference coordinates of node" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
-Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     M,      GetInitialCoordinateVector_t,   ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
@@ -240,8 +240,8 @@ Fv,     C,      CollectCurrentNodeMarkerData,   ,               ,       void,   
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'RigidBodyEP';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #**Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,    "return internally stored reference coordinates of node" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
-Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     M,      GetInitialCoordinateVector_t,   ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #
@@ -332,8 +332,8 @@ Fv,     C,      CollectCurrentNodeMarkerData,   ,               ,       void,   
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'RigidBodyRxyz';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #**Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,    "return internally stored reference coordinates of node" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
-Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     M,      GetInitialCoordinateVector_t,   ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #helper functions for rotation parameters:
 Fv,      C,      GetRotationParameters,         ,               ,       ConstSizeVector<maxRotationCoordinates>, ,"ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute vector to of 4 Euler Parameters from reference and configuration coordinates"  
@@ -355,7 +355,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodeRigidBodyRotVecLG
-classDescription = "A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies or beams; the node has 3 displacement coordinates and three rotation coordinates."
+classDescription = "A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies; the node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods."
 cParentClass = CNodeRigidBody
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -404,7 +404,7 @@ Fv,     C,      GetNumberOfODE2Coordinates,     ,               ,       Index,  
 Fv,     C,      GetNumberOfDisplacementCoordinates,,            ,       Index,      "return nDisplacementCoordinates;",,CI,     "return number of displacement coordinates" 
 Fv,     C,      GetNumberOfRotationCoordinates, ,               ,       Index,      "return nRotationCoordinates;",  ,  CI,     "return number of rotation coordinates" 
 #not possible: coordinate is automatically generated by rigid body!: Fv,     C,      GetNumberOfAECoordinates,       ,               ,       Index,"return 1;",                ,       CI,     "return number of second order diff. eq. coordinates" 
-Fv,     C,      GetType,                        ,               ,       Node::Type,  "return (Node::Type)(Node::Position + Node::Orientation + Node::RigidBody + Node::RotationRotationVector + Node::RotationLieGroup);", ,   CI,     "return node type (for node treatment in computation)" 
+Fv,     C,      GetType,                        ,               ,       Node::Type,  "return (Node::Type)(Node::Position + Node::Orientation + Node::RigidBody + Node::RotationRotationVector + Node::LieGroupWithDirectUpdate);", ,   CI,     "return node type (for node treatment in computation)" 
 Fv,     C,      GetNodeGroup,                   ,               ,       CNodeGroup,  "return CNodeGroup::ODE2variables;", ,    CI,     "return node group, which is special because of algebraic equations" 
 Fv,     C,      GetPosition,                    ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent position of node; returns always a 3D Vector" 
 Fv,     C,      GetVelocity,                    ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent velocity of node; returns always a 3D Vector" 
@@ -420,8 +420,8 @@ Fv,     C,      CollectCurrentNodeMarkerData,   ,               ,       void,   
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'RigidBodyRotVecLG';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #**Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,    "return internally stored reference coordinates of node" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
-Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     M,      GetInitialCoordinateVector_t,   ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #helper functions for rotation parameters:
 Fv,      C,      GetRotationParameters,         ,               ,       ConstSizeVector<maxRotationCoordinates>, ,"ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute vector to of 4 Euler Parameters from reference and configuration coordinates"  
@@ -440,6 +440,115 @@ Fv,     V,      UpdateGraphics,                 ,               ,       void,   
 V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 #file names automatically determined from class name
 writeFile = True
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = NodeRigidBodyRotVecDataLG
+classDescription = "A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies or beams; the node has 3 displacement coordinates and three rotation coordinates (rotation vector) and additionally data coordinates for configuration at start of a computation step. External operations (initial coordinates, graphics, ...) operate on data coordinates, which represent the global frame. Internally, ODE2 coordinates represent the local frame and they must be updated using (implicit) Lie group methods. UNDER CONSTRUCTION, DO NOT USE!!!"
+cParentClass = CNodeRigidBody
+mainParentClass = MainNode
+visuParentClass = VisualizationNode
+addProtectedC = "    static constexpr Index nRotationCoordinates = 3;\n    static constexpr Index nDisplacementCoordinates = 3;\n    Index globalDataCoordinateIndex; //!< for data coordinates!\n"
+author = Gerstmayr Johannes, Holzinger Stefan
+pythonShortName = RigidRotVecLG
+outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node','Velocity':'$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Coordinates':'$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\nu_0,\,\nu_1,\,\nu_2]\tp\cConfig$ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles', 'Coordinates_t':'$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cConfig$ velocity coordinates vector of node', 'RotationMatrix':'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates', 'Rotation':'$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$global 3D angular velocity vector of node', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node'}"
+classType = Node
+equations =
+    \paragraph{Detailed information:}
+    For a detailed description on the rigid body dynamics formulation using this node, see Holzinger and Gerstmayr [under publication].
+    The node has data and ODE2 coordinates. Here, data coordinates always represent the current state during computation, while
+    ODE2 coordinates represent the incremental motion, e.g., during Newton iterations, and they represent the 
+    coordinates needed for the Jacobian.
+
+    The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and three rotation coordinates, which is the rotation vector 
+    \be
+      \tnu = \varphi \nv = \tnu\cConfig + \tnu\cRef,
+    \ee
+    with the rotation angle $\varphi$ and the rotation axis $\nv$.
+    All coordinates $\cv\cConfig$ lead to second order differential equations, however the rotation vector cannot be used as a conventional parameterization. It must be computed within a nonlinear update, using appropriate Lie group methods.
+
+    The rotation matrix $\LU{0b}{\Rot(\tnu)}\cConfig$ transforms a local (body-fixed) 3D position 
+    $\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp$ to global 3D positions,
+    \be
+      \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot(\tnu)}\cConfig \LU{b}{\pLoc} 
+    \ee
+    Note that $\Rot(\tnu)$ is defined in function \texttt{ RotationVector2RotationMatrix}, see \refSection{sec:rigidBodyUtilities:RotationVector2RotationMatrix}.
+    
+    A Lie group integrator must be used with this node, which is why the is used, the 
+    rotation parameter velocities are identical to the local angular velocity $\LU{b}{\tomega}$ and thus the 
+    matrix $ \LU{b}{\Gm}$ becomes the identity matrix.
+    %The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
+    %\bea
+    %  \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
+    %  \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
+    %\eea
+    
+    For creating a \texttt{NodeRigidBodyRotVecLG}, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
+    see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
+/end
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "node's unique name"
+V,      CP,     referenceCoordinates,           ,               3,      Vector6D,   "Vector6D({0.,0.,0., 0.,0.,0.})",     ,       I,      "$\qv\cRef = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cRef = [\pv\tp\cRef,\,\tnu\tp\cRef]\tp$reference coordinates (position and rotation vector $\tnu$) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)"
+V,      MP,     initialCoordinates,             initialCoordinates,  3, Vector6D,   "Vector6D({0.,0.,0., 0.,0.,0.})",     ,       IO,     "$\qv\cIni = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cIni = [\uv\tp\cIni,\,\tnu\tp\cIni]\tp$initial displacement coordinates $\uv$ and rotation vector $\tnu$ relative to reference coordinates; these coordinates are mapped to the data coordiantes!"
+V,      MP,     initialVelocities,              initialCoordinates_t,3, Vector6D,   "Vector6D({0.,0.,0., 0.,0.,0.})",     ,       IO,     "$\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tnu\tp\cIni]\tp$initial velocity coordinate: time derivatives of displacement and angular velocity vector; these coordinates are mapped to the ODE2 velocity coordinates!"
+#
+Fv,     C,      GetNumberOfODE2Coordinates,     ,               ,       Index,      "return 6;",                ,       CI,     "return number of second order diff. eq. coordinates" 
+Fv,     C,      GetNumberOfDataCoordinates,     ,               ,       Index,      "return 6;",                ,       CI,     "return number of data coordinates" 
+#additional functions for Data coordinates:
+Fv,     C,      SetGlobalDataCoordinateIndex,   ,               ,       void,       "globalDataCoordinateIndex = globalIndex;",  "Index globalIndex",       I,    "this function is needed additionally, because Node is derived only from NodeODE2" 
+Fv,     C,      GetGlobalDataCoordinateIndex,   ,               3,      Index,      "return globalDataCoordinateIndex;",  , CI,    "this function is needed additionally, because Node is derived only from NodeODE2" 
+
+Fv,     C,      GetCurrentCoordinate,           ,               ,       "const Real&",    "return computationalData->currentState.dataCoords[globalDataCoordinateIndex + i];",  "Index i", CI,    "this function is needed additionally, because Node is derived only from NodeODE2" 
+F,      C,      GetCurrentAndReferenceODE2CoordinateVector, ,   ,       template<class TVector> void,      "vector.CopyFrom(LinkedDataVector(computationalData->currentState.dataCoords, globalDataCoordinateIndex, GetNumberOfDataCoordinates()));",  "TVector& vector", CI,    "this function is needed additionally, because Node is derived only from NodeODE2" 
+F,      C,      GetODE2CoordinateVectorWithReference, ,         ,       template<class TVector> void, "if (configuration != ConfigurationType::Reference) { vector = GetCoordinateVector(configuration); } else { vector.CopyFrom(GetReferenceCoordinateVector()); }",  "TVector& vector, ConfigurationType configuration = ConfigurationType::Current", CI,    "this function is needed additionally, because Node is derived only from NodeODE2" 
+#
+Fv,     C,      GetCurrentCoordinateVector,     ,               ,       LinkedDataVector, "return LinkedDataVector(computationalData->currentState.dataCoords, globalDataCoordinateIndex, GetNumberOfDataCoordinates());",  , CI,    "this function is needed additionally, because Node is derived only from NodeODE2" 
+Fv,     C,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return LinkedDataVector(computationalData->initialState.dataCoords, globalDataCoordinateIndex, GetNumberOfDataCoordinates());", , CI,    "this function is needed additionally, because Node is derived only from NodeODE2" 
+Fv,     C,      GetStartOfStepCoordinateVector, ,               ,       LinkedDataVector, "return LinkedDataVector(computationalData->startOfStepState.dataCoords, globalDataCoordinateIndex, GetNumberOfDataCoordinates());", , CI,    "this function is needed additionally, because Node is derived only from NodeODE2" 
+Fv,     C,      GetVisualizationCoordinateVector, ,             ,       LinkedDataVector, "return LinkedDataVector(computationalData->visualizationState.dataCoords, globalDataCoordinateIndex, GetNumberOfDataCoordinates());", , CI,    "this function is needed additionally, because Node is derived only from NodeODE2" 
+#
+#is ok: Fv,     C,      GetCoordinateVector,            ,               ,       LinkedDataVector, ,  "ConfigurationType configuration", CDI,    "this function is needed additionally, because Node is derived only from NodeODE2" 
+#
+Fv,     C,      GetNumberOfDisplacementCoordinates,,            ,       Index,      "return nDisplacementCoordinates;",,CI,     "return number of displacement coordinates" 
+Fv,     C,      GetNumberOfRotationCoordinates, ,               ,       Index,      "return nRotationCoordinates;",  ,  CI,     "return number of rotation coordinates" 
+#not possible: coordinate is automatically generated by rigid body!: Fv,     C,      GetNumberOfAECoordinates,       ,               ,       Index,"return 1;",                ,       CI,     "return number of second order diff. eq. coordinates" 
+Fv,     C,      GetType,                        ,               ,       Node::Type,  "return (Node::Type)(Node::Position + Node::Orientation + Node::RigidBody + Node::RotationRotationVector + Node::LieGroupWithDataCoordinates);", ,   CI,     "return node type (for node treatment in computation)" 
+Fv,     C,      GetNodeGroup,                   ,               ,       CNodeGroup,  "return (CNodeGroup)((Index)CNodeGroup::ODE2variables + (Index)CNodeGroup::DataVariables);", ,    CI,     "return node group, which is special because of algebraic equations" 
+Fv,     C,      GetPosition,                    ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent position of node; returns always a 3D Vector" 
+Fv,     C,      GetVelocity,                    ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent velocity of node; returns always a 3D Vector" 
+Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Vector" 
+Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector" 
+Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D,   ,                           "ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector" 
+Fv,     C,      GetPositionJacobian,            ,               ,       void,       , "Matrix& value",          CDI,    "provide position jacobian of node; derivative of 3D Position with respect to all coordinates" 
+Fv,     C,      GetRotationJacobian,            ,               ,       void,       , "Matrix& value",          CDI,    "provide 'rotation' jacobian $\Jm_R$ of node; derivative of 3D angular velocity vector with respect to all velocity coordinates (='G-matrix'); action of torque $\mv$: $\Qm_m = \Jm_R^T \mv$" 
+Fv,     C,      GetRotationJacobianTTimesVector_q,,             ,       void,       ,                           "const Vector3D& vector, Matrix& jacobian_q",       CDI,    "provide derivative w.r.t. coordinates of rotation Jacobian times vector; for current configuration" 
+Fs,     C,      RotationVectorGTv_q,            ,               ,       Matrix3D,   ,                           "const CSVector4D& rotParameters, const Vector3D& v3D",       DI,    "static function to compute d(G^T*v)/dq for rotation vector (Glocal = I, G = RotationMatrix); using autodiff" 
+Fv,     C,      CollectCurrentNodeData1,        ,               ,       void,       , "ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, Vector3D& angularVelocityLocal",          CDI,    "provide nodal values efficiently for rigid body computation" 
+Fv,     C,      CollectCurrentNodeMarkerData,   ,               ,       void,       , "ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G, Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal", CDI, "obtain G matrices, position, velocity, rotation matrix A (local to global), local angular velocity " 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'RigidBodyRotVecLG';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
+#**Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
+Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,    "return internally stored reference coordinates of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     M,      GetInitialCoordinateVector_t,   ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
+Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
+#helper functions for rotation parameters:
+Fv,      C,      GetRotationParameters,         ,               ,       ConstSizeVector<maxRotationCoordinates>, ,"ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute vector to of 4 Euler Parameters from reference and configuration coordinates"  
+Fv,      C,      GetRotationParameters_t,       ,               ,       LinkedDataVector, ,"ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute vector to time derivative of 4 Euler Parameters in given configuration"  
+Fv,      C,      GetG,                          ,               ,       void, ,"ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute G matrix (=diff(angularVelocity, velocityParameters)) for given configuration"  
+Fv,      C,      GetGlocal,                     ,               ,       void, ,"ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute local G matrix for given configuration"  
+Fv,      C,      GetG_t,                        ,               ,       void, ,"ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute G matrix (=diff(angularVelocity, velocityParameters)) for given configuration"  
+Fv,      C,      GetGlocal_t,                   ,               ,       void, ,"ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute local G matrix for given configuration"  
+Fv,      C,      GetGTv_q,                      ,               ,       void, ,"const Vector3D& v, ConstSizeMatrix<maxRotationCoordinates * maxRotationCoordinates>& matrix, ConfigurationType configuration = ConfigurationType::Current", CDI, "compute d(G^T*v)/dq for any set of parameters; needed for jacobians"  
+Fv,      C,      GetGlocalTv_q,                 ,               ,       void, ,"const Vector3D& v, ConstSizeMatrix<maxRotationCoordinates * maxRotationCoordinates>& matrix, ConfigurationType configuration = ConfigurationType::Current", CDI, "compute d(Glocal^T*v)/dq for any set of parameters; needed for jacobians"  
+#
+#VISUALIZATION:
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
+Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
+#file names automatically determined from class name
+writeFile = True
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodeRigidBody2D
@@ -483,8 +592,8 @@ Fv,     C,      GetRotationJacobianTTimesVector_q,,             ,       void,   
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'RigidBody2D';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #**Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,    "return internally stored reference coordinates of node" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
-Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     M,      GetInitialCoordinateVector_t,   ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
@@ -528,8 +637,8 @@ Fv,     C,      GetVelocity,                    ,               3,      Vector3D
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return '1D';",       ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #Fv,     M,      CallFunction,                   ,               ,       py::object,  ";",    "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,  "return internally stored reference coordinates of node" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
-Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     M,      GetInitialCoordinateVector_t,   ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
@@ -566,8 +675,8 @@ Fv,     C,      GetRotationJacobianTTimesVector_q,,             ,       void,   
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'Point2DSlope1';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #**Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,    "return internally stored reference coordinates of node" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
-Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     M,      GetInitialCoordinateVector_t,   ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
@@ -605,8 +714,8 @@ Fv,     C,      GetPositionJacobian,            ,               ,       void,   
 # Fv,     C,      GetRotationJacobianTTimesVector_q,,             ,       void,       ,                           "const Vector3D& vector, Matrix& jacobian_q",       CDI,    "provide derivative w.r.t. coordinates of rotation Jacobian times vector; for current configuration" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'Point3DSlope1';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,    "return internally stored reference coordinates of node" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
-Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     M,      GetInitialCoordinateVector_t,   ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
@@ -646,8 +755,8 @@ Fv,     C,      GetRotationJacobian,            ,               ,       void,   
 Fv,     C,      GetRotationJacobianTTimesVector_q,,             ,       void,       ,                           "const Vector3D& vector, Matrix& jacobian_q",       CDI,    "provide derivative w.r.t. coordinates of rotation Jacobian times vector; for current configuration" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'Point3DSlope23';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,    "return internally stored reference coordinates of node" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
-Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     M,      GetInitialCoordinateVector_t,   ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
@@ -682,8 +791,8 @@ Fv,     C,      GetAcceleration,                ,               3,      Vector3D
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'GenericODE2';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #Fv,     M,      CallFunction,                   ,               ,       py::object,  ";",    "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,  "return internally stored reference coordinates of node" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
-Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     M,      GetInitialCoordinateVector_t,   ,               ,       LinkedDataVector, "return parameters.initialCoordinates_t;", , CI,  "return internally stored initial coordinates (velocities) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
@@ -712,7 +821,7 @@ Fv,     C,      GetType,                        ,               ,       Node::Ty
 #put position into visualization: Fv,     C,      GetPosition,                    ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", "ConfigurationType configuration = ConfigurationType::Current",       CI,    "return configuration dependent position of node; returns always a 3D Vector; this makes no sense for NodeGenericODE1, but necessary for consistency; FUTURE: add 'drawable' flag to nodes in order to exclude drawing" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'GenericODE1';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,  "return internally stored reference coordinates of node" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
@@ -739,7 +848,7 @@ Fv,     C,      GetNumberOfAECoordinates,     GetNumberOfAECoordinates,,  Index,
 Fv,     C,      GetType,                        ,               ,       Node::Type,  "return Node::GenericAE;", ,   CI,     "return node type (for node treatment in computation)" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'GenericAE';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,  "return internally stored reference coordinates of node" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial coordinates (displacements) of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
@@ -766,7 +875,7 @@ Fv,     C,      GetType,                        ,               ,       Node::Ty
 #Fv,     C,      NodeGroup,                      ,               ,       CNodeGroup, ,                           ,       CIJ,    "return node group (for classification (\hac{Data}/\hac{ODE2}/\hac{AE}) in computation)" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'GenericData';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #Fv,     M,      CallFunction,                   ,               ,       py::object,  ";",    "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial data coordinates of node" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return parameters.initialCoordinates;", , CI,    "return internally stored initial data coordinates of node" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #VISUALIZATION:
@@ -805,8 +914,8 @@ Fv,     C,      GetRotationJacobianTTimesVector_q,,             ,       void,   
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'PointGround';",    ,       CI,     "Get type name of node (without keyword 'Node'...!); could also be realized via a string -> type conversion?" 
 #**Fv,     M,      CallFunction,                   ,               ,       py::object,  ,                          "STDstring functionName, py::dict args",       CDI,    "Call a specific node function ==> automatically generated in future" 
 Fv,     C,      GetReferenceCoordinateVector,   ,               ,       LinkedDataVector, "return parameters.referenceCoordinates;", , CI,    "return internally stored reference coordinates of node" 
-Fv,     M,      GetInitialVector,               ,               ,       LinkedDataVector, "return LinkedDataVector();", , CI,    "return empty vector, as there are no initial coordinates" 
-Fv,     M,      GetInitialVector_t,             ,               ,       LinkedDataVector, "return LinkedDataVector();", , CI,  "return empty vector, as there are no initial velocity coordinates" 
+Fv,     M,      GetInitialCoordinateVector,     ,               ,       LinkedDataVector, "return LinkedDataVector();", , CI,    "return empty vector, as there are no initial coordinates" 
+Fv,     M,      GetInitialCoordinateVector_t,   ,               ,       LinkedDataVector, "return LinkedDataVector();", , CI,  "return empty vector, as there are no initial velocity coordinates" 
 Fv,     C,      GetOutputVariable,              ,               ,       void,       ,                           "OutputVariableType variableType, ConfigurationType configuration, Vector& value",          DC, "provide according output variable in 'value'; used e.g. for postprocessing and sensors" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
@@ -2243,14 +2352,16 @@ V,      CP,     forceUserFunction,              ,               ,       PyFuncti
 #
 V,      C,      tempVector,                     ,               ,       ResizableVector,"ResizableVector()",  ,       U,       "temporary vector during computation of mass and ODE2LHS"
 V,      C,      tempVector2,                    ,               ,       ResizableVector,"ResizableVector()",  ,       U,       "second temporary vector during computation of mass and ODE2LHS"
-V,      C,      jointTransformationsTemp,       ,               ,       Transformations66List,"Transformations66List()", , IUR,    "$\Xm \in \Rcal^{n \times (6 \times 6)}$temporary list containing transformations (Pluecker transforms) per joint"
-V,      C,      linkInertiasT66,                ,               ,       Transformations66List,"Transformations66List()", , IUR,    "$\Jm_{66} \in \Rcal^{n \times (6 \times 6)}$temporary list link inertias as Pluecker transforms per link"
-V,      C,      motionSubspaces,                ,               ,       Vector6DList,"Vector6DList()",        ,       IUR,    "$\Mm\Sm \in \Rcal^{n \times 6}$temporary list containing 6D motion subspaces per joint"
-V,      C,      jointTempT66,                   ,               ,       Transformations66List,"Transformations66List()", ,  IUR,   "$\Xm_j \in \Rcal^{n \times 6}$temporary list containing 66 transformations per joint"
-V,      C,      jointVelocities,                ,               ,       Vector6DList,"Vector6DList()",        ,       IUR,    "$\Vm_j \in \Rcal^{n \times 6}$temporary list containing 6D velocities per joint"
-V,      C,      jointAccelerations,             ,               ,       Vector6DList,"Vector6DList()",        ,       IUR,    "$\Am_j \in \Rcal^{n \times 6}$temporary list containing 6D accelerations per joint"
-V,      C,      jointForces,                    ,               ,       Vector6DList,"Vector6DList()",        ,       IUR,    "$\Fm_j \in \Rcal^{n \times 6}$temporary list containing 6D torques/forces per joint/link"
-# V,      C,      tempCoordinates_tt,             ,               ,       NumpyVector,"Vector()",                 ,       IUR,    "$\ddot \cv_{temp} \in \Rcal^{n}$temporary vector containing acceleration coordinates"
+V,      C,      jointTransformationsTemp,       ,               ,       Transformation66List,"Transformation66List()", , U,    "$\Xm \in \Rcal^{n \times (6 \times 6)}$temporary list containing transformations (Pluecker transforms) per joint"
+V,      C,      jointVelocitiesTemp,            ,               ,       Vector6DList,"Vector6DList()",        ,       U,    "$\Vm_j \in \Rcal^{n \times 6}$temporary list containing 6D velocities per joint"
+V,      C,      jointAccelerationsTemp,         ,               ,       Vector6DList,"Vector6DList()",        ,       U,    "$\Am_j \in \Rcal^{n \times 6}$temporary list containing 6D accelerations per joint"
+V,      C,      jointTransformationsTempVis,    ,               ,       Transformation66List,"Transformation66List()", , U,    "$\Xm \in \Rcal^{n \times (6 \times 6)}$temporary list containing transformations (Pluecker transforms) per joint; for visualization!"
+V,      C,      jointVelocitiesTempVis,         ,               ,       Vector6DList,"Vector6DList()",        ,       U,    "$\Vm_j \in \Rcal^{n \times 6}$temporary list containing 6D velocities per joint; for visualization!"
+V,      C,      jointAccelerationsTempVis,      ,               ,       Vector6DList,"Vector6DList()",        ,       U,    "$\Am_j \in \Rcal^{n \times 6}$temporary list containing 6D accelerations per joint; for visualization!"
+V,      C,      linkInertias,                   ,               ,       InertiaList,"InertiaList()", , U,    "$\Jm_{66} \in \Rcal^{n \times (6 \times 6)}$temporary list link inertias as Pluecker transforms per link"
+V,      C,      motionSubspaces,                ,               ,       Vector6DList,"Vector6DList()",        ,       U,    "$\Mm\Sm \in \Rcal^{n \times 6}$temporary list containing 6D motion subspaces per joint"
+V,      C,      jointTempT66,                   ,               ,       Transformation66List,"Transformation66List()", ,  U,   "$\Xm_j \in \Rcal^{n \times 6}$temporary list containing 66 transformations per joint"
+V,      C,      jointForces,                    ,               ,       Vector6DList,"Vector6DList()",        ,       U,    "$\Fm_j \in \Rcal^{n \times 6}$temporary list containing 6D torques/forces per joint/link"
 Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return (parameters.forceUserFunction!=0);", "", CI,  "return true, if object has a computation user function"  
 Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
@@ -2293,9 +2404,9 @@ F ,     C,      NumberOfLinks,                  ,               ,       Index,  
 F,      C,      EvaluateUserFunctionForce,      ,               ,       void,       ,                           "Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
 F,      C,      GetNegativeGravity6D,           ,               ,       void,       ,                           "Vector6D& gravity6D",   CDI,    "compute negative 6D gravity to be used in Pluecker transforms"
 F,      C,      JointTransformMotionSubspace66, ,               ,       void,       ,                           "Joint::Type jointType, Real q, Transformation66& T, Vector6D& MS",          CDI,    "compute joint transformation T and motion subspace MS for jointType and joint value q"
-F,      C,      ComputeTreeTransformations,     ,               ,       void,       ,                           "ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, Transformations66List& Xup, Vector6DList& V, Vector6DList& A",          CDI,    "compute list of Pluecker transformations Xup, 6D velocities and 6D acceleration terms (not joint accelerations) per joint"
+F,      C,      ComputeTreeTransformations,     ,               ,       void,       ,                           "ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, Transformation66List& Xup, Vector6DList& V, Vector6DList& A",          CDI,    "compute list of Pluecker transformations Xup, 6D velocities and 6D acceleration terms (not joint accelerations) per joint"
 F,      C,      ComputeMassMatrixAndODE2LHS,    ,               ,       void,       ,                           "EXUmath::MatrixContainer* massMatrixC, const ArrayIndex* ltg, Vector* ode2Lhs, Index objectNumber, bool computeMass",          CDI,    "compute mass matrix if computeMass = true and compute ODE2LHS vector if computeMass=false"
-F,      C,      AddExternalForces6D,            ,               ,       void,       ,                           "const Transformations66List& Xup, Vector6DList& Fvp",          CDI,    "function which adds 3D torques/forces per joint to Fvp"
+F,      C,      AddExternalForces6D,            ,               ,       void,       ,                           "const Transformation66List& Xup, Vector6DList& Fvp",          CDI,    "function which adds 3D torques/forces per joint to Fvp"
 #superelement functions:
 Fv,     C,      HasReferenceFrame,              ,               ,       Bool,       "localReferenceFrameNode = 0; return false;", "Index& localReferenceFrameNode", CI,    "return true, if object has reference frame; return according LOCAL node number" 
 Fv,     C,      GetNumberOfMeshNodes,           ,               ,       Index,      "return parameters.jointTransformations.NumberOfItems();", , IC, "return the number of mesh nodes; these are virtual nodes per link, emulating rigid bodies recomputed from kinematic tree" 
@@ -2312,7 +2423,7 @@ Fv,     C,      GetOutputVariableTypesSuperElement,  ,          ,       OutputVa
 F,      C,      GetOutputVariableKinematicTree,  ,               ,       void,       ,                          "OutputVariableType variableType, const Vector3D& localPosition, Index linkNumber, ConfigurationType configuration, Vector& value",          DC, "get extended output variables for multi-nodal objects with mesh nodes"
 #F,      C,      GetAccessFunctionKinematicTree,  ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Index linkNumber, Matrix& value",          DC, "compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file"
 F,      C,      ComputeRigidBodyMarkerDataKT,   ,               ,       void,       ,                           "const Vector3D& localPosition, Index linkNumber, bool computeJacobian, MarkerData& markerData",          CDI, "accelerator function for faster computation of MarkerData for rigid bodies/joints" 
-F,      C,      ComputeJacobian,                ,               ,       void,       ,                           "Index linkNumber, const Vector3D& position, const Transformations66List& jointTransformations, ResizableMatrix& positionJacobian, ResizableMatrix& rotationJacobian",          CDI, "compute rot+pos jacobian of (global) position at linkNumber, using pre-computed joint transformations" 
+F,      C,      ComputeJacobian,                ,               ,       void,       ,                           "Index linkNumber, const Vector3D& position, const Transformation66List& jointTransformations, ResizableMatrix& positionJacobian, ResizableMatrix& rotationJacobian",          CDI, "compute rot+pos jacobian of (global) position at linkNumber, using pre-computed joint transformations" 
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,       "true",                         ,   IO,      "set true, if item is shown in visualization and false if it is not shown"
 #for future, we may use a graphicsDataList with twice length to allow showing links/joints separately?
@@ -3591,8 +3702,7 @@ mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
 pythonShortName = Beam2D
 addProtectedC = "    static constexpr Index nODE2coordinates = 6; //!< fixed size of coordinates used e.g. for ConstSizeVectors\n    mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set\n    mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation\n"
-outputVariables = "{'Position':'global position vector of local axis (1) and cross section (2) position', 'Displacement':'global displacement vector of local axis (1) and cross section (2) position', 'Velocity':'global velocity vector of local axis (1) and cross section (2) position', 'Rotation':'3D Tait-Bryan rotation components, containing rotation around $z$-axis only', 'StrainLocal':'6 strain components, containing only axial ($xx$) and shear strain ($xy$)', 'CurvatureLocal':'3D vector of curvature, containing only curvature w.r.t. $z$-axis'}"
-#"{", 'ForceLocal':'(local) section normal force (scalar)', 'TorqueLocal':'(local) bending moment (scalar)'}"
+outputVariables = "{'Position':'global position vector of local axis (X) and cross section (Y) position', 'Displacement':'global displacement vector of local axis (X) and cross section (Y) position', 'Velocity':'global velocity vector of local axis (X) and cross section (Y) position', 'Rotation':'3D Tait-Bryan rotation components, containing rotation around $Z$-axis only', 'StrainLocal':'6 (local) strain components, containing only axial ($XX$, index 0) and shear strain ($XY$, index 5); evaluated at beam axis ONLY', 'CurvatureLocal':'3D vector of (local) curvature, only $Z$ component is non-zero', 'ForceLocal':'3D vector of (local) section normal force, containing axial (X) and shear force (Y)', 'TorqueLocal':'3D vector of (local) torques, containing only bending moment (Z)'}"
 classType = Object
 objectType = FiniteElement
 equations = 
@@ -3626,7 +3736,8 @@ Fv,     C,      GetOutputVariableBody,          ,               ,       void,   
 Fv,     C,      GetPosition,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) position of 'localPosition' according to configuration type" 
 Fv,     C,      GetDisplacement,                ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) displacement of 'localPosition' according to configuration type" 
 Fv,     C,      GetVelocity,                    ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) velocity of 'localPosition' according to configuration type" 
-Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
+Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of beam; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
+F,      C,      GetRotation,                    ,               ,       Real,       ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation of beam (Tait-Bryan angles); returns 3D Vector with z-component" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'BeamGeometricallyExact2D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex <= 1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
@@ -4827,6 +4938,123 @@ writeFile = True
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = ObjectConnectorCoordinateSpringDamperExt
+classDescription = "A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates; same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction; has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. UNDER CONSTRUCTION"
+cParentClass = CObjectConnector
+mainParentClass = MainObjectConnector
+visuParentClass = VisualizationObject
+pythonShortName = CoordinateSpringDamperExt
+classType = Object
+objectType = Connector
+addIncludesC = 'class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
+outputVariables = "{'Displacement':'$\Delta q$relative scalar displacement of marker coordinates', 'Velocity':'$\Delta v$difference of scalar marker velocity coordinates', 'Force':'$f_{SD}$scalar spring force'}"
+excludeFromTheDoc = True
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+equations =
+    \mysubsubsubsection{Definition of quantities}
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{marker m0 coordinate}{$q_{m0}$}{current displacement coordinate which is provided by marker m0; does NOT include reference coordinate!}
+    \rowTable{marker m1 coordinate}{$q_{m1}$}{}
+    \rowTable{marker m0 velocity coordinate}{$v_{m0}$}{current velocity coordinate which is provided by marker m0}
+    \rowTable{marker m1 velocity coordinate}{$v_{m1}$}{}
+    \finishTable
+    \mysubsubsubsection{Connector forces}
+    Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates),
+    \be
+      \Delta q= q_{m1} - q_{m0}
+    \ee
+    and relative velocity,
+    \be
+      \Delta v= v_{m1} - v_{m0}
+    \ee
+    If $f_{\mu_s} > 0$, friction is computed using a so-called bristle model. This requires the data node to be defined accordingly, 
+    which must contain 3 data variables.
+    
+    If $f_{\mu_d} > 0$ but $f_{\mu_s} = 0$, the Stribeck friction model is used, with
+    \be
+      f(v) = \begin{cases} 
+           (\mu_d + \mu_{s_{off}}) v, \quad \mathrm{if} \quad |v| <= v_{reg}\\
+           \mathrm{Sign}(v)\left( \mu_d + \mu_{s_{off}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} + \mu_v (|v|-v_{reg}) \right), \quad \mathrm{else}
+           \end{cases}
+    \ee
+    If \texttt{activeConnector = True}, the scalar spring force vector is computed as
+    \be
+      f_{SD} = k \left( \Delta q - x_\mathrm{off} \right) + d \cdot \left( \Delta v - v_\mathrm{off} \right)
+      + f_\mathrm{friction} + f_\mathrm{contact}
+    \ee
+    If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
+    \be
+      f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta q, \Delta v, k, d, l_\mathrm{off}, f_\mu, v_\mu)
+    \ee
+    and \texttt{iN} represents the itemNumber (=objectNumber).
+
+    If \texttt{activeConnector = False}, $f_{SD}$ is set to zero.:
+    %
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+#CObjectMarkerBodyPosition* automatically inserted!
+Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "connector's unique name"
+V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "list of markers used in connector"
+V,      CP,     nodeNumber,                     ,               ,       NodeIndex,      "EXUstd::InvalidIndex",       ,       I,      "node number of a NodeGenericData for 3 data coordinates (friction mode, last sticking position, limit contact); must exist in case of bristle friction model or limit stops"
+V,      CP,     stiffness,                      ,               ,       Real,       "0.",       ,       I,       "$k$stiffness [SI:N/m] of spring; acts against relative value of coordinates"
+V,      CP,     damping,                        ,               ,       Real,       "0.",       ,       IO,      "$d$damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates"
+V,      CP,     offset,                         ,               ,       Real,       "0.",       ,       IO,      "$x_\mathrm{off}$offset between two coordinates (reference length of springs), see equation; it can be used to represent the pre-scribed drive coordinate"
+V,      CP,     velocityOffset,                 ,               ,       Real,       "0.",       ,       IO,      "$v_\mathrm{off}$offset between two coordinates; used to model D-control of a drive, where damping is not acting against prescribed velocity"
+#
+V,      CP,     dynamicFriction,                ,               ,       Real,       "0.",       ,       IO,      "$f_{\mu_\mathrm{d}}$dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$"
+V,      CP,     staticFrictionOffset,           ,               ,       Real,       "0.",       ,       IO,      "$f_{\mu_\mathrm{so}}$static (dry) friction offset force [SI:N]; assuming a normal force $f_N$, the friction force is limited by $f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}$"
+V,      CP,     stickingStiffness,              ,               ,       Real,       "0.",       ,       IO,      "$k_\mu$stiffness of bristles in sticking case  [SI:N/m]"
+V,      CP,     stickingDamping,                ,               ,       Real,       "0.",       ,       IO,      "$d_\mu$damping of bristles in sticking case  [SI:N/(m/s)]"
+V,      CP,     frictionExpVelocity,            ,               ,       Real,       "0.",       ,       IO,      "$v_\mathrm{exp}$relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at $\Delta v = v_\mathrm{exp}$, the static friction offset force is reduced to 36.8\%"
+V,      CP,     frictionViscous,                ,               ,       Real,       "0.",       ,       IO,      "$\mu_\mathrm{v}$viscous friction part [SI:N/(m s)], acting against relative velocity in sliding case"
+#
+V,      CP,     limitStopsUpper,                ,               ,       Real,       "0.",       ,       IO,      "$s_\mathrm{upper}$upper (maximum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates"
+V,      CP,     limitStopsLower,                ,               ,       Real,       "0.",       ,       IO,      "$s_\mathrm{lower}$lower (minimum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates"
+V,      CP,     limitStopsStiffness,            ,               ,       Real,       "0.",       ,       IO,      "$k_\mathrm{limits}$stiffness [SI:N/m] of limit stop (contact stiffness); following a linear contact model"
+V,      CP,     limitStopsDamping,              ,               ,       Real,       "0.",       ,       IO,      "$d_\mathrm{limits}$damping [SI:N/(m/s)] of limit stop (contact damping); following a linear contact model"
+V,      CP,     useLimitStops,                  ,               ,       bool,       "false",    ,       IO,      "if True, limit stops are considered and parameters must be set accordingly; furthermore, the NodeGenericData must have 3 data coordinates"
+#
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     springForceUserFunction,        ,               ,       PyFunctionMbsScalarIndexScalar7, 0,,       IO,     "$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with 8 parameters, see equations section / see description below"
+#
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
+Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return 3*(useLimitStops || (dynamicFriction+);",                 ,       CI,     "needed in order to create ltg-lists for data variable of connector" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+#
+Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return (parameters.springForceUserFunction!=0);", "", CI,  "return true, if object has a computation user function"  
+Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
+Fv,     C,      IsPenaltyConnector,            ,               ,        Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
+Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                    ,          CDI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} \ac{LHS} equations w.r.t. ODE2 coordinates and ODE2 velocities; write either dense local jacobian into dense matrix of MatrixContainer or ADD sparse triplets INCLUDING ltg mapping to sparse matrix of MatrixContainer"
+#
+Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+#
+Fv,     C,      ComputeJacobianForce6D,         ,               ,       void,       ,                           "const MarkerDataStructure& markerData, Index objectNumber, Vector6D& force6D",          CDI,     "compute global 6D force and torque which is used for computation of derivative of jacobian; used only in combination with ComputeJacobianODE2_ODE2" 
+Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
+Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::Coordinate;", ,   CI,     "provide requested markerType for connector" 
+Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
+Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,    "return object type (for node treatment in computation)" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ConnectorCoordinateSpringDamper';", , CI,     "Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
+Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
+#+++helper functions+++
+F,      C,      ComputeSpringForce,             ,               ,       void,       , "const MarkerDataStructure& markerData, Index itemIndex, Real& relPos, Real& relVel, Real& force", CDI,    "compute spring damper force helper function" 
+F,      C,      EvaluateUserFunctionForce,      ,               ,       void,       , "Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real& relPos, Real& relVel", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
+#VISUALIZATION:
+Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+V,      V,      drawSize,                       ,               ,       float,  "-1.f",                          ,       IO,    "drawing size = diameter of spring; size == -1.f means that default connector size is used"
+V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
+#file names automatically determined from class name
+writeFile = True
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorGravity
 classDescription = "A connector for additing forces due to gravitational fields beween two bodies, which can be used for aerospace and small-scale astronomical problems; DO NOT USE this connector for adding gravitational forces (loads), which should be using LoadMassProportional, which is acting global and always in the same direction."
 cParentClass = CObjectConnector
@@ -4927,8 +5155,8 @@ miniExample =
     exu.SolveDynamic(mbs, sims, solverType=exu.DynamicSolverType.RK67)
 
     #check result at default integration time
-    #expect y=x after one period of orbiting (got: 100000.00000000485)
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)[1]
+    #expect y=x after one period of orbiting (got: 100000.00000000479)
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)[1]/100000
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription

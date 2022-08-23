@@ -4,7 +4,7 @@
 *
 * @author       Manzl Peter
 * @date         2019-07-01 (generated)
-* @date         2022-07-04  22:03:18 (last modified)
+* @date         2022-07-21  19:30:01 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -153,7 +153,7 @@ public: // AUTO:
         d["coefficientsHullDerivative"] = EPyUtils::Vector2NumPy(cObjectContactConvexRoll->GetCoefficientsHullDerivative()); //! AUTO: cast variables into python (not needed for standard types) 
         d["coefficientsHullDDerivative"] = EPyUtils::Vector2NumPy(cObjectContactConvexRoll->GetCoefficientsHullDDerivative()); //! AUTO: cast variables into python (not needed for standard types) 
         d["rBoundingSphere"] = (Real)cObjectContactConvexRoll->GetRBoundingSphere(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["pContact"] = (std::vector<Real>)cObjectContactConvexRoll->GetPContact(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["pContact"] = EPyUtils::SlimVector2NumPy(cObjectContactConvexRoll->GetPContact()); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectContactConvexRoll->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["Vcolor"] = (std::vector<float>)visualizationObjectContactConvexRoll->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -178,7 +178,7 @@ public: // AUTO:
         else if (parameterName.compare("coefficientsHullDerivative") == 0) { return EPyUtils::Vector2NumPy(cObjectContactConvexRoll->GetCoefficientsHullDerivative());} //! AUTO: get parameter
         else if (parameterName.compare("coefficientsHullDDerivative") == 0) { return EPyUtils::Vector2NumPy(cObjectContactConvexRoll->GetCoefficientsHullDDerivative());} //! AUTO: get parameter
         else if (parameterName.compare("rBoundingSphere") == 0) { return py::cast((Real)cObjectContactConvexRoll->GetRBoundingSphere());} //! AUTO: get parameter
-        else if (parameterName.compare("pContact") == 0) { return py::cast((std::vector<Real>)cObjectContactConvexRoll->GetPContact());} //! AUTO: get parameter
+        else if (parameterName.compare("pContact") == 0) { return EPyUtils::SlimVector2NumPy(cObjectContactConvexRoll->GetPContact());} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectContactConvexRoll->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectContactConvexRoll->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectContactConvexRoll->GetColor());} //! AUTO: get parameter

@@ -30,7 +30,9 @@ import numpy as np
 from math import sqrt, sin, cos, pi
 
 doMeshing = True #set false if mesh shall be loaded
-computeStresses = True
+useHCBmodes = True #Hurty-Craig-Bampton modes
+computeStresses = False #takes some time
+loadStresses = False #set True only if already computed previously; may lead to severe problems if wrong modes are loaded!!!!
 
 fileName = 'testData/FMBStest1' #for load/save of FEM data
 
@@ -175,22 +177,24 @@ if False: #activate to animate modes
 
 # In[6]:
 
-
+addSensors = True
 pLeft = [0,0,0] #midpoint of bolt
 pRight = [L,0,-t] #midpoint of hole
 pMid = [0.5*L,hp,-0.5*t] #midpoint of bar
 pTip = [L+ra,0,-0.5*t] #midpoint of bar
 
-nMid = femInterface.GetNodeAtPoint(pMid) #tip node (do not use midpoint, as this may not be a mesh node ...)
-print("pMid=",pMid,", nMid=",nMid)
-nTip = femInterface.GetNodeAtPoint(pTip) #tip node (do not use midpoint, as this may not be a mesh node ...)
-print("pTip=",pTip,", nTip=",nTip)
+#%%  
+if addSensors:
+    nMid = femInterface.GetNodeAtPoint(pMid, tolerance=1e-2) #tip node (do not use midpoint, as this may not be a mesh node ...)
+    print("pMid=",pMid,", nMid=",nMid)
+    nTip = femInterface.GetNodeAtPoint(pTip, tolerance=1e-2) #tip node (do not use midpoint, as this may not be a mesh node ...)
+    print("pTip=",pTip,", nTip=",nTip)
 
 tV = np.array([0,0,0.5*t])
 nodesLeft = femInterface.GetNodesOnCylinder(pLeft-tV, pLeft+tV, ri)
-#print('nodesLeft=',nodesLeft)
+# print('nodesLeft=',nodesLeft)
 nodesRight = femInterface.GetNodesOnCylinder(pRight-tV, pRight+tV, ri)
-#print('nodesRight=',nodesRight)
+# print('nodesRight=',nodesRight)
 
 lenNodesLeft = len(nodesLeft)
 weightsNodesLeft = np.array((1./lenNodesLeft)*np.ones(lenNodesLeft))
@@ -208,7 +212,6 @@ boundaryList = [nodesLeft, nodesRight] #second boudary (right plane) not needed 
 
 #remark: ComputeEigenmodes requires upgrade of scipy (python -m pip install --upgrade scipy) as compared to Anaconda installation...
 import time
-useHCBmodes = True #Hurty-Craig-Bampton modes
 
 print("compute modes... ")
 start_time = time.time()
@@ -252,9 +255,10 @@ if computeStresses:
     #save modes + stresses
     femInterface.SaveToFile(femModesName)
 else:
-    femInterface.LoadFromFile(femModesName)
-    SC.visualizationSettings.contour.outputVariable = varType
-    SC.visualizationSettings.contour.outputVariableComponent = 0 #x-component
+    if loadStresses:
+        femInterface.LoadFromFile(femModesName)
+        SC.visualizationSettings.contour.outputVariable = varType
+        SC.visualizationSettings.contour.outputVariableComponent = 0 #x-component
 
 
 # # Setup flexible body in exudyn
@@ -324,19 +328,20 @@ mLeft = mbs.AddMarker(MarkerSuperElementRigid(bodyNumber=objFFRF['oFFRFreducedOr
                                               offset=-femInterface.GetNodePositionsMean(nodesLeft),
                                              ))
 oJoint = mbs.AddObject(GenericJoint(markerNumbers=[mGround, mLeft], 
-                           constrainedAxes = [1,1,1,1,1,0],
-                           visualization=VGenericJoint(axesRadius=0.05*ri, axesLength=1.5*t)))
+                            constrainedAxes = [1,1,1,1,1,0],
+                            visualization=VGenericJoint(axesRadius=0.05*ri, axesLength=1.5*t)))
 # oJoint = mbs.AddObject(RevoluteJointZ(markerNumbers=[mGround, mLeft],
-#                              visualization=VRevoluteJointZ(axisRadius=0.05*ri, axisLength=1.5*t)))
+#                               visualization=VRevoluteJointZ(axisRadius=0.05*ri, axisLength=1.5*t)))
 
-#compensate joint offset:
-if True:
+if False: #if this is used, remove offset in MarkerSuperElementRigid above
+    #alternative to offset above: compensate joint offset by computation of current displacement in joint: (if not done in MarkerSuperElementRigid)
     mbs.Assemble() #initialize system to compute joint offset
     jointOffset = mbs.GetObjectOutput(oJoint,exu.OutputVariableType.DisplacementLocal)
     print('jointOffset=',jointOffset)
 
     mbs.SetMarkerParameter(mLeft.GetIndex(), 'offset', list(-jointOffset)) #compensate offset; mLeft.GetIndex() because of BUG751
 
+    #now check new offset:
     mbs.Assemble() #initialize system to compute joint offset
     jointOffset = mbs.GetObjectOutput(oJoint,exu.OutputVariableType.DisplacementLocal)
     print('jointOffset=',jointOffset)
@@ -345,23 +350,21 @@ if True:
 # In[13]:
 
 
-mLeft
-
-
 # # Add sensors
 
 # In[14]:
 
 
 fileDir = 'solution/'
-sMidDispl = mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], 
-                          meshNodeNumber=nMid, #meshnode number!
-                          fileName=fileDir+'uMid'+str(nModes)+'modes.txt', 
-                          outputVariableType = exu.OutputVariableType.Displacement))
-sTipDispl = mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], 
-                          meshNodeNumber=nTip, #meshnode number!
-                          fileName=fileDir+'uTip'+str(nModes)+'modes.txt', 
-                          outputVariableType = exu.OutputVariableType.Displacement))
+if addSensors:
+    sMidDispl = mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], 
+                              meshNodeNumber=nMid, #meshnode number!
+                              fileName=fileDir+'uMid'+str(nModes)+'modes.txt', 
+                              outputVariableType = exu.OutputVariableType.Displacement))
+    sTipDispl = mbs.AddSensor(SensorSuperElement(bodyNumber=objFFRF['oFFRFreducedOrder'], 
+                              meshNodeNumber=nTip, #meshnode number!
+                              fileName=fileDir+'uTip'+str(nModes)+'modes.txt', 
+                              outputVariableType = exu.OutputVariableType.Displacement))
 
 
 # # Set up visualization
@@ -435,7 +438,7 @@ simulationSettings.displayComputationTime = True
 # In[17]:
 
 
-lifeVisualization = False
+lifeVisualization = True
 
 if lifeVisualization:
     SC.visualizationSettings.general.autoFitScene=False #if reloaded view settings
@@ -446,8 +449,9 @@ if lifeVisualization:
 exu.SolveDynamic(mbs, #solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
                   simulationSettings=simulationSettings)
             
-uTip = mbs.GetSensorValues(sMidDispl)
-print("nModes=", nModes, ", mid displacement=", uTip)
+if addSensors:
+    uTip = mbs.GetSensorValues(sMidDispl)
+    print("nModes=", nModes, ", mid displacement=", uTip)
 
 if lifeVisualization:
     SC.WaitForRenderEngineStopFlag()
@@ -471,7 +475,7 @@ if False: #use this to reload the solution and use SolutionViewer
 # In[19]:
 
 
-if True:
+if addSensors:
     from exudyn.plot import PlotSensor
     PlotSensor(mbs, sensorNumbers=[sMidDispl,sMidDispl,sMidDispl], components=[0,1,2])
 

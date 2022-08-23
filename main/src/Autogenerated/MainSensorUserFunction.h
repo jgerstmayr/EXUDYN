@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-26  22:40:50 (last modified)
+* @date         2022-07-21  19:36:24 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -124,7 +124,7 @@ public: // AUTO:
         auto d = py::dict();
         d["sensorType"] = (std::string)GetTypeName();
         d["sensorNumbers"] = EPyUtils::GetArraySensorIndex(cSensorUserFunction->GetParameters().sensorNumbers); //! AUTO: cast variables into python (not needed for standard types) 
-        d["factors"] = (std::vector<Real>)cSensorUserFunction->GetParameters().factors; //! AUTO: cast variables into python (not needed for standard types) 
+        d["factors"] = EPyUtils::Vector2NumPy(cSensorUserFunction->GetParameters().factors); //! AUTO: cast variables into python (not needed for standard types) 
         d["writeToFile"] = (bool)cSensorUserFunction->GetParameters().writeToFile; //! AUTO: cast variables into python (not needed for standard types) 
         d["fileName"] = (std::string)cSensorUserFunction->GetParameters().fileName; //! AUTO: cast variables into python (not needed for standard types) 
         if (cSensorUserFunction->GetParameters().sensorUserFunction)
@@ -143,7 +143,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("sensorNumbers") == 0) { return py::cast(EPyUtils::GetArraySensorIndex(cSensorUserFunction->GetParameters().sensorNumbers));} //! AUTO: get parameter
-        else if (parameterName.compare("factors") == 0) { return py::cast((std::vector<Real>)cSensorUserFunction->GetParameters().factors);} //! AUTO: get parameter
+        else if (parameterName.compare("factors") == 0) { return EPyUtils::Vector2NumPy(cSensorUserFunction->GetParameters().factors);} //! AUTO: get parameter
         else if (parameterName.compare("writeToFile") == 0) { return py::cast((bool)cSensorUserFunction->GetParameters().writeToFile);} //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { return py::cast((std::string)cSensorUserFunction->GetParameters().fileName);} //! AUTO: get parameter
         else if (parameterName.compare("sensorUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,StdArrayIndex,StdVector,ConfigurationType)>)cSensorUserFunction->GetParameters().sensorUserFunction);} //! AUTO: get parameter

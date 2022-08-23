@@ -534,7 +534,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 		//.value("RotationEulerParameters", Node::RotationEulerParameters)
 		//.value("RotationRxyz", Node::RotationRxyz)
 		//.value("RotationRotationVector", Node::RotationRotationVector)
-		//.value("RotationLieGroup", Node::RotationLieGroup)
+		//.value("LieGroupWithDirectUpdate", Node::LieGroupWithDirectUpdate)
 		//.value("GenericODE2", Node::GenericODE2)
 		//.value("GenericODE1", Node::GenericODE1)
 		//.value("GenericAE", Node::GenericAE)

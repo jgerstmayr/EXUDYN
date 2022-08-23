@@ -66,7 +66,7 @@
 		.value("RotationEulerParameters", Node::RotationEulerParameters)    //node with 3D orientations that are modelled with Euler parameters (unit quaternions)
 		.value("RotationRxyz", Node::RotationRxyz)    //node with 3D orientations that are modelled with Tait-Bryan angles
 		.value("RotationRotationVector", Node::RotationRotationVector)    //node with 3D orientations that are modelled with the rotation vector
-		.value("RotationLieGroup", Node::RotationLieGroup)    //node intended to be solved with Lie group methods
+		.value("LieGroupWithDirectUpdate", Node::LieGroupWithDirectUpdate)    //node intended to be solved with Lie group methods
 		.value("GenericODE2", Node::GenericODE2)    //node with general ODE2 variables
 		.value("GenericODE1", Node::GenericODE1)    //node with general ODE1 variables
 		.value("GenericAE", Node::GenericAE)    //node with general algebraic variables

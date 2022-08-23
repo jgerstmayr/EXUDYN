@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-14  23:29:22 (last modified)
+* @date         2022-08-23  12:24:34 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,8 +115,11 @@ public: // AUTO:
     //! AUTO:  return the (global) velocity of 'localPosition' according to configuration type
     virtual Vector3D GetVelocity(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //! AUTO:  return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
+    //! AUTO:  return configuration dependent rotation matrix of beam; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
     virtual Matrix3D GetRotationMatrix(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  return configuration dependent rotation of beam (Tait-Bryan angles); returns 3D Vector with z-component
+    Real GetRotation(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const;
 
     //! AUTO:  return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
     virtual Vector3D GetAngularVelocity(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
@@ -181,7 +184,9 @@ public: // AUTO:
             (Index)OutputVariableType::Velocity +
             (Index)OutputVariableType::Rotation +
             (Index)OutputVariableType::StrainLocal +
-            (Index)OutputVariableType::CurvatureLocal );
+            (Index)OutputVariableType::CurvatureLocal +
+            (Index)OutputVariableType::ForceLocal +
+            (Index)OutputVariableType::TorqueLocal );
     }
 
 };

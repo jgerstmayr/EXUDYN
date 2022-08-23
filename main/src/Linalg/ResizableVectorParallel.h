@@ -109,6 +109,11 @@ public:
 		}
 	}
 
+	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//                      PARALLEL
+	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	//! copy from other vector (or even array) and perform type conversion (e.g. for graphics)
 	template<class TVector>
@@ -142,8 +147,6 @@ public:
 		}
 
 	}
-
-    //! @todo: ResizableVectorParallelBase: check if operator+,-,* need to be overloaded (compare ConstSizeVectorBase)
 
 	//! overloaded operator=, because it needs to return a ResizableVectorParallelBase
 	//ResizableVectorParallelBase& operator=(const ResizableVectorParallelBase& vector)

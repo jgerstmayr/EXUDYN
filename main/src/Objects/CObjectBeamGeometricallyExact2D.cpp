@@ -129,7 +129,7 @@ void CObjectBeamGeometricallyExact2D::ComputeODE2LHS(Vector& ode2Lhs, Index obje
 	Real u2_x = SV_x[0] * qNode0[1] + SV_x[1] * qNode1[1];
 
 	Real theta   = SV[0] * (qNode0[2]+ qNode0Ref[2]) + SV[1] * (qNode1[2] + qNode1Ref[2]); //rotations need also reference values
-	Real theta_x = SV_x[0] * qNode0[2] + SV_x[1] * qNode1[2];
+	Real theta_x = SV_x[0] * qNode0[2] + SV_x[1] * qNode1[2]; //in precurved case, reference values shall not contribute to curvature
 
 	Vector2D refSlopeVector({ SV_x[0] * qNode0Ref[0] + SV_x[1] * qNode1Ref[0] ,
 		                      SV_x[0] * qNode0Ref[1] + SV_x[1] * qNode1Ref[1]}); //reference slope vector, r'=d r / dx needed in reference configuration needed for computation of strains
@@ -237,34 +237,59 @@ void CObjectBeamGeometricallyExact2D::GetAccessFunctionBody(AccessFunctionType a
 //! provide according output variable in 'value'
 void CObjectBeamGeometricallyExact2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
-	//CHECKandTHROWstring("CObjectBeamGeometricallyExact2D::GetOutputVariableBody not implemented!");
+	//(Index)OutputVariableType::Position +
+	//	(Index)OutputVariableType::Displacement +
+	//	(Index)OutputVariableType::Velocity +
+	//	(Index)OutputVariableType::Rotation +
+	//	(Index)OutputVariableType::StrainLocal +
+	//	(Index)OutputVariableType::CurvatureLocal );
+	Real gamma1, gamma2;
+	CSVector6D deltaGamma1, deltaGamma2;
+	Real theta_x;
+
+	if (!EXUstd::IsOfType((Index)variableType, (Index)OutputVariableType::Position + (Index)OutputVariableType::Displacement +
+		(Index)OutputVariableType::Velocity + (Index)OutputVariableType::Rotation))
+	{
+		CSVector3D qNode0(((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), 0); //displacement coordinates node 0
+		CSVector3D qNode1(((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration), 0); //displacement coordinates node 1
+
+		CSVector3D qNode0Ref(((CNodeODE2*)GetCNode(0))->GetReferenceCoordinateVector(), 0);
+		CSVector3D qNode1Ref(((CNodeODE2*)GetCNode(1))->GetReferenceCoordinateVector(), 0);
+		if (configuration == ConfigurationType::Reference)
+		{
+			qNode0.SetAll(0);
+			qNode1.SetAll(0);
+		}
+
+		//compute elastic forces at midpoint:
+		Real L = parameters.physicsLength;
+		Real x = 0; //midpoint, beam goes from -L/2 ... L/2
+		Vector2D SV = ComputeShapeFunctions(x);
+		Vector2D SV_x = ComputeShapeFunctions_x(x);
+
+		Real u1_x = SV_x[0] * qNode0[0] + SV_x[1] * qNode1[0];
+		Real u2_x = SV_x[0] * qNode0[1] + SV_x[1] * qNode1[1];
+
+		Real theta = SV[0] * (qNode0[2] + qNode0Ref[2]) + SV[1] * (qNode1[2] + qNode1Ref[2]); //rotations need also reference values
+		theta_x = SV_x[0] * qNode0[2] + SV_x[1] * qNode1[2]; //in precurved case, reference values shall not contribute to curvature
+
+		Vector2D refSlopeVector({ SV_x[0] * qNode0Ref[0] + SV_x[1] * qNode1Ref[0] ,
+								  SV_x[0] * qNode0Ref[1] + SV_x[1] * qNode1Ref[1] }); //reference slope vector, r'=d r / dx needed in reference configuration needed for computation of strains
+		ComputeGeneralizedStrains(u1_x, u2_x, theta, SV, SV_x, refSlopeVector, gamma1, gamma2, deltaGamma1, deltaGamma2);
+	}
 
 	switch (variableType)
 	{
-	case OutputVariableType::Position:	value.CopyFrom(GetPosition(localPosition, configuration)); break;
-	case OutputVariableType::Displacement:	value.CopyFrom(GetPosition(localPosition, configuration) - GetPosition(localPosition, ConfigurationType::Reference)); break;
-	case OutputVariableType::Velocity:	value.CopyFrom(GetVelocity(localPosition, configuration)); break;
-	//case OutputVariableType::StrainLocal:	value.SetVector({ ComputeAxialStrain(localPosition[0], configuration) }); break;
-	//case OutputVariableType::CurvatureLocal:	value.SetVector({ ComputeCurvature(localPosition[0], configuration) }); break;
-	//case OutputVariableType::ForceLocal: {
-	//	Real physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature;
-	//	GetMaterialParameters(physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature);
-
-	//	Real force = physicsAxialStiffness * (ComputeAxialStrain(localPosition[0], configuration) - physicsReferenceAxialStrain);
-	//	if (axialDamping != 0) { force += axialDamping * ComputeAxialStrain_t(localPosition[0], configuration); }
-
-	//	value.SetVector({ force }); break;
-	//}
-	//case OutputVariableType::TorqueLocal: {
-	//	Real physicsBendingStiffness, physicsAxialStiffness, physicsReferenceAxialStrain, physicsReferenceCurvature, bendingDamping, axialDamping;
-	//	GetMaterialParameters(physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature);
-
-	//	Real torque = physicsBendingStiffness * (ComputeCurvature(localPosition[0], configuration) - physicsReferenceCurvature);
-	//	if (bendingDamping != 0) { torque += bendingDamping * ComputeCurvature_t(localPosition[0], configuration); }
-	//	value.SetVector({ torque }); break;
-	//}
+	case OutputVariableType::Position:		value.CopyFrom(GetPosition(localPosition, configuration)); break;
+	case OutputVariableType::Displacement:	value.CopyFrom(GetDisplacement(localPosition, configuration)); break;
+	case OutputVariableType::Velocity:		value.CopyFrom(GetVelocity(localPosition, configuration)); break;
+	case OutputVariableType::Rotation:		value.SetVector({ 0., 0., GetRotation(localPosition, configuration) }); break;
+	case OutputVariableType::StrainLocal:	value.SetVector({gamma1, 0., 0.,  0., 0., gamma2}); break;
+	case OutputVariableType::CurvatureLocal:value.SetVector({ 0., 0., theta_x }); break;
+	case OutputVariableType::ForceLocal:	value.SetVector({ parameters.physicsAxialStiffness*gamma1, parameters.physicsShearStiffness*gamma2, 0. }); break;
+	case OutputVariableType::TorqueLocal:	value.SetVector({ 0., 0., parameters.physicsBendingStiffness*theta_x }); break;
 	default:
-		SysError("CObjectANCFCable2D::GetOutputVariableBody failed"); //error should not occur, because types are checked!
+		SysError("CObjectBeamGeometricallyExact2D::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}
 }
 
@@ -336,9 +361,24 @@ Matrix3D CObjectBeamGeometricallyExact2D::GetRotationMatrix(const Vector3D& loca
 		u += MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Reference), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(ConfigurationType::Reference));
 	}
 
-	return Matrix3D(3, 3, { cos(u[2]), -sin(u[2]), 0, 
-		                    sin(u[2]),  cos(u[2]), 0,
-		                    0,          0,         1}); //rotation about z-axis, stored in 3D matrix
+	return Matrix3D(3, 3, { cos(u[2]), -sin(u[2]), 0,
+							sin(u[2]),  cos(u[2]), 0,
+							0,          0,         1 }); //rotation about z-axis, stored in 3D matrix
+}
+
+//! return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
+Real CObjectBeamGeometricallyExact2D::GetRotation(const Vector3D& localPosition, ConfigurationType configuration) const
+{
+	Real x = localPosition[0]; //only x-coordinate
+	Vector2D SV = ComputeShapeFunctions(x);
+
+	Vector3D u = MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration));
+	if (configuration != ConfigurationType::Reference)
+	{
+		u += MapCoordinates(SV, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Reference), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(ConfigurationType::Reference));
+	}
+
+	return u[2];
 }
 
 //! return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect

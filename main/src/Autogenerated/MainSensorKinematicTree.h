@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-30  20:00:09 (last modified)
+* @date         2022-07-21  19:29:30 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -126,7 +126,7 @@ public: // AUTO:
         d["sensorType"] = (std::string)GetTypeName();
         d["objectNumber"] = (ObjectIndex)cSensorKinematicTree->GetParameters().objectNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["linkNumber"] = (Index)cSensorKinematicTree->GetParameters().linkNumber; //! AUTO: cast variables into python (not needed for standard types) 
-        d["localPosition"] = (std::vector<Real>)cSensorKinematicTree->GetParameters().localPosition; //! AUTO: cast variables into python (not needed for standard types) 
+        d["localPosition"] = EPyUtils::SlimVector2NumPy(cSensorKinematicTree->GetParameters().localPosition); //! AUTO: cast variables into python (not needed for standard types) 
         d["writeToFile"] = (bool)cSensorKinematicTree->GetParameters().writeToFile; //! AUTO: cast variables into python (not needed for standard types) 
         d["fileName"] = (std::string)cSensorKinematicTree->GetParameters().fileName; //! AUTO: cast variables into python (not needed for standard types) 
         d["outputVariableType"] = (OutputVariableType)cSensorKinematicTree->GetParameters().outputVariableType; //! AUTO: cast variables into python (not needed for standard types) 
@@ -142,7 +142,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("objectNumber") == 0) { return py::cast((ObjectIndex)cSensorKinematicTree->GetParameters().objectNumber);} //! AUTO: get parameter
         else if (parameterName.compare("linkNumber") == 0) { return py::cast((Index)cSensorKinematicTree->GetParameters().linkNumber);} //! AUTO: get parameter
-        else if (parameterName.compare("localPosition") == 0) { return py::cast((std::vector<Real>)cSensorKinematicTree->GetParameters().localPosition);} //! AUTO: get parameter
+        else if (parameterName.compare("localPosition") == 0) { return EPyUtils::SlimVector2NumPy(cSensorKinematicTree->GetParameters().localPosition);} //! AUTO: get parameter
         else if (parameterName.compare("writeToFile") == 0) { return py::cast((bool)cSensorKinematicTree->GetParameters().writeToFile);} //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { return py::cast((std::string)cSensorKinematicTree->GetParameters().fileName);} //! AUTO: get parameter
         else if (parameterName.compare("outputVariableType") == 0) { return py::cast((OutputVariableType)cSensorKinematicTree->GetParameters().outputVariableType);} //! AUTO: get parameter

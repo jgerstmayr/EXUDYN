@@ -155,60 +155,6 @@ void CObjectConnectorSpringDamper::ComputeJacobianODE2_ODE2(EXUmath::MatrixConta
 		VV2.SetWithDiadicProduct((factorODE2*parameters.stiffness + factorODE2_t * parameters.damping)*forceDirection, forceDirection);
 		innerJac += VV2;
 
-		////velocity term:
-		//Matrix3D VV3;
-		//VV3.SetWithDiadicProduct(factorODE2_t * parameters.damping * forceDirection, forceDirection);
-		//innerJac += VV3;
-
-		//else //compute numerical jacobian, agrees 100% with analytical
-		//{
-		//	//const ResizableMatrix& jac0 = markerData.GetMarkerData(0).positionJacobian;
-		//	//const ResizableMatrix& jac1 = markerData.GetMarkerData(1).positionJacobian;
-
-		//	////CHECKandTHROWstring("ERROR: illegal call to CObjectConnectorCartesianSpringDamper::ComputeJacobianODE2_ODE2");
-		//	//Index n0 = jac0.NumberOfColumns();
-		//	//Index n1 = jac1.NumberOfColumns();
-		//	innerJac.SetScalarMatrix(3, 0.);
-
-		//	Real force;
-		//	Vector3D relPos, relVel, forceDirection;
-		//	ComputeConnectorProperties(markerData, objectNumber, relPos, relVel, force, forceDirection);
-		//	Vector3D f0 = force * forceDirection;
-
-		//	LinkedDataVector pos0(markerData.GetMarkerData(0).position);
-		//	LinkedDataVector pos1(markerData.GetMarkerData(1).position);
-		//	LinkedDataVector vel0(markerData.GetMarkerData(0).velocity);
-		//	LinkedDataVector vel1(markerData.GetMarkerData(1).velocity);
-
-		//	Real eps = 1e-8;
-		//	Real store;
-		//	Vector3D f1;
-		//	for (Index j = 0; j < 3; j++)
-		//	{
-		//		store = pos1[j];
-		//		pos1[j] += eps;
-		//		ComputeConnectorProperties(markerData, objectNumber, relPos, relVel, force, forceDirection);
-		//		pos1[j] = store;
-		//		f1 = force * forceDirection;
-		//		for (Index i = 0; i < 3; i++)
-		//		{
-		//			innerJac(i, j) += factorODE2*(1. / eps)*(f1[i] - f0[i]);
-		//		}
-
-		//		store = vel1[j];
-		//		vel1[j] += eps;
-		//		ComputeConnectorProperties(markerData, objectNumber, relPos, relVel, force, forceDirection);
-		//		vel1[j] = store;
-		//		f1 = force * forceDirection;
-		//		for (Index i = 0; i < 3; i++)
-		//		{
-		//			innerJac(i, j) += factorODE2_t*(1. / eps)*(f1[i] - f0[i]);
-		//		}
-
-
-		//	}
-
-		//}
 		temp.localJacobian.CopyFrom(innerJac);
 
 	}

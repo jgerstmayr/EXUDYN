@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2022-07-04  22:03:15 (last modified)
+* @date         2022-07-21  20:27:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -181,9 +181,9 @@ public: // AUTO:
         d["mXRefTildePsiTilde"] = EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde); //! AUTO: cast variables into python (not needed for standard types) 
         d["objectIsInitialized"] = (bool)cObjectFFRFreducedOrder->GetObjectIsInitialized(); //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsMass"] = (Real)cObjectFFRFreducedOrder->GetPhysicsMass(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["physicsInertia"] = EXUmath::Matrix3DToStdArray33(cObjectFFRFreducedOrder->GetPhysicsInertia()); //! AUTO: cast variables into python (not needed for standard types) 
-        d["physicsCenterOfMass"] = (std::vector<Real>)cObjectFFRFreducedOrder->GetPhysicsCenterOfMass(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["physicsCenterOfMassTilde"] = EXUmath::Matrix3DToStdArray33(cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsInertia"] = EPyUtils::Matrix2NumPyTemplate(cObjectFFRFreducedOrder->GetPhysicsInertia()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsCenterOfMass"] = EPyUtils::SlimVector2NumPy(cObjectFFRFreducedOrder->GetPhysicsCenterOfMass()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsCenterOfMassTilde"] = EPyUtils::Matrix2NumPyTemplate(cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); //! AUTO: cast variables into python (not needed for standard types) 
         d["tempUserFunctionForce"] = EPyUtils::Vector2NumPy(cObjectFFRFreducedOrder->GetTempUserFunctionForce()); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectFFRFreducedOrder->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -210,15 +210,15 @@ public: // AUTO:
         else if (parameterName.compare("referencePositions") == 0) { return EPyUtils::Vector2NumPy(cObjectFFRFreducedOrder->GetParameters().referencePositions);} //! AUTO: get parameter
         else if (parameterName.compare("objectIsInitialized") == 0) { return py::cast((bool)cObjectFFRFreducedOrder->GetObjectIsInitialized());} //! AUTO: get parameter
         else if (parameterName.compare("physicsMass") == 0) { return py::cast((Real)cObjectFFRFreducedOrder->GetPhysicsMass());} //! AUTO: get parameter
-        else if (parameterName.compare("physicsInertia") == 0) { return py::cast(EXUmath::Matrix3DToStdArray33(cObjectFFRFreducedOrder->GetPhysicsInertia()));} //! AUTO: get parameter
-        else if (parameterName.compare("physicsCenterOfMass") == 0) { return py::cast((std::vector<Real>)cObjectFFRFreducedOrder->GetPhysicsCenterOfMass());} //! AUTO: get parameter
+        else if (parameterName.compare("physicsInertia") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectFFRFreducedOrder->GetPhysicsInertia());} //! AUTO: get parameter
+        else if (parameterName.compare("physicsCenterOfMass") == 0) { return EPyUtils::SlimVector2NumPy(cObjectFFRFreducedOrder->GetPhysicsCenterOfMass());} //! AUTO: get parameter
         else if (parameterName.compare("mPsiTildePsi") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mPsiTildePsi);} //! AUTO: get parameter
         else if (parameterName.compare("mPsiTildePsiTilde") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mPsiTildePsiTilde);} //! AUTO: get parameter
         else if (parameterName.compare("mPhitTPsi") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mPhitTPsi);} //! AUTO: get parameter
         else if (parameterName.compare("mPhitTPsiTilde") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mPhitTPsiTilde);} //! AUTO: get parameter
         else if (parameterName.compare("mXRefTildePsi") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi);} //! AUTO: get parameter
         else if (parameterName.compare("mXRefTildePsiTilde") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde);} //! AUTO: get parameter
-        else if (parameterName.compare("physicsCenterOfMassTilde") == 0) { return py::cast(EXUmath::Matrix3DToStdArray33(cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()));} //! AUTO: get parameter
+        else if (parameterName.compare("physicsCenterOfMassTilde") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde());} //! AUTO: get parameter
         else if (parameterName.compare("tempUserFunctionForce") == 0) { return EPyUtils::Vector2NumPy(cObjectFFRFreducedOrder->GetTempUserFunctionForce());} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectFFRFreducedOrder->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectFFRFreducedOrder->GetColor());} //! AUTO: get parameter

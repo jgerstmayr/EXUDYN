@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:58 (last modified)
+* @date         2022-07-21  19:36:20 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,7 +114,7 @@ public: // AUTO:
     }
 
     //! AUTO:  return internally stored initial data coordinates of node
-    virtual LinkedDataVector GetInitialVector() const override
+    virtual LinkedDataVector GetInitialCoordinateVector() const override
     {
         return parameters.initialCoordinates;
     }
@@ -138,7 +138,7 @@ public: // AUTO:
         auto d = py::dict();
         d["nodeType"] = (std::string)GetTypeName();
         d["numberOfDataCoordinates"] = (Index)cNodeGenericData->GetParameters().numberOfDataCoordinates; //! AUTO: cast variables into python (not needed for standard types) 
-        d["initialCoordinates"] = (std::vector<Real>)GetParameters().initialCoordinates; //! AUTO: cast variables into python (not needed for standard types) 
+        d["initialCoordinates"] = EPyUtils::Vector2NumPy(GetParameters().initialCoordinates); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationNodeGenericData->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -148,7 +148,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("initialCoordinates") == 0) { return py::cast((std::vector<Real>)GetParameters().initialCoordinates);} //! AUTO: get parameter
+        else if (parameterName.compare("initialCoordinates") == 0) { return EPyUtils::Vector2NumPy(GetParameters().initialCoordinates);} //! AUTO: get parameter
         else if (parameterName.compare("numberOfDataCoordinates") == 0) { return py::cast((Index)cNodeGenericData->GetParameters().numberOfDataCoordinates);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationNodeGenericData->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("NodeGenericData::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user

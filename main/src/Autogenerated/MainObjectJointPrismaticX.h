@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-04  22:03:19 (last modified)
+* @date         2022-07-21  20:27:19 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -123,8 +123,8 @@ public: // AUTO:
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
         d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectJointPrismaticX->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
-        d["rotationMarker0"] = EXUmath::Matrix3DToStdArray33(cObjectJointPrismaticX->GetParameters().rotationMarker0); //! AUTO: cast variables into python (not needed for standard types) 
-        d["rotationMarker1"] = EXUmath::Matrix3DToStdArray33(cObjectJointPrismaticX->GetParameters().rotationMarker1); //! AUTO: cast variables into python (not needed for standard types) 
+        d["rotationMarker0"] = EPyUtils::Matrix2NumPyTemplate(cObjectJointPrismaticX->GetParameters().rotationMarker0); //! AUTO: cast variables into python (not needed for standard types) 
+        d["rotationMarker1"] = EPyUtils::Matrix2NumPyTemplate(cObjectJointPrismaticX->GetParameters().rotationMarker1); //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectJointPrismaticX->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectJointPrismaticX->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -139,8 +139,8 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectJointPrismaticX->GetParameters().markerNumbers));} //! AUTO: get parameter
-        else if (parameterName.compare("rotationMarker0") == 0) { return py::cast(EXUmath::Matrix3DToStdArray33(cObjectJointPrismaticX->GetParameters().rotationMarker0));} //! AUTO: get parameter
-        else if (parameterName.compare("rotationMarker1") == 0) { return py::cast(EXUmath::Matrix3DToStdArray33(cObjectJointPrismaticX->GetParameters().rotationMarker1));} //! AUTO: get parameter
+        else if (parameterName.compare("rotationMarker0") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectJointPrismaticX->GetParameters().rotationMarker0);} //! AUTO: get parameter
+        else if (parameterName.compare("rotationMarker1") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectJointPrismaticX->GetParameters().rotationMarker1);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectJointPrismaticX->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectJointPrismaticX->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VaxisRadius") == 0) { return py::cast((float)visualizationObjectJointPrismaticX->GetAxisRadius());} //! AUTO: get parameter

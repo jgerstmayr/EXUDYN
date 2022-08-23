@@ -302,6 +302,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             id = ""
         else:
             id = self.tree.insert(parentNode, "end", text=key)
+        #print("key =", key)
 
         if isinstance(value, dict):
             self.tree.item(id, open=self.treeOpen)
@@ -535,7 +536,7 @@ def EditDictionaryWithTypeInfo(dictionaryData, exu=None, dictionaryName='edit'):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#hierarchical lists:
+#hierarchical lists, without type info:
 class TkinterEditDictionary(tk.Frame):
     def __init__(self, parent, dictionaryData, dictionaryIsEditable=True):
         tk.Frame.__init__(self, parent)
@@ -600,6 +601,7 @@ class TkinterEditDictionary(tk.Frame):
                 isinstance(var, exudyn.LoadIndex) or
                 isinstance(var, exudyn.SensorIndex))
     #create dictionary
+    #this is used e.g. for mouse right-button dialog
     def AddNodeFromDictionary(self, value, parentNode="", key=None):
         if key is None:
             id = ""
@@ -611,7 +613,6 @@ class TkinterEditDictionary(tk.Frame):
 
         if isinstance(value, dict):
             self.tree.item(id, open=True)
-            #print("dict =", value)
             for (key, value) in value.items():
                 self.AddNodeFromDictionary(value, id, key)
         else:
@@ -700,7 +701,7 @@ class TkinterEditDictionary(tk.Frame):
             if self.dictionaryIsEditable:
                 valueStr = self.editItemVar.get()
                 valueStr = str(valueStr).replace(' ','\ ')
-                print(valueStr)
+                #print(valueStr)
                 self.tree.item(self.selectedItem, values=(valueStr))
                 currentItem = self.selectedItem
                 self.selectedItem = '' #now item can be modified

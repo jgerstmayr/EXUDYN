@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-04  22:03:14 (last modified)
+* @date         2022-07-21  20:27:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -128,8 +128,8 @@ public: // AUTO:
         d["objectType"] = (std::string)GetTypeName();
         d["physicsInertia"] = (Real)cObjectRotationalMass1D->GetParameters().physicsInertia; //! AUTO: cast variables into python (not needed for standard types) 
         d["nodeNumber"] = (NodeIndex)cObjectRotationalMass1D->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
-        d["referencePosition"] = (std::vector<Real>)cObjectRotationalMass1D->GetParameters().referencePosition; //! AUTO: cast variables into python (not needed for standard types) 
-        d["referenceRotation"] = EXUmath::Matrix3DToStdArray33(cObjectRotationalMass1D->GetParameters().referenceRotation); //! AUTO: cast variables into python (not needed for standard types) 
+        d["referencePosition"] = EPyUtils::SlimVector2NumPy(cObjectRotationalMass1D->GetParameters().referencePosition); //! AUTO: cast variables into python (not needed for standard types) 
+        d["referenceRotation"] = EPyUtils::Matrix2NumPyTemplate(cObjectRotationalMass1D->GetParameters().referenceRotation); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectRotationalMass1D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VgraphicsData"] = PyGetBodyGraphicsDataList(visualizationObjectRotationalMass1D->GetGraphicsData(), addGraphicsData); //! AUTO: generate dictionary with special function
@@ -142,8 +142,8 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("physicsInertia") == 0) { return py::cast((Real)cObjectRotationalMass1D->GetParameters().physicsInertia);} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectRotationalMass1D->GetParameters().nodeNumber);} //! AUTO: get parameter
-        else if (parameterName.compare("referencePosition") == 0) { return py::cast((std::vector<Real>)cObjectRotationalMass1D->GetParameters().referencePosition);} //! AUTO: get parameter
-        else if (parameterName.compare("referenceRotation") == 0) { return py::cast(EXUmath::Matrix3DToStdArray33(cObjectRotationalMass1D->GetParameters().referenceRotation));} //! AUTO: get parameter
+        else if (parameterName.compare("referencePosition") == 0) { return EPyUtils::SlimVector2NumPy(cObjectRotationalMass1D->GetParameters().referencePosition);} //! AUTO: get parameter
+        else if (parameterName.compare("referenceRotation") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectRotationalMass1D->GetParameters().referenceRotation);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectRotationalMass1D->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectRotationalMass1D::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();

@@ -16,6 +16,7 @@ from exudyn.itemInterface import *
 from exudyn.utilities import *
 from exudyn.FEM import *
 from exudyn.graphicsDataUtilities import *
+import time 
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -44,7 +45,7 @@ h = 0.02 #height of plate (Z)
 d = 0.03    #diameter of bolt
 D = d*2 #diameter of bushing
 b = 0.05 #length of bolt
-nModes = 128
+nModes = 32 #128
 meshH = 0.01 #0.01 is default, 0.002 gives 100000 nodes and is fairly converged
 #meshH = 0.0014 #203443 nodes, takes 1540 seconds for eigenmode computation (free-free) and 753 seconds for postprocessing on i9
 
@@ -66,6 +67,7 @@ def CSGcylinder(p0,p1,r):
                    r) * Plane(Pnt(p0[0],p0[1],p0[2]), Vec(-v[0],-v[1],-v[2])) * Plane(Pnt(p1[0],p1[1],p1[2]), Vec(v[0],v[1],v[2])) 
     return cyl
 
+mBushing = None
 meshCreated = False
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -207,7 +209,7 @@ if True: #now import mesh as mechanical model to EXUDYN
     
     #mRB = mbs.AddMarker(MarkerNodeRigid(nodeNumber=objFFRF['nRigidBody']))
 
-    if True:
+    if False:
         boltMidPoint = 0.5*(np.array(boltP1)+boltP2)
         
         oGround = mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
@@ -249,7 +251,7 @@ if True: #now import mesh as mechanical model to EXUDYN
         cms = ObjectFFRFreducedOrderInterface(fem)
         
         objFFRF = cms.AddObjectFFRFreducedOrder(mbs, positionRef=[0,0,0], 
-                                                      initialVelocity=[0,0,0], 
+                                                      initialVelocity=[990,990,990], 
                                                       initialAngularVelocity=[0,0,0],
                                                       color=[0.9,0.9,0.9,1.],
                                                       )
@@ -291,23 +293,24 @@ if True: #now import mesh as mechanical model to EXUDYN
     #add gravity (not necessary if user functions used)
     oFFRF = objFFRF['oFFRFreducedOrder']
     mBody = mbs.AddMarker(MarkerBodyMass(bodyNumber=oFFRF))
-    mbs.AddLoad(LoadMassProportional(markerNumber=mBody, loadVector= [0,0,-9.81]))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mBody, loadVector= [0,0,-9.81*0]))
     
-    
+
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
-    fileDir = 'solution/'
-    # sensBolt = mbs.AddSensor(SensorMarker(markerNumber=mBolt, 
-    #                                       fileName=fileDir+'hingePartBoltPos'+str(nModes)+strMode+'.txt', 
-    #                                       outputVariableType = exu.OutputVariableType.Position))
-    # sensBushing= mbs.AddSensor(SensorMarker(markerNumber=mBushing, 
-    #                                       fileName=fileDir+'hingePartBushingPos'+str(nModes)+strMode+'.txt', 
-    #                                       outputVariableType = exu.OutputVariableType.Position))
-    sensBushingVel= mbs.AddSensor(SensorMarker(markerNumber=mBushing, 
-                                          fileName=fileDir+'hingePartBushingVel'+str(nModes)+strMode+'.txt', 
-                                          outputVariableType = exu.OutputVariableType.Velocity))
-    sensBushing= mbs.AddSensor(SensorMarker(markerNumber=mBushing, 
-                                          fileName=fileDir+'hingePartBushing'+str(nModes)+strMode+'.txt', 
-                                          outputVariableType = exu.OutputVariableType.Position))
+    if mBushing != None:    
+        fileDir = 'solution/'
+        # sensBolt = mbs.AddSensor(SensorMarker(markerNumber=mBolt, 
+        #                                       fileName=fileDir+'hingePartBoltPos'+str(nModes)+strMode+'.txt', 
+        #                                       outputVariableType = exu.OutputVariableType.Position))
+        # sensBushing= mbs.AddSensor(SensorMarker(markerNumber=mBushing, 
+        #                                       fileName=fileDir+'hingePartBushingPos'+str(nModes)+strMode+'.txt', 
+        #                                       outputVariableType = exu.OutputVariableType.Position))
+        sensBushingVel= mbs.AddSensor(SensorMarker(markerNumber=mBushing, 
+                                              fileName=fileDir+'hingePartBushingVel'+str(nModes)+strMode+'.txt', 
+                                              outputVariableType = exu.OutputVariableType.Velocity))
+        sensBushing= mbs.AddSensor(SensorMarker(markerNumber=mBushing, 
+                                              fileName=fileDir+'hingePartBushing'+str(nModes)+strMode+'.txt', 
+                                              outputVariableType = exu.OutputVariableType.Position))
         
     mbs.Assemble()
     
@@ -356,7 +359,6 @@ if True: #now import mesh as mechanical model to EXUDYN
     SC.visualizationSettings.window.renderWindowSize=[1920,1080]
     SC.visualizationSettings.openGL.multiSampling = 4
 
-    useGraphics=False
     if True:
         if useGraphics:
             SC.visualizationSettings.general.autoFitScene=False
@@ -374,16 +376,17 @@ if True: #now import mesh as mechanical model to EXUDYN
         else:
             exu.SolveStatic(mbs, simulationSettings=simulationSettings)
 
-        uTip = mbs.GetSensorValues(sensBushing)
-        print("nModes="+strMode, nModes, ", bushing position=", uTip)
             
         if useGraphics:
             SC.WaitForRenderEngineStopFlag()
             exu.StopRenderer() #safely close rendering window!
         
-        if False:
-            from exudyn.plot import PlotSensor
-            PlotSensor(mbs, sensorNumbers=[sensBushingVel], components=[1])
+        if mBushing != None:
+            uTip = mbs.GetSensorValues(sensBushing)
+            print("nModes="+strMode, nModes, ", bushing position=", uTip)
+            if False:
+                from exudyn.plot import PlotSensor
+                PlotSensor(mbs, sensorNumbers=[sensBushingVel], components=[1])
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if True:

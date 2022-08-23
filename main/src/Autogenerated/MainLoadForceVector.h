@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-16  11:24:37 (last modified)
+* @date         2022-07-21  19:29:30 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -122,7 +122,7 @@ public: // AUTO:
         auto d = py::dict();
         d["loadType"] = (std::string)GetTypeName();
         d["markerNumber"] = (MarkerIndex)cLoadForceVector->GetParameters().markerNumber; //! AUTO: cast variables into python (not needed for standard types) 
-        d["loadVector"] = (std::vector<Real>)cLoadForceVector->GetParameters().loadVector; //! AUTO: cast variables into python (not needed for standard types) 
+        d["loadVector"] = EPyUtils::SlimVector2NumPy(cLoadForceVector->GetParameters().loadVector); //! AUTO: cast variables into python (not needed for standard types) 
         d["bodyFixed"] = (bool)cLoadForceVector->GetParameters().bodyFixed; //! AUTO: cast variables into python (not needed for standard types) 
         if (cLoadForceVector->GetParameters().loadVectorUserFunction)
             {d["loadVectorUserFunction"] = (std::function<StdVector(const MainSystem&,Real,StdVector3D)>)cLoadForceVector->GetParameters().loadVectorUserFunction;}
@@ -139,7 +139,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("markerNumber") == 0) { return py::cast((MarkerIndex)cLoadForceVector->GetParameters().markerNumber);} //! AUTO: get parameter
-        else if (parameterName.compare("loadVector") == 0) { return py::cast((std::vector<Real>)cLoadForceVector->GetParameters().loadVector);} //! AUTO: get parameter
+        else if (parameterName.compare("loadVector") == 0) { return EPyUtils::SlimVector2NumPy(cLoadForceVector->GetParameters().loadVector);} //! AUTO: get parameter
         else if (parameterName.compare("bodyFixed") == 0) { return py::cast((bool)cLoadForceVector->GetParameters().bodyFixed);} //! AUTO: get parameter
         else if (parameterName.compare("loadVectorUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,StdVector3D)>)cLoadForceVector->GetParameters().loadVectorUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationLoadForceVector->GetShow());} //! AUTO: get parameter

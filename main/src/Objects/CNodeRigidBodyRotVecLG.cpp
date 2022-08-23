@@ -107,7 +107,7 @@ void CNodeRigidBodyRotVecLG::CollectCurrentNodeMarkerData(ConstSizeMatrix<maxRot
 }
 
 
-// Compute vector to of 4 Euler Parameters from reference and configuration coordinates
+// Compute vector to of 3 rotation parameters from reference and configuration coordinates
 ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> CNodeRigidBodyRotVecLG::GetRotationParameters(ConfigurationType configuration) const
 {
 	LinkedDataVector refCoordinates = GetReferenceCoordinateVector();

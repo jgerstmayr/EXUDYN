@@ -230,6 +230,43 @@ class NodeRigidBodyRotVecLG:
 RigidRotVecLG = NodeRigidBodyRotVecLG
 VRigidRotVecLG = VNodeRigidBodyRotVecLG
 
+class VNodeRigidBodyRotVecDataLG:
+    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.drawSize = drawSize
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'drawSize', self.drawSize
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+class NodeRigidBodyRotVecDataLG:
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0., 0.,0.,0.], initialCoordinates = [0.,0.,0., 0.,0.,0.], initialVelocities = [0.,0.,0., 0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.referenceCoordinates = referenceCoordinates
+        self.initialCoordinates = initialCoordinates
+        self.initialVelocities = initialVelocities
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'nodeType', 'RigidBodyRotVecDataLG'
+        yield 'name', self.name
+        yield 'referenceCoordinates', self.referenceCoordinates
+        yield 'initialCoordinates', self.initialCoordinates
+        yield 'initialVelocities', self.initialVelocities
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdrawSize', dict(self.visualization)["drawSize"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+#add typedef for short usage:
+RigidRotVecLG = NodeRigidBodyRotVecDataLG
+VRigidRotVecLG = VNodeRigidBodyRotVecDataLG
+
 class VNodeRigidBody2D:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -1596,6 +1633,75 @@ class ObjectConnectorCoordinateSpringDamper:
 #add typedef for short usage:
 CoordinateSpringDamper = ObjectConnectorCoordinateSpringDamper
 VCoordinateSpringDamper = VObjectConnectorCoordinateSpringDamper
+
+class VObjectConnectorCoordinateSpringDamperExt:
+    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.drawSize = drawSize
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'drawSize', self.drawSize
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+class ObjectConnectorCoordinateSpringDamperExt:
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., dynamicFriction = 0., staticFrictionOffset = 0., stickingStiffness = 0., stickingDamping = 0., frictionExpVelocity = 0., frictionViscous = 0., limitStopsUpper = 0., limitStopsLower = 0., limitStopsStiffness = 0., limitStopsDamping = 0., useLimitStops = False, activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.nodeNumber = nodeNumber
+        self.stiffness = stiffness
+        self.damping = damping
+        self.offset = offset
+        self.velocityOffset = velocityOffset
+        self.dynamicFriction = dynamicFriction
+        self.staticFrictionOffset = staticFrictionOffset
+        self.stickingStiffness = stickingStiffness
+        self.stickingDamping = stickingDamping
+        self.frictionExpVelocity = frictionExpVelocity
+        self.frictionViscous = frictionViscous
+        self.limitStopsUpper = limitStopsUpper
+        self.limitStopsLower = limitStopsLower
+        self.limitStopsStiffness = limitStopsStiffness
+        self.limitStopsDamping = limitStopsDamping
+        self.useLimitStops = useLimitStops
+        self.activeConnector = activeConnector
+        self.springForceUserFunction = springForceUserFunction
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'ConnectorCoordinateSpringDamperExt'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
+        yield 'stiffness', self.stiffness
+        yield 'damping', self.damping
+        yield 'offset', self.offset
+        yield 'velocityOffset', self.velocityOffset
+        yield 'dynamicFriction', self.dynamicFriction
+        yield 'staticFrictionOffset', self.staticFrictionOffset
+        yield 'stickingStiffness', self.stickingStiffness
+        yield 'stickingDamping', self.stickingDamping
+        yield 'frictionExpVelocity', self.frictionExpVelocity
+        yield 'frictionViscous', self.frictionViscous
+        yield 'limitStopsUpper', self.limitStopsUpper
+        yield 'limitStopsLower', self.limitStopsLower
+        yield 'limitStopsStiffness', self.limitStopsStiffness
+        yield 'limitStopsDamping', self.limitStopsDamping
+        yield 'useLimitStops', self.useLimitStops
+        yield 'activeConnector', self.activeConnector
+        yield 'springForceUserFunction', self.springForceUserFunction
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdrawSize', dict(self.visualization)["drawSize"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+#add typedef for short usage:
+CoordinateSpringDamperExt = ObjectConnectorCoordinateSpringDamperExt
+VCoordinateSpringDamperExt = VObjectConnectorCoordinateSpringDamperExt
 
 class VObjectConnectorGravity:
     def __init__(self, show = False, drawSize = -1., color = [-1.,-1.,-1.,-1.]):

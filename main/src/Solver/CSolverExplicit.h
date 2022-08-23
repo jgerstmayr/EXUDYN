@@ -155,16 +155,16 @@ public:
 	void PrecomputeLieGroupStructures(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
 
 	//! update stage coordinates for regular ODE2 coordinates and Lie group nodes
-	void UpdateODE2StageCoordinatesLieGroup(CSystem& computationalSystem, Vector& solutionODE2, 
+	void UpdateODE2StageCoordinatesLieGroup(CSystem& computationalSystem, ResizableVectorParallel& solutionODE2,
 		Real stepSize, Index i);
 
 	//! compute displacement stage increment for standard coordinates (stageDerivODE2) and for Lie group nodes (stageDerivLieODE2)
-	void LieGroupComputeKstage(CSystem& computationalSystem, const Vector& solutionODE2_t,
-		Vector& stageDerivODE2, Vector& stageDerivLieODE2, Real stepSize, Index i);
+	void LieGroupComputeKstage(CSystem& computationalSystem, const ResizableVectorParallel& solutionODE2_t,
+		ResizableVectorParallel& stageDerivODE2, ResizableVectorParallel& stageDerivLieODE2, Real stepSize, Index i);
 
 	//! compute final integration formula for Runge-Kutta method, including Lie group nodes; 
 	//! also applicable to compute secondApproximation with different weights
-	void LieGroupODE2StepEvaluation(CSystem& computationalSystem, Vector& solutionODE2, Real stepSize, const Vector& weights);
+	void LieGroupODE2StepEvaluation(CSystem& computationalSystem, ResizableVectorParallel& solutionODE2, Real stepSize, const Vector& weights);
 
 };
 

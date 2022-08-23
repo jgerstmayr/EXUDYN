@@ -10,15 +10,49 @@ This section will show:
 \ei
 For an introduction to the solvers, see \refSection{sec:solvers}.
 
+\begin{figure}
+  \centering
+  \begin{tikzpicture}[node distance = 2cm, auto]
+      % Place nodes
+      \node [cloud] (exu) {exudyn};
+      \node [wideblock, above of=exu, xshift = 1cm] (exudynCPP) {\mybold{exudynCPP}: C++ module};
+      \node [wideblock, below of=exu, xshift = 1cm] (exudynPython) {exudyn Python modules};
+      \node [wideblock, right of=exudynPython, node distance=6cm, text width=5cm] (utilities) {\mybold{utilities}};
+      \node [wideblock, below of=utilities, text width=5cm] (solvers) {\mybold{solvers}: interface to C++ solvers};
+      \node [wideblock, below of=solvers, text width=5cm] (itemInterface) {\mybold{itemInterface}: main interface to C++ items};
+      \node [wideblock, below of=itemInterface, text width=5cm] (FEM) {\mybold{FEM}: FEM import and preprocessing};
+      \node [wideblock, below of=FEM, text width=5cm] (plot) {\mybold{plot}: interface to matplotlib};
+      \node [wideblock, below of=plot, text width=5cm] (processing) {\mybold{processing}: parallelization and optimization};
+      \node [wideblock, below of=processing, text width=5cm] (robotics) {\mybold{robotics} submodule};
+      \node [wideblock, below of=robotics, text width=5cm] (etc) {...};
+
+      % Draw edges
+      \path [line] (exu) -- (exudynCPP);
+      \path [line] (exu) -- (exudynPython);
+
+      \path [line] (exudynPython) |- (itemInterface);
+      \path [line] (exudynPython) |- (solvers);
+      \path [line] (exudynPython) |- (utilities);
+      \path [line] (exudynPython) |- (FEM);
+      \path [line] (exudynPython) |- (plot);
+      \path [line] (exudynPython) |- (processing);
+      \path [line] (exudynPython) |- (robotics);
+      \path [line] (exudynPython) |- (etc);
+  \end{tikzpicture}
+  \caption{Overview of exudyn C++ and Python modules.}
+  \label{fig_exudyn_CandPython}
+\end{figure}
+
 \mysubsubsection{Overview of modules}
-Currently, the module structure is simple:
+Currently, the \codeName\ module structure is split into a C++ core part and a set of Python parts,
+see Figs.\ \ref{fig_exudyn_CandPython}.
 \bi
-  \item \mybold{C++ parts}, see Figs.\ \ref{fig_exudyn_overview} and \ref{fig_system_overview}:
+  \item \mybold{C++ parts}, see Figs.\ \ref{fig_exudyn_CPP} and \ref{fig_system_overview}:
   \bi
     \item[--] \texttt{exudyn}:
     on this level, there are just very few functions: \texttt{SystemContainer()}, \texttt{StartRenderer()}, \texttt{StopRenderer()}, \texttt{GetVersionString()}, \texttt{SolveStatic(...)}, \texttt{SolveDynamic(...)}, ... as well as system and user variable dictionaries \texttt{exudyn.variables} and \texttt{exudyn.sys}
     \item[--] \texttt{SystemContainer}: contains the systems (most important), solvers (static, dynamics, ...), visualization settings
-    \item[--] \texttt{mbs}: system created with \texttt{mbs = SC.AddSystem()}, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
+    \item[--] \texttt{mbs}: \acf{mbs} created with \texttt{mbs = SC.AddSystem()}, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
     loads can added to the system, see \refSection{sec:item:reference:manual};
     \item[--] \texttt{mbs.systemData}: contains the initial, current, visualization, ... states of the system and holds the items, see \fig{fig_system_overview}
   \ei
@@ -46,16 +80,20 @@ Currently, the module structure is simple:
   \centering
   \begin{tikzpicture}[node distance = 2cm, auto]
       % Place nodes
-      \node [cloud] (exu) {exudyn};
+      \node [cloud] (exu) {exudynCPP};
       \node [wideblock, below of=exu] (systemContainer) {SystemContainer};
       \node [wideblock, below of=systemContainer] (system) {MainSystem (e.g. 'mbs')};
       \node [wideblock, right of=systemContainer,  node distance=6cm] (visualizationSettings) {visualizationSettings};
       \node [block, below of=system] (systemData) {systemData};
       \node [wideblock, below of=systemData] (systemStates) {system states (initial, current, ...)};
+      \node [wideblock, left of=systemContainer, node distance=6cm] (solver) {static and dynamic solver interfaces};
+      \node [wideblock, below of=solver] (renderer) {basic renderer interface (start/stop)};
+      \node [wideblock, below of=renderer] (misc) {data types, local dictionaries, system wide settings};
       
       \node [wideblock, dashed, fill=gray!10, right of=system,  node distance=6cm] (anotherSystem) {MainSystem (e.g. 'anotherMbs')};
       \node [block, dashed, fill=gray!10, below of=anotherSystem] (anotherSystemData) {systemData};
-      \node [wideblock, dashed, fill=gray!10, below of=anotherSystemData] (anotherSystemStates) {system states (initial, current, ...)};
+      \node [wideblock, dashed, fill=gray!10, below of=anotherSystemData] (anotherSystemStates) {system states 
+      (initial, current, ...)};
 
       %\node [cloud, right of=exu] (itemInterface) {itemInterface.py};
       %\node [cloud, right of=itemInterface] (exudynUtilities) {exudynUtilities.py};
@@ -66,13 +104,16 @@ Currently, the module structure is simple:
       \path [line] (systemContainer) -- (visualizationSettings);
       \path [line] (system) -- (systemData);
       \path [line] (systemData) -- (systemStates);
+      \path [line] (exu) -- (solver);
+      \path [line] (solver) -- (renderer);
+      \path [line] (renderer) -- (misc);
 
       \path [line, dashed] (systemContainer) -- (anotherSystem);
       \path [line, dashed] (anotherSystem) -- (anotherSystemData);
       \path [line, dashed] (anotherSystemData) -- (anotherSystemStates);
   \end{tikzpicture}
-  \caption{Overview of exudyn module.}
-  \label{fig_exudyn_overview}
+  \caption{Overview of exudyn C++ module.}
+  \label{fig_exudyn_CPP}
 \end{figure}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -650,7 +691,7 @@ import exudyn as exu
 \noindent However, there are many \mybold{ways to speed up \codeName\ in general}:
 \bi
   \item for models with more than 50 coordinates, switching to sparse solvers might greatly improve speed: \texttt{simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse}
-  \item try to avoid Python function or try to speed up Python functions
+  \item try to avoid Python functions or try to speed up Python functions
   \item instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in \texttt{mbs.SetPreStepUserFunction(...)}
   \item user functions can be speed up using the Python numba package, using \texttt{@jit} in front of functions (for more options, see \exuUrl{https://numba.pydata.org/numba-doc/dev/user/index.html}{https://numba.pydata.org/numba-doc/dev/user/index.html}); Example given in \texttt{Examples/springDamperUserFunctionNumbaJIT.py} showing speedups of factor 4; more complicated Python functions may see speedups of 10 - 50
   %
@@ -828,6 +869,7 @@ In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer(
     \item \ac{ODE1}: marks parts related to first order differential equations (ES, EvalF in HOTINT)
     \item \ac{AE}; note: using the term 'AEcoordinates' for 'algebraicEquationsCoordinates'
     \item 'C[...]' ... Computational, e.g. for ComputationalNode ==> use 'CNode'
+    \item \ac{mbs}
     \item \ac{min}, \ac{max}
     \item \ac{abs}, \ac{rel}
     \item \ac{trig} 
@@ -838,6 +880,7 @@ In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer(
     \item \ac{Rxyz}%: consecutive rotations around x, y and z-axis (Tait-Bryan rotations);
     \item \ac{coeffs}
     \item \ac{pos}
+    \item \ac{T66}; based on $6\times 6$ matrix transformations
     \item write time derivatives with underscore: \_t, \_tt; example: Position\_t, Position\_tt, ...
     \item write space-wise derivatives ith underscore: \_x, \_xx, \_y, ...
     \item if a scalar, write coordinate derivative with underscore: \_q, \_v (derivative w.r.t. velocity coordinates)

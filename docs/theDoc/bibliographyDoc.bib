@@ -1,7 +1,7 @@
 @manual{EXUDYNgit,
 annote = {$\backslash$url{\{}https://github.com/jgerstmayr/EXUDYN{\}}},
 author = {Gerstmayr, Johannes},
-title = {{EXUDYN github repository}}
+title = {{Exudyn github repository}}
 }
 
 @article{Newmark1959,
@@ -564,8 +564,8 @@ author = {Zw{\"{o}}lfer, Andreas and Gerstmayr, Johannes},
 journal = {Multibody System Dynamics},
 number = {3},
 pages = {291--313},
-title = {{A concise nodal-based derivation of the floating frame of reference formulation for displacement-based solid finite elements}},
 volume = {49},
+title = {{A concise nodal-based derivation of the floating frame of reference formulation for displacement-based solid finite elements}},
 year = {2020}
 }
 
@@ -573,6 +573,9 @@ year = {2020}
 author = {Holzinger, Stefan and Gerstmayr, Johannes},
 journal = {Multibody System Dynamics},
 title = {{Time integration of rigid bodies modelled with three rotation parameters}},
+pages = {345--378},
+volume = {53},
+number = {4},
 year = {2021},
 pages={(online)}
 }
@@ -580,6 +583,9 @@ pages={(online)}
 @article{ZwoelferGerstmayr2021,
 author = {Zw{\"{o}}lfer, Andreas and Gerstmayr, Johannes},
 journal = {Acta Mechanica},
+pages = {835--851},
+volume = {232},
+number = {3},
 title = {{The nodal-based floating frame of reference formulation with modal reduction}},
 year = {2021}
 }
@@ -618,4 +624,113 @@ pages = {41--52},
 volume = {1},
 year = {1997}
 }
+
+@misc{NGsolve2014,
+  author = {Sch\"oberl, Joachim},
+  title = {{C++11 Implementation of Finite Elements in NGSolve, ASC Report 30/2014}},
+  year = {2014},
+  publisher = {Institute for Analysis and Scientific Computing, Vienna University of Technology},
+  howpublished = {\url{https://www.asc.tuwien.ac.at/~schoeberl/wiki/publications/ngs-cpp11.pdf} (accessed on August 16, 2022)},
+}
+
+@misc{NGsolve2022,
+  doi = {10.48550/ARXIV.2004.06783},
+  url = {https://arxiv.org/abs/2004.06783},
+  author = {Gangl, Peter and Sturm, Kevin and Neunteufel, Michael and Sch\"oberl, Joachim},
+  title = {Fully and Semi-Automated Shape Differentiation in NGSolve},
+  publisher = {arXiv},
+  year = {2020},
+}
+
+@inproceedings{Pieber2017,
+author = {Pieber, Michael and Gerstmayr, Johannes},
+booktitle = {IEEE/RSJ International Conference on Intelligent Robots and Systems},
+file = {:C$\backslash$:/Users/c8501018/AppData/Local/Mendeley Ltd./Mendeley Desktop/Downloaded/Pieber, Gerstmayr - 2017 - A reconfigurable robot based on tetrahedral cells with adaptive shape.pdf:pdf},
+title = {{A reconfigurable robot based on tetrahedral cells with adaptive shape}},
+year = {2017}
+}
+
+@article{TasoraChrono2007,
+author = {Tasora, Alessandro and Silvestri, Marco and Righettini, P.},
+year = {2007},
+month = {06},
+pages = {},
+title = {Architecture of the {Chrono::Engine} physics simulation middleware}
+}
+
+@article{TasoraNegrutChrono2013,
+author = {Mazhar, Hammad and Heyn, Toby and Pazouki, Arman and Melanz, Dan and Seidl, Andrew and Bartholomew, Aaron and Tasora, Alessandro and Negrut, Dan},
+year = {2013},
+month = {02},
+pages = {49-64},
+title = {{CHRONO: A} parallel multi-physics library for rigid-body, flexible-body, and fluid dynamics},
+volume = {4},
+journal = {Mechanical Sciences},
+doi = {10.5194/ms-4-49-2013}
+}
+
+@article{MasaratiMBDyn2014,
+    author = {Masarati, Pierangelo and Morandini, Marco and Mantegazza, Paolo},
+    title = "{An Efficient Formulation for General-Purpose Multibody/Multiphysics Analysis}",
+    journal = {Journal of Computational and Nonlinear Dynamics},
+    volume = {9},
+    number = {4},
+    year = {2014},
+    month = {07},
+    issn = {1555-1415},
+    doi = {10.1115/1.4025628},
+    url = {https://doi.org/10.1115/1.4025628},
+    note = {041001},
+}
+
+@inproceedings{Numba2015,
+author = {Lam, Siu Kwan and Pitrou, Antoine and Seibert, Stanley},
+title = {Numba: A LLVM-Based Python JIT Compiler},
+year = {2015},
+isbn = {9781450340052},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2833157.2833162},
+doi = {10.1145/2833157.2833162},
+abstract = {Dynamic, interpreted languages, like Python, are attractive for domain-experts and scientists experimenting with new ideas. However, the performance of the interpreter is often a barrier when scaling to larger data sets. This paper presents a just-in-time compiler for Python that focuses in scientific and array-oriented computing. Starting with the simple syntax of Python, Numba compiles a subset of the language into efficient machine code that is comparable in performance to a traditional compiled language. In addition, we share our experience in building a JIT compiler using LLVM[1].},
+booktitle = {Proceedings of the Second Workshop on the LLVM Compiler Infrastructure in HPC},
+articleno = {7},
+numpages = {6},
+keywords = {LLVM, compiler, Python},
+location = {Austin, Texas},
+series = {LLVM '15}
+}
+
+@inproceedings{todorov2012mujoco,
+  title={MuJoCo: A physics engine for model-based control},
+  author={Todorov, Emanuel and Erez, Tom and Tassa, Yuval},
+  booktitle={2012 IEEE/RSJ International Conference on Intelligent Robots and Systems},
+  pages={5026--5033},
+  year={2012},
+  organization={IEEE},
+  doi={10.1109/IROS.2012.6386109}
+}
+
+@misc{coumans2016pybullet,
+  title={Pybullet, a python module for physics simulation for games, robotics and machine learning},
+  author={Coumans, Erwin and Bai, Yunfei},
+  year={2016},
+  howpublished = {\url{https://docs.google.com/document/d/10sXEhzFRSnvFcl3XxNGhnD4N2SedqwdAvK3dsihxVUA} (accessed on August 16, 2022)},
+}
+
+@inproceedings{coumans2015bullet,
+author = {Coumans, Erwin},
+title = {Bullet Physics Simulation},
+year = {2015},
+isbn = {9781450336345},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2776880.2792704},
+doi = {10.1145/2776880.2792704},
+booktitle = {ACM SIGGRAPH 2015 Courses},
+articleno = {7},
+location = {Los Angeles, California},
+series = {SIGGRAPH '15}
+}
+
 

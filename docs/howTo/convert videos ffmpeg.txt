@@ -1,7 +1,9 @@
 #see https://ffmpeg.org/documentation.html
 #Powershell commands to create video from images:
 
+#create .mp4 video from exudyn tga/png images:
 ./ffmpeg.exe -r 25 -start_number 0 -i frame%05d.tga -c:v libx264 -vf "fps=25,format=yuv420p" animation.mp4
+./ffmpeg.exe -r 25 -start_number 0 -i frame%05d.png -c:v libx264 -vf "fps=25,format=yuv420p" animation.mp4
 
 #convert frame rate:
 ./ffmpeg -i input.mkv -r 16 -filter:v "setpts=0.25*PTS" output.mkv
@@ -64,4 +66,8 @@ ffmpeg -i v1c.mkv -i v2c.mkv -i v3c.mkv -filter_complex "[0:v] [0:a] [1:v] [1:a]
 #documentation of drawtext:https://ffmpeg.org/ffmpeg-filters.html#drawtext-1
 #move in text vertically up to certain position; use \, for commas!; text centered horizontally; use special font STENCIL ... 
 ffmpeg -y -i v1b.avi -vf "drawtext=text=Text to be written:fontfile=/windows/fonts/STENCIL.TTF:y=0*h-line_h+if(lt(t\,0.5)\,t*1200\,600+50.*sin((t-0.5)*20)*exp(-6*(t-0.5))):x=(w-text_w)/2:enable=lt(t\,7):fontcolor=gray:fontsize=100:shadowx=2:shadowy=2" test.mkv
+
+#create animated gifs from exudyn .pngs:
+ffmpeg -i frame%05d.png -framerate 5 test.gif
+
 

@@ -465,10 +465,10 @@ bool MainNodeGenericData::CheckPreAssembleConsistency(const MainSystem& mainSyst
 	//Index dataNodeNumber = cNode->GetNodeNumber(0);
 
 	Index len = cNode->GetParameters().numberOfDataCoordinates;
-	if (len != GetInitialVector().NumberOfItems())
+	if (len != GetInitialCoordinateVector().NumberOfItems())
 	{
 		errorString = "MainNodeGenericData: numberOfDataCoordinates (size=" + EXUstd::ToString(len) + ") must have same size as initialCoordinates (size=" +
-			EXUstd::ToString(GetInitialVector().NumberOfItems()) + ")";
+			EXUstd::ToString(GetInitialCoordinateVector().NumberOfItems()) + ")";
 		return false;
 	}
 
@@ -481,17 +481,17 @@ bool MainNodeGenericODE2::CheckPreAssembleConsistency(const MainSystem& mainSyst
 	//Index dataNodeNumber = cNode->GetNodeNumber(0);
 
 	Index len = cNode->GetParameters().numberOfODE2Coordinates;
-	if (len != GetInitialVector().NumberOfItems())
+	if (len != GetInitialCoordinateVector().NumberOfItems())
 	{
 		errorString = "MainNodeGenericODE2: numberOfODE2Coordinates (size=" + EXUstd::ToString(len) + ") must have same size as initialCoordinates (size=" +
-			EXUstd::ToString(GetInitialVector().NumberOfItems()) + ")";
+			EXUstd::ToString(GetInitialCoordinateVector().NumberOfItems()) + ")";
 		return false;
 	}
 
-	if (len != GetInitialVector_t().NumberOfItems())
+	if (len != GetInitialCoordinateVector_t().NumberOfItems())
 	{
 		errorString = "MainNodeGenericODE2: numberOfODE2Coordinates (size=" + EXUstd::ToString(len) + ") must have same size as initialCoordinates_t (size=" +
-			EXUstd::ToString(GetInitialVector_t().NumberOfItems()) + ")";
+			EXUstd::ToString(GetInitialCoordinateVector_t().NumberOfItems()) + ")";
 		return false;
 	}
 
@@ -510,10 +510,10 @@ bool MainNodeGenericODE1::CheckPreAssembleConsistency(const MainSystem& mainSyst
 	CNodeGenericODE1* cNode = (CNodeGenericODE1*)GetCNode();
 
 	Index len = cNode->GetParameters().numberOfODE1Coordinates;
-	if (len != GetInitialVector().NumberOfItems())
+	if (len != GetInitialCoordinateVector().NumberOfItems())
 	{
 		errorString = "MainNodeGenericODE1: numberOfODE1Coordinates (size=" + EXUstd::ToString(len) + ") must have same size as initialCoordinates (size=" +
-			EXUstd::ToString(GetInitialVector().NumberOfItems()) + ")";
+			EXUstd::ToString(GetInitialCoordinateVector().NumberOfItems()) + ")";
 		return false;
 	}
 
@@ -532,10 +532,10 @@ bool MainNodeGenericAE::CheckPreAssembleConsistency(const MainSystem& mainSystem
 	CNodeGenericAE* cNode = (CNodeGenericAE*)GetCNode();
 
 	Index len = cNode->GetParameters().numberOfAECoordinates;
-	if (len != GetInitialVector().NumberOfItems())
+	if (len != GetInitialCoordinateVector().NumberOfItems())
 	{
 		errorString = "MainNodeGenericAE: numberOfAECoordinates (size=" + EXUstd::ToString(len) + ") must have same size as initialCoordinates (size=" +
-			EXUstd::ToString(GetInitialVector().NumberOfItems()) + ")";
+			EXUstd::ToString(GetInitialCoordinateVector().NumberOfItems()) + ")";
 		return false;
 	}
 
@@ -1662,7 +1662,7 @@ bool MainObjectJointSliding2D::CheckPreAssembleConsistency(const MainSystem& mai
 	Index dataNodeNumber = cObject->GetNodeNumber(0);
 
 	const MainNode& dataNode = mainSystem.GetMainSystemData().GetMainNode(dataNodeNumber);
-	SignedIndex initialMarker = (SignedIndex)dataNode.GetInitialVector()[0]; //length of initial vector already checked in Node-consistency checks
+	SignedIndex initialMarker = (SignedIndex)dataNode.GetInitialCoordinateVector()[0]; //length of initial vector already checked in Node-consistency checks
 
 	Index slidingMarkerSize = cObject->GetParameters().slidingMarkerNumbers.NumberOfItems();
 	Index slidingMarkerOffsetSize = cObject->GetParameters().slidingMarkerOffsets.NumberOfItems();
@@ -1744,7 +1744,7 @@ bool MainObjectJointALEMoving2D::CheckPreAssembleConsistency(const MainSystem& m
 	Index genericODE2NodeNumber = cObject->GetNodeNumber(1);
 
 	const MainNode& dataNode = mainSystem.GetMainSystemData().GetMainNode(dataNodeNumber);
-	SignedIndex initialMarker = (SignedIndex)dataNode.GetInitialVector()[0]; //length of initial vector already checked in Node-consistency checks
+	SignedIndex initialMarker = (SignedIndex)dataNode.GetInitialCoordinateVector()[0]; //length of initial vector already checked in Node-consistency checks
 
 	Index slidingMarkerSize = cObject->GetParameters().slidingMarkerNumbers.NumberOfItems();
 	Index slidingMarkerOffsetSize = cObject->GetParameters().slidingMarkerOffsets.NumberOfItems();

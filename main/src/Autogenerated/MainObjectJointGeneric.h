@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-04  22:03:18 (last modified)
+* @date         2022-07-21  20:27:19 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -133,10 +133,10 @@ public: // AUTO:
         d["objectType"] = (std::string)GetTypeName();
         d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectJointGeneric->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["constrainedAxes"] = (std::vector<Index>)cObjectJointGeneric->GetParameters().constrainedAxes; //! AUTO: cast variables into python (not needed for standard types) 
-        d["rotationMarker0"] = EXUmath::Matrix3DToStdArray33(cObjectJointGeneric->GetParameters().rotationMarker0); //! AUTO: cast variables into python (not needed for standard types) 
-        d["rotationMarker1"] = EXUmath::Matrix3DToStdArray33(cObjectJointGeneric->GetParameters().rotationMarker1); //! AUTO: cast variables into python (not needed for standard types) 
+        d["rotationMarker0"] = EPyUtils::Matrix2NumPyTemplate(cObjectJointGeneric->GetParameters().rotationMarker0); //! AUTO: cast variables into python (not needed for standard types) 
+        d["rotationMarker1"] = EPyUtils::Matrix2NumPyTemplate(cObjectJointGeneric->GetParameters().rotationMarker1); //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectJointGeneric->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
-        d["offsetUserFunctionParameters"] = (std::vector<Real>)cObjectJointGeneric->GetParameters().offsetUserFunctionParameters; //! AUTO: cast variables into python (not needed for standard types) 
+        d["offsetUserFunctionParameters"] = EPyUtils::SlimVector2NumPy(cObjectJointGeneric->GetParameters().offsetUserFunctionParameters); //! AUTO: cast variables into python (not needed for standard types) 
         if (cObjectJointGeneric->GetParameters().offsetUserFunction)
             {d["offsetUserFunction"] = (std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction;}
         else
@@ -161,10 +161,10 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectJointGeneric->GetParameters().markerNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("constrainedAxes") == 0) { return py::cast((std::vector<Index>)cObjectJointGeneric->GetParameters().constrainedAxes);} //! AUTO: get parameter
-        else if (parameterName.compare("rotationMarker0") == 0) { return py::cast(EXUmath::Matrix3DToStdArray33(cObjectJointGeneric->GetParameters().rotationMarker0));} //! AUTO: get parameter
-        else if (parameterName.compare("rotationMarker1") == 0) { return py::cast(EXUmath::Matrix3DToStdArray33(cObjectJointGeneric->GetParameters().rotationMarker1));} //! AUTO: get parameter
+        else if (parameterName.compare("rotationMarker0") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectJointGeneric->GetParameters().rotationMarker0);} //! AUTO: get parameter
+        else if (parameterName.compare("rotationMarker1") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectJointGeneric->GetParameters().rotationMarker1);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectJointGeneric->GetParameters().activeConnector);} //! AUTO: get parameter
-        else if (parameterName.compare("offsetUserFunctionParameters") == 0) { return py::cast((std::vector<Real>)cObjectJointGeneric->GetParameters().offsetUserFunctionParameters);} //! AUTO: get parameter
+        else if (parameterName.compare("offsetUserFunctionParameters") == 0) { return EPyUtils::SlimVector2NumPy(cObjectJointGeneric->GetParameters().offsetUserFunctionParameters);} //! AUTO: get parameter
         else if (parameterName.compare("offsetUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("offsetUserFunction_t") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)>)cObjectJointGeneric->GetParameters().offsetUserFunction_t);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectJointGeneric->GetShow());} //! AUTO: get parameter

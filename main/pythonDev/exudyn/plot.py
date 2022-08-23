@@ -59,7 +59,7 @@ def ParseOutputFileHeader(lines):
     parseLines = min(10, nLines) #max 10 lines to parse
     output = {}
     output['type'] = 'unknown'
-    columns = []
+    #columns = []
     if len(lines) < 1:
         return {} #empty dictionary
     variableTypes = []
@@ -675,8 +675,8 @@ def PlotFFT(frequency, data,
     ax=plt.gca() # get current axes
     ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
     ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-    xScale = 'linear'
-    yScale = 'linear'
+    # xScale = 'linear'
+    # yScale = 'linear'
     if logScaleX:
         plt.xscale('log')
     if logScaleY:
@@ -770,6 +770,7 @@ def LoadImage(fileName, trianglesAsLines = True, verbose=False):
     listLineColors = [] #line colors as tuples
     listTriangles = []
     nSegments = 0
+    nTriangles = 0
     actColor = (0,0,0,1)
     while i < len(lines)-1: #there will be always 1 extra line (or file end)!
         lineType = lines[i][:-1]
@@ -784,6 +785,7 @@ def LoadImage(fileName, trianglesAsLines = True, verbose=False):
             nSegments +=int(len(splitLine)/3)-1
             # print('line', listLines)
         elif lineType == '#TRIANGLE':
+            nTriangles += 1
             splitLine = np.array(data.split(','), dtype=float)
             linePoints = list(np.array(data.split(','), dtype=float))
             if trianglesAsLines:
@@ -800,7 +802,7 @@ def LoadImage(fileName, trianglesAsLines = True, verbose=False):
     if verbose:
         print('number of lines:', len(listLines))
         print('number of line segments:', nSegments)
-        print('number of triangles:', len(listTriangles))
+        print('number of triangles:', nTriangles)
         
     return {'linePoints':listLines, 'lineColors':listLineColors, 'triangles':listTriangles}
 
@@ -814,6 +816,8 @@ def LoadImage(fileName, trianglesAsLines = True, verbose=False):
 #  lineStyles: matplotlib codes for lines
 #  triangleEdgeColors: color for triangle edges as tuple of rgb colors or matplotlib color code strings 'black', 'r', ...
 #  triangleEdgeWidths: width of triangle edges; set to 0 if edges shall not be shown
+#  removeAxes: if True, all axes and background are removed for simpler export
+#  orthogonalProjection: if True, projection is orthogonal with no perspective view
 #  title: optional string representing plot title 
 #  figureName: optional name for figure, if newFigure=True
 #  fileName: if this string is non-empty, figure will be saved to given path and filename (use figName.pdf to safe as PDF or figName.png to save as PNG image); use matplotlib.use('Agg') in order not to open figures if you just want to save them
@@ -821,7 +825,7 @@ def LoadImage(fileName, trianglesAsLines = True, verbose=False):
 #  closeAll: if True, close all figures before opening new one (do this only in first PlotSensor command!)
 #  azim, elev: for 3D plots: the initial angles for the 3D view in degrees
 def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidths=1, lineStyles='-', 
-              triangleEdgeColors='black', triangleEdgeWidths=0.5,
+              triangleEdgeColors='black', triangleEdgeWidths=0.5, removeAxes = True, orthogonalProjection=True,
               title = '', figureName='', fileName = '', fontSize = 16, closeAll = False,
               azim=0., elev=0.):
     from matplotlib import collections  as mc #plot does not accept colors
@@ -872,7 +876,8 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
             collLines = mc.LineCollection(plotData, colors=colors, 
                                    linewidths=lineWidths, linestyles=lineStyles)
             ax.add_collection(collLines)
-            ax.set_aspect('equal', 'box') #for 2D only
+            if axesEqual:
+                ax.set_aspect('equal', 'box') #for 2D only
 
         if len(triangles) != 0:
             print('WARNING: PlotImage: triangles are ignored; they can only be plotted if plot3D=True')
@@ -930,7 +935,15 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
             ax.add_collection(collTrigs)
 
         ax.view_init(elev=0., azim=0.)
-        ax.set_proj_type('ortho') #this is better for e.g. xy view
+        if removeAxes:
+            ax.set_axis_off()
+        if orthogonalProjection:
+            ax.set_proj_type('ortho') #this is better for e.g. xy view
+
+        if axesEqual:
+            ax.set_aspect('auto') 
+            ax.set_box_aspect([1,1,1])
+
         ax.autoscale()
     #end 3D plotting
 

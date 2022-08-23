@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:21:00 (last modified)
+* @date         2022-07-21  19:36:24 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -123,7 +123,7 @@ public: // AUTO:
         d["markerType"] = (std::string)GetTypeName();
         d["bodyNumber"] = (ObjectIndex)cMarkerSuperElementPosition->GetParameters().bodyNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["meshNodeNumbers"] = (std::vector<Index>)cMarkerSuperElementPosition->GetParameters().meshNodeNumbers; //! AUTO: cast variables into python (not needed for standard types) 
-        d["weightingFactors"] = (std::vector<Real>)cMarkerSuperElementPosition->GetParameters().weightingFactors; //! AUTO: cast variables into python (not needed for standard types) 
+        d["weightingFactors"] = EPyUtils::Vector2NumPy(cMarkerSuperElementPosition->GetParameters().weightingFactors); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationMarkerSuperElementPosition->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VshowMarkerNodes"] = (bool)visualizationMarkerSuperElementPosition->GetShowMarkerNodes(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -136,7 +136,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("bodyNumber") == 0) { return py::cast((ObjectIndex)cMarkerSuperElementPosition->GetParameters().bodyNumber);} //! AUTO: get parameter
         else if (parameterName.compare("meshNodeNumbers") == 0) { return py::cast((std::vector<Index>)cMarkerSuperElementPosition->GetParameters().meshNodeNumbers);} //! AUTO: get parameter
-        else if (parameterName.compare("weightingFactors") == 0) { return py::cast((std::vector<Real>)cMarkerSuperElementPosition->GetParameters().weightingFactors);} //! AUTO: get parameter
+        else if (parameterName.compare("weightingFactors") == 0) { return EPyUtils::Vector2NumPy(cMarkerSuperElementPosition->GetParameters().weightingFactors);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationMarkerSuperElementPosition->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VshowMarkerNodes") == 0) { return py::cast((bool)visualizationMarkerSuperElementPosition->GetShowMarkerNodes());} //! AUTO: get parameter
         else  {PyError(STDstring("MarkerSuperElementPosition::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user

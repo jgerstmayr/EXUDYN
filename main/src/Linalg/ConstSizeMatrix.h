@@ -740,9 +740,6 @@ public:
 	//! get fast inverse for 1D, 2D and 3D case
 	ConstSizeMatrixBase<T, dataSize> GetInverse() const
 	{
-		//delete: (now implemented for general case ...)
-		//CHECKandTHROW(this->numberOfColumns <= 3 && this->numberOfColumns == this->numberOfRows, "ConstSizeMatrixBase::GetInverse(): only implemented for dimensions (1x1, 2x2 and 3x3)");
-
 		switch (this->numberOfColumns)
 		{
 			case 1:
@@ -790,7 +787,7 @@ public:
 				return result;
 				break;
 			}
-			default: //may not occur due to static assertion
+			default: 
 			{
 				ConstSizeMatrixBase<T, dataSize> result(false);
 				ConstSizeMatrixBase<T, dataSize> copyMatrix(*this);

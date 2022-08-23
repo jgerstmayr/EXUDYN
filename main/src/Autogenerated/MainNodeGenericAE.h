@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-23  22:01:19 (last modified)
+* @date         2022-07-21  19:36:20 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,7 +114,7 @@ public: // AUTO:
     }
 
     //! AUTO:  return internally stored initial coordinates (displacements) of node
-    virtual LinkedDataVector GetInitialVector() const override
+    virtual LinkedDataVector GetInitialCoordinateVector() const override
     {
         return parameters.initialCoordinates;
     }
@@ -138,9 +138,9 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["nodeType"] = (std::string)GetTypeName();
-        d["referenceCoordinates"] = (std::vector<Real>)cNodeGenericAE->GetParameters().referenceCoordinates; //! AUTO: cast variables into python (not needed for standard types) 
+        d["referenceCoordinates"] = EPyUtils::Vector2NumPy(cNodeGenericAE->GetParameters().referenceCoordinates); //! AUTO: cast variables into python (not needed for standard types) 
         d["numberOfAECoordinates"] = (Index)cNodeGenericAE->GetParameters().numberOfAECoordinates; //! AUTO: cast variables into python (not needed for standard types) 
-        d["initialCoordinates"] = (std::vector<Real>)GetParameters().initialCoordinates; //! AUTO: cast variables into python (not needed for standard types) 
+        d["initialCoordinates"] = EPyUtils::Vector2NumPy(GetParameters().initialCoordinates); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationNodeGenericAE->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -150,8 +150,8 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("referenceCoordinates") == 0) { return py::cast((std::vector<Real>)cNodeGenericAE->GetParameters().referenceCoordinates);} //! AUTO: get parameter
-        else if (parameterName.compare("initialCoordinates") == 0) { return py::cast((std::vector<Real>)GetParameters().initialCoordinates);} //! AUTO: get parameter
+        else if (parameterName.compare("referenceCoordinates") == 0) { return EPyUtils::Vector2NumPy(cNodeGenericAE->GetParameters().referenceCoordinates);} //! AUTO: get parameter
+        else if (parameterName.compare("initialCoordinates") == 0) { return EPyUtils::Vector2NumPy(GetParameters().initialCoordinates);} //! AUTO: get parameter
         else if (parameterName.compare("numberOfAECoordinates") == 0) { return py::cast((Index)cNodeGenericAE->GetParameters().numberOfAECoordinates);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationNodeGenericAE->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("NodeGenericAE::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user

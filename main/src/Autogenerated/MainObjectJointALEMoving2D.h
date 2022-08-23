@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-04  22:03:19 (last modified)
+* @date         2022-07-21  19:36:23 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -136,7 +136,7 @@ public: // AUTO:
         d["objectType"] = (std::string)GetTypeName();
         d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectJointALEMoving2D->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["slidingMarkerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectJointALEMoving2D->GetParameters().slidingMarkerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
-        d["slidingMarkerOffsets"] = (std::vector<Real>)cObjectJointALEMoving2D->GetParameters().slidingMarkerOffsets; //! AUTO: cast variables into python (not needed for standard types) 
+        d["slidingMarkerOffsets"] = EPyUtils::Vector2NumPy(cObjectJointALEMoving2D->GetParameters().slidingMarkerOffsets); //! AUTO: cast variables into python (not needed for standard types) 
         d["slidingOffset"] = (Real)cObjectJointALEMoving2D->GetParameters().slidingOffset; //! AUTO: cast variables into python (not needed for standard types) 
         d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(cObjectJointALEMoving2D->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["usePenaltyFormulation"] = (bool)cObjectJointALEMoving2D->GetParameters().usePenaltyFormulation; //! AUTO: cast variables into python (not needed for standard types) 
@@ -155,7 +155,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectJointALEMoving2D->GetParameters().markerNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("slidingMarkerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectJointALEMoving2D->GetParameters().slidingMarkerNumbers));} //! AUTO: get parameter
-        else if (parameterName.compare("slidingMarkerOffsets") == 0) { return py::cast((std::vector<Real>)cObjectJointALEMoving2D->GetParameters().slidingMarkerOffsets);} //! AUTO: get parameter
+        else if (parameterName.compare("slidingMarkerOffsets") == 0) { return EPyUtils::Vector2NumPy(cObjectJointALEMoving2D->GetParameters().slidingMarkerOffsets);} //! AUTO: get parameter
         else if (parameterName.compare("slidingOffset") == 0) { return py::cast((Real)cObjectJointALEMoving2D->GetParameters().slidingOffset);} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(cObjectJointALEMoving2D->GetParameters().nodeNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("usePenaltyFormulation") == 0) { return py::cast((bool)cObjectJointALEMoving2D->GetParameters().usePenaltyFormulation);} //! AUTO: get parameter

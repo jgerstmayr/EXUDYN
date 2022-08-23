@@ -36,9 +36,6 @@
 #include "Utilities/TimerStructure.h" //for local CPU time measurement
 #include "Main/rendererPythonInterface.h" //for regular call to PyExecuteQueue(...)
 
-//delete: //#define USE_AUTODIFF
-
-
 #include "Utilities/Parallel.h" //include after 
 
 
@@ -103,15 +100,15 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			Index numberOfCoordinates = node->GetNumberOfODE2Coordinates();
 			if (numberOfCoordinates)
 			{
-				if (numberOfCoordinates != mainNode->GetInitialVector().NumberOfItems()) {
+				if (numberOfCoordinates != mainNode->GetInitialCoordinateVector().NumberOfItems()) {
 					PyError(STDstring("Node ") + EXUstd::ToString(itemIndex) + " '" + mainNode->GetName() + "'" + "(type=" + mainNode->GetTypeName() + ") has inconsistent size of initial displacement coordinates vector (" +
-						EXUstd::ToString(mainNode->GetInitialVector().NumberOfItems()) + ") != number of nodal ODE2 coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
+						EXUstd::ToString(mainNode->GetInitialCoordinateVector().NumberOfItems()) + ") != number of nodal ODE2 coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
 					systemIsInteger = false;
 				}
 
-				if (numberOfCoordinates != mainNode->GetInitialVector_t().NumberOfItems()) {
+				if (numberOfCoordinates != mainNode->GetInitialCoordinateVector_t().NumberOfItems()) {
 					PyError(STDstring("Node ") + EXUstd::ToString(itemIndex) + " '" + mainNode->GetName() + "'" + "(type=" + mainNode->GetTypeName() + ") has inconsistent size of initial velocity coordinate vector (" +
-						EXUstd::ToString(mainNode->GetInitialVector_t().NumberOfItems()) + ") != number of nodal ODE2 coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
+						EXUstd::ToString(mainNode->GetInitialCoordinateVector_t().NumberOfItems()) + ") != number of nodal ODE2 coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
 					systemIsInteger = false;
 				}
 			}
@@ -121,9 +118,9 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			Index numberOfCoordinates = node->GetNumberOfODE1Coordinates();
 			if (numberOfCoordinates)
 			{
-				if (numberOfCoordinates != mainNode->GetInitialVector().NumberOfItems()) {
+				if (numberOfCoordinates != mainNode->GetInitialCoordinateVector().NumberOfItems()) {
 					PyError(STDstring("Node ") + EXUstd::ToString(itemIndex) + " '" + mainNode->GetName() + "'" + "(type=" + mainNode->GetTypeName() + ") has inconsistent size of initial coordinates vector (" +
-						EXUstd::ToString(mainNode->GetInitialVector().NumberOfItems()) + ") != number of nodal ODE1 coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
+						EXUstd::ToString(mainNode->GetInitialCoordinateVector().NumberOfItems()) + ") != number of nodal ODE1 coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
 					systemIsInteger = false;
 				}
 			}
@@ -133,25 +130,27 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			Index numberOfCoordinates = node->GetNumberOfDataCoordinates();
 			if (numberOfCoordinates)
 			{
-				if (numberOfCoordinates != mainNode->GetInitialVector().NumberOfItems()) {
+				if (numberOfCoordinates != mainNode->GetInitialCoordinateVector().NumberOfItems()) {
 					PyError(STDstring("Node ") + EXUstd::ToString(itemIndex) + " '" + mainNode->GetName() + "'" + "(type=" + mainNode->GetTypeName() + ") has inconsistent size of initial coordinates vector (" +
-						EXUstd::ToString(mainNode->GetInitialVector().NumberOfItems()) + ") != number of nodal Data coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
+						EXUstd::ToString(mainNode->GetInitialCoordinateVector().NumberOfItems()) + ") != number of nodal Data coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
 					systemIsInteger = false;
 				}
 			}
 		}
-		else // mixed ODE1, ODE2 and/or AE variables
-		{
-			Index numberOfCoordinates = node->GetNumberOfAccessibleCoordinates(); //ODE2+ODE1+AE
-			if (numberOfCoordinates)
-			{
-				if (numberOfCoordinates != mainNode->GetInitialVector().NumberOfItems()) {
-					PyError(STDstring("Node ") + EXUstd::ToString(itemIndex) + " '" + mainNode->GetName() + "'" + "(type=" + mainNode->GetTypeName() + ") has inconsistent size of initial coordinates vector (" +
-						EXUstd::ToString(mainNode->GetInitialVector().NumberOfItems()) + ") != number of nodal coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
-					systemIsInteger = false;
-				}
-			}
-		}
+		//2022-08-12: this code could not be reached so far; better delete; initial coordinates should only be used for
+		//ODE2 or ODE1 coordinates, or Data variables; in mixed case ODE2+AE, only ODE2 get initial values; in ODE2+Data case, it should be similar?
+		//else // mixed ODE1, ODE2 and/or AE variables
+		//{
+		//	Index numberOfCoordinates = node->GetNumberOfAccessibleCoordinates(); //ODE2+ODE1+AE
+		//	if (numberOfCoordinates)
+		//	{
+		//		if (numberOfCoordinates != mainNode->GetInitialCoordinateVector().NumberOfItems()) {
+		//			PyError(STDstring("Node ") + EXUstd::ToString(itemIndex) + " '" + mainNode->GetName() + "'" + "(type=" + mainNode->GetTypeName() + ") has inconsistent size of initial coordinates vector (" +
+		//				EXUstd::ToString(mainNode->GetInitialCoordinateVector().NumberOfItems()) + ") != number of nodal coordinates (" + EXUstd::ToString(numberOfCoordinates) + ")");
+		//			systemIsInteger = false;
+		//		}
+		//	}
+		//}
 		itemIndex++;
 	}
 	if (!systemIsInteger) { return false; }
@@ -647,12 +646,16 @@ void CSystem::AssembleCoordinates(const MainSystem& mainSystem)
 			node->SetGlobalAECoordinateIndex(globalAEIndex); //use current index
 			globalAEIndex += node->GetNumberOfAECoordinates(); //add counter in order to track number of AE-coordinates
 		}
-		else if ((Index)node->GetNodeGroup() & (Index)CNodeGroup::DataVariables) //
+		else if (!((Index)node->GetNodeGroup() & (Index)CNodeGroup::DataVariables) )
+		{ CHECKandTHROWstring("CSystem::Assemble(): invalid node type!"); }
+
+		//data coordinates can be present even in case of other variables!
+		if ((Index)node->GetNodeGroup() & (Index)CNodeGroup::DataVariables) //
 		{
 			node->SetGlobalDataCoordinateIndex(globalDataIndex); //use current index
 			globalDataIndex += node->GetNumberOfDataCoordinates(); //add counter in order to track number of Data-coordinates
 		}
-		else { CHECKandTHROWstring("CSystem::Assemble(): invalid node type!"); }
+
 		node_ind++;
 	}
 
@@ -697,11 +700,16 @@ void CSystem::AssembleLTGLists(const MainSystem& mainSystem)
 	listAE.Flush();
 	listData.Flush();
 
+	ObjectContainer<ArrayIndex>& listODE2numDiff = cSystemData.GetLocalToGlobalODE2NumDiff();
+	listODE2numDiff.Flush();
+
 	//temporary lists per object:
 	ArrayIndex ltgListODE2;
 	ArrayIndex ltgListODE1;
 	ArrayIndex ltgListAE;
 	ArrayIndex ltgListData;
+
+	ArrayIndex ltgListODE2numDiff;
 
 	//compute localToGlobalODE2 coordinate indices
 	for (Index i = 0; i < cSystemData.GetCObjects().NumberOfItems(); i++)
@@ -712,6 +720,28 @@ void CSystem::AssembleLTGLists(const MainSystem& mainSystem)
 		listODE1.Append(ltgListODE1);
 		listAE.Append(ltgListAE);
 		listData.Append(ltgListData);
+
+		//check for duplicates in ODE2 lists (other lists may have problems as well; AE does not use numDiff, so it is safe; ODE1 needs to be checked as well)
+		ltgListODE2numDiff = ltgListODE2;
+		EXUstd::QuickSort(ltgListODE2numDiff); //additional overhead, but should not be too time critical!
+		ltgListODE2.SetNumberOfItems(0); //new list without duplicates
+
+		//first item always added
+		if (ltgListODE2numDiff.NumberOfItems() != 0) { ltgListODE2.Append(ltgListODE2numDiff[0]); }
+
+		//add only non-duplicates:
+		for (Index j = 1; j < ltgListODE2numDiff.NumberOfItems(); j++)
+		{
+			if (ltgListODE2numDiff[j] != ltgListODE2numDiff[j - 1])
+			{
+				ltgListODE2.Append(ltgListODE2numDiff[j]);
+			}
+		}
+		//if (ltgListODE2numDiff.NumberOfItems() != ltgListODE2.NumberOfItems())
+		//{
+		//	pout << "object " << i << ": ltgListODE2=" << ltgListODE2 << ": ltgListODE2numDiff=" << ltgListODE2numDiff << "\n";
+		//}
+		listODE2numDiff.Append(ltgListODE2);
 	}
 	//pout << "local to global ODE2 Indices:\n" << listODE2 << "\n\n";
 	//pout << "local to global ODE1 Indices:\n" << listODE1 << "\n\n";
@@ -1049,8 +1079,11 @@ void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 				LinkedDataVector u(ODE2u, coordIndex, numberOfCoordinates);
 				LinkedDataVector v(ODE2v, coordIndex, numberOfCoordinates);
 
-				u = mainNode->GetInitialVector();	//size must be compatible and is not checked!
-				v = mainNode->GetInitialVector_t();	//size must be compatible and is not checked!
+				mainNode->SetInitialCoordinateVector(u);
+				mainNode->SetInitialCoordinateVector_t(v);
+				//DELETE:
+				//u = mainNode->GetInitialCoordinateVector();	//size must be compatible and is not checked!
+				//v = mainNode->GetInitialCoordinateVector_t();	//size must be compatible and is not checked!
 
 				//also initialize global reference coordinate vector (used for differentiation and in finite elements)
 				LinkedDataVector uRef(ODE2uRef, coordIndex, numberOfCoordinates);
@@ -1066,7 +1099,9 @@ void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 				Index numberOfCoordinates = node->GetNumberOfODE1Coordinates();
 				LinkedDataVector x(ODE1x, coordIndex, numberOfCoordinates);
 
-				x = mainNode->GetInitialVector(); //size must be compatible and is not checked!
+				mainNode->SetInitialCoordinateVector(x);
+				//DELETE:
+				//x = mainNode->GetInitialCoordinateVector(); //size must be compatible and is not checked!
 
 				//also initialize global reference coordinate vector (used for differentiation and in finite elements)
 				LinkedDataVector uRef(ODE1xRef, coordIndex, numberOfCoordinates);
@@ -1082,7 +1117,9 @@ void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 				Index numberOfCoordinates = node->GetNumberOfDataCoordinates();
 				LinkedDataVector x(data, coordIndex, numberOfCoordinates);
 
-				x = mainNode->GetInitialVector(); //size must be compatible and is not checked!
+				mainNode->SetInitialCoordinateVector(x);
+				//DELETE:
+				//x = mainNode->GetInitialCoordinateVector(); //size must be compatible and is not checked!
 			}
 		}
 		else { CHECKandTHROWstring("CSystem::AssembleInitializeSystemCoordinates: invalid Node type, not implemented"); }
@@ -2051,43 +2088,84 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 {
 	//recommendedStepSize (must be initialized with -1 or appropriately)
 	Real PNerror = 0;
-	PostNewtonFlags::Type postNewtonFlags;
-	//algebraic equations only origin from objects (e.g. Euler parameters) and constraints
-	TemporaryComputationData& temp = tempArray[0]; //always exists
-
-	//done in solver timer
-	//if (cSystemData.listDiscontinuousIteration.NumberOfItems() != 0) 
-	//{ STARTGLOBALTIMER(TSpostNewtonStep); }
-
-	//for (Index objectIndex = 0; objectIndex < cSystemData.GetCObjects().NumberOfItems(); objectIndex++)
-	for (Index j : cSystemData.listDiscontinuousIteration)
+	int nItems = cSystemData.listDiscontinuousIteration.NumberOfItems();
+	if (nItems != 0) //save time here!
 	{
-		CObjectConnector* connector = (CObjectConnector*)(cSystemData.GetCObjects()[j]);
+		Index nThreads = exuThreading::TaskManager::GetNumThreads();
+		bool doMultiThreading = false;
+		exuThreading::TotalCosts costs = 0; //costs < 1000 does no multithreading, ParallelFor turns into regular for loop [with small overhead]
 
-		if (connector->IsActive()) //usually is active ...
+		if (nThreads > 1 && (nItems >= solverData.multithreadedLLimitResiduals))
 		{
-			const bool computeJacobian = true; //why needed for PostNewtonStep?==> check Issue #241
-			cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
+			outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
+			doMultiThreading = true;
+			costs = 1000;
+		}
+		for (Index k=0; k<nThreads; k++)
+		{
+			tempArray[k].tempValue = 0; //PNerror
+			tempArray[k].tempValue2 = recommendedStepSize; //recommended step size
+			tempArray[k].tempIndex.SetNumberOfItems0(); //stores object indices which shall get a ltg-rebuild
+		}
 
-			Real objectRecomStepSize = -1;
-			PNerror = EXUstd::Maximum(connector->PostNewtonStep(temp.markerDataStructure, j, postNewtonFlags, objectRecomStepSize), PNerror);
-			if (objectRecomStepSize >= 0 && (objectRecomStepSize < recommendedStepSize || recommendedStepSize==-1))
+		Index taskSplit = GetTaskSplit(nItems, nThreads);
+		exuThreading::ParallelFor(nItems, [this, &tempArray, &nItems](NGSsizeType j)
+		{
+			Index i = cSystemData.listDiscontinuousIteration[(Index)j];
+			Index threadID = exuThreading::TaskManager::GetThreadId();
+			PostNewtonFlags::Type postNewtonFlags;
+
+			TemporaryComputationData& temp = tempArray[threadID];
+			Real& recommendedStepSizeLocal = temp.tempValue2;
+			
+			//for (Index i : cSystemData.listDiscontinuousIteration) //serial
+			//{
+			CObjectConnector* connector = (CObjectConnector*)(cSystemData.GetCObjects()[i]);
+
+			if (connector->IsActive()) //usually is active ...
 			{
-				recommendedStepSize = objectRecomStepSize;
+				const bool computeJacobian = true; //why needed for PostNewtonStep?==> check Issue #241
+				cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
+
+				Real objectRecomStepSize = -1;
+				temp.tempValue = EXUstd::Maximum(connector->PostNewtonStep(temp.markerDataStructure, i, 
+					postNewtonFlags, objectRecomStepSize), temp.tempValue);
+				if (objectRecomStepSize >= 0 && (objectRecomStepSize < recommendedStepSizeLocal || recommendedStepSizeLocal == -1))
+				{
+					recommendedStepSizeLocal = objectRecomStepSize;
+				}
+
+				if (postNewtonFlags&PostNewtonFlags::UpdateLTGLists)
+				{
+					temp.tempIndex.Append(i);
+				}
+			}
+		}, taskSplit, costs);
+
+		if (doMultiThreading) { outputBuffer.SetSuspendWriting(false); } //may not write to python during parallel computation
+
+		//now collect results from threads:
+		for (Index k = 0; k < nThreads; k++)
+		{
+			TemporaryComputationData& temp = tempArray[k];
+			PNerror = EXUstd::Maximum(temp.tempValue, PNerror);
+
+			Real recommendedStepSizeThread = temp.tempValue2;
+			if (recommendedStepSizeThread >= 0 && (recommendedStepSizeThread < recommendedStepSize || recommendedStepSize == -1))
+			{
+				recommendedStepSize = recommendedStepSizeThread;
 			}
 
-			if (postNewtonFlags&PostNewtonFlags::UpdateLTGLists)
+			//ltg-rebuild should be rare, but needs to be done in serial mode!
+			for (Index i : temp.tempIndex)
 			{
 				//now update specific ltg lists, if e.g. due to contact or switching the connectivity has changed
-				AssembleObjectLTGLists(j, cSystemData.GetLocalToGlobalODE2()[j], cSystemData.GetLocalToGlobalODE1()[j],
-					cSystemData.GetLocalToGlobalAE()[j], cSystemData.GetLocalToGlobalData()[j]);
-
-				//pout << "Connector" << objectIndex << ", new LTGlist=" << cSystemData.GetLocalToGlobalODE2()[objectIndex] << "\n";
+				AssembleObjectLTGLists(i, cSystemData.GetLocalToGlobalODE2()[i], cSystemData.GetLocalToGlobalODE1()[i],
+					cSystemData.GetLocalToGlobalAE()[i], cSystemData.GetLocalToGlobalData()[i]);
 			}
 		}
+
 	}
-	//if (cSystemData.listDiscontinuousIteration.NumberOfItems() != 0) 
-	//{ STOPGLOBALTIMER(TSpostNewtonStep); }
 
 	//this part is anyway done in parallel:
 	for (GeneralContact* gc : generalContacts) //usually only 1
@@ -2105,9 +2183,9 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 void CSystem::PostDiscontinuousIterationStep()
 {
 	//for (CObject* object : cSystemData.GetCObjects())
-	for (Index j : cSystemData.listDiscontinuousIteration)
+	for (Index i : cSystemData.listDiscontinuousIteration)
 	{
-		CObjectConnector* connector = (CObjectConnector*)(cSystemData.GetCObjects()[j]);
+		CObjectConnector* connector = (CObjectConnector*)(cSystemData.GetCObjects()[i]);
 
 		if (connector->IsActive()) //usually is active ...
 		{
@@ -2176,6 +2254,7 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 				bool jacobianComputed = false;
 				if (jacType & (JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE1)) //any ODE2 dependency
 				{
+					//pout << "jacobian object " << j << "\n";
 					if (!numDiff.forODE2 && ((jacType & (JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function/* + JacobianType::ODE2_ODE1_function*/)) != 0))
 					{
 						if (!EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
@@ -2201,18 +2280,22 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 						else if (!numDiff.forODE2connectors)
 						{	// ++++++++++++++ go the lengthier way: compute connector jacobian, e.g., spring-damper
 							CObjectConnector* connector = (CObjectConnector*)object;
-
+							//pout << "analytic jac connector \n";
 							const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
 							jacobianComputed = true;
 							bool jacDerivNonZero = false;
-							for (Index k = 0; k < markerNumbers.NumberOfItems(); k++)
+							if (numDiff.jacobianConnectorDerivative) //if ignored, it will not be considered
 							{
-								jacobianComputed &= ((cSystemData.GetCMarker(markerNumbers[k]).GetType() & Marker::JacobianDerivativeAvailable) != 0);
-								jacDerivNonZero |= ((cSystemData.GetCMarker(markerNumbers[k]).GetType() & Marker::JacobianDerivativeNonZero) != 0);
+								for (Index k = 0; k < markerNumbers.NumberOfItems(); k++)
+								{
+									jacobianComputed &= ((cSystemData.GetCMarker(markerNumbers[k]).GetType() & Marker::JacobianDerivativeAvailable) != 0);
+									jacDerivNonZero |= ((cSystemData.GetCMarker(markerNumbers[k]).GetType() & Marker::JacobianDerivativeNonZero) != 0);
+								}
 							}
 
 							if (jacobianComputed)
 							{
+								//pout << "  continue\n";
 								//compute MarkerData for connector:
 								const bool computeJacobian = true; //jacobian needed for jacobian computation ...
 								cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
@@ -2259,20 +2342,29 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 					}
 
 
+					//++++++++++++++++++++++++++++++++++++++++++++++++++++
+					//no analytic jacobians so far? => do numerical differentiation!
 					if (!jacobianComputed)
 					{
-						f0.SetNumberOfItems(nLocalODE2); //size also correct for ODE1 derivatives
-						f1.SetNumberOfItems(nLocalODE2);
+						ArrayIndex& ltgODE2numDiff = cSystemData.GetLocalToGlobalODE2NumDiff()[j];
+						//pout << "ltgODE2numDiff = " << ltgODE2numDiff << "\n";
+						//ArrayIndex& ltgODE2numDiff = cSystemData.GetLocalToGlobalODE2()[j];
+						Index nLocalODE2numDiff = ltgODE2numDiff.NumberOfItems(); //this is a possibly shorter list with no duplicates!
+						nLocalODE2 = ltgODE2.NumberOfItems();
+
+						f0.SetNumberOfItems(nLocalODE2numDiff); //size also correct for ODE1 derivatives
+						f1.SetNumberOfItems(nLocalODE2numDiff);
 						if (ComputeObjectODE2LHS(temp, object, f0, j)) //check if it is a constraint, etc. which is not differentiated for ODE2 jacobian
 						{
-							localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
+							//pout << "f0 = " << f0 << "\n";
+							localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE2numDiff); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
 							if (diffODE2)
 							{
 								Real xRefVal = 0;
-								for (Index i = 0; i < nLocalODE2; i++) //differentiate w.r.t. every ltgODE2 coordinate
+								for (Index i = 0; i < nLocalODE2numDiff; i++) //differentiate w.r.t. every ltgODE2numDiff coordinate
 								{
-									Real& xVal = x[ltgODE2[i]];
-									if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRef[ltgODE2[i]]; }
+									Real& xVal = x[ltgODE2numDiff[i]];
+									if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRef[ltgODE2numDiff[i]]; }
 
 									eps = relEps * (EXUstd::Maximum(minCoord, fabs(xVal + xRefVal)));
 
@@ -2294,9 +2386,9 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 
 							if (diffODE2_t && EXUstd::IsOfType(jacType, JacobianType::ODE2_ODE2_t))
 							{
-								for (Index i = 0; i < nLocalODE2; i++) //differentiate w.r.t. every ltgODE2 coordinate
+								for (Index i = 0; i < nLocalODE2numDiff; i++) //differentiate w.r.t. every ltgODE2numDiff coordinate
 								{
-									Real& xVal = x_t[ltgODE2[i]];
+									Real& xVal = x_t[ltgODE2numDiff[i]];
 									eps = relEps * (EXUstd::Maximum(minCoord, fabs(xVal)));
 
 									xStore = xVal;
@@ -2314,13 +2406,13 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 								}
 							}
 
-							jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE2, ltgODE2);
+							jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE2, ltgODE2numDiff);
 							//pout << "jacN" << j << "=np.array(" << localJacobian << ")\n";
 
 							if (diffODE1 && (jacType & JacobianType::ODE2_ODE1))
 							{
 								ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
-								Index nLocalODE1 = ltgODE1.NumberOfItems();
+								Index nLocalODE1 = ltgODE1.NumberOfItems(); //here, duplicates would also need to be extracted!
 
 								localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE1); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
 
@@ -2484,7 +2576,7 @@ void CSystem::NumericalJacobianODE1RHS(TemporaryComputationDataArray& tempArray,
 		for (Index j : cSystemData.listComputeObjectODE1Rhs)
 		{
 			ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
-			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
+			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2NumDiff()[j];
 			CObject* object = cSystemData.GetCObjects()[j];
 
 			Index nLocalODE1 = ltgODE1.NumberOfItems();
@@ -2984,7 +3076,7 @@ void CSystem::JacobianAE(TemporaryComputationDataArray& tempArray, const NewtonS
 			//work over bodies, connectors, etc.
 			//CObject& object = *(cSystemData.GetCObjects()[j]);
 			ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[j];
-			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
+			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j]; //as we do not perform numerical differentiation, LTG duplicates are needed!
 			ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
 
 			bool objectUsesVelocityLevel;// = false;

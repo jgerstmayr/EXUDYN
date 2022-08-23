@@ -81,9 +81,13 @@ void CMarkerBodyCable2DShape::ComputeMarkerData(const CSystemData& cSystemData, 
 		//store ALE coordinate:
 		markerData.GetHelper2() = ((CNodeODE2*)(((CObjectALEANCFCable2D*)cable)->GetCNode(2)))->GetCurrentCoordinate(0);
 		markerData.GetHelper2() += ((CNodeODE2*)(((CObjectALEANCFCable2D*)cable)->GetCNode(2)))->GetReferenceCoordinateVector()[0];
-		
-		markerData.GetHelperMatrix().SetNumberOfRowsAndColumns(nPoints, 2); //stores r_x per segment point
 	}
+
+	//currently not used in CObjectContactFrictionCircleCable2D
+	//if (isALE || verticalOffset != 0.)
+	//{
+	//		markerData.GetHelperMatrix().SetNumberOfRowsAndColumns(nPoints, 2); //stores r_x per segment point
+	//}
 
 	for (Index i = 0; i < nPoints; i++) //iterate over nPoints, including endpoints!
 	{
@@ -98,8 +102,8 @@ void CMarkerBodyCable2DShape::ComputeMarkerData(const CSystemData& cSystemData, 
 		{
 			SVx = cable->ComputeShapeFunctions_x(x, L); //could be precomputed and stored!
 			r_x = cable->MapCoordinates(SVx, q0, q1);
-			markerData.GetHelperMatrix()(0, 0) = r_x[0];
-			markerData.GetHelperMatrix()(0, 1) = r_x[1];
+			//markerData.GetHelperMatrix()(i, 0) = r_x[0]; //currently not used
+			//markerData.GetHelperMatrix()(i, 1) = r_x[1];
 		}
 		if (isALE)
 		{

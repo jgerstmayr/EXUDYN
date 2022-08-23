@@ -907,7 +907,9 @@ public:
 	//! the destination rows and columns of the submatrix (sm) relative to row and column are given in LTGrows and LTGcolumns
 	void AddSubmatrix(const MatrixBase<T>& sm, T factor, const ResizableArray<Index>& LTGrows, const ResizableArray<Index>& LTGcolumns, Index row = 0, Index column = 0)
 	{
-		CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::AddSubmatrix(2) size mismatch");
+		//sm.Rows/Columns is not decisive: max of LTG counts! CHECKandTHROW(row + sm.NumberOfRows() <= NumberOfRows() && column + sm.NumberOfColumns() <= NumberOfColumns(), "Matrix::AddSubmatrix(2) size mismatch");
+		CHECKandTHROW(row + EXUstd::MaximumItem(LTGrows) <= NumberOfRows() && column + EXUstd::MaximumItem(LTGcolumns) <= NumberOfColumns(), 
+			"Matrix::AddSubmatrix(2) size mismatch");
 
 		for (Index i = 0; i < sm.numberOfRows; i++)
 		{

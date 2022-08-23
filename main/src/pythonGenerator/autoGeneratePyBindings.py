@@ -141,6 +141,7 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
 [s1, sL1] = AddEnumValue(cClass, 'RotationRxyz', 'node with 3D orientations that are modelled with Tait-Bryan angles'); s += s1; sLenum += sL1
 [s1, sL1] = AddEnumValue(cClass, 'RotationRotationVector', 'node with 3D orientations that are modelled with the rotation vector'); s += s1; sLenum += sL1
 [s1, sL1] = AddEnumValue(cClass, 'RotationLieGroup', 'node intended to be solved with Lie group methods'); s += s1; sLenum += sL1
+[s1, sL1] = AddEnumValue(cClass, 'LieGroupGeneral', 'node intended to be solved with general (implicit) Lie group methods'); s += s1; sLenum += sL1
 [s1, sL1] = AddEnumValue(cClass, 'GenericODE2', 'node with general ODE2 variables'); s += s1; sLenum += sL1
 [s1, sL1] = AddEnumValue(cClass, 'GenericODE1', 'node with general ODE1 variables'); s += s1; sLenum += sL1
 [s1, sL1] = AddEnumValue(cClass, 'GenericAE', 'node with general algebraic variables'); s += s1; sLenum += sL1

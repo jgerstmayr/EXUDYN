@@ -78,6 +78,9 @@ public:
 	ResizableArray<Index> listObjectProjectedReactionForcesODE2UF;//!< list of objects that produce projected reaction forces for constraints
 	ResizableArray<Index> listObjectProjectedReactionForcesODE2NoUF;//!< list of objects that produce projected reaction forces for constraints
 
+	//lists for Jacobians
+	ObjectContainer<ArrayIndex> localToGlobalODE2numDiff;  //!< special LTG list needed for Jacobians, in order to prevent duplicate entries for self-connecting connectors, especially in ObjectKinematicTree
+
 public: //
 
 	//bool isODE2RHSjacobianComputation;
@@ -130,6 +133,7 @@ public: //
 		objectsWithAlgebraicEquations.Flush();
 		listObjectProjectedReactionForcesODE2.Flush();
 
+		localToGlobalODE2numDiff.Flush();
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -196,6 +200,11 @@ public: //
 	ObjectContainer<ArrayIndex>& GetLocalToGlobalODE2() { return localToGlobalODE2; }
 	//! Read (Reference) access to:CObject local to global ODE2 (Second order ODEs) coordinate indices transformation
 	const ObjectContainer<ArrayIndex>& GetLocalToGlobalODE2() const { return localToGlobalODE2; }
+
+	//! Write (Reference) access to:CObject local to global ODE2 (Second order ODEs) coordinate indices transformation without duplicates
+	ObjectContainer<ArrayIndex>& GetLocalToGlobalODE2NumDiff() { return localToGlobalODE2numDiff; }
+	//! Read (Reference) access to:CObject local to global ODE2 (Second order ODEs) coordinate indices transformation without duplicates
+	const ObjectContainer<ArrayIndex>& GetLocalToGlobalODE2NumDiff() const { return localToGlobalODE2numDiff; }
 
 	//! Write (Reference) access to:CObject local to global ODE1 (first order ODEs) coordinate indices transformation
 	ObjectContainer<ArrayIndex>& GetLocalToGlobalODE1() { return localToGlobalODE1; }

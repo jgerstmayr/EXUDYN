@@ -38,7 +38,7 @@ from exudyn.robotics import *
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-useGraphics = False
+# useGraphics = False
 
 useMBS = True
 useKinematicTree = True

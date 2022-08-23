@@ -48,6 +48,8 @@
 namespace py = pybind11;
 //using namespace pybind11::literals; //brings in the '_a' literals; e.g. for short arguments definition
 
+#include "Linalg/BasicLinalg.h"
+#include "Linalg/KinematicsBasics.h"
 
 #include "Pymodules/PybindTests.h"
 
@@ -90,7 +92,6 @@ namespace py = pybind11;
 //#include "ngs-core-master/ngs_core.hpp"
 
 #include "Utilities/Parallel.h" //ParallelFor
-//#include "Linalg/ResizableVectorParallel.h"	 
 
 
 //namespace multiThreading = ngstd;
@@ -217,8 +218,116 @@ public:
 
 void PyTest()
 {
+	//if (1)
+	//{
+	//	Matrix3D A1 = RigidBodyMath::RotationMatrix1(0.2) * RigidBodyMath::RotationMatrix3(0.1) * RigidBodyMath::RotationMatrix2(-0.3);
+	//	Vector3D v1({ 1.2,2.1,0.3 });
+	//	Matrix6D T1 = RigidBodyMath::RotationTranslation2T66(A1, v1);
+	//	HomogeneousTransformation T1new = RigidBodyMath2::RotationTranslation2T66(A1, v1);
+
+	//	Matrix3D A2 = RigidBodyMath::RotationMatrix1(-0.12) * RigidBodyMath::RotationMatrix3(-0.2) * RigidBodyMath::RotationMatrix2(-0.25);
+	//	Vector3D v2({ 0.4,1.3,3.3 });
+	//	Matrix6D T2 = RigidBodyMath::RotationTranslation2T66Inverse(A2, v2);
+	//	HomogeneousTransformation T2new = RigidBodyMath2::RotationTranslation2T66Inverse(A2, v2);
+
+	//	RigidBodyMath::InertiaAtRefPoint I1;
+	//	Real m1 = 3;
+	//	Vector3D com1({ 0.1,-0.2,0.7 });
+	//	Matrix3D inertia1(3,3,{ 3.,1.,2., 1.,0.4,7., 2.,7.,0.3 });
+	//	I1 = RigidBodyMath::InertiaT66FromInertiaParameters(m1, com1, inertia1);
+	//	RigidBodyMath2::InertiaAtRefPoint I1new;
+	//	I1new.SetWithInertiaAtCOM(m1, com1, inertia1);
+	//	RigidBodyMath::InertiaAtRefPoint I2;
+	//	RigidBodyMath2::InertiaAtRefPoint I2new;
+
+	//	Real m2;
+	//	Vector3D com2;
+	//	Matrix3D inertia2;
+
+	//	RigidBodyMath::InertiaParametersFromInertiaT66ATCOM(I1, m2, com2, inertia2);
+	//	pout << "I1=" << m2 << ", " << com2 << ", " << inertia2 << "\n";
+
+	//	Vector6D v6A({ 0.51,0.33,0.58,0.2,0.41,0.7 });
+	//	Vector6D v6B({ -0.29,-0.21,0.3,-0.27,0.3,-0.13 });
+	//	Vector6D v6C;
+
+	//	Matrix3D A;
+	//	Vector3D v;
+	//	pout << "A1=" << A1 << ", v1=" << v1 << "\n";
+	//	pout << "A2=" << A2 << ", v2=" << v2 << "\n";
+
+	//	RigidBodyMath2::T66toRotationTranslation(T1new, A, v);
+	//	pout << "test1: " << "A=" << A << ", v=" << v << "\n";
+	//	RigidBodyMath::T66toRotationTranslation(T1, A, v);
+	//	pout << "test1: " << "A=" << A << ", v=" << v << "\n";
+
+	//	RigidBodyMath2::T66toRotationTranslationInverse(T1new, A, v);
+	//	pout << "test2: " << "A=" << A << ", v=" << v << "\n";
+	//	RigidBodyMath::T66toRotationTranslationInverse(T1, A, v);
+	//	pout << "test2: " << "A=" << A << ", v=" << v << "\n";
+
+	//	RigidBodyMath2::T66toRotationTranslation(T2new, A, v);
+	//	pout << "test3: " << "A=" << A << ", v=" << v << "\n";
+	//	RigidBodyMath::T66toRotationTranslation(T2, A, v);
+	//	pout << "test3: " << "A=" << A << ", v=" << v << "\n";
+
+	//	RigidBodyMath2::T66toRotationTranslationInverse(T2new, A, v);
+	//	pout << "test3b: " << "A=" << A << ", v=" << v << "\n";
+	//	RigidBodyMath::T66toRotationTranslationInverse(T2, A, v);
+	//	pout << "test3b: " << "A=" << A << ", v=" << v << "\n";
+
+	//	v6C = RigidBodyMath2::MultT66SkewMotion(v6A, v6B);
+	//	pout << "test4: " << "v6C=" << v6C << "\n";
+	//	v6C = RigidBodyMath::MultT66SkewMotion(v6A, v6B);
+	//	pout << "test4: " << "v6C=" << v6C << "\n";
+
+	//	v6C = RigidBodyMath2::MultT66SkewForce(v6A, v6B);
+	//	pout << "test5: " << "v6C=" << v6C << "\n";
+	//	v6C = RigidBodyMath::MultT66SkewForce(v6A, v6B);
+	//	pout << "test5: " << "v6C=" << v6C << "\n";
+
+	//	v6C = RigidBodyMath2::T66Mult(T2new, v6A);
+	//	pout << "test6: " << "v6C=" << v6C << "\n";
+	//	v6C = RigidBodyMath::T66Mult(T2, v6A);
+	//	pout << "test6: " << "v6C=" << v6C << "\n";
+
+	//	v6C = RigidBodyMath2::T66Mult(T1new, v6A);
+	//	pout << "test6b: " << "v6C=" << v6C << "\n";
+	//	v6C = RigidBodyMath::T66Mult(T1, v6A);
+	//	pout << "test6b: " << "v6C=" << v6C << "\n";
+
+	//	v6C = RigidBodyMath2::T66MultTransposed(T2new, v6A);
+	//	pout << "test7: " << "v6C=" << v6C << "\n";
+	//	v6C = RigidBodyMath::T66MultTransposed(T2, v6A);
+	//	pout << "test7: " << "v6C=" << v6C << "\n";
+
+	//	v6C = RigidBodyMath2::T66MultTransposedInverse(T2new, v6A);
+	//	pout << "test8: " << "v6C=" << v6C << "\n";
+	//	v6C = RigidBodyMath::T66MultTransposedInverse(T2, v6A);
+	//	pout << "test8: " << "v6C=" << v6C << "\n";
+
+	//	v6C = RigidBodyMath2::T66MultInertia(I1new, v6A);
+	//	pout << "test9: " << "v6C=" << v6C << "\n";
+	//	v6C = RigidBodyMath::T66MultInertia(I1, v6A);
+	//	pout << "test9: " << "v6C=" << v6C << "\n";
+
+	//	I2new = RigidBodyMath2::T66TransformInertia(T1new, I1new);
+	//	inertia2 = I2new.GetInertiaTensorCOM();
+	//	m2 = I2new.GetMass();
+	//	com2 = I2new.GetCOM();
+	//	pout << "testA: " << "I2=" << m2 << ", " << com2 << ", " << inertia2 << "\n";
+
+	//	I2 = RigidBodyMath::T66TransformInertia(T1, I1);
+	//	RigidBodyMath::InertiaParametersFromInertiaT66ATCOM(I2, m2, com2, inertia2);
+	//	pout << "testA: " << "I2=" << m2 << ", " << com2 << ", " << inertia2 << "\n";
+
+	//	pout << "T1=" << T1.GetTransposed() << "\n";
+	//	pout << "T1=" << RigidBodyMath::T66MotionInverse(RigidBodyMath::T66MotionInverse(T1.GetTransposed())) << "\n";
+	//	
+
+	//}
 	//parallelization tests:
-	if (1)
+	if (0)
 	{
 		pout << "AVXsize= " << AVXRealSize << "\n";
 		pout << "AVXRealShift= " << AVXRealShift << "\n";

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-06-05  15:30:50 (last modified)
+* @date         2022-07-21  19:29:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -122,7 +122,7 @@ public: // AUTO:
         d["markerType"] = (std::string)GetTypeName();
         d["objectNumber"] = (ObjectIndex)cMarkerKinematicTreeRigid->GetParameters().objectNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["linkNumber"] = (Index)cMarkerKinematicTreeRigid->GetParameters().linkNumber; //! AUTO: cast variables into python (not needed for standard types) 
-        d["localPosition"] = (std::vector<Real>)cMarkerKinematicTreeRigid->GetParameters().localPosition; //! AUTO: cast variables into python (not needed for standard types) 
+        d["localPosition"] = EPyUtils::SlimVector2NumPy(cMarkerKinematicTreeRigid->GetParameters().localPosition); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationMarkerKinematicTreeRigid->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -134,7 +134,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("objectNumber") == 0) { return py::cast((ObjectIndex)cMarkerKinematicTreeRigid->GetParameters().objectNumber);} //! AUTO: get parameter
         else if (parameterName.compare("linkNumber") == 0) { return py::cast((Index)cMarkerKinematicTreeRigid->GetParameters().linkNumber);} //! AUTO: get parameter
-        else if (parameterName.compare("localPosition") == 0) { return py::cast((std::vector<Real>)cMarkerKinematicTreeRigid->GetParameters().localPosition);} //! AUTO: get parameter
+        else if (parameterName.compare("localPosition") == 0) { return EPyUtils::SlimVector2NumPy(cMarkerKinematicTreeRigid->GetParameters().localPosition);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationMarkerKinematicTreeRigid->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("MarkerKinematicTreeRigid::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();

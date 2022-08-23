@@ -108,7 +108,7 @@ The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training
 
 The following people have contributed to Python and C++ library implementations:
 \bi
-  \item Joachim Sch{\"o}berl, TU Vienna (Providing specialized NGsolve \cite{Schoeberl1997,Schoeberl2014,2022NGsolve} core library with \texttt{taskmanager} for \mybold{multi-threaded parallelization}; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
+  \item Joachim Sch{\"o}berl, TU Vienna (Providing specialized NGsolve \cite{Schoeberl1997,NGsolve2014,NGsolve2022} core library with \texttt{taskmanager} for \mybold{multi-threaded parallelization}; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
   \item Stefan Holzinger, University of Innsbruck (Lie group solvers in Python, Lie group node)
   \item Andreas Zw{\"o}lfer, Technical University Munich (FFRF and CMS formulation)
   \item Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation / pip install on linux / wsl with graphics)
@@ -460,16 +460,17 @@ After the first development phase (2019-2021), it
   \item allows to add user defined objects and solvers in C++,
   \item allows to add user defined objects and solvers in Python.
 \ei
-Future goals are:
+Future goals (2022-2024) are:
 \bi
-  \item add more multi-threaded parallel computing techniques (first parts implemented, improvements planned during 2022),
+  \item add more multi-threaded parallel computing techniques (DONE, Q2 2022),
   \item add vectorization,
   \item add specific and advanced connectors/constraints (extended wheels, contact, control connector)
-  \item kinematical trees (with minimum coordinates),
-  \item automatic step size selection for second order solvers,
-  \item deeper integration of Lie groups,
-  \item more interfaces for robotics,
-  \item add 3D beams.
+  \item kinematical trees with minimum coordinates (DONE, Q1 2022),
+  \item automatic step size selection for second order solvers (planned, 2023),
+  \item deeper integration of Lie groups (Q3 2022),
+  \item more interfaces for robotics (DONE, Q1 2022),
+  \item add 3D beams (first attempts exist; planned, Q1 2023),
+  \item export equations (planned, 2024)
 \ei
 For solved issues (and new features), see section 'Issues and Bugs', \refSection{sec:issueTracker}.
 For specific open issues, see \texttt{trackerlog.html} -- a document only intended for developers!
@@ -480,7 +481,7 @@ For specific open issues, see \texttt{trackerlog.html} -- a document only intend
 After performing the steps of the previous section, this section shows a simplistic model which helps you to check if \codeName\ runs on your computer.
 
 In order to start, run the Python interpreter Spyder (or any preferred Python environment).
-For the following example, 
+In order to test the following example, which creates a \ac{mbs}, adds a node, an object, a marker and a load and simulates everything with default values, 
 \bi
 \ignoreRST{
 \item open Spyder and copy the example provided in Listing \ref{lst:firstexample} into a new file, or}

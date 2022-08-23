@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-04  22:03:16 (last modified)
+* @date         2022-07-21  19:29:27 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -127,9 +127,9 @@ public: // AUTO:
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
         d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectConnectorCartesianSpringDamper->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
-        d["stiffness"] = (std::vector<Real>)cObjectConnectorCartesianSpringDamper->GetParameters().stiffness; //! AUTO: cast variables into python (not needed for standard types) 
-        d["damping"] = (std::vector<Real>)cObjectConnectorCartesianSpringDamper->GetParameters().damping; //! AUTO: cast variables into python (not needed for standard types) 
-        d["offset"] = (std::vector<Real>)cObjectConnectorCartesianSpringDamper->GetParameters().offset; //! AUTO: cast variables into python (not needed for standard types) 
+        d["stiffness"] = EPyUtils::SlimVector2NumPy(cObjectConnectorCartesianSpringDamper->GetParameters().stiffness); //! AUTO: cast variables into python (not needed for standard types) 
+        d["damping"] = EPyUtils::SlimVector2NumPy(cObjectConnectorCartesianSpringDamper->GetParameters().damping); //! AUTO: cast variables into python (not needed for standard types) 
+        d["offset"] = EPyUtils::SlimVector2NumPy(cObjectConnectorCartesianSpringDamper->GetParameters().offset); //! AUTO: cast variables into python (not needed for standard types) 
         if (cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction)
             {d["springForceUserFunction"] = (std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>)cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction;}
         else
@@ -148,9 +148,9 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectConnectorCartesianSpringDamper->GetParameters().markerNumbers));} //! AUTO: get parameter
-        else if (parameterName.compare("stiffness") == 0) { return py::cast((std::vector<Real>)cObjectConnectorCartesianSpringDamper->GetParameters().stiffness);} //! AUTO: get parameter
-        else if (parameterName.compare("damping") == 0) { return py::cast((std::vector<Real>)cObjectConnectorCartesianSpringDamper->GetParameters().damping);} //! AUTO: get parameter
-        else if (parameterName.compare("offset") == 0) { return py::cast((std::vector<Real>)cObjectConnectorCartesianSpringDamper->GetParameters().offset);} //! AUTO: get parameter
+        else if (parameterName.compare("stiffness") == 0) { return EPyUtils::SlimVector2NumPy(cObjectConnectorCartesianSpringDamper->GetParameters().stiffness);} //! AUTO: get parameter
+        else if (parameterName.compare("damping") == 0) { return EPyUtils::SlimVector2NumPy(cObjectConnectorCartesianSpringDamper->GetParameters().damping);} //! AUTO: get parameter
+        else if (parameterName.compare("offset") == 0) { return EPyUtils::SlimVector2NumPy(cObjectConnectorCartesianSpringDamper->GetParameters().offset);} //! AUTO: get parameter
         else if (parameterName.compare("springForceUserFunction") == 0) { return py::cast((std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>)cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorCartesianSpringDamper->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorCartesianSpringDamper->GetShow());} //! AUTO: get parameter

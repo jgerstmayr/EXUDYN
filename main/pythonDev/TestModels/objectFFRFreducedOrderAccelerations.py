@@ -30,6 +30,7 @@ except:
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
+useGraphics = False #without test
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -231,7 +232,7 @@ result = abs(data).sum()
 exu.Print('solution of ObjectFFRFreducedOrderAccelerations=',result)
 
 exudynTestGlobals.testError = (result - (61576.266114362006 ))/(2*result) #2021-01-03: added '/(2*result)' as error is too large (2e-10); 2020-12-19: (dense eigenvalue solver gives repeatable results!) 61576.266114362006 
-exudynTestGlobals.testResult = result/(2*61576.266114362006)
+exudynTestGlobals.testResult = result/(10*61576.266114362006)
 exu.Print('ObjectFFRFreducedOrderAccelerations test result=',exudynTestGlobals.testResult)
 
 if useGraphics:

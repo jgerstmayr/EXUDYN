@@ -82,17 +82,18 @@
 	#define SinglePrecision // added from SH. needed to switch between double/float AVX instructions
 #endif // DoublePrecision
 
+
+//#define LIE_GROUP_IMPLICIT_SOLVER
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //MULTITHREADED computation using ngsolve taskmanager; thanks to Joachim Schöberl
 #if !defined(__APPLE__) //currently simd makes problems on different Apple platforms - needs sse2neon.h
 #define USE_NGSOLVE_TASKMANAGER //!< for multithreaded computation
 #endif
-//#undef USE_NGSOLVE_TASKMANAGER //!< for multithreaded computation
 
 #define USE_RESIZABLE_VECTOR_PARALLEL //activating this flag, will replace some vectors in solver with parallelized vector for improved parallel performance
 
 //#define USE_MICROTHREADING //if this is defined, use MicroThreading instead of NGsolve taskmanager
-
 #ifdef USE_MICROTHREADING
 #define	ResizableVectorParallelThreadingLimit 10000
 #else
@@ -207,7 +208,7 @@ namespace EXUstd {
 
 	//not tested if works with MAC or linux
 	constexpr double LOWESTREAL = std::numeric_limits<Real>::lowest(); //lowest (neg) Real number
-	constexpr double MAXREAL = std::numeric_limits<Real>::lowest();  //highest (pos) Real number
+	constexpr double MAXREAL = std::numeric_limits<Real>::max();  //highest (pos) Real number
 
 	//empty class for default initialization, cannot be converted from e.g. Real, Index, etc.
 	class Dummy

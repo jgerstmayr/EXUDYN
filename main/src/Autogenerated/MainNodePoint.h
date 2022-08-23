@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-16  11:24:34 (last modified)
+* @date         2022-07-21  19:29:25 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -116,13 +116,13 @@ public: // AUTO:
     }
 
     //! AUTO:  return internally stored initial coordinates (displacements) of node
-    virtual LinkedDataVector GetInitialVector() const override
+    virtual LinkedDataVector GetInitialCoordinateVector() const override
     {
         return parameters.initialCoordinates;
     }
 
     //! AUTO:  return internally stored initial coordinates (velocities) of node
-    virtual LinkedDataVector GetInitialVector_t() const override
+    virtual LinkedDataVector GetInitialCoordinateVector_t() const override
     {
         return parameters.initialCoordinates_t;
     }
@@ -145,9 +145,9 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["nodeType"] = (std::string)GetTypeName();
-        d["referenceCoordinates"] = (std::vector<Real>)cNodePoint->GetParameters().referenceCoordinates; //! AUTO: cast variables into python (not needed for standard types) 
-        d["initialCoordinates"] = (std::vector<Real>)GetParameters().initialCoordinates; //! AUTO: cast variables into python (not needed for standard types) 
-        d["initialVelocities"] = (std::vector<Real>)GetParameters().initialCoordinates_t; //! AUTO: cast variables into python (not needed for standard types) 
+        d["referenceCoordinates"] = EPyUtils::SlimVector2NumPy(cNodePoint->GetParameters().referenceCoordinates); //! AUTO: cast variables into python (not needed for standard types) 
+        d["initialCoordinates"] = EPyUtils::SlimVector2NumPy(GetParameters().initialCoordinates); //! AUTO: cast variables into python (not needed for standard types) 
+        d["initialVelocities"] = EPyUtils::SlimVector2NumPy(GetParameters().initialCoordinates_t); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationNodePoint->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdrawSize"] = (float)visualizationNodePoint->GetDrawSize(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -159,9 +159,9 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("referenceCoordinates") == 0) { return py::cast((std::vector<Real>)cNodePoint->GetParameters().referenceCoordinates);} //! AUTO: get parameter
-        else if (parameterName.compare("initialCoordinates") == 0) { return py::cast((std::vector<Real>)GetParameters().initialCoordinates);} //! AUTO: get parameter
-        else if (parameterName.compare("initialVelocities") == 0) { return py::cast((std::vector<Real>)GetParameters().initialCoordinates_t);} //! AUTO: get parameter
+        else if (parameterName.compare("referenceCoordinates") == 0) { return EPyUtils::SlimVector2NumPy(cNodePoint->GetParameters().referenceCoordinates);} //! AUTO: get parameter
+        else if (parameterName.compare("initialCoordinates") == 0) { return EPyUtils::SlimVector2NumPy(GetParameters().initialCoordinates);} //! AUTO: get parameter
+        else if (parameterName.compare("initialVelocities") == 0) { return EPyUtils::SlimVector2NumPy(GetParameters().initialCoordinates_t);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationNodePoint->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationNodePoint->GetDrawSize());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationNodePoint->GetColor());} //! AUTO: get parameter

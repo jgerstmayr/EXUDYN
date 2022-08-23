@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-04  22:03:13 (last modified)
+* @date         2022-07-21  19:29:26 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -122,7 +122,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["referencePosition"] = (std::vector<Real>)cObjectGround->GetParameters().referencePosition; //! AUTO: cast variables into python (not needed for standard types) 
+        d["referencePosition"] = EPyUtils::SlimVector2NumPy(cObjectGround->GetParameters().referencePosition); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectGround->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         if (visualizationObjectGround->GetGraphicsDataUserFunction())
@@ -139,7 +139,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("referencePosition") == 0) { return py::cast((std::vector<Real>)cObjectGround->GetParameters().referencePosition);} //! AUTO: get parameter
+        else if (parameterName.compare("referencePosition") == 0) { return EPyUtils::SlimVector2NumPy(cObjectGround->GetParameters().referencePosition);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectGround->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { return py::cast((std::function<py::object(const MainSystem&, Index)>)visualizationObjectGround->GetGraphicsDataUserFunction());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectGround->GetColor());} //! AUTO: get parameter

@@ -152,7 +152,7 @@ public:
 	//! helper function to have unique task-split for parallel computations for CSystem computations; include parameters into solver?
 	Index GetTaskSplit(Index nItems, Index nThreads) 
 	{ 
-		return (nItems >= solverData.taskSplitMinItems * nThreads) ? solverData.taskSplitTasksPerThread * nThreads : nThreads;
+		return (nItems >= solverData.taskSplitMinItems * nThreads && nThreads > 1) ? solverData.taskSplitTasksPerThread * nThreads : nThreads;
 	}
 
 	//merged with SetSystemIsConsistent //! Function called e.g. by AddNode/Object/..., ModifyNode/Object/... to signal that the system has changed and consistency is not guaranteed

@@ -850,12 +850,17 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 elif parameter['type'] == 'BodyGraphicsDataList': #special conversion routine
                     dictListRead[i] +=space8+'d["' + pyName + '"] = PyGetBodyGraphicsDataListOfLists(' + destStr + addGraphicsData+'); //! AUTO: generate dictionary with special function\n'                    
                 elif IsInternalSetGetParameter(parameter['type']):
-                    parRead = 'GetInternal'+ parameter['type'] +'()'                    
-                elif parameter['type'] == 'Matrix6D':
-                    parRead = 'EXUmath::Matrix6DToStdArray66(' + destStr + ')'
-                    #dictListRead[i] +=space8+'d["' + pyName + '"] = EXUmath::Matrix6DToStdArray66(' + destStr + '); //! AUTO: generate dictionary with special function\n'                    
-                elif parameter['type'] == 'Matrix3D':
-                    parRead = 'EXUmath::Matrix3DToStdArray33(' + destStr + ')'
+                    parRead = 'GetInternal'+ parameter['type'] +'()'
+                elif parameter['type'][:-2] == 'Matrix' and parameter['type'][-1] == 'D':
+                    parRead = 'EPyUtils::Matrix2NumPyTemplate(' + destStr + ')'
+                elif parameter['type'][:-2] == 'Vector' and parameter['type'][-1] == 'D': #any Vector2D, Vector3D, ...
+                    parRead = 'EPyUtils::SlimVector2NumPy(' + destStr + ')'
+                elif parameter['type'] == 'Vector': 
+                    parRead = 'EPyUtils::Vector2NumPy(' + destStr + ')'
+                # elif parameter['type'] == 'Matrix6D':
+                #     parRead = 'EXUmath::Matrix6DToStdArray66(' + destStr + ')'
+                # elif parameter['type'] == 'Matrix3D':
+                #     parRead = 'EXUmath::Matrix3DToStdArray33(' + destStr + ')'
                 elif parameter['type'] == 'NumpyMatrix':
                     parRead = 'EPyUtils::Matrix2NumPy(' + destStr + ')'
                 elif parameter['type'] == 'NumpyMatrixI':
@@ -882,7 +887,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 isPyFunction = False                
                 if parameter['type'].find('PyFunction') != -1: #in case of function, special conversion and tests are necessary (function is either 0 or a python function)
                     isPyFunction = True
-                   
+                
+                #+++++++++++++++++
+                #read from dictionary
                 if len(parRead) != 0:
                     dictListRead[i] += space8
                     if isPyFunction: 
@@ -894,7 +901,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                             
                     dictListRead[i] +=' //! AUTO: cast variables into python (not needed for standard types) \n'
                                                     
-                #if (parameter['cFlags'].find('C') == -1) & (parameter['cFlags'].find('R') == -1): #'C' ... const access or 'R' means both read only!
+                #+++++++++++++++++
+                #write to dictionary
                 if (parameter['cFlags'].find('R') == -1): #'R' means read only!
                     dictListWrite[i]+=space8
                     if parameter['cFlags'].find('O') != -1: #optional ==> means that we have to check first, if it exists in the dictionary
@@ -935,6 +943,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                         dictListWrite[i]+='} '
                     dictListWrite[i]+='\n'
 
+                    #+++++++++++++++++
+                    #parameter write
                     #if (parameter['type'] == 'String') | (parameter['type'] == 'Vector2D') | (parameter['type'] == 'Vector3D') | (parameter['type'] == 'Vector4D') | (parameter['type'] == 'Vector6D') | (parameter['type'] == 'Vector7D'):
                     if IsASetSafelyParameter(parameter['type']):
                         safelyFunctionName = GetSetSafelyFunctionName(parameter['type'])
@@ -961,9 +971,13 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                         parWrite+=destStr + ' = py::cast<' + typeCastStr + '>'
                         parWrite+='(value); /* AUTO:  read out dictionary and cast to C++ type*/'
 
-
+                #+++++++++++++++++
+                #parameter read
                 if parRead != '':
-                    if parameter['type'].find('Numpy') != -1: #do not add py::cast(...) NumpyMatrix/Vector
+                    #if parameter['type'].find('Numpy') != -1: #do not add py::cast(...) NumpyMatrix/Vector
+                    if (parRead.find('EPyUtils::Matrix') != -1 
+                        or parRead.find('EPyUtils::Vector') != -1
+                        or parRead.find('EPyUtils::SlimVector') != -1): #do not add py::cast(...) to anything already having a special PyUtils function
                         parameterReadStr += 'if (parameterName.compare("' + pyName + '") == 0) { return ' + parRead + ';} //! AUTO: get parameter\n        else '
                     else:
                         parameterReadStr += 'if (parameterName.compare("' + pyName + '") == 0) { return py::cast(' + parRead + ');} //! AUTO: get parameter\n        else '

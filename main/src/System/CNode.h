@@ -57,15 +57,16 @@ namespace Node {
 		RotationEulerParameters = 1 << 7,	//!< used if orientation is described with euler parameters
 		RotationRxyz = 1 << 8,				//!< used if orientation is described with euler angles
 		RotationRotationVector = 1 << 9,	//!< used if orientation is described with rotation vector parameters
-		RotationLieGroup = 1 << 10,			//!< used if a lie group formulation is used; this means, that equations are written vor angular acc (omega_t), not for rotationParameters_tt
+		LieGroupWithDirectUpdate = 1 << 10,			//!< used if a lie group formulation is used; this means, that equations are written vor angular acc (omega_t), not for rotationParameters_tt
+		LieGroupWithDataCoordinates = 1 << 11,			//!< used if a lie group formulation is used with data variables for start-of-step state and local frame approach
 		//General
-		GenericODE2 = 1 << 11,				//!< used for node with ODE2 coordinates (no specific access functions, except on coordinate level)
-		GenericODE1 = 1 << 12,				//!< used for node with ODE1 coordinates (no specific access functions, except on coordinate level)
-		GenericAE = 1 << 13,				//!< (CURRENTLY UNUSED!) used for node with AE coordinates (no specific access functions, except on coordinate level)
-		GenericData = 1 << 14,				//!< used for node with data coordinates
+		GenericODE2 = 1 << 12,				//!< used for node with ODE2 coordinates (no specific access functions, except on coordinate level)
+		GenericODE1 = 1 << 13,				//!< used for node with ODE1 coordinates (no specific access functions, except on coordinate level)
+		GenericAE = 1 << 14,				//!< (CURRENTLY UNUSED!) used for node with AE coordinates (no specific access functions, except on coordinate level)
+		GenericData = 1 << 15,				//!< used for node with data coordinates
 		//ANCF:
-		Point3DSlope1 = 1 << 15,			//!< used for: nodes which provide a position and a slope vector in 1-direction
-		Point3DSlope23 = 1 << 16			//!< used for: nodes which provide a position and slope vectors in 2 and 3-direction
+		Point3DSlope1 = 1 << 16,			//!< used for: nodes which provide a position and a slope vector in 1-direction
+		Point3DSlope23 = 1 << 17			//!< used for: nodes which provide a position and slope vectors in 2 and 3-direction
 		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//keep these lists synchronized with autoGeneratePybindings.py lists
 	};
@@ -87,7 +88,8 @@ namespace Node {
 		if (var & RotationEulerParameters) { t += "RotationEulerParameters"; }
 		if (var & RotationRxyz) { t += "RotationRxyz"; }
 		if (var & RotationRotationVector) { t += "RotationRotationVector"; }
-		if (var & RotationLieGroup) { t += "RotationLieGroup"; }
+		if (var & LieGroupWithDirectUpdate) { t += "LieGroupWithDirectUpdate"; }
+		if (var & LieGroupWithDataCoordinates) { t += "LieGroupWithDataCoordinates"; }
 
 		if (var & GenericODE2) { t += "GenericODE2"; }
 		if (var & GenericData) { t += "GenericData"; }
@@ -331,16 +333,8 @@ public:
 		{
 		case ConfigurationType::Current: return GetCurrentCoordinateVector_t();
 		case ConfigurationType::Initial: return GetInitialCoordinateVector_t();
-		//case ConfigurationType::Reference: return GetReferenceCoordinateVector_t();
 		case ConfigurationType::StartOfStep: return GetStartOfStepCoordinateVector_t();
-		case ConfigurationType::Visualization:
-		{
-			//if (!computationalData->IsSystemConsistent())
-			//{
-			//	pout << "GetCoordinateVector_t: system inconsistent; cannot draw\n";
-			//}
-			return GetVisualizationCoordinateVector_t();
-		}
+		case ConfigurationType::Visualization: return GetVisualizationCoordinateVector_t();
 		default: CHECKandTHROWstring("CNodeODE2::GetCoordinateVector_t: invalid ConfigurationType"); return LinkedDataVector();
 		}
 	}
@@ -622,6 +616,17 @@ public:
 	//! obtain G matrices, position, velocity, rotation matrix A (local to global), local angular velocity 
 	virtual void CollectCurrentNodeMarkerData(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G,
 		Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal) const { CHECKandTHROWstring("CNodeRigidBody::CollectCurrentNodeData1(...): invalid call"); }
+
+#ifdef LIE_GROUP_IMPLICIT_SOLVER
+	////! apply composition rule for current coordinates (in SE3) with incremental motion, compute new coordinates
+	//virtual void CompositionRule(const LinkedDataVector& currentCoordinates, const Vector6D& incrementalMotion,
+	//	const LinkedDataVector& newCoordinates) const {
+	//	CHECKandTHROWstring("CNodeRigidBody::CompositionRule(...): invalid call");
+	//};
+	//! apply composition rule for current position and orientation coordinates (depending on node type) with incremental motion, compute new coordinates
+	virtual void CompositionRule(const LinkedDataVector& currentPosition, const LinkedDataVector& currentOrientation, const Vector6D& incrementalMotion,
+		const LinkedDataVector& newPosition, const LinkedDataVector& newOrientation) const { CHECKandTHROWstring("CNodeRigidBody::CompositionRule(...): invalid call");	};
+#endif
 };
 
 //! node with data variables

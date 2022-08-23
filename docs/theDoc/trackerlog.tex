@@ -10,15 +10,190 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.3.59, 
-  \item last change =  2022-07-20, 
-  \item Number of issues = 1218, 
-  \item Number of resolved issues = 1048 (59 in current version), 
+  \item Exudyn version = 1.3.84.dev1, 
+  \item last change =  2022-08-23, 
+  \item Number of issues = 1239, 
+  \item Number of resolved issues = 1073 (84 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.3.84}:  resolved Issue 1238: {\bf visualization dialog}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: resort options, such that contour options are on top}
+    \item   date resolved: {\bf 2022-08-23 15:19},
+date raised: 2022-08-23 
+  \ei
+  \item {\bf Version 1.3.83}:  resolved Issue 1237: {\bf Beams}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option for drawing filled cross-sections (or alternatively wire frames)}
+    \item   date resolved: {\bf 2022-08-23 15:19},
+date raised: 2022-08-23 
+  \ei
+  \item {\bf Version 1.3.82}:  resolved Issue 1236: {\bf GeometricallyExactBeam}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: GeometricallyExactBeam2D and GeometricallyExactBeam3D do not show values in contour plot}
+    \item   date resolved: {\bf 2022-08-23 14:15},
+date raised: 2022-08-23 
+  \ei
+  \item {\bf Version 1.3.81}:  resolved Issue 1235: {\bf GeometricallyExactBeam2D}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add missing output variables (strain, curvatureLocal, forces,torques)}
+    \item   date resolved: {\bf 2022-08-23 12:02},
+date raised: 2022-08-23 
+  \ei
+  \item {\bf Version 1.3.80}: {\bf \color{warningRed}  resolved BUG 1233}: {\bf KinematicTree}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: Jacobian in KinematicTree has too many approximations: either missing velocity terms have large influence or double entries for connectors on single KinematicTree; check stiffFlyballGovernor w/o systemWideDifferentiation}
+    \item {\bf notes: fixed JacobianODE2 for duplicate global indices, e.g., in case that Connector is attached with two markers to same object (kinematic tree)}
+    \item   date resolved: {\bf 2022-08-23 11:41},
+date raised: 2022-08-22 
+  \ei
+  \item {\bf Version 1.3.79}:  resolved Issue 1234: {\bf Newton / Jacobian}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add new Newton / numericalDifferentiation setting jacobianConnectorDerivative for faster Jacobian computations}
+    \item   date resolved: {\bf 2022-08-23 10:15},
+date raised: 2022-08-23 
+  \ei
+  \item {\bf Version 1.3.78}:  resolved Issue 1224: {\bf KinematicTree}
+(check)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: visulization problems with kinematicTreeConstraintTest.py with 10 links and more; may be caused by wrong states in visualization or possible bug in KinematicTreeMarker}
+    \item {\bf notes: resolved with issue 1232 by adding additional temporary variables for visualization}
+    \item   date resolved: {\bf 2022-08-22 23:26},
+date raised: 2022-08-07 
+  \ei
+  \item {\bf Version 1.3.77}: {\bf \color{warningRed}  resolved BUG 1232}: {\bf KinematicTree}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: visualization of joints uses illegal temporary data; leads to data race and erroneous results}
+    \item   date resolved: {\bf 2022-08-22 23:23},
+date raised: 2022-08-22 
+  \ei
+  \item {\bf Version 1.3.76}: {\bf \color{warningRed}  resolved BUG 1231}: {\bf BasicDefinitions}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: definition of MAXREAL wrong; affects searchtree and contact}
+    \item   date resolved: {\bf 2022-08-22 21:33},
+date raised: 2022-08-22 
+  \ei
+  \item {\bf Version 1.3.75}:  resolved Issue 1230: {\bf GetInitialVector}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: change GetInitialVector into GetInitialCoordinateVector for consistency reasons; samge for GetInitialVector\_t, SetInitialVector, SetInitialVector\_t}
+    \item   date resolved: {\bf 2022-08-17 17:53},
+date raised: 2022-08-17 
+  \ei
+  \item {\bf Version 1.3.74}: {\bf \color{warningRed}  resolved BUG 1229}: {\bf CMarkerBodyCable2DShape}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: system error due to incorrect initialization of matrix}
+    \item   date resolved: {\bf 2022-08-15 15:31},
+date raised: 2022-08-15 
+  \ei
+  \item {\bf Version 1.3.73}:  resolved Issue 1228: {\bf add LieGroup node with data coordinates}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add special Lie group node for implicit integration, containing the start-of-step configuration in data coordinates and additionally use regular ODE2 coordinates for the incremental motion}
+    \item   date resolved: {\bf 2022-08-12 19:35},
+date raised: 2022-08-12 
+  \ei
+  \item {\bf Version 1.3.72}:  resolved Issue 1227: {\bf CNode.cpp}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: remove exceptions for illegal index access in GetCurrentCoordinate(...)}
+    \item   date resolved: {\bf 2022-08-12 19:18},
+date raised: 2022-08-12 
+  \ei
+  \item {\bf Version 1.3.71}:  resolved Issue 1226: {\bf initial coordinates}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: nodes get a separate SetInitialCoordinateVector() function; used for special nodes with mixed coordinates}
+    \item   date resolved: {\bf 2022-08-12 19:17},
+date raised: 2022-08-12 
+  \ei
+  \item {\bf Version 1.3.70}:  resolved Issue 1115: {\bf KinematicTree}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++ implement efficient T66 transformations}
+    \item {\bf notes: stable implementation, with formulas different to Featherstone formulas, but in line with 6D matrix manipulations; further tests and documentation needed}
+    \item   date resolved: {\bf 2022-08-07 22:55},
+date raised: 2022-05-29 
+  \ei
+  \item {\bf Version 1.3.69}: {\bf \color{warningRed}  resolved BUG 1223}: {\bf T66MotionInverse}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: RigidBodyMath implementation of T66 inverse is wrong, could affect special KinematicTree force reaction}
+    \item   date resolved: {\bf 2022-08-05 21:45},
+date raised: 2022-08-05 
+  \ei
+  \item {\bf Version 1.3.68}:  resolved Issue 1222: {\bf KinematicTree}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: remove some temporary variables from interface as new efficient transformations cannot be converted to Python easily}
+    \item   date resolved: {\bf 2022-08-04 16:28},
+date raised: 2022-08-04 
+  \ei
+  \item {\bf Version 1.3.67}:  resolved Issue 1221: {\bf Transformations66List}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: rename into Transformation66List}
+    \item   date resolved: {\bf 2022-08-04 16:27},
+date raised: 2022-08-04 
+  \ei
+  \item {\bf Version 1.3.66}:  resolved Issue 1220: {\bf PlotImage}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add options for orthogonal projection and removing axes and background}
+    \item   date resolved: {\bf 2022-07-26 09:34},
+date raised: 2022-07-26 
+  \ei
+  \item {\bf Version 1.3.65}:  resolved Issue 1205: {\bf LinkedDataVectorParallel}
+(check)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: check if LinkedDataVector can obtain performance mode from ResizableVectorParallel}
+    \item   date resolved: {\bf 2022-07-22 20:45},
+date raised: 2022-07-12 
+  \ei
+  \item {\bf Version 1.3.64}:  resolved Issue 1206: {\bf parallel}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: parallelize important vector-vector and matrix-vector (MultMatrix, MultAdd, ...) operations with optional commands}
+    \item {\bf notes: already done in ResizableVectorParallel, but extensions in LinkedDataVector needed}
+    \item   date resolved: {\bf 2022-07-22 19:49},
+date raised: 2022-07-12 
+  \ei
+  \item {\bf Version 1.3.63}:  resolved Issue 1218: {\bf SolverExplicit}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: parallelize Lie group updates in explicit solver}
+    \item   date resolved: {\bf 2022-07-22 19:26},
+date raised: 2022-07-22 
+  \ei
+  \item {\bf Version 1.3.62}:  resolved Issue 1219: {\bf SolverExplicit}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: turn off Lie group integration if no Lie group nodes available}
+    \item   date resolved: {\bf 2022-07-22 18:15},
+date raised: 2022-07-22 
+  \ei
+  \item {\bf Version 1.3.61}:  resolved Issue 1160: {\bf numpy arrays}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: change conversion behavior for Vector3D and Matrix3D, automatically transformed into numpy arrays instead of std::vector which gives a list right now}
+    \item {\bf notes: for items containing VectorXD or MatrixXD, the parameter returned in GetObject() and similar functions is now giving numpy arrays; for system structures, this is anyway already implemented; specifically, the changed behaviour can be used for referenceCoordinates in user functions; BEHAVIOUR CHANGED: check your models!}
+    \item   date resolved: {\bf 2022-07-21 19:33},
+date raised: 2022-06-26 
+  \ei
+  \item {\bf Version 1.3.60}:  resolved Issue 1209: {\bf parallel}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: C++: add multithreaded parallelization for PostNewton}
+    \item   date resolved: {\bf 2022-07-21 10:02},
+date raised: 2022-07-14 
+  \ei
   \item {\bf Version 1.3.59}:  resolved Issue 1035: {\bf TestModels}
 (change)
   \begin{itemize}[label=$\bullet$]
@@ -4834,6 +5009,11 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 1225}:  {\bf Linux TestSuite}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: segmentation fault when running ANCFgeneralContactCircle.py}
+    \item date raised: 2022-08-11 
+  \ei
   \item open {\bf BUG 1085}:  {\bf GeneralContact}
   \begin{itemize}[label=$\bullet$]
     \item {description: generalContactFrictionTests.py gives considerably different results after t=0.05 seconds between Windows and linux compiled version; may be caused by some initialization problems (bugs...); needs further tests}

@@ -51,13 +51,15 @@ public:
 	ResizableVector numericalJacobianf0;	//!< temporary vector for numerical differentiation
 	ResizableVector numericalJacobianf1;	//!< temporary vector for numerical differentiation
 
-	ArrayIndex ltg;						//!< local to global coordinate mapping; ArrayIndex is also resizable
+	ArrayIndex tempIndex;					//!< for PostNewton ltg rebuild; e.g. for local to global coordinate mapping
 	EXUmath::SparseVector sparseVector;		//!< used for temporary assembly of ode2RHS, contact, etc.
 
 	//these sparsetriplets are either filled directly or as a buffer, if the regular section in the global sparse matrix is full
 	SparseTripletVector sparseTriplets;		//!< used for temporary assembly of jacobian, mass matrix, etc.
 
 	MarkerDataStructure markerDataStructure;
+	Real tempValue; //!< used for PostNewton PNerror, maybe also for other procedures in future
+	Real tempValue2; //!< used for PostNewton recommendedStepSize, maybe also for other procedures in future
 };
 
 //! array of temporary data used for parallelized (multithreaded) computations

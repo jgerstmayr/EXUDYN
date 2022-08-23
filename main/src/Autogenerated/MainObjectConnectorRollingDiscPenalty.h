@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-04  22:03:18 (last modified)
+* @date         2022-07-21  19:29:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -142,12 +142,12 @@ public: // AUTO:
         d["dryFrictionAngle"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionAngle; //! AUTO: cast variables into python (not needed for standard types) 
         d["contactStiffness"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness; //! AUTO: cast variables into python (not needed for standard types) 
         d["contactDamping"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping; //! AUTO: cast variables into python (not needed for standard types) 
-        d["dryFriction"] = (std::vector<Real>)cObjectConnectorRollingDiscPenalty->GetParameters().dryFriction; //! AUTO: cast variables into python (not needed for standard types) 
+        d["dryFriction"] = EPyUtils::SlimVector2NumPy(cObjectConnectorRollingDiscPenalty->GetParameters().dryFriction); //! AUTO: cast variables into python (not needed for standard types) 
         d["dryFrictionProportionalZone"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionProportionalZone; //! AUTO: cast variables into python (not needed for standard types) 
         d["rollingFrictionViscous"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().rollingFrictionViscous; //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectConnectorRollingDiscPenalty->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         d["discRadius"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().discRadius; //! AUTO: cast variables into python (not needed for standard types) 
-        d["planeNormal"] = (std::vector<Real>)cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal; //! AUTO: cast variables into python (not needed for standard types) 
+        d["planeNormal"] = EPyUtils::SlimVector2NumPy(cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectConnectorRollingDiscPenalty->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdiscWidth"] = (float)visualizationObjectConnectorRollingDiscPenalty->GetDiscWidth(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -164,12 +164,12 @@ public: // AUTO:
         else if (parameterName.compare("dryFrictionAngle") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionAngle);} //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness);} //! AUTO: get parameter
         else if (parameterName.compare("contactDamping") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping);} //! AUTO: get parameter
-        else if (parameterName.compare("dryFriction") == 0) { return py::cast((std::vector<Real>)cObjectConnectorRollingDiscPenalty->GetParameters().dryFriction);} //! AUTO: get parameter
+        else if (parameterName.compare("dryFriction") == 0) { return EPyUtils::SlimVector2NumPy(cObjectConnectorRollingDiscPenalty->GetParameters().dryFriction);} //! AUTO: get parameter
         else if (parameterName.compare("dryFrictionProportionalZone") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionProportionalZone);} //! AUTO: get parameter
         else if (parameterName.compare("rollingFrictionViscous") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().rollingFrictionViscous);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorRollingDiscPenalty->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("discRadius") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().discRadius);} //! AUTO: get parameter
-        else if (parameterName.compare("planeNormal") == 0) { return py::cast((std::vector<Real>)cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal);} //! AUTO: get parameter
+        else if (parameterName.compare("planeNormal") == 0) { return EPyUtils::SlimVector2NumPy(cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorRollingDiscPenalty->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdiscWidth") == 0) { return py::cast((float)visualizationObjectConnectorRollingDiscPenalty->GetDiscWidth());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectConnectorRollingDiscPenalty->GetColor());} //! AUTO: get parameter

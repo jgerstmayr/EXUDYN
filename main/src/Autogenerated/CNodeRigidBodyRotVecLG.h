@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Holzinger Stefan
 * @date         2019-07-01 (generated)
-* @date         2021-12-22  10:30:11 (last modified)
+* @date         2022-08-12  19:31:56 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CNodeRigidBodyRotVecLG
-* @brief        A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies or beams; the node has 3 displacement coordinates and three rotation coordinates.
+* @brief        A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies; the node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods.
 *
 * @author       Gerstmayr Johannes, Holzinger Stefan
 * @date         2019-07-01 (generated)
@@ -93,7 +93,7 @@ public: // AUTO:
     //! AUTO:  return node type (for node treatment in computation)
     virtual Node::Type GetType() const override
     {
-        return (Node::Type)(Node::Position + Node::Orientation + Node::RigidBody + Node::RotationRotationVector + Node::RotationLieGroup);
+        return (Node::Type)(Node::Position + Node::Orientation + Node::RigidBody + Node::RotationRotationVector + Node::LieGroupWithDirectUpdate);
     }
 
     //! AUTO:  return node group, which is special because of algebraic equations

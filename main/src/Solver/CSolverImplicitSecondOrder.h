@@ -37,7 +37,13 @@ public: //made public for access via pybind
 	bool useScaling; //scaling for ODE2 and AE part to ensure good conditioning of Jacobian
 	bool hasConstantMassMatrix; //!< avoid recomputation of mass matrix, if constant
 
-
+	bool useLieGroupIntegration;			//!< only used internally to speed up in case of no Lie group nodes
+#ifdef LIE_GROUP_IMPLICIT_SOLVER
+	//++++++++++++++++++++++++++++++
+	//Lie groups:
+	ResizableArray<Index> lieGroupNodes;	//filled with Lie group node indices during initialization; ONLY if useLieGroupIntegration=true
+	ResizableArray<Index> nonLieGroupNodes; //filled with non-Lie group nodes
+#endif
 	//bool useIndex2Constraints; ==> directly linked to simulationSettings
 public:
 

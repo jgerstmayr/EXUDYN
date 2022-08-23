@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2022-07-04  22:03:15 (last modified)
+* @date         2022-07-21  20:27:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -160,8 +160,8 @@ public: // AUTO:
         d["coordinateIndexPerNode"] = (std::vector<Index>)cObjectFFRF->GetCoordinateIndexPerNode(); //! AUTO: cast variables into python (not needed for standard types) 
         d["objectIsInitialized"] = (bool)cObjectFFRF->GetObjectIsInitialized(); //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsMass"] = (Real)cObjectFFRF->GetPhysicsMass(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["physicsInertia"] = EXUmath::Matrix3DToStdArray33(cObjectFFRF->GetPhysicsInertia()); //! AUTO: cast variables into python (not needed for standard types) 
-        d["physicsCenterOfMass"] = (std::vector<Real>)cObjectFFRF->GetPhysicsCenterOfMass(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsInertia"] = EPyUtils::Matrix2NumPyTemplate(cObjectFFRF->GetPhysicsInertia()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsCenterOfMass"] = EPyUtils::SlimVector2NumPy(cObjectFFRF->GetPhysicsCenterOfMass()); //! AUTO: cast variables into python (not needed for standard types) 
         d["PHItTM"] = EPyUtils::Matrix2NumPy(cObjectFFRF->GetPHItTM()); //! AUTO: cast variables into python (not needed for standard types) 
         d["referencePositions"] = EPyUtils::Vector2NumPy(cObjectFFRF->GetReferencePositions()); //! AUTO: cast variables into python (not needed for standard types) 
         d["tempVector"] = EPyUtils::Vector2NumPy(cObjectFFRF->GetTempVector()); //! AUTO: cast variables into python (not needed for standard types) 
@@ -192,8 +192,8 @@ public: // AUTO:
         else if (parameterName.compare("coordinateIndexPerNode") == 0) { return py::cast((std::vector<Index>)cObjectFFRF->GetCoordinateIndexPerNode());} //! AUTO: get parameter
         else if (parameterName.compare("objectIsInitialized") == 0) { return py::cast((bool)cObjectFFRF->GetObjectIsInitialized());} //! AUTO: get parameter
         else if (parameterName.compare("physicsMass") == 0) { return py::cast((Real)cObjectFFRF->GetPhysicsMass());} //! AUTO: get parameter
-        else if (parameterName.compare("physicsInertia") == 0) { return py::cast(EXUmath::Matrix3DToStdArray33(cObjectFFRF->GetPhysicsInertia()));} //! AUTO: get parameter
-        else if (parameterName.compare("physicsCenterOfMass") == 0) { return py::cast((std::vector<Real>)cObjectFFRF->GetPhysicsCenterOfMass());} //! AUTO: get parameter
+        else if (parameterName.compare("physicsInertia") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectFFRF->GetPhysicsInertia());} //! AUTO: get parameter
+        else if (parameterName.compare("physicsCenterOfMass") == 0) { return EPyUtils::SlimVector2NumPy(cObjectFFRF->GetPhysicsCenterOfMass());} //! AUTO: get parameter
         else if (parameterName.compare("PHItTM") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRF->GetPHItTM());} //! AUTO: get parameter
         else if (parameterName.compare("referencePositions") == 0) { return EPyUtils::Vector2NumPy(cObjectFFRF->GetReferencePositions());} //! AUTO: get parameter
         else if (parameterName.compare("tempVector") == 0) { return EPyUtils::Vector2NumPy(cObjectFFRF->GetTempVector());} //! AUTO: get parameter

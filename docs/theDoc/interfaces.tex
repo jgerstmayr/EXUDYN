@@ -98,6 +98,7 @@ NumericalDifferentiationSettings has the following items:
     forAE &     bool &      &     False &     flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification\\ \hline
     forODE2 &     bool &      &     False &     flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; numerical differentiation is less efficient and may lead to numerical problems, but may smoothen problems of analytical derivatives; sometimes the analytical derivative may neglect terms\\ \hline
     forODE2connectors &     bool &      &     False &     flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE\\ \hline
+    jacobianConnectorDerivative &     bool &      &     True &     True: for analytic Jacobians of connectors, the Jacobian derivative is computed, causing additional CPU costs and not beeing available for all connectors or markers (thus switching to numerical differentiation); False: Jacobian derivative is neglected in analytic Jacobians (but included in numerical Jacobians), which often has only minor influence on convergence\\ \hline
     minimumCoordinateSize &     UReal &      &     1e-2 &     minimum size of coordinates in relative differentiation parameter\\ \hline
     relativeEpsilon &     UReal &      &     1e-7 &     relative differentiation parameter epsilon; the numerical differentiation parameter $\varepsilon$ follows from the formula ($\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)$, with $\varepsilon_\mathrm{relative}$=relativeEpsilon, $q_{min} = $minimumCoordinateSize, $q_i$ is the current coordinate which is differentiated, and $qRef_i$ is the reference coordinate of the current coordinate\\ \hline
 	  \end{longtable}
@@ -182,7 +183,7 @@ ExplicitIntegrationSettings has the following items:
     computeEndOfStepAccelerations &     \tabnewline bool &      &     True &     accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different\\ \hline
     dynamicSolverType &     DynamicSolverType &      &     DynamicSolverType::DOPRI5 &     \tabnewline selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, ...), for detailed description see DynamicSolverType, \refSection{sec:DynamicSolverType}, but only referring to explicit solvers.\\ \hline
     eliminateConstraints &     bool &      &     True &     True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!\\ \hline
-    useLieGroupIntegration &     bool &      &     True &     True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes, but also improves integration of other rigid body nodes. Only available for RK44 integrator.\\ \hline
+    useLieGroupIntegration &     bool &      &     True &     True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates!\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -430,6 +431,7 @@ VSettingsBeams has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     axialTiling &     PInt &      &     8 &     number of segments to discretise the beams axis\\ \hline
+    crossSectionFilled &     bool &      &     True &     if implemented for element, cross section is drawn as solid (filled) instead of wire-frame; NOTE: some quantities may not be interpolated correctly over cross section in visualization\\ \hline
     crossSectionTiling &     PInt &      &     4 &     number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing\\ \hline
     drawVertical &     bool &      &     False &     draw contour plot outputVariables 'vertical' along beam height; contour.outputVariable must be set accordingly\\ \hline
     drawVerticalColor &     Float4 &     4 &     [0.2,0.2,0.2,1.] &     \tabnewline color for outputVariable to be drawn along cross section (vertically)\\ \hline
@@ -681,6 +683,7 @@ VSettingsExportImages has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     heightAlignment &     PInt &      &     2 &     alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)\\ \hline
+    saveImageAsTextCircles &     bool &      &     True &     export circles in save image (only in TXT format)\\ \hline
     saveImageAsTextLines &     bool &      &     True &     export lines in save image (only in TXT format)\\ \hline
     saveImageAsTextTexts &     bool &      &     False &     export text in save image (only in TXT format)\\ \hline
     saveImageAsTextTriangles &     bool &      &     False &     export triangles in save image (only in TXT format)\\ \hline

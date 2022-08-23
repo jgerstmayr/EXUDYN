@@ -4,7 +4,7 @@
 # Details:  A library for preparation of minimum coordinates (kinematic tree) formulation.
 #			This library follows mostly the algorithms of Roy Featherstone, see http://royfeatherstone.org/
 #           His code is availble in MATLAB as well as described in the Springer Handbook of Robotics \cite{Siciliano2016}.
-#			The main formalisms are based on the 6x6 Pl\"ucker coordinate system as denoted by Featherstone.
+#			The main formalisms are based on 6x6 matrices, so-called Pl\"ucker transformations, denoted as \ac{T66}, as defined by Featherstone.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2021-06-22

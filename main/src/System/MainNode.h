@@ -57,10 +57,16 @@ public:
 	virtual void SetVisualizationNode(VisualizationNode* pVisualizationNode) { SysError("Invalid call to MainNode::SetVisualizationNode"); }
 
 	//! Hook to initial values vector (displacements) implemented in derived class
-	virtual LinkedDataVector GetInitialVector() const { PyError("Node does not support GetInitialVector_t functionality"); return LinkedDataVector(); }
+	virtual LinkedDataVector GetInitialCoordinateVector() const { PyError("Node does not support GetInitialCoordinateVector functionality"); return LinkedDataVector(); }
 	//! Hook to initial values vector (velocities) implemented in derived class
-	virtual LinkedDataVector GetInitialVector_t() const { PyError("Node does not support GetInitialVector_t functionality"); return LinkedDataVector(); }
-	
+	virtual LinkedDataVector GetInitialCoordinateVector_t() const { PyError("Node does not support GetInitialCoordinateVector_t functionality"); return LinkedDataVector(); }
+
+	//! set initial coordinates, usually using default; special classes (Lie group) override
+	virtual void SetInitialCoordinateVector(LinkedDataVector& initialVector) { initialVector = GetInitialCoordinateVector(); }
+	//! set initial coordinates, usually using default; special classes (Lie group) override
+	virtual void SetInitialCoordinateVector_t(LinkedDataVector& initialVector_t) { initialVector_t = GetInitialCoordinateVector_t(); }
+
+
 	//! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CNode GetOutputVariable(...)
 	virtual py::object GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration) const;
 

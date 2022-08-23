@@ -415,12 +415,12 @@ The item VNodeRigidBodyRxyz has the following parameters:\vspace{-1cm}\\
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{NodeRigidBodyRotVecLG}
 \label{sec:item:NodeRigidBodyRotVecLG}
-A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies or beams; the node has 3 displacement coordinates and three rotation coordinates.\vspace{12pt}
+A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies; the node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods.\vspace{12pt}
  \\\noindent Authors: Gerstmayr Johannes, Holzinger Stefan
 \vspace{12pt}
  \\{\bf Additional information for NodeRigidBodyRotVecLG}:
 \bi
-  \item The Node has the following types = \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}, \texttt{RotationRotationVector}, \texttt{RotationLieGroup}
+  \item The Node has the following types = \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}, \texttt{RotationRotationVector}
   \item {\bf Short name} for Python = {\bf RigidRotVecLG}  \item {\bf Short name} for Python (visualization object) = {\bf VRigidRotVecLG}\ei
 \vspace{12pt} \noindent The item {\bf NodeRigidBodyRotVecLG} with type = 'RigidBodyRotVecLG' has the following parameters:\vspace{-1cm}\\ 
 %reference manual TABLE
@@ -508,6 +508,97 @@ The item VNodeRigidBodyRotVecLG has the following parameters:\vspace{-1cm}\\
 \ei
 
 %
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{NodeRigidBodyRotVecDataLG}
+\label{sec:item:NodeRigidBodyRotVecDataLG}
+A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies or beams; the node has 3 displacement coordinates and three rotation coordinates (rotation vector) and additionally data coordinates for configuration at start of a computation step. External operations (initial coordinates, graphics, ...) operate on data coordinates, which represent the global frame. Internally, ODE2 coordinates represent the local frame and they must be updated using (implicit) Lie group methods. UNDER CONSTRUCTION, DO NOT USE!!!\vspace{12pt}
+ \\\noindent Authors: Gerstmayr Johannes, Holzinger Stefan
+\vspace{12pt}
+ \\{\bf Additional information for NodeRigidBodyRotVecDataLG}:
+\bi
+  \item The Node has the following types = \texttt{Position}, \texttt{Orientation}, \texttt{RigidBody}, \texttt{RotationRotationVector}
+  \item {\bf Short name} for Python = {\bf RigidRotVecLG}  \item {\bf Short name} for Python (visualization object) = {\bf VRigidRotVecLG}\ei
+\vspace{12pt} \noindent The item {\bf NodeRigidBodyRotVecDataLG} with type = 'RigidBodyRotVecDataLG' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     node's unique name\\ \hline
+    referenceCoordinates &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     \tabnewline reference coordinates (position and rotation vector $\tnu$) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)\\ \hline
+    initialCoordinates &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     \tabnewline initial displacement coordinates $\uv$ and rotation vector $\tnu$ relative to reference coordinates; these coordinates are mapped to the data coordiantes!\\ \hline
+    initialVelocities &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     \tabnewline initial velocity coordinate: time derivatives of displacement and angular velocity vector; these coordinates are mapped to the ODE2 velocity coordinates!\\ \hline
+    visualization & VNodeRigidBodyRotVecDataLG & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VNodeRigidBodyRotVecDataLG has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used\\ \hline
+	  \end{longtable}
+	\end{center}
+\par\noindent\rule{\textwidth}{0.4pt}
+\mysubsubsubsection{DESCRIPTION of NodeRigidBodyRotVecDataLG:}
+\label{description_NodeRigidBodyRotVecDataLG}
+\paragraph{Information on input parameters:} 
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{referenceCoordinates}{$\qv\cRef = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cRef = [\pv\tp\cRef,\,\tnu\tp\cRef]\tp$}{}
+\rowTable{initialCoordinates}{$\qv\cIni = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cIni = [\uv\tp\cIni,\,\tnu\tp\cIni]\tp$}{}
+\rowTable{initialVelocities}{$\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tnu\tp\cIni]\tp$}{}
+\finishTable
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
+\rowTable{Position}{$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$}{global 3D position vector of node; $\uv\cRef=0$}
+\rowTable{Displacement}{$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$}{global 3D displacement vector of node}
+\rowTable{Velocity}{$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$}{global 3D velocity vector of node}
+\rowTable{Coordinates}{$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\nu_0,\,\nu_1,\,\nu_2]\tp\cConfig$}{ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles}
+\rowTable{Coordinates\_t}{$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cConfig$}{ velocity coordinates vector of node}
+\rowTable{RotationMatrix}{$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$}{vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates}
+\rowTable{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$}{vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix}
+\rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{global 3D angular velocity vector of node}
+\rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{local (body-fixed)  3D angular velocity vector of node}
+\finishTable
+ \noindent
+    \paragraph{Detailed information:}
+    For a detailed description on the rigid body dynamics formulation using this node, see Holzinger and Gerstmayr [under publication].
+    The node has data and ODE2 coordinates. Here, data coordinates always represent the current state during computation, while
+    ODE2 coordinates represent the incremental motion, e.g., during Newton iterations, and they represent the 
+    coordinates needed for the Jacobian.
+
+    The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and three rotation coordinates, which is the rotation vector 
+    \be
+      \tnu = \varphi \nv = \tnu\cConfig + \tnu\cRef,
+    \ee
+    with the rotation angle $\varphi$ and the rotation axis $\nv$.
+    All coordinates $\cv\cConfig$ lead to second order differential equations, however the rotation vector cannot be used as a conventional parameterization. It must be computed within a nonlinear update, using appropriate Lie group methods.
+
+    The rotation matrix $\LU{0b}{\Rot(\tnu)}\cConfig$ transforms a local (body-fixed) 3D position 
+    $\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp$ to global 3D positions,
+    \be
+      \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot(\tnu)}\cConfig \LU{b}{\pLoc} 
+    \ee
+    Note that $\Rot(\tnu)$ is defined in function \texttt{ RotationVector2RotationMatrix}, see \refSection{sec:rigidBodyUtilities:RotationVector2RotationMatrix}.
+    
+    A Lie group integrator must be used with this node, which is why the is used, the 
+    rotation parameter velocities are identical to the local angular velocity $\LU{b}{\tomega}$ and thus the 
+    matrix $ \LU{b}{\Gm}$ becomes the identity matrix.
+    %The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
+    %\bea
+    %  \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
+    %  \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
+    %\eea
+    
+    For creating a \texttt{NodeRigidBodyRotVecLG}, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
+    see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
 \newpage
 
 %+++++++++++++++++++++++++++++++++++
@@ -915,8 +1006,9 @@ The item VNodeGenericODE2 has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py}{\texttt{kinematicTreeAndMBS.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simulateInteractively.py}{\texttt{simulateInteractively.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py}{\texttt{stiffFlyballGovernorKT.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFslidingAndALEjointTest.py}{\texttt{ANCFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeTest.py}{\texttt{kinematicTreeTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/solverExplicitODE1ODE2test.py}{\texttt{solverExplicitODE1ODE2test.py}} (TestModels/)
 \ei
@@ -1085,9 +1177,9 @@ The item VNodeGenericData has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py}{\texttt{serialRobotKinematicTree.py}} (Examples/)
 \item  ...
 
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -1160,9 +1252,9 @@ The item VNodePointGround has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_test_halfcircle.py}{\texttt{ANCF\_test\_halfcircle.py}} (Examples/)
 \item  ...
 
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py}{\texttt{ANCFBeam3DeigTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -1298,8 +1390,8 @@ The item VObjectGround has the following parameters:\vspace{-1cm}\\
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -2191,7 +2283,7 @@ The item VObjectRigidBody2D has the following parameters:\vspace{-1cm}\\
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -2507,13 +2599,6 @@ A special object to represent open kinematic trees using minimum coordinate form
     jointPControlVector &     Vector &      &     [] &     proportional (P) control values per joint (multiplied with position error between joint value and offset $\uv_o$); note that more complicated control laws must be implemented with user functions; must be either empty list/array $[]$ (default) or have size $n$\\ \hline
     jointDControlVector &     Vector &      &     [] &     derivative (D) control values per joint (multiplied with velocity error between joint velocity and velocity offset $\vv_o$); note that more complicated control laws must be implemented with user functions; must be either empty list/array $[]$ (default) or have size $n$\\ \hline
     forceUserFunction &     PyFunctionVectorMbsScalarIndex2Vector &     \tabnewline  &     \tabnewline 0 &     \tabnewline A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below\\ \hline
-    jointTransformationsTemp &     Transformations66List &     \tabnewline  &     \tabnewline [] &     \tabnewline temporary list containing transformations (Pluecker transforms) per joint\\ \hline
-    linkInertiasT66 &     Transformations66List &     \tabnewline  &     \tabnewline [] &     \tabnewline temporary list link inertias as Pluecker transforms per link\\ \hline
-    motionSubspaces &     Vector6DList &      &     [] &     temporary list containing 6D motion subspaces per joint\\ \hline
-    jointTempT66 &     Transformations66List &     \tabnewline  &     \tabnewline [] &     \tabnewline temporary list containing 66 transformations per joint\\ \hline
-    jointVelocities &     Vector6DList &      &     [] &     temporary list containing 6D velocities per joint\\ \hline
-    jointAccelerations &     Vector6DList &      &     [] &     temporary list containing 6D accelerations per joint\\ \hline
-    jointForces &     Vector6DList &      &     [] &     temporary list containing 6D torques/forces per joint/link\\ \hline
     visualization & VObjectKinematicTree & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -2554,13 +2639,6 @@ The item VObjectKinematicTree has the following parameters:\vspace{-1cm}\\
 \rowTable{jointPControlVector}{$\Pm \in \Rcal^{n}$}{}
 \rowTable{jointDControlVector}{$\Dm \in \Rcal^{n}$}{}
 \rowTable{forceUserFunction}{$\fv_{user} \in \Rcal^{n}$}{}
-\rowTable{jointTransformationsTemp}{$\Xm \in \Rcal^{n \times (6 \times 6)}$}{}
-\rowTable{linkInertiasT66}{$\Jm_{66} \in \Rcal^{n \times (6 \times 6)}$}{}
-\rowTable{motionSubspaces}{$\Mm\Sm \in \Rcal^{n \times 6}$}{}
-\rowTable{jointTempT66}{$\Xm_j \in \Rcal^{n \times 6}$}{}
-\rowTable{jointVelocities}{$\Vm_j \in \Rcal^{n \times 6}$}{}
-\rowTable{jointAccelerations}{$\Am_j \in \Rcal^{n \times 6}$}{}
-\rowTable{jointForces}{$\Fm_j \in \Rcal^{n \times 6}$}{}
 \finishTable
 {\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
 \startTable{output variable}{symbol}{description}
@@ -2694,6 +2772,7 @@ The item VObjectKinematicTree has the following parameters:\vspace{-1cm}\\
 \noindent For examples on ObjectKinematicTree see Examples and TestModels:
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py}{\texttt{kinematicTreeAndMBS.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py}{\texttt{stiffFlyballGovernorKT.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeTest.py}{\texttt{kinematicTreeTest.py}} (TestModels/)
 \ei
 
@@ -3966,12 +4045,14 @@ The item VObjectBeamGeometricallyExact2D has the following parameters:\vspace{-1
 \finishTable
 {\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
 \startTable{output variable}{symbol}{description}
-\rowTable{Position}{}{global position vector of local axis (1) and cross section (2) position}
-\rowTable{Displacement}{}{global displacement vector of local axis (1) and cross section (2) position}
-\rowTable{Velocity}{}{global velocity vector of local axis (1) and cross section (2) position}
-\rowTable{Rotation}{}{3D Tait-Bryan rotation components, containing rotation around $z$-axis only}
-\rowTable{StrainLocal}{}{6 strain components, containing only axial ($xx$) and shear strain ($xy$)}
-\rowTable{CurvatureLocal}{}{3D vector of curvature, containing only curvature w.r.t. $z$-axis}
+\rowTable{Position}{}{global position vector of local axis (X) and cross section (Y) position}
+\rowTable{Displacement}{}{global displacement vector of local axis (X) and cross section (Y) position}
+\rowTable{Velocity}{}{global velocity vector of local axis (X) and cross section (Y) position}
+\rowTable{Rotation}{}{3D Tait-Bryan rotation components, containing rotation around $Z$-axis only}
+\rowTable{StrainLocal}{}{6 (local) strain components, containing only axial ($XX$, index 0) and shear strain ($XY$, index 5); evaluated at beam axis ONLY}
+\rowTable{CurvatureLocal}{}{3D vector of (local) curvature, only $Z$ component is non-zero}
+\rowTable{ForceLocal}{}{3D vector of (local) section normal force, containing axial (X) and shear force (Y)}
+\rowTable{TorqueLocal}{}{3D vector of (local) torques, containing only bending moment (Z)}
 \finishTable
  \noindent
     See paper of Simo and Vu-Quoc (1986).
@@ -5598,6 +5679,7 @@ The item VObjectConnectorSpringDamper has the following parameters:\vspace{-1cm}
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_slidingJoint2D.py}{\texttt{ANCF\_slidingJoint2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/Spring_with_constraints.py}{\texttt{Spring\_with\_constraints.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py}{\texttt{stiffFlyballGovernor2.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py}{\texttt{stiffFlyballGovernorKT.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/modelUnitTests.py}{\texttt{modelUnitTests.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/PARTS_ATEs_moving.py}{\texttt{PARTS\_ATEs\_moving.py}} (TestModels/)
@@ -6564,8 +6646,8 @@ The item VObjectConnectorCoordinateSpringDamper has the following parameters:\vs
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/scissorPrismaticRevolute2D.py}{\texttt{scissorPrismaticRevolute2D.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -6719,8 +6801,8 @@ The item VObjectConnectorGravity has the following parameters:\vspace{-1cm}\\
     exu.SolveDynamic(mbs, sims, solverType=exu.DynamicSolverType.RK67)
 
     #check result at default integration time
-    #expect y=x after one period of orbiting (got: 100000.00000000485)
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)[1]
+    #expect y=x after one period of orbiting (got: 100000.00000000479)
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)[1]/100000
 
 \end{lstlisting}
 
@@ -7414,9 +7496,9 @@ The item VObjectContactCircleCable2D has the following parameters:\vspace{-1cm}\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_contact_circle2.py}{\texttt{ANCF\_contact\_circle2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_moving_rigidbody.py}{\texttt{ANCF\_moving\_rigidbody.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_slidingJoint2D.py}{\texttt{ANCF\_slidingJoint2D.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFslidingAndALEjointTest.py}{\texttt{ANCFslidingAndALEjointTest.py}} (TestModels/)
 \ei
 
 %
@@ -7853,9 +7935,9 @@ The item VObjectContactFrictionCircleCable2D has the following parameters:\vspac
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py}{\texttt{beltDriveReevingSystem.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive.py}{\texttt{sliderCrank3DwithANCFbeltDrive.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFslidingAndALEjointTest.py}{\texttt{ANCFslidingAndALEjointTest.py}} (TestModels/)
 \ei
 
 %
@@ -8194,9 +8276,9 @@ The item VObjectConnectorCoordinate has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_test_halfcircle.py}{\texttt{ANCF\_test\_halfcircle.py}} (Examples/)
 \item  ...
 
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -8705,9 +8787,9 @@ The item VMarkerBodyPosition has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/HydraulicActuator2Arms.py}{\texttt{HydraulicActuator2Arms.py}} (Examples/)
 \item  ...
 
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -8772,8 +8854,8 @@ The item VMarkerBodyRigid has the following parameters:\vspace{-1cm}\\
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -8955,9 +9037,9 @@ The item VMarkerNodeCoordinate has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_test_halfcircle.py}{\texttt{ANCF\_test\_halfcircle.py}} (Examples/)
 \item  ...
 
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py}{\texttt{ANCFBeam3DeigTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -9558,6 +9640,7 @@ The item VMarkerKinematicTreeRigid has the following parameters:\vspace{-1cm}\\
 \noindent For examples on MarkerKinematicTreeRigid see Examples and TestModels:
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py}{\texttt{humanRobotInteraction.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py}{\texttt{stiffFlyballGovernorKT.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py}{\texttt{kinematicTreeConstraintTest.py}} (TestModels/)
 \ei
 
@@ -9654,10 +9737,10 @@ The item VMarkerBodyCable2DShape has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py}{\texttt{beltDriveReevingSystem.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive.py}{\texttt{sliderCrank3DwithANCFbeltDrive.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFslidingAndALEjointTest.py}{\texttt{ANCFslidingAndALEjointTest.py}} (TestModels/)
 \ei
 
 %
@@ -10094,7 +10177,7 @@ The item VLoadCoordinate has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py}{\texttt{parameterVariationExample.py}} (Examples/)
 \item  ...
 
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFslidingAndALEjointTest.py}{\texttt{ANCFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCoordinateTest.py}{\texttt{contactCoordinateTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}} (TestModels/)
 \item  ...
@@ -10399,6 +10482,7 @@ The item VSensorKinematicTree has the following parameters:\vspace{-1cm}\\
 %
 \noindent For examples on SensorKinematicTree see Examples and TestModels:
 \bi
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py}{\texttt{stiffFlyballGovernorKT.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py}{\texttt{kinematicTreeAndMBStest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py}{\texttt{kinematicTreeConstraintTest.py}} (TestModels/)
 \ei

@@ -450,9 +450,9 @@ see Examples/ANCF_cantilever_test.py\end{lstlisting}\vspace{-24pt}\bi\item[]\vsp
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/finiteSegmentMethod.py}{\texttt{finiteSegmentMethod.py}} (Ex), 
  ...
 , 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}} (TM), 
  ...
 \ei
 
@@ -577,7 +577,7 @@ see Examples/ANCF_cantilever_test.py\end{lstlisting}\vspace{-24pt}\bi\item[]\vsp
 %
 \noindent For examples on GenerateSlidingJoint see Examples (Ex) and TestModels (TM):
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TM)\ei
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFslidingAndALEjointTest.py}{\texttt{ANCFslidingAndALEjointTest.py}} (TM)\ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -592,7 +592,7 @@ see Examples/ANCF_cantilever_test.py\end{lstlisting}\vspace{-24pt}\bi\item[]\vsp
 %
 \noindent For examples on GenerateAleSlidingJoint see Examples (Ex) and TestModels (TM):
 \bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TM)\ei
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFslidingAndALEjointTest.py}{\texttt{ANCFslidingAndALEjointTest.py}} (TM)\ei
 
 %
 \mysubsection{Module: FEM}
@@ -603,7 +603,7 @@ see Examples/ANCF_cantilever_test.py\end{lstlisting}\vspace{-24pt}\bi\item[]\vsp
 \item[]Author:
 \vspace{-22pt}\begin{itemize}[leftmargin=0.5cm]
 \setlength{\itemindent}{-0.5cm}
-\item[]   Johannes Gerstmayr; Stefan Holzinger (Abaqus and Ansys import utilities); Joachim Sch\"oberl (support for Netgen and NGsolve \cite{Schoeberl1997,Schoeberl2014,2022NGsolve} import and eigen computations)
+\item[]   Johannes Gerstmayr; Stefan Holzinger (Abaqus and Ansys import utilities); Joachim Sch\"oberl (support for Netgen and NGsolve \cite{Schoeberl1997,NGsolve2014,NGsolve2022} import and eigen computations)
 \ei
 \item[]Date:      2020-03-10 (created)
 \item[]Notes:  	internal CSR matrix storage format contains 3 float numbers per row: [row, column, value], can be converted to scipy csr sparse matrices with function CSRtoScipySparseCSR(...)
@@ -1127,7 +1127,7 @@ this class holds all data for ObjectFFRF user functions
 \vspace{3pt} \\ 
 \mysubsubsection{CLASS FEMinterface (in module FEM)}
 \noindent\textcolor{steelblue}{{\bf class description}}:  general interface to different FEM / mesh imports and export to EXUDYN functions
-         use this class to import meshes from different meshing or FEM programs (NETGEN/NGsolve \cite{2022NGsolve}, ABAQUS, ANSYS, ..) and store it in a unique format
+         use this class to import meshes from different meshing or FEM programs (NETGEN/NGsolve \cite{NGsolve2022}, ABAQUS, ANSYS, ..) and store it in a unique format
          do mesh operations, compute eigenmodes and reduced basis, etc.
          load/store the data efficiently with LoadFromFile(...), SaveToFile(...)  if import functions are slow
          export to EXUDYN objects
@@ -1535,7 +1535,7 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
   \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
     \item[] The interface to NETGEN/NGsolve has been created together with Joachim Sch\"oberl, main developer
-    \item[]   of NETGEN/NGsolve \cite{Schoeberl1997,Schoeberl2014}; Thank's a lot!
+    \item[]   of NETGEN/NGsolve \cite{Schoeberl1997,NGsolve2014}; Thank's a lot!
     \item[] {\it   download NGsolve at}: https://ngsolve.org/
     \item[]   NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!
     \item[]   note that node/element indices in the NGsolve mesh are 1-based and need to be converted to 0-base!
@@ -1966,9 +1966,9 @@ nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])\end{lstlisting}\vspace{-24pt}\bi
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesTest.py}{\texttt{particlesTest.py}} (Ex), 
  ...
 , 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py}{\texttt{ANCFmovingRigidBodyTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFslidingAndALEjointTest.py}{\texttt{ANCFslidingAndALEjointTest.py}} (TM), 
  ...
 \ei
 
@@ -2545,7 +2545,7 @@ points = np.array([[0, 0], [0, 2], [2, 2], [2, 1], [1, 1], [0, 1], [1, 0]])
 \item[]Notes: 	This is an internal library, which is only used inside Exudyn for modifying settings.
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L495}{EditDictionaryWithTypeInfo}{}}}\label{sec:GUI:EditDictionaryWithTypeInfo}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L496}{EditDictionaryWithTypeInfo}{}}}\label{sec:GUI:EditDictionaryWithTypeInfo}
 ({\it dictionaryData}, {\it exu}= None, {\it dictionaryName}= 'edit')
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -2829,7 +2829,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
   A library for preparation of minimum coordinates (kinematic tree) formulation.
 			This library follows mostly the algorithms of Roy Featherstone, see http://royfeatherstone.org/
            His code is availble in MATLAB as well as described in the Springer Handbook of Robotics \cite{Siciliano2016}.
-			The main formalisms are based on the 6x6 Pl\"ucker coordinate system as denoted by Featherstone.
+			The main formalisms are based on 6x6 matrices, so-called Pl\"ucker transformations, denoted as \ac{T66}, as defined by Featherstone.
 \begin{itemize}[leftmargin=1.4cm]
 \setlength{\itemindent}{-1.4cm}
 \item[]Author:    Johannes Gerstmayr
@@ -3785,8 +3785,8 @@ PlotSensor(mbs, sensorNumbers=s0, componentsX=[0], components=[1], xLabel='x-Pos
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L823}{PlotImage}{}}}\label{sec:plot:PlotImage}
-({\it imageData}, {\it HT}= np.eye(4), {\it axesEqual}= True, {\it plot3D}= False, {\it lineWidths}= 1, {\it lineStyles}= '-', {\it triangleEdgeColors}= 'black', {\it triangleEdgeWidths}= 0.5, {\it title}= '', {\it figureName}= '', {\it fileName}= '', {\it fontSize}= 16, {\it closeAll}= False, {\it azim}= 0., {\it elev}= 0.)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L827}{PlotImage}{}}}\label{sec:plot:PlotImage}
+({\it imageData}, {\it HT}= np.eye(4), {\it axesEqual}= True, {\it plot3D}= False, {\it lineWidths}= 1, {\it lineStyles}= '-', {\it triangleEdgeColors}= 'black', {\it triangleEdgeWidths}= 0.5, {\it removeAxes}= True, {\it orthogonalProjection}= True, {\it title}= '', {\it figureName}= '', {\it fileName}= '', {\it fontSize}= 16, {\it closeAll}= False, {\it azim}= 0., {\it elev}= 0.)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -3801,6 +3801,8 @@ PlotSensor(mbs, sensorNumbers=s0, componentsX=[0], components=[1], xLabel='x-Pos
     \item[] {\it   lineStyles}: matplotlib codes for lines
     \item[] {\it   triangleEdgeColors}: color for triangle edges as tuple of rgb colors or matplotlib color code strings 'black', 'r', ...
     \item[] {\it   triangleEdgeWidths}: width of triangle edges; set to 0 if edges shall not be shown
+    \item[] {\it   removeAxes}: if True, all axes and background are removed for simpler export
+    \item[] {\it   orthogonalProjection}: if True, projection is orthogonal with no perspective view
     \item[] {\it   title}: optional string representing plot title
     \item[] {\it   figureName}: optional name for figure, if newFigure=True
     \item[] {\it   fileName}: if this string is non-empty, figure will be saved to given path and filename (use figName.pdf to safe as PDF or figName.png to save as PNG image); use matplotlib.use('Agg') in order not to open figures if you just want to save them
@@ -3904,8 +3906,9 @@ ParameterVariation(parameters={'mass':(1,10,10), 'stiffness':(1000,10000,10)}, p
 \noindent For examples on ParameterVariation see Examples (Ex) and TestModels (TM):
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/dispyParameterVariationExample.py}{\texttt{dispyParameterVariationExample.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/dispyParameterVariationExampleAlt.py}{\texttt{dispyParameterVariationExampleAlt.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py}{\texttt{parameterVariationExample.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}} (TM)\ei
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}} (TM)\ei
 
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -5210,6 +5213,7 @@ InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])\end{lstlisting}\vspace{-24pt
 \noindent For examples on InertiaMassPoint see Examples (Ex) and TestModels (TM):
 \bi
  \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py}{\texttt{stiffFlyballGovernor2.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py}{\texttt{stiffFlyballGovernorKT.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py}{\texttt{stiffFlyballGovernor.py}} (TM)\ei
 
 %
@@ -6676,9 +6680,9 @@ import exudyn as exu
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_contact_circle.py}{\texttt{ANCF\_contact\_circle.py}} (Ex), 
  ...
 , 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py}{\texttt{ANCFcontactCircleTest.py}} (TM), 
  ...
 \ei
 
@@ -6734,8 +6738,8 @@ import exudyn as exu
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACNFslidingAndALEjointTest.py}{\texttt{ACNFslidingAndALEjointTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py}{\texttt{ANCFBeam3DeigTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py}{\texttt{ANCFBeam3Dtest.py}} (TM), 
  ...
 \ei
 

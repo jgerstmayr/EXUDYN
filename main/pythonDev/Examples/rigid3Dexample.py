@@ -19,6 +19,7 @@ mbs = SC.AddSystem()
 
 print('EXUDYN version='+exu.GetVersionString())
 
+#%%+++++++++++++++++++++++++++++++++++
 #background
 #rect = [-0.1,-0.1,0.1,0.1] #xmin,ymin,xmax,ymax
 #background0 = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]} #background
@@ -36,6 +37,7 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
 mPosLast = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, 
                                             localPosition=[-2*sx,0,cPosZ]))
 
+#%%+++++++++++++++++++++++++++++++++++
 #create a chain of bodies:
 for i in range(20):
     #print("Build Object", i)
@@ -71,7 +73,7 @@ for i in range(20):
                                                        stiffness=[k,k,k], damping=[d,d,d])) #gravity in negative z-direction
     mPosLast = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oRB, localPosition = [sx,0.,cPosZ]))
 
-
+#%%+++++++++++++++++++++++++++++++++++
 mbs.Assemble()
 print(mbs)
 

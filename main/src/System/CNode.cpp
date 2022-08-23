@@ -45,7 +45,7 @@ CData*& CNode::GetCData()
 
 const Real& CNodeODE2::GetCurrentCoordinate(Index i) const
 {
-	CHECKandTHROW(i < GetNumberOfODE2Coordinates(), "ERROR: CNodeODE2::GetCurrentCoordinate: index out of range");
+	//CHECKandTHROW(i < GetNumberOfODE2Coordinates(), "ERROR: CNodeODE2::GetCurrentCoordinate: index out of range");
 
 	return computationalData->currentState.ODE2Coords[globalODE2CoordinateIndex + i];
 	//old, not used?: return computationalData->currentState.ODE2Coords_t[globalODE2CoordinateIndex + i - GetNumberOfODE2Coordinates()];
@@ -53,38 +53,15 @@ const Real& CNodeODE2::GetCurrentCoordinate(Index i) const
 
 const Real& CNodeODE2::GetCurrentCoordinate_t(Index i) const
 {
-	CHECKandTHROW(i < GetNumberOfODE2Coordinates(), "ERROR: CNodeODE2::GetCurrentCoordinate_t: index out of range");
+	//CHECKandTHROW(i < GetNumberOfODE2Coordinates(), "ERROR: CNodeODE2::GetCurrentCoordinate_t: index out of range");
 	return computationalData->currentState.ODE2Coords_t[globalODE2CoordinateIndex + i];
 }
 
 const Real& CNodeODE2::GetCurrentCoordinate_tt(Index i) const
 {
-	CHECKandTHROW(i < GetNumberOfODE2Coordinates(), "ERROR: CNodeODE2::GetCurrentCoordinate_tt: index out of range");
+	//CHECKandTHROW(i < GetNumberOfODE2Coordinates(), "ERROR: CNodeODE2::GetCurrentCoordinate_tt: index out of range");
 	return computationalData->currentState.ODE2Coords_tt[globalODE2CoordinateIndex + i];
 }
-
-
-//in CPP:
-//ALL 6 PERFORMANCE TESTS SUCCESSFUL
-//TOTAL PERFORMANCE TEST TIME = 87.94748115539551 seconds
-//ALL 6 PERFORMANCE TESTS SUCCESSFUL
-//TOTAL PERFORMANCE TEST TIME = 88.8079776763916 seconds
-//LinkedDataVector CNodeODE2::GetCurrentCoordinateVector() const
-//{
-//	return LinkedDataVector(computationalData->currentState.ODE2Coords, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
-//}
-//
-////! get vector with current coordinates_t; corresponds to velocities
-//LinkedDataVector CNodeODE2::GetCurrentCoordinateVector_t() const
-//{
-//	return LinkedDataVector(computationalData->currentState.ODE2Coords_t, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
-//}
-//
-////! get vector with current coordinates_tt; corresponds to accelerations
-//LinkedDataVector CNodeODE2::GetCurrentCoordinateVector_tt() const
-//{
-//	return LinkedDataVector(computationalData->currentState.ODE2Coords_tt, globalODE2CoordinateIndex, GetNumberOfODE2Coordinates());
-//}
 
 LinkedDataVector CNodeODE2::GetInitialCoordinateVector() const
 {
@@ -139,13 +116,13 @@ LinkedDataVector CNodeODE2::GetVisualizationCoordinateVector_tt() const
 
 const Real& CNodeODE1::GetCurrentCoordinate(Index i) const
 {
-	CHECKandTHROW(i < GetNumberOfODE1Coordinates(), "ERROR: CNodeODE1::GetCurrentCoordinate: index out of range");
+	//CHECKandTHROW(i < GetNumberOfODE1Coordinates(), "ERROR: CNodeODE1::GetCurrentCoordinate: index out of range");
 	return computationalData->currentState.ODE1Coords[globalODE1CoordinateIndex + i];
 }
 
 const Real& CNodeODE1::GetCurrentCoordinate_t(Index i) const
 {
-	CHECKandTHROW(i < GetNumberOfODE1Coordinates(), "ERROR: CNodeODE1::GetCurrentCoordinate_t: index out of range");
+	//CHECKandTHROW(i < GetNumberOfODE1Coordinates(), "ERROR: CNodeODE1::GetCurrentCoordinate_t: index out of range");
 	return computationalData->currentState.ODE1Coords_t[globalODE1CoordinateIndex + i];
 }
 
@@ -199,7 +176,7 @@ LinkedDataVector CNodeODE1::GetVisualizationCoordinateVector_t() const
 
 const Real& CNodeAE::GetCurrentCoordinate(Index i) const
 {
-	CHECKandTHROW(i < GetNumberOfAECoordinates(), "ERROR: CNodeAE::GetCurrentCoordinate: index out of range");
+	//CHECKandTHROW(i < GetNumberOfAECoordinates(), "ERROR: CNodeAE::GetCurrentCoordinate: index out of range");
 	return computationalData->currentState.AECoords[globalAEcoordinateIndex + i];
 }
 

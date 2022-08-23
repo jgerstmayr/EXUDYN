@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-04  11:58:23 (last modified)
+* @date         2022-08-22  23:16:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,12 +106,15 @@ protected: // AUTO:
     CObjectKinematicTreeParameters parameters; //! AUTO: contains all parameters for CObjectKinematicTree
     mutable ResizableVector tempVector;           //!< AUTO: temporary vector during computation of mass and ODE2LHS
     mutable ResizableVector tempVector2;          //!< AUTO: second temporary vector during computation of mass and ODE2LHS
-    mutable Transformations66List jointTransformationsTemp;//!< AUTO: temporary list containing transformations (Pluecker transforms) per joint
-    mutable Transformations66List linkInertiasT66;//!< AUTO: temporary list link inertias as Pluecker transforms per link
+    mutable Transformation66List jointTransformationsTemp;//!< AUTO: temporary list containing transformations (Pluecker transforms) per joint
+    mutable Vector6DList jointVelocitiesTemp;     //!< AUTO: temporary list containing 6D velocities per joint
+    mutable Vector6DList jointAccelerationsTemp;  //!< AUTO: temporary list containing 6D accelerations per joint
+    mutable Transformation66List jointTransformationsTempVis;//!< AUTO: temporary list containing transformations (Pluecker transforms) per joint; for visualization!
+    mutable Vector6DList jointVelocitiesTempVis;  //!< AUTO: temporary list containing 6D velocities per joint; for visualization!
+    mutable Vector6DList jointAccelerationsTempVis;//!< AUTO: temporary list containing 6D accelerations per joint; for visualization!
+    mutable InertiaList linkInertias;             //!< AUTO: temporary list link inertias as Pluecker transforms per link
     mutable Vector6DList motionSubspaces;         //!< AUTO: temporary list containing 6D motion subspaces per joint
-    mutable Transformations66List jointTempT66;   //!< AUTO: temporary list containing 66 transformations per joint
-    mutable Vector6DList jointVelocities;         //!< AUTO: temporary list containing 6D velocities per joint
-    mutable Vector6DList jointAccelerations;      //!< AUTO: temporary list containing 6D accelerations per joint
+    mutable Transformation66List jointTempT66;    //!< AUTO: temporary list containing 66 transformations per joint
     mutable Vector6DList jointForces;             //!< AUTO: temporary list containing 6D torques/forces per joint/link
 
 public: // AUTO: 
@@ -121,12 +124,15 @@ public: // AUTO:
     {
         tempVector = ResizableVector();
         tempVector2 = ResizableVector();
-        jointTransformationsTemp = Transformations66List();
-        linkInertiasT66 = Transformations66List();
+        jointTransformationsTemp = Transformation66List();
+        jointVelocitiesTemp = Vector6DList();
+        jointAccelerationsTemp = Vector6DList();
+        jointTransformationsTempVis = Transformation66List();
+        jointVelocitiesTempVis = Vector6DList();
+        jointAccelerationsTempVis = Vector6DList();
+        linkInertias = InertiaList();
         motionSubspaces = Vector6DList();
-        jointTempT66 = Transformations66List();
-        jointVelocities = Vector6DList();
-        jointAccelerations = Vector6DList();
+        jointTempT66 = Transformation66List();
         jointForces = Vector6DList();
     };
 
@@ -151,18 +157,53 @@ public: // AUTO:
     ResizableVector& GetTempVector2() { return tempVector2; }
 
     //! AUTO:  Write (Reference) access to:\f$\Xm \in \Rcal^{n \times (6 \times 6)}\f$temporary list containing transformations (Pluecker transforms) per joint
-    void SetJointTransformationsTemp(const Transformations66List& value) { jointTransformationsTemp = value; }
+    void SetJointTransformationsTemp(const Transformation66List& value) { jointTransformationsTemp = value; }
     //! AUTO:  Read (Reference) access to:\f$\Xm \in \Rcal^{n \times (6 \times 6)}\f$temporary list containing transformations (Pluecker transforms) per joint
-    const Transformations66List& GetJointTransformationsTemp() const { return jointTransformationsTemp; }
+    const Transformation66List& GetJointTransformationsTemp() const { return jointTransformationsTemp; }
     //! AUTO:  Read (Reference) access to:\f$\Xm \in \Rcal^{n \times (6 \times 6)}\f$temporary list containing transformations (Pluecker transforms) per joint
-    Transformations66List& GetJointTransformationsTemp() { return jointTransformationsTemp; }
+    Transformation66List& GetJointTransformationsTemp() { return jointTransformationsTemp; }
+
+    //! AUTO:  Write (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint
+    void SetJointVelocitiesTemp(const Vector6DList& value) { jointVelocitiesTemp = value; }
+    //! AUTO:  Read (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint
+    const Vector6DList& GetJointVelocitiesTemp() const { return jointVelocitiesTemp; }
+    //! AUTO:  Read (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint
+    Vector6DList& GetJointVelocitiesTemp() { return jointVelocitiesTemp; }
+
+    //! AUTO:  Write (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint
+    void SetJointAccelerationsTemp(const Vector6DList& value) { jointAccelerationsTemp = value; }
+    //! AUTO:  Read (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint
+    const Vector6DList& GetJointAccelerationsTemp() const { return jointAccelerationsTemp; }
+    //! AUTO:  Read (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint
+    Vector6DList& GetJointAccelerationsTemp() { return jointAccelerationsTemp; }
+
+    //! AUTO:  Write (Reference) access to:\f$\Xm \in \Rcal^{n \times (6 \times 6)}\f$temporary list containing transformations (Pluecker transforms) per joint; for visualization!
+    void SetJointTransformationsTempVis(const Transformation66List& value) { jointTransformationsTempVis = value; }
+    //! AUTO:  Read (Reference) access to:\f$\Xm \in \Rcal^{n \times (6 \times 6)}\f$temporary list containing transformations (Pluecker transforms) per joint; for visualization!
+    const Transformation66List& GetJointTransformationsTempVis() const { return jointTransformationsTempVis; }
+    //! AUTO:  Read (Reference) access to:\f$\Xm \in \Rcal^{n \times (6 \times 6)}\f$temporary list containing transformations (Pluecker transforms) per joint; for visualization!
+    Transformation66List& GetJointTransformationsTempVis() { return jointTransformationsTempVis; }
+
+    //! AUTO:  Write (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint; for visualization!
+    void SetJointVelocitiesTempVis(const Vector6DList& value) { jointVelocitiesTempVis = value; }
+    //! AUTO:  Read (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint; for visualization!
+    const Vector6DList& GetJointVelocitiesTempVis() const { return jointVelocitiesTempVis; }
+    //! AUTO:  Read (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint; for visualization!
+    Vector6DList& GetJointVelocitiesTempVis() { return jointVelocitiesTempVis; }
+
+    //! AUTO:  Write (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint; for visualization!
+    void SetJointAccelerationsTempVis(const Vector6DList& value) { jointAccelerationsTempVis = value; }
+    //! AUTO:  Read (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint; for visualization!
+    const Vector6DList& GetJointAccelerationsTempVis() const { return jointAccelerationsTempVis; }
+    //! AUTO:  Read (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint; for visualization!
+    Vector6DList& GetJointAccelerationsTempVis() { return jointAccelerationsTempVis; }
 
     //! AUTO:  Write (Reference) access to:\f$\Jm_{66} \in \Rcal^{n \times (6 \times 6)}\f$temporary list link inertias as Pluecker transforms per link
-    void SetLinkInertiasT66(const Transformations66List& value) { linkInertiasT66 = value; }
+    void SetLinkInertias(const InertiaList& value) { linkInertias = value; }
     //! AUTO:  Read (Reference) access to:\f$\Jm_{66} \in \Rcal^{n \times (6 \times 6)}\f$temporary list link inertias as Pluecker transforms per link
-    const Transformations66List& GetLinkInertiasT66() const { return linkInertiasT66; }
+    const InertiaList& GetLinkInertias() const { return linkInertias; }
     //! AUTO:  Read (Reference) access to:\f$\Jm_{66} \in \Rcal^{n \times (6 \times 6)}\f$temporary list link inertias as Pluecker transforms per link
-    Transformations66List& GetLinkInertiasT66() { return linkInertiasT66; }
+    InertiaList& GetLinkInertias() { return linkInertias; }
 
     //! AUTO:  Write (Reference) access to:\f$\Mm\Sm \in \Rcal^{n \times 6}\f$temporary list containing 6D motion subspaces per joint
     void SetMotionSubspaces(const Vector6DList& value) { motionSubspaces = value; }
@@ -172,25 +213,11 @@ public: // AUTO:
     Vector6DList& GetMotionSubspaces() { return motionSubspaces; }
 
     //! AUTO:  Write (Reference) access to:\f$\Xm_j \in \Rcal^{n \times 6}\f$temporary list containing 66 transformations per joint
-    void SetJointTempT66(const Transformations66List& value) { jointTempT66 = value; }
+    void SetJointTempT66(const Transformation66List& value) { jointTempT66 = value; }
     //! AUTO:  Read (Reference) access to:\f$\Xm_j \in \Rcal^{n \times 6}\f$temporary list containing 66 transformations per joint
-    const Transformations66List& GetJointTempT66() const { return jointTempT66; }
+    const Transformation66List& GetJointTempT66() const { return jointTempT66; }
     //! AUTO:  Read (Reference) access to:\f$\Xm_j \in \Rcal^{n \times 6}\f$temporary list containing 66 transformations per joint
-    Transformations66List& GetJointTempT66() { return jointTempT66; }
-
-    //! AUTO:  Write (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint
-    void SetJointVelocities(const Vector6DList& value) { jointVelocities = value; }
-    //! AUTO:  Read (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint
-    const Vector6DList& GetJointVelocities() const { return jointVelocities; }
-    //! AUTO:  Read (Reference) access to:\f$\Vm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D velocities per joint
-    Vector6DList& GetJointVelocities() { return jointVelocities; }
-
-    //! AUTO:  Write (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint
-    void SetJointAccelerations(const Vector6DList& value) { jointAccelerations = value; }
-    //! AUTO:  Read (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint
-    const Vector6DList& GetJointAccelerations() const { return jointAccelerations; }
-    //! AUTO:  Read (Reference) access to:\f$\Am_j \in \Rcal^{n \times 6}\f$temporary list containing 6D accelerations per joint
-    Vector6DList& GetJointAccelerations() { return jointAccelerations; }
+    Transformation66List& GetJointTempT66() { return jointTempT66; }
 
     //! AUTO:  Write (Reference) access to:\f$\Fm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D torques/forces per joint/link
     void SetJointForces(const Vector6DList& value) { jointForces = value; }
@@ -308,13 +335,13 @@ public: // AUTO:
     void JointTransformMotionSubspace66(Joint::Type jointType, Real q, Transformation66& T, Vector6D& MS) const;
 
     //! AUTO:  compute list of Pluecker transformations Xup, 6D velocities and 6D acceleration terms (not joint accelerations) per joint
-    void ComputeTreeTransformations(ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, Transformations66List& Xup, Vector6DList& V, Vector6DList& A) const;
+    void ComputeTreeTransformations(ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, Transformation66List& Xup, Vector6DList& V, Vector6DList& A) const;
 
     //! AUTO:  compute mass matrix if computeMass = true and compute ODE2LHS vector if computeMass=false
     void ComputeMassMatrixAndODE2LHS(EXUmath::MatrixContainer* massMatrixC, const ArrayIndex* ltg, Vector* ode2Lhs, Index objectNumber, bool computeMass) const;
 
     //! AUTO:  function which adds 3D torques/forces per joint to Fvp
-    void AddExternalForces6D(const Transformations66List& Xup, Vector6DList& Fvp) const;
+    void AddExternalForces6D(const Transformation66List& Xup, Vector6DList& Fvp) const;
 
     //! AUTO:  return true, if object has reference frame; return according LOCAL node number
     virtual bool HasReferenceFrame(Index& localReferenceFrameNode) const override
@@ -347,7 +374,7 @@ public: // AUTO:
     void ComputeRigidBodyMarkerDataKT(const Vector3D& localPosition, Index linkNumber, bool computeJacobian, MarkerData& markerData) const;
 
     //! AUTO:  compute rot+pos jacobian of (global) position at linkNumber, using pre-computed joint transformations
-    void ComputeJacobian(Index linkNumber, const Vector3D& position, const Transformations66List& jointTransformations, ResizableMatrix& positionJacobian, ResizableMatrix& rotationJacobian) const;
+    void ComputeJacobian(Index linkNumber, const Vector3D& position, const Transformation66List& jointTransformations, ResizableMatrix& positionJacobian, ResizableMatrix& rotationJacobian) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

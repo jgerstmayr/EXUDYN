@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-16  11:24:37 (last modified)
+* @date         2022-07-21  19:36:24 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -124,9 +124,9 @@ public: // AUTO:
         auto d = py::dict();
         d["markerType"] = (std::string)GetTypeName();
         d["bodyNumber"] = (ObjectIndex)cMarkerSuperElementRigid->GetParameters().bodyNumber; //! AUTO: cast variables into python (not needed for standard types) 
-        d["offset"] = (std::vector<Real>)cMarkerSuperElementRigid->GetParameters().offset; //! AUTO: cast variables into python (not needed for standard types) 
+        d["offset"] = EPyUtils::SlimVector2NumPy(cMarkerSuperElementRigid->GetParameters().offset); //! AUTO: cast variables into python (not needed for standard types) 
         d["meshNodeNumbers"] = (std::vector<Index>)cMarkerSuperElementRigid->GetParameters().meshNodeNumbers; //! AUTO: cast variables into python (not needed for standard types) 
-        d["weightingFactors"] = (std::vector<Real>)cMarkerSuperElementRigid->GetParameters().weightingFactors; //! AUTO: cast variables into python (not needed for standard types) 
+        d["weightingFactors"] = EPyUtils::Vector2NumPy(cMarkerSuperElementRigid->GetParameters().weightingFactors); //! AUTO: cast variables into python (not needed for standard types) 
         d["useAlternativeApproach"] = (bool)cMarkerSuperElementRigid->GetParameters().useAlternativeApproach; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationMarkerSuperElementRigid->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -139,9 +139,9 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("bodyNumber") == 0) { return py::cast((ObjectIndex)cMarkerSuperElementRigid->GetParameters().bodyNumber);} //! AUTO: get parameter
-        else if (parameterName.compare("offset") == 0) { return py::cast((std::vector<Real>)cMarkerSuperElementRigid->GetParameters().offset);} //! AUTO: get parameter
+        else if (parameterName.compare("offset") == 0) { return EPyUtils::SlimVector2NumPy(cMarkerSuperElementRigid->GetParameters().offset);} //! AUTO: get parameter
         else if (parameterName.compare("meshNodeNumbers") == 0) { return py::cast((std::vector<Index>)cMarkerSuperElementRigid->GetParameters().meshNodeNumbers);} //! AUTO: get parameter
-        else if (parameterName.compare("weightingFactors") == 0) { return py::cast((std::vector<Real>)cMarkerSuperElementRigid->GetParameters().weightingFactors);} //! AUTO: get parameter
+        else if (parameterName.compare("weightingFactors") == 0) { return EPyUtils::Vector2NumPy(cMarkerSuperElementRigid->GetParameters().weightingFactors);} //! AUTO: get parameter
         else if (parameterName.compare("useAlternativeApproach") == 0) { return py::cast((bool)cMarkerSuperElementRigid->GetParameters().useAlternativeApproach);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationMarkerSuperElementRigid->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VshowMarkerNodes") == 0) { return py::cast((bool)visualizationMarkerSuperElementRigid->GetShowMarkerNodes());} //! AUTO: get parameter

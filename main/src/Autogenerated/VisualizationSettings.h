@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -185,7 +185,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -277,7 +277,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -368,7 +368,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -387,6 +387,7 @@ class VSettingsBeams // AUTO:
 {
 public: // AUTO: 
   Index axialTiling;                              //!< AUTO: number of segments to discretise the beams axis
+  bool crossSectionFilled;                        //!< AUTO: if implemented for element, cross section is drawn as solid (filled) instead of wire-frame; NOTE: some quantities may not be interpolated correctly over cross section in visualization
   Index crossSectionTiling;                       //!< AUTO: number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing
   bool drawVertical;                              //!< AUTO: draw contour plot outputVariables 'vertical' along beam height; contour.outputVariable must be set accordingly
   Float4 drawVerticalColor;                       //!< AUTO: color for outputVariable to be drawn along cross section (vertically)
@@ -402,6 +403,7 @@ public: // AUTO:
   VSettingsBeams()
   {
     axialTiling = 8;
+    crossSectionFilled = true;
     crossSectionTiling = 4;
     drawVertical = false;
     drawVerticalColor = Float4({0.2f,0.2f,0.2f,1.f});
@@ -433,6 +435,7 @@ public: // AUTO:
   {
     os << "VSettingsBeams" << ":\n";
     os << "  axialTiling = " << axialTiling << "\n";
+    os << "  crossSectionFilled = " << crossSectionFilled << "\n";
     os << "  crossSectionTiling = " << crossSectionTiling << "\n";
     os << "  drawVertical = " << drawVertical << "\n";
     os << "  drawVerticalColor = " << drawVerticalColor << "\n";
@@ -459,7 +462,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -520,7 +523,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -598,7 +601,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -687,7 +690,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -756,7 +759,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -834,7 +837,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -903,7 +906,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -989,7 +992,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1076,7 +1079,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1337,7 +1340,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1356,6 +1359,7 @@ class VSettingsExportImages // AUTO:
 {
 public: // AUTO: 
   Index heightAlignment;                          //!< AUTO: alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)
+  bool saveImageAsTextCircles;                    //!< AUTO: export circles in save image (only in TXT format)
   bool saveImageAsTextLines;                      //!< AUTO: export lines in save image (only in TXT format)
   bool saveImageAsTextTexts;                      //!< AUTO: export text in save image (only in TXT format)
   bool saveImageAsTextTriangles;                  //!< AUTO: export triangles in save image (only in TXT format)
@@ -1372,6 +1376,7 @@ public: // AUTO:
   VSettingsExportImages()
   {
     heightAlignment = 2;
+    saveImageAsTextCircles = true;
     saveImageAsTextLines = true;
     saveImageAsTextTexts = false;
     saveImageAsTextTriangles = false;
@@ -1409,6 +1414,7 @@ public: // AUTO:
   {
     os << "VSettingsExportImages" << ":\n";
     os << "  heightAlignment = " << heightAlignment << "\n";
+    os << "  saveImageAsTextCircles = " << saveImageAsTextCircles << "\n";
     os << "  saveImageAsTextLines = " << saveImageAsTextLines << "\n";
     os << "  saveImageAsTextTexts = " << saveImageAsTextTexts << "\n";
     os << "  saveImageAsTextTriangles = " << saveImageAsTextTriangles << "\n";
@@ -1436,7 +1442,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1548,7 +1554,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-07-19 (last modfied)
+* @date         AUTO: 2022-08-23 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

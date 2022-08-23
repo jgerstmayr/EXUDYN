@@ -2,8 +2,8 @@
 Exudyn
 ======
 
-+  Exudyn version = 1.3.59 (Davis)
-+  build date and time=2022-07-20  14:44
++  Exudyn version = 1.3.84.dev1 (Davis)
++  build date and time=2022-08-23  17:28
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn 1.3 is out! It includes a redundant coordinate (constraint) as well as a minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support and multi-threading; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
@@ -476,16 +476,17 @@ After the first development phase (2019-2021), it
 +  allows to add user defined objects and solvers in C++,
 +  allows to add user defined objects and solvers in Python.
 
-Future goals are:
+Future goals (2022-2024) are:
 
-+  add more multi-threaded parallel computing techniques (first parts implemented, improvements planned during 2022),
++  add more multi-threaded parallel computing techniques (DONE, Q2 2022),
 +  add vectorization,
 +  add specific and advanced connectors/constraints (extended wheels, contact, control connector)
-+  kinematical trees (with minimum coordinates),
-+  automatic step size selection for second order solvers,
-+  deeper integration of Lie groups,
-+  more interfaces for robotics,
-+  add 3D beams.
++  kinematical trees with minimum coordinates (DONE, Q1 2022),
++  automatic step size selection for second order solvers (planned, 2023),
++  deeper integration of Lie groups (Q3 2022),
++  more interfaces for robotics (DONE, Q1 2022),
++  add 3D beams (first attempts exist; planned, Q1 2023),
++  export equations (planned, 2024)
 
 For solved issues (and new features), see section 'Issues and Bugs', theDoc.pdf.
 For specific open issues, see \ ``trackerlog.html``\  -- a document only intended for developers!
@@ -497,7 +498,7 @@ Run a simple example in Python
 After performing the steps of the previous section, this section shows a simplistic model which helps you to check if Exudyn runs on your computer.
 
 In order to start, run the Python interpreter Spyder (or any preferred Python environment).
-For the following example, 
+In order to test the following example, which creates a mbs, adds a node, an object, a marker and a load and simulates everything with default values, 
 
 
 +  open \ ``myFirstExample.py``\  from your \ ``Examples``\  folder.
@@ -854,17 +855,20 @@ This section will show:
 
 For an introduction to the solvers, see theDoc.pdf.
 
+
+
 Overview of modules
 ===================
 
-Currently, the module structure is simple:
+Currently, the Exudyn module structure is split into a C++ core part and a set of Python parts,
+see Figs. [theDoc.pdf].
 
 +  \ **C++ parts**\ , see Figs. [theDoc.pdf] and [theDoc.pdf]:
   
  -  \ ``exudyn``\ :
     on this level, there are just very few functions: \ ``SystemContainer()``\ , \ ``StartRenderer()``\ , \ ``StopRenderer()``\ , \ ``GetVersionString()``\ , \ ``SolveStatic(...)``\ , \ ``SolveDynamic(...)``\ , ... as well as system and user variable dictionaries \ ``exudyn.variables``\  and \ ``exudyn.sys``\ 
  -  \ ``SystemContainer``\ : contains the systems (most important), solvers (static, dynamics, ...), visualization settings
- -  \ ``mbs``\ : system created with \ ``mbs = SC.AddSystem()``\ , this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
+ -  \ ``mbs``\ : fmbs created with \ ``mbs = SC.AddSystem()``\ , this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
     loads can added to the system, see theDoc.pdf;
  -  \ ``mbs.systemData``\ : contains the initial, current, visualization, ... states of the system and holds the items, see [figure in theDoc.pdf]
   
@@ -1441,7 +1445,7 @@ import exudyn as exu
 However, there are many \ **ways to speed up Exudyn in general**\ :
 
 +  for models with more than 50 coordinates, switching to sparse solvers might greatly improve speed: \ ``simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse``\ 
-+  try to avoid Python function or try to speed up Python functions
++  try to avoid Python functions or try to speed up Python functions
 +  instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in \ ``mbs.SetPreStepUserFunction(...)``\ 
 +  user functions can be speed up using the Python numba package, using \ ``@jit``\  in front of functions (for more options, see `https://numba.pydata.org/numba-doc/dev/user/index.html <https://numba.pydata.org/numba-doc/dev/user/index.html>`_); Example given in \ ``Examples/springDamperUserFunctionNumbaJIT.py``\  showing speedups of factor 4; more complicated Python functions may see speedups of 10 - 50
 +  for \ **discontinuous problems**\ , try to adjust solver parameters; especially the discontinuous.iterationTolerance which may be too tight and cause many iterations; iterations may be limited by discontinuous.maxIterations, which at larger values solely multiplies the computation time with a factor if all iterations are performed
@@ -1635,6 +1639,7 @@ In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer(
 +  ODE1: marks parts related to first order differential equations (ES, EvalF in HOTINT)
 +  AE; note: using the term 'AEcoordinates' for 'algebraicEquationsCoordinates'
 +  'C[...]' ... Computational, e.g. for ComputationalNode ==> use 'CNode'
++  mbs
 +  min, max
 +  abs, rel
 +  trig 
@@ -1645,6 +1650,7 @@ In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer(
 +  Rxyz%: consecutive rotations around x, y and z-axis (Tait-Bryan rotations);
 +  coeffs
 +  pos
++  T66; based on 6\times 6 matrix transformations
 +  write time derivatives with underscore: _t, _tt; example: Position_t, Position_tt, ...
 +  write space-wise derivatives ith underscore: _x, _xx, _y, ...
 +  if a scalar, write coordinate derivative with underscore: _q, _v (derivative w.r.t. velocity coordinates)

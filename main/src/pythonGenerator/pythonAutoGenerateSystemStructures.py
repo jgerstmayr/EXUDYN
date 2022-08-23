@@ -9,6 +9,7 @@ currently: automatic generate structures with ostream and initialization
 """
 import datetime # for current date
 from autoGenerateHelper import RemoveSpacesTabs, CountLines, TypeConversion, GenerateHeader, SplitString, Str2Latex, Str2Doxygen, GetDateStr
+import copy
 
 sortStructures = True
 
@@ -305,8 +306,20 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     sDictSet += '  void SetDictionary(' + parseInfo['class'] + '& data, const py::dict& d) {\n'
 
     #************************************
-    #access functions:
-    for parameter in parameterListSorted:
+    #access functions and dictionaries for visualization dialog ...:
+    
+    #create second list, which causes contour to show up as first option
+    parameterListSorted2 = copy.deepcopy(parameterListSorted)
+    if len(parameterListSorted2) >= 4:
+        if (parameterListSorted2[0]['pythonName'] == 'bodies' and
+            parameterListSorted2[3]['pythonName'] == 'contour'):
+            print('resort parameter list!')
+            parameterListSorted2[0] = copy.deepcopy(parameterListSorted[3])
+            parameterListSorted2[1] = copy.deepcopy(parameterListSorted[0])
+            parameterListSorted2[2] = copy.deepcopy(parameterListSorted[1])
+            parameterListSorted2[3] = copy.deepcopy(parameterListSorted[2])
+        
+    for parameter in parameterListSorted2:
         if (parameter['lineType'].find('V') != -1): #only if it is a member variable
             origType = parameter['type']
             typeStr = TypeConversion(parameter['type'], typeConversion)

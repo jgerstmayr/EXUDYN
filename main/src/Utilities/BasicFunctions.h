@@ -129,7 +129,6 @@ namespace EXUstd {
 		return fact1 * value1 + fact2 * value2;
 	}
 
-
      //@brief Sorts an array x(1..x.Length()) into ascending numerical order by Shell’s method (diminishing increment sort).
      //! 'array' is replaced on output by its sorted rearrangement. 
      //! needed member functions of array: operator[], Index NumberOfItems()

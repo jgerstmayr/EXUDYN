@@ -182,6 +182,7 @@ cppFiles = [
                  'src/Objects/CNodePointGround.cpp',
                  'src/Objects/CNodeRigidBody2D.cpp',
                  'src/Objects/CNodeRigidBodyEP.cpp',
+                 'src/Objects/CNodeRigidBodyRotVecDataLG.cpp',
                  'src/Objects/CNodeRigidBodyRotVecLG.cpp',
                  'src/Objects/CNodeRigidBodyRxyz.cpp',
                  'src/Objects/CObjectALEANCFCable2D.cpp',

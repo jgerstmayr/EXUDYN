@@ -46,8 +46,8 @@ try: #puts example in safe environment
     exu.SolveDynamic(mbs, sims, solverType=exu.DynamicSolverType.RK67)
 
     #check result at default integration time
-    #expect y=x after one period of orbiting (got: 100000.00000000485)
-    exudynTestGlobals.testResult = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)[1]
+    #expect y=x after one period of orbiting (got: 100000.00000000479)
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)[1]/100000
 
 except BaseException as e:
     exu.Print("An error occured in test example for ObjectConnectorGravity:", e)

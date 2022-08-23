@@ -599,5 +599,20 @@ namespace EXUstd {
 };
 
 
+namespace EXUstd {
+	//! template function to find item with maximum value
+	template <class T>
+	T MaximumItem(const ResizableArray<T>& array)
+	{
+		T maxNumber = std::numeric_limits<T>::lowest();
+		for (T item : array)
+		{
+			maxNumber = std::max(maxNumber, item);
+		}
+		return maxNumber;
+	}
+};
+
+
 
 #endif
