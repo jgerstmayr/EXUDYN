@@ -519,10 +519,13 @@ void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTre
 		}
 		if (verboseMode >= 1) { pout << "auto computed searchTree box=" << searchTreeBox << "\n"; }
 	}
+	if (verboseMode >= 2) { pout << "FinalizeContact: reset searchtree\n"; }
 	searchTree.ResetSearchTree(settings.searchTreeSizeInit[0], settings.searchTreeSizeInit[1], settings.searchTreeSizeInit[2], searchTreeBox);
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	Real recommendedStepSize = 1; //not used
+	//if (verboseMode >= 2) { pout << "FinalizeContact: call PostNewtonStep\n"; }
 	PostNewtonStep(cSystem, tempArray, recommendedStepSize);
+	//if (verboseMode >= 2) { pout << "FinalizeContact: finish\n"; }
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -760,6 +763,7 @@ void GeneralContact::ComputeContact(const CSystem& cSystem, TemporaryComputation
 {
 	Index nThreads = exuThreading::TaskManager::GetNumThreads();
 	SetNumberOfThreads(nThreads);
+	if (verboseMode >= 2) { pout << "ComputeContact: start\n"; }
 
 	//not needed if CCode2rhsFromActiveSets:
 	if (opMode & (CCode2rhsFull + CCactiveSets))
@@ -774,6 +778,7 @@ void GeneralContact::ComputeContact(const CSystem& cSystem, TemporaryComputation
 	//only in case of ODE2rhs computation:
 	if (opMode & (CCode2rhsFull + CCode2rhsFromActiveSets))
 	{
+		//if (verboseMode >= 2) { pout << "ComputeContact: initialize sparse vectors\n"; }
 		for (Index i = 0; i < nThreads; i++)
 		{
 			tempArray[i].sparseVector.SetAllZero();
@@ -790,16 +795,20 @@ void GeneralContact::ComputeContact(const CSystem& cSystem, TemporaryComputation
 	//**ICI individual contact implementation
 	if (settings.sphereSphereContact)
 	{
+		if (verboseMode >= 2) { pout << "ComputeContact: ComputeContactMarkerBasedSpheres\n"; }
 		ComputeContactMarkerBasedSpheres<opMode>(tempArray, nThreads);
 	}
 	if (ancfCable2D.NumberOfItems())
 	{
+		if (verboseMode >= 2) { pout << "ComputeContact: ComputeContactANCFCable2D\n"; }
 		ComputeContactANCFCable2D<opMode>(cSystem, tempArray, nThreads);
 	}
+	if (verboseMode >= 2) { pout << "ComputeContact: ComputeContactTrigsRigidBodyBased\n"; }
 	ComputeContactTrigsRigidBodyBased<opMode>(tempArray, nThreads);
 
 	if (opMode & (CCode2rhsFull + CCode2rhsFromActiveSets))
 	{
+		if (verboseMode >= 2) { pout << "ComputeContact: systemODE2Rhs\n"; }
 		//serial section for writing into system vector
 		for (Index i = 0; i < nThreads; i++)
 		{
@@ -2306,19 +2315,20 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 //! recommended step size \f$h_{recom}\f$ after PostNewton(...): \f$h_{recom} < 0\f$: no recommendation, \f$h_{recom}==0\f$: use minimum step size, \f$h_{recom}>0\f$: use specific step size, if no smaller size requested by other reason
 Real GeneralContact::PostNewtonStep(const CSystem& cSystem, TemporaryComputationDataArray& tempArray, Real& recommendedStepSize)
 {
-	if (verboseMode >= 2) pout  << "\n****************\n  Post Newton\nt=" << cSystem.GetSystemData().GetCData().currentState.GetTime() << "\n";
+	if (verboseMode >= 2) { pout << "\n****************\n  Post Newton\nt=" << cSystem.GetSystemData().GetCData().currentState.GetTime() << "\n"; }
+
+	//DELETE:
+	//if (verboseMode >= 2) { pout << "Post Newton: new\n"; }
 
 	if (cSystem.GetSolverData().doPostNewtonIteration)
 	{
-		//pout << "postnewton\n";
 		STARTGLOBALTIMERmain(TScontactPostNewton);
 		Index oldCnt = EXUstd::ArrayOfArraysTotalCount(allActiveContacts);
 		Vector systemODE2Rhs; //dummy, unused
+
 		ComputeContact<CCactiveSets>(cSystem, tempArray, systemODE2Rhs);
 
 		STOPGLOBALTIMERmain(TScontactPostNewton);
-		//Index nDiff = EXUstd::ArrayOfArraysTotalCount(allActiveContacts) - oldCnt;
-		//if (nDiff != 0) { pout << "nDiff=" << nDiff << "\n"; }
 		return fabs(EXUstd::ArrayOfArraysTotalCount(allActiveContacts) - oldCnt); //use change of total size of active sets for now
 	}
 	return 0.;

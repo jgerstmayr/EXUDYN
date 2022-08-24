@@ -42,6 +42,7 @@
 //! Prepare a newly created System of nodes, objects, loads, ... for computation
 void CSystem::Assemble(const MainSystem& mainSystem)
 {
+	globalTimers.Reset(); //timers already used by finalize contact ...
 	for (CObject* object : cSystemData.GetCObjects())
 	{
 		object->PreAssemble();

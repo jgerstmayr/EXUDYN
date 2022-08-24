@@ -48,6 +48,8 @@
 
 class TimerStructure;
 extern TimerStructure globalTimers;
+extern std::vector<Real>* globalTimersCounters;
+extern std::vector<const char*>* globalTimersCounterNames;
 
 //!special timer structure to measure time spent at certain parts of code
 //! put a global variable of this class somewhere to allow micro-timing of functions at any place
@@ -55,69 +57,68 @@ class TimerStructure
 {
 private:
 	//this class has two coupled lists, which do the work
-	std::vector<Real> counters;
-	std::vector<const char*> counterNames;
+	//std::vector<Real> counters;
+	//std::vector<const char*> counterNames;
 	Real offsetSecondsPerCall;
 public:
+	//! default constructor; DO NOT call Initialize, as TimerStructure may be initialized LATER than first timer is registered!
 	TimerStructure() { offsetSecondsPerCall = 0; };
 
 	//! initialize structure with given (measured offset per call, to obtain more accurate measurements)
+	//  DO NOT call Initialize, as TimerStructure may be initialized LATER than first timer is registered!
 	TimerStructure(Real offsetSecondsPerCallInit) { offsetSecondsPerCall = offsetSecondsPerCallInit; };
 	
+	//! initialize timers at first call to RegisterTimer, whatever library is doing that (unordered! depends on compiler / Windows/Linux/...)
+	void Initialize();
+
 	//! create a new timer; name must be a static name (must exist until end of timer) or dynamically allocated string, may not be deleted
-	Index AddTimer(const char* name)
-	{
-		Index n = (Index)counters.size();
-		counters.push_back(0.);
-		counterNames.push_back(name);
-		return n;
-	}
+	Index RegisterTimer(const char* name);
 
 	//!get current value of a timer
-	Real GetTiming(Index counterIndex) const { return counters[counterIndex]; }
+	Real GetTiming(Index counterIndex) const { return (*globalTimersCounters)[counterIndex]; }
 
 	//!get current value of a timer
-	const char* GetTimerName(Index counterIndex) const { return counterNames[counterIndex]; }
+	const char* GetTimerName(Index counterIndex) const { return (*globalTimersCounterNames)[counterIndex]; }
 
 	//!get current value of a timer
-	Index NumberOfTimers() const { return (Index)counters.size(); }
+	Index NumberOfTimers() const { return (Index)globalTimersCounters->size(); }
 
 	//!reset timers( e.g. before starting simulation):
 	void Reset()
 	{
-		for (auto& item : counters) { item = 0; }
+		for (auto& item : (*globalTimersCounters)) { item = 0; }
 	}
 
 	//! set counter to specific value
-	void SetCounter(Index counterIndex, Real value) { counters[counterIndex] = value; }
+	void SetCounter(Index counterIndex, Real value) { (*globalTimersCounters)[counterIndex] = value; }
 
 	//! get counter value
-	Real GetCounter(Index counterIndex) { return counters[counterIndex]; }
+	Real GetCounter(Index counterIndex) { return (*globalTimersCounters)[counterIndex]; }
 
 	//! start measurement
 	void StartTimer(Index counterIndex)
 	{
-		counters[counterIndex] -= EXUstd::GetTimeInSeconds();
+		(*globalTimersCounters)[counterIndex] -= EXUstd::GetTimeInSeconds();
 	}
 
 	//! stop measurement
 	void StopTimer(Index counterIndex)
 	{
-		counters[counterIndex] += EXUstd::GetTimeInSeconds() - offsetSecondsPerCall;
+		(*globalTimersCounters)[counterIndex] += EXUstd::GetTimeInSeconds() - offsetSecondsPerCall;
 	}
 
 	//! print current timers into string
 	STDstring ToString() const 
 	{
-		if (!counters.size()) { return ""; }
+		if (!globalTimersCounters->size()) { return ""; }
 
 		std::ostringstream ostr;
 		ostr.precision(5); //reduced precision for nicer output...
-		for (Index i = 0; i < (Index)counters.size(); i++)
+		for (Index i = 0; i < (Index)globalTimersCounters->size(); i++)
 		{
-			if (counters[i] != 0.) //exclude timers that are exactly zero:
+			if ((*globalTimersCounters)[i] != 0.) //exclude timers that are exactly zero:
 			{
-				ostr << "  " << counterNames[i] << " = " << counters[i] << "s\n";
+				ostr << "  " << (*globalTimersCounterNames)[i] << " = " << (*globalTimersCounters)[i] << "s\n";
 			}
 		}
 		return ostr.str();
@@ -136,7 +137,7 @@ public:
 	#else
 		if (addAlways)
 		{
-			timerNumber = globalTimerStructure.AddTimer(timerName);
+			timerNumber = globalTimerStructure.RegisterTimer(timerName);
 		}
 	#endif
 	}

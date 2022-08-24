@@ -13,6 +13,7 @@
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import sys, platform
+import multiprocessing #for determining if on laptop or workstation
 
 if sys.version_info.major != 3 or sys.version_info.minor < 6:# or sys.version_info.minor > 9:
     raise ImportError("EXUDYN only supports python versions >= 3.6")
@@ -95,8 +96,9 @@ elif not isWindows: #add linux, to distinguish linux tests from windows tests!
     platformString += sys.platform
 
 subFolder = ''
-if platform.processor() == 'Intel64 Family 6 Model 142 Stepping 10, GenuineIntel':
-    subFolder = 'SurfaceBook2/'
+#only works on Windows: if platform.processor() == 'Intel64 Family 6 Model 142 Stepping 10, GenuineIntel':
+if multiprocessing.cpu_count() == 8:
+    subFolder = 'SurfaceBook2/' #this is for internal use only!
     
 logFileName = '../PerformanceLogs/'+subFolder+'performanceLog_V'+exu.GetVersionString()+'_'+platformString+'.txt'
 exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=False) #write all testSuite logs to files

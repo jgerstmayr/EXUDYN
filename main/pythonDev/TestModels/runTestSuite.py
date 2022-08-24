@@ -119,7 +119,7 @@ exu.Print('EXUDYN build date   = '+exuDateStr)
 exu.Print('platform            = '+platform.architecture()[0])
 exu.Print('system              = '+sys.platform)
 exu.Print('python version      = '+str(sys.version_info.major)+'.'+str(sys.version_info.minor)+'.'+str(sys.version_info.micro))
-exu.Print('test tolerance      = ',testTolerance)
+exu.Print('test tolerance      =',testTolerance)
 exu.Print('testsuite date (now)= '+dateStr)
 exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
 exu.SetWriteToConsole(writeToConsole) #stop output from now on

@@ -335,6 +335,11 @@ public:
 			sz = sizez;
 
 			data = new ArrayIndex[TotalSize()]();
+			//DELETE: check if this is needed in Linux?
+			//for (Index i = 0; i < TotalSize(); i++)
+			//{
+			//	data[i].SetDataUnsafe(nullptr, 0, 0);
+			//}
 		}
 	}
 

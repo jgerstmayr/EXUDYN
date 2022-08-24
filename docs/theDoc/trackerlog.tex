@@ -10,15 +10,28 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.3.84.dev1, 
-  \item last change =  2022-08-23, 
-  \item Number of issues = 1239, 
-  \item Number of resolved issues = 1073 (84 in current version), 
+  \item Exudyn version = 1.3.86.dev1, 
+  \item last change =  2022-08-24, 
+  \item Number of issues = 1243, 
+  \item Number of resolved issues = 1075 (86 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.3.86}: {\bf \color{warningRed}  resolved BUG 1239}: {\bf Timer registration}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: self-registration of Timers fails on Linux and may lead to crashes; depends on order of initialization of global variables}
+    \item {\bf notes: changed timer registration to suggested way with scalar variables, guaranteeing initialization}
+    \item   date resolved: {\bf 2022-08-24 15:10},
+date raised: 2022-08-24 
+  \ei
+  \item {\bf Version 1.3.85}: {\bf \color{warningRed}  resolved BUG 1225}: {\bf Linux TestSuite}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: segmentation fault when running ANCFgeneralContactCircle.py}
+    \item   date resolved: {\bf 2022-08-24 09:13},
+date raised: 2022-08-11 
+  \ei
   \item {\bf Version 1.3.84}:  resolved Issue 1238: {\bf visualization dialog}
 (change)
   \begin{itemize}[label=$\bullet$]
@@ -5009,11 +5022,6 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 1225}:  {\bf Linux TestSuite}
-  \begin{itemize}[label=$\bullet$]
-    \item {description: segmentation fault when running ANCFgeneralContactCircle.py}
-    \item date raised: 2022-08-11 
-  \ei
   \item open {\bf BUG 1085}:  {\bf GeneralContact}
   \begin{itemize}[label=$\bullet$]
     \item {description: generalContactFrictionTests.py gives considerably different results after t=0.05 seconds between Windows and linux compiled version; may be caused by some initialization problems (bugs...); needs further tests}

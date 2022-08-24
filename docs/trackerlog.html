@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1239, 
-Number of resolved issues = 1073 (84 in current minor version), 
-Exudyn version = 1.3.84.dev1, 
-last change =  2022-08-23
+Number of issues = 1243, 
+Number of resolved issues = 1075 (86 in current minor version), 
+Exudyn version = 1.3.86.dev1, 
+last change =  2022-08-24
 
 
 <table style = "width:100%">
@@ -39,15 +39,47 @@ last change =  2022-08-23
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>1225</td>
-    <td>Linux TestSuite     </td>
+    <td>1242</td>
+    <td>Beam3D              </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> segmentation fault when running ANCFgeneralContactCircle.py</td>
-    <td>BUG</td>
+    <td> rename ANCFBeam3D to ANCFBeam and GeometricallyExactBeam3D in same way for consistency reasons</td>
+    <td>CHANGE</td>
     <td></td>
-    <td>2022-08-11</td>
-    <td>2022-10-10</td>
+    <td>2022-08-24</td>
+    <td>2022-10-23</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1241</td>
+    <td>Register Items      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> consider mechanism to self-register items: objects, nodes, ...; same a swith TimerStructure registration; this allows to add user-defined objects without touching the overall code</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-08-24</td>
+    <td>2022-10-23</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1240</td>
+    <td>Register unit tests </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> consider mechanism to self-register unit tests; same a swith TimerStructure registration</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-08-24</td>
+    <td>2022-10-23</td>
     <td></td>
     <td></td>
     <td></td>
@@ -2695,6 +2727,22 @@ last change =  2022-08-23
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1239</td>
+    <td>Timer registration  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> self-registration of Timers fails on Linux and may lead to crashes; depends on order of initialization of global variables</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-08-24</td>
+    <td>2022-10-23</td>
+    <td>2022-08-24 15:10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>changed timer registration to suggested way with scalar variables, guaranteeing initialization</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1238</td>
     <td>visualization dialog</td>
     <td>JG</td>
@@ -2897,6 +2945,22 @@ last change =  2022-08-23
     <td>2022-08-12</td>
     <td>2022-10-11</td>
     <td>2022-08-12 19:17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1225</td>
+    <td>Linux TestSuite     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> segmentation fault when running ANCFgeneralContactCircle.py</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-08-11</td>
+    <td>2022-10-10</td>
+    <td>2022-08-24 09:13</td>
     <td>JG</td>
     <td></td>
     <td></td>

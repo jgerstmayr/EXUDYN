@@ -27,10 +27,12 @@ except:
         pass
     exudynTestGlobals = ExudynTestGlobals()
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
+exu.Print('exudyn version=',exu.GetVersionString())
+
+# useGraphics=False
 #background
 rect = [-1,-1.5,3,1.5] #xmin,ymin,xmax,ymax
 background0 = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]} #background
@@ -228,7 +230,7 @@ if useContact:
     frictionMatrix = np.zeros((1,1))
     frictionMatrix[0,0]=int(useFriction)*dryFriction
     gContact.SetFrictionPairings(frictionMatrix)
-
+    #gContact.verboseMode=2
 
 mbs.Assemble()
 

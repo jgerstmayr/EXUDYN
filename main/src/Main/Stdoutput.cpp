@@ -110,9 +110,37 @@ bool CheckPathAndCreateDirectories(const STDstring& pathAndFileName)
 
 
 
-
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //global variable for timers:
+std::vector<Real>* globalTimersCounters = nullptr; //global scalar variables get initialized with zero, put into separate are!
+std::vector<const char*>* globalTimersCounterNames = nullptr;
 TimerStructure globalTimers(4.5e-08); //offset added to correct measurements (i9: 4.521e-08); may lead to negative timings!
+
+//! initialize timers at first call to RegisterTimer, whatever library is doing that (unordered! depends on compiler / Windows/Linux/...)
+void TimerStructure::Initialize()
+{
+	if (globalTimersCounters == nullptr)
+	{
+		globalTimersCounters = new std::vector<Real>();
+	}
+	if (globalTimersCounterNames == nullptr)
+	{
+		globalTimersCounterNames = new std::vector<const char*>();
+	}
+}
+//! create a new timer; name must be a static name (must exist until end of timer) or dynamically allocated string, may not be deleted
+Index TimerStructure::RegisterTimer(const char* name)
+{
+	Initialize(); //called upon every registration; thus, 
+	//std::cout << "add timer " << name << "\n";
+	Index n = (Index)globalTimersCounters->size();
+	globalTimersCounters->push_back(0.);
+	globalTimersCounterNames->push_back(name);
+	return n;
+}
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
 
 //these two variables become global
 OutputBuffer outputBuffer; //this is my customized output buffer, which can redirect the output stream;

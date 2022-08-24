@@ -200,7 +200,13 @@ public:
 	Index MaxNumberOfItems() const { return maxNumberOfItems; }	//!< get max number of items (allocated data length)
 	//T* GetDataPointer() { return &data[0]; }					//!< return pointer to first data containing T* items.
 	T* GetDataPointer() { return data; }					    //!< return pointer to first data containing T* items.
-	T* GetDataPointer() const { return data; }					    //!< return pointer to first data containing T* items.
+	T* GetDataPointer() const { return data; }					//!< return pointer to first data containing T* items.
+	void SetDataUnsafe(T* newData, Index maxNumberOfItemsNew, Index numberOfItemsNew) //!< unsafe way to set data and number of items for testing only; without delete!
+	{ 
+		data = newData; 
+		maxNumberOfItems = maxNumberOfItemsNew;
+		numberOfItems = numberOfItemsNew;
+	}	
 
 	//! set all items in array to 'value'
 	void SetAll(const T& scalarValue) {

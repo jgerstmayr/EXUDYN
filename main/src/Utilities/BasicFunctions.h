@@ -343,7 +343,7 @@ namespace EXUstd {
 	inline Index ArrayOfArraysTotalCount(const T & arrayOfArrays)
 	{
 		Index cnt = 0;
-		for (const auto* a : arrayOfArrays)
+		for (const auto a : arrayOfArrays)
 		{
 			cnt += a->NumberOfItems();
 		}
