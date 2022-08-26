@@ -133,7 +133,7 @@ public:
 	TimerStructureRegistrator(const char* timerName, Index& timerNumber, TimerStructure& globalTimerStructure, bool addAlways=false)
 	{
 	#ifdef USEGLOBALTIMERS
-		timerNumber = globalTimerStructure.AddTimer(timerName);
+		timerNumber = globalTimerStructure.RegisterTimer(timerName);
 	#else
 		if (addAlways)
 		{
