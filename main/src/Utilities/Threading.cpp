@@ -2,6 +2,7 @@
 * @file			Threading.cpp
 * @brief		Implementation of micro-multithreading tools, taken and adapted from NGsolve project; thanks to Joachim Schöberl!!!
 * @details		Details:
+*               This file adapts / duplicates parts of NGsolve: https://github.com/NGSolve/ngsolve ; see also https://ngsolve.org/ 
 *
 * @author		Gerstmayr Johannes
 * @date			2022-07-11 (created)

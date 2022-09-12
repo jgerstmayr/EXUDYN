@@ -1,8 +1,10 @@
 /** ***********************************************************************************************
 * @file			Threading.h
 * @brief		This file mainly contains a library for small-scale parallelization ("micro-threading")
-*               Multithreading takes effect for >1000 clock cycles (or even less)
+*               Multithreading takes effect for >1000 clock cycles (or even less);
+*               thanks to Joachim Schöberl!!!
 * @details		Details:
+*               This file adapts / duplicates parts of NGsolve: https://github.com/NGSolve/ngsolve ; see also https://ngsolve.org/ 
 *
 * @author		Gerstmayr Johannes
 * @date			2022-01-13 (created)
