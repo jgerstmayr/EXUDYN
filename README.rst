@@ -2,11 +2,11 @@
 Exudyn
 ======
 
-+  Exudyn version = 1.3.104.dev1 (Davis)
++  Exudyn version = 1.4.1 (Ellington)
 +  build date and time=2022-09-14  16:18
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
-Exudyn 1.3 is out! It includes a redundant coordinate (constraint) as well as a minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support and multi-threading; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
+Exudyn 1.4 is out! It includes improved multi-threading support; a redundant coordinate (constraint) as well as a minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
 
 If you like using Exudyn, please add a *star* on github, and send an email to  ``reply.exudyn@gmail.com`` such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
@@ -16,7 +16,7 @@ A paper on Exudyn is planned to be presented at the `6th Joint International Con
 +  **A flexible multibody dynamics systems simulation code with Python and C++**
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 +  *free, open source* and with plenty of *documentation* and *examples*
-+  **pre-built** for Python 3.6, 3.7, 3.8, 3.9, and 3.10 under **Windows** ; Python 3.8 for **MacOS** available; some **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
++  **pre-built** for Python 3.6 - 3.10 under **Windows** ; Python 3.8 under **MacOS** available; Python 3.6 - 3.10 under **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
 +  Exudyn can be linked to any other Python package, but we explicitly mention: `NGsolve <https://github.com/NGSolve/ngsolve>`_, `OpenAI <https://github.com/openai>`_, `OpenAI gym <https://github.com/openai/gym>`_, `Robotics Toolbox (Peter Corke) <https://github.com/petercorke/robotics-toolbox-python>`_, `Pybind11 <https://github.com/pybind/pybind11>`_
 
 .. |pic1| image:: docs/demo/screenshots/pistonEngine.gif
@@ -181,7 +181,7 @@ As with most other packages, in the regular case (if your binary has been pre-bu
 
    \ ``pip install exudyn``\ 
 
-On Linux (currently only pre-built for UBUNTU 18.04 and 20.04), \bf update pip to at least 20.3 and use 
+On Linux (currently only pre-built for UBUNTU, but should work on many other linux platforms), \bf update pip to at least 20.3 and use 
 
    \ ``pip3 install exudyn``\ 
 
@@ -205,8 +205,8 @@ A simple way to install Exudyn on Windows 10 (and maybe also Windows 7) is to us
   \ ``C:\ProgramData\Anaconda3``\ 
 
 
-Install from Wheel (UBUNTU and Windows)
-=======================================
+Install from specific Wheel (UBUNTU and Windows)
+================================================
 
 A way to install the Python package Exudyn is to use the so-called 'wheels' (file ending \ ``.whl``\ ).
 Wheels can be downloaded directly from `https://pypi.org/project/exudyn/\#files <https://pypi.org/project/exudyn/\#files>`_, for many Python versions and architectures.
