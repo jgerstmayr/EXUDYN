@@ -197,12 +197,8 @@ namespace MicroThreading {
 		void StartWorkers();
 		void StopWorkers();
 
-		void SuspendWorkers(Index asleep_usecs = 1000)
-		{
-			//sleep_usecs = asleep_usecs;
-			//sleep = true;
-		}
-		void ResumeWorkers() {} // { sleep = false; }
+		static void SuspendWorkers(Index asleep_usecs = 1000) {} //not implemented, for compatibility with NGsolve
+		static void ResumeWorkers() {} //not implemented, for compatibility with NGsolve
 
 		static void SetNumThreads(Index numThreadsInit) 
 		{ 
@@ -252,7 +248,7 @@ namespace MicroThreading {
 	template <typename ...Args>
 	inline void ParallelFor(size_t n, Args...args)
 	{
-		ParallelFor(RangeIndex(n), args...);
+		ParallelFor(RangeIndex((Index)n), args...);
 	}
 
 

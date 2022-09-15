@@ -10,15 +10,37 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.3.104.dev1, 
-  \item last change =  2022-09-14, 
-  \item Number of issues = 1260, 
-  \item Number of resolved issues = 1093 (104 in current version), 
+  \item Exudyn version = 1.4.1, 
+  \item last change =  2022-09-15, 
+  \item Number of issues = 1261, 
+  \item Number of resolved issues = 1096 (1 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.4.1}: {\bf \color{warningRed}  resolved BUG 1260}: {\bf MacOS}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: compilation not working on MacOS with taskmanager adaptions}
+    \item   date resolved: {\bf 2022-09-15 11:14},
+date raised: 2022-09-15 
+  \ei
+  \item {\bf Version 1.4.0}:  resolved Issue 0860: {\bf SparseVectorDomain}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: ?NEEDED (see 0862): create templated SparseVector with IndexValue+domain, having C-array of ResizableArray<IndexValue>, used for multithreaded creation of sparse vectors, associated indices for lateron fill into system vectors}
+    \item {\bf notes: done in TemporaryComputationData now}
+    \item   date resolved: {\bf 2022-09-15 08:50},
+date raised: 2022-01-13 
+  \ei
+  \item {\bf Version 1.3.105}:  resolved Issue 0861: {\bf SparseVectorParallel}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: create SparseVector with: mainSparseVector + ArrayIndex2 with per-thread max index and current index; SparseTriplets exceeding the index go into ResizableArray<SparseVector*> threadSparseVector; Function to finally fill all triplets into main vector}
+    \item {\bf notes: done in TemporaryComputationData now}
+    \item   date resolved: {\bf 2022-09-15 08:49},
+date raised: 2022-01-13 
+  \ei
   \item {\bf Version 1.3.104}:  resolved Issue 1259: {\bf MarkerSuperElementRigid}
 (extension)
   \begin{itemize}[label=$\bullet$]

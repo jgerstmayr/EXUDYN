@@ -58,8 +58,8 @@ namespace ngstd
     atomic<int> active_workers;
     atomic<int> workers_on_node[4];   // max nodes
     Array<atomic<int>*> sync;
-    int sleep_usecs;
-    bool sleep;
+	static int sleep_usecs;
+	static bool sleep;
 
     NodeData *nodedata[4];
 
@@ -82,12 +82,12 @@ namespace ngstd
     void StartWorkers();
     void StopWorkers();
 
-    void SuspendWorkers(int asleep_usecs = 1000 )
-      {
-        sleep_usecs = asleep_usecs;
-        sleep = true;
-      }
-    void ResumeWorkers() { sleep = false; }
+    static void SuspendWorkers(int asleep_usecs = 1000 )
+    {
+		sleep_usecs = asleep_usecs;
+		sleep = true;
+    }
+    static void ResumeWorkers() { sleep = false; }
 
     static void SetNumThreads(int amax_threads);
     static int GetMaxThreads() { return max_threads; }

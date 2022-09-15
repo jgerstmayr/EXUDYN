@@ -30,6 +30,8 @@ namespace ngstd
   // #else
   // __thread int TaskManager :: thread_id;
   // #endif
+  int TaskManager::sleep_usecs = 1000;
+  bool TaskManager::sleep = false;
 
   const function<void(TaskInfo&)> * TaskManager::func;
   const function<void()> * TaskManager::startup_function = nullptr;

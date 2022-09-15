@@ -48,14 +48,19 @@ namespace ngstd {
 		static void SetNumThreads(int amax_threads) {};
 		static int GetMaxThreads() { return 1; }
 		static int GetThreadId() { return 0; }
+		static void SuspendWorkers(Index asleep_usecs = 1000) {}
+		static void ResumeWorkers() {} // { sleep = false; }
 	};
+	typedef Index SizeType;
+	typedef SizeType TotalCosts;
 };
+
 #endif
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #include "Utilities/Threading.h"
 
-#ifdef USE_MICROTHREADING //if this is defined, use MicroThreading instead of NGsolve taskmanager
+#ifdef USE_MICROTHREADING//if this is defined, use MicroThreading instead? of NGsolve taskmanager
 namespace exuThreading = MicroThreading; //this works better for smaller systems
 #else
 namespace exuThreading = ngstd; //NGsolve; this works better for larger systems; much better for contact!

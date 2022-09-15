@@ -154,18 +154,18 @@ namespace MicroThreading
 
 		task_manager = new TaskManager();
 
-#ifndef WIN32
+#ifndef _WIN32
 		// master has maximal priority !
 		int policy;
 		struct sched_param param;
 		pthread_getschedparam(pthread_self(), &policy, &param);
 		param.sched_priority = sched_get_priority_max(policy);
 		pthread_setschedparam(pthread_self(), policy, &param);
-#endif // WIN32
+#endif // _WIN32
 
 		task_manager->StartWorkers();
 
-		ParallelFor(Range(100), [&](Index i) {; });    // startup
+		ParallelFor(RangeIndex(100), [&](Index i) {; });    // startup
 		return task_manager->GetNumThreads();
 	}
 

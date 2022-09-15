@@ -392,7 +392,7 @@ Index GeneralMatrixEigenSparse::FactorizeNew(bool ignoreRedundantEquation, Index
 {
 	CHECKandTHROW(IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::Factorize(): matrix must be built before factorization!");
 	Index nThreads = exuThreading::TaskManager::GetNumThreads();
-	if (LinearSolverSuspendWorkers && nThreads > 1) { exuThreading::task_manager->SuspendWorkers(LinearSolverSuspendWorkersTimeUS); }
+	if (LinearSolverSuspendWorkers && nThreads > 1) { exuThreading::TaskManager::SuspendWorkers(LinearSolverSuspendWorkersTimeUS); }
 
 	Index rv = 0;
 	if (!IsSymmetric())
@@ -417,7 +417,7 @@ Index GeneralMatrixEigenSparse::FactorizeNew(bool ignoreRedundantEquation, Index
 			solver.factorize(matrix);
 		}
 
-		if (LinearSolverSuspendWorkers && nThreads > 1) { exuThreading::task_manager->ResumeWorkers(); }
+		if (LinearSolverSuspendWorkers && nThreads > 1) { exuThreading::TaskManager::ResumeWorkers(); }
 
 		//0: successful factorization
 		//if info = i, and i is
