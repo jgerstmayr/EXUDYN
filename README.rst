@@ -2,8 +2,8 @@
 Exudyn
 ======
 
-+  Exudyn version = 1.3.86.dev1 (Davis)
-+  build date and time=2022-08-24  15:14
++  Exudyn version = 1.3.104.dev1 (Davis)
++  build date and time=2022-09-14  16:18
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn 1.3 is out! It includes a redundant coordinate (constraint) as well as a minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support and multi-threading; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
@@ -1109,8 +1109,44 @@ Typical output settings are:
 Visualization settings
 ======================
 
+
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
-Details on visualization settings and its substructures are provided in Sections [theDoc.pdf] -- [theDoc.pdf].
+
+Details on visualization settings and its substructures are provided in Sections [theDoc.pdf] -- [theDoc.pdf]. These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \ ``SC.WaitForRenderEngineStopFlag()``\  or 
+\ ``mbs.WaitForUserToContinue()``\  ).
+
+Note that this dialog is automatically created and uses Python's \ ``tkinter``\ , which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn .
+The appearance of settings dialogs may be adjusted by \ ``exudyn.GUI``\  variables:
+
++  \ ``exudyn.GUI.useRenderWindowDisplayScaling``\ : if True, the scaling will follow the current scaling of the render window; if False, it will use the \ ``tkinter``\  internal scaling, which uses the main screen where the dialog is created (which won't scale well, if the window is moved to another screen).
++  \ ``exudyn.GUI.treeviewDefaultFontSize``\ : this is the base font size of the dialog (also right-mouse-button dialog)
++  \ ``exudyn.GUI.useRenderWindowDisplayScaling``\ : this factor is used to increase height of lines as compared to font size
++  \ ``exudyn.GUI.treeEditDefaultWidth``\ : unscaled width of, e.g., visualizationSettings
++  \ ``exudyn.GUI.treeEditDefaultHeight``\ : unscaled height of, e.g., visualizationSettings
++  \ ``exudyn.GUI.dialogDefaultWidth``\ : unscaled width of, e.g., right-mouse-button dialog
++  \ ``exudyn.GUI.treeEditDefaultHeight``\ : unscaled height of, e.g., right-mouse-button dialog
+
+For example, to change some parameters, write:
+
+.. code-block:: python
+
+  import exudyn.GUI
+  exudyn.GUI.treeEditDefaultWidth = 1600
+  exudyn.GUI.useRenderWindowDisplayScaling = False
+
+
+
+
+.. |picVisSettings| image:: docs/theDoc/figures/visualizationSettings.png
+   :width: 60%
+
+|picVisSettings|
+
+[View of visualization settings (press 'V' in render window to open dialog).]
+
+
+
+
 
 The visualization settings structure can be accessed in the system container \ ``SC``\  (access per reference, no copying!), accessing every value or structure directly, e.g.,
 
@@ -1143,7 +1179,8 @@ Storing the model view
 ----------------------
 
 
-There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \ ``SC.GetRenderState()``\  and \ ``SC.SetRenderState()``\ .
+There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \ ``SC.GetRenderState()``\  and \ ``SC.SetRenderState()``\ ,
+see also theDoc.pdf.
 A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation (
 note that \ ``visualizationSettings.general.autoFitScene``\  should be set False if you want to use the stored zoom factor):
 
@@ -1199,6 +1236,8 @@ Now copy the output and set this with \ ``SC.SetRenderState``\  in your Python c
   #.... further code for simulation here
 
 
+Note that in the current version of Exudyn there is more data stored in render state, which is not used in \ ``SC.SetRenderState``\ ,
+see also theDoc.pdf.
 
 
 Graphics pipeline
@@ -1368,7 +1407,7 @@ Contact problems
 ================
 
 Since Q4 2021 a contact module is available in Exudyn. 
-This separate module \ ``GeneralContact``\  \[still under developement, consider with care!\] is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
+This separate module \ ``GeneralContact``\  [\ **still under development, consider with care!**\ ] is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
 
 
 .. |cpic1| image:: docs/theDoc/figures/contactTests.png
@@ -1386,7 +1425,7 @@ This separate module \ ``GeneralContact``\  \[still under developement, consider
 
 \ **Note**\ :
 
-+  \ ``GeneralContact``\  is (in most cases) restricted to dynamic simulation (explicit or implicit \[still under developement, consider with care!\]) if friction is used; without friction, it also works in the static case
++  \ ``GeneralContact``\  is (in most cases) restricted to dynamic simulation (explicit or implicit [\ **still under development, consider with care!**\ ]) if friction is used; without friction, it also works in the static case
 +  in addition to \ ``GeneralContact``\  there are special objects, in particular for rolling and simple 1D contacts, that are available as single objects, cf. \ ``ObjectConnectorRollingDiscPenalty``\ 
 +  \ ``GeneralContact``\  is recommended to be used for large numbers of contacts, while the single objects are integrated more directly into mbs.
 
@@ -1441,6 +1480,7 @@ sys.exudynFast = True #this variable is used to signal to load the fast exudyn m
 import exudyn as exu
 
 
+The faster versions are only pre-compiled for some Python versions, which can be determined by trying \ ``import exudyn.exudynCPPfast``\ .
 
 However, there are many \ **ways to speed up Exudyn in general**\ :
 

@@ -298,6 +298,19 @@ def FindNodeIndex(i, globalVariables):
     if not found:
         print("no according variable found")
 
+#**function: checks, if data is of type list or np.array; used in functions to check input data
+#**input:
+#  data: any type, preferrably list or numpy.array
+#  checkIfNoneEmpty: if True, function only returns True if type is list or array AND if length is non-zero
+#**output: returns True/False
+def IsListOrArray(data, checkIfNoneEmpty=False):
+    if isinstance(data,list) or isinstance(data,np.ndarray):
+        if checkIfNoneEmpty and len(data) == 0:
+            return False
+        return True
+    else:
+        return False
+
 
 #**function: function to hide all objects in mbs except for those listed in objectNumbers
 #**input: 
@@ -383,7 +396,7 @@ def UFsensorRecord(mbs, t, sensorNumbers, factors, configuration):
 #  sensorsWritePeriod: as given in simulationSettings.solutionSettings.sensorsWritePeriod
 #  sensorOutputSize: size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)
 #**output: adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables['sensorRecord'+str(sensorNumber)] and the information is written row-wise: [time, sensorValue1, sensorValue2, ...]
-#**notes: This sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
+#**notes: Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
 def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutputSize=3):
     nSteps = int(endTime/sensorsWritePeriod)
     mbs.variables['sensorRecord'+str(sensorNumber)] = np.zeros((nSteps+1,1+sensorOutputSize)) #time+3 sensor values
@@ -932,16 +945,23 @@ def AnimateSolution(mbs, solution, rowIncrement = 1, timeout=0.04, createImages 
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph
+#**function: helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!
 #**input:
 #   mbs: MainSystem to be operated with
 #   showLoads: toggle appearance of loads in mbs
 #   showSensors: toggle appearance of sensors in mbs
 #   useItemNames: if True, object names are shown instead of basic object types (Node, Load, ...)
 #   useItemTypes: if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend
+#   addItemTypeNames: if True, type nymes (Node, Load, etc.) are added
+#   multiLine: if True, labels are multiline, improving readability
+#   fontSizeFactor: use this factor to scale fonts, allowing to fit larger graphs on the screen with values < 1
+#   showLegend: shows legend for different item types
+#   layoutDistanceFactor: this factor influences the arrangement of labels; larger distance values lead to circle-like results
+#   layoutIterations: more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
 #**output: [nx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)
-def DrawSystemGraph(mbs, showLoads=True, showSensors=True, 
-                    useItemNames = False, useItemTypes = False):
+def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False, 
+                    useItemTypes = False, addItemTypeNames=True, multiLine=True, fontSizeFactor=1., 
+                    layoutDistanceFactor=3., layoutIterations=100, showLegend = True):
     
     try:
         #all imports are part of anaconda (e.g. anaconda 5.2.0, python 3.6.5)
@@ -974,10 +994,14 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
             
     G = nx.Graph()
     
-    showLegend = False
-    addItemNames = False #Object, Node, ... not added but legend added
-    if useItemTypes or useItemNames:
-        showLegend = True
+    #showLegend = False
+    #addItemTypeNames = False #Object, Node, ... not added but legend added
+    # if useItemTypes or useItemNames:
+    #     showLegend = True
+
+    sLineBreak = ''
+    if multiLine:
+        sLineBreak = '-\n'
 
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++
     itemType = 'Node'
@@ -985,16 +1009,21 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
     for i in range(n):
         item = mbs.GetNode(i)
         itemName=itemType+str(i)
+    
+        nodeName = 'Node'
         if item['nodeType'].find('Ground') != -1:
-            itemName= 'G'+itemName
+            nodeName = nodeName + 'Ground'
     
         if useItemNames:
             itemName=item['name']+str(i)
         elif useItemTypes:
             itemName=item['nodeType']+str(i)
-            if addItemNames:
-                itemName = 'Node' + itemName
-    
+            if addItemTypeNames:
+                itemName = nodeName + sLineBreak + itemName
+
+            if sLineBreak != '':
+                itemName=itemName.replace('Node'+sLineBreak+'Rigid','NodeRigid'+sLineBreak)
+                itemName=itemName.replace('Node'+sLineBreak+'Generic','NodeGeneric'+sLineBreak)
     
         G.add_node(itemName) #attributes: size, weight, ...
         nodesToItems += [len(itemColorMap)]
@@ -1013,8 +1042,15 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
             itemName=item['name']+str(i)
         elif useItemTypes:
             itemName=item['markerType']+str(i)
-            if addItemNames:
-                itemName = 'Marker' + itemName
+            if addItemTypeNames:
+                itemName = 'Marker' + sLineBreak + itemName
+
+            if sLineBreak != '':
+                itemName=itemName.replace('Marker'+sLineBreak+'Body','MarkerBody'+sLineBreak)
+                itemName=itemName.replace('Marker'+sLineBreak+'Object','MarkerObject'+sLineBreak)
+                itemName=itemName.replace('Marker'+sLineBreak+'Node','MarkerNode'+sLineBreak)
+                itemName=itemName.replace('Marker'+sLineBreak+'SuperElement','MarkerSuperElement'+sLineBreak)
+                itemName=itemName.replace('Marker'+sLineBreak+'Kinematic','MarkerKinematic'+sLineBreak)
     
         G.add_node(itemName) #attributes: size, weight, ...
         markersToItems += [len(itemColorMap)]
@@ -1040,8 +1076,18 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
             itemName=item['name']+str(i)
         elif useItemTypes:
             itemName=item['objectType']+str(i)
-            if addItemNames:
-                itemName = 'Object'+itemName
+            if addItemTypeNames:
+                itemName = 'Object' + sLineBreak + itemName
+            
+            if sLineBreak != '':
+                itemName=itemName.replace('Object'+sLineBreak+'Joint','ObjectJoint'+sLineBreak)
+                itemName=itemName.replace('Object'+sLineBreak+'Mass','ObjectMass'+sLineBreak)
+                itemName=itemName.replace('Object'+sLineBreak+'Beam','ObjectBeam'+sLineBreak)
+                itemName=itemName.replace('Object'+sLineBreak+'ANCF','ObjectANCF'+sLineBreak)
+                itemName=itemName.replace('Object'+sLineBreak+'Contact','ObjectContact'+sLineBreak)
+                itemName=itemName.replace('Object'+sLineBreak+'Connector','ObjectConnector'+sLineBreak)
+                itemName=itemName.replace('Object'+sLineBreak+'Rigid','ObjectRigid'+sLineBreak)
+                itemName=itemName.replace('Object'+sLineBreak+'FFRFr','ObjectFFRF'+sLineBreak+'r')
             
         G.add_node(itemName) #attributes: size, weight, ...
         objectsToItems += [len(itemColorMap)]
@@ -1117,8 +1163,12 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
                 itemName=item['name']+str(i)
             elif useItemTypes:
                 itemName=item['loadType']+str(i)
-                if addItemNames:
-                    itemName = 'Load'+itemName
+                if addItemTypeNames:
+                    itemName = 'Load' + sLineBreak + itemName
+
+                if sLineBreak != '':
+                    itemName=itemName.replace('Load'+sLineBreak+'Mass','LoadMass'+sLineBreak)
+
         
             G.add_node(itemName) #attributes: size, weight, ...
             loadsToItems += [len(itemColorMap)]
@@ -1143,8 +1193,8 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
                 itemName=item['name']+str(i)
             elif useItemTypes:
                 itemName=item['sensorType']+str(i)
-                if addItemNames:
-                    itemName = 'Sensor'+itemName
+                if addItemTypeNames:
+                    itemName = 'Sensor' + sLineBreak + itemName
         
             G.add_node(itemName) #attributes: size, weight, ...
             sensorsToItems += [len(itemColorMap)]
@@ -1178,7 +1228,11 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
         #ax = f.add_subplot(1,1,1)
         for label in legendColors:
             plt.plot([0],[0],linewidth=8,color=legendColors[label],label=label)
-        plt.legend(fontsize=10)
+        
+        fontSizeLegend = 10
+        if fontSizeFactor > 1: #do not make font size smaller!
+            fontSizeLegend *= fontSizeFactor
+        plt.legend(fontsize=fontSizeLegend)
 
     
     #now get out the right sorting of colors ...
@@ -1192,15 +1246,16 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
             edgeWidth = 4
         edgeWidths += [edgeWidth]
     
-    pos = nx.drawing.spring_layout(G, scale=0.5, k=3/sqrt(G.size()), threshold = 1e-5, iterations = 100)
+    pos = nx.drawing.spring_layout(G, scale=0.5, k=layoutDistanceFactor*1/sqrt(G.size()), 
+                                   threshold = 1e-5, iterations = layoutIterations)
     nx.draw_networkx_nodes(G, pos, node_size=1)
     nx.draw_networkx_edges(G, pos, edge_color=edgeColorMap, width=edgeWidths)#width=2)
     
     #reproduce what draw_networkx_labels does, allowing different colors for nodes
     #check: https://networkx.github.io/documentation/stable/_modules/networkx/drawing/nx_pylab.html
-    items = nx.draw_networkx_labels(G, pos, font_size=10, clip_on=False, #clip at plot boundary
+    items = nx.draw_networkx_labels(G, pos, font_size=10*fontSizeFactor, clip_on=False, #clip at plot boundary
                                     bbox=dict(facecolor='skyblue', edgecolor='black', 
-                                              boxstyle='round,pad=0.1', lw=10)) #lw is border size (no effect?)
+                                              boxstyle='round,pad=0.1', lw=10*fontSizeFactor)) #lw is border size (no effect?)
 
     
     #now assign correct colors:
@@ -1208,16 +1263,16 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
         currentColor = itemColorMap[i]
         itemType = itemTypes[i]
         boxStyle = 'round,pad=0.2'
-        fontSize = 10
+        fontSize = 10*fontSizeFactor
         if itemType == 'Object':
             boxStyle = 'round,pad=0.2'
-            fontSize = 12
+            fontSize = 12*fontSizeFactor
         if itemType == 'Node':  
             boxStyle = 'square,pad=0.1'
-            fontSize = 10
+            fontSize = 10*fontSizeFactor
         if itemType == 'Marker':  
             boxStyle = 'square,pad=0.1'
-            fontSize = 8
+            fontSize = 8*fontSizeFactor
     
         #print("color=",currentColor)
         items[itemNames[i]].set_bbox(dict(facecolor=currentColor,  
@@ -1226,7 +1281,7 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True,
     
     plt.axis('off') #do not show frame, because usually some nodes are very close to frame ...
     plt.tight_layout()
-    plt.margins(x=0.2, y=0.2) #larger margin, to avoid clipping of long texts
+    plt.margins(x=0.1*fontSizeFactor, y=0.1*fontSizeFactor) #larger margin, to avoid clipping of long texts
     plt.draw() #force redraw after colors have changed
     
     return [nx, G, items]

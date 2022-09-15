@@ -42,7 +42,7 @@ public: //made public for access via pybind
 	//++++++++++++++++++++++++++++++
 	//Lie groups:
 	ResizableArray<Index> lieGroupNodes;	//filled with Lie group node indices during initialization; ONLY if useLieGroupIntegration=true
-	ResizableArray<Index> nonLieGroupNodes; //filled with non-Lie group nodes
+	ResizableArray<Index> nonLieODE2Coordinates; //filled with ODE2 coordinates, for which no Lie group integration is used; ONLY if useLieGroupIntegration=true
 #endif
 	//bool useIndex2Constraints; ==> directly linked to simulationSettings
 public:
@@ -85,6 +85,10 @@ public:
 	//! finalize algorithmic accelerations in generalized alpha method
 	virtual void FinalizeNewton(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
 
+#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
+	virtual void UpdateDataCoordinatesLieGroupIntegrator(CSystem& computationalSystem, const ResizableVectorParallel& currentODE2,
+		const LinkedDataVector& incrementODE2, ResizableVectorParallel& compositionODE2);
+#endif
 };
 
 class MainSolverImplicitSecondOrder;

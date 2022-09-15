@@ -140,8 +140,8 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
 [s1, sL1] = AddEnumValue(cClass, 'RotationEulerParameters', 'node with 3D orientations that are modelled with Euler parameters (unit quaternions)'); s += s1; sLenum += sL1
 [s1, sL1] = AddEnumValue(cClass, 'RotationRxyz', 'node with 3D orientations that are modelled with Tait-Bryan angles'); s += s1; sLenum += sL1
 [s1, sL1] = AddEnumValue(cClass, 'RotationRotationVector', 'node with 3D orientations that are modelled with the rotation vector'); s += s1; sLenum += sL1
-[s1, sL1] = AddEnumValue(cClass, 'RotationLieGroup', 'node intended to be solved with Lie group methods'); s += s1; sLenum += sL1
-[s1, sL1] = AddEnumValue(cClass, 'LieGroupGeneral', 'node intended to be solved with general (implicit) Lie group methods'); s += s1; sLenum += sL1
+[s1, sL1] = AddEnumValue(cClass, 'LieGroupWithDirectUpdate', 'node to be solved with Lie group methods, without data coordinates'); s += s1; sLenum += sL1
+[s1, sL1] = AddEnumValue(cClass, 'LieGroupWithDataCoordinates', 'node to be solved with Lie group methods, having data coordinates'); s += s1; sLenum += sL1
 [s1, sL1] = AddEnumValue(cClass, 'GenericODE2', 'node with general ODE2 variables'); s += s1; sLenum += sL1
 [s1, sL1] = AddEnumValue(cClass, 'GenericODE1', 'node with general ODE1 variables'); s += s1; sLenum += sL1
 [s1, sL1] = AddEnumValue(cClass, 'GenericAE', 'node with general algebraic variables'); s += s1; sLenum += sL1
@@ -401,7 +401,7 @@ sL += '  visualizationSettings & this structure is read/writeable and contains v
                                 description="Redraw openGL scene and save image (command waits until process is finished)"); sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='WaitForRenderEngineStopFlag', cName='WaitForRenderEngineStopFlag', 
-                                description="Wait for user to stop render engine (Press 'Q' or Escape-key)"); sL+=sL1
+                                description="Wait for user to stop render engine (Press 'Q' or Escape-key); this command is used to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as mbs.WaitForUserToContinue()"); sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='RenderEngineZoomAll', cName='PyZoomAll', 
                                 description="Send zoom all signal, which will perform zoom all at next redraw request"); sL+=sL1
@@ -484,7 +484,7 @@ s+=s1; sL+=sL1
                                 description="return the systemContainer where the mainSystem (mbs) was created"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='WaitForUserToContinue', cName='WaitForUserToContinue', 
-                                description="interrupt further computation until user input --> 'pause' function"); s+=s1; sL+=sL1
+                                description="interrupt further computation until user input --> 'pause' function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as SC.WaitForRenderEngineStopFlagthis()"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SendRedrawSignal', cName='SendRedrawSignal', 
                                 description="this function is used to send a signal to the renderer that the scene shall be redrawn because the visualization state has been updated"); s+=s1; sL+=sL1

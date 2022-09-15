@@ -243,7 +243,7 @@ The item VNodeRigidBodyEP has the following parameters:\vspace{-1cm}\\
 \rowTable{Coordinates\_t}{$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2,\,\dot \psi_3]\tp\cConfig$}{ velocity coordinates vector of node}
 \rowTable{Coordinates\_tt}{$\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2, \,\ddot \psi_0,\,\ddot \psi_1,\,\ddot \psi_2,\,\ddot \psi_3]\tp\cConfig$}{ acceleration coordinates vector of node}
 \rowTable{RotationMatrix}{$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$}{vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates}
-\rowTable{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$}{vector with 3 components of the Euler angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix}
+\rowTable{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$}{vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix}
 \rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{global 3D angular velocity vector of node}
 \rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{local (body-fixed)  3D angular velocity vector of node}
 \rowTable{AngularAcceleration}{$\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\alpha_2]}\cConfig\tp$}{global 3D angular acceleration vector of node}
@@ -365,7 +365,7 @@ The item VNodeRigidBodyRxyz has the following parameters:\vspace{-1cm}\\
 \rowTable{Coordinates\_t}{$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2]\tp\cConfig$}{ velocity coordinates vector of node}
 \rowTable{Coordinates\_tt}{$\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2, \,\ddot \psi_0,\,\ddot \psi_1,\,\ddot \psi_2]\tp\cConfig$}{ acceleration coordinates vector of node}
 \rowTable{RotationMatrix}{$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$}{vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates}
-\rowTable{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig = [\psi_0,\,\psi_1,\,\psi_2]\tp\cRef + [\psi_0,\,\psi_1,\,\psi_2]\tp\cConfig$}{vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix}
+\rowTable{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig = [\psi_0,\,\psi_1,\,\psi_2]\tp\cRef + [\psi_0,\,\psi_1,\,\psi_2]\tp\cConfig$}{vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$)}
 \rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{global 3D angular velocity vector of node}
 \rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{local (body-fixed)  3D angular velocity vector of node}
 \rowTable{AngularAcceleration}{$\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\alpha_2]}\cConfig\tp$}{global 3D angular acceleration vector of node}
@@ -465,7 +465,7 @@ The item VNodeRigidBodyRotVecLG has the following parameters:\vspace{-1cm}\\
 \rowTable{Coordinates}{$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\nu_0,\,\nu_1,\,\nu_2]\tp\cConfig$}{ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles}
 \rowTable{Coordinates\_t}{$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cConfig$}{ velocity coordinates vector of node}
 \rowTable{RotationMatrix}{$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$}{vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates}
-\rowTable{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$}{vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix}
+\rowTable{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$}{vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix}
 \rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{global 3D angular velocity vector of node}
 \rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{local (body-fixed)  3D angular velocity vector of node}
 \finishTable
@@ -563,7 +563,7 @@ The item VNodeRigidBodyRotVecDataLG has the following parameters:\vspace{-1cm}\\
 \rowTable{Coordinates}{$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\nu_0,\,\nu_1,\,\nu_2]\tp\cConfig$}{ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles}
 \rowTable{Coordinates\_t}{$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cConfig$}{ velocity coordinates vector of node}
 \rowTable{RotationMatrix}{$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$}{vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates}
-\rowTable{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$}{vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix}
+\rowTable{Rotation}{$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$}{vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix}
 \rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{global 3D angular velocity vector of node}
 \rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$}{local (body-fixed)  3D angular velocity vector of node}
 \finishTable
@@ -1702,7 +1702,7 @@ The item VObjectMass1D has the following parameters:\vspace{-1cm}\\
 \rowTable{Displacement}{$\LU{0}{\uv}\cConfig$}{global displacement vector; for interpretation see intermediate variables}
 \rowTable{Velocity}{$\LU{0}{\vv}\cConfig $}{global velocity vector; for interpretation see intermediate variables}
 \rowTable{RotationMatrix}{$\LU{0b}{\Rot}$}{vector with 9 components of the rotation matrix (row-major format)}
-\rowTable{Rotation}{}{vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix $\LU{0b}{\Rot}$}
+\rowTable{Rotation}{}{vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix $\LU{0b}{\Rot}$}
 \rowTable{AngularVelocity}{$\LU{0}{\tomega}\cConfig$}{angular velocity of body}
 \rowTable{AngularVelocityLocal}{$\LU{b}{\tomega}\cConfig$}{local (body-fixed) 3D velocity vector of node}
 \finishTable
@@ -9368,8 +9368,8 @@ The item VMarkerSuperElementRigid has the following parameters:\vspace{-1cm}\\
 
     \rowTable{marker position}{$\LU{0}{\pv}_{m} \!=\! \LU{0}{\pv}_r + \LU{0r}{\Rot} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right)$}
              {current global position which is provided by marker; note offset $\LU{r}{\ov\cRef}$ added, if used as a correction of marker mesh nodes}
-    \rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r + \LU{0r}{\Rot} \left( \LU{r}{\tilde \tomega_r} \sum_i (w_i \cdot \LU{r}{\pv^{(i)}}) + \right.
-             \left. \sum_i (w_i \cdot \LU{r}{\dot \uv^{(i)}}) \right)$}
+    \rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r $ $+ \LU{0r}{\Rot} \left( \LU{r}{\tilde \tomega_r} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right) + \right.$
+                                                  $\left. \sum_i (w_i \cdot \LU{r}{\dot \uv^{(i)}}) \right)$}
              {current global velocity which is provided by marker}
                 %\rowTable{marker velocity}{$\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r + \LU{0r}{\Rot} \LU{r}{\tilde \tomega_r} \LU{r}{\pv_{0,ref}} +
                 %\LU{0r}{\Rot} \left(\sum_i (w_i \cdot \LU{r}{\vv^{(i)}}) + \LU{r}{\tilde \tomega_r} \sum_i (w_i \cdot \LU{r}{\uv^{(i)}}) \right)$}
@@ -9413,7 +9413,7 @@ The item VMarkerSuperElementRigid has the following parameters:\vspace{-1cm}\\
     the jacobian will consist of zeros and unit matrices $\Im$ ,
     \be
       \LU{0}{\Jm_{m,pos}^{GenericODE2}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}} 
-      = \left[ \Null,\; \ldots,\; \Null,\; \Im,\; \Null,\; \ldots,\; \Null,\; \Im,\; \Null,\; \ldots,\; \Null \right]\eqComma
+      = \left[ \Null,\; \ldots,\; \Null,\; w_0 \Im,\; \Null,\; \ldots,\; \Null,\; w_1 \Im,\; \Null,\; \ldots,\; \Null \right]\eqComma
     \ee
     in which the $\Im$ matrices are placed at the according indices of marker nodes.
 
@@ -9422,7 +9422,7 @@ The item VMarkerSuperElementRigid has the following parameters:\vspace{-1cm}\\
     \be
       \LU{0}{\Jm_{m,pos}^{FFRFreduced}} = \frac{\partial \LU{0}{\vv}_{m}}{\dot \qv_{n_b}}
       = \sum_i w_i \LU{0}{\Jm^{(i)}_\mathrm{pos}}
-      = \left[\Im, \; -\LU{0r}{\Rot} \left(\sum_i(\LU{r}{\tilde\uv\indf^{(i)}} + \LU{r}{\tilde\xv^{(i)}\cRef}) \right) \LU{r}{\Gm},\;
+      = \left[\Im, \; -\LU{0r}{\Rot} \left(\LU{r}{\ov\cRef} + \sum_i \LU{r}{\pv^{(i)}} \right) \LU{r}{\Gm},\;
               \sum_i w_i \LU{0r}{\Rot} \vr{\LU{r}{\tPsi_{r=3i}\tp}}{\LU{r}{\tPsi_{r=3i+1}\tp}}{\LU{r}{\tPsi_{r=3i+2}\tp}} \right] \eqDot
     \ee
     %\sum_i w_i \Im = \Im !!!

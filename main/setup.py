@@ -124,6 +124,13 @@ __version__ = exudynVersionString
 print('build Exudyn version',exudynVersionString)
 
 
+if exudynVersionString.find('.dev1') == -1:
+    developmentStatus = "Development Status :: 5 - Production/Stable"
+    isDevelopmentVersion = False
+else:
+    developmentStatus = "Development Status :: 4 - Beta"
+    isDevelopmentVersion = True
+
 #++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -281,7 +288,15 @@ ext_modules = [
         language='c++'
     ),
 ]
-if compileExudynFast and (pyVersionString == '3.7' or pyVersionString == '3.8'):
+
+if compileExudynFast:
+    if not (pyVersionString == '3.7' or
+            #pyVersionString == '3.8' or
+            #pyVersionString == '3.9' or
+            pyVersionString == '3.10'
+       ) and isDevelopmentVersion: compileExudynFast = False
+
+if compileExudynFast:
     print('***  preparing C++ module also for __FAST_EXUDYN_LINALG  ***')
     ext_modules += [
         Extension(
@@ -335,15 +350,7 @@ def cpp_flag(compiler):
 class BuildExt(build_ext):
 #    A custom build extension for adding compiler-specific options.
     #options used for all builds:
-    allMacros = ['EXUDYN_RELEASE'] #exclude experimental parts
-
-    #changed with #1116
-    # if isWindows and pyVersionString == '3.8':
-    #     allMacros += ['__FAST_EXUDYN_LINALG'] #exclude range checks for Python 3.8 version
-    #     print('**********************************************************')
-    #     print('*  compiling __FAST_EXUDYN_LINALG in Python 3.8 version  *')
-    #     print('**********************************************************')
-    
+    allMacros = ['EXUDYN_RELEASE'] #exclude experimental parts    
     
     commonCopts = []
     for macroString in allMacros:
@@ -384,6 +391,7 @@ class BuildExt(build_ext):
                 '/D', exudynPythonMacro,
             ]+msvcCppGLFWflag+commonCopts,
         'unix': [
+         #'-O3', #tests with GCC, Python3.8 do not show performance increase!!
          '-Wno-comment', #deactivate multiline comment warning /* ... * * ...*/
          '-Wno-unknown-pragmas', #warning from ngs_core.hpp/taskmanager.hpp (NGsolve)
          '-Wno-sign-compare', #warning from taskmanager.hpp (NGsolve)
@@ -393,7 +401,6 @@ class BuildExt(build_ext):
          #'-std=c++17', #==>chosen automatic
          #'-fpermissive', #because of exceptions ==> allows compilation
          #'-fopenmp',
- 		 #'-O3', #takes long ...
  		 #'-shared',
  		 #'-fPIC',
 
@@ -578,10 +585,6 @@ if compileParallel:
 
 
 
-if exudynVersionString.find('.dev1') == -1:
-    developmentStatus = "Development Status :: 5 - Production/Stable"
-else:
-    developmentStatus = "Development Status :: 4 - Beta"
 
 long_description=''
 long_description += '==========\n'

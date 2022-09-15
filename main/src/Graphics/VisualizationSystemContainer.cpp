@@ -214,6 +214,7 @@ void VisualizationSystemContainer::InitializeView()
 	renderState.maxSceneSize = settings.openGL.initialMaxSceneSize;
 	renderState.centerPoint = settings.openGL.initialCenterPoint; //this is the initial centerPoint; hereafter it can be changed!
 	//renderState.rotationCenterPoint.SetAll(0);
+	renderState.displayScaling = 1;
 
 	renderState.currentWindowSize = settings.window.renderWindowSize;
 	if (renderState.currentWindowSize[0] < 1) { renderState.currentWindowSize[0] = 1; } //avoid division by zero
@@ -233,60 +234,6 @@ void VisualizationSystemContainer::InitializeView()
 	renderState.modelRotation[15] = 1.;
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-	////for now, use nodal reference coordinates to estimate the maximum zoom level
-	//Vector3D pmax0({ -1e30,-1e30,-1e30 });
-	//Vector3D pmin0({ 1e30,1e30,1e30 });
-	//Vector3D pmax = pmax0;
-	//Vector3D pmin = pmin0;
-	//for (auto visSystem : visualizationSystems)
-	//{
-	//	//! @todo extend VisualizationSystemContainer::InitializeView for objects, markers and loads; maybe better to first draw all and zoom to full region?
-	//	for (auto item : visSystem->systemData->GetCNodes())
-	//	{
-	//		if ((Index)item->GetNodeGroup() & (Index)CNodeGroup::ODE2variables)
-	//		{
-	//			//LinkedDataVector pref = item->GetReferenceCoordinateVector();
-	//			Vector3D pref = ((CNodeODE2*)item)->GetPosition(ConfigurationType::Reference);
-
-	//			pmax[0] = EXUstd::Maximum(pref[0], pmax[0]);
-	//			pmax[1] = EXUstd::Maximum(pref[1], pmax[1]);
-	//			pmax[2] = EXUstd::Maximum(pref[2], pmax[2]);
-	//			pmin[0] = EXUstd::Minimum(pref[0], pmin[0]);
-	//			pmin[1] = EXUstd::Minimum(pref[1], pmin[1]);
-	//			pmin[2] = EXUstd::Minimum(pref[2], pmin[2]);
-	//		}
-
-	//	}
-	//}
-	////check if some bad coordinates result
-	//if (pmax == pmax0 || pmin == pmin0) 
-	//{
-	//	pmin = Vector3D({ 0.,0.,0. });
-	//	pmax = Vector3D({ 1.,1.,1. });
-	//}
-	//else if (pmax == pmin)
-	//{
-	//	Real d = 0.5;
-	//	pmax += Vector3D({ d,d,d });
-	//	pmin -= Vector3D({ d,d,d});
-	//}
-	//Vector3D center = 0.5*(pmin + pmax);
-
-	//if (renderState.centerPoint[0] == 0 && renderState.centerPoint[1] == 0 && renderState.centerPoint[2] == 0) {
-	//	renderState.centerPoint.CopyFrom(center);
-	//}
-
-	//renderState.maxSceneSize = (float)((pmax - pmin).GetL2Norm());
-	//if (renderState.maxSceneSize < settings.general.minSceneSize) 
-	//{ 
-	//	renderState.maxSceneSize = settings.general.minSceneSize; 
-	//}
-
-	//if (settings.general.autoFitScene)
-	//{
-	//	renderState.zoom = 0.4f*renderState.maxSceneSize;
-	//}
 }
 
 //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)

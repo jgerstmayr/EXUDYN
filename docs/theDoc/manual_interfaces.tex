@@ -63,7 +63,7 @@ The SystemContainer is the top level of structures in \codeName. The container h
     \texttt{SC = exu.SystemContainer()\tabnewline
     SC.SetRenderState(renderState)}}\\ \hline 
   RedrawAndSaveImage() & Redraw openGL scene and save image (command waits until process is finished)\\ \hline 
-  WaitForRenderEngineStopFlag() & Wait for user to stop render engine (Press 'Q' or Escape-key)\\ \hline 
+  WaitForRenderEngineStopFlag() & Wait for user to stop render engine (Press 'Q' or Escape-key); this command is used to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as mbs.WaitForUserToContinue()\\ \hline 
   RenderEngineZoomAll() & Send zoom all signal, which will perform zoom all at next redraw request\\ \hline 
   RedrawAndSaveImage() & Redraw openGL scene and save image (command waits until process is finished)\\ \hline 
   AttachToRenderEngine() & Links the SystemContainer to the render engine, such that the changes in the graphics structure drawn upon updates, etc.; done automatically on creation of SystemContainer; return False, if no renderer exists (e.g., compiled without GLFW) or cannot be linked (if other SystemContainer already linked)\\ \hline 
@@ -88,7 +88,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
   AssembleSystemInitialize() & initialize some system data, e.g., generalContact objects (searchTree, etc.)\\ \hline 
   Reset() & reset all lists of items (nodes, bodies, markers, loads, ...) and temporary vectors; deallocate memory\\ \hline 
   GetSystemContainer() & return the systemContainer where the mainSystem (mbs) was created\\ \hline 
-  WaitForUserToContinue() & interrupt further computation until user input --> 'pause' function\\ \hline 
+  WaitForUserToContinue() & interrupt further computation until user input --> 'pause' function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as SC.WaitForRenderEngineStopFlagthis()\\ \hline 
   SendRedrawSignal() & this function is used to send a signal to the renderer that the scene shall be redrawn because the visualization state has been updated\\ \hline 
   GetRenderEngineStopFlag() & get the current stop simulation flag; True=user wants to stop simulation\\ \hline 
   SetRenderEngineStopFlag() & set the current stop simulation flag; set to False, in order to continue a previously user-interrupted simulation\\ \hline 
@@ -808,7 +808,8 @@ This section shows the NodeType structure, which is used for defining node types
   RotationEulerParameters & node with 3D orientations that are modelled with Euler parameters (unit quaternions)\\ \hline 
   RotationRxyz & node with 3D orientations that are modelled with Tait-Bryan angles\\ \hline 
   RotationRotationVector & node with 3D orientations that are modelled with the rotation vector\\ \hline 
-  RotationLieGroup & node intended to be solved with Lie group methods\\ \hline 
+  LieGroupWithDirectUpdate & node to be solved with Lie group methods, without data coordinates\\ \hline 
+  LieGroupWithDataCoordinates & node to be solved with Lie group methods, having data coordinates\\ \hline 
   GenericODE2 & node with general ODE2 variables\\ \hline 
   GenericODE1 & node with general ODE1 variables\\ \hline 
   GenericAE & node with general algebraic variables\\ \hline 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Holzinger Stefan
 * @date         2019-07-01 (generated)
-* @date         2022-08-22  16:14:13 (last modified)
+* @date         2022-08-26  12:15:52 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -125,6 +125,12 @@ public: // AUTO:
     virtual LinkedDataVector GetInitialCoordinateVector_t() const override
     {
         return parameters.initialCoordinates_t;
+    }
+
+    //! AUTO:  set initial ODE2 coordinates of node
+    virtual void SetInitialCoordinateVector(LinkedDataVector& initialVector) override
+    {
+        initialVector.SetAll(0);
     }
 
 

@@ -79,27 +79,28 @@ public:
 class RenderState
 {
 public:
-	//GLfloat modelview[16]; //current model view matrix
-	Float3 centerPoint;		//offset of scene in x, y and z direction; initialized by user, then by InitializeView and hereafter changed in OpenGL renderer by ZoomAll (z not used, because it would bring objects out of near/far plane)
-	//Float3 rotationCenterPoint;	//additional offset for point around which the model view is rotated; standard=[0,0,0]
-	float maxSceneSize;		//size given e.g. by initial state of system
-	float zoom;				//this is a factor for zoom
+	//GLfloat modelview[16];		//!< current model view matrix
+	Float3 centerPoint;				//!< offset of scene in x, y and z direction; initialized by user, then by InitializeView and hereafter changed in OpenGL renderer by ZoomAll (z not used, because it would bring objects out of near/far plane)
+	//Float3 rotationCenterPoint;	//!< additional offset for point around which the model view is rotated; standard=[0,0,0]
+	float maxSceneSize;				//!< size given e.g. by initial state of system
+	float zoom;						//!< this is a factor for zoom
+	float displayScaling;			//!< value as retrieved from GLFW glfwGetWindowContentScale
 
-	Index2 currentWindowSize;	//!< current window size in pixel; used to transform mouse movements to OpenGL coordinates; x=width, y=height
-	Float16 modelRotation;		//!< rotation used for incremental rotation with mouse / right mouse button
+	Index2 currentWindowSize;		//!< current window size in pixel; used to transform mouse movements to OpenGL coordinates; x=width, y=height
+	Float16 modelRotation;			//!< rotation used for incremental rotation with mouse / right mouse button
 	Float16 openGLModelViewMatrix;	//!< modelview matrix as used in openGL
 	Float16 openGLProjection;		//!< projection matrix as used in openGL
 	
-	Vector2D mouseCoordinates; //!current mouse coordinates as obtained from GLFW
-	Vector2D openGLcoordinates; //!current mouse coordinates projected in current model view plane (x/y)
-	bool mouseLeftPressed;     //!current left mouse button as obtained from GLFW
-	bool mouseRightPressed;    //!current right mouse button as obtained from GLFW
-	bool mouseMiddlePressed;   //!current middle mouse button as obtained from GLFW
+	Vector2D mouseCoordinates;		//!current mouse coordinates as obtained from GLFW
+	Vector2D openGLcoordinates;		//!current mouse coordinates projected in current model view plane (x/y)
+	bool mouseLeftPressed;			//!current left mouse button as obtained from GLFW
+	bool mouseRightPressed;			//!current right mouse button as obtained from GLFW
+	bool mouseMiddlePressed;		//!current middle mouse button as obtained from GLFW
 
 	//for space mouse (3D position + 3D rotation):
-	Vector3D joystickPosition;    //!< stored position of joystick, if available
-	Vector3D joystickRotation;	//!< stored rotation of joystick, if available
-	Index joystickAvailable;			//!< -1 if no joystick available, otherwise the index of the available joystick
+	Vector3D joystickPosition;		//!< stored position of joystick, if available
+	Vector3D joystickRotation;		//!< stored rotation of joystick, if available
+	Index joystickAvailable;		//!< -1 if no joystick available, otherwise the index of the available joystick
 };
 
 #endif

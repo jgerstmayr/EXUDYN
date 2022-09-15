@@ -14,20 +14,27 @@
 import tkinter as tk
 import tkinter.messagebox
 import tkinter.ttk as ttk
+import tkinter.font as tkFont
 import numpy as np #for array checks
 import ast #for ast.literal_eval
 import exudyn
 
+useRenderWindowDisplayScaling = True #using this, scaling will change with render window
+
+treeviewDefaultFontSize = 9 #this is then scaled; but it could be changed to make fonts smaller
+textHeightFactor = 1.45 #this is the factor between font size and text height; larger values leading to more space between lines
+
+treeEditDefaultWidth = 1024     #unscaled width of e.g. visualizationSettings
+treeEditDefaultHeight = 800     #unscaled height of e.g. visualizationSettings
+dialogDefaultWidth = 800        #unscaled width of e.g. right mouse edit
+dialogDefaultHeight = 600       #unscaled height of e.g. right mouse edit
+
 #unique text height for tk with given scaling
 def TkTextHeight(systemScaling):
-    return int(13*systemScaling) #must be int #16 is too big on surface
+    #OLD, without     style.configure("Treeview", font=(None, treeviewDefaultFontSize ) ):
+    #return int(13*systemScaling) #must be int; 13 is good; 16 is too big on surface
     
-##convert a given value with type information and size to a string; depending on size, it converts from matrix, vector, scalar, ...
-#def ConvertValue2String(value, vType, vSize):
-#    s= str(value)
-#    if len(vSize) == 2 or (len(vSize)==1 and vSize[0] > 1): #must be matrix
-#        s.s()
-#    return s
+    return int((treeviewDefaultFontSize*textHeightFactor)*systemScaling) #must be int; 13 is good with treeviewDefaultFontSize = 9; 12 leads to some cuts of 'g'
 
 #check if is float:
 def IsFloat(v):
@@ -52,6 +59,37 @@ def IsVector(v):
         return False
     return True
 
+#safely request scaling factor from exudyn
+def GetExudynDisplayScaling():
+    try:
+        if 'currentRendererSystemContainer' in exudyn.sys: 
+            guiSC = exudyn.sys['currentRendererSystemContainer']
+            if guiSC != 0: #this would mean that renderer is detached
+                rs = guiSC.GetRenderState()
+                #print('return render state')
+                return rs['displayScaling']
+        
+        return 1
+
+    except: 
+        #print('except!')
+        return 1
+
+#return either exudyn or tkinter scaling, unified approach
+def GetGUIContentScaling(tkMaster):
+    try:
+        if useRenderWindowDisplayScaling:
+            #print('exudyn scaling      =',GetExudynDisplayScaling())
+            #print('tkinter scaling(OLD)=',tkMaster.tk.call('tk', 'scaling'))
+            s = 1.4*GetExudynDisplayScaling() #gives similar size as other programs; factor 1.4 is empirical
+            tkMaster.tk.call('tk', 'scaling', s) #needed to update font size internally ...
+            #print('tkinter scaling(NEW)=',tkMaster.tk.call('tk', 'scaling'))
+            return s
+        else:
+            return tkMaster.tk.call('tk', 'scaling') #obtains current scaling?
+    except:
+        return 1
+    
 #create dictionaries for lists in combo box: bool, OutputVariableType, ...
 def GetComboBoxListsDict(exu = None):
     d=dict()  #as string
@@ -217,13 +255,14 @@ def CheckType(valueStr, vType, vSize):
 #this class gets a dictionary with type information structure in, but a plain dictionary with types (int, float, string, list, ...) out
 #dictionaryTypes contains a dictionary which the available types, e.g. bool, etc.
 class TkinterEditDictionaryWithTypeInfo(tk.Frame):
-    def __init__(self, parent, dictionaryData, dictionaryTypesT, treeOpen=False):
+    def __init__(self, parent, dictionaryData, dictionaryTypesT, treeOpen=False, textHeight = 15):
         tk.Frame.__init__(self, parent)
         
         self.parentFrame = parent #parent frame stored for member functions
         #self.dictionaryTypes = dictionaryTypes #as string
         self.dictionaryTypesT = dictionaryTypesT #as type
         self.treeOpen = treeOpen
+        self.textHeight = textHeight
 
         #additional storage for type, size, etc.
         self.typeStorage = dict() #dictionary is stored as {'ID1': 'type1', 'ID2': 'type2', ...}
@@ -231,13 +270,14 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.descriptionStorage = dict()
 
         #create treeview:
-        self.tree = ttk.Treeview(self, columns=("value","description"), selectmode='browse', height=15)
+        self.tree = ttk.Treeview(self, columns=("value","description"), selectmode='browse', height=self.textHeight)
         self.vertivalScrollbar = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=self.vertivalScrollbar.set)
 
         self.tree.grid(row=0, column=0, columnspan=3, sticky="nsew")
         self.vertivalScrollbar.grid(row=0, column=3, sticky='nse')
         self.vertivalScrollbar.configure(command=self.tree.yview)
+
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0,weight=1)
@@ -501,30 +541,55 @@ def EditDictionaryWithTypeInfo(dictionaryData, exu=None, dictionaryName='edit'):
         master = tk.Toplevel(root)
         #print('EditDictionaryWithTypeInfo: tkinter already running, using toplevel')
         tkinterAlreadyRunning = True
+        tkMaster = root
     else:
         master = tk.Tk()
-    master.geometry("1024x800")
+        tkMaster = master
+    
+    master.geometry(str(treeEditDefaultWidth)+'x'+str(treeEditDefaultHeight))
+    #master.geometry("1024x800")
+    systemScaling = GetGUIContentScaling(tkMaster)
+
+
     master.lift() #brings it to front of other; not always "strong" enough
     master.attributes("-topmost", True) #puts window topmost (permanent)
     #master.attributes("-topmost", False) #puts window topmost (remove permanent)
     master.title(dictionaryName)
     master.focus_force() #window has focus
 
-    if tkinterAlreadyRunning:
-        systemScaling = root.tk.call('tk', 'scaling') #obtains current scaling?
-        #print('display scaling=',systemScaling)
-    else:
-        systemScaling = master.tk.call('tk', 'scaling') #obtains current scaling
+
+    # if tkinterAlreadyRunning:
+    #     #systemScaling = root.tk.call('tk', 'scaling') #obtains current scaling?
+    #     systemScaling = GetExudynDisplayScaling() #obtains current scaling?
+    # else:
+    #     #systemScaling = master.tk.call('tk', 'scaling') #obtains current scaling
+    #     systemScaling = GetExudynDisplayScaling() #obtains current scaling?
+
+    # print('TK display scaling=',systemScaling)
+    # print('exudyn display scaling=',GetExudynDisplayScaling())
+
     textHeight = TkTextHeight(systemScaling)
+    #fontSize = TkFontSize(systemScaling)
+
+    #no effect:
+    # defaultFont = tkFont.Font(root=tkMaster, family = "TkDefaultFont")
+    # defaultFont.configure(size=fontSize)
     
     style = ttk.Style(master)
     style.configure('Treeview', rowheight=textHeight) 
+    #it seems that the font size should not be changed (what is done due to scaling internally ...)
+    fontFactor = 1
+    
+    style.configure("Treeview.Heading", font=(None, int(treeviewDefaultFontSize*fontFactor) ) )
+    style.configure("Treeview", font=(None, int(treeviewDefaultFontSize*fontFactor) ) )
+    
+    #style.configure("Vertical.TScrollbar", width=4)
     
     def closeEditDictionary(event):
-        master.destroy() # if you want to bring it back
+        master.destroy() 
 
     comboListsT = GetComboBoxListsDict(exu)
-    ex=TkinterEditDictionaryWithTypeInfo(parent=master, dictionaryData=dictionaryData, dictionaryTypesT=comboListsT, treeOpen=True)
+    ex=TkinterEditDictionaryWithTypeInfo(parent=master, dictionaryData=dictionaryData, dictionaryTypesT=comboListsT, treeOpen=True, textHeight = textHeight)
     ex.pack(fill="both", expand=True)
 
     if not tkinterAlreadyRunning:
@@ -538,18 +603,19 @@ def EditDictionaryWithTypeInfo(dictionaryData, exu=None, dictionaryName='edit'):
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #hierarchical lists, without type info:
 class TkinterEditDictionary(tk.Frame):
-    def __init__(self, parent, dictionaryData, dictionaryIsEditable=True):
+    def __init__(self, parent, dictionaryData, dictionaryIsEditable=True, textHeight = 15):
         tk.Frame.__init__(self, parent)
         
         self.parent = parent
         self.dictionaryIsEditable = dictionaryIsEditable
         self.longestColumn = 20 #min value
+        self.textHeight = textHeight
 
         #create treeview:
-        self.tree = ttk.Treeview(self, columns=("value"), height=15)
+        self.tree = ttk.Treeview(self, columns=("value"), height=textHeight)
         self.AddNodeFromDictionary(value=dictionaryData, parentNode="")
 
-        self.vsb = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview)
+        self.vsb = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview, )
         self.hsb = ttk.Scrollbar(self, orient="horizontal", command=self.tree.xview)
         self.tree.configure(yscrollcommand=self.vsb.set, xscrollcommand=self.hsb.set)
 
@@ -735,6 +801,7 @@ class TkinterEditDictionary(tk.Frame):
 #            self.editItemVar.set('')
 #            self.editItemName.set('')
             self.tree.focus_set()
+    
 
 #edit dictionaryData and return modified (new) dictionary
 def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
@@ -745,30 +812,45 @@ def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
         master = tk.Toplevel(root)
         #print('EditDictionary: tkinter already running, using toplevel')
         tkinterAlreadyRunning = True
+        tkMaster = root
     else:
         master = tk.Tk()
-    # master = tk.Tk()
+        tkMaster = master
 
-    master.geometry("600x600")
+    master.geometry(str(dialogDefaultWidth)+'x'+str(dialogDefaultHeight))
+    #master.geometry("600x600")
+    systemScaling = GetGUIContentScaling(tkMaster)
+
     master.lift() #brings it to front of other; is not always strong enough
     master.attributes("-topmost", True) #puts window topmost (permanent)
     #master.attributes("-topmost", False) #puts window topmost (remove permanent)
-    if tkinterAlreadyRunning:
-        systemScaling = exudyn.sys['tkinterRoot'].tk.call('tk', 'scaling') #obtains current scaling?
-        #print('display scaling=',systemScaling)
-    else:
-        systemScaling = master.tk.call('tk', 'scaling') #obtains current scaling
+    
+
     textHeight = TkTextHeight(systemScaling)
+    #fontSize = TkFontSize(systemScaling)
+
+    #no effect:
+    # defaultFont = tkFont.Font(root=tkMaster, family = "TkDefaultFont")
+    # defaultFont.configure(size=fontSize)
+
     master.title(dialogName)
     master.focus_force() #window has focus
 
     style = ttk.Style(master)
     style.configure('Treeview', rowheight=textHeight) 
+    #it seems that the font size should not be changed (what is done due to scaling internally ...)
+
+    fontFactor = 1
+    
+    style.configure("Treeview.Heading", font=(None, int(treeviewDefaultFontSize*fontFactor) ) )
+    style.configure("Treeview", font=(None, int(treeviewDefaultFontSize*fontFactor) ) )
+
+    #this has no effect style.configure("Vertical.TScrollbar", width=4)
     
     def closeEditDictionary(event):
-        master.destroy() # if you want to bring it back
+        master.destroy() 
 
-    ex=TkinterEditDictionary(master, dictionaryData, dictionaryIsEditable)
+    ex=TkinterEditDictionary(master, dictionaryData, dictionaryIsEditable, textHeight)
     ex.pack(fill="both", expand=True)
 
     if not tkinterAlreadyRunning:

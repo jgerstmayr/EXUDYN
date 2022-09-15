@@ -46,27 +46,27 @@ namespace Node {
 		Ground = 1 << 0,					//!< used for ground nodes
 
 		//2D
-		Position2D = 1 << 1,				//!< used for: 2D point nodes, rigid nodes, nodes with position and slopes, ...; must provide position + translational displacement, velocity
-		Orientation2D = 1 << 2,				//!< used for: 2D rigid nodes (independent of parameterization); node must provide rotation matrix, dAngularVelocity/dq
-		Point2DSlope1 = 1 << 3,				//!< used for: nodes which provide a 2D position and a 2D slope vector in 1-direction
+		Position2D = 1 << 1,					//!< used for: 2D point nodes, rigid nodes, nodes with position and slopes, ...; must provide position + translational displacement, velocity
+		Orientation2D = 1 << 2,					//!< used for: 2D rigid nodes (independent of parameterization); node must provide rotation matrix, dAngularVelocity/dq
+		Point2DSlope1 = 1 << 3,					//!< used for: nodes which provide a 2D position and a 2D slope vector in 1-direction
 		//3D
-		Position = 1 << 4,					//!< used for: point nodes, rigid nodes, nodes with position and slopes, ...; must provide position + translational displacement, velocity
-		Orientation = 1 << 5,				//!< nodes, which can measure rotation, can apply torque (not only rigid nodes); node must provide rotation matrix, dAngularVelocity/dq
-		RigidBody = 1 << 6,					//!< nodes which are derived from NodeRigidBody; used for ObjectRigidBody or for beams; node must provide rotation matrix, dAngularVelocity/dq, and G, Glocal, ...
+		Position = 1 << 4,						//!< used for: point nodes, rigid nodes, nodes with position and slopes, ...; must provide position + translational displacement, velocity
+		Orientation = 1 << 5,					//!< nodes, which can measure rotation, can apply torque (not only rigid nodes); node must provide rotation matrix, dAngularVelocity/dq
+		RigidBody = 1 << 6,						//!< nodes which are derived from NodeRigidBody; used for ObjectRigidBody or for beams; node must provide rotation matrix, dAngularVelocity/dq, and G, Glocal, ...
 		//special Rotation:
-		RotationEulerParameters = 1 << 7,	//!< used if orientation is described with euler parameters
-		RotationRxyz = 1 << 8,				//!< used if orientation is described with euler angles
-		RotationRotationVector = 1 << 9,	//!< used if orientation is described with rotation vector parameters
-		LieGroupWithDirectUpdate = 1 << 10,			//!< used if a lie group formulation is used; this means, that equations are written vor angular acc (omega_t), not for rotationParameters_tt
-		LieGroupWithDataCoordinates = 1 << 11,			//!< used if a lie group formulation is used with data variables for start-of-step state and local frame approach
+		RotationEulerParameters = 1 << 7,		//!< used if orientation is described with euler parameters
+		RotationRxyz = 1 << 8,					//!< used if orientation is described with euler angles
+		RotationRotationVector = 1 << 9,		//!< used if orientation is described with rotation vector parameters
+		LieGroupWithDirectUpdate = 1 << 10,		//!< used if a lie group formulation is used; this means, that equations are written vor angular acc (omega_t), not for rotationParameters_tt
+		LieGroupWithDataCoordinates = 1 << 11,	//!< used if a lie group formulation is used with data variables for start-of-step state and local frame approach
 		//General
-		GenericODE2 = 1 << 12,				//!< used for node with ODE2 coordinates (no specific access functions, except on coordinate level)
-		GenericODE1 = 1 << 13,				//!< used for node with ODE1 coordinates (no specific access functions, except on coordinate level)
-		GenericAE = 1 << 14,				//!< (CURRENTLY UNUSED!) used for node with AE coordinates (no specific access functions, except on coordinate level)
-		GenericData = 1 << 15,				//!< used for node with data coordinates
+		GenericODE2 = 1 << 12,					//!< used for node with ODE2 coordinates (no specific access functions, except on coordinate level)
+		GenericODE1 = 1 << 13,					//!< used for node with ODE1 coordinates (no specific access functions, except on coordinate level)
+		GenericAE = 1 << 14,					//!< (CURRENTLY UNUSED!) used for node with AE coordinates (no specific access functions, except on coordinate level)
+		GenericData = 1 << 15,					//!< used for node with data coordinates
 		//ANCF:
-		Point3DSlope1 = 1 << 16,			//!< used for: nodes which provide a position and a slope vector in 1-direction
-		Point3DSlope23 = 1 << 17			//!< used for: nodes which provide a position and slope vectors in 2 and 3-direction
+		Point3DSlope1 = 1 << 16,				//!< used for: nodes which provide a position and a slope vector in 1-direction
+		Point3DSlope23 = 1 << 17				//!< used for: nodes which provide a position and slope vectors in 2 and 3-direction
 		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//keep these lists synchronized with autoGeneratePybindings.py lists
 	};
@@ -617,16 +617,10 @@ public:
 	virtual void CollectCurrentNodeMarkerData(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G,
 		Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal) const { CHECKandTHROWstring("CNodeRigidBody::CollectCurrentNodeData1(...): invalid call"); }
 
-#ifdef LIE_GROUP_IMPLICIT_SOLVER
-	////! apply composition rule for current coordinates (in SE3) with incremental motion, compute new coordinates
-	//virtual void CompositionRule(const LinkedDataVector& currentCoordinates, const Vector6D& incrementalMotion,
-	//	const LinkedDataVector& newCoordinates) const {
-	//	CHECKandTHROWstring("CNodeRigidBody::CompositionRule(...): invalid call");
-	//};
-	//! apply composition rule for current position and orientation coordinates (depending on node type) with incremental motion, compute new coordinates
-	virtual void CompositionRule(const LinkedDataVector& currentPosition, const LinkedDataVector& currentOrientation, const Vector6D& incrementalMotion,
-		const LinkedDataVector& newPosition, const LinkedDataVector& newOrientation) const { CHECKandTHROWstring("CNodeRigidBody::CompositionRule(...): invalid call");	};
-#endif
+	//! apply "SE3" composition rule for current position and orientation coordinates (depending on node type) with incremental motion, compute new coordinates
+	virtual void CompositionRule(const LinkedDataVector& currentPosition, const LinkedDataVector& currentOrientation, 
+		const Vector6D& incrementalMotion,
+		LinkedDataVector& newPosition, LinkedDataVector& newOrientation) const { CHECKandTHROWstring("CNodeRigidBody::CompositionRule(...): invalid call");	};
 };
 
 //! node with data variables

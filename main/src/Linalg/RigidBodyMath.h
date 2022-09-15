@@ -850,5 +850,40 @@ namespace EXUlie {
 		return w * n;
 	}
 
+#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
+	//! compute tangent operator of R3xSO(3)
+	inline Matrix6D TExpR3xSO3(const Vector6D& incrementalMotion)
+	{
+		// incremental position/rotation
+		//Vector3D incrementalPosition = { incrementalMotion[0], incrementalMotion[1], incrementalMotion[2] };
+		Vector3D incrementalRotation = { incrementalMotion[3], incrementalMotion[4], incrementalMotion[5] };
+
+		Matrix6D Texp(6, 6);
+		Texp.SetSubmatrix(EXUmath::unitMatrix3D, 0, 0);
+		Texp.SetSubmatrix(EXUmath::zeroMatrix3D, 0, 3);
+		Texp.SetSubmatrix(EXUmath::zeroMatrix3D, 3, 0);
+		Texp.SetSubmatrix(TExpSO3(incrementalRotation), 3, 3);
+
+		return Texp;
+	}
+
+
+	//! compute tangent operator of R3xSO(3)
+	inline Matrix6D TExpR3xSO3Inv(const Vector6D& incrementalMotion)
+	{
+		// incremental position/rotation
+		//Vector3D incrementalPosition = { incrementalMotion[0], incrementalMotion[1], incrementalMotion[2] };
+		Vector3D incrementalRotation = { incrementalMotion[3], incrementalMotion[4], incrementalMotion[5] };
+
+		Matrix6D TexpInv(6, 6);
+		TexpInv.SetSubmatrix(EXUmath::unitMatrix3D, 0, 0);
+		TexpInv.SetSubmatrix(EXUmath::zeroMatrix3D, 0, 3);
+		TexpInv.SetSubmatrix(EXUmath::zeroMatrix3D, 3, 0);
+		TexpInv.SetSubmatrix(TExpSO3Inv(incrementalRotation), 3, 3);
+
+		return TexpInv;
+	}
+#endif // LIE_GROUP_IMPLICIT_SOLVER
+
 } //namespace LieGroup
 #endif

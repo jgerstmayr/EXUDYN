@@ -91,7 +91,7 @@ std::atomic_flag GlfwRenderer::renderFunctionRunning = ATOMIC_FLAG_INIT;  //!< s
 std::atomic_flag GlfwRenderer::showMessageSemaphore = ATOMIC_FLAG_INIT;   //!< semaphore for ShowMessage
 
 BitmapFont GlfwRenderer::bitmapFont;				//!< bitmap font for regular texts, initialized upon start of renderer
-float GlfwRenderer::fontScale;						//!< monitor scaling factor from windows, to scale fonts
+//moved to render state; float GlfwRenderer::fontScale;						//!< monitor scaling factor from windows, to scale fonts
 #ifndef USE_TEXTURED_BITMAP_FONTS
 BitmapFont GlfwRenderer::bitmapFontSmall;			//!< bitmap font for small texts, initialized upon start of renderer
 BitmapFont GlfwRenderer::bitmapFontLarge;			//!< bitmap font for large texts, initialized upon start of renderer
@@ -118,8 +118,9 @@ GlfwRenderer::GlfwRenderer()
 	rendererActive = false;
 	graphicsDataList = nullptr;
 	window = nullptr;
+	state = nullptr;
 
-	fontScale = 1; //initialized if needed before bitmap initialization
+	//moved to renderState: fontScale = 1; //initialized if needed before bitmap initialization
 	//renderState state cannot be initialized here, because it will be linked later to visualizationSystemContainer
 
 	ResetStateMachine();
@@ -1227,7 +1228,7 @@ bool GlfwRenderer::SetupRenderer(bool verbose)
 	{
 		PySetRendererCallbackLock(false); //reset callback lock if still set from earlier run (for safety ...)
 
-		basicVisualizationSystemContainer->InitializeView(); //this is done to make OpenGL zoom and maxSceneCoordinates work
+		basicVisualizationSystemContainer->InitializeView(); //initializes renderState; this is done to make OpenGL zoom and maxSceneCoordinates work
 		basicVisualizationSystemContainer->SetComputeMaxSceneRequest(true); //computes maxSceneCoordinates for perspective and shadow
 		if (visSettings->general.autoFitScene) 
 		{ 
@@ -1381,6 +1382,21 @@ void GlfwRenderer::StopRenderer()
 	}
 }
 
+
+void GlfwRenderer::SetContentScaling(float xScale, float yScale)
+{
+	float fontScaleOld = GetFontScaling();
+	if (visSettings->general.useWindowsDisplayScaleFactor)
+	{
+		SetFontScaling(0.5f*(xScale + yScale) ); //simplified for now!
+	} else {SetFontScaling(1); }
+
+	if (GetFontScaling() != fontScaleOld)
+	{
+		ShowMessage("Font size adjusted to monitor scaling", 3.);
+	}
+}
+
 void GlfwRenderer::InitCreateWindow()
 {
 	try
@@ -1466,6 +1482,9 @@ void GlfwRenderer::InitCreateWindow()
 
 		glfwSetWindowCloseCallback(window, window_close_callback);
 		glfwSetWindowRefreshCallback(window, Render);
+#if !defined(__EXUDYN__LINUX__)
+		glfwSetWindowContentScaleCallback(window, window_content_scale_callback);
+#endif
 		if (verboseRenderer) { PrintDelayed("window callbacks successful"); }
 
 		glfwMakeContextCurrent(window);
@@ -1486,17 +1505,14 @@ void GlfwRenderer::InitCreateWindow()
 
 		//+++++++++++++++++
 		//determine the windows scale; TODO: add callback to redraw if monitor is changed: glfwSetWindowContentScaleCallback(...)
-#ifdef __EXUDYN__LINUX__
-		fontScale = 1; //glfwGetWindowContentScale() crashes on Ubuntu18.04 and 20.04 compilation
-#else
-		float xWindowScale, yWindowScale;
+		float xWindowScale = 1;
+		float yWindowScale = 1;
+#if !defined(__EXUDYN__LINUX__) //glfwGetWindowContentScale() crashes on Ubuntu18.04 and 20.04 compilation
 		glfwGetWindowContentScale(window, &xWindowScale, &yWindowScale);
-		fontScale = 0.5f*(xWindowScale + yWindowScale); //simplified for now!
-		if (!visSettings->general.useWindowsMonitorScaleFactor) { fontScale = 1; }
 #endif
-		guint fontSize = (guint)(visSettings->general.textSize*fontScale);
-
-		InitFontBitmap(fontSize);
+		SetContentScaling(xWindowScale, yWindowScale); 
+		guint fontSize = (guint)(visSettings->general.textSize * GetFontScaling()); //use this size for fonts throughout
+		InitFontBitmap(fontSize); //fontSize only used in old bitmap mode!
 		if (verboseRenderer) { PrintDelayed("InitFontBitmap(...) successful"); }
 
 		InitGLlists();
@@ -1730,15 +1746,8 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	state->currentWindowSize[1] = height;
 
 	
-	//determine the windows scale; TODO: add callback to redraw if monitor is changed: glfwSetWindowContentScaleCallback(...)
-	//float xWindowScale, yWindowScale;
-	//glfwGetWindowContentScale(window, &xWindowScale, &yWindowScale);
-	//fontScale = 0.5f*(xWindowScale + yWindowScale); //simplified for now!
 
-	////do not use font scaling with bitmaps (they are internally scaled ...)
-	//if (!visSettings->general.useWindowsMonitorScaleFactor/* || visSettings->general.useBitmapText*/) { fontScale = 1; }
-
-	float fontSize = visSettings->general.textSize * fontScale; //use this size for fonts throughout
+	float fontSize = visSettings->general.textSize * GetFontScaling(); //use this size for fonts throughout
 
 	glViewport(0, 0, width, height);
 	//std::cout << "h=" << height << ", w=" << width << "\n";
@@ -1882,7 +1891,10 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		if (stateMachine.rendererMessage.size() != 0)
 		{
 			DrawString(stateMachine.rendererMessage.c_str(), fontSize*fontSmallFactor, poff, textColor);
-			if (stateMachine.renderMessageTimeout != 0. && stateMachine.renderMessageTimeout < EXUstd::GetTimeInSeconds()) { stateMachine.rendererMessage = ""; }
+			if (stateMachine.renderMessageTimeout != 0. && stateMachine.renderMessageTimeout < EXUstd::GetTimeInSeconds()) 
+			{ 
+				stateMachine.rendererMessage = ""; 
+			}
 		}
 		else if (visSettings->window.showMouseCoordinates)
 		{
@@ -2609,8 +2621,8 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 				if (selectionMode) { if (t.itemID != lastItemID) { glLoadName(t.itemID); lastItemID = t.itemID; } }
 				//delete: float scale = textheight * scaleFactor;
 				//delete: if (t.size != 0.f) { scale = t.size * scaleFactor; }
-				textFontSize = textheight * fontScale;
-				if (t.size != 0.f) { textFontSize = t.size * fontScale; }
+				textFontSize = textheight * GetFontScaling();
+				if (t.size != 0.f) { textFontSize = t.size * GetFontScaling(); }
 
 				float offx = t.offsetX * scaleFactor * textFontSize;
 				float offy = t.offsetY * scaleFactor * textFontSize;

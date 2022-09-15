@@ -13,8 +13,9 @@
 
 #constants and fixed structures:
 import exudyn.itemInterface as eii
-from exudyn.utilities import RoundMatrix, ComputeSkewMatrix, PlotLineCode, GetRigidBodyNode#, FillInSubMatrix
+from exudyn.utilities import RoundMatrix, ComputeSkewMatrix, PlotLineCode, GetRigidBodyNode, IsListOrArray #, FillInSubMatrix
 from exudyn.rigidBodyUtilities import AngularVelocity2EulerParameters_t, EulerParameters2GLocal, RotationVector2GLocal, RotXYZ2GLocal, RotXYZ2GLocal_t, Skew, eulerParameters0
+from exudyn.graphicsDataUtilities import ComputeTriangleArea
 import numpy as np #LoadSolutionFile
 from enum import Enum #for class HCBstaticModeSelection
 
@@ -660,7 +661,6 @@ class FiniteElement:
     def __init__(self, material):
         self.material = material
     
-
 #**class: simplistic 4-noded tetrahedral interface to compute strain/stress at nodal points
 class Tet4(FiniteElement):
     def __init__(self, material):
@@ -669,7 +669,8 @@ class Tet4(FiniteElement):
     #return (per node) linearized strain, linearized stress, reference B-matrix and deformation gradient
     def ComputeMatrices(self, nodalReferenceCoordinates, nodalDisplacements):
         #following routines implemented according to implementation in AMFE (TU-Munich):
-        X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4 = nodalReferenceCoordinates
+        [X1, Y1, Z1, X2, Y2, Z2, X3, Y3, Z3, X4, Y4, Z4] = nodalReferenceCoordinates
+        
         Umat = nodalDisplacements.reshape(-1, 3)
         #Xmat = nodalReferenceCoordinates.reshape(-1, 3)
 
@@ -1092,8 +1093,8 @@ class ObjectFFRFreducedOrderInterface:
     #  initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
     #  eulerParametersRef: DEPRECATED, use rotationParametersRef or rotationMatrixRef in future: reference euler parameters of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
     #  gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
-    #  UFforce: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(mbs, t, qReduced, qReduced\_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
-    #  UFmassMatrix: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFmassFFRFreducedOrder(mbs, t, qReduced, qReduced\_t):\\  \phantom{XXXX}return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
+    #  UFforce: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced\_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
+    #  UFmassMatrix: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFmassFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced\_t):\\  \phantom{XXXX}return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
     #  massProportionalDamping: Rayleigh damping factor for mass proportional damping (multiplied with reduced mass matrix), added to floating frame/modal coordinates only
     #  stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only (multiplied with reduced stiffness matrix)
     #  color: provided as list of 4 RGBA values
@@ -1407,9 +1408,9 @@ class ObjectFFRFreducedOrderInterface:
 # - noStaticModes:        do not compute static modes, only eigen modes (not recommended; usually only for tests)
 class HCBstaticModeSelection(Enum):
     allBoundaryNodes = 1    #compute a single static mode for every boundary coordinate; if this is used, 6 constraints need to be added to the ObjectFFRFreducedOrder, otherwise there is additional rigid body motion!
-    RBE2 = 2                #(recommended) static modes computation only for rigid body motion at boundary nodes
-    noStaticModes = 3       #do not compute static modes, only eigen modes (not really recommended; usually only for tests)
-    
+    RBE2 = 2                #static modes which include (exact / constrained) rigid body motion (3x translation, 3x rotation) at boundary / interface; recommended as basic / simpler method, however, leads to additional stiffening and stress concentration at boundary
+    RBE3 = 3                #static modes which include averaged rigid body motion (3x translation, 3x rotation) at boundary / interface; recommended as advanced method; may lead to overly large deformation at boundary
+    noStaticModes = 4       #do not compute static modes, only eigen modes (not really recommended; usually only for tests)
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2265,7 +2266,65 @@ class FEMinterface:
                 cnt+=1
         return nodeList
 
-    #**classFunction: return surface trigs as node number list (for drawing in EXUDYN)
+
+    #**classFunction: return list of node weights based on surface triangle areas; surface triangles are identified as such for which all nodes of a triangle are on the surface
+    #**nodes: requires that surface triangles have been already built during import of finite element mesh, or by calling VolumeToSurfaceElements!
+    #**input: 
+    #  nodeList: list of local (Position) node numbers
+    #  normalizeWeights: if True, weights are normalized to sum(weights)==1; otherwise, returned list contains areas according to nodes per
+    #**output: numpy array with weights according to indices in node list
+    def GetNodeWeightsFromSurfaceAreas(self, nodeList, normalizeWeights=True):
+        verboseMode=False #for debug
+        if len(self.surface) != 1:
+            raise ValueError('GetNodeWeightsFromSurfaces: expected one surface triangle list in FEM, but received: '+str(len(self.surface)))
+
+        if 'Trigs' not in self.surface[0]:
+            raise ValueError('GetNodeWeightsFromSurfaces: only works for triangle surfaces!')
+
+        if len(self.nodes) != 1:
+            raise ValueError('GetNodeWeightsFromSurfaces: only works for one node set!')
+            
+        trigList = self.surface[0]['Trigs']
+        nNodes = self.NumberOfNodes()
+        
+        #build a node list, which contains !=-1 for every node in nodelist
+        globalToLocal = -np.ones(nNodes, dtype=int)
+        for i, node in enumerate(nodeList):
+            globalToLocal[node] = i #also stores global to local mapping ...
+
+        #find according surface trigs and compute areas:
+        femNodes = self.GetNodePositionsAsArray()
+        localSurfaceAreas = []
+        localSurfaceTrigs = []
+        weights = np.zeros(len(nodeList))
+        for trig in trigList: #if all nodes are on surface, also trig is on surface ... (except rare events, which are not considered)
+            if (globalToLocal[trig[0]] != -1 and #zero means that node is not on local surface
+                globalToLocal[trig[1]] != -1 and
+                globalToLocal[trig[2]] != -1 ):
+                localSurfaceTrigs += [trig]
+                A = ComputeTriangleArea(femNodes[trig[0]], femNodes[trig[1]], femNodes[trig[2]]) #always positive
+                localSurfaceAreas += [A]
+                #now add areas weighted to nodes:
+                for k in trig:
+                    weights[globalToLocal[k]] += A/3 #add area to every node
+                    
+        
+        totalArea = sum(localSurfaceAreas)
+        sumWeights = sum(weights)
+        if verboseMode: 
+            print('localSurfaceTrigs:', localSurfaceTrigs)
+            print('total area=', totalArea)
+            print('sum weights=', sumWeights)
+        
+        if sumWeights == 0:
+            raise ValueError('GetNodeWeightsFromSurfaces: no according triangle surfaces found!')
+
+        if normalizeWeights:
+            weights *= 1./sumWeights
+        
+        return weights
+
+    #**classFunction: return surface trigs as node number list (for drawing in EXUDYN and for node weights)
     def GetSurfaceTriangles(self):
         trigList = []
         for surface in self.surface:
@@ -2275,7 +2334,7 @@ class FEMinterface:
 
     #**classFunction: generate surface elements from volume elements
     #stores the surface in self.surface
-    #only works for one element list and one type ('Hex8') of elements
+    #only works for one element list and only for element types 'Hex8', 'Hex20', 'Tet4' and 'Tet10'
     def VolumeToSurfaceElements(self, verbose=False):
         if verbose: print("create surface from volume elements")
 #        self.elements = []              # [{'Name':'identifier', 'Tet4':[[n0,n1,n2,n3],...], 'Hex8':[[n0,...,n7],...],  },...]        #there may be several element sets
@@ -2748,41 +2807,75 @@ class FEMinterface:
     #**classFunction: compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part \refSection{sec:theory:CMS}. Note that this function may need significant time, depending on your hardware, but 50.000 nodes will require approx. 1-2 minutes and more nodes typically raise time more than linearly.
     #**input:
     #  boundaryNodesList: [nodeList0, nodeList1, ...] a list of node lists, each of them representing a set of 'Position' nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!)
-    #  nEigenModes: number of eigen modes in addition to static modes (may be zero for RBE2 computationMode); eigen modes are computed for the case where all rigid body motions at boundaries are fixed; only smallest nEigenModes absolute eigenvalues are considered
-    #  useSparseSolver: for more than approx.~500 nodes, it is recommended to use the sparse solver
-    #  computationMode: see class HCBstaticModeSelection for available modes; select RBE2 as standard, which is both efficient and accurate and which uses rigid-body-interfaces (6 independent modes) per boundary
-    #**notes: for NGsolve / Netgen meshes, see the according ComputeHurtyCraigBamptonModesNGsolve function, which is usually much faster
+    #  nEigenModes: number of eigen modes in addition to static modes (may be zero for RBE2/RBE3 computationMode); eigen modes are computed for the case where all rigid body motions at boundaries are fixed; only smallest nEigenModes absolute eigenvalues are considered
+    #  useSparseSolver: for more than approx.~500 nodes, it is recommended to use the sparse solver; dense mode not available for RBE3
+    #  computationMode: see class HCBstaticModeSelection for available modes; select RBE2 / RBE3 as standard, which is both efficient and accurate and which uses rigid-body-interfaces (6 independent modes) per boundary; RBE3 mode uses singular value decomposition, which requires full matrices for boundary nodes; this becomes slow in particular if the number of a single boundary node set gets larger than 500 nodes
+    #  boundaryNodesWeights: according list of weights with same order as boundaryNodesList, as returned e.g. by FEMinterface.GetNodeWeightsFromSurfaceAreas(...)
+    #  excludeRigidBodyMotion: if True (recommended), the first set of boundary modes is eliminated, which defines the reference conditions for the FFRF object
+    #  RBE3secondMomentOfAreaWeighting: if True, the weighting of RBE3 boundaries is done according to second moment of area; if False, the more conventional (but less appropriate) quadratic distance to reference point weighting is used
+    #  verboseMode: if True, some additional output is printed
+    #**notes: for NGsolve / Netgen meshes, see the according ComputeHurtyCraigBamptonModesNGsolve function, which is usually much faster - currently only implemented for RBE2 case
     #**output: stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
     def ComputeHurtyCraigBamptonModes(self,
-                                      boundaryNodesList,
-                                      nEigenModes, 
-                                      useSparseSolver = True,
-                                      computationMode = HCBstaticModeSelection.RBE2):
+                                  boundaryNodesList,
+                                  nEigenModes, 
+                                  useSparseSolver = True,
+                                  computationMode = HCBstaticModeSelection.RBE2,
+                                  boundaryNodesWeights = [],
+                                  excludeRigidBodyMotion = True,
+                                  RBE3secondMomentOfAreaWeighting = True,
+                                  verboseMode = False):
 
         #only makes sense for RBE3 modes:  positionOnlyModes: provide empty list [] to compute rigid body interfaces for all boundary node lists, or a boolean list [False, False, True, ...] to indicate which modes only have 3 position but no rotation modes; only valid for computationMode = RBE2 
-    
         #unsorted, dense eigen vectors
         from scipy.linalg import eigh#, solve, eig #eigh for symmetric matrices, positive definite
         from scipy.linalg import block_diag
         import time #for some timers
-
-        timerTreshold = 20000 #for more DOF than this number, show CPU times
+    
+        addRotationModes = 1 #may become an argument in future ...
+    
     
         if useSparseSolver: 
-            from scipy.sparse.linalg import eigsh #eigh for symmetric matrices, positive definite
-            from scipy.sparse.linalg import factorized
+            from scipy.sparse.linalg import eigsh, factorized #eigh for symmetric matrices, positive definite
     
             K = CSRtoScipySparseCSR(self.GetStiffnessMatrix(sparse=True))
             M = CSRtoScipySparseCSR(self.GetMassMatrix(sparse=True))
     
         else: #not recommended for more than 2000 nodes (6000 DOF)!
+            if computationMode == HCBstaticModeSelection.RBE3:
+                raise ValueError('ComputeHurtyCraigBamptonModes: RBE3 mode only available in sparse mode')
+    
             K = self.GetStiffnessMatrix(sparse=False)
             M = self.GetMassMatrix(sparse=False)
+    
+        n = M.shape[0] #size of mass and stiffness matrix; assume square matrix!
+        timerTreshold = 20000 #for more DOF than this number, show CPU times
+        verboseTimer = n>timerTreshold or verboseMode
+    
+    
+        for bnl in boundaryNodesList:
+            if not IsListOrArray(bnl,checkIfNoneEmpty=True):
+                raise ValueError('ComputeHurtyCraigBamptonModes: boundaryNodesList must contain non-empty node lists')
+                
+    
             
+        if len(boundaryNodesWeights) != 0:
+            if len(boundaryNodesList) != len(boundaryNodesList):
+                raise ValueError('ComputeHurtyCraigBamptonModes: boundaryNodesWeights must be either empty or have same dimension as boundaryNodesList')
+                for i in range(len(boundaryNodesList)):
+                    if len(boundaryNodesWeights[i]) != len(boundaryNodesList[i]):
+                        raise ValueError('ComputeHurtyCraigBamptonModes: boundaryNodesWeights and boundaryNodesList must have same dimension for every sublist')
+            BNWlist = boundaryNodesWeights 
+        else: #create boundaryNodesWeights
+            BNWlist = []
+            for i in range(len(boundaryNodesList)):
+                nBNL = len(boundaryNodesList[i])
+                BNWlist += [1/nBNL*np.ones(nBNL)]
+        
+        
         #implementation with RBE2 boundary mode
         if len(boundaryNodesList) != 0:
             
-            n = M.shape[0] #size of mass and stiffness matrix; assume square matrix!
             nb = 0
             DOFb = []
             nNodeLists = len(boundaryNodesList)
@@ -2792,7 +2885,7 @@ class FEMinterface:
             boundaryNodesMidPoints = []
             
             #determine sizes and some parameters:
-            for boundaryNodes in boundaryNodesList:
+            for boundaryIndex, boundaryNodes in enumerate(boundaryNodesList):
             #sizes of internal and boundary nodes:
                 nb += len(boundaryNodes)*3
                 #compute indices for internal and boundary DOF/coordinates:
@@ -2801,25 +2894,21 @@ class FEMinterface:
     
                 #compute midpoints of boundary nodes:
                 p = np.zeros(3)
-                for node in boundaryNodes:
-                    p += nodesPos[node]
+                for nodeIndex, node in enumerate(boundaryNodes):
+                    #OLD, without weighting: p += nodesPos[node]
+                    p += BNWlist[boundaryIndex][nodeIndex]*nodesPos[node]
                 
-                boundaryNodesMidPoints += [p*(1./len(boundaryNodes))]
+                #OLD, without weighting: boundaryNodesMidPoints += [p*(1./len(boundaryNodes))]
+                boundaryNodesMidPoints += [p]
     
-            #print("midpoints=",boundaryNodesMidPoints)
-    
-            #ni = n-nb
+            if verboseMode:
+                print('calculated boundary midpoints=', boundaryNodesMidPoints)
     
             #compute boundary and internal DOF numbers:
             DOFb = np.array(DOFb)
-            #DOFb.sort() #do not sort to keep consistency between sorting of nodes and DOFb
             DOFi = np.arange(n)
             DOFi = np.delete(DOFi, DOFb) #sorting not needed for DOFb
-            
-            #print("n=", n, ", nb=",nb, ", ni=", ni)
-            #print("DOFb=", DOFb)
-            #print("DOFi=", DOFi)
-            
+                    
             #create mass and stiffness matrices with new indices:
             if useSparseSolver: 
                 #A = B.tocsr()[np.array(list1),:].tocsc()[:,np.array(list2)] faster?
@@ -2827,6 +2916,13 @@ class FEMinterface:
                 Mii = M[DOFi,:][:,DOFi] #these matrices are np.array (dense) or sparse ...
                 Kii = K[DOFi,:][:,DOFi]
                 Kib = K[DOFi,:][:,DOFb]
+                if computationMode == HCBstaticModeSelection.RBE3:
+                    Kbi = K[DOFb,:][:,DOFi] #Kib.T may be used alternatively ...
+                    Kbb = K[DOFb,:][:,DOFb]
+                    
+                    Mbi = M[DOFb,:][:,DOFi] 
+                    Mib = M[DOFi,:][:,DOFb] 
+                    Mbb = M[DOFb,:][:,DOFb] 
                 
             else:
                 #works also for sparse matrices, but computes dense matrices in between ...
@@ -2835,18 +2931,18 @@ class FEMinterface:
                 Kib = K[np.ix_(DOFi,DOFb)]
             #Mii, Kii, Kib are now np.array (dense) or sparse ...
         
-            if nEigenModes != 0:
-                if n>timerTreshold: print("compute eigenvalues and eigenvectors... "); start_time = time.time()
+            #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            if nEigenModes != 0 and computationMode != HCBstaticModeSelection.RBE3:
+                if verboseTimer: print("compute eigenvalues and eigenvectors... "); start_time = time.time()
                 if useSparseSolver: 
-                    #for details on solver settings, see FEMinterface.ComputeEigenmodes(...)
+                    #for details on solver settings, see selfComputeEigenmodes(...)
                     [eigVals, eigVecs] = eigsh(A=Kii, k=nEigenModes, M=Mii, 
                                                which='LM', sigma=0, mode='normal') #try modes 'normal','buckling' and 'cayley'
                 else:
                     [eigVals, eigVecs] = eigh(Kii,Mii) #this gives omega^2 ... squared eigen frequencies (rad/s)
-                if n>timerTreshold: print("   ... needed %.3f seconds" % (time.time() - start_time))
+                if verboseTimer: print("   ... needed %.3f seconds" % (time.time() - start_time))
     
-            #print("assemble matrices ...")
-
+            #for testing and for case where only one boundary exists, which is eliminated afterwards ...
             if computationMode == HCBstaticModeSelection.allBoundaryNodes: #quite inefficient, because it 
                 modeBasis = np.zeros((n, nb+nEigenModes))
                 DOFstatic = np.arange(nb) #for final mapping of boundary coordinates
@@ -2855,23 +2951,24 @@ class FEMinterface:
                     modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
                 
                 modeBasis[np.ix_(DOFb,DOFstatic)] = np.eye(nb)
-                if n>timerTreshold: print("factorize Kii... "); start_time = time.time()
+                if verboseTimer: print("factorize Kii... "); start_time = time.time()
                 if useSparseSolver: 
                     invKii = factorized(Kii.tocsc()) #factorized expects csc format, otherwise warning
                     KiiInvKib = invKii(-Kib.toarray())
                 else:
                     KiiInvKib = -np.linalg.inv(Kii) @ Kib
-                if n>timerTreshold: print("   ... needed %.3f seconds" % (time.time() - start_time))
+                if verboseTimer: print("   ... needed %.3f seconds" % (time.time() - start_time))
                 modeBasis[np.ix_(DOFi,DOFstatic)] = KiiInvKib
     
+            #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            #leading to infinitly stiff (rigid) boundaries; adds additional stiffening:
             elif computationMode == HCBstaticModeSelection.RBE2:
-                addRotationModes = 1
                 rbSize = 3 + 3*addRotationModes #size of rigid body coordinates (3 for translation, 6 for translation+rotation)
-                nbRBE2 = (nNodeLists-1)*rbSize #number of chosen static modes, 6 DOF per rigid body interface; exclude first rigid body boundary in order to suppress rigid body motion of static modes
+                nbRBE = (nNodeLists-int(excludeRigidBodyMotion))*rbSize #number of chosen static modes, 6 DOF per rigid body interface; exclude first rigid body boundary in order to suppress rigid body motion of static modes
     
-                modeBasis = np.zeros((n, nbRBE2+nEigenModes))
+                modeBasis = np.zeros((n, nbRBE+nEigenModes))
                 if nEigenModes != 0:
-                    DOFeig = np.arange(nbRBE2,nbRBE2+nEigenModes) #for final mapping of eigenmode coordinates
+                    DOFeig = np.arange(nbRBE,nbRBE+nEigenModes) #for final mapping of eigenmode coordinates
                     modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
                 
                 #create list of mappings between average rigid body motion and boundary DOF matrix
@@ -2886,14 +2983,20 @@ class FEMinterface:
                     if addRotationModes:
                         Trot = np.zeros((nn*3,3))
                         p0 = boundaryNodesMidPoints[cntBoundary]
-                        for i in range(3): #iterate about 3 rotation axes
-                            rot = np.zeros(3) #rotation vector, unit rotation
-                            rot[i] = 1
-                            rotTilde = Skew(rot)
-                            for j in range(len(boundaryNodes)):
-                                p = nodesPos[boundaryNodes[j]]-p0
-                                qRot = rotTilde@p
-                                Trot[j*3:j*3+3,i] = qRot
+                        # for i in range(3): #iterate about 3 rotation axes
+                        #     rot = np.zeros(3) #rotation vector, unit rotation
+                        #     rot[i] = 1
+                        #     rotTilde = Skew(rot)
+                        #     for j in range(len(boundaryNodes)):
+                        #         p = nodesPos[boundaryNodes[j]]-p0
+                        #         pRot = rotTilde@p
+                        #         Trot[j*3:j*3+3,i] = pRot
+                        #shorter:
+                        for j in range(len(boundaryNodes)):
+                            p = nodesPos[boundaryNodes[j]]-p0
+                            pRot = Skew(p)
+                            Trot[j*3:j*3+3,:] = pRot
+                            
                         T = np.hstack((T,Trot))
                                 
     
@@ -2902,33 +3005,209 @@ class FEMinterface:
     
                 
                 Tall = block_diag(*rigidBodyMappings)  # '*' does unpacking of lists;
-                Tall = Tall[:,rbSize:] #exclude first rigid body boundary in order to suppress rigid body motion of static modes
+                if excludeRigidBodyMotion:
+                    Tall = Tall[:,rbSize:] #exclude first rigid body boundary in order to suppress rigid body motion of static modes
     
-                DOFstatic = np.arange(nbRBE2) #for final mapping of boundary coordinates; 
+                DOFstatic = np.arange(nbRBE) #for final mapping of boundary coordinates; 
                 modeBasis[np.ix_(DOFb,DOFstatic)] = Tall
-                if n>timerTreshold: print("factorize Kii... "); start_time = time.time()
+                if verboseTimer: print("factorize Kii... "); start_time = time.time()
                 if useSparseSolver: 
                     invKii = factorized(Kii.tocsc()) #factorized expects csc format, otherwise warning
                     KiiInvKibTall = invKii(-(Kib @ Tall)) #(Kib @ Tall) gives already dense matrix; may be huge ...!
                 else:
                     KiiInvKibTall = -np.linalg.inv(Kii) @ (Kib @ Tall)
-                if n>timerTreshold: print("   ... needed %.3f seconds" % (time.time() - start_time))
+                if verboseTimer: print("   ... needed %.3f seconds" % (time.time() - start_time))
     
                 modeBasis[np.ix_(DOFi,DOFstatic)] = KiiInvKibTall #KiiInvKib @ Tall
     
-                # modeBasis[np.ix_(DOFb,DOFstatic)] = np.eye(nb)
-                # modeBasis[np.ix_(DOFi,DOFstatic)] = KiiInvKib
+            #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            #advanced case: modes average motion at boundary; may not be desired, but does not add additional stiffening
+            elif computationMode == HCBstaticModeSelection.RBE3:
+                from scipy.linalg import svd
                 
+                rbSize = 3 + 3*addRotationModes #size of rigid body coordinates (3 for translation, 6 for translation+rotation)
+                nbRBE = (nNodeLists-int(excludeRigidBodyMotion))*rbSize #number of chosen static modes, 6 DOF per rigid body interface; exclude first rigid body boundary in order to suppress rigid body motion of static modes
+                dim3D =3 #3D displacement nodes
+    
+                modeBasis = np.zeros((n, nbRBE+nEigenModes))
+                
+                #create list of mappings between average rigid body motion and boundary DOF matrix
+                # rigidBodyMappings = [[]]*nNodeLists #list of mappings
+                modesRBE3 = [[]]*nNodeLists
+                #%%
+                from scipy import sparse
+                Knew = sparse.bmat([[Kbb,Kbi],[Kib, Kii]])
+                
+                bNodesCnt = 0
+                bNodesCntList = [bNodesCnt] #this list contains start and end indices of number of boundary nodes
+                for boundaryNodes in boundaryNodesList:
+                    bNodesCnt += len(boundaryNodes)
+                    bNodesCntList += [bNodesCnt]
+    
+                # print('boundaryNodesList =',boundaryNodesList )
+                # print('bNodesCntList =',bNodesCntList )
+    
+                Cmat = np.zeros((nNodeLists*rbSize, n)) #Constraint matrix
+                unitForces = []
+                
+                ClocalList = []
+                
+                for k, boundaryNodes in enumerate(boundaryNodesList):
+                    # print('********\nboundary ',k,':\n********')
+                    nPrev = bNodesCntList[k]
+                    nn = len(boundaryNodes)
+                    p0 = boundaryNodesMidPoints[k]
+    
+                    W=np.zeros((dim3D,dim3D)) #compute weighting ('inertia') for rotation part
+                    if addRotationModes:
+                        Clocal = np.zeros((rbSize, nn*dim3D))
+                        for j in range(len(boundaryNodes)):
+                            p = nodesPos[boundaryNodes[j]]-p0
+                            pRot = Skew(p)
+    
+                            #Cnode = BNWlist[k][j]*block_diag(np.eye(dim3D), pRot)
+                            Cnode = BNWlist[k][j]*np.vstack((np.eye(dim3D), pRot))
+                            Clocal[:,j*dim3D:(j+1)*dim3D] = Cnode
+                            
+                            if RBE3secondMomentOfAreaWeighting:
+                                W += -BNWlist[k][j]*pRot@pRot
+                            else:
+                                W += BNWlist[k][j]*(np.linalg.norm(p)**2)*np.eye(3) #could be easier to just sum up terms, but for consistency, it is also computed as matrix
+    
+                        WposRot = block_diag(np.eye(dim3D), W)
+                        WposRotInv = np.eye(6) #old mode
+                        #WposRotInv = np.linalg.inv(WposRot) #not necessary / does not influence results!
+                        
+                        Clocal = WposRotInv @ Clocal
+                        unitForces += [WposRotInv @ WposRot]
+                        #print('unit Forces=', unitForces)
+                        #print('W=', W)
+                        
+    
+                    else:
+                        unitForces += [np.eye(dim3D)]
+                        Clocal = np.kron(BNWlist[k],np.eye(dim3D)) #maps rigid body motion of interface to all boundary nodes
+                    
+                    ClocalList += [Clocal]
+    
+    
+                    Cmat[k*rbSize:(k+1)*rbSize, nPrev*dim3D:(nPrev+nn)*dim3D] = Clocal
+    
+                    
+                #==> now Cmat contains the constraint jacobian                
+                # print('Knew=',Knew.shape)
+                # print('Cmat=',Cmat.shape)
+    
+                #stiffness matrix + constraints:
+                KC = sparse.bmat([[Knew,Cmat.T],[Cmat, None]])
+                #print('KC=',KC.shape)
+                if verboseTimer: print("factorize KC... "); start_time = time.time()
+                invKC = factorized(KC.tocsc()) #factorized expects csc format, otherwise warning
+                if verboseTimer: print("   ... needed %.3f seconds" % (time.time() - start_time))
+                
+                fUnit = np.zeros((n + nNodeLists*rbSize, rbSize)) #prescribed displacements
+                        
+                for k, boundaryNodes in enumerate(boundaryNodesList):
+                
+                    #add unit displacements at constraint equations side:
+                    fUnit *= 0
+                    #fUnit[n + k*rbSize:n + (k+1)*rbSize, :] = len(boundaryNodes)*np.eye(rbSize) #prescribed average unit displacemnets/rotations for boundary
+                    fUnit[n + k*rbSize:n + (k+1)*rbSize, :] = unitForces[k] #prescribed average unit displacemnets/rotations for boundary
+                    modesWithC = invKC(fUnit) 
+                    modes = modesWithC [:n,:]
+                    if verboseMode: print('max displacement=', np.amax(modes))
+    
+                    maxDisplacement = np.amax(modes)
+                    if maxDisplacement == 0: #should not occur
+                        maxDisplacement = 1
+                    
+                    modesRBE3[k] = (1/maxDisplacement)*modes #exclude solution for Lagrange multipliers
+                    
+                                
+                allModes = np.hstack(tuple(modesRBE3[int(excludeRigidBodyMotion):])) 
+                #print('allModes=',allModes.shape)
+                DOFstatic = np.arange(nbRBE) #for final mapping of boundary coordinates; 
+    
+                modeBasis[np.ix_(DOFb,DOFstatic)] = allModes[0:nb,:]
+                modeBasis[np.ix_(DOFi,DOFstatic)] = allModes[nb:,:]
+    
+    
+                #+++++++++++++++++++++++++++++++++++++
+                #now compute special RBE3 eigenmodes:
+                rigidBoundaries = False
+                if nEigenModes != 0: #otherwise, nothing to be done!
+                    if rigidBoundaries:
+                        [eigVals, eigVecs] = eigsh(A=Kii, k=nEigenModes, M=Mii, 
+                                                   which='LM', sigma=0, mode='normal') #try modes 'normal','buckling' and 'cayley'
+                        # print('eigValues RBE2=', 0.5/pi*np.sqrt(eigVals))
+            
+                        DOFeig = np.arange(nbRBE,nbRBE+nEigenModes) #for final mapping of eigenmode coordinates
+                        modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
+                    if not rigidBoundaries:
+                        #singular value decomposition needs to be done PER BOUNDARY!
+                        
+                        rowsC = nNodeLists*rbSize
+                        nbReduced = nb-rowsC
+                        VlocalList = []
+                        for i, Clocal in enumerate(ClocalList):
+                            [U, s, V] = svd(Clocal)
+                            #VlocalList += [V[:-rbSize,:]]
+                            VlocalList += [V[rbSize:,:]]
+                        
+                            if np.amin(s) / np.amax(s) < 1e-8:
+                                print('************\nWARNING: ComputeHurtyCraigBamptonModes: expected '+str(rowsC) +
+                                      ' singular values, but some values are smaller than a threshold of 1e-8; check boundary nodes and mesh and \n************')
+                                #print('singular values=',s)
+                        
+                        V1 = block_diag(*VlocalList)
+                               
+                        # print('rowsC=',rowsC)
+                        # print('nb=',nb)
+                        # print('nbReduced=',nbReduced)
+                        # print('Kbb=',Kbb.shape)
+                        # print('Kbi=',Kbi.shape)
+                        # print('V=',V.shape)
+                        # print('U=',U.shape)
+                        # print('V1=',V1.shape)
+                        
+                        #compute reduced size matrices (just 6 columns/rows less per boundary/interface)
+                        KbbV = V1 @ Kbb @ V1.T
+                        KbiV = V1 @ Kbi
+                        KibV = Kib @ V1.T
+        
+                        MbbV = V1 @ Mbb @ V1.T
+                        MbiV = V1 @ Mbi
+                        MibV = Mib @ V1.T
+                        
+                        Knew = sparse.bmat([[KbbV,KbiV],[KibV, Kii]])
+                        Mnew = sparse.bmat([[MbbV,MbiV],[MibV, Mii]])
+                        # print('Knew=',Knew.shape)
+                        # print('Mnew=',Mnew.shape)
+                        
+                        [eigVals, eigVecs] = eigsh(A=Knew, k=nEigenModes, M=Mnew, 
+                                                   which='LM', sigma=0, mode='normal') #try modes 'normal','buckling' and 'cayley'
+                        # print('eigValues RBE3=', 0.5/pi*np.sqrt(eigVals))
+                        eigVecsB = eigVecs[0:nbReduced,:] 
+                        eigVecsI = eigVecs[nbReduced:,:] 
+                        # print('eigVecsB=',eigVecsB.shape)
+                        eigVecsB = V1.T @ eigVecsB #project into original unconstrained space ...
+                        eigVecs = np.vstack((eigVecsB, eigVecsI))
+            
+                        DOFeig = np.arange(nbRBE,nbRBE+nEigenModes) #for final mapping of eigenmode coordinates
+                        modeBasis[np.ix_(list(DOFb)+list(DOFi),DOFeig)] = eigVecs[:,:nEigenModes]
+                    
+            #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
             elif computationMode == HCBstaticModeSelection.onlyEigenModes: #only eigen modes, e.g., for testing
                 if nEigenModes != 0:
                     raise ValueError('ComputeHurtyCraigBamptonModes: in computationMode onlyEigenModes, nEigenModes must be != 0')
-
+    
                 modeBasis = np.zeros((n, nEigenModes))
                 DOFeig = np.arange(nEigenModes) #for final mapping of eigenmode coordinates
                 modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
             
-            #print(modeBasis.shape)
-            #print(modeBasis.round(2))
+            if modeBasis.shape[1] == 0:
+                print('************\nWARNING: ComputeHurtyCraigBamptonModes computed 0 modes, check boundaryNodesList and settings\n************')
            
             self.modeBasis = {'matrix':modeBasis, 'type':'HCBmodes'}
             if nEigenModes != 0:
@@ -2940,6 +3219,7 @@ class FEMinterface:
             [eigVals, eigVecs] = eigh(K,M) #this gives omega^2 ... squared eigen frequencies (rad/s)
             self.modeBasis = {'matrix':eigVecs[:,0:nEigenModes], 'type':'NormalModes'}
             self.eigenValues = abs(eigVals)
+
 
 
 
@@ -2983,11 +3263,6 @@ class FEMinterface:
                         stressModesMatrix[ind,j] += Ev4[cnt, j]
                     else:
                         stressModesMatrix[ind,j] += Sv4[cnt, j]
-                # for j in range(6): #6 components
-                #     if computeStrains:
-                #         stressModes[ind,6*iMode+j] += Ev4[cnt, j]
-                #     else:
-                #         stressModes[ind,6*iMode+j] += Sv4[cnt, j]
         nodeWarned = False
         for ind in range(nNodes):
             elPerNode = stressModesCnt[ind]

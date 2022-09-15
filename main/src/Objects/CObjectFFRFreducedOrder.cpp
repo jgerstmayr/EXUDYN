@@ -756,8 +756,8 @@ Vector3D CObjectFFRFreducedOrder::GetMeshNodeCoordinates(Index nodeNumber, const
 
 //! for definition see CObjectSuperElement
 void CObjectFFRFreducedOrder::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, 
-	const ArrayIndex& meshNodeNumbers, Matrix& value) const
-{
+	const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value) const
+{ 
 	bool useAlternativeApproach = false;
 	if (EXUstd::IsOfType(accessType, AccessFunctionType::SuperElementAlternativeRotationMode)) 
 	{ 
@@ -808,7 +808,7 @@ void CObjectFFRFreducedOrder::GetAccessFunctionSuperElement(AccessFunctionType a
 		//add action for REFERENCE FRAME NODE:
 		//\partial vMarker / \partial q_t = [I, -A * pLocalTilde * Glocal, A*(w0*nodeJac0, w1*nodeJac1, ...)]
 
-		Vector3D localPosition({ 0,0,0 });
+		Vector3D localPosition = localOffset;// ({ 0,0,0 });
 		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
 		{
 			localPosition += weightingMatrix(i, 0) * GetMeshNodeLocalPosition(meshNodeNumbers[i]); //((const CNodeODE2&)cSystemData.GetCNode(cObject.GetNodeNumber(nodeNumbers[i]))).GetPosition();
@@ -869,8 +869,7 @@ void CObjectFFRFreducedOrder::GetAccessFunctionSuperElement(AccessFunctionType a
 				factor += weightingMatrix(i, 0) * pRef.GetL2NormSquared();
 			}
 		}
-		//pout << "factor=" << factor << "\n";
-		//CHECKandTHROW(factor != 0., "CObjectFFRFreducedOrder::GetAccessFunctionSuperElement obtained singular mesh node weighting matrix ==> check your interface nodes");
+
 		if (useAlternativeApproach)
 		{
 			factorMatrix = factorMatrix.GetInverse();

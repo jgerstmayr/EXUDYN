@@ -52,8 +52,34 @@ https://docs.microsoft.com/en-us/windows/wsl/install-manual
 enter user name
 enter password
 
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#CONDA WITH WSL
+#install miniconda (similar file):
+download from: https://docs.conda.io/en/latest/miniconda.html#linux-installers
+install guide: https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html 
+bash Miniconda3-latest-Linux-x86_64.sh
+
+#test:
+conda list
+
+conda update conda
+
+=> HTTP error with Anaconda ...
+=> restart wsl (exit() first):
+wsl --shutdown
+
+=> now conda works!
+
+conda create -n venvP38 python=3.8 scipy matplotlib -y
+conda create -n venvP39 python=3.9 scipy matplotlib -y
+conda create -n venvP310 python=3.10 scipy matplotlib -y
+
 #install windows terminal
 https://docs.microsoft.com/en-us/windows/terminal/get-started
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 #++++++++++++++++++++++++++++++
 #using several Ubuntu versions:
@@ -107,6 +133,20 @@ echo $DISPLAY
 #set back to original:
 export DISPLAY=:0
 ==> this gives back functionality!
+
+==> Firewall settings may be required:
+Control Panel > System and Security > Windows Defender Firewall > Advanced Settings > Inbound Rules > New Rule...
+> Program > %ProgramFiles%\VcXsrv\vcxsrv.exe > Allow the connection
+
+if DISPLAY 0 does not work, try ip address found in  ipconfig.exe
+==> check different Ethernet adapters!
+
+==> check: 
+https://github.com/microsoft/WSL/issues/4793
+
+==> one way to work with specific window (on some computes may require to set DISPLAY to correct IP address):
+& 'C:\Program Files\VcXsrv\vcxsrv.exe' -ac
+==> get IP address with: cat /etc/resolv.conf
 
 install nedit (to test xserver):
 sudo apt-get install nedit

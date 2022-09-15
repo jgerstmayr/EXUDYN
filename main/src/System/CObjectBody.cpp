@@ -71,7 +71,7 @@ Real CObjectConstraint::GetCurrentAEcoordinate(Index localIndex) const
 }
 
 void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, 
-	const ArrayIndex& meshNodeNumbers, Matrix& value) const
+	const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value) const
 { 
 	bool useAlternativeApproach = false;
 	if (EXUstd::IsOfType(accessType, AccessFunctionType::SuperElementAlternativeRotationMode))
@@ -82,7 +82,6 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 	Index localReferenceNodeIndex; //local node number!!!
 	bool hasReferenceFrame = HasReferenceFrame(localReferenceNodeIndex);
 
-	//CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetAccessFunctionSuperElement"); 
 	switch ((Index)accessType)
 	{
 	case (Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement: //global translational velocity at mesh position derivative w.r.t. all q_t: without reference frame: [0,..., 0, w0*nodeJac0, 0, ..., 0, w1*nodeJac1, 0,...]; with reference frame: [I, -A * pLocalTilde * Glocal, A*(0,...,0, w0*nodeJac0, 0,..., 0, w1*nodeJac1, ...)]
@@ -105,6 +104,7 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 		}
 
 		//Index cOffset = 0; //coordinates offset
+		//without reference frame, the localOffset does not influence position jacobian!
 		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
 		{
 			Index iNode = meshNodeNumbers[i] + refFrameOffset;
@@ -149,7 +149,8 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 		{
 			//\partial vMarker / \partial q_t = [I, -A * pLocalTilde * Glocal, A*(w0*nodeJac0, w1*nodeJac1, ...)]
 
-			Vector3D localPosition({ 0,0,0 });
+			Vector3D localPosition;// ({ 0,0,0 });
+			localPosition = localOffset;
 			for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
 			{
 				if (weightingMatrix.NumberOfColumns() == 1)
@@ -167,10 +168,6 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 
 			const CNodeRigidBody* cNode = (const CNodeRigidBody*)GetCNode(localReferenceNodeIndex);
 			Index nodeODE2 = cNode->GetNumberOfODE2Coordinates();
-			//if (nodeODE2 >= CNodeRigidBody::maxDisplacementCoordinates + CNodeRigidBody::maxRotationCoordinates)
-			//{
-			//	CHECKandTHROWstring("CObjectSuperElement::GetAccessFunctionSuperElement: MarkerSuperElement only available in case of reference node with equal or less than 7 coordinates!");
-			//}
 
 
 			ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates*CNodeRigidBody::nDim3D> Glocal;
@@ -195,8 +192,8 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 	case (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::SuperElement: //global translational velocity at mesh position derivative w.r.t. all q_t: without reference frame: [0,..., 0, w0*nodeJac0, 0, ..., 0, w1*nodeJac1, 0,...]; with reference frame: [I, -A * pLocalTilde * Glocal, A*(0,...,0, w0*nodeJac0, 0,..., 0, w1*nodeJac1, ...)]
 	{
 		//[0, A * Glocal, A*(0, ..., 0, w0*pRefTilde0*nodeJac0, 0, ..., 0, w1*pRefTilde1*nodeJac1, ...)]
-		//CHECKandTHROWstring("CObjectSuperElement:GetAccessFunctionSuperElement: AngularVelocity_qt not implemented; cannot compute jacobian for orientation");
-		//break;
+
+		//according to theDoc, localOffset has no influence on rotations, as this position also does not influence angular velocity
 
 		CHECKandTHROW(weightingMatrix.NumberOfColumns() == 1, "CObjectFFRFreducedOrder::GetAccessFunctionSuperElement: AccessFunctionType::AngularVelocity_qt, weightingMatrix must have 1 row!");
 		CHECKandTHROW(!hasReferenceFrame, "CObjectSuperElement::GetAccessFunctionSuperElement: AccessFunctionType::AngularVelocity_qt, only possible for ObjectGenericODE2 and ObjectFFRFreducedOrder!");
@@ -213,7 +210,6 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 		Vector3D pRef; //mesh node local reference position
 
 		Vector3D pRef0(0);			 //this is the midpoint of the Marker, computed from reference positions
-
 		for (Index i = 0; i < meshNodeNumbers.NumberOfItems(); i++)
 		{
 			pRef0 += weightingMatrix(i, 0) * GetMeshNodeLocalPosition(meshNodeNumbers[i], ConfigurationType::Reference);

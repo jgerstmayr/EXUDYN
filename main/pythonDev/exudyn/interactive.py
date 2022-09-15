@@ -128,7 +128,10 @@ class InteractiveDialog:
         exudyn.sys['tkinterRoot'] = root
         root.protocol("WM_DELETE_WINDOW", self.OnQuit) #always leave app with OnQuit
         root.title(title)
-        systemScaling = root.call('tk', 'scaling') #obtains current scaling?
+        try:
+            systemScaling = root.call('tk', 'scaling') #obtains current scaling?
+        except:
+            pass
         #print('systemScaling=',systemScaling)
         systemScaling = 1
 
@@ -529,7 +532,7 @@ class InteractiveDialog:
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: animate modes of ObjectFFRFreducedOrder and other objects (changes periodically one nodal coordinate); for creating snapshots, press 'Static' and 'Record animation' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'
+#**function: animate modes of ObjectFFRFreducedOrder and other objects (changes periodically one nodal coordinate); for creating snapshots, press 'Static' and 'Record animation' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'. Modes may be inverted by pressing according '+' and '-' buttons next to Amplitude.
 #**input:
 #    systemContainer: system container (usually SC) of your model, containing visualization settings
 #    mainSystem: system (usually mbs) containing your model
@@ -539,13 +542,17 @@ class InteractiveDialog:
 #    showTime: show a virtual time running from 0 to 2*pi during one mode cycle
 #    renderWindowText: additional text written into renderwindow before 'Mode X' (use $\backslash$n to add line breaks)
 #    runOnStart: immediately go into 'Run' mode
-#    runMode: 0=continuous run, 1=one cycle, 2=static (use slider/mouse to vary time steps)
+#    runMode: 0=continuous run, 1=static continuous, 2=one cycle, 3=static (use slider/mouse to vary time steps)
 #    scaleAmplitude: additional scaling for amplitude if necessary
+#    fontSize: define font size for labels in InteractiveDialog
+#    title: if empty, it uses default; otherwise define specific title
+#    checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
 #**output: opens interactive dialog with further settings
-#**notes: Uses class InteractiveDialog in the background, which can be used to adjust animation creation. 
+#**notes: Uses class InteractiveDialog in the background, which can be used to adjust animation creation. If meshes are large, animation artifacts may appear, which are resolved by using a larger update period.
 #    Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record animation' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see \refSection{secGeneratingAnimations}); now deactivate 'Record animation' by pressing 'Off' and chose another mode
 def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPerPeriod = 30, showTime = True, 
-                 renderWindowText = '', runOnStart = False, runMode=0, scaleAmplitude = 1):
+                 renderWindowText = '', runOnStart = False, runMode=0, scaleAmplitude = 1, title='', fontSize = 12,
+                 checkRenderEngineStopFlag = True):
 
     SC = systemContainer
     mbs = mainSystem
@@ -560,7 +567,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
     numberOfModes = len(nodeCoords)
     #numberOfModes = mbs.GetNode(nODE2)['numberOfODE2Coordinates']
 
-    if (runMode != 0 and runMode != 1 and runMode != 2):
+    if (runMode < 0 or runMode > 3):
         print('ERROR in AnimateModes: illegal run mode:', runMode)
         return
     
@@ -579,9 +586,10 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
                    {'type':'slider', 'range':(-1, 5), 'value':0, 'steps':7, 'variable':'modeShapeComponent', 'grid':(4,1)},
                    {'type':'label', 'text':'Amplitude:', 'grid':(5,0)},
                    {'type':'slider', 'range':(0, 1), 'value':0.05, 'steps':501, 'variable':'modeShapeAmplitude', 'grid':(5,1)},
+                   {'type':'radio', 'textValueList':[('positive',1), ('negative',-1)],'value':1, 'variable':'modeSignAmplitude', 'grid': [(5,2),(5,3)]},
                    {'type':'label', 'text':'update period:', 'grid':(6,0)},
                    {'type':'slider', 'range':(0.01, 2), 'value':0.04, 'steps':200, 'variable':'modeShapePeriod', 'grid':(6,1)},
-                   {'type':'radio', 'textValueList':[('Continuous run',0), ('One cycle',1), ('Static',2)],'value':runMode, 'variable':'modeShapeRunModus', 'grid': [(7,0),(7,1),(7,2)]},
+                   {'type':'radio', 'textValueList':[('Continuous run',0), ('Static continuous',1), ('One cycle',2), ('Static once',3)],'value':runMode, 'variable':'modeShapeRunModus', 'grid': [(7,0),(7,1),(7,2),(7,3)]},
                    {'type':'radio', 'textValueList':[('Mesh+Faces',3), ('Faces only',1), ('Mesh only',2)],'value':3, 'variable':'modeShapeMesh', 'grid': [(8,0),(8,1),(8,2)]},
                    {'type':'radio', 'textValueList':[('Record animation',0), ('No recording',1)],'value':1, 'variable':'modeShapeSaveImages', 'grid': [(9,0),(9,1)]},
                    ]
@@ -592,26 +600,27 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
     mbs.variables['modeShapeLastSetting'] = [-1,0,0,0]
     mbs.variables['modeShapeNodeCoordIndex'] = coordIndex
     mbs.variables['modeShapeScaleAmplitude'] = scaleAmplitude
+    mbs.variables['modeSignAmplitude'] = 1
 
     def UFshowModes(mbs, dialog):
         i = mbs.variables['modeShapeTimeIndex']
         mbs.variables['modeShapeTimeIndex'] += 1
         stepsPerPeriod = mbs.variables['modeShapeStepsPerPeriod']
-        amplitude = mbs.variables['modeShapeAmplitude']
+        amplitude = mbs.variables['modeShapeAmplitude']*mbs.variables['modeSignAmplitude']
         if amplitude == 0:
             SC.visualizationSettings.bodies.deformationScaleFactor = 0
             amplitude = 1
         else:
             SC.visualizationSettings.bodies.deformationScaleFactor = 1
 
-        if mbs.variables['modeShapeRunModus'] == 2: #no sin(t) in static case
+        if mbs.variables['modeShapeRunModus'] == 1 or mbs.variables['modeShapeRunModus'] == 3: #no sin(t) in static case
             stepsPerPeriod = 1
             t = 0
         else:
             t = i/stepsPerPeriod * 2 * pi
             amplitude *= sin(t)
         mbs.systemData.SetTime(t, exudyn.ConfigurationType.Visualization)
-
+        
         ode2Coords = mbs.systemData.GetODE2Coordinates()
         selectedMode = int(mbs.variables['modeShapeModeNumber'])
         outputVariable = exudyn.OutputVariableType(int(mbs.variables['modeShapeOutputVariable']))
@@ -638,8 +647,12 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 
         SC.visualizationSettings.contour.outputVariable = outputVariable
         SC.visualizationSettings.contour.outputVariableComponent = int(mbs.variables['modeShapeComponent']) #component
-        SC.visualizationSettings.openGL.showFaces = (mbs.variables['modeShapeMesh'] & 1) == 1
-        SC.visualizationSettings.openGL.showFaceEdges = (mbs.variables['modeShapeMesh'] & 2) == 2
+
+        #SC.visualizationSettings.openGL.showFaces = (mbs.variables['modeShapeMesh'] & 1) == 1
+        SC.visualizationSettings.openGL.showMeshFaces = (mbs.variables['modeShapeMesh'] & 1) == 1
+
+        #SC.visualizationSettings.openGL.showFaceEdges = (mbs.variables['modeShapeMesh'] & 2) == 2
+        SC.visualizationSettings.openGL.showMeshEdges = (mbs.variables['modeShapeMesh'] & 2) == 2
         
 
         mbs.SendRedrawSignal()
@@ -654,7 +667,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 
         if mbs.variables['modeShapeTimeIndex']>=stepsPerPeriod:
            mbs.variables['modeShapeTimeIndex'] = 0
-           if mbs.variables['modeShapeRunModus'] > 0: #one cylce or static
+           if mbs.variables['modeShapeRunModus'] > 1: #one cylce or static once
                dialog.StartSimulation()
         
 
@@ -668,20 +681,23 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
     if not SC.visualizationSettings.general.useMultiThreadedRendering:
         exudyn.DoRendererIdleTasks() #do an update once
 
+    titleDialog = 'Animate mode shapes'
+    if title != '': 
+        titleDialog = title
+    
     dialog = InteractiveDialog(mbs, simulationSettings=simulationSettings, 
                       simulationFunction=UFshowModes, 
                       dialogItems=dialogItems,
-                      title='Animate mode shapes',
+                      title=titleDialog,
                       doTimeIntegration=False, period=period,
                       showTime=False,#done in UFshowModes
-                      runOnStart=runOnStart
+                      runOnStart=runOnStart, 
+                      checkRenderEngineStopFlag=checkRenderEngineStopFlag ,
+                      fontSize=fontSize
                       )
-
     
     #SC.WaitForRenderEngineStopFlag() #not needed, Render window closes when dialog is quit
     exudyn.StopRenderer() #safely close rendering window!
-
-
 
 
 #++++++++++++++++++++++++++++++++++++++++++++
@@ -693,6 +709,8 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #  timeout: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second
 #  runOnStart: immediately go into 'Run' mode
 #  runMode: 0=continuous run, 1=one cycle, 2=static (use slider/mouse to vary time steps)
+#  fontSize: define font size for labels in InteractiveDialog
+#  title: if empty, it uses default; otherwise define specific title
 #  checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
 #**output: updates current visualization state, renders the scene continuously (after pressing button 'Run')
 #**example:
@@ -704,8 +722,9 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #from exudyn.interactive import SolutionViewer #import function
 #sol = LoadSolutionFile('coordinatesSolution.txt') #load solution: adjust to your file name
 #SolutionViewer(mbs, sol)
+def SolutionViewer(mainSystem, solution=[], rowIncrement = 1, timeout=0.04, runOnStart = True, runMode=2, 
+                   fontSize=12, title='', checkRenderEngineStopFlag=True):
 
-def SolutionViewer(mainSystem, solution=[], rowIncrement = 1, timeout=0.04, runOnStart = True, runMode=2, checkRenderEngineStopFlag=True):
     from exudyn.utilities import SetSolutionState, LoadSolutionFile
     
     mbs = mainSystem
@@ -761,7 +780,6 @@ def SolutionViewer(mainSystem, solution=[], rowIncrement = 1, timeout=0.04, runO
                    {'type':'label', 'text':'update period:', 'grid':(3,0)},
                    {'type':'slider', 'range':(0.005, 1), 'value':timeout, 'steps':200, 'variable':'solutionViewerPeriod', 'grid':(3,1)},
                    {'type':'radio', 'textValueList':[('Continuous run',0), ('One cycle',1), ('Static',2)],'value':runMode, 'variable':'solutionViewerRunModus', 'grid': [(4,0),(4,1),(4,2)]},
-                   #{'type':'radio', 'textValueList':[('Mesh+Faces',3), ('Faces only',1), ('Mesh only',2)],'value':3, 'variable':'modeShapeMesh', 'grid': [(8,0),(8,1),(8,2)]},
                    {'type':'radio', 'textValueList':[('Record animation',0), ('No recording',1)],'value':1, 'variable':'solutionViewerSaveImages', 'grid': [(5,0),(5,1)]},
                    ]
 
@@ -827,12 +845,17 @@ def SolutionViewer(mainSystem, solution=[], rowIncrement = 1, timeout=0.04, runO
     if not SC.visualizationSettings.general.useMultiThreadedRendering:
         exudyn.DoRendererIdleTasks() #do an update once
 
+    dialogTitle='Solution Viewer'
+    if title != '':
+        dialogTitle = title
+
     dialog = InteractiveDialog(mbs, simulationSettings=simulationSettings, 
                       simulationFunction=UFviewer, 
                       dialogItems=dialogItems,
-                      title='Solution Viewer',
+                      fontSize=fontSize,title=dialogTitle,
                       doTimeIntegration=False, period=timeout,
-                      showTime=True, runOnStart=runOnStart, checkRenderEngineStopFlag=checkRenderEngineStopFlag
+                      showTime=True, runOnStart=runOnStart, 
+                      checkRenderEngineStopFlag=checkRenderEngineStopFlag
                       )
 
     

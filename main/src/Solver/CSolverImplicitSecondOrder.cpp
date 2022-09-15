@@ -289,7 +289,7 @@ void CSolverImplicitSecondOrderTimeInt::PreInitializeSolverSpecific(CSystem& com
 	}
 	useScaling = true;
 
-#ifdef LIE_GROUP_IMPLICIT_SOLVER
+#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
 	useLieGroupIntegration = true; //will be set false, if no Lie group nodes exist
 #else
 	useLieGroupIntegration = false;
@@ -342,19 +342,28 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 
 	//++++++++++++++++++++++++++++++++++++++++
 	//Lie group nodes
-#ifdef LIE_GROUP_IMPLICIT_SOLVER
+#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
 	if (useLieGroupIntegration)
 	{
 		//PrecomputeLieGroupStructures(computationalSystem, simulationSettings);
 		const auto& cNodes = computationalSystem.GetSystemData().GetCNodes();
 		lieGroupNodes.SetNumberOfItems(0); //filled with lie group node indices during initialization; ONLY if useLieGroupIntegration=true
-		nonLieGroupNodes.SetNumberOfItems(0); 
+		nonLieODE2Coordinates.SetNumberOfItems(0);
 
 		for (Index i = 0; i < cNodes.NumberOfItems(); i++)
 		{
 			if (EXUstd::IsOfType(cNodes[i]->GetType(), Node::LieGroupWithDataCoordinates))
 			{
 				lieGroupNodes.Append(i);
+				const CNodeRigidBody& rigidNode = (const CNodeRigidBody&)(*cNodes[i]);
+
+				//add displacement coordinates to nonLie coordinates
+				Index nDispODE2 = rigidNode.GetNumberOfDisplacementCoordinates();
+				for (Index j = 0; j < nDispODE2; j++)
+				{
+					nonLieODE2Coordinates.Append(cNodes[i]->GetGlobalODE2CoordinateIndex() + j);
+				}
+
 			}
 			else if (EXUstd::IsOfType(cNodes[i]->GetType(), Node::LieGroupWithDirectUpdate))
 			{
@@ -362,7 +371,14 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 			}
 			else
 			{
-				nonLieGroupNodes.Append(i);
+				//nonLieGroupNodes.Append(i);
+
+				Index nODE2 = cNodes[i]->GetNumberOfODE2Coordinates();
+				for (Index j = 0; j < nODE2; j++)
+				{
+					nonLieODE2Coordinates.Append(cNodes[i]->GetGlobalODE2CoordinateIndex() + j);
+				}
+
 			}
 		}
 
@@ -451,8 +467,41 @@ Real CSolverImplicitSecondOrderTimeInt::ComputeNewtonResidual(CSystem& computati
 		Real scalODE2 = newmarkBeta * EXUstd::Square(it.currentStepSize);
 		ode2Residual *= scalODE2; //r_bar = D_L*r
 	}
+
 	return scalarResidual / conv.errorCoordinateFactor;
 }
+
+
+
+
+#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
+void CSolverImplicitSecondOrderTimeInt::UpdateDataCoordinatesLieGroupIntegrator(CSystem& computationalSystem,
+	const ResizableVectorParallel& currentODE2, const LinkedDataVector& incrementODE2, ResizableVectorParallel& compositionODE2)
+{
+	//updates for Lie group nodes/coordinates
+	for (Index k : lieGroupNodes)
+	{
+		const CNodeRigidBody& node = (const CNodeRigidBody&)(computationalSystem.GetSystemData().GetCNode(k));
+		Index nPos = node.GetNumberOfDisplacementCoordinates(); //should be 3
+		Index nRot = node.GetNumberOfRotationCoordinates();     //should be 3
+		Index off = node.GetGlobalODE2CoordinateIndex();
+
+		// current state (vec0)
+		LinkedDataVector currentPosition(currentODE2, off, nPos);
+		LinkedDataVector currentOrientation(currentODE2, off + nPos, nRot);
+
+		LinkedDataVector newPosition(compositionODE2, off, nPos);
+		LinkedDataVector newOrientation(compositionODE2, off + nPos, nRot);
+		Vector6D incrementalMotion;
+		incrementalMotion.CopyFrom(LinkedDataVector(incrementODE2, off, nPos + nRot));
+
+
+		// update Lie group node
+		node.CompositionRule(currentPosition, currentOrientation, incrementalMotion, newPosition, newOrientation); //Delta q in Arnold/Bruls is (-1)*Delta q here	
+	}
+}
+#endif // LIE_GROUP_IMPLICIT_SOLVER
+
 
 void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool initial)
 {
@@ -486,6 +535,27 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 
 	if (initial)
 	{
+#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
+
+		const auto& cNodes = computationalSystem.GetSystemData().GetCNodes();
+		for (Index i : lieGroupNodes)
+		{
+			Index nODE2 = cNodes[i]->GetNumberOfODE2Coordinates();
+			for (Index j = 0; j < nODE2; j++)
+			{
+				solutionODE2[cNodes[i]->GetGlobalODE2CoordinateIndex() + j] = 0;
+			}
+		}
+		//for (Index k : nonLieODE2Coordinates)
+		//{
+		//	solutionODE2[k] = 0; //Set Lie group ode2 coordinates equal zero!
+		//}
+		//pout << "initial data coordinates=" << computationalSystem.GetSystemData().GetCData().initialState.dataCoords << "\n";
+		//pout << "start of step data coordinates=" << computationalSystem.GetSystemData().GetCData().startOfStepState.dataCoords << "\n";
+		//pout << "current data coordinates=" << computationalSystem.GetSystemData().GetCData().currentState.dataCoords << "\n";
+		//pout << "current ODE2 coordinates=" << solutionODE2 << "\n";
+
+#endif
 		//solutionODE2_tt must contain initial accelerations !!!
 		//solutionAE.SetAll(0.); //already done in Newton
 		solutionODE2.MultAdd(it.currentStepSize, solutionODE2_t);
@@ -521,9 +591,9 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 	else
 	{
 		//now only add increments
-		solutionODE2 -= newtonSolutionODE2; //Delta q in Arnold/Bruls is (-1)*Delta q here
+		solutionODE2 -= newtonSolutionODE2; //Delta q in Arnold/Bruls is (-1)*Delta q here	
 		solutionODE2_t.MultAdd(-gammaPrime, newtonSolutionODE2); //Delta q in Arnold/Bruls is (-1)*Delta q here
-		solutionODE2_tt.MultAdd(-betaPrime, newtonSolutionODE2); //Delta q in Arnold/Bruls is (-1)*Delta q here
+		solutionODE2_tt.MultAdd(-betaPrime, newtonSolutionODE2); //Delta q in Arnold/Bruls is (-1)*Delta q here	
 		if (useScaling)
 		{
 			Real scalAE = 1. / (newmarkBeta * EXUstd::Square(it.currentStepSize));
@@ -536,6 +606,17 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 
 		solutionODE1 -= newtonSolutionODE1;
 		solutionODE1_t.MultAdd(-2. / it.currentStepSize, newtonSolutionODE1); //2/h =^= gammaPrime = gamma/(h*beta) = 0.5/(h*0.25)
+
+#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
+		UpdateDataCoordinatesLieGroupIntegrator(computationalSystem,
+			computationalSystem.GetSystemData().GetCData().startOfStepState.dataCoords,
+			solutionODE2,
+			computationalSystem.GetSystemData().GetCData().currentState.dataCoords);
+		//std::cout << "sol ODE2    =" << solutionODE2 << "\n";
+		//std::cout << "NewtonODE2  =" << newtonSolutionODE2 << "\n";
+		//std::cout << "data start  =" << computationalSystem.GetSystemData().GetCData().startOfStepState.dataCoords << "\n";
+		//std::cout << "data current=" << computationalSystem.GetSystemData().GetCData().currentState.dataCoords << "\n";
+#endif
 
 		//std::cout << "newtonODE2=" << newtonSolutionODE2 << "\n";
 		//std::cout << "newtonODE1=" << newtonSolutionODE1 << "\n";
@@ -551,6 +632,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 
 	STOPTIMER(timer.integrationFormula);
 }
+
 
 //! compute jacobian for newton method of given solver method
 void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computationalSystem, const SimulationSettings& simulationSettings)

@@ -10,15 +10,143 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.3.86.dev1, 
-  \item last change =  2022-08-24, 
-  \item Number of issues = 1243, 
-  \item Number of resolved issues = 1075 (86 in current version), 
+  \item Exudyn version = 1.3.104.dev1, 
+  \item last change =  2022-09-14, 
+  \item Number of issues = 1260, 
+  \item Number of resolved issues = 1093 (104 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.3.104}:  resolved Issue 1259: {\bf MarkerSuperElementRigid}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extend offset for case that it is large}
+    \item   date resolved: {\bf 2022-09-14 15:18},
+date raised: 2022-09-14 
+  \ei
+  \item {\bf Version 1.3.103}:  resolved Issue 1258: {\bf AnimateModes}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to change sign of mode}
+    \item   date resolved: {\bf 2022-09-14 08:51},
+date raised: 2022-09-14 
+  \ei
+  \item {\bf Version 1.3.102}: {\bf \color{warningRed}  resolved BUG 1257}: {\bf AnimateModes}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: button for "Faces only" not working due to new way edges are turned on / off; workaround by pressing T in render window}
+    \item {\bf notes: buttons now affect the mesh faces / edges instead of regular edges / faces}
+    \item   date resolved: {\bf 2022-09-14 08:28},
+date raised: 2022-09-13 
+  \ei
+  \item {\bf Version 1.3.101}:  resolved Issue 1256: {\bf GUI}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: added some variables in exudyn.GUI which may be used to adjust appearance of dialogs, specifically for extreme display scaling}
+    \item   date resolved: {\bf 2022-09-13 16:42},
+date raised: 2022-09-13 
+  \ei
+  \item {\bf Version 1.3.100}:  resolved Issue 1252: {\bf use display scaling in GUI}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: use display scaling in visualization settings, etc.}
+    \item   date resolved: {\bf 2022-09-13 16:42},
+date raised: 2022-09-13 
+  \ei
+  \item {\bf Version 1.3.99}:  resolved Issue 1255: {\bf tkinter}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: put root calls into try-except clause in order to preserve operation on special systems like MacOS or Linux}
+    \item   date resolved: {\bf 2022-09-13 14:49},
+date raised: 2022-09-13 
+  \ei
+  \item {\bf Version 1.3.98}:  resolved Issue 1254: {\bf SolutionViewer, AnimateModes}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add font size and title; this allows to scale fonts as monitor scaling is not active here}
+    \item   date resolved: {\bf 2022-09-13 14:13},
+date raised: 2022-09-13 
+  \ei
+  \item {\bf Version 1.3.97}:  resolved Issue 1253: {\bf renderState}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add description into theDoc, in section 3D graphics visualization}
+    \item   date resolved: {\bf 2022-09-13 11:12},
+date raised: 2022-09-13 
+  \ei
+  \item {\bf Version 1.3.96}:  resolved Issue 1251: {\bf useWindowsDisplayScaleFactor}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: changed visualizationsSettings.general option name from useWindowsMonitorScaleFactor to useWindowsDisplayScaleFactor}
+    \item   date resolved: {\bf 2022-09-13 10:33},
+date raised: 2022-09-13 
+  \ei
+  \item {\bf Version 1.3.95}:  resolved Issue 0538: {\bf displayScaling}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add displayScaling to renderState and use this value for GUI.py in visualization settings}
+    \item {\bf notes: added displayScaling and automatic updating when Windows display scaling is changed or window is moved to other display}
+    \item   date resolved: {\bf 2022-09-13 10:19},
+date raised: 2021-01-06 
+  \ei
+  \item {\bf Version 1.3.94}:  resolved Issue 1250: {\bf FEM HurtyCraigBampton}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: ComputeHurtyCraigBamptonModes now includes option to compute RBE3 case; adds optional boundary node weights}
+    \item   date resolved: {\bf 2022-09-07 12:33},
+date raised: 2022-09-06 
+  \ei
+  \item {\bf Version 1.3.93}:  resolved Issue 1249: {\bf FEM interface}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add function GetNodeWeightsFromSurfaceAreas which computes correct weights for linear finite elements (tested for tetrahedrals); this weighting can now reduce erroneous offset in MarkerSuperElementRigid significantly; also used for RBE3 mode computation}
+    \item   date resolved: {\bf 2022-09-07 12:33},
+date raised: 2022-09-06 
+  \ei
+  \item {\bf Version 1.3.92}:  resolved Issue 1248: {\bf AddObjectFFRFreducedOrderWithUserFunctions}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: wrong description of user functions; add missing itemIndex in description}
+    \item   date resolved: {\bf 2022-09-05 18:39},
+date raised: 2022-09-05 
+  \ei
+  \item {\bf Version 1.3.91}:  resolved Issue 1246: {\bf DrawSystemGraph}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to create multi-line graphs; improving appearance and readability}
+    \item   date resolved: {\bf 2022-09-02 09:05},
+date raised: 2022-09-02 
+  \ei
+  \item {\bf Version 1.3.90}:  resolved Issue 1244: {\bf pre-compiled linux}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add all Python 3.6 - 3.10 linux 64 bit versions to pypi with pip installer}
+    \item   date resolved: {\bf 2022-09-01 10:02},
+date raised: 2022-08-25 
+  \ei
+  \item {\bf Version 1.3.89}:  resolved Issue 0562: {\bf Gen alpha Lie}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add Lie groups to new generalized alpha integrator}
+    \item   date resolved: {\bf 2022-08-26 14:09},
+date raised: 2021-01-26 
+  \ei
+  \item {\bf Version 1.3.88}:  resolved Issue 1245: {\bf Rotation output variable}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: changed/fixed OutputVariableType.Rotation for NodeRigidBodyRotVecLG to output Tait-Bryan rotations instead of rotation parameters; corrected description for NodeRigidBodyRxyz: returns rotation parameters directly, NOT recomputed from RotationMatrix}
+    \item   date resolved: {\bf 2022-08-26 10:25},
+date raised: 2022-08-26 
+  \ei
+  \item {\bf Version 1.3.87}:  resolved Issue 1243: {\bf Lie group integration}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item issue author: Stefan Holzinger
+    \item {description: add new functions for implicit Lie group integration (FIRST TESTS)}
+    \item   date resolved: {\bf 2022-08-24 17:13},
+date raised: 2022-08-24 (resolved by: Stefan Holzinger)
+  \ei
   \item {\bf Version 1.3.86}: {\bf \color{warningRed}  resolved BUG 1239}: {\bf Timer registration}
   \begin{itemize}[label=$\bullet$]
     \item {description: self-registration of Timers fails on Linux and may lead to crashes; depends on order of initialization of global variables}
@@ -4501,10 +4629,10 @@ date raised: 2020-12-27
     \item   date resolved: {\bf 2020-12-27 01:31},
 date raised: 2020-12-27 
   \ei
-  \item {\bf Version 1.0.72}:  resolved Issue 0521: {\bf useWindowsMonitorScaleFactor}
+  \item {\bf Version 1.0.72}:  resolved Issue 0521: {\bf useWindowsDisplayScaleFactor}
 (extension)
   \begin{itemize}[label=$\bullet$]
-    \item {description: add new option useWindowsMonitorScaleFactor in visualizationSettings.general to include monitor scaling factor for font sizes}
+    \item {description: add new option useWindowsDisplayScaleFactor in visualizationSettings.general to include display scaling factor for font sizes}
     \item   date resolved: {\bf 2020-12-27 01:25},
 date raised: 2020-12-27 
   \ei
@@ -4529,11 +4657,11 @@ date raised: 2020-12-21
     \item   date resolved: {\bf 2020-12-24 01:25},
 date raised: 2020-12-24 
   \ei
-  \item {\bf Version 1.0.68}:  resolved Issue 0518: {\bf windows monitor scaling}
+  \item {\bf Version 1.0.68}:  resolved Issue 0518: {\bf windows display scaling}
 (extension)
   \begin{itemize}[label=$\bullet$]
-    \item {description: include windows monitor (screen) scaling into drawing of texts to increase visibility on high dpi screens}
-    \item {\bf notes: added flag in visualizationSettings: general.useWindowsMonitorScaleFactor}
+    \item {description: include windows display (screen) scaling into drawing of texts to increase visibility on high dpi screens}
+    \item {\bf notes: added flag in visualizationSettings: general.useWindowsDisplayScaleFactor}
     \item   date resolved: {\bf 2020-12-24 00:22},
 date raised: 2020-12-24 
   \ei

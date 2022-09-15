@@ -128,6 +128,7 @@ void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 	Vector3D omegaBar;
 	((CNodeRigidBody*)GetCNode(0))->CollectCurrentNodeData1(Glocal, omegaBar);
 
+	//std::cout << "omegaBar=" << omegaBar << "\n";
 	//+++++++++++++++++++++++++++++++++++++
 	//Version1 (different to Version2 (gives different forces1; difference acting in the nullspace of rot):
 	//Vector3D temp = omegaBar.CrossProduct(localInertia * omegaBar);

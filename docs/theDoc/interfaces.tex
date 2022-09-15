@@ -327,7 +327,7 @@ SimulationSettings has the following items:
 
 %++++++++++++++++++++++++++++++++++++++
 \mysubsection{Visualization settings}
-This section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options.
+This section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see \refSection{sec:introduction:visualizationSettings}.
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{VSettingsGeneral} \label{sec:VSettingsGeneral}
@@ -361,12 +361,12 @@ VSettingsGeneral has the following items:
     showSolverTime &     bool &      &     True &     true = solver current time shown in render window\\ \hline
     sphereTiling &     PInt &      &     6 &     global number of segments for spheres; if smaller than 2, 2 segments are used (flat)\\ \hline
     textColor &     Float4 &     4 &     [0.,0.,0.,1.0] &     \tabnewline general text color (default); used for system texts in render window\\ \hline
-    textSize &     float &      &     12. &     general text size (font size) in pixels if not overwritten; if useWindowsMonitorScaleFactor=True, the the textSize is multplied with the windows monitor scaling factor for larger texts on on high resolution monitors; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)\\ \hline
+    textSize &     float &      &     12. &     general text size (font size) in pixels if not overwritten; if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)\\ \hline
     threadSafeGraphicsUpdate &     bool &      &     True &     true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state\\ \hline
     useBitmapText &     bool &      &     True &     if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (>10000) node numbers shown\\ \hline
     useGradientBackground &     bool &      &     False &     true = use vertical gradient for background; \\ \hline
     useMultiThreadedRendering &     bool &      &     True &     true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); set this parameter before call to exudyn.StartRenderer(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW\\ \hline
-    useWindowsMonitorScaleFactor &     bool &      &     True &     the windows monitor scaling is used for increased visibility of texts on high resolution monitors; based on GLFW glfwGetWindowContentScale\\ \hline
+    useWindowsDisplayScaleFactor &     bool &      &     True &     the Windows display scaling (monitor scaling; content scaling) factor is used for increased visibility of texts on high resolution displays; based on GLFW glfwGetWindowContentScale; deactivated on linux compilation as it leads to crashes (adjust textSize manually!)\\ \hline
     worldBasisSize &     float &      &     1.0 &     size of world basis coordinate system\\ \hline
 	  \end{longtable}
 	\end{center}

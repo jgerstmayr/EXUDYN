@@ -284,7 +284,9 @@ void CNodeRigidBodyRotVecDataLG::GetOutputVariable(OutputVariableType variableTy
 		break;
 	}
 	case OutputVariableType::Rotation: {
-		value.CopyFrom(GetRotationParameters(configuration));
+		Matrix3D rotMat = GetRotationMatrix(configuration);
+		Vector3D rot = RigidBodyMath::RotationMatrix2RotXYZ(rotMat);
+		value.SetVector(3, rot.GetDataPointer());
 		break;
 	}
 	case OutputVariableType::Coordinates:
@@ -315,4 +317,64 @@ void CNodeRigidBodyRotVecDataLG::GetOutputVariable(OutputVariableType variableTy
 		SysError("CNodeRigidBodyRotVecDataLG::GetOutputVariable failed"); //error should not occur, because types are checked!
 	}
 }
+
+//! composition operation in R3xSO(3) with rotation vector as rotation parameters
+void CNodeRigidBodyRotVecDataLG::CompositionRule(const LinkedDataVector& currentPosition, const LinkedDataVector& currentOrientation,
+	const Vector6D& incrementalMotion,
+	LinkedDataVector& newPosition, LinkedDataVector& newOrientation) const
+{
+	// incremental position/rotation
+	LinkedDataVector incrementalPosition(incrementalMotion, 0, nDisplacementCoordinates);
+	LinkedDataVector incrementalRotation(incrementalMotion, nDisplacementCoordinates, nRotationCoordinates);
+
+	// position update: x0 + incPosVec
+	newPosition = currentPosition; 
+	newPosition += incrementalPosition;
+
+	//newOrientation += incrementalRotation //testing for small rotations ...
+
+	// rotation update (composition operaton for roitation vectors): rotVec0 o incRotVec 
+	newOrientation = EXUlie::CompositionRotationVector((Vector3D)currentOrientation, (Vector3D)incrementalRotation);
+
+	//no improvements for small increments:
+	//Matrix3D A0 = RigidBodyMath::RotationVector2RotationMatrix(currentOrientation);
+	//Matrix3D Ainc = RigidBodyMath::RotationVector2RotationMatrix(incrementalRotation);
+	//newOrientation = RigidBodyMath::SkewMatrix2Vector(EXUlie::LogSO3(A0*Ainc));
+
+	//pout << "currentPosition=" << currentPosition << ", ";
+	//pout << "currentOrientation=" << currentOrientation << "\n";
+
+	//pout << "incrementalMotion=" << incrementalMotion << ", ";
+
+	//pout << "newPosition=" << newPosition << ", ";
+	//pout << "newOrientation=" << newOrientation << "\n\n";
+
+}
+
+
+#ifdef CONFIGSPACE_SE3_ROTVEC
+//! composition operation in SE(3) with rotation vector as rotation parameters
+//void CNodeRigidBodyRotVecDataLG::CompositionRule(const LinkedDataVector& currentPosition, const LinkedDataVector& currentOrientation, const Vector6D& incrementalMotion,
+//	const LinkedDataVector& newPosition, const LinkedDataVector& newOrientation) const
+void CNodeRigidBodyRotVecDataLG::CompositionRule(const LinkedDataVector& currentPosition, const LinkedDataVector& currentOrientation, const Vector6D& incrementalMotion,
+	LinkedDataVector& newPosition, LinkedDataVector& newOrientation) const
+{
+	// incremental position/rotation
+	Vector3D incrementalPosition = { incrementalMotion[0], incrementalMotion[1], incrementalMotion[2] };
+	Vector3D incrementalRotation = { incrementalMotion[3], incrementalMotion[4], incrementalMotion[5] };
+
+	// for testing with EOM in R3xSO(3)
+	incrementalPosition = EXUlie::ExpSO3((Vector3D)currentOrientation).GetTransposed()*incrementalPosition;
+
+	// position update: x = x0 + deltaX = x0 + R0*TexpSO3^T(incRotVec)*incPocVec; R0=expSO3(rotVec0)
+	//newPosition.SetAll(0.); // needed?
+	newPosition = EXUlie::ExpSO3((Vector3D)currentOrientation)*EXUlie::TExpSO3(incrementalRotation).GetTransposed()*incrementalPosition; // R0*TexpSO3^T(incRotVec)*incPocVec = deltaX
+	newPosition += currentPosition; // deltaX + x0
+
+	// rotation update (composition operaton for roitation vectors): rotVec0 o incRotVec 
+	//newOrientation.SetAll(0.); // needed?
+	newOrientation = (LinkedDataVector)EXUlie::CompositionRotationVector((Vector3D)currentOrientation, incrementalRotation);
+}
+#endif // CONFIGSPACE_SE3_ROTVEC
+
 

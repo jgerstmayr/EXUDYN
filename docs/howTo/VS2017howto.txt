@@ -15,10 +15,10 @@ Installation [2021-04-24]:
 
 - install VS2017 Enterprise, with flags:
   - Activate Python development tools:
-    - Python 3 (64 bit) 3.6.6 (needed for compilation)
     - Native Python development tools
     - Python 3.6.6, 32bit (may be needed for VS2017 compilation)
-    - Anaconda 3, Python 3.6, 32 bit [DO NOT INSTALL in future ...] ==> will be installed into: C:\Program Files (x86)\Microsoft Visual Studio\Shared\Anaconda3_86
+    - [SINCE 2022 not needed]: Python 3 (64 bit) 3.6.6 (needed for compilation)
+    - [SINCE 2022 not needed]: Anaconda 3, Python 3.6, 32 bit [DO NOT INSTALL in future ...] ==> will be installed into: C:\Program Files (x86)\Microsoft Visual Studio\Shared\Anaconda3_86
 - but DO NOT install:
   - Anaconda 2, Python 3.6, 32/64 bit
   - Anaconda 3, Python 3.6, 64 bit

@@ -36,6 +36,7 @@ py::dict MainSystemContainer::RenderState2PyDict(const RenderState& state)
 	d["maxSceneSize"] = state.maxSceneSize;
 	d["zoom"] = state.zoom;
 	d["currentWindowSize"] = (const std::vector<Index>)state.currentWindowSize;
+	d["displayScaling"] = state.displayScaling;
 
 	//current orientation:
 	const Float16& A = state.modelRotation;
@@ -96,7 +97,7 @@ void MainSystemContainer::PySetRenderState(py::dict renderState)
 		state.zoom = py::cast<float>(renderState["zoom"]);
 
 		Vector2D windowSize;
-		EPyUtils::SetVector2DSafely(renderState["currentWindowSize"], windowSize);
+		EPyUtils::SetVector2DSafely(renderState["currentWindowSize"], windowSize); //no effect when changing
 		state.currentWindowSize[0] = (Index)windowSize[0];
 		state.currentWindowSize[1] = (Index)windowSize[1];
 

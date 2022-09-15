@@ -190,6 +190,11 @@ public:
 			state->mouseRightPressed = false;
 			state->mouseMiddlePressed = false;
 			state->joystickAvailable = invalidIndex;
+			state->displayScaling = 1;
+
+			state->openGLModelViewMatrix.SetAll(0);	//! this notifies, if needed, that there was no rendering so far
+			state->openGLProjection.SetAll(0);		//! this notifies, if needed, that there was no rendering so far
+
 			return true;
 		}
 		else { return false; }
@@ -286,12 +291,18 @@ private: //to be called internally only!
 		std::cout << description << "\n";
 	}
 
-	//static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	//! GLFW callback functions:
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 	static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 	static void window_close_callback(GLFWwindow* window);
+	static void window_content_scale_callback(GLFWwindow* window, float xscale, float yscale) { SetContentScaling(xscale, yscale); }
+
+	//! compute unified content scaling based on values provided by GLFW
+	static void SetContentScaling(float xScale, float yScale);
+	static float GetFontScaling() { if (state != nullptr) { return state->displayScaling; } else { return 1; } }
+	static void SetFontScaling(float scaling) { if (state != nullptr) { state->displayScaling = scaling; }  }
 
 	//! return true, if joystick available and updated values are available; if joystickNumber==invalidIndex, chose a joystick; 
 	//! if joystickNumber!=invalidIndex, it uses the fixed joystick until end of Renderer
@@ -337,7 +348,7 @@ private: //to be called internally only!
 	static void SaveSceneToFile(const STDstring& filename);
 	
 	//! Render particulary the graphics data of multibody system; selectionMode==true adds names
-	static void RenderGraphicsData(bool selectionMode = false); // fontScale now stored in GLFWRenderer: float fontScale); 
+	static void RenderGraphicsData(bool selectionMode = false); 
 
 	//! Render triangles with stencil shadow method (slow, but accurate and should be sufficient for some animations)
 	static void DrawTrianglesWithShadow(GraphicsData* data); 

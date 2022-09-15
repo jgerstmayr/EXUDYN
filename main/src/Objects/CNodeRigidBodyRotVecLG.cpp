@@ -285,9 +285,16 @@ void CNodeRigidBodyRotVecLG::GetOutputVariable(OutputVariableType variableType, 
 		break;
 	}
 	case OutputVariableType::Rotation: {
-		value.CopyFrom(GetRotationParameters(configuration));
+		Matrix3D rotMat = GetRotationMatrix(configuration);
+		Vector3D rot = RigidBodyMath::RotationMatrix2RotXYZ(rotMat);
+		value.SetVector(3, rot.GetDataPointer());
 		break;
 	}
+	//DELETE: not consistent with theDoc and other nodes:
+	//case OutputVariableType::Rotation: {
+	//	value.CopyFrom(GetRotationParameters(configuration));
+	//	break;
+	//}
 	case OutputVariableType::Coordinates:
 	{
 		if (IsConfigurationInitialCurrentReferenceVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))

@@ -188,6 +188,7 @@ public:
 	//{ CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetAccessFunctionTypesSuperElement"); }
 
 	//! special access function for multi - nodal objects with mesh nodes; compute Jacobian with weightingMatrix(WM), which defines how flexible coordinates(w / wo modeBasis) are 
+	//! localOffset acts in reference frame
 	//! CASE 1:
 	//!   if meshNodeNumbers (out of n total mesh nodes in the SuperElement) are provided, the nodes are weighted by weightingMatrix (can be n x 1 or n x 3) 
 	//!   and the position (or velocity) of every node is added to a weighted sum. In case (n x 3), the single components are weighted.
@@ -195,9 +196,7 @@ public:
 	//! CASE 2:
 	//!   For reducedOrder elements, meshNodeNumbers.NumberOfItems()==0, the weightingMatrix acts on reduced coordinates (WM = WMfull * modalBasis), 
 	//!   and must have size (nReducedCoordinates x 3): pLoc = WM * qReduced, pGlob = pRef + A * pLoc == > Jac = d(pGlob) / d([q0, q])
-	virtual void GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, Matrix& value) const;
-	//virtual void GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, Matrix& value) const
-	//{ CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetAccessFunctionSuperElement"); }
+	virtual void GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value) const;
 
 	//! get extended output variable types for multi-nodal objects with mesh nodes
 	virtual OutputVariableType GetOutputVariableTypesSuperElement(Index meshNodeNumber) const

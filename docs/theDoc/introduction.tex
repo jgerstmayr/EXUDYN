@@ -371,10 +371,52 @@ The solvers provide a number of options in \texttt{solutionSettings} to generate
 
 
 \mysubsubsection{Visualization settings}
+\label{sec:introduction:visualizationSettings}
 %
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
-Details on visualization settings and its substructures are provided in Sections \ref{sec:VSettingsGeneral} -- \ref{sec:VisualizationSettings}.
 
+Details on visualization settings and its substructures are provided in Sections \ref{sec:VSettingsGeneral} -- \ref{sec:VisualizationSettings}. These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \texttt{SC.WaitForRenderEngineStopFlag()} or 
+\texttt{mbs.WaitForUserToContinue()} ).
+\ignoreRST{The visualization settings dialog is shown exemplarily in \fig{fig_visualizationSettings}.}
+Note that this dialog is automatically created and uses Python's \texttt{tkinter}, which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for \codeName\ .
+The appearance of settings dialogs may be adjusted by \texttt{exudyn.GUI} variables:
+\bi
+  \item \texttt{exudyn.GUI.useRenderWindowDisplayScaling}: if True, the scaling will follow the current scaling of the render window; if False, it will use the \texttt{tkinter} internal scaling, which uses the main screen where the dialog is created (which won't scale well, if the window is moved to another screen).
+  \item \texttt{exudyn.GUI.treeviewDefaultFontSize}: this is the base font size of the dialog (also right-mouse-button dialog)
+  \item \texttt{exudyn.GUI.useRenderWindowDisplayScaling}: this factor is used to increase height of lines as compared to font size
+  \item \texttt{exudyn.GUI.treeEditDefaultWidth}: unscaled width of, e.g., visualizationSettings
+  \item \texttt{exudyn.GUI.treeEditDefaultHeight}: unscaled height of, e.g., visualizationSettings
+  \item \texttt{exudyn.GUI.dialogDefaultWidth}: unscaled width of, e.g., right-mouse-button dialog
+  \item \texttt{exudyn.GUI.treeEditDefaultHeight}: unscaled height of, e.g., right-mouse-button dialog
+\ei
+For example, to change some parameters, write:
+\pythonstyle\begin{lstlisting}
+  import exudyn.GUI
+  exudyn.GUI.treeEditDefaultWidth = 1600
+  exudyn.GUI.useRenderWindowDisplayScaling = False
+\end{lstlisting}
+%
+\onlyRST{
+
+.. |picVisSettings| image:: docs/theDoc/figures/visualizationSettings.png
+   :width: 60%
+
+|picVisSettings|
+
+[View of visualization settings (press 'V' in render window to open dialog).]
+
+}
+\ignoreRST{
+\begin{figure}[tbh]%
+\begin{center}
+\includegraphics[width=0.7\columnwidth]{figures/visualizationSettings}
+\end{center}
+\caption{View of visualization settings (press 'V' in render window to open dialog).}%
+\label{fig_visualizationSettings}%
+\end{figure}
+}
+
+\noindent
 The visualization settings structure can be accessed in the system container \texttt{SC} (access per reference, no copying!), accessing every value or structure directly, e.g.,
 \pythonstyle\begin{lstlisting}
   SC.visualizationSettings.nodes.defaultSize = 0.001      #draw nodes very small
@@ -401,7 +443,8 @@ The visualization settings structure can be accessed in the system container \te
 
 \mysubsubsubsection{Storing the model view}
 \label{sec:storing:modelview}
-There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \texttt{SC.GetRenderState()} and \texttt{SC.SetRenderState()}.
+There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \texttt{SC.GetRenderState()} and \texttt{SC.SetRenderState()},
+see also \refSection{sec:renderState}.
 %
 A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation\footnote{
 note that \texttt{visualizationSettings.general.autoFitScene} should be set False if you want to use the stored zoom factor}:
@@ -449,6 +492,8 @@ Now copy the output and set this with \texttt{SC.SetRenderState} in your Python 
   SC.SetRenderState(renderState)
   #.... further code for simulation here
 \end{lstlisting}
+Note that in the current version of \codeName\ there is more data stored in render state, which is not used in \texttt{SC.SetRenderState},
+see also \refSection{sec:renderState}.
 \horizontalRuler
 %
 %
@@ -609,7 +654,7 @@ We are trying hard to achieve error-free algorithms of physically correct models
 \mysubsubsection{Contact problems}
 %
 Since Q4 2021 a contact module is available in \codeName. 
-This separate module \texttt{GeneralContact} \[still under developement, consider with care!\] is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
+This separate module \texttt{GeneralContact} $[$\mybold{still under development, consider with care!}$]$ is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
 \onlyRST{
 
 .. |cpic1| image:: docs/theDoc/figures/contactTests.png
@@ -636,7 +681,7 @@ This separate module \texttt{GeneralContact} \[still under developement, conside
 
 \noindent \mybold{Note}:
 \bi
-\item \texttt{GeneralContact} is (in most cases) restricted to dynamic simulation (explicit or implicit \[still under developement, consider with care!\]) if friction is used; without friction, it also works in the static case
+\item \texttt{GeneralContact} is (in most cases) restricted to dynamic simulation (explicit or implicit $[$\mybold{still under development, consider with care!}$]$) if friction is used; without friction, it also works in the static case
 \item in addition to \texttt{GeneralContact} there are special objects, in particular for rolling and simple 1D contacts, that are available as single objects, cf.\ \texttt{ObjectConnectorRollingDiscPenalty}
 \item \texttt{GeneralContact} is recommended to be used for large numbers of contacts, while the single objects are integrated more directly into mbs.
 \ei
@@ -687,6 +732,7 @@ import sys
 sys.exudynFast = True #this variable is used to signal to load the fast exudyn module
 import exudyn as exu
 \end{lstlisting}
+The faster versions are only pre-compiled for some Python versions, which can be determined by trying \texttt{import exudyn.exudynCPPfast}.
 
 \noindent However, there are many \mybold{ways to speed up \codeName\ in general}:
 \bi

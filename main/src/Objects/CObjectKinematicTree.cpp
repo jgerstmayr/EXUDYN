@@ -719,7 +719,7 @@ void CObjectKinematicTree::GetAccessFunctionBody(AccessFunctionType accessType, 
 
 
 //! just make sure that this overwritten function is not called!
-void CObjectKinematicTree::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, Matrix& value) const
+void CObjectKinematicTree::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value) const
 {
 	CHECKandTHROWstring("CObjectKinematicTree::GetAccessFunctionSuperElement: Function called without intention; use MarkerKinematicTree instead of MarkerSuperElement");
 }

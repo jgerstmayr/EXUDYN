@@ -66,6 +66,9 @@ public:
 	//! set initial coordinates, usually using default; special classes (Lie group) override
 	virtual void SetInitialCoordinateVector_t(LinkedDataVector& initialVector_t) { initialVector_t = GetInitialCoordinateVector_t(); }
 
+	//! set initial coordinates, usually using default; special classes (Lie group) override
+	virtual void SetInitialDataCoordinateVector(LinkedDataVector& initialVector) { initialVector = GetInitialCoordinateVector(); }
+
 
 	//! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CNode GetOutputVariable(...)
 	virtual py::object GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration) const;

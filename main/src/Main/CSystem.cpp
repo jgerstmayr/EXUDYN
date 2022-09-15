@@ -1082,9 +1082,6 @@ void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 
 				mainNode->SetInitialCoordinateVector(u);
 				mainNode->SetInitialCoordinateVector_t(v);
-				//DELETE:
-				//u = mainNode->GetInitialCoordinateVector();	//size must be compatible and is not checked!
-				//v = mainNode->GetInitialCoordinateVector_t();	//size must be compatible and is not checked!
 
 				//also initialize global reference coordinate vector (used for differentiation and in finite elements)
 				LinkedDataVector uRef(ODE2uRef, coordIndex, numberOfCoordinates);
@@ -1109,7 +1106,8 @@ void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 				uRef = node->GetReferenceCoordinateVector();
 			}
 		}
-		else if ((Index)node->GetNodeGroup() & (Index)CNodeGroup::DataVariables)
+		//else  //the following is always done:
+		if ((Index)node->GetNodeGroup() & (Index)CNodeGroup::DataVariables)
 		{
 			Index coordIndex = node->GetGlobalDataCoordinateIndex();
 
@@ -1118,12 +1116,10 @@ void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 				Index numberOfCoordinates = node->GetNumberOfDataCoordinates();
 				LinkedDataVector x(data, coordIndex, numberOfCoordinates);
 
-				mainNode->SetInitialCoordinateVector(x);
-				//DELETE:
-				//x = mainNode->GetInitialCoordinateVector(); //size must be compatible and is not checked!
+				mainNode->SetInitialDataCoordinateVector(x);
 			}
 		}
-		else { CHECKandTHROWstring("CSystem::AssembleInitializeSystemCoordinates: invalid Node type, not implemented"); }
+		//else { CHECKandTHROWstring("CSystem::AssembleInitializeSystemCoordinates: invalid Node type, not implemented"); }
 		nodeIndex++;
 	}
 

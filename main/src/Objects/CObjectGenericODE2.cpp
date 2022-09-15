@@ -376,9 +376,9 @@ void CObjectGenericODE2::InitializeCoordinateIndices()
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! for definition see CObjectSuperElement
-void CObjectGenericODE2::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, Matrix& value) const
+void CObjectGenericODE2::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value) const
 {
-	CObjectSuperElement::GetAccessFunctionSuperElement(accessType, weightingMatrix, meshNodeNumbers, value);
+	CObjectSuperElement::GetAccessFunctionSuperElement(accessType, weightingMatrix, meshNodeNumbers, localOffset, value);
 }
 
 //! get extended output variable types for multi-nodal objects with mesh nodes
