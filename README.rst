@@ -3,7 +3,7 @@ Exudyn
 ======
 
 +  Exudyn version = 1.4.1 (Ellington)
-+  build date and time=2022-09-14  16:18
++  build date and time=2022-09-15  11:40
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn 1.4 is out! It includes improved multi-threading support; a redundant coordinate (constraint) as well as a minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!

@@ -20,6 +20,8 @@
 #include "Linalg/SlimVector.h" 
 #include "Utilities/Parallel.h"
 
+#include <thread> //needed on MacOS, automatic elsewhere
+
 //#define MEMORY_ORDER_TINYTHREAD std::memory_order_acq_rel
 
 #define MEMORY_ORDER_TINYTHREAD std::memory_order_seq_cst
