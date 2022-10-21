@@ -269,6 +269,9 @@ public:
 	//! Set (write) parameter 'parameterName' of 'itemNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
 	virtual void PySetMarkerParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value);
 
+	//! Get specific output variable with variable type
+	virtual py::object PyGetMarkerOutputVariable(const py::object& itemIndex, OutputVariableType variableType, ConfigurationType configuration = ConfigurationType::Current) const;
+
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   LOAD
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...

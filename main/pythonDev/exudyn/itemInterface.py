@@ -1976,10 +1976,13 @@ class VObjectConnectorRollingDiscPenalty:
     def __repr__(self):
         return str(dict(self))
 class ObjectConnectorRollingDiscPenalty:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., rollingFrictionViscous = 0., activeConnector = True, discRadius = 0, planeNormal = [0,0,1], visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), discRadius = 0, discAxis = [1,0,0], planeNormal = [0,0,1], dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., rollingFrictionViscous = 0., activeConnector = True, visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.nodeNumber = nodeNumber
+        self.discRadius = discRadius
+        self.discAxis = discAxis
+        self.planeNormal = planeNormal
         self.dryFrictionAngle = dryFrictionAngle
         self.contactStiffness = contactStiffness
         self.contactDamping = contactDamping
@@ -1987,8 +1990,6 @@ class ObjectConnectorRollingDiscPenalty:
         self.dryFrictionProportionalZone = dryFrictionProportionalZone
         self.rollingFrictionViscous = rollingFrictionViscous
         self.activeConnector = activeConnector
-        self.discRadius = discRadius
-        self.planeNormal = planeNormal
         self.visualization = visualization
 
     def __iter__(self):
@@ -1996,6 +1997,9 @@ class ObjectConnectorRollingDiscPenalty:
         yield 'name', self.name
         yield 'markerNumbers', self.markerNumbers
         yield 'nodeNumber', self.nodeNumber
+        yield 'discRadius', self.discRadius
+        yield 'discAxis', self.discAxis
+        yield 'planeNormal', self.planeNormal
         yield 'dryFrictionAngle', self.dryFrictionAngle
         yield 'contactStiffness', self.contactStiffness
         yield 'contactDamping', self.contactDamping
@@ -2003,8 +2007,6 @@ class ObjectConnectorRollingDiscPenalty:
         yield 'dryFrictionProportionalZone', self.dryFrictionProportionalZone
         yield 'rollingFrictionViscous', self.rollingFrictionViscous
         yield 'activeConnector', self.activeConnector
-        yield 'discRadius', self.discRadius
-        yield 'planeNormal', self.planeNormal
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdiscWidth', dict(self.visualization)["discWidth"]
         yield 'Vcolor', dict(self.visualization)["color"]

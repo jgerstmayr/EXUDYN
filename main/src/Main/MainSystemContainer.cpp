@@ -32,7 +32,7 @@ py::dict MainSystemContainer::RenderState2PyDict(const RenderState& state)
 {
 	auto d = py::dict();
 	d["centerPoint"] = (const std::vector<float>)state.centerPoint;
-	//d["rotationCenterPoint"] = (const std::vector<float>)state.rotationCenterPoint;
+	d["rotationCenterPoint"] = (const std::vector<float>)state.rotationCenterPoint;
 	d["maxSceneSize"] = state.maxSceneSize;
 	d["zoom"] = state.zoom;
 	d["currentWindowSize"] = (const std::vector<Index>)state.currentWindowSize;
@@ -89,10 +89,10 @@ void MainSystemContainer::PySetRenderState(py::dict renderState)
 			
 		//Vector3D centerPoint;
 		EPyUtils::SetSlimVectorTemplateSafely<float, 3>(renderState["centerPoint"], state.centerPoint);
-		//if (renderState.contains("rotationCenterPoint"))
-		//{
-		//	EPyUtils::SetSlimVectorTemplateSafely<float, 3>(renderState["rotationCenterPoint"], state.rotationCenterPoint);
-		//}
+		if (renderState.contains("rotationCenterPoint"))
+		{
+			EPyUtils::SetSlimVectorTemplateSafely<float, 3>(renderState["rotationCenterPoint"], state.rotationCenterPoint);
+		}
 		state.maxSceneSize = py::cast<float>(renderState["maxSceneSize"]);
 		state.zoom = py::cast<float>(renderState["zoom"]);
 

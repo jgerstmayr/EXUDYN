@@ -53,7 +53,7 @@ listMarkerStylesFilled = ['x','+','*','.','d','D','s','X','P','v','^','<','>','o
 componentNorm = -2 #
 
 #**function: parse header of output file (solution file, sensor file, genetic optimization output, ...) given in file.readlines() format
-#**output: return dictionary with 'type'=['sensor','solution','geneticOptimization','parameterVariation'], 'variableType', 
+#**output: return dictionary with 'type'=['sensor','solution','geneticOptimization','parameterVariation'], 'variableType' containing variable types, 'variableRanges' containing ranges for parameter variation 
 def ParseOutputFileHeader(lines):
     nLines = len(lines)
     parseLines = min(10, nLines) #max 10 lines to parse
@@ -63,6 +63,7 @@ def ParseOutputFileHeader(lines):
     if len(lines) < 1:
         return {} #empty dictionary
     variableTypes = []
+    variableRanges = [] #only for parameter variation
     if lines[0].find('EXUDYN genetic optimization results file') != -1:
         output['type'] = 'geneticOptimization'
         for i in range(parseLines): #header is max. 10 lines
@@ -78,6 +79,15 @@ def ParseOutputFileHeader(lines):
                 cols = lines[i+1].strip('#').split(',')
                 for j in range(len(cols)):
                     variableTypes += [cols[j].strip()]
+                break
+        for i in range(parseLines): #header is max. 10 lines
+            if i+1 < len(lines) and lines[i][0:17] == '#parameter ranges':
+                ranges = lines[i+1].strip('#').strip('\n').split(';') #this gives e.g. ['(0.1, 5, 4)', '(2,4.5,2)']
+                # print('ranges=', ranges)
+                for j in range(len(ranges)):
+                    oneRange = ranges[j].strip('(').strip(')').split(',')
+                    # print('one range=', oneRange)
+                    variableRanges += [[float(oneRange[0]),float(oneRange[1]),int(oneRange[2])]]
                 break
     elif lines[0].find('sensor output file') != -1:
         #print("SENSOR")
@@ -129,6 +139,8 @@ def ParseOutputFileHeader(lines):
                 break
 
     output['columns'] = variableTypes
+    output['variableRanges'] = variableRanges
+    
     return output
 
 #**function: returns structure with default values for PlotSensor which can be modified once to be set for all later calls of PlotSensor
@@ -181,7 +193,7 @@ def PlotSensorDefaults():
 #        minorTicksYon: if True, turn minor ticks for y-axis on
 #        fileCommentChar: if exists, defines the comment character in files (\#, %, ...)
 #        fileDelimiterChar: if exists, defines the character indicating the columns for data (',', ' ', ';', ...)
-#**output: plots the sensor data
+#**output: plots the sensor data; returns [plt, fig, ax, line] in which plt is matplotlib.pyplot, fig is the figure (or None), ax is the axis (or None) and line is the return value of plt.plot (or None) which could be changed hereafter
 #**notes: adjust default values by modifying the variables exudyn.plot.plotSensorDefault..., e.g., exudyn.plot.plotSensorDefaultFontSize
 #**example: 
 ##assume to have some position-based nodes 0 and 1:
@@ -319,6 +331,8 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
 
 
     fig=None
+    ax=None
+    line=None
     if nSensors:
         if figureName!='':
             if newFigure and plt.fignum_exists(figureName):
@@ -631,7 +645,8 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
         
         if fileName != '':
             plt.savefig(fileName)
-        
+    
+    return [plt, fig, ax, line]
     
 #**function: plot fft spectrum of signal
 #**input: 

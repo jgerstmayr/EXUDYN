@@ -69,7 +69,7 @@ void CSolverExplicitTimeInt::PostInitializeSolverSpecific(CSystem& computational
 	if (useLieGroupIntegration)
 	{
 		PrecomputeLieGroupStructures(computationalSystem, simulationSettings);
-		if (lieGroupNodes.NumberOfItems() == 0) { useLieGroupIntegration = false; } //to avoid overheads!
+		if (lieGroupDataNodes.NumberOfItems() == 0) { useLieGroupIntegration = false; } //to avoid overheads!
 	}
 
 	//it.automaticStepSize is used such that it is only on, if solver has automatic step size control
@@ -892,14 +892,14 @@ void CSolverExplicitTimeInt::EliminateCoordinateConstraints(CSystem& computation
 void CSolverExplicitTimeInt::PrecomputeLieGroupStructures(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
 	const auto& cNodes = computationalSystem.GetSystemData().GetCNodes();
-	lieGroupNodes.SetNumberOfItems(0); //filled with lie group node indices during initialization; ONLY if useLieGroupIntegration=true
+	lieGroupDataNodes.SetNumberOfItems(0); //filled with lie group node indices during initialization; ONLY if useLieGroupIntegration=true
 	nonLieODE2Coordinates.SetNumberOfItems(0); //filled with coordinates, for which no Lie group integration is used; ONLY if useLieGroupIntegration=true
 
 	for (Index i = 0; i < cNodes.NumberOfItems(); i++)
 	{
 		if (EXUstd::IsOfType(cNodes[i]->GetType(), Node::LieGroupWithDirectUpdate))
 		{
-			lieGroupNodes.Append(i);
+			lieGroupDataNodes.Append(i);
 			//lie group node must be rigid body node for now:
 			const CNodeRigidBody& rigidNode = (const CNodeRigidBody&)(*cNodes[i]);
 
@@ -958,7 +958,7 @@ void CSolverExplicitTimeInt::UpdateODE2StageCoordinatesLieGroup(CSystem& computa
 	}
 	const Vector& refODE2 = computationalSystem.GetSystemData().GetCData().referenceState.ODE2Coords;
 
-	int nItems = lieGroupNodes.NumberOfItems();
+	int nItems = lieGroupDataNodes.NumberOfItems();
 	Index nThreads = exuThreading::TaskManager::GetNumThreads();
 
 	Index taskSplit = (nThreads > 1 && nItems >= 1000) ? 16 * nThreads : nThreads; //difficult to optimally set for nodes
@@ -969,9 +969,9 @@ void CSolverExplicitTimeInt::UpdateODE2StageCoordinatesLieGroup(CSystem& computa
 		//as nodes are independent, tasks can be performed thread-independent!
 		//Index threadID = exuThreading::TaskManager::GetThreadId();
 
-		Index n = lieGroupNodes[(Index)j];
+		Index n = lieGroupDataNodes[(Index)j];
 		//Lie group nodes:
-	//for (Index n : lieGroupNodes)
+	//for (Index n : lieGroupDataNodes)
 	//{
 		const CNodeRigidBody& node = (const CNodeRigidBody&)(computationalSystem.GetSystemData().GetCNode(n));
 		Index nPos = node.GetNumberOfDisplacementCoordinates(); //should be 3
@@ -1021,7 +1021,7 @@ void CSolverExplicitTimeInt::LieGroupComputeKstage(CSystem& computationalSystem,
 		stageDerivODE2[k] = solutionODE2_t[k];
 	}
 
-	int nItems = lieGroupNodes.NumberOfItems();
+	int nItems = lieGroupDataNodes.NumberOfItems();
 	Index nThreads = exuThreading::TaskManager::GetNumThreads();
 
 	Index taskSplit = (nThreads > 1 && nItems >= 1000) ? 16 * nThreads : nThreads; //difficult to optimally set for nodes
@@ -1032,10 +1032,8 @@ void CSolverExplicitTimeInt::LieGroupComputeKstage(CSystem& computationalSystem,
 		//as nodes are independent, tasks can be performed thread-independent!
 		//Index threadID = exuThreading::TaskManager::GetThreadId();
 
-		Index n = lieGroupNodes[(Index)j];
+		Index n = lieGroupDataNodes[(Index)j];
 		//Lie group nodes:
-	//for (Index n : lieGroupNodes)
-	//{
 		const CNodeRigidBody& node = (const CNodeRigidBody&)(computationalSystem.GetSystemData().GetCNode(n));
 		Index nPos = node.GetNumberOfDisplacementCoordinates(); //should be 3
 		Index nRot = node.GetNumberOfRotationCoordinates();     //should be 3
@@ -1097,7 +1095,7 @@ void CSolverExplicitTimeInt::LieGroupODE2StepEvaluation(CSystem& computationalSy
 	const Vector& refODE2 = computationalSystem.GetSystemData().GetCData().referenceState.ODE2Coords;
 	//Lie group nodes:
 
-	int nItems = lieGroupNodes.NumberOfItems();
+	int nItems = lieGroupDataNodes.NumberOfItems();
 	Index nThreads = exuThreading::TaskManager::GetNumThreads();
 
 	Index taskSplit = (nThreads > 1 && nItems >= 1000) ?  16 * nThreads : nThreads; //difficult to optimally set for nodes
@@ -1108,9 +1106,9 @@ void CSolverExplicitTimeInt::LieGroupODE2StepEvaluation(CSystem& computationalSy
 		//as nodes are independent, tasks can be performed thread-independent!
 		//Index threadID = exuThreading::TaskManager::GetThreadId();
 
-		Index n = lieGroupNodes[(Index)j];
+		Index n = lieGroupDataNodes[(Index)j];
 
-	//for (Index n : lieGroupNodes)
+	//for (Index n : lieGroupDataNodes)
 	//{
 		const CNodeRigidBody& node = (const CNodeRigidBody&)(computationalSystem.GetSystemData().GetCNode(n));
 		Index nPos = node.GetNumberOfDisplacementCoordinates(); //should be 3

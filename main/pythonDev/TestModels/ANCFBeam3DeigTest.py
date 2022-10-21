@@ -108,11 +108,11 @@ if True:
         for k in range(nElements):
             n1 = mbs.AddNode(NodePoint3DSlope23(referenceCoordinates=[lElem*(k+1),0,0]+initialRotations))
     
-            oBeam = mbs.AddObject(ObjectANCFBeam3D(nodeNumbers=[n0,n1], physicsLength = lElem, 
+            oBeam = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], physicsLength = lElem, 
                                                    #testBeamRectangularSize = [h,w],
                                                    sectionData = sectionData,
                                                    crossSectionPenaltyFactor = [csPenaltyFactor]*3,
-                                                   visualization=VBeam3D(sectionGeometry=sectionGeometry)))
+                                                   visualization=VANCFBeam(sectionGeometry=sectionGeometry)))
             n0 = n1
     
     

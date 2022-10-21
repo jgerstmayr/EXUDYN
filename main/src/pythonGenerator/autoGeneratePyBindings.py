@@ -600,7 +600,7 @@ sL+=DefLatexStartClass(classStr+': Node', '\label{sec:mainsystem:node}\n This se
 #                                ); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetNodeOutput', cName='PyGetNodeOutputVariable', 
-                                description="get the ouput of the node specified with the OutputVariableType; default configuration = 'current'; output may be scalar or array (e.g. displacement vector)",
+                                description="get the ouput of the node specified with the OutputVariableType; output may be scalar or array (e.g. displacement vector)",
                                 argList=['nodeNumber','variableType','configuration'],
                                 defaultArgs=['','','ConfigurationType::Current'],
                                 example = "mbs.GetNodeOutput(nodeNumber=0, variableType=exu.OutputVariableType.Displacement)"
@@ -772,6 +772,13 @@ sL += DefLatexStartClass(classStr+': Marker', '\label{sec:mainsystem:marker}\n T
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetMarkerParameter', cName='PySetMarkerParameter', 
                                 description="set parameter 'parameterName' of marker with markerNumber to value; parameter names can be found for the specific items in the reference manual",
                                 argList=['markerNumber', 'parameterName', 'value']
+                                ); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetMarkerOutput', cName='PyGetMarkerOutputVariable', 
+                                description="get the ouput of the marker specified with the OutputVariableType; currently only provides Position and Velocity for position based markers, and RotationMatrix, Rotation and AngularVelocity(Local) for markers providing orientation",
+                                argList=['markerNumber','variableType','configuration'],
+                                defaultArgs=['','','ConfigurationType::Current'],
+                                example = "mbs.GetMarkerOutput(markerNumber=0, variableType=exu.OutputVariableType.Position)"
                                 ); s+=s1; sL+=sL1
 
 

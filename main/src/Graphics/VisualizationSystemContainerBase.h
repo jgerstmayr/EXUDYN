@@ -40,6 +40,8 @@ public:
 	virtual void SetComputeMaxSceneRequest(bool flag) = 0;
 	virtual bool GetComputeMaxSceneRequest() = 0;
 
+	virtual void GetMarkerPositionOrientation(Index markerNumber, Index mbsNumber, Vector3D& position, Matrix3D& orientation, bool& hasPosition, bool& hasOrientation) = 0;
+
 	virtual std::string GetComputationMessage(bool solverInformation = true,
 		bool solutionInformation = true, bool solverTime = true) = 0; //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
 	virtual MainSystem* GetMainSystemBacklink(Index iSystem) = 0; //! REMOVE: get backlink of ith main system (0 if not existing), temporary for selection
@@ -81,7 +83,8 @@ class RenderState
 public:
 	//GLfloat modelview[16];		//!< current model view matrix
 	Float3 centerPoint;				//!< offset of scene in x, y and z direction; initialized by user, then by InitializeView and hereafter changed in OpenGL renderer by ZoomAll (z not used, because it would bring objects out of near/far plane)
-	//Float3 rotationCenterPoint;	//!< additional offset for point around which the model view is rotated; standard=[0,0,0]
+	Float3 rotationCenterPoint;	    //!< additional offset for point around which the model view is rotated; standard=[0,0,0]
+
 	float maxSceneSize;				//!< size given e.g. by initial state of system
 	float zoom;						//!< this is a factor for zoom
 	float displayScaling;			//!< value as retrieved from GLFW glfwGetWindowContentScale

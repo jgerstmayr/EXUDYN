@@ -22,20 +22,15 @@
 
 #include <thread> //needed on MacOS, automatic elsewhere
 
-//#define MEMORY_ORDER_TINYTHREAD std::memory_order_acq_rel
-
-#define MEMORY_ORDER_TINYTHREAD std::memory_order_seq_cst
-//#define MEMORY_ORDER_NEWJOB std::memory_order_relaxed 
-//#define MEMORY_ORDER_NEWJOB std::memory_order_seq_cst
-//#define MEMORY_ORDER_NEWJOB std::memory_order_acq_rel //only works if applied always in correct order
 
 #define MEMORY_ORDER_SYNCLOAD std::memory_order_relaxed //on intel same as memory_order_seq_cst?
 #define MEMORY_ORDER_SYNCSTORE std::memory_order_seq_cst
+//#define MEMORY_ORDER_FETCHADD std::memory_order_seq_cst
 
 //#define USETHREADFENCE
 //#define PRINTDEBUGINFORMATION
 
-//#define USE_BINARY_OR_SYNC
+//#define USE_FETCHADD //on surface i7, 4 threads slightly slower than MicroThreading with array of atomics
 
 //static objects
 namespace MicroThreading
@@ -96,14 +91,16 @@ namespace MicroThreading
 #ifdef PRINTDEBUGINFORMATION
 		std::cout << "main thread: send starting sync\n";
 #endif
-#ifdef USE_BINARY_OR_SYNC
-		sync[0]->store(0, MEMORY_ORDER_SYNCSTORE);//sync==0 means that job is ready to be computed
+#ifdef USE_FETCHADD
+		//syncEnd.store(0,MEMORY_ORDER_SYNCSTORE);
+		syncStart.store(ti.nthreads-1, MEMORY_ORDER_SYNCSTORE);
 #else
 		for (Index i = 1; i < sync.NumberOfItems(); i++)
 		{
 			sync[i]->store(0, MEMORY_ORDER_SYNCSTORE);//sync==0 means that job is ready to be computed
 		}
 #endif
+
 #ifdef PRINTDEBUGINFORMATION
 		std::cout << "main thread: compute job\n";
 #endif
@@ -131,8 +128,10 @@ namespace MicroThreading
 #endif
 		//! wait until other threads are ready
 		//==> use loop from 1 .. nThreads-1
-#ifdef USE_BINARY_OR_SYNC
-		while (sync[0]->load(MEMORY_ORDER_SYNCLOAD) != (1 << ti.nthreads) - 2) { ; }//wait until all sync set!
+#ifdef USE_FETCHADD
+		while (syncEnd.load(MEMORY_ORDER_SYNCLOAD) < ti.nthreads-1) { ; }
+		syncEnd.store(0, MEMORY_ORDER_SYNCSTORE); //on Surface i7 measured as 40ns
+		//syncStart = 0;
 #else
 		for (Index i = 1; i < sync.NumberOfItems(); i++)
 		{
@@ -194,7 +193,12 @@ namespace MicroThreading
 #endif
 
 		sync.SetNumberOfItems(num_threads);
-		sync[0] = new std::atomic<Index>(0); //sync[0] in fact not needed!
+		sync[0] = new std::atomic_int(0); //sync[0] in fact not needed!
+
+#ifdef USE_FETCHADD
+		syncStart = 0;
+		syncEnd = 0;
+#endif
 
 		//! start (num_threads-1) additional threads (+ main thread)
 		for (Index i = 1; i < num_threads; i++)
@@ -222,6 +226,7 @@ namespace MicroThreading
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//this is run on every thread
 	inline void TaskManager::Loop(Index threadID)
 	{
 		thread_id = threadID;
@@ -229,11 +234,7 @@ namespace MicroThreading
 		std::cout << "  start Loop in thread" << thread_id << "\n";
 #endif
 
-#ifdef USE_BINARY_OR_SYNC
-		*sync[0] |= 1 << thread_id;
-#else
-		sync[thread_id] = new std::atomic<Index>(1);
-#endif
+		sync[thread_id] = new std::atomic_int(1);
 
 		TaskInfo ti;
 		ti.nthreads = GetNumThreads();
@@ -248,15 +249,18 @@ namespace MicroThreading
 		{
 			//wait for new job; HOT WAIT!:
 			//wait until main thread switches sync to 0, then job is available
-#ifdef USE_BINARY_OR_SYNC
-			while ((*sync[0] & (1 << thread_id)) != 0 && !stop)
+#ifdef USE_FETCHADD
+			while (!syncStart && !stop)
 #else
 			while (sync[thread_id]->load(MEMORY_ORDER_SYNCLOAD) && !stop)
 #endif
 			{
 				stop = !isRunning;// .load(std::memory_order_relaxed); //this is not urgent, as it is only performed at end of many computations
 			}
-
+#ifdef USE_FETCHADD
+			//int syncOld = syncStart.fetch_sub(1, MEMORY_ORDER_SYNCSTORE); //returns previous sync
+			--syncStart;
+#endif
 			if (stop)
 			{ 
 				break; 
@@ -284,18 +288,17 @@ namespace MicroThreading
 #ifdef PRINTDEBUGINFORMATION
 			std::cout << "  thread" << thread_id << ": send signal finished\n";
 #endif
-#ifdef USE_BINARY_OR_SYNC
-			*sync[0] |= 1 << thread_id;//->store(0, MEMORY_ORDER_SYNCSTORE);//sync==0 means that job is ready to be computed
+#ifdef USE_FETCHADD
+			while (syncStart.load(MEMORY_ORDER_SYNCLOAD) > 0) { ; }
+			//syncEnd.fetch_add(1, MEMORY_ORDER_SYNCSTORE);
+			++syncEnd; //noteably faster than fetch_add (~35 ns faster)
 #else
 			sync[thread_id]->store(1, MEMORY_ORDER_SYNCSTORE); // , memory_order_release); //main thread receives message that job is done!
 #endif
 		}
 
-
 		//finish loops!
-#if !defined(USE_BINARY_OR_SYNC)
 		delete sync[thread_id];
-#endif
 		active_workers--;
 	}
 };

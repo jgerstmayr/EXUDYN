@@ -324,3 +324,19 @@ void CNodeRigidBodyRotVecLG::GetOutputVariable(OutputVariableType variableType, 
 	}
 }
 
+//! composition operation in R3xSO(3) with rotation vector as rotation parameters
+void CNodeRigidBodyRotVecLG::CompositionRule(const LinkedDataVector& currentPosition, const LinkedDataVector& currentOrientation,
+	const Vector6D& incrementalMotion, LinkedDataVector& newPosition, LinkedDataVector& newOrientation) const
+{
+	// incremental position/rotation
+	LinkedDataVector incrementalPosition(incrementalMotion, 0, nDisplacementCoordinates);
+	LinkedDataVector incrementalRotation(incrementalMotion, nDisplacementCoordinates, nRotationCoordinates);
+
+	// position update: x0 + incPosVec
+	newPosition = currentPosition;
+	newPosition += incrementalPosition;
+
+	// rotation update (composition operaton for roitation vectors): rotVec0 o incRotVec 
+	newOrientation = EXUlie::CompositionRotationVector((Vector3D)currentOrientation, (Vector3D)incrementalRotation);
+
+}

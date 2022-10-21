@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1261, 
-Number of resolved issues = 1096 (1 in current minor version), 
-Exudyn version = 1.4.1, 
-last change =  2022-09-15
+Number of issues = 1284, 
+Number of resolved issues = 1109 (14 in current minor version), 
+Exudyn version = 1.4.14.dev1, 
+last change =  2022-10-20
 
 
 <table style = "width:100%">
@@ -39,6 +39,182 @@ last change =  2022-09-15
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
+    <td>1279</td>
+    <td>release_assert      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> remove all asserts (in automatic code generation)</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-10-13</td>
+    <td>2023-04-11</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1276</td>
+    <td>Renderer: marker tracking</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add option to track markers in renderer</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-10-12</td>
+    <td>2023-04-10</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1273</td>
+    <td>GeometricallyExactBeam</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check quadratic velocity terms</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-09-24</td>
+    <td>2023-03-23</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1272</td>
+    <td>GeometricallyExactBeam</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check jacobian computation as numerical differentiation works better; similar to #1100</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-09-24</td>
+    <td>2023-03-23</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1271</td>
+    <td>DistanceSensor      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> Add way to collect visualization object triangulation during computation; needed for distance sensors; add ConfigurationType to GraphicsUpdate interface; alternatively, would only work single-threaded</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-09-21</td>
+    <td>2023-03-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1270</td>
+    <td>DistanceSensor      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add advanced distance sensor with possibility to use a set of beams and averaging or multiple output</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-09-21</td>
+    <td>2023-03-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1269</td>
+    <td>LaserSensor         </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add advanced distance sensors replicating laser scanner (with axis, revolution speed and initial direction)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-09-21</td>
+    <td>2023-03-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1268</td>
+    <td>DistanceSensor      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add simple distance sensor</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-09-21</td>
+    <td>2023-03-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1267</td>
+    <td>matrix inverse      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add pivot threshold to options, may improve redundant constraints problems</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-09-21</td>
+    <td>2023-03-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1266</td>
+    <td>matrix inverse      </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add full pivoting mode for matrix inverse, to resolve redundant constraints</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-09-21</td>
+    <td>2023-03-20</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1264</td>
+    <td>RollingDiscPenalty  </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> correct torque on ground, which currently has no effect, but will be used for moving ground</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-09-17</td>
+    <td>2023-03-16</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
     <td>1247</td>
     <td>UserFunctions       </td>
     <td>JG</td>
@@ -48,22 +224,6 @@ last change =  2022-09-15
     <td></td>
     <td>2022-09-02</td>
     <td>2022-11-01</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1242</td>
-    <td>Beam3D              </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> rename ANCFBeam3D to ANCFBeam and GeometricallyExactBeam3D in same way for consistency reasons</td>
-    <td>CHANGE</td>
-    <td></td>
-    <td>2022-08-24</td>
-    <td>2022-10-23</td>
     <td></td>
     <td></td>
     <td></td>
@@ -2679,6 +2839,198 @@ last change =  2022-09-15
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1283</td>
+    <td>ProcessParameterList</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> in case useMultiProcessing=False the output file does not contain correct ranges</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-10-20</td>
+    <td>2023-04-18</td>
+    <td>2022-10-20 21:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1282</td>
+    <td>PlotSensor          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> added return value including [plt, fig, ax, line] to be used for subsequent operations</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-10-19</td>
+    <td>2023-04-17</td>
+    <td>2022-10-19 20:30</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1281</td>
+    <td>results monitor     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend results monitor for viewing more detailed results of ParameterVariation with colorVariations option; add function SingleIndex2SubIndices</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-10-17</td>
+    <td>2023-04-15</td>
+    <td>2022-10-17 07:30</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1280</td>
+    <td>ParameterVariation  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> resultsFile not working (problem with ProcessParameterList</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-10-14</td>
+    <td>2023-04-12</td>
+    <td>2022-10-14 08:22</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1278</td>
+    <td>center point        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add key O to change center of rotation; resolve finally original issue 1155</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-10-12</td>
+    <td>2023-04-10</td>
+    <td>2022-10-12 22:37</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1277</td>
+    <td>shadowPolygonOffset </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> decrease default value from 10 to 0.1; adjust in your models</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-10-12</td>
+    <td>2023-04-10</td>
+    <td>2022-10-12 20:27</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1275</td>
+    <td>GetMarkerOutput     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function mbs.GetMarkerOutput() to return position, velocitiy, rotation matrix and angular velocity for markers if available</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-10-12</td>
+    <td>2023-04-10</td>
+    <td>2022-10-12 09:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1274</td>
+    <td>ALECable2D          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> missing term L in preComputedB terms in C++ implementation</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-09-25</td>
+    <td>2023-03-24</td>
+    <td>2022-09-25 14:17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1265</td>
+    <td>RollingDisc         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> correct description of coordinate systems in RollingDisc and RollingDiscPenalty; remove wrong transposed sign</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-09-19</td>
+    <td>2023-03-18</td>
+    <td>2022-09-19 17:46</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1263</td>
+    <td>RollingDiscPenalty  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add arbitrary local wheel axis (discAxis) instead of x-axis only</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-09-17</td>
+    <td>2023-03-16</td>
+    <td>2022-09-17 10:42</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1262</td>
+    <td>RigidBodyInertia    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add += operator</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-09-17</td>
+    <td>2023-03-16</td>
+    <td>2022-09-17 08:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1261</td>
+    <td>Lie group integration</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> improve implicit Lie group integration, adapt old rotation vector approach, add tangent operator</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-09-16</td>
+    <td>2023-03-15</td>
+    <td>2022-09-16 18:14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1260</td>
     <td>MacOS               </td>
     <td>JG</td>
@@ -2946,6 +3298,22 @@ last change =  2022-09-15
     <td>2022-10-23</td>
     <td>2022-08-24 17:13</td>
     <td>Stefan Holzinger</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1242</td>
+    <td>Beam3D              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> rename ANCFBeam3D to ANCFBeam and GeometricallyExactBeam3D in same way for consistency reasons</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-08-24</td>
+    <td>2022-10-23</td>
+    <td>2022-09-24 19:35</td>
+    <td>JG</td>
     <td></td>
     <td></td>
     <td></td>
@@ -4164,7 +4532,7 @@ last change =  2022-09-15
     <td>JG</td>
     <td></td>
     <td></td>
-    <td></td>
+    <td>currently deactivated due to transformation of coordinates issue</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1154</td>

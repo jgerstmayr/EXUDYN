@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-21  19:29:28 (last modified)
+* @date         2022-09-17  10:30:57 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectConnectorRollingDiscPenalty
-* @brief        A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global \f$x\f$-\f$y\f$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.
+* @brief        A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global \f$x\f$-\f$y\f$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation for the arbitrary disc axis is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -116,6 +116,9 @@ public: // AUTO:
     {
         cObjectConnectorRollingDiscPenalty->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectConnectorRollingDiscPenalty->GetParameters().discRadius = py::cast<Real>(d["discRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "discAxis")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "discAxis", cObjectConnectorRollingDiscPenalty->GetParameters().discAxis); /*! AUTO:  safely cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "planeNormal")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "planeNormal", cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal); /*! AUTO:  safely cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "dryFrictionAngle")) { cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionAngle = py::cast<Real>(d["dryFrictionAngle"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness = py::cast<Real>(d["contactStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "contactDamping")) { cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping = py::cast<Real>(d["contactDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -123,8 +126,6 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "dryFrictionProportionalZone")) { cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionProportionalZone = py::cast<Real>(d["dryFrictionProportionalZone"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "rollingFrictionViscous")) { cObjectConnectorRollingDiscPenalty->GetParameters().rollingFrictionViscous = py::cast<Real>(d["rollingFrictionViscous"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorRollingDiscPenalty->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        cObjectConnectorRollingDiscPenalty->GetParameters().discRadius = py::cast<Real>(d["discRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "planeNormal")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "planeNormal", cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal); /*! AUTO:  safely cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorRollingDiscPenalty->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdiscWidth")) { visualizationObjectConnectorRollingDiscPenalty->GetDiscWidth() = py::cast<float>(d["VdiscWidth"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -139,6 +140,9 @@ public: // AUTO:
         d["objectType"] = (std::string)GetTypeName();
         d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectConnectorRollingDiscPenalty->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["nodeNumber"] = (NodeIndex)cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
+        d["discRadius"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().discRadius; //! AUTO: cast variables into python (not needed for standard types) 
+        d["discAxis"] = EPyUtils::SlimVector2NumPy(cObjectConnectorRollingDiscPenalty->GetParameters().discAxis); //! AUTO: cast variables into python (not needed for standard types) 
+        d["planeNormal"] = EPyUtils::SlimVector2NumPy(cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal); //! AUTO: cast variables into python (not needed for standard types) 
         d["dryFrictionAngle"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionAngle; //! AUTO: cast variables into python (not needed for standard types) 
         d["contactStiffness"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness; //! AUTO: cast variables into python (not needed for standard types) 
         d["contactDamping"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping; //! AUTO: cast variables into python (not needed for standard types) 
@@ -146,8 +150,6 @@ public: // AUTO:
         d["dryFrictionProportionalZone"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionProportionalZone; //! AUTO: cast variables into python (not needed for standard types) 
         d["rollingFrictionViscous"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().rollingFrictionViscous; //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectConnectorRollingDiscPenalty->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
-        d["discRadius"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().discRadius; //! AUTO: cast variables into python (not needed for standard types) 
-        d["planeNormal"] = EPyUtils::SlimVector2NumPy(cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectConnectorRollingDiscPenalty->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdiscWidth"] = (float)visualizationObjectConnectorRollingDiscPenalty->GetDiscWidth(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -161,6 +163,9 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectConnectorRollingDiscPenalty->GetParameters().markerNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber);} //! AUTO: get parameter
+        else if (parameterName.compare("discRadius") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().discRadius);} //! AUTO: get parameter
+        else if (parameterName.compare("discAxis") == 0) { return EPyUtils::SlimVector2NumPy(cObjectConnectorRollingDiscPenalty->GetParameters().discAxis);} //! AUTO: get parameter
+        else if (parameterName.compare("planeNormal") == 0) { return EPyUtils::SlimVector2NumPy(cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal);} //! AUTO: get parameter
         else if (parameterName.compare("dryFrictionAngle") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionAngle);} //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness);} //! AUTO: get parameter
         else if (parameterName.compare("contactDamping") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping);} //! AUTO: get parameter
@@ -168,8 +173,6 @@ public: // AUTO:
         else if (parameterName.compare("dryFrictionProportionalZone") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionProportionalZone);} //! AUTO: get parameter
         else if (parameterName.compare("rollingFrictionViscous") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().rollingFrictionViscous);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorRollingDiscPenalty->GetParameters().activeConnector);} //! AUTO: get parameter
-        else if (parameterName.compare("discRadius") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().discRadius);} //! AUTO: get parameter
-        else if (parameterName.compare("planeNormal") == 0) { return EPyUtils::SlimVector2NumPy(cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorRollingDiscPenalty->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdiscWidth") == 0) { return py::cast((float)visualizationObjectConnectorRollingDiscPenalty->GetDiscWidth());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectConnectorRollingDiscPenalty->GetColor());} //! AUTO: get parameter
@@ -184,6 +187,9 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("discRadius") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().discRadius = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("discAxis") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectConnectorRollingDiscPenalty->GetParameters().discAxis); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("planeNormal") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dryFrictionAngle") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionAngle = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("contactDamping") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
@@ -191,8 +197,6 @@ public: // AUTO:
         else if (parameterName.compare("dryFrictionProportionalZone") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionProportionalZone = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rollingFrictionViscous") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().rollingFrictionViscous = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("discRadius") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().discRadius = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("planeNormal") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectConnectorRollingDiscPenalty->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdiscWidth") == 0) { visualizationObjectConnectorRollingDiscPenalty->GetDiscWidth() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectConnectorRollingDiscPenalty->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

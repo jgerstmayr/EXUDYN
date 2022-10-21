@@ -237,6 +237,8 @@ public:
 	virtual void SetComputeMaxSceneRequest(bool flag) override { computeMaxSceneRequest = flag; }
 	virtual bool GetComputeMaxSceneRequest() override { return computeMaxSceneRequest; }
 
+	virtual void GetMarkerPositionOrientation(Index markerNumber, Index mbsNumber, Vector3D& position, Matrix3D& orientation, bool& hasPosition, bool& hasOrientation) override;
+
 	//! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
 	virtual std::string GetComputationMessage(bool solverInformation = true, 
 		bool solutionInformation = true, bool solverTime = true) override;

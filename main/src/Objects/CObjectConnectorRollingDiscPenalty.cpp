@@ -39,10 +39,6 @@ Vector2D CObjectConnectorRollingDiscPenalty::ComputeSlipForce(const CObjectConne
 		slipForce = -(phi * fabs(contactForce) * dataSlipDirection); //negative sign, as slip force acts against slip velocity
 		if (parameters.dryFrictionAngle == 0)
 		{
-			//for (Index j = 0; j < 2; j++)
-			//{
-			//	slipForce[j] = -(parameters.dryFriction[j] * phi * fabs(contactForce) * dataSlipDirection[j]);
-			//}
 			slipForce = frictionMatrix * slipForce;
 		}
 		else
@@ -50,8 +46,6 @@ Vector2D CObjectConnectorRollingDiscPenalty::ComputeSlipForce(const CObjectConne
 			Real phi = parameters.dryFrictionAngle;
 			Matrix2D rotFriction(2, 2, { cos(phi),-sin(phi),sin(phi),cos(phi) });
 			slipForce = rotFriction.GetTransposed() * (frictionMatrix * (rotFriction * slipForce));
-			//pout << "angle=" << phi << "\n";
-			//pout << "  friction matrix=" << rotFriction.GetTransposed() * frictionMatrix * rotFriction << "\n";
 		}
 	}
 	return slipForce;
@@ -71,8 +65,8 @@ void CObjectConnectorRollingDiscPenalty::ComputeContactForces(const MarkerDataSt
 	Vector3D omega1 = A1 * markerData.GetMarkerData(1).angularVelocityLocal;
 	//const Vector3D& p0 = markerData.GetMarkerData(0).position; //use already z-position ..., but no transformation
 
-	Vector3D vAxisLocal({ 1,0,0 });
-	Vector3D w1 = A1 * vAxisLocal;
+	//Vector3D vAxisLocal({ 1,0,0 });
+	Vector3D w1 = A1 * parameters.discAxis;
 
 	w2 = w1.CrossProduct(parameters.planeNormal); //longitudinal direction; cross product has length != 1
 	w2.Normalize();
@@ -130,7 +124,8 @@ void CObjectConnectorRollingDiscPenalty::ComputeODE2LHS(Vector& ode2Lhs, const M
 
 		Vector3D fPos = -(fContact[0]* wLateral + fContact[1] * w2 + fContact[2] * parameters.planeNormal); //in global coordinates now
 
-		Vector3D fRot = (parameters.discRadius*w3).CrossProduct(fPos);
+		Vector3D fRotDisc = (parameters.discRadius*w3).CrossProduct(fPos);
+		Vector3D fRotGround = pC.CrossProduct(fPos); //CHECK sign as soon as ground can rotate!!!
 
 		if (parameters.rollingFrictionViscous) //not acting on rotation!
 		{
@@ -148,16 +143,17 @@ void CObjectConnectorRollingDiscPenalty::ComputeODE2LHS(Vector& ode2Lhs, const M
 			//positionJacobian.NumberOfColumns() == rotationJacobian.NumberOfColumns()
 			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
 			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).positionJacobian, fPos, ldv1);
-			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(1).rotationJacobian, fRot, ldv1);
+			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(1).rotationJacobian, fRotDisc, ldv1);
 		}
 
 		if (markerData.GetMarkerData(0).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
 		{
 			fPos *= -1.;
-			fRot *= -1.;
+			//fRot *= -1.; //this would be wrong; torque is different on both bodies, due to different center point!
+			fRotGround *= -1.;
 			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
 			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).positionJacobian, fPos, ldv0);
-			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(0).rotationJacobian, fRot, ldv0);
+			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(0).rotationJacobian, fRotGround, ldv0);
 		}
 		//pout << "  ode2Lhs=" << ode2Lhs << "\n";
 	}
@@ -212,7 +208,7 @@ void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariab
 		axisOffsetX_t = sign * r * cosAlpha_t / EXUstd::Square(cosAlpha) *(-1. / sqrt(1. - cosAlpha * cosAlpha) * cosAlpha * cosAlpha - sqrt(1. - cosAlpha * cosAlpha));
 	}
 
-	vTrail = v1 - omega1.CrossProduct(A1*Vector3D({ axisOffsetX,0,0 })) - A1 * Vector3D({ axisOffsetX_t,0,0 });
+	vTrail = v1 - omega1.CrossProduct(A1*(axisOffsetX*parameters.discAxis)) - A1 * ( axisOffsetX_t*parameters.discAxis);
 	vTrail[2] = 0; //z-velocity
 
 	switch (variableType)

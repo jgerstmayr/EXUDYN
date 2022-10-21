@@ -21,6 +21,7 @@
 #include "Graphics/VisualizationPrimitives.h"
 
 #include "Graphics/GlfwClient.h" //in order to link to graphics engine
+#include "Main/MainSystem.h" //for MainSystemBacklink
 
 //#ifdef USE_GLFW_GRAPHICS
 //#endif
@@ -213,7 +214,7 @@ void VisualizationSystemContainer::InitializeView()
 	renderState.zoom = settings.openGL.initialZoom;
 	renderState.maxSceneSize = settings.openGL.initialMaxSceneSize;
 	renderState.centerPoint = settings.openGL.initialCenterPoint; //this is the initial centerPoint; hereafter it can be changed!
-	//renderState.rotationCenterPoint.SetAll(0);
+	renderState.rotationCenterPoint.SetAll(0);
 	renderState.displayScaling = 1;
 
 	renderState.currentWindowSize = settings.window.renderWindowSize;
@@ -246,6 +247,34 @@ std::string VisualizationSystemContainer::GetComputationMessage(bool solverInfor
 	}
 	return std::string();
 }
+
+void VisualizationSystemContainer::GetMarkerPositionOrientation(Index markerNumber, Index mbsNumber, Vector3D& position, Matrix3D& orientation, bool& hasPosition, bool& hasOrientation)
+{
+	position = Vector3D(0);
+	orientation = EXUmath::unitMatrix3D;
+	hasPosition = false;
+	hasOrientation = false;
+	if (mbsNumber >= 0 && mbsNumber < NumberOFMainSystemsBacklink())
+	{
+		CSystem* cSystem = GetMainSystemBacklink(mbsNumber)->GetCSystem();
+		if (markerNumber >= 0 && markerNumber < cSystem->GetSystemData().GetCMarkers().NumberOfItems())
+		{
+			const CMarker& marker = cSystem->GetSystemData().GetCMarker(markerNumber);
+			if (EXUstd::IsOfType(marker.GetType(), Marker::Position))
+			{
+				marker.GetPosition(cSystem->GetSystemData(), position, ConfigurationType::Visualization);
+				hasPosition = true;
+			}
+			if (EXUstd::IsOfType(marker.GetType(), Marker::Orientation))
+			{
+				marker.GetRotationMatrix(cSystem->GetSystemData(), orientation, ConfigurationType::Visualization);
+				hasOrientation = true;
+			}
+		}
+	}
+	//no error, as this is inside graphics ...
+}
+
 
 //! REMOVE: get backlink of ith main system (0 if not existing), temporary for selection
 MainSystem* VisualizationSystemContainer::GetMainSystemBacklink(Index iSystem)

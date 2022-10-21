@@ -2,8 +2,8 @@
 Exudyn
 ======
 
-+  Exudyn version = 1.4.1 (Ellington)
-+  build date and time=2022-09-15  11:40
++  Exudyn version = 1.4.14.dev1 (Ellington)
++  build date and time=2022-10-21  08:21
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn 1.4 is out! It includes improved multi-threading support; a redundant coordinate (constraint) as well as a minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
@@ -914,7 +914,7 @@ As known from Python, all \ **indexes**\  of arrays, vectors, matrices, ... are 
 2D vs. 3D
 
 As a convention, quantities in Exudyn are 3D, such as nodes, objects, markers, loads, measured quantities, etc. 
-For that reason, we denote planar nodes, objects, etc. with the suffix 2D, but 3D objects do not get this suffix.
+For that reason, we denote planar nodes, objects, etc. with the suffix 2D, but 3D objects do not get this suffix (There are some rare exceptions, such as Beam3D as the pure beam may easily lead to name space conflicts in Python).
 
 Output and input to objects, markers, loads, etc. is usually given by 3D vectors (or matrices), such as (local) position, force, torque, rotation, etc. However, initial and reference values for nodes depend on their dimensionality.
 As an example, consider a \ ``NodePoint2D``\ :

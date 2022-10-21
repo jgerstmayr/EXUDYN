@@ -39,11 +39,12 @@ void CObjectALEANCFCable2D::PreComputeMassTerms() const
 		{
 			for (Index j = 0; j < ns; j++)
 			{
-				//compute B1=B' and B2=B'' terms: B'=[S^T*S']_0^L, B'' = [S'^T*S']_0^L
-				preComputedB1(i * 2, j * 2) += rhoAmoving * (SVL[i] * SVL_x[j] - SV0[i] * SV0_x[j]);
-				preComputedB1(i * 2 + 1, j * 2 + 1) += rhoAmoving * (SVL[i] * SVL_x[j] - SV0[i] * SV0_x[j]);
-				preComputedB2(i * 2, j * 2) += rhoAmoving * (SVL_x[i] * SVL_x[j] - SV0_x[i] * SV0_x[j]);
-				preComputedB2(i * 2 + 1, j * 2 + 1) += rhoAmoving * (SVL_x[i] * SVL_x[j] - SV0_x[i] * SV0_x[j]);
+				//compute B1=B' and B2=B'' terms: B'=f_M*m*[S^T*S']_0^L, B'' = f_M*m*[S'^T*S']_0^L
+				const Real factL = 1.; //check if this should be L 2022-09-05 ==> no, m is rhoA in paper!!!
+				preComputedB1(i * 2, j * 2) += factL*rhoAmoving * (SVL[i] * SVL_x[j] - SV0[i] * SV0_x[j]);
+				preComputedB1(i * 2 + 1, j * 2 + 1) += factL * rhoAmoving * (SVL[i] * SVL_x[j] - SV0[i] * SV0_x[j]);
+				preComputedB2(i * 2, j * 2) += factL * rhoAmoving * (SVL_x[i] * SVL_x[j] - SV0_x[i] * SV0_x[j]);
+				preComputedB2(i * 2 + 1, j * 2 + 1) += factL * rhoAmoving * (SVL_x[i] * SVL_x[j] - SV0_x[i] * SV0_x[j]);
 			}
 		}
 
@@ -94,65 +95,6 @@ void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatr
 	Real L = GetParameters().physicsLength;
 	Real rhoAmoving = GetParameters().physicsMassPerLength * GetParameters().physicsMovingMassFactor; //take only moving part here!
 
-	//if (!massTermsALEComputed)
-	//{
-	//	preComputedM1.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
-	//	preComputedM2.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
-	//	preComputedB1.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
-	//	preComputedB2.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
-	//	
-	//	Vector4D SV0 = ComputeShapeFunctions(0, L);
-	//	Vector4D SVL = ComputeShapeFunctions(L, L);
-	//	Vector4D SV0_x = ComputeShapeFunctions_x(0, L);
-	//	Vector4D SVL_x = ComputeShapeFunctions_x(L, L);
-
-	//	for (Index i = 0; i < ns; i++)
-	//	{
-	//		for (Index j = 0; j < ns; j++)
-	//		{
-	//			//compute B1=B' and B2=B'' terms: B'=[S^T*S']_0^L, B'' = [S'^T*S']_0^L
-	//			preComputedB1(i * 2, j * 2)			+= rhoAmoving * (SVL[i] * SVL_x[j]	- SV0[i] * SV0_x[j]);
-	//			preComputedB1(i * 2 + 1, j * 2 + 1) += rhoAmoving * (SVL[i] * SVL_x[j]	- SV0[i] * SV0_x[j]);
-	//			preComputedB2(i * 2, j * 2)			+= rhoAmoving * (SVL_x[i] * SVL_x[j]- SV0_x[i] * SV0_x[j]);
-	//			preComputedB2(i * 2 + 1, j * 2 + 1) += rhoAmoving * (SVL_x[i] * SVL_x[j]- SV0_x[i] * SV0_x[j]);
-	//		}
-	//	}
-
-	//	//compute M1=M' and M2=M'' terms:
-	//	Real a = 0; //integration interval [a,b]
-	//	Real b = L;
-	//	Index cnt = 0;
-	//	for (auto item : EXUmath::gaussRuleOrder7Points)
-	//	{
-	//		Real x = 0.5*(b - a)*item + 0.5*(b + a);
-	//		Vector4D SV = ComputeShapeFunctions(x, L);
-	//		Vector4D SV_x = ComputeShapeFunctions_x(x, L);
-	//		Vector4D SVint_x = SV_x;
-
-	//		SVint_x *= rhoAmoving * (0.5*(b - a)*EXUmath::gaussRuleOrder7Weights[cnt]);
-	//		cnt++;
-
-	//		for (Index i = 0; i < ns; i++)
-	//		{
-	//			for (Index j = 0; j < ns; j++)
-	//			{
-	//				//M'=M1=int(rhoA * S^T*S'), M''=int(rhoA * S'^T*S')
-	//				preComputedM1(i * 2, j * 2)         += SV[i] * SVint_x[j];
-	//				preComputedM1(i * 2 + 1, j * 2 + 1) += SV[i] * SVint_x[j];
-	//				preComputedM2(i * 2, j * 2)         += SV_x[i] * SVint_x[j];
-	//				preComputedM2(i * 2 + 1, j * 2 + 1) += SV_x[i] * SVint_x[j];
-	//			}
-	//		}
-	//	}
-	//	massTermsALEComputed = true;
-	//}
-
-	//pout << "preComputedM1=" << preComputedM1 << "\n";
-	//pout << "preComputedM2=" << preComputedM2 << "\n";
-	//pout << "preComputedB1=" << preComputedB1 << "\n";
-	//pout << "preComputedB2=" << preComputedB2 << "\n";
-
-
 	//compute ALE mass terms:
 	//++++++++++++++++++++++++++++++
 	//Term M'*q:
@@ -191,17 +133,10 @@ void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatr
 	//++++++++++++++++++++++++++++++
 	//Term \mu:
 	EXUmath::MultMatrixVector(preComputedM2, qANCF, mq); //M''*q
-	if (1 || parameters.physicsUseCouplingTerms)
-	{
-		//this term is approximately the mass of the cable parameters.physicsLength*parameters.physicsMassPerLength:
-		massMatrix(nODE2coordinates, nODE2coordinates) = qANCF * mq; //mu = q^T*M''*q; check if this does any Vector conversion
-	}
-	else
-	{
-		massMatrix(nODE2coordinates, nODE2coordinates) = rhoAmoving * L;
-	}
-	//pout << "mu  =" << qANCF * mq << "\n";
-	//pout << "mass=" << parameters.physicsLength*parameters.physicsMassPerLength << "\n";
+	//this term is approximately the mass of the cable parameters.physicsLength*parameters.physicsMassPerLength:
+	massMatrix(nODE2coordinates, nODE2coordinates) = qANCF * mq; //mu = q^T*M''*q; check if this does any Vector conversion
+	//approximation ...:
+	massMatrix(nODE2coordinates, nODE2coordinates) = rhoAmoving * L;
 
 	//pout << "Mass =" << massMatrix << "\n";
 }
@@ -253,7 +188,7 @@ void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) 
 	Qvqt += 0.5*vALE*vALE*(qANCF*temp);
 	//pout << "QV=" << Qvqt << "\n";
 
-	ode2Lhs[nODE2coordinates] += Qvqt; //this term is not added, because it does not exist in standard ANCF
+	ode2Lhs[nODE2coordinates] += Qvqt; //this term is now added, because ode2Lhs is already initialized in base ODE2LHS function!
 
 	//++++++++++++++++++++++++++++++
 	//Term Q_q_tv (1x8 vector): 2*v*M' \dot q + v^2(B'-M'')q

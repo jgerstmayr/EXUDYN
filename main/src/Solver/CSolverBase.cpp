@@ -233,7 +233,7 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 	computationalSystem.GetPostProcessData()->SetSolutionMessage(simulationSettings.solutionSettings.solutionInformation);
 
 	//some pre-checks for solver
-	if (!computationalSystem.IsSystemConsistent()) { PyError("SolverGeneralizedAlpha: system is inconsistent and cannot be solved (call Assemble() and check error messages, file.solverFile)"); return false; }
+	if (!computationalSystem.IsSystemConsistent()) { PyError("SolverGeneralizedAlpha: system is inconsistent and cannot be solved (call Assemble() and check error messages)", file.solverFile); return false; }
 
 	computationalSystem.GetSystemData().GetNumberOfComputationCoordinates(data.nODE2, data.nODE1, data.nAE, data.nData);
 	data.nSys = data.nODE2 + data.nODE1 + data.nAE;

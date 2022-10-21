@@ -766,6 +766,15 @@ class RigidBodyInertia:
                                 inertiaTensor = self.inertiaTensor + otherBodyInertia.inertiaTensor,
                                 com=1./sumMass*(self.mass*self.com + otherBodyInertia.mass*otherBodyInertia.com))
 
+    #**classFunction: += operator allows adding another inertia information with SAME local coordinate system and reference point!
+    #only inertias with same center of rotation can be added!
+    #**example: 
+    #J = InertiaSphere(2,0.1) 
+    #J += InertiaRodX(1,2)
+    def __iadd__(self, otherBodyInertia):
+        self = self + otherBodyInertia
+        return self
+        
     #**classFunction: set RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t.\ com) and center of mass com
     #**input:
     #  mass: mass of rigid body (dimensions need to be consistent, should be in SI-units)

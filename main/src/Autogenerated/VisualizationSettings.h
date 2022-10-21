@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -185,7 +185,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -277,7 +277,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -368,7 +368,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -462,7 +462,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -523,7 +523,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -601,7 +601,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -690,7 +690,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -759,7 +759,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -837,7 +837,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -906,7 +906,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -992,7 +992,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1079,7 +1079,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1340,7 +1340,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1442,7 +1442,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1474,6 +1474,10 @@ public: // AUTO:
   bool selectionLeftMouse;                        //!< AUTO: True: left mouse click on items and show basic information
   bool selectionRightMouse;                       //!< AUTO: True: right mouse click on items and show dictionary (read only!)
   bool selectionRightMouseGraphicsData;           //!< AUTO: True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)
+  Index trackMarker;                              //!< AUTO: if valid marker index is provided and marker provides position (and orientation), the centerpoint of the scene follows the marker (and orientation); depends on trackMarkerPosition and trackMarkerOrientation; by default, only position is tracked
+  Index trackMarkerMbsNumber;                     //!< AUTO: number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number
+  Float3 trackMarkerOrientation;                  //!< AUTO: choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one
+  Float3 trackMarkerPosition;                     //!< AUTO: choose which coordinates or marker are tracked (x,y,z)
   bool useJoystickInput;                          //!< AUTO: True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ...
   float zoomStepFactor;                           //!< AUTO: change of zoom per keypress (keypad +/-) or mouse wheel increment
 
@@ -1496,6 +1500,10 @@ public: // AUTO:
     selectionLeftMouse = true;
     selectionRightMouse = true;
     selectionRightMouseGraphicsData = false;
+    trackMarker = -1;
+    trackMarkerMbsNumber = 0;
+    trackMarkerOrientation = Float3({0.f,0.f,0.f});
+    trackMarkerPosition = Float3({1.f,1.f,1.f});
     useJoystickInput = true;
     zoomStepFactor = 1.15f;
   };
@@ -1516,6 +1524,16 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
   std::array<float,4> PyGetHighlightOtherColor() const { return std::array<float,4>(highlightOtherColor); }
 
+  //! AUTO: Set function (needed in pybind) for: choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one
+  void PySetTrackMarkerOrientation(const std::array<float,3>& trackMarkerOrientationInit) { trackMarkerOrientation = trackMarkerOrientationInit; }
+  //! AUTO: Read (Copy) access to: choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one
+  std::array<float,3> PyGetTrackMarkerOrientation() const { return std::array<float,3>(trackMarkerOrientation); }
+
+  //! AUTO: Set function (needed in pybind) for: choose which coordinates or marker are tracked (x,y,z)
+  void PySetTrackMarkerPosition(const std::array<float,3>& trackMarkerPositionInit) { trackMarkerPosition = trackMarkerPositionInit; }
+  //! AUTO: Read (Copy) access to: choose which coordinates or marker are tracked (x,y,z)
+  std::array<float,3> PyGetTrackMarkerPosition() const { return std::array<float,3>(trackMarkerPosition); }
+
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -1534,6 +1552,10 @@ public: // AUTO:
     os << "  selectionLeftMouse = " << selectionLeftMouse << "\n";
     os << "  selectionRightMouse = " << selectionRightMouse << "\n";
     os << "  selectionRightMouseGraphicsData = " << selectionRightMouseGraphicsData << "\n";
+    os << "  trackMarker = " << trackMarker << "\n";
+    os << "  trackMarkerMbsNumber = " << trackMarkerMbsNumber << "\n";
+    os << "  trackMarkerOrientation = " << trackMarkerOrientation << "\n";
+    os << "  trackMarkerPosition = " << trackMarkerPosition << "\n";
     os << "  useJoystickInput = " << useJoystickInput << "\n";
     os << "  zoomStepFactor = " << zoomStepFactor << "\n";
     os << "\n";
@@ -1554,7 +1576,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-09-13 (last modfied)
+* @date         AUTO: 2022-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

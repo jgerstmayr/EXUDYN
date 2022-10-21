@@ -26,12 +26,23 @@ argList = sys.argv
 import matplotlib.pyplot as plt
 import numpy as np
 from exudyn.plot import ParseOutputFileHeader
+from exudyn.utilities import PlotLineCode
+from exudyn.processing import SingleIndex2SubIndices
 
+listMarkerStyles = ['. ', '+', 'x ', 'v ', '^ ', '< ', '> ', '* ', 'd ', 'D', 's', 'X ', 'P', 'o', 'p ', 'h ', 'H ']
+
+def GetMarkerColorCode(i):
+    j = int(i/7)
+    if j >= len(listMarkerStyles):
+        j = 0
+    c = PlotLineCode(i%7)[0]+listMarkerStyles[j]
 
 x = np.linspace(0, 6*np.pi, 100)
 y = np.sin(x)
 
 plt.ion() #interactive mode on
+
+
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #default values
@@ -40,6 +51,7 @@ lineColor = 'b'
 lineStyle = '-'
 logX = False
 logY = False
+colorVariations = False
 sizeXinInches = 5
 sizeYinInches = 5
 xColumns = [] #which columns to read data for x-axis
@@ -48,6 +60,7 @@ xLabels = [] #labels per plot
 yLabels = [] #labels per plot
 addMarker = False #add marker to last point in curve
 fileName = '' #must be set
+variations = []
 
 #parse command line arguments:
 runLoader = True
@@ -64,6 +77,8 @@ else:
         print('  -ycols i,j,..: comma-separated columns (NO SPACES!) to be plotted on y-axis')
         print('  -logx: use log scale for x-axis')
         print('  -logy: use log scale for y-axis')
+        print('  -colorVariations: for parameter variation file just plot first axis, add different colors for variations of other axes (limited to 28 colors)')
+        print('  -variations start,end: comma-separated values (NO SPACES!) for start and end index of colorVariations; -variations 0,2 plots variation 0 and 1')
         print('  -addMarker: add marker (filled red circle) to last point in plot')
         print('  -sizex float: float = x-size of one subplot in inches (default=5)')
         print('  -sizey float: float = y-size of one subplot in inches (default=5)')
@@ -96,6 +111,13 @@ else:
                 logX = True
             elif argList[i] == '-logy':
                 logY = True
+            elif argList[i] == '-colorVariations':
+                colorVariations = True                
+            elif argList[i] == '-variations':
+                strList = argList[i+1].split(',')
+                for s in strList:
+                    variations += [int(s)]
+                i=i+1
             elif argList[i] == '-addMarker':
                 addMarker = True
             elif argList[i] == '-sizex':
@@ -141,7 +163,8 @@ if runLoader:
     if header['type'] == 'geneticOptimization' or header['type'] == 'parameterVariation':
         lineStyle = '.'
         colValue = -1
-        for i in range(len(header['columns'])):
+        nColumnsProcessed = len(header['columns'])
+        for i in range(nColumnsProcessed):
             col = header['columns'][i]
             if col != 'globalIndex' and col != 'computationIndex' and col != 'value':
                 xColumns += [i]
@@ -182,6 +205,9 @@ if runLoader:
 if runLoader:    
     #generate subplots:
     nPlots = len(xColumns)
+    nVariations = 1 #regular case
+    variableRanges = header['variableRanges']
+
     maxCols = int(np.sqrt(nPlots)+1)
     if nPlots == 3:
         maxCols = 3
@@ -192,6 +218,18 @@ if runLoader:
     if nCols > maxCols:
         nCols = maxCols
     # print("nRows=",nRows,", nCols=", nCols)
+    if colorVariations:
+        # print('variableRanges=',variableRanges)
+        for rangeI in variableRanges[1:]:
+            nVariations *= rangeI[2] #this is the number of variations
+        # print('plot',nVariations,'variations')
+        nPlots=nVariations
+        if variations == []:
+            variations = [0,nPlots]
+        else:
+            nPlots = variations[1]-variations[0]
+        nCols=1 #everything in one plot
+        nRows=1
     
     fig = plt.figure('Results monitor')
     fig.dpi = 100 #in terminal, initially set to 200
@@ -202,17 +240,27 @@ if runLoader:
     lineList = []
     markerList = []
     for i in range(nPlots):
-        ax = fig.add_subplot(nRows,nCols,i+1)
+        if not colorVariations or i==0:
+            ax = fig.add_subplot(nRows,nCols,i+1)
+            
         ax.grid(True, 'major', 'both')
         axList += [ax]
         if logX:
             ax.set_xscale('log')
         if logY:
             ax.set_yscale('log')
-        line, = ax.plot(0.1,0.1, lineColor+lineStyle)
+        lineColorStyle=lineColor+lineStyle
+        if colorVariations:
+            lineColorStyle = PlotLineCode(i)
+            # print(listMarkerStyles[i%7][0])
+            lineColorStyle = lineColorStyle[0]+listMarkerStyles[int(i/7)][0]
+
+        line, = ax.plot(0.1,0.1, lineColorStyle)
         lineList += [line] #empty plot
-        if addMarker:
-            line, = ax.plot(0.1,0.1, 'ro') #red circle
+        
+        if addMarker: #red circle at end of line
+            markerColorCode = 'ro'
+            line, = ax.plot(0.1,0.1, markerColorCode) #red circle
             markerList += [line] #empty plot
             
     
@@ -230,8 +278,62 @@ if runLoader:
                 ax = axList[i]
                 # ax.clear() #slow
                 # ax.plot(data[:,xColumns[i]], data[:,yColumns[i]], lineColor+lineStyle) 
-                dataX = data[:,xColumns[i]]
-                dataY = data[:,yColumns[i]]
+                if not colorVariations:
+                    dataX = data[:,xColumns[i]]
+                    dataY = data[:,yColumns[i]]
+                else:
+                    dataRows = data.shape[0]
+                    # print('rows= ',dataRows)
+                    ii = variations[0] + i
+                    nRanges=[]
+                    for kRange in variableRanges:
+                        nRanges += [kRange[2]]
+
+                    n0 = nRanges[0]
+                    nRest = np.array(nRanges[1:]).prod() #remaining range
+                    # print('n ranges=', nRanges)
+                    # print('variableRanges=',variableRanges)
+                    subIndices = SingleIndex2SubIndices(ii, nRanges[1:]) #i runs in subindices
+                    subValues = []
+                    for j in range(len(subIndices)):
+                        valueStart = variableRanges[j+1][0]
+                        valueEnd = variableRanges[j+1][1]
+                        value = valueStart
+                        if nRanges[j+1] > 1:
+                            value += (valueEnd-valueStart)*(subIndices[j]/(nRanges[j+1]-1))
+                        subValues += [value]
+                    # print('subIndices=', subIndices)
+                    jIndex0 = np.arange(n0)*nRest+ii
+                    # print(jIndex0)
+                    #check if data is available:
+                    if dataRows < max(jIndex0):
+                        jIndex = []
+                        for j in jIndex0:
+                            if j < dataRows:
+                                jIndex += [j]
+                        #print('new indices=',jIndex)
+                        jIndex = np.array(jIndex)
+                    else:
+                        jIndex = jIndex0
+                    
+                    if len(jIndex) == 0:
+                        continue
+                    
+                    dataX = data[jIndex,xColumns[0]]
+                    dataY = data[jIndex,yColumns[0]]
+                    
+                    # ax.set_label('asdf')
+                    # ax.legend()
+                    sLabel = 'var'+str(ii)+':'
+                    for kRange in range(len(nRanges)-1):
+                        #print('kRange=',kRange)
+                        colName = header['columns'][kRange+1+2] #offset 1 to take first sub index; offset 2 for globalindex and value
+                        sLabel += colName[0:5]+str(round(subValues[kRange],3))+' '
+                        #sLabel += colName[0:5]+str(subIndices[kRange])
+                        
+                    lineList[i].set_label(sLabel)
+                    ax.legend()
+
 
                 if logX:
                     dataX = abs(dataX)
@@ -242,14 +344,14 @@ if runLoader:
                 if addMarker:
                     markerList[i].set_data(dataX[-1], dataY[-1])
 
-                ax.set_xlabel(xLabels[i])
-                ax.set_ylabel(yLabels[i])
+                if not colorVariations or i==0:
+                    ax.set_xlabel(xLabels[i])
+                    ax.set_ylabel(yLabels[i])
+                    
                 #next two commands to zoom all ...:
                 ax.relim()
                 ax.autoscale_view()
-            # if firstRun:
-            #     fig.set_size_inches(nPlots*5, 5, forward=True)
-        
+                
             fig.canvas.draw()
             fig.canvas.flush_events()
             #print("dpi=", fig.dpi)

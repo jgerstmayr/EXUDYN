@@ -64,6 +64,8 @@ public:
 	//! Set (write) parameter 'parameterName' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
 	virtual void SetParameter(const STDstring& parameterName, const py::object& value) { SysError("Invalid call to MainMarker::SetParameter(...)"); }
 
+	//! GetOutputVariable with type and return value; restricted to certain number of types
+	virtual py::object GetOutputVariable(const CSystemData& cSystemData, OutputVariableType variableType, ConfigurationType configuration) const;
 };
 
 #endif

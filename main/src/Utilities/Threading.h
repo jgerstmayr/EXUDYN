@@ -173,7 +173,9 @@ namespace MicroThreading {
 		//std::atomic<Index> completed_tasks;
 		Exception * ex;
 
-		ResizableArray<std::atomic<int>*> sync; //is initialized when started up
+		ResizableArray<std::atomic_int*> sync; //is initialized when started up
+		std::atomic_int syncStart;
+		std::atomic_int syncEnd;
 
 	public:
 

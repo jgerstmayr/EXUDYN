@@ -651,16 +651,19 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 		{ 
 			ZoomAll(); 
 		}
-		//if (key == GLFW_KEY_O && action == GLFW_PRESS)
-		//{
-		//	const Float16& A = state->modelRotation;
-		//	Matrix3DF rotMatrix(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
+		if (key == GLFW_KEY_O && action == GLFW_PRESS)
+		{
+			const Float16& A = state->modelRotation;
+			Matrix3DF rotationMV(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
 
-		//	//check which offset or rotation is needed here!
-		//	***
-		//	state->rotationCenterPoint = rotMatrix.GetTransposed()*state->centerPoint;
-		//	pout << "rot center point=" << state->rotationCenterPoint << "\n";
-		//}
+			//Float3 p = state->rotationCenterPoint * rotationMV + (state->centerPoint - state->rotationCenterPoint);
+			//state->rotationCenterPoint = state->centerPoint;// rotationMV * state->rotationCenterPoint;
+			Float3 pOld = state->rotationCenterPoint * rotationMV + state->centerPoint;
+			state->rotationCenterPoint = state->rotationCenterPoint + rotationMV * state->centerPoint;
+			state->centerPoint = pOld - state->rotationCenterPoint * rotationMV;
+
+			//PrintDelayed("new centerpoint=" + EXUstd::ToString(state->rotationCenterPoint));
+		}
 	}
 	//EXUstd::ReleaseSemaphore(graphicsUpdateAtomicFlag);
 }
@@ -1801,19 +1804,59 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//model rotation and translation, include rotation center point
-	const Float16& A = state->modelRotation;
- 	Matrix3DF rotMatrix(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
+	//Float16& A = state->modelRotation;
+	Float16 A(state->modelRotation); //copy, do not update model rotation, which is still modifiable
+	Matrix3DF rotationMV(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
+	Float3 translationMV = state->rotationCenterPoint * rotationMV + state->centerPoint;
+	//Float3 translationMV = state->centerPoint;// *rotationMV;
 
-	glTranslatef(-state->centerPoint[0], -state->centerPoint[1], 0.f); 
+	//update center point if tracked by marker
+	if (visSettings->interactive.trackMarker != -1)
+	{
+		Vector3D markerPosition;
+		Matrix3D markerOrientation;
+		bool hasPosition;
+		bool hasOrientation;
+		basicVisualizationSystemContainer->GetMarkerPositionOrientation(visSettings->interactive.trackMarker,
+			visSettings->interactive.trackMarkerMbsNumber, markerPosition, markerOrientation, hasPosition, hasOrientation);
 
-	//Float3 rot2 = state->rotationCenterPoint;
-	//glTranslatef(rot2[0], rot2[1], rot2[2]);
 
-	glMultMatrixf(state->modelRotation.GetDataPointer());
+		if (hasOrientation && visSettings->interactive.trackMarkerOrientation.SumAbs() == 3.f)
+		{ //track orientation as well!
+			Matrix3DF markerOrientation3DF;
+			markerOrientation3DF.CopyFrom(markerOrientation);
+			rotationMV = markerOrientation3DF * rotationMV; //superimposed initial rotation
 
-	////rot2 = rotMatrix.GetTransposed() * (-state->rotationCenterPoint); //A.T*rotationCenterPoint
-	//rot2 =  (-state->rotationCenterPoint); //A.T*rotationCenterPoint
-	//glTranslatef(rot2[0], rot2[1], rot2[2]);
+			//map rotation matrix to part of 16 components in A
+			A[0] = rotationMV(0, 0);
+			A[1] = rotationMV(0, 1);
+			A[2] = rotationMV(0, 2);
+			A[4] = rotationMV(1, 0);
+			A[5] = rotationMV(1, 1);
+			A[6] = rotationMV(1, 2);
+			A[8] = rotationMV(2, 0);
+			A[9] = rotationMV(2, 1);
+			A[10]= rotationMV(2, 2);
+		}
+		if (hasPosition)
+		{  //track position
+			markerPosition[0] *= (Real)visSettings->interactive.trackMarkerPosition[0];
+			markerPosition[1] *= (Real)visSettings->interactive.trackMarkerPosition[1];
+			markerPosition[2] *= (Real)visSettings->interactive.trackMarkerPosition[2];
+
+			Float3 markerPosition3DF;
+			markerPosition3DF.CopyFrom(markerPosition);
+			translationMV += markerPosition3DF * rotationMV;
+		}
+
+	}
+
+	glTranslatef(-translationMV[0], -translationMV[1], 0.f);
+
+
+	//glMultMatrixf(state->modelRotation.GetDataPointer());
+	glMultMatrixf(A.GetDataPointer());
+
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

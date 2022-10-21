@@ -331,8 +331,6 @@ void CNodeRigidBodyRotVecDataLG::CompositionRule(const LinkedDataVector& current
 	newPosition = currentPosition; 
 	newPosition += incrementalPosition;
 
-	//newOrientation += incrementalRotation //testing for small rotations ...
-
 	// rotation update (composition operaton for roitation vectors): rotVec0 o incRotVec 
 	newOrientation = EXUlie::CompositionRotationVector((Vector3D)currentOrientation, (Vector3D)incrementalRotation);
 
@@ -340,15 +338,6 @@ void CNodeRigidBodyRotVecDataLG::CompositionRule(const LinkedDataVector& current
 	//Matrix3D A0 = RigidBodyMath::RotationVector2RotationMatrix(currentOrientation);
 	//Matrix3D Ainc = RigidBodyMath::RotationVector2RotationMatrix(incrementalRotation);
 	//newOrientation = RigidBodyMath::SkewMatrix2Vector(EXUlie::LogSO3(A0*Ainc));
-
-	//pout << "currentPosition=" << currentPosition << ", ";
-	//pout << "currentOrientation=" << currentOrientation << "\n";
-
-	//pout << "incrementalMotion=" << incrementalMotion << ", ";
-
-	//pout << "newPosition=" << newPosition << ", ";
-	//pout << "newOrientation=" << newOrientation << "\n\n";
-
 }
 
 

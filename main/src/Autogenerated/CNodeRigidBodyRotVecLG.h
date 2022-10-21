@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Holzinger Stefan
 * @date         2019-07-01 (generated)
-* @date         2022-08-12  19:31:56 (last modified)
+* @date         2022-09-16  15:48:27 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -167,6 +167,9 @@ public: // AUTO:
 
     //! AUTO:  compute d(Glocal^T*v)/dq for any set of parameters; needed for jacobians
     virtual void GetGlocalTv_q(const Vector3D& v, ConstSizeMatrix<maxRotationCoordinates * maxRotationCoordinates>& matrix, ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  apply composition rule for all nodal coordinates
+    virtual void CompositionRule(const LinkedDataVector& currentPosition, const LinkedDataVector& currentOrientation, const Vector6D& incrementalMotion, LinkedDataVector& newPosition, LinkedDataVector& newOrientation) const override;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

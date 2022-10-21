@@ -889,6 +889,20 @@ void MainSystem::PySetMarkerParameter(const py::object& itemIndex, const STDstri
 	}
 }
 
+//! Get specific output variable with variable type
+py::object MainSystem::PyGetMarkerOutputVariable(const py::object& itemIndex, OutputVariableType variableType, ConfigurationType configuration) const
+{
+	Index itemNumber = EPyUtils::GetMarkerIndexSafely(itemIndex);
+	if (itemNumber < mainSystemData.GetMainMarkers().NumberOfItems())
+	{
+		return mainSystemData.GetMainMarkers().GetItem(itemNumber)->GetOutputVariable(GetCSystem()->GetSystemData(), variableType, configuration);
+	}
+	else
+	{
+		PyError(STDstring("MainSystem::GetMarkerOutput: invalid access to marker number ") + EXUstd::ToString(itemNumber));
+		return py::int_(EXUstd::InvalidIndex);
+	}
+}
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

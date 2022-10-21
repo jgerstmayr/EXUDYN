@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-02-25  14:31:49 (last modified)
+* @date         2022-09-17  10:30:57 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,6 +29,9 @@ class CObjectConnectorRollingDiscPenaltyParameters // AUTO:
 public: // AUTO: 
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector; \f$m0\f$ represents the ground, which can undergo translations but not rotations, and \f$m1\f$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)
+    Real discRadius;                              //!< AUTO: defines the disc radius
+    Vector3D discAxis;                            //!< AUTO: axis of disc defined in marker \f$m1\f$ frame
+    Vector3D planeNormal;                         //!< AUTO: normal to the contact / rolling plane (ground); Currently, this is not co-rotating with the ground body, but will do so in the future
     Real dryFrictionAngle;                        //!< AUTO: angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle
     Real contactStiffness;                        //!< AUTO: normal contact stiffness [SI:N/m]
     Real contactDamping;                          //!< AUTO: normal contact damping [SI:N/(m s)]
@@ -36,13 +39,14 @@ public: // AUTO:
     Real dryFrictionProportionalZone;             //!< AUTO: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)
     Real rollingFrictionViscous;                  //!< AUTO: rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground!
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
-    Real discRadius;                              //!< AUTO: defines the disc radius
-    Vector3D planeNormal;                         //!< AUTO: normal to the contact / rolling plane (ground); Currently, this is not co-rotating with the ground body, but will do so in the future
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorRollingDiscPenaltyParameters()
     {
         markerNumbers = ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex });
         nodeNumber = EXUstd::InvalidIndex;
+        discRadius = 0;
+        discAxis = Vector3D({1,0,0});
+        planeNormal = Vector3D({0,0,1});
         dryFrictionAngle = 0.;
         contactStiffness = 0.;
         contactDamping = 0.;
@@ -50,15 +54,13 @@ public: // AUTO:
         dryFrictionProportionalZone = 0.;
         rollingFrictionViscous = 0.;
         activeConnector = true;
-        discRadius = 0;
-        planeNormal = Vector3D({0,0,1});
     };
 };
 
 
 /** ***********************************************************************************************
 * @class        CObjectConnectorRollingDiscPenalty
-* @brief        A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global \f$x\f$-\f$y\f$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.
+* @brief        A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global \f$x\f$-\f$y\f$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation for the arbitrary disc axis is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

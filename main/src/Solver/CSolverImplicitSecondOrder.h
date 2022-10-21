@@ -41,8 +41,10 @@ public: //made public for access via pybind
 #ifdef LIE_GROUP_IMPLICIT_SOLVER
 	//++++++++++++++++++++++++++++++
 	//Lie groups:
-	ResizableArray<Index> lieGroupNodes;	//filled with Lie group node indices during initialization; ONLY if useLieGroupIntegration=true
-	ResizableArray<Index> nonLieODE2Coordinates; //filled with ODE2 coordinates, for which no Lie group integration is used; ONLY if useLieGroupIntegration=true
+	ResizableArray<Index> lieGroupDataNodes;			//filled with Lie group node indices with data coordinates during initialization; ONLY if useLieGroupIntegration=true
+	ResizableArray<Index> lieGroupDirectUpdateNodes;	//filled with Lie group node indices with direct updates during initialization; ONLY if useLieGroupIntegration=true
+	//UNUSED: //ResizableArray<Index> nonLieODE2Coordinates;		//filled with ODE2 coordinates, for which no Lie group integration is used; ONLY if useLieGroupIntegration=true
+	ResizableVectorParallel lieGroupDirectUpdateNewtonSolution; //this is the previous newton solution in case of direct update
 #endif
 	//bool useIndex2Constraints; ==> directly linked to simulationSettings
 public:
@@ -86,8 +88,21 @@ public:
 	virtual void FinalizeNewton(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
 
 #ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
-	virtual void UpdateDataCoordinatesLieGroupIntegrator(CSystem& computationalSystem, const ResizableVectorParallel& currentODE2,
-		const LinkedDataVector& incrementODE2, ResizableVectorParallel& compositionODE2);
+	//! apply composition rule to currentODE2 o incrementODE2 for given set of nodes
+	virtual void UpdateDataCoordinatesLieGroupIntegrator(CSystem& computationalSystem, const ArrayIndex& lieGroupNodes, 
+		const ResizableVectorParallel& currentODE2, const ResizableVectorParallel& incrementODE2, ResizableVectorParallel& compositionODE2);
+
+	//! set Lie group data coordinates 0, set Lie group previous Newton increment 0
+	virtual void ResetCoordinatesLieGroupNodes(CSystem& computationalSystem, ResizableVectorParallel& solutionODE2, ResizableVectorParallel& previousNewtonSolution);
+
+	//! set solutionODE2 coordinates of Lie group direct update nodes to previous Newton solution
+	virtual void SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(CSystem& computationalSystem, 
+		const ResizableVectorParallel& previousNewtonSolution, ResizableVectorParallel& solutionODE2);
+
+	//! apply tangent operator T to matrix A: A = A*T; T defined for Lie group nodes
+	virtual void LieGroupNodesApplyTangentOperator(CSystem& computationalSystem, 
+		ResizableVectorParallel& globalIncrementalSolutionODE2, const ArrayIndex& lieGroupNodes, Index startRow, GeneralMatrix& A);
+
 #endif
 };
 

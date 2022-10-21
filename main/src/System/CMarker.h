@@ -98,9 +98,9 @@ public: //
 		CHECKandTHROWstring("Invalid call to CMarker::ComputeMarkerDataJacobianDerivative");
 	}
 
-	//DELETE (replaced by Marker::JacobianDerivativeAvailable)
-	////! true = signal that analytical jacobian derivative is available
-	//virtual bool ProvidesJacobianDerivative() const { return false; } 
+	//! GetOutputVariable with type; writes values into value and returns true, if successful
+	virtual bool GetOutputVariable(const CSystemData& cSystemData, OutputVariableType variableType, ConfigurationType configuration, CSVector9D& value) const;
+
 
 	//! dimension, which an according connector would have
 	virtual Index GetDimension(const CSystemData& cSystemData) const {

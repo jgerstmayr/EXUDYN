@@ -161,6 +161,7 @@ GeneralizedAlphaSettings has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     computeInitialAccelerations &     bool &      &     True &     True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations\\ \hline
+    lieGroupAddTangentOperator &     bool &      &     True &     True: for Lie group nodes, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)\\ \hline
     newmarkBeta &     UReal &      &     0.25 &     value beta for Newmark method; default value beta = $\frac 1 4$ corresponds to (undamped) trapezoidal rule\\ \hline
     newmarkGamma &     UReal &      &     0.5 &     value gamma for Newmark method; default value gamma = $\frac 1 2$ corresponds to (undamped) trapezoidal rule\\ \hline
     spectralRadius &     UReal &      &     0.9 &     spectral radius for Generalized-alpha solver; set this value to 1 for no damping or to 0 < spectralRadius < 1 for damping of high-frequency dynamics; for position-level constraints (index 3), spectralRadius must be < 1\\ \hline
@@ -721,6 +722,10 @@ VSettingsInteractive has the following items:
     selectionLeftMouse &     bool &      &     True &     True: left mouse click on items and show basic information\\ \hline
     selectionRightMouse &     bool &      &     True &     True: right mouse click on items and show dictionary (read only!)\\ \hline
     selectionRightMouseGraphicsData &     \tabnewline bool &      &     False &     True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)\\ \hline
+    trackMarker &     Index &      &     -1 &     if valid marker index is provided and marker provides position (and orientation), the centerpoint of the scene follows the marker (and orientation); depends on trackMarkerPosition and trackMarkerOrientation; by default, only position is tracked\\ \hline
+    trackMarkerMbsNumber &     Index &      &     0 &     number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number\\ \hline
+    trackMarkerOrientation &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one\\ \hline
+    trackMarkerPosition &     Float3 &     3 &     [1.,1.,1.] &     \tabnewline choose which coordinates or marker are tracked (x,y,z)\\ \hline
     useJoystickInput &     bool &      &     True &     True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ...\\ \hline
     zoomStepFactor &     float &      &     1.15 &     change of zoom per keypress (keypad +/-) or mouse wheel increment\\ \hline
 	  \end{longtable}

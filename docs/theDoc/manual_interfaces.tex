@@ -155,7 +155,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{nodeType = {\textquotesingle}Point{\textquotesingle}\tabnewline
     nodeDict = mbs.GetNodeDefaults(nodeType)}}\\ \hline 
-  GetNodeOutput(nodeNumber, variableType, configuration = ConfigurationType.Current) & get the ouput of the node specified with the OutputVariableType; default configuration = 'current'; output may be scalar or array (e.g. displacement vector)\tabnewline 
+  GetNodeOutput(nodeNumber, variableType, configuration = ConfigurationType.Current) & get the ouput of the node specified with the OutputVariableType; output may be scalar or array (e.g. displacement vector)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.GetNodeOutput(nodeNumber=0, variableType=exu.OutputVariableType.Displacement)}}\\ \hline 
   GetNodeODE2Index(nodeNumber) & get index in the global ODE2 coordinate vector for the first node coordinate of the specified node\tabnewline 
@@ -257,6 +257,9 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
     markerDict = mbs.GetMarkerDefaults(markerType)}}\\ \hline 
   GetMarkerParameter(markerNumber, parameterName) & get markers's parameter from markerNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
   SetMarkerParameter(markerNumber, parameterName, value) & set parameter 'parameterName' of marker with markerNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
+  GetMarkerOutput(markerNumber, variableType, configuration = ConfigurationType.Current) & get the ouput of the marker specified with the OutputVariableType; currently only provides Position and Velocitiy for position based markers and RotationMatrix as well as AngularVelocity(Local) for markers providing additionally orientation\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{mbs.GetMarkerOutput(markerNumber=0, variableType=exu.OutputVariableType.Position)}}\\ \hline 
 \end{longtable}
 \end{center}
 

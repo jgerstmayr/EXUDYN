@@ -56,10 +56,10 @@ sectionData = exu.BeamSection()
 #print('section=',sectionData)
 
 if True:
-    nElements = 1 #4 works
+    nElements = 8 #4 works
     L = 1
     fTip = -4.05e5*0.5*0.25
-    bodyFixedLoad = True
+    bodyFixedLoad = False
     # Material properties
     E = 2.1e11            # Young modulus
     nu = 0.3              # Poisson ratio
@@ -126,7 +126,7 @@ nInit = n0
 for k in range(nElements):
     n1 = mbs.AddNode(NodeClass(referenceCoordinates=[lElem*(k+1),0,0]+initialRotations))
 
-    oBeam = mbs.AddObject(ObjectBeamGeometricallyExact3D(nodeNumbers=[n0,n1], physicsLength = lElem, 
+    oBeam = mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[n0,n1], physicsLength = lElem, 
                                                          sectionData = sectionData,
                                                          visualization=VBeam3D(sectionGeometry=sectionGeometry)))
     n0 = n1
@@ -135,8 +135,8 @@ mTip = mbs.AddMarker(MarkerNodeRigid(nodeNumber = n1))
 if False:
     mbs.AddLoad(Force(markerNumber=mTip, loadVector = [0,fTip,0], bodyFixed = bodyFixedLoad ))
 elif True:
-    mbs.AddLoad(Force(markerNumber=mTip, loadVector = [0,fTip,0] ))
-    mbs.AddLoad(Torque(markerNumber=mTip, loadVector = [1*fTip,0.2*fTip,0]))
+    #mbs.AddLoad(Force(markerNumber=mTip, loadVector = [0,fTip*0.1,fTip*0] ))
+    mbs.AddLoad(Torque(markerNumber=mTip, loadVector = [0*fTip,0*0.2*fTip,1*fTip]))
 else:
     mbs.AddLoad(Torque(markerNumber=mTip, loadVector = [3*fTip,0,0])) #static
 
@@ -186,7 +186,7 @@ if False:
 mbs.Assemble()
 
 tEnd = 100     #end time of simulation
-h = 0.01*0.1    #step size; leads to 1000 steps
+h = 0.01    #step size; leads to 1000 steps
 
 simulationSettings = exu.SimulationSettings()
 simulationSettings.solutionSettings.solutionWritePeriod = 5e-3  #output interval general
@@ -195,13 +195,13 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
 simulationSettings.timeIntegration.endTime = tEnd
 #simulationSettings.solutionSettings.solutionInformation = "This is the info\nNew line\n and another new line \n"
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-simulationSettings.timeIntegration.simulateInRealtime=True
-simulationSettings.timeIntegration.realtimeFactor=0.1
+#simulationSettings.timeIntegration.simulateInRealtime=True
+#simulationSettings.timeIntegration.realtimeFactor=0.1
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.parallel.numberOfThreads = 4
-#simulationSettings.timeIntegration.newton.useModifiedNewton = True
-#simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1e0
+# simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 1e-4
+simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2 = True
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6
 #simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 
@@ -229,8 +229,8 @@ if useGraphics:
     exu.StartRenderer()
     mbs.WaitForUserToContinue()
 
-exu.SolveStatic(mbs, simulationSettings)
-#exu.SolveDynamic(mbs, simulationSettings)
+#exu.SolveStatic(mbs, simulationSettings)
+exu.SolveDynamic(mbs, simulationSettings)
 #exu.SolveDynamic(mbs, simulationSettings, solverType = exu.DynamicSolverType.RK44)
         
 

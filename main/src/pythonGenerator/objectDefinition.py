@@ -423,6 +423,7 @@ Fv,      C,      GetG_t,                        ,               ,       void, ,"
 Fv,      C,      GetGlocal_t,                   ,               ,       void, ,"ConstSizeMatrix<maxRotationCoordinates * nDim3D>& matrix, ConfigurationType configuration = ConfigurationType::Current", CDI, "Compute local G matrix for given configuration"  
 Fv,      C,      GetGTv_q,                      ,               ,       void, ,"const Vector3D& v, ConstSizeMatrix<maxRotationCoordinates * maxRotationCoordinates>& matrix, ConfigurationType configuration = ConfigurationType::Current", CDI, "compute d(G^T*v)/dq for any set of parameters; needed for jacobians"  
 Fv,      C,      GetGlocalTv_q,                 ,               ,       void, ,"const Vector3D& v, ConstSizeMatrix<maxRotationCoordinates * maxRotationCoordinates>& matrix, ConfigurationType configuration = ConfigurationType::Current", CDI, "compute d(Glocal^T*v)/dq for any set of parameters; needed for jacobians"  
+Fv,      C,      CompositionRule,               ,               ,       void, ,"const LinkedDataVector& currentPosition, const LinkedDataVector& currentOrientation, const Vector6D& incrementalMotion, LinkedDataVector& newPosition, LinkedDataVector& newOrientation", CDI, "apply composition rule for all nodal coordinates"
 #
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
@@ -5850,13 +5851,13 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorRollingDiscPenalty
-classDescription = "A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc."
+classDescription = "A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation for the arbitrary disc axis is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
 pythonShortName = RollingDiscPenalty
 addProtectedC = "    static constexpr Index nDataVariables = 3; //number of data variables for tangential and normal contact\n"
-outputVariables = "{'Position':'$\LU{0}{\pv}_{G}$current global position of contact point between rolling disc and ground', 'Velocity':'$\LU{0}{\vv}_{trail}$current velocity of the trail (according to motion of the contact point along the trail!) in global coordinates; this is not the velocity of the contact point!', 'VelocityLocal':'$\LU{J1}{\vv}$relative slip velocity at contact point in special $J1$ joint coordinates', 'ForceLocal':'$\LU{J1}{\fv} = \LU{0}{[f_{t,x},\, f_{t,y},\, f_{n}]\tp}$contact forces acting on disc, in special $J1$ joint coordinates, see section Connector Forces, $f_{t,x}$ being the lateral force (parallel to ground plane), $f_{t,y}$ being the longitudinal force and $f_{n}$ being the contact normal force', 'RotationMatrix': '$\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]\tp$transformation matrix of special joint $J1$ coordinates to global coordinates'}"
+outputVariables = "{'Position':'$\LU{0}{\pv}_{G}$current global position of contact point between rolling disc and ground', 'Velocity':'$\LU{0}{\vv}_{trail}$current velocity of the trail (according to motion of the contact point along the trail!) in global coordinates; this is not the velocity of the contact point!', 'VelocityLocal':'$\LU{J1}{\vv}$relative slip velocity at contact point in special $J1$ joint coordinates', 'ForceLocal':'$\LU{J1}{\fv} = \LU{0}{[f_{t,x},\, f_{t,y},\, f_{n}]\tp}$contact forces acting on disc, in special $J1$ joint coordinates, see section Connector Forces, $f_{t,x}$ being the lateral force (parallel to ground plane), $f_{t,y}$ being the longitudinal force and $f_{n}$ being the contact normal force', 'RotationMatrix': '$\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$transformation matrix of special joint coordinates $J1$ to global coordinates'}"
 classType = Object
 objectType = Connector
 #add input quantities
@@ -5880,11 +5881,11 @@ equations =
     \rowTable{ground position C}{$\LU{0}{\pv}_{C}$}{contact point of disc with ground}
     \rowTable{ground velocity C}{$\LU{0}{\vv}_{C}$}{velocity of disc at ground contact point (must be zero at end of iteration)}
     %\rowTable{ground vector}{$\LU{0}{\dv}$}{vector from ground to the disc center point , currently [0,0,\LU{0}{\pv}_{m1,z}]}
-    \rowTable{wheel axis vector}{$\LU{0}{\wv_1} =\LU{0,m1}{\Rot} \cdot [1,0,0]\tp $}{normalized disc axis vector, currently $[1,0,0]\tp$ in local coordinates}
+    \rowTable{wheel axis vector}{$\LU{0}{\wv_1} =\LU{0,m1}{\Rot} \LU{m1}{\wv_{1}} $}{normalized disc axis vector in global coordinates}
     \rowTable{longitudinal vector}{$\LU{0}{\wv_2}$}{vector in longitudinal (motion) direction}
     \rowTable{contact point vector}{$\LU{0}{\wv_3}$}{normalized vector from disc center point in direction of contact point C}
     \rowTable{lateral vector}{$\LU{0}{\wv_{lat}} = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2$}{vector in lateral direction, parallel to ground plane}
-    \rowTable{$D1$ transformation matrix}{$\LU{0,D1}{\Am} = [\LU{0}{\wv_1},\, \LU{0}{\wv_2},\, \LU{0}{\wv_3}]\tp$}{transformation of special disc coordinates $D1$ to global coordinates}
+    \rowTable{$D1$ transformation matrix}{$\LU{0,D1}{\Am} = [\LU{0}{\wv_1},\, \LU{0}{\wv_2},\, \LU{0}{\wv_3}]$}{transformation of special disc coordinates $D1$ to global coordinates}
 %
     \rowTable{connector forces}{$\LU{J1}{\fv}=[f_{t,x},\,f_{t,y},\,f_n]\tp$}{joint force vector at contact point in joint 1 coordinates: x=lateral direction, y=longitudinal direction, z=plane normal (contact normal)}
     \finishTable
@@ -5900,7 +5901,7 @@ equations =
     \be
       \LU{0}{\xv} = \LU{0}{\wv}_1 \times \LU{0}{\vv_{PN}}
     \ee
-    we create a disc coordinate system $D1$ ($\LU{0}{\wv}_1, \; \LU{0}{\wv}_2, \; \LU{0}{\wv}_3$), representing the longitudinal direction,
+    we create a disc coordinate system $D1$ ($\LU{0}{\wv}_1, \; \LU{0}{\wv}_2, \; \LU{0}{\wv}_3$), with the longitudinal direction,
     \be
       \LU{0}{\wv}_2 = \frac{1}{|\LU{0}{\xv}|} \LU{0}{\xv} 
     \ee
@@ -5916,12 +5917,12 @@ equations =
     \be
       \LU{0}{\vv}_{C} = \LU{0}{\vv}_{m1} + \LU{0}{\tomega}_{m1} \times (r\cdot \LU{0}{\wv}_3)
     \ee
-    A second coordinate system is defined by ($\LU{0}{\wv}_{lat}, \; \LU{0}{\wv}_2, \;  \LU{0}{\vv}_{PN}$), using
+    A second coordinate system, denoted as $J1$, is defined by vectors ($\LU{0}{\wv}_{lat}, \; \LU{0}{\wv}_2, \;  \LU{0}{\vv}_{PN}$), using
     \be
         \LU{0}{\wv}_{lat} = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2
     \ee
     Note that {\bf in the case that} the rolling axis $\LU{0}{\wv}_1$ lies in the rolling plane, we obtain the special case
-    $\LU{0}{\wv}_{lat} = \LU{0}{\wv}_1$ and $\LU{0}{\wv}_1 = -\LU{0}{\vv}_{PN}$.
+    $\LU{0}{\wv}_{lat} = \LU{0}{\wv}_1$ and $\LU{0}{\wv}_3 = -\LU{0}{\vv}_{PN}$.
                                                                      
     \mysubsubsubsection{Computation of normal and tangential forces}
     The connector forces at the contact point $C$ are computed as follows. 
@@ -5993,6 +5994,9 @@ Vp,     M,      name,                           ,               ,       String, 
 V,      CP,     markerNumbers,                  ,               2,      ArrayMarkerIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector; $m0$ represents the ground, which can undergo translations but not rotations, and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point"
 V,      CP,     nodeNumber,                     ,               ,       NodeIndex,      "EXUstd::InvalidIndex",     ,       I,      "$n_d$node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)"
 #
+V,      CP,     discRadius,                     ,               ,       Real,       "0",                        ,       I,      "defines the disc radius"
+V,      CP,     discAxis,                       ,               ,       Vector3D,   "Vector3D({1,0,0})",        ,       IO,     "$\LU{m1}{\wv_{1}}, \;\; |\LU{m1}{\wv_{1}}| = 1$axis of disc defined in marker $m1$ frame"
+V,      CP,     planeNormal,                    ,               ,       Vector3D,   "Vector3D({0,0,1})",        ,       IO,     "$\LU{0}{\vv_{PN}}, \;\; |\LU{0}{\vv_{PN}}| = 1$normal to the contact / rolling plane (ground); Currently, this is not co-rotating with the ground body, but will do so in the future"
 #V,      CP,     constrainedAxes,                ,               3,      ArrayIndex, "ArrayIndex({1,1,1})",      ,       IO,     "$\jv=[j_0,\,\ldots,\,j_2]$flag, which determines which constraints are active, in which $j_0,j_1$ represent the tangential motion and $j_2$ represents the normal (contact) direction"
 V,      CP,     dryFrictionAngle,               ,               ,       Real,       "0.",                       ,       IO,     "$\alpha_t$angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle"
 V,      CP,     contactStiffness,               ,               ,       Real,       "0.",                       ,       I,      "$k_c$normal contact stiffness [SI:N/m]"
@@ -6001,8 +6005,6 @@ V,      CP,     dryFriction,                    ,               ,       Vector2D
 V,      CP,     dryFrictionProportionalZone,    ,               ,       Real,       "0.",                       ,       IO,     "$v_\mu$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)"
 V,      CP,     rollingFrictionViscous,         ,               ,       Real,       "0.",                       ,       IO,     "$\mu_r$rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground!"
 V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
-V,      CP,     discRadius,                     ,               ,       Real,       "0",                        ,       I,      "defines the disc radius"
-V,      CP,     planeNormal,                    ,               ,       Vector3D,   "Vector3D({0,0,1})",        ,       IO,     "$\LU{0}{\vv_{PN}}, \;\; |\LU{0}{\vv_{PN}}| = 1$normal to the contact / rolling plane (ground); Currently, this is not co-rotating with the ground body, but will do so in the future"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
@@ -7284,7 +7286,7 @@ mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
 pythonShortName = RollingDiscJoint
 addProtectedC = "    static constexpr Index nConstraints = 3;\n"
-outputVariables = "{'Position':'$\LU{0}{\pv}_{G}$current global position of contact point between rolling disc and ground', 'Velocity':'$\LU{0}{\vv}_{trail}$current velocity of the trail (according to motion of the contact point along the trail!) in global coordinates; this is not the velocity of the contact point!', 'ForceLocal':'$\LU{J1}{\fv} = \LU{0}{[f_0,\, f_1,\, f_2]\tp}= [-\zv^T \LU{0}{\wv_{lat}}, \, -\zv^T \LU{0}{\wv_2}, \, -\zv^T \LU{0}{\vv_{PN}}]\tp$contact forces acting on disc, in special $J1$ joint coordinates, $f_0$ being the lateral force (parallel to ground plane), $f_1$ being the longitudinal force and $f_2$ being the normal force', 'RotationMatrix': '$\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]\tp$transformation matrix of special joint $J1$ coordinates to global coordinates'}"
+outputVariables = "{'Position':'$\LU{0}{\pv}_{G}$current global position of contact point between rolling disc and ground', 'Velocity':'$\LU{0}{\vv}_{trail}$current velocity of the trail (according to motion of the contact point along the trail!) in global coordinates; this is not the velocity of the contact point!', 'ForceLocal':'$\LU{J1}{\fv} = \LU{0}{[f_0,\, f_1,\, f_2]\tp}= [-\zv^T \LU{0}{\wv_{lat}}, \, -\zv^T \LU{0}{\wv_2}, \, -\zv^T \LU{0}{\vv_{PN}}]\tp$contact forces acting on disc, in special $J1$ joint coordinates, $f_0$ being the lateral force (parallel to ground plane), $f_1$ being the longitudinal force and $f_2$ being the normal force', 'RotationMatrix': '$\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$transformation matrix of special joint coordinates $J1$ to global coordinates'}"
 classType = Object
 objectType = Joint
 #add input quantities
@@ -7313,8 +7315,8 @@ equations =
     \rowTable{longitudinal vector}{$\LU{0}{\wv_2}$}{vector in longitudinal (motion) direction}
     \rowTable{lateral vector}{$\LU{0}{\wv_{lat}} = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2$}{vector in lateral direction, parallel to ground plane}
     \rowTable{contact point vector}{$\LU{0}{\wv_3}$}{normalized vector from disc center point in direction of contact point C}
-    \rowTable{$D1$ transformation matrix}{$\LU{0,D1}{\Am} = [\LU{0}{\wv_1},\, \LU{0}{\wv_2},\, \LU{0}{\wv_3}]\tp$}{transformation of special disc coordinates $D1$ to global coordinates}
-    %\rowTable{$J1$ transformation matrix}{$\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]\tp$}{transformation of special joint $J1$ coordinates to global coordinates}
+    \rowTable{$D1$ transformation matrix}{$\LU{0,D1}{\Am} = [\LU{0}{\wv_1},\, \LU{0}{\wv_2},\, \LU{0}{\wv_3}]$}{transformation of special disc coordinates $D1$ to global coordinates}
+    %\rowTable{$J1$ transformation matrix}{$\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$}{transformation of special joint $J1$ coordinates to global coordinates}
 %
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\lambda_1,\,\lambda_2]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable

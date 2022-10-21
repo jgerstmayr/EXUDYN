@@ -44,6 +44,23 @@ def GetVersionPlatformString():
 
     return sReturn
 
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
+#*function: internal function; convert single index i into subindices based on given list of ranges in subIndexRanges; return list of subindices for sub ranges; ordering is according to way computed in ParameterVariation
+# try following to see effects: for i in range(100): print(SingleIndex2SubIndices(i,[10,2,3,2]))
+def SingleIndex2SubIndices(i, subIndexRanges):
+    nr = len(subIndexRanges)
+    iRanges=[]
+    for k in range(nr):
+        rem = 1
+        for j in range(k+1,nr):
+            rem *= subIndexRanges[j]
+        # print('k=',k,'rem=',rem)
+        kk = int(i/rem)%subIndexRanges[k]
+        iRanges += [kk]
+    # print('iRanges=',iRanges)
+    return iRanges
+    
+
 #%%+++++++++++++++++++++++++++++++++++++++++++
 #function: internal output function for ParameterVariation and GeneticOptimization
 # write header or values to output file and increase counter
@@ -58,19 +75,24 @@ def WriteToFile(resultsFile, parameters, currentGeneration, values, globalCnt, w
             if multiProcessingMode != '':
                 sVersion += '(processing='+multiProcessingMode+')'
             file.write('#'+sVersion+'\n')
-            file.write('#\n')
+            if 'functionData' in parameters:
+                file.write('functionData:'+str(parameters['functionData'])+'\n')
+            else:
+                file.write('#\n')
             file.write('#columns:\n') #'globalIndex, parameters, computationIndex:\n')
             s = '#globalIndex,value'
             for (key,value) in parameters.items():
-                s += ',' + key
+                if key != 'functionData':
+                    s += ',' + key
             s += ',computationIndex'
             file.write(s+'\n')
             file.write('#parameter ranges [format: (begin, end, numberOfVariations) or list, parameters separated with ";"]:\n')
             sep = ''
             s = '#'
             for (key,value) in parameters.items():
-                s += sep + str(value)
-                sep = ';'
+                if key != 'functionData':
+                    s += sep + str(value)
+                    sep = ';'
             file.write(s+'\n')
             file.close()
         
@@ -81,7 +103,8 @@ def WriteToFile(resultsFile, parameters, currentGeneration, values, globalCnt, w
             s += str(values[i])
             for (key,value) in currentGeneration[i].items():
                 #print(currentGeneration[i])
-                s += ', ' + str(value)
+                if key != 'functionData':
+                    s += ', ' + str(value)
             file.write(s+'\n')
             globalCnt += 1 #for every line of values
             
@@ -128,25 +151,24 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
             useCluster = False
 
     if not useCluster: 
-        
         resultsFileCnt = 0 #counter for results file
         if not useMultiProcessing:
             for i in range(nVariations):
-                parameters = parameterList[i]
-                v = parameterFunction(parameters)
+                currentParameters = parameterList[i]
+                v = parameterFunction(currentParameters)
                 values += [v]
                 if showProgress:
                     printStr = ''
                     if (type(v) == float) or (type(v) == int):
                         printStr = ', value = '+str(v)
-                    if 'functionData' in parameters: #functionData may be large, DO not print!
+                    if 'functionData' in currentParameters: #functionData may be large, DO not print!
                         copyParameters = {}
-                        for key, value in parameters.items():
+                        for key, value in currentParameters.items():
                             if key != 'functionData':
                                 copyParameters[key] = value
                         printStr += ": parameters=" + str(copyParameters)
                     else:
-                        printStr += ": parameters=" + str(parameters)
+                        printStr += ": parameters=" + str(currentParameters)
                     
                     print("\rrun ", i+1, "/", nVariations, printStr, '                ', end='', flush=True)
                 if resultsFile != '':
@@ -286,7 +308,7 @@ def ProcessParameterList(parameterFunction, parameterList, addComputationIndex, 
 def ParameterVariation(parameterFunction, parameters, 
                        useLogSpace=False, debugMode=False, addComputationIndex=False,
                        useMultiProcessing=False, showProgress = True, parameterFunctionData={}, clusterHostNames=[],
-                       numberOfThreads=None, **kwargs):
+                       numberOfThreads=None, resultsFile='', **kwargs):
     
     if 'multiprocessing' in sys.modules:
         from multiprocessing import cpu_count
@@ -299,10 +321,6 @@ def ParameterVariation(parameterFunction, parameters,
                 print("using cluster")
     if numberOfThreads == None:
         numberOfThreads = 8 #just some default, if no other value available
-
-    resultsFile = ''
-    if 'resultsFile' in kwargs: 
-        resultsFile = kwargs['resultsFile']
 
     #generate list of parameters to iterate
     dim = len(parameters)       #dimensionality (dimension) of problem
@@ -1174,6 +1192,7 @@ def PlotSensitivityResults(valRef, valuesSorted, sensitivity, fVar=None, strYAxi
         axs[i].set(ylabel=strYAxis[i])
         axs[i].legend()
         axs[i].grid()
-    axs[-1].set( xlabel='Variation in $\%$') # in % because spacing is fVar*100 on x-Axis
+    axs[-1].set( xlabel='Variation in $\\%$') # in % because spacing is fVar*100 on x-Axis
     plt.tight_layout()
     return [fig, axs]
+

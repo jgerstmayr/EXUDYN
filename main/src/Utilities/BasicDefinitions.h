@@ -83,7 +83,7 @@
 #endif // DoublePrecision
 
 
-//#define LIE_GROUP_IMPLICIT_SOLVER
+#define LIE_GROUP_IMPLICIT_SOLVER
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //MULTITHREADED computation using ngsolve taskmanager; thanks to Joachim Schöberl

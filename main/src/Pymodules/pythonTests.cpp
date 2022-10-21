@@ -327,7 +327,7 @@ void PyTest()
 
 	//}
 	//parallelization tests:
-	if (0)
+	if (1)
 	{
 		pout << "AVXsize= " << AVXRealSize << "\n";
 		pout << "AVXRealShift= " << AVXRealShift << "\n";

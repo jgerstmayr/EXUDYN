@@ -10,15 +10,103 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.4.1, 
-  \item last change =  2022-09-15, 
-  \item Number of issues = 1261, 
-  \item Number of resolved issues = 1096 (1 in current version), 
+  \item Exudyn version = 1.4.14.dev1, 
+  \item last change =  2022-10-20, 
+  \item Number of issues = 1284, 
+  \item Number of resolved issues = 1109 (14 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.4.14}: {\bf \color{warningRed}  resolved BUG 1283}: {\bf ProcessParameterList}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: in case useMultiProcessing=False the output file does not contain correct ranges}
+    \item   date resolved: {\bf 2022-10-20 21:59},
+date raised: 2022-10-20 
+  \ei
+  \item {\bf Version 1.4.13}:  resolved Issue 1282: {\bf PlotSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: added return value including [plt, fig, ax, line] to be used for subsequent operations}
+    \item   date resolved: {\bf 2022-10-19 20:30},
+date raised: 2022-10-19 
+  \ei
+  \item {\bf Version 1.4.12}:  resolved Issue 1281: {\bf results monitor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extend results monitor for viewing more detailed results of ParameterVariation with colorVariations option; add function SingleIndex2SubIndices}
+    \item   date resolved: {\bf 2022-10-17 07:30},
+date raised: 2022-10-17 
+  \ei
+  \item {\bf Version 1.4.11}: {\bf \color{warningRed}  resolved BUG 1280}: {\bf ParameterVariation}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: resultsFile not working (problem with ProcessParameterList}
+    \item   date resolved: {\bf 2022-10-14 08:22},
+date raised: 2022-10-14 
+  \ei
+  \item {\bf Version 1.4.10}:  resolved Issue 1278: {\bf center point}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add key O to change center of rotation; resolve finally original issue 1155}
+    \item   date resolved: {\bf 2022-10-12 22:37},
+date raised: 2022-10-12 
+  \ei
+  \item {\bf Version 1.4.9}:  resolved Issue 1277: {\bf shadowPolygonOffset}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: decrease default value from 10 to 0.1; adjust in your models}
+    \item   date resolved: {\bf 2022-10-12 20:27},
+date raised: 2022-10-12 
+  \ei
+  \item {\bf Version 1.4.8}:  resolved Issue 1275: {\bf GetMarkerOutput}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add function mbs.GetMarkerOutput() to return position, velocitiy, rotation matrix and angular velocity for markers if available}
+    \item   date resolved: {\bf 2022-10-12 09:18},
+date raised: 2022-10-12 
+  \ei
+  \item {\bf Version 1.4.7}: {\bf \color{warningRed}  resolved BUG 1274}: {\bf ALECable2D}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: missing term L in preComputedB terms in C++ implementation}
+    \item   date resolved: {\bf 2022-09-25 14:17},
+date raised: 2022-09-25 
+  \ei
+  \item {\bf Version 1.4.6}:  resolved Issue 1242: {\bf Beam3D}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: rename ANCFBeam3D to ANCFBeam and GeometricallyExactBeam3D in same way for consistency reasons}
+    \item   date resolved: {\bf 2022-09-24 19:35},
+date raised: 2022-08-24 
+  \ei
+  \item {\bf Version 1.4.5}:  resolved Issue 1265: {\bf RollingDisc}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: correct description of coordinate systems in RollingDisc and RollingDiscPenalty; remove wrong transposed sign}
+    \item   date resolved: {\bf 2022-09-19 17:46},
+date raised: 2022-09-19 
+  \ei
+  \item {\bf Version 1.4.4}:  resolved Issue 1263: {\bf RollingDiscPenalty}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add arbitrary local wheel axis (discAxis) instead of x-axis only}
+    \item   date resolved: {\bf 2022-09-17 10:42},
+date raised: 2022-09-17 
+  \ei
+  \item {\bf Version 1.4.3}:  resolved Issue 1262: {\bf RigidBodyInertia}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add += operator}
+    \item   date resolved: {\bf 2022-09-17 08:23},
+date raised: 2022-09-17 
+  \ei
+  \item {\bf Version 1.4.2}:  resolved Issue 1261: {\bf Lie group integration}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: improve implicit Lie group integration, adapt old rotation vector approach, add tangent operator}
+    \item   date resolved: {\bf 2022-09-16 18:14},
+date raised: 2022-09-16 
+  \ei
   \item {\bf Version 1.4.1}: {\bf \color{warningRed}  resolved BUG 1260}: {\bf MacOS}
   \begin{itemize}[label=$\bullet$]
     \item {description: compilation not working on MacOS with taskmanager adaptions}
@@ -817,6 +905,7 @@ date raised: 2022-03-09
 (extension)
   \begin{itemize}[label=$\bullet$]
     \item {description: add key "o" option to set center point to current center point of view; this allows to rotate around the current center point of the view}
+    \item {\bf notes: currently deactivated due to transformation of coordinates issue}
     \item   date resolved: {\bf 2022-06-21 18:16},
 date raised: 2022-06-21 
   \ei
