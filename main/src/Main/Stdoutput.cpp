@@ -112,7 +112,7 @@ bool CheckPathAndCreateDirectories(const STDstring& pathAndFileName)
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //global variable for timers:
-std::vector<Real>* globalTimersCounters = nullptr; //global scalar variables get initialized with zero, put into separate are!
+std::vector<Real>* globalTimersCounters = nullptr; //global scalar variables get initialized with zero, this works on all platforms ... (arrays are not initialized ...)!
 std::vector<const char*>* globalTimersCounterNames = nullptr;
 TimerStructure globalTimers(4.5e-08); //offset added to correct measurements (i9: 4.521e-08); may lead to negative timings!
 
@@ -131,8 +131,7 @@ void TimerStructure::Initialize()
 //! create a new timer; name must be a static name (must exist until end of timer) or dynamically allocated string, may not be deleted
 Index TimerStructure::RegisterTimer(const char* name)
 {
-	Initialize(); //called upon every registration; thus, 
-	//std::cout << "add timer " << name << "\n";
+	Initialize(); //called upon every registration; this is needed, because it is unclear, which function is called first!
 	Index n = (Index)globalTimersCounters->size();
 	globalTimersCounters->push_back(0.);
 	globalTimersCounterNames->push_back(name);

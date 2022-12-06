@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-09-28  19:19:58 (last modified)
+* @date         2022-12-01  20:24:37 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,7 +35,7 @@ public: // AUTO:
     Real contactDamping;                          //!< AUTO: contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration
     Real circleRadius;                            //!< AUTO: radius [SI:m] of contact circle
     Real offset;                                  //!< AUTO: offset [SI:m] of contact, e.g. to include thickness of cable element
-    bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
+    bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectContactCircleCable2DParameters()
     {
@@ -94,7 +94,7 @@ public: // AUTO:
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override
     {
-        release_assert(localIndex == 0);
+        CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);
         return parameters.nodeNumber;
     }
 

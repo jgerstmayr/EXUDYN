@@ -654,10 +654,12 @@ class Robot:
     #   jointLoadUserFunctionList: DEPRECATED: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list
     #   createJointTorqueLoads: DEPRECATED: if True, independently of jointLoadUserFunctionList, joint loads are created; the load numbers are stored in lists jointTorque0List/ jointTorque1List; the loads contain zero torques and need to be updated in every computation step, e.g., using a preStepUserFunction; unitTorque0List/ unitTorque1List contain the unit torque vector for the according body(link) which needs to be applied on both bodies attached to the joint
     #   rotationMarkerBase: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint; note, that for moving base, the static compensation does not work (base rotation must be updated)
+    #   rigidBodyNodeType: specify node type of rigid body node, e.g., exudyn.NodeType.RotationEulerParameters, etc.
     #**output: the function returns a dictionary containing per link nodes and object (body) numbers, 'nodeList', 'bodyList', the object numbers for joints, 'jointList', list of load numbers for joint torques (jointTorque0List, jointTorque1List); unit torque vectors in local coordinates of the bodies to which the torques are applied (unitTorque0List, unitTorque1List); springDamperList contains the spring dampers if defined by PDcontrol of links
     def CreateRedundantCoordinateMBS(self, mbs, baseMarker, jointSpringDamperUserFunctionList= [], 
                                      jointLoadUserFunctionList=[], 
-                                     createJointTorqueLoads=True, rotationMarkerBase=None): 
+                                     createJointTorqueLoads=True, rotationMarkerBase=None,
+                                     rigidBodyNodeType=exudyn.NodeType.RotationEulerParameters): 
         #build robot model:
         nodeList = []           #node number or rigid node for link
         bodyList = []           #body number or rigid body for link
@@ -763,7 +765,7 @@ class Robot:
             #++++++++++++++++++++++++
             #now add body for link:
             [nLink,bLink]=erb.AddRigidBody(mainSys = mbs, inertia=inertiaLink, 
-                                nodeType='NodeType.RotationEulerParameters', 
+                                nodeType=rigidBodyNodeType, #'NodeType.RotationEulerParameters', 
                                 position=erb.HT2translation(Tcurrent), 
                                 rotationMatrix = erb.HT2rotationMatrix(Tcurrent),
                                 gravity=self.gravity, 

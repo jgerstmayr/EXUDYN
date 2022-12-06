@@ -271,7 +271,7 @@ public: //
 
 	//! compute MarkerDataStructure for computation of Connector Jacobians (no AE, diff of Jacobian needed)
 	//! jacobian derivative times constant vector v, e.g.: d(Jpos.T @ v)/dq
-	void ComputeMarkerDataStructureJacobianODE2(const CObjectConnector* connector, const Vector& v, MarkerDataStructure& markerDataStructure) const;
+	//void ComputeMarkerDataStructureJacobianODE2(const CObjectConnector* connector, const Vector& v, MarkerDataStructure& markerDataStructure) const;
 
 	void Print(std::ostream& os) const
 	{
@@ -441,7 +441,8 @@ inline void CSystemData::ComputeMarkerDataStructure(const CObjectConnector* conn
 {
 	const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
 	Index nMarkers = connector->GetMarkerNumbers().NumberOfItems();
-	if (nMarkers != 2) { CHECKandTHROWstring("CSystemData::ComputeMarkerDataStructure(...): Number of connector markers != 2 not implemented"); }
+	//if (nMarkers > MarkerDataStructure::GetMaxNumberOfMarkerData()) { CHECKandTHROWstring("CSystemData::ComputeMarkerDataStructure(...): Number of connector markers exceeds maximum"); }
+	markerDataStructure.SetNumberOfMarkerData(nMarkers);
 	markerDataStructure.SetTime(GetCData().currentState.GetTime());
 
 	if ((Index)connector->GetType() & (Index)CObjectType::Constraint)

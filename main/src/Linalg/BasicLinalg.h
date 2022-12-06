@@ -275,29 +275,10 @@ namespace EXUmath {
 		A(2, 2) = vectorZ[2];
 	}
 
-	////! compute orthogonal, normalized basis from two given non-parallel and non-zero vectors (vector0, vector1);
-	////! In this version, Z is the leading vector, Y is used to define the plane and X is compute from cross product
-	////! column vectors in Matrix A are NOT normalized
-	//inline void OrthogonalVectorsFromVectorsZY(Matrix3D A)
-	//{
-	//	Vector3D vectorZ({ A(0,2), A(1,2), A(2,2) });
-	//	Vector3D vectorY({ A(0,1), A(1,1), A(2,1) });
-	//	Real h = (vectorY * vectorZ) / (vectorZ*vectorZ);
-	//	vectorY -= h * vectorZ;
-	//	Vector3D vectorX = vectorY.CrossProduct(vectorZ);
-	//	A(0, 0) = vectorX[0];
-	//	A(1, 0) = vectorX[1];
-	//	A(2, 0) = vectorX[2];
-	//	A(0, 1) = vectorY[0];
-	//	A(1, 1) = vectorY[1];
-	//	A(2, 1) = vectorY[2];
-	//	A(0, 2) = vectorZ[0];
-	//	A(1, 2) = vectorZ[1];
-	//	A(2, 2) = vectorZ[2];
-	//}
 
 	//numerical integration in interval [-1,1]; int(1) = 2
 	static const Index maxIntegrationPoints = 5; //adjust this value, if number of Gauss points is increased!
+	//Order1 can integrate first order polynomial exactly!
 	static const SlimVector<1> gaussRuleOrder1Points({ 0. });
 	static const SlimVector<1> gaussRuleOrder1Weights({ 2. });
 	static const SlimVector<2> gaussRuleOrder3Points({ -sqrt(1. / 3.), sqrt(1. / 3.) });
@@ -309,12 +290,12 @@ namespace EXUmath {
 	static const SlimVector<5> gaussRuleOrder9Points({ -0.906179845938664, -0.5384693101056831, 0., 0.5384693101056831, 0.906179845938664 });
 	static const SlimVector<5> gaussRuleOrder9Weights({ 0.23692688505618914, 0.47862867049936636, 0.5688888888888889, 0.47862867049936636, 0.23692688505618914 });
 
-	static const SlimVector<2> lobattoRuleOrder2Points({ -1., 1.});
-	static const SlimVector<2> lobattoRuleOrder2Weights({ 1., 1.});
-	static const SlimVector<3> lobattoRuleOrder4Points({ -1., 0., 1.});
-	static const SlimVector<3> lobattoRuleOrder4Weights({ 1./3., 4./3., 1./3.});
-	static const SlimVector<4> lobattoRuleOrder6Points({ -1., -sqrt(1./5.), sqrt(1./5.), 1.});
-	static const SlimVector<4> lobattoRuleOrder6Weights({ 1./6., 5./6., 5./6., 1./6.});
+	static const SlimVector<2> lobattoRuleOrder1Points({ -1., 1.});
+	static const SlimVector<2> lobattoRuleOrder1Weights({ 1., 1.});
+	static const SlimVector<3> lobattoRuleOrder3Points({ -1., 0., 1.});
+	static const SlimVector<3> lobattoRuleOrder3Weights({ 1./3., 4./3., 1./3.});
+	static const SlimVector<4> lobattoRuleOrder5Points({ -1., -sqrt(1./5.), sqrt(1./5.), 1.});
+	static const SlimVector<4> lobattoRuleOrder5Weights({ 1./6., 5./6., 5./6., 1./6.});
 
 	template<class TVector>
 	void SetGaussIntegrationRule(Index order, TVector& integrationPoints, TVector& integrationWeights)
@@ -336,9 +317,9 @@ namespace EXUmath {
 	{
 		switch (order)
 		{
-		case 2: integrationPoints.CopyFrom(lobattoRuleOrder2Points); integrationWeights.CopyFrom(lobattoRuleOrder2Weights); break;
-		case 4: integrationPoints.CopyFrom(lobattoRuleOrder4Points); integrationWeights.CopyFrom(lobattoRuleOrder4Weights); break;
-		case 6: integrationPoints.CopyFrom(lobattoRuleOrder6Points); integrationWeights.CopyFrom(lobattoRuleOrder6Weights); break;
+		case 1: integrationPoints.CopyFrom(lobattoRuleOrder1Points); integrationWeights.CopyFrom(lobattoRuleOrder1Weights); break;
+		case 3: integrationPoints.CopyFrom(lobattoRuleOrder3Points); integrationWeights.CopyFrom(lobattoRuleOrder3Weights); break;
+		case 5: integrationPoints.CopyFrom(lobattoRuleOrder5Points); integrationWeights.CopyFrom(lobattoRuleOrder5Weights); break;
 		default:
 			CHECKandTHROWstring("SetLobattoIntegrationRule: invalid order");
 		}

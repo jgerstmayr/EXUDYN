@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-08-23  12:24:34 (last modified)
+* @date         2022-11-17  23:40:43 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -34,6 +34,11 @@ public: // AUTO:
     Real physicsBendingStiffness;                 //!< AUTO:  [SI:Nm\f$^2\f$] bending stiffness of beam; the bending moment is \f$m = EI (\kappa - \kappa_0)\f$, in which \f$\kappa\f$ is the material measure of curvature
     Real physicsAxialStiffness;                   //!< AUTO:  [SI:N] axial stiffness of beam; the axial force is \f$f_{ax} = EA (\varepsilon -\varepsilon_0)\f$, in which \f$\varepsilon\f$ is the axial strain
     Real physicsShearStiffness;                   //!< AUTO:  [SI:N] effective shear stiffness of beam, including stiffness correction
+    Real physicsBendingDamping;                   //!< AUTO:  [SI:Nm\f$^2\f$/s] viscous damping of bending deformation; the additional virtual work due to damping is \f$\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx\f$
+    Real physicsAxialDamping;                     //!< AUTO:  [SI:N/s] viscous damping of axial deformation
+    Real physicsShearDamping;                     //!< AUTO:  [SI:N/s] viscous damping of shear deformation
+    Real physicsReferenceCurvature;               //!< AUTO:  [SI:1/m] reference curvature of beam (pre-deformation) of beam
+    bool includeReferenceRotations;               //!< AUTO: if True, the computation of bending strains considers reference rotations in nodes; otherwise, the strains are relative to reference values (which allows to consider pre-curved geometries naturally)
     //! AUTO: default constructor with parameter initialization
     CObjectBeamGeometricallyExact2DParameters()
     {
@@ -44,13 +49,18 @@ public: // AUTO:
         physicsBendingStiffness = 0.;
         physicsAxialStiffness = 0.;
         physicsShearStiffness = 0.;
+        physicsBendingDamping = 0.;
+        physicsAxialDamping = 0.;
+        physicsShearDamping = 0.;
+        physicsReferenceCurvature = 0.;
+        includeReferenceRotations = false;
     };
 };
 
 
 /** ***********************************************************************************************
 * @class        CObjectBeamGeometricallyExact2D
-* @brief        A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[-L/2, L/2]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}).
+* @brief        A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D; FURTHER TESTS REQUIRED. Note that the orientation of the nodes need to follow the cross section orientation; e.g., an angle 0 represents the cross section pointing in \f$y\f$-direction, while and angle \f$\pi\f$ means that the cross section points in negative \f$x\f$-direction and the axis shows in positive \f$y\f$-direction. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[-L/2, L/2]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -127,7 +137,7 @@ public: // AUTO:
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override
     {
-        release_assert(localIndex <= 1);
+        CHECKandTHROW(localIndex <= 1, __EXUDYN_invalid_local_node1);
         return parameters.nodeNumbers[localIndex];
     }
 
@@ -174,7 +184,7 @@ public: // AUTO:
     Matrix2D GetRotationMatrix2D(Real theta) const;
 
     //! AUTO:  compute strains and variation of strains for given interpolated derivatives of displacement u1_x, u2_x, angle theta (incl. reference config.!), shape vector SV and shape vector derivatives SV_x and slope vector in reference configuration
-    void ComputeGeneralizedStrains(Real u1_x, Real u2_x, Real theta, const Vector2D& SV, const Vector2D& SV_x, const Vector2D& referenceSlopeVector, Real& gamma1, Real& gamma2, CSVector6D& deltaGamma1, CSVector6D& deltaGamma2) const;
+    void ComputeGeneralizedStrains(Real x, Real& theta, Vector2D& SV, Vector2D& SV_x, Real& gamma1, Real& gamma2, Real& theta_x, Real& gamma1_t, Real& gamma2_t, Real& theta_xt, CSVector6D& deltaGamma1, CSVector6D& deltaGamma2) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

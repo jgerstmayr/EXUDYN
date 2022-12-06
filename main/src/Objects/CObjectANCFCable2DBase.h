@@ -36,7 +36,7 @@ public:
 
 	//! access function to parameters; must be overwritten
 	virtual void GetMaterialParameters(Real& physicsBendingStiffness, Real& physicsAxialStiffness, Real& physicsBendingDamping, Real& physicsAxialDamping,
-		Real& physicsReferenceAxialStrain, Real& physicsReferenceCurvature) const {
+		Real& physicsReferenceAxialStrain, Real& physicsReferenceCurvature, Real& physicsMovingMassFactor) const {
 		CHECKandTHROWcond(false); }
 
 	//! access to parameters.useReducedOrderIntegration of derived class
@@ -233,10 +233,10 @@ public:
 	Vector2D ComputeSlopeVector_xt(Real x, ConfigurationType configuration) const;
 
 	//!  compute time derivative of the axial strain at a certain axial position, for given configuration
-	Real ComputeAxialStrain_t(Real x, ConfigurationType configuration) const;
+	Real ComputeAxialStrain_t(Real x, bool isALE, Real physicsMovingMassFactor, ConfigurationType configuration) const;
 
 	//!  compute time derivative of the (bending) curvature at a certain axial position, for given configuration
-	Real ComputeCurvature_t(Real x, ConfigurationType configuration) const;
+	Real ComputeCurvature_t(Real x, bool isALE, Real physicsMovingMassFactor, ConfigurationType configuration) const;
 
 };
 

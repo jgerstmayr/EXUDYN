@@ -259,11 +259,6 @@ public:
 	//! compute system right-hand-side (RHS) of algebraic equations (AE) to vector 'AERhs'
 	void ComputeAlgebraicEquations(TemporaryComputationDataArray& tempArray, Vector& algebraicEquations, bool velocityLevel = false);
 
-	//directly called via cSystemData
-	////! compute MarkerDataStructure for a given connector (using its markers); used in ComputeSystemODE2RHS, GetOutputVariableConnector, etc.
-	//void ComputeMarkerDataStructure(const CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const
-	//{ cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, markerDataStructure); }
-
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Jacobians
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

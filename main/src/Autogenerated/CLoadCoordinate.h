@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-03-01  20:14:22 (last modified)
+* @date         2022-12-01  16:28:59 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,8 +30,8 @@ class CLoadCoordinateParameters // AUTO:
 {
 public: // AUTO: 
     Index markerNumber;                           //!< AUTO: marker's number to which load is applied
-    Real load;                                    //!< AUTO: scalar load [SI:N]
-    std::function<Real(const MainSystem&,Real,Real)> loadUserFunction;//!< AUTO: A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!
+    Real load;                                    //!< AUTO: scalar load [SI:N]; in case of a user function, this value is ignored
+    std::function<Real(const MainSystem&,Real,Real)> loadUserFunction;//!< AUTO: A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector!
     //! AUTO: default constructor with parameter initialization
     CLoadCoordinateParameters()
     {

@@ -92,6 +92,10 @@ public:
 	virtual void UpdateDataCoordinatesLieGroupIntegrator(CSystem& computationalSystem, const ArrayIndex& lieGroupNodes, 
 		const ResizableVectorParallel& currentODE2, const ResizableVectorParallel& incrementODE2, ResizableVectorParallel& compositionODE2);
 
+	//! apply composition rule to currentODE2 o incrementODE2 for given set of nodes
+	virtual void CompositionRuleCoordinatesLieGroupIntegrator(CSystem& computationalSystem, const ArrayIndex& lieGroupNodes, 
+		const ResizableVectorParallel& currentODE2, const ResizableVectorParallel& incrementODE2, ResizableVectorParallel& compositionODE2);
+
 	//! set Lie group data coordinates 0, set Lie group previous Newton increment 0
 	virtual void ResetCoordinatesLieGroupNodes(CSystem& computationalSystem, ResizableVectorParallel& solutionODE2, ResizableVectorParallel& previousNewtonSolution);
 

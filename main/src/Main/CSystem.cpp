@@ -190,15 +190,15 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 		if ((Index)item->GetCObject()->GetType() & (Index)CObjectType::Connector)
 		{
 			CObjectConnector* connector = (CObjectConnector*)item->GetCObject();
-			if (connector->GetMarkerNumbers().NumberOfItems() != 2)
+			if (connector->RequestedNumberOfMarkers() != 0 && connector->GetMarkerNumbers().NumberOfItems() != connector->RequestedNumberOfMarkers())
 			{
 				PyError(STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() + 
-					" must have two markers, but got " + EXUstd::ToString(connector->GetMarkerNumbers().NumberOfItems()) + " markers");
+					" must have " + EXUstd::ToString(connector->RequestedNumberOfMarkers()) + " markers, but got " + EXUstd::ToString(connector->GetMarkerNumbers().NumberOfItems()) + " markers");
 				systemIsInteger = false;
 			}
 			else
 			{
-				if (connector->GetMarkerNumbers().NumberOfItems() == 2) //for future cases
+				if (connector->GetMarkerNumbers().NumberOfItems() == 2) //check only performed for 2 markers; otherwise, user needs to take care of that!
 				{
 					if (connector->GetMarkerNumbers()[0] == connector->GetMarkerNumbers()[1])
 					{
@@ -2058,26 +2058,6 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationDataArray& tempArray
 	}
 
 }
-
-//void CSystem::ComputeMarkerDataStructure(const CObjectConnector* connector, bool computeJacobian, MarkerDataStructure& markerDataStructure) const
-//{
-//	const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
-//	Index nMarkers = connector->GetMarkerNumbers().NumberOfItems();
-//	if (nMarkers != 2) { CHECKandTHROWstring("CSystem::ComputeMarkerDataStructure(...): Number of connector markers != 2 not implemented"); }
-//	markerDataStructure.SetTime(cSystemData.GetCData().currentState.GetTime());
-//
-//	if ((Index)connector->GetType() & (Index)CObjectType::Constraint)
-//	{
-//		const CObjectConstraint* constraint = (CObjectConstraint*)connector;
-//		Index AEindex = constraint->GetGlobalAECoordinateIndex();
-//		Index nAEcoords = constraint->GetAlgebraicEquationsSize();
-//		markerDataStructure.GetLagrangeMultipliers().LinkDataTo(cSystemData.GetCData().currentState.AECoords, AEindex, nAEcoords);
-//	}
-//	for (Index k = 0; k < 2; k++)
-//	{
-//		cSystemData.GetCMarkers()[markerNumbers[k]]->ComputeMarkerData(cSystemData, computeJacobian, markerDataStructure.GetMarkerData(k));
-//	}
-//}
 
 //! PostNewtonStep: do this for every object (connector), which has a PostNewtonStep ->discontinuous iteration e.g. to resolve contact, friction or plasticity
 //! recommendedStepSize must be initialized with -1 or previous recommendation: [< 0: no recommendation, 0: use minimum step size, >0: use specific step size, if no smaller size requested by other reason]

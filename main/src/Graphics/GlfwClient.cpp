@@ -1159,8 +1159,10 @@ void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mou
 	glPushMatrix();
 	glLoadIdentity();
 
-	glTranslated(-state->centerPoint[0], -state->centerPoint[1], 0.f);
-	glMultMatrixf(state->modelRotation.GetDataPointer());
+	SetModelRotationTranslation();
+
+	//glTranslated(-state->centerPoint[0], -state->centerPoint[1], 0.f);
+	//glMultMatrixf(state->modelRotation.GetDataPointer());
 	//++++++++++++++++++++++++++++++++++++++++
 
 	//add one name in hierarchie and then draw scene with names
@@ -1734,6 +1736,64 @@ void GlfwRenderer::SetProjection(int width, int height, float ratio, float& zoom
 	}
 }
 
+//! set model view rotation and translation, unified for Render and mouse select
+void GlfwRenderer::SetModelRotationTranslation()
+{
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//model rotation and translation, include rotation center point
+	//Float16& A = state->modelRotation;
+	Float16 A(state->modelRotation); //copy, do not update model rotation, which is still modifiable
+	Matrix3DF rotationMV(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
+	Float3 translationMV = state->rotationCenterPoint * rotationMV + state->centerPoint;
+	//Float3 translationMV = state->centerPoint;// *rotationMV;
+
+	//update center point if tracked by marker
+	if (visSettings->interactive.trackMarker != -1)
+	{
+		Vector3D markerPosition;
+		Matrix3D markerOrientation;
+		bool hasPosition;
+		bool hasOrientation;
+		basicVisualizationSystemContainer->GetMarkerPositionOrientation(visSettings->interactive.trackMarker,
+			visSettings->interactive.trackMarkerMbsNumber, markerPosition, markerOrientation, hasPosition, hasOrientation);
+
+
+		if (hasOrientation && visSettings->interactive.trackMarkerOrientation.SumAbs() == 3.f)
+		{ //track orientation as well!
+			Matrix3DF markerOrientation3DF;
+			markerOrientation3DF.CopyFrom(markerOrientation);
+			rotationMV = markerOrientation3DF * rotationMV; //superimposed initial rotation
+
+			//map rotation matrix to part of 16 components in A
+			A[0] = rotationMV(0, 0);
+			A[1] = rotationMV(0, 1);
+			A[2] = rotationMV(0, 2);
+			A[4] = rotationMV(1, 0);
+			A[5] = rotationMV(1, 1);
+			A[6] = rotationMV(1, 2);
+			A[8] = rotationMV(2, 0);
+			A[9] = rotationMV(2, 1);
+			A[10] = rotationMV(2, 2);
+		}
+		if (hasPosition)
+		{  //track position
+			markerPosition[0] *= (Real)visSettings->interactive.trackMarkerPosition[0];
+			markerPosition[1] *= (Real)visSettings->interactive.trackMarkerPosition[1];
+			markerPosition[2] *= (Real)visSettings->interactive.trackMarkerPosition[2];
+
+			Float3 markerPosition3DF;
+			markerPosition3DF.CopyFrom(markerPosition);
+			translationMV += markerPosition3DF * rotationMV;
+		}
+
+	}
+
+	glTranslatef(-translationMV[0], -translationMV[1], 0.f);
+
+	//glMultMatrixf(state->modelRotation.GetDataPointer()); //OLD
+	glMultMatrixf(A.GetDataPointer());
+}
+
 void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, because of glfwSetWindowRefreshCallback
 {
 	if (PyGetRendererCallbackLock()) { return; }
@@ -1779,7 +1839,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	//create special background, looking more professional ...
+	//create special gradient background
 	if (visSettings->general.useGradientBackground)
 	{
 		Float4 bg2 = visSettings->general.backgroundColorBottom;
@@ -1802,70 +1862,8 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	//put here, will be fixed light seen from camera:
 	SetGLLights(); //moved here 2020-12-05; light should now be rotation independent!
 
+	SetModelRotationTranslation();
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//model rotation and translation, include rotation center point
-	//Float16& A = state->modelRotation;
-	Float16 A(state->modelRotation); //copy, do not update model rotation, which is still modifiable
-	Matrix3DF rotationMV(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
-	Float3 translationMV = state->rotationCenterPoint * rotationMV + state->centerPoint;
-	//Float3 translationMV = state->centerPoint;// *rotationMV;
-
-	//update center point if tracked by marker
-	if (visSettings->interactive.trackMarker != -1)
-	{
-		Vector3D markerPosition;
-		Matrix3D markerOrientation;
-		bool hasPosition;
-		bool hasOrientation;
-		basicVisualizationSystemContainer->GetMarkerPositionOrientation(visSettings->interactive.trackMarker,
-			visSettings->interactive.trackMarkerMbsNumber, markerPosition, markerOrientation, hasPosition, hasOrientation);
-
-
-		if (hasOrientation && visSettings->interactive.trackMarkerOrientation.SumAbs() == 3.f)
-		{ //track orientation as well!
-			Matrix3DF markerOrientation3DF;
-			markerOrientation3DF.CopyFrom(markerOrientation);
-			rotationMV = markerOrientation3DF * rotationMV; //superimposed initial rotation
-
-			//map rotation matrix to part of 16 components in A
-			A[0] = rotationMV(0, 0);
-			A[1] = rotationMV(0, 1);
-			A[2] = rotationMV(0, 2);
-			A[4] = rotationMV(1, 0);
-			A[5] = rotationMV(1, 1);
-			A[6] = rotationMV(1, 2);
-			A[8] = rotationMV(2, 0);
-			A[9] = rotationMV(2, 1);
-			A[10]= rotationMV(2, 2);
-		}
-		if (hasPosition)
-		{  //track position
-			markerPosition[0] *= (Real)visSettings->interactive.trackMarkerPosition[0];
-			markerPosition[1] *= (Real)visSettings->interactive.trackMarkerPosition[1];
-			markerPosition[2] *= (Real)visSettings->interactive.trackMarkerPosition[2];
-
-			Float3 markerPosition3DF;
-			markerPosition3DF.CopyFrom(markerPosition);
-			translationMV += markerPosition3DF * rotationMV;
-		}
-
-	}
-
-	glTranslatef(-translationMV[0], -translationMV[1], 0.f);
-
-
-	//glMultMatrixf(state->modelRotation.GetDataPointer());
-	glMultMatrixf(A.GetDataPointer());
-
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-	//glRotatef(state->rotations[2], 0.f, 0.f, 1.f);//((float)glfwGetTime() * 50.f, 0.f, 0.f, 1.f);
-	//glRotatef(state->rotations[1], 0.f, 1.f, 0.f);
-	//glRotatef(state->rotations[0], 1.f, 0.f, 0.f);
-
-	//put here, will rotate with model-view:
-	//SetGLLights(); 
 
 	RenderGraphicsData();
 

@@ -1218,7 +1218,7 @@ class ObjectALEANCFCable2D:
 ALECable2D = ObjectALEANCFCable2D
 VALECable2D = VObjectALEANCFCable2D
 
-class VObjectANCFBeam3D:
+class VObjectANCFBeam:
     def __init__(self, show = True, sectionGeometry = exudyn.BeamSectionGeometry(), color = [-1.,-1.,-1.,-1.]):
         self.show = show
         self.sectionGeometry = sectionGeometry
@@ -1231,18 +1231,18 @@ class VObjectANCFBeam3D:
 
     def __repr__(self):
         return str(dict(self))
-class ObjectANCFBeam3D:
+class ObjectANCFBeam:
     def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], physicsLength = 0., sectionData = exudyn.BeamSection(), crossSectionPenaltyFactor = [1.,1.,1.], testBeamRectangularSize = [-1.,-1.], visualization = {'show': True, 'sectionGeometry': exudyn.BeamSectionGeometry(), 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.nodeNumbers = nodeNumbers
-        self.physicsLength = CheckForValidPReal(physicsLength,"physicsLength","ObjectANCFBeam3D")
+        self.physicsLength = CheckForValidPReal(physicsLength,"physicsLength","ObjectANCFBeam")
         self.sectionData = sectionData
         self.crossSectionPenaltyFactor = crossSectionPenaltyFactor
         self.testBeamRectangularSize = testBeamRectangularSize
         self.visualization = visualization
 
     def __iter__(self):
-        yield 'objectType', 'ANCFBeam3D'
+        yield 'objectType', 'ANCFBeam'
         yield 'name', self.name
         yield 'nodeNumbers', self.nodeNumbers
         yield 'physicsLength', self.physicsLength
@@ -1256,8 +1256,8 @@ class ObjectANCFBeam3D:
     def __repr__(self):
         return str(dict(self))
 #add typedef for short usage:
-Beam3D = ObjectANCFBeam3D
-VBeam3D = VObjectANCFBeam3D
+ANCFBeam = ObjectANCFBeam
+VANCFBeam = VObjectANCFBeam
 
 class VObjectBeamGeometricallyExact2D:
     def __init__(self, show = True, drawHeight = 0., color = [-1.,-1.,-1.,-1.]):
@@ -1273,7 +1273,7 @@ class VObjectBeamGeometricallyExact2D:
     def __repr__(self):
         return str(dict(self))
 class ObjectBeamGeometricallyExact2D:
-    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], physicsLength = 0., physicsMassPerLength = 0., physicsCrossSectionInertia = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsShearStiffness = 0., visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], physicsLength = 0., physicsMassPerLength = 0., physicsCrossSectionInertia = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsShearStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsShearDamping = 0., physicsReferenceCurvature = 0., includeReferenceRotations = False, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.nodeNumbers = nodeNumbers
         self.physicsLength = CheckForValidUReal(physicsLength,"physicsLength","ObjectBeamGeometricallyExact2D")
@@ -1282,6 +1282,11 @@ class ObjectBeamGeometricallyExact2D:
         self.physicsBendingStiffness = CheckForValidUReal(physicsBendingStiffness,"physicsBendingStiffness","ObjectBeamGeometricallyExact2D")
         self.physicsAxialStiffness = CheckForValidUReal(physicsAxialStiffness,"physicsAxialStiffness","ObjectBeamGeometricallyExact2D")
         self.physicsShearStiffness = CheckForValidUReal(physicsShearStiffness,"physicsShearStiffness","ObjectBeamGeometricallyExact2D")
+        self.physicsBendingDamping = CheckForValidUReal(physicsBendingDamping,"physicsBendingDamping","ObjectBeamGeometricallyExact2D")
+        self.physicsAxialDamping = CheckForValidUReal(physicsAxialDamping,"physicsAxialDamping","ObjectBeamGeometricallyExact2D")
+        self.physicsShearDamping = CheckForValidUReal(physicsShearDamping,"physicsShearDamping","ObjectBeamGeometricallyExact2D")
+        self.physicsReferenceCurvature = physicsReferenceCurvature
+        self.includeReferenceRotations = includeReferenceRotations
         self.visualization = visualization
 
     def __iter__(self):
@@ -1294,6 +1299,11 @@ class ObjectBeamGeometricallyExact2D:
         yield 'physicsBendingStiffness', self.physicsBendingStiffness
         yield 'physicsAxialStiffness', self.physicsAxialStiffness
         yield 'physicsShearStiffness', self.physicsShearStiffness
+        yield 'physicsBendingDamping', self.physicsBendingDamping
+        yield 'physicsAxialDamping', self.physicsAxialDamping
+        yield 'physicsShearDamping', self.physicsShearDamping
+        yield 'physicsReferenceCurvature', self.physicsReferenceCurvature
+        yield 'includeReferenceRotations', self.includeReferenceRotations
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawHeight', dict(self.visualization)["drawHeight"]
         yield 'Vcolor', dict(self.visualization)["color"]
@@ -1304,7 +1314,7 @@ class ObjectBeamGeometricallyExact2D:
 Beam2D = ObjectBeamGeometricallyExact2D
 VBeam2D = VObjectBeamGeometricallyExact2D
 
-class VObjectBeamGeometricallyExact3D:
+class VObjectBeamGeometricallyExact:
     def __init__(self, show = True, sectionGeometry = exudyn.BeamSectionGeometry(), color = [-1.,-1.,-1.,-1.]):
         self.show = show
         self.sectionGeometry = sectionGeometry
@@ -1317,16 +1327,16 @@ class VObjectBeamGeometricallyExact3D:
 
     def __repr__(self):
         return str(dict(self))
-class ObjectBeamGeometricallyExact3D:
+class ObjectBeamGeometricallyExact:
     def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], physicsLength = 0., sectionData = exudyn.BeamSection(), visualization = {'show': True, 'sectionGeometry': exudyn.BeamSectionGeometry(), 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.nodeNumbers = nodeNumbers
-        self.physicsLength = CheckForValidPReal(physicsLength,"physicsLength","ObjectBeamGeometricallyExact3D")
+        self.physicsLength = CheckForValidPReal(physicsLength,"physicsLength","ObjectBeamGeometricallyExact")
         self.sectionData = sectionData
         self.visualization = visualization
 
     def __iter__(self):
-        yield 'objectType', 'BeamGeometricallyExact3D'
+        yield 'objectType', 'BeamGeometricallyExact'
         yield 'name', self.name
         yield 'nodeNumbers', self.nodeNumbers
         yield 'physicsLength', self.physicsLength
@@ -1338,8 +1348,8 @@ class ObjectBeamGeometricallyExact3D:
     def __repr__(self):
         return str(dict(self))
 #add typedef for short usage:
-Beam3D = ObjectBeamGeometricallyExact3D
-VBeam3D = VObjectBeamGeometricallyExact3D
+Beam3D = ObjectBeamGeometricallyExact
+VBeam3D = VObjectBeamGeometricallyExact
 
 class VObjectConnectorSpringDamper:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -1832,6 +1842,59 @@ class ObjectConnectorHydraulicActuatorSimple:
 HydraulicActuatorSimple = ObjectConnectorHydraulicActuatorSimple
 VHydraulicActuatorSimple = VObjectConnectorHydraulicActuatorSimple
 
+class VObjectConnectorReevingSystemSprings:
+    def __init__(self, show = True, ropeRadius = 0.001, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.ropeRadius = ropeRadius
+        self.color = color
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'ropeRadius', self.ropeRadius
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+class ObjectConnectorReevingSystemSprings:
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], hasCoordinateMarkers = False, coordinateFactors = [1,1], stiffnessPerLength = 0., dampingPerLength = 0., dampingTorsional = 0., dampingShear = 0., referenceLength = 0., sheavesAxes = [], sheavesRadii = [], activeConnector = True, visualization = {'show': True, 'ropeRadius': 0.001, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = markerNumbers
+        self.hasCoordinateMarkers = hasCoordinateMarkers
+        self.coordinateFactors = coordinateFactors
+        self.stiffnessPerLength = CheckForValidUReal(stiffnessPerLength,"stiffnessPerLength","ObjectConnectorReevingSystemSprings")
+        self.dampingPerLength = CheckForValidUReal(dampingPerLength,"dampingPerLength","ObjectConnectorReevingSystemSprings")
+        self.dampingTorsional = CheckForValidUReal(dampingTorsional,"dampingTorsional","ObjectConnectorReevingSystemSprings")
+        self.dampingShear = CheckForValidUReal(dampingShear,"dampingShear","ObjectConnectorReevingSystemSprings")
+        self.referenceLength = referenceLength
+        self.sheavesAxes = sheavesAxes
+        self.sheavesRadii = sheavesRadii
+        self.activeConnector = activeConnector
+        self.visualization = visualization
+
+    def __iter__(self):
+        yield 'objectType', 'ConnectorReevingSystemSprings'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'hasCoordinateMarkers', self.hasCoordinateMarkers
+        yield 'coordinateFactors', self.coordinateFactors
+        yield 'stiffnessPerLength', self.stiffnessPerLength
+        yield 'dampingPerLength', self.dampingPerLength
+        yield 'dampingTorsional', self.dampingTorsional
+        yield 'dampingShear', self.dampingShear
+        yield 'referenceLength', self.referenceLength
+        yield 'sheavesAxes', self.sheavesAxes
+        yield 'sheavesRadii', self.sheavesRadii
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VropeRadius', dict(self.visualization)["ropeRadius"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+#add typedef for short usage:
+ReevingSystemSprings = ObjectConnectorReevingSystemSprings
+VReevingSystemSprings = VObjectConnectorReevingSystemSprings
+
 class VObjectConnectorDistance:
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
         self.show = show
@@ -1976,7 +2039,7 @@ class VObjectConnectorRollingDiscPenalty:
     def __repr__(self):
         return str(dict(self))
 class ObjectConnectorRollingDiscPenalty:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), discRadius = 0, discAxis = [1,0,0], planeNormal = [0,0,1], dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., rollingFrictionViscous = 0., activeConnector = True, visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), discRadius = 0, discAxis = [1,0,0], planeNormal = [0,0,1], dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., viscousFriction = [0,0], rollingFrictionViscous = 0., useLinearProportionalZone = False, activeConnector = True, visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.nodeNumber = nodeNumber
@@ -1988,7 +2051,9 @@ class ObjectConnectorRollingDiscPenalty:
         self.contactDamping = contactDamping
         self.dryFriction = dryFriction
         self.dryFrictionProportionalZone = dryFrictionProportionalZone
+        self.viscousFriction = viscousFriction
         self.rollingFrictionViscous = rollingFrictionViscous
+        self.useLinearProportionalZone = useLinearProportionalZone
         self.activeConnector = activeConnector
         self.visualization = visualization
 
@@ -2005,7 +2070,9 @@ class ObjectConnectorRollingDiscPenalty:
         yield 'contactDamping', self.contactDamping
         yield 'dryFriction', self.dryFriction
         yield 'dryFrictionProportionalZone', self.dryFrictionProportionalZone
+        yield 'viscousFriction', self.viscousFriction
         yield 'rollingFrictionViscous', self.rollingFrictionViscous
+        yield 'useLinearProportionalZone', self.useLinearProportionalZone
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdiscWidth', dict(self.visualization)["discWidth"]

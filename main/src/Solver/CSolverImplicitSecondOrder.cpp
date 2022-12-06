@@ -265,6 +265,12 @@ void CSolverImplicitSecondOrderTimeInt::PreInitializeSolverSpecific(CSystem& com
 {
 	const TimeIntegrationSettings& timeint = simulationSettings.timeIntegration;
 
+	if (simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints &&
+		!simulationSettings.timeIntegration.generalizedAlpha.useNewmark)
+	{
+		PyError("SolveDynamic:GeneralizedAlpha: useIndex2Constraints=True may only be used if useNewmark=True");
+	}
+
 	hasConstantMassMatrix = false;
 
 	//do solver-specific tasks and initialization:
@@ -385,7 +391,7 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 			if (simulationSettings.linearSolverType == LinearSolverType::EigenSparse &&
 				simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator)
 			{
-				PyError("SolverGeneralizedAlpha: generalizedAlpha.lieGroupAddTangentOperator may not be set True in case of EigenSparse solver", file.solverFile);
+				PyError("SolveDynamic:GeneralizedAlpha: generalizedAlpha.lieGroupAddTangentOperator may not be set True in case of EigenSparse solver", file.solverFile);
 			}
 
 			//initialize for Jacobian computation
@@ -483,6 +489,36 @@ Real CSolverImplicitSecondOrderTimeInt::ComputeNewtonResidual(CSystem& computati
 
 #ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
 //! apply composition rule to currentODE2 o incrementODE2 for given set of nodes
+//! reference configuration needs to be taken into account in node.CompositionRule !!!
+void CSolverImplicitSecondOrderTimeInt::CompositionRuleCoordinatesLieGroupIntegrator(CSystem& computationalSystem, const ArrayIndex& lieGroupNodes,
+	const ResizableVectorParallel& currentODE2, const ResizableVectorParallel& incrementODE2, ResizableVectorParallel& compositionODE2)
+{
+	//updates for Lie group nodes/coordinates
+	for (Index k : lieGroupNodes)
+	{
+		const CNodeRigidBody& node = (const CNodeRigidBody&)(computationalSystem.GetSystemData().GetCNode(k));
+		Index nPos = node.GetNumberOfDisplacementCoordinates(); //should be 3
+		Index nRot = node.GetNumberOfRotationCoordinates();     //should be 3
+		Index off = node.GetGlobalODE2CoordinateIndex();
+
+		// current state (vec0)
+		LinkedDataVector currentPosition(currentODE2, off, nPos);
+		LinkedDataVector currentOrientation(currentODE2, off + nPos, nRot);
+
+		LinkedDataVector newPosition(compositionODE2, off, nPos);
+		LinkedDataVector newOrientation(compositionODE2, off + nPos, nRot);
+		Vector6D incrementalMotion;
+		incrementalMotion.CopyFrom(LinkedDataVector(incrementODE2, off, nPos + nRot));
+
+		// update Lie group node
+		node.CompositionRule(currentPosition, currentOrientation, incrementalMotion, newPosition, newOrientation); //Delta q in Arnold/Bruls is (-1)*Delta q here	
+	}
+}
+
+
+//! apply composition rule to currentODE2 o incrementODE2 for given set of nodes
+//MISSING reference coordinates; ONLY WORKS if only lie group data nodes!!!
+//DELETE!
 void CSolverImplicitSecondOrderTimeInt::UpdateDataCoordinatesLieGroupIntegrator(CSystem& computationalSystem, const ArrayIndex& lieGroupNodes,
 	const ResizableVectorParallel& currentODE2, const ResizableVectorParallel& incrementODE2, ResizableVectorParallel& compositionODE2)
 {
@@ -708,11 +744,12 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 	if (useLieGroupIntegration)
 	{
 		//update data coordinates with composition rule:
+		//this won't work in general, must be different functions for data coordinates and for ODE2 coordinates!
 		UpdateDataCoordinatesLieGroupIntegrator(computationalSystem, lieGroupDataNodes,
-			computationalSystem.GetSystemData().GetCData().startOfStepState.dataCoords,
+			computationalSystem.GetSystemData().GetCData().startOfStepState.dataCoords, 
 			solutionODE2, computationalSystem.GetSystemData().GetCData().currentState.dataCoords);
-		//update ODE2 coordinates with composition rule:
-		UpdateDataCoordinatesLieGroupIntegrator(computationalSystem, lieGroupDirectUpdateNodes,
+		//update ODE2 coordinates with composition rule; reference configuration is considered in node.ComputationRule
+		CompositionRuleCoordinatesLieGroupIntegrator(computationalSystem, lieGroupDirectUpdateNodes,
 			computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords,
 			solutionODE2, solutionODE2);
 	}

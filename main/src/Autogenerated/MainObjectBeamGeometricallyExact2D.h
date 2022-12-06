@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-21  19:28:51 (last modified)
+* @date         2022-11-17  23:40:43 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectBeamGeometricallyExact2D
-* @brief        A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[-L/2, L/2]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}).
+* @brief        A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D; FURTHER TESTS REQUIRED. Note that the orientation of the nodes need to follow the cross section orientation; e.g., an angle 0 represents the cross section pointing in \f$y\f$-direction, while and angle \f$\pi\f$ means that the cross section points in negative \f$x\f$-direction and the axis shows in positive \f$y\f$-direction. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[-L/2, L/2]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -118,6 +118,11 @@ public: // AUTO:
         cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingStiffness = py::cast<Real>(d["physicsBendingStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialStiffness = py::cast<Real>(d["physicsAxialStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectBeamGeometricallyExact2D->GetParameters().physicsShearStiffness = py::cast<Real>(d["physicsShearStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingDamping = py::cast<Real>(d["physicsBendingDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialDamping = py::cast<Real>(d["physicsAxialDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectBeamGeometricallyExact2D->GetParameters().physicsShearDamping = py::cast<Real>(d["physicsShearDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectBeamGeometricallyExact2D->GetParameters().physicsReferenceCurvature = py::cast<Real>(d["physicsReferenceCurvature"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectBeamGeometricallyExact2D->GetParameters().includeReferenceRotations = py::cast<bool>(d["includeReferenceRotations"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectBeamGeometricallyExact2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdrawHeight")) { visualizationObjectBeamGeometricallyExact2D->GetDrawHeight() = py::cast<float>(d["VdrawHeight"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -137,6 +142,11 @@ public: // AUTO:
         d["physicsBendingStiffness"] = (Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingStiffness; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsAxialStiffness"] = (Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialStiffness; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsShearStiffness"] = (Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsShearStiffness; //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsBendingDamping"] = (Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingDamping; //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsAxialDamping"] = (Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialDamping; //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsShearDamping"] = (Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsShearDamping; //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsReferenceCurvature"] = (Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsReferenceCurvature; //! AUTO: cast variables into python (not needed for standard types) 
+        d["includeReferenceRotations"] = (bool)cObjectBeamGeometricallyExact2D->GetParameters().includeReferenceRotations; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectBeamGeometricallyExact2D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdrawHeight"] = (float)visualizationObjectBeamGeometricallyExact2D->GetDrawHeight(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -155,6 +165,11 @@ public: // AUTO:
         else if (parameterName.compare("physicsBendingStiffness") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingStiffness);} //! AUTO: get parameter
         else if (parameterName.compare("physicsAxialStiffness") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialStiffness);} //! AUTO: get parameter
         else if (parameterName.compare("physicsShearStiffness") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsShearStiffness);} //! AUTO: get parameter
+        else if (parameterName.compare("physicsBendingDamping") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingDamping);} //! AUTO: get parameter
+        else if (parameterName.compare("physicsAxialDamping") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialDamping);} //! AUTO: get parameter
+        else if (parameterName.compare("physicsShearDamping") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsShearDamping);} //! AUTO: get parameter
+        else if (parameterName.compare("physicsReferenceCurvature") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsReferenceCurvature);} //! AUTO: get parameter
+        else if (parameterName.compare("includeReferenceRotations") == 0) { return py::cast((bool)cObjectBeamGeometricallyExact2D->GetParameters().includeReferenceRotations);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectBeamGeometricallyExact2D->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawHeight") == 0) { return py::cast((float)visualizationObjectBeamGeometricallyExact2D->GetDrawHeight());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectBeamGeometricallyExact2D->GetColor());} //! AUTO: get parameter
@@ -174,6 +189,11 @@ public: // AUTO:
         else if (parameterName.compare("physicsBendingStiffness") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsAxialStiffness") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsShearStiffness") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsShearStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsBendingDamping") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsAxialDamping") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsShearDamping") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsShearDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsReferenceCurvature") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsReferenceCurvature = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("includeReferenceRotations") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().includeReferenceRotations = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectBeamGeometricallyExact2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawHeight") == 0) { visualizationObjectBeamGeometricallyExact2D->GetDrawHeight() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectBeamGeometricallyExact2D->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

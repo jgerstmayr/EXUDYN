@@ -233,7 +233,7 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 	computationalSystem.GetPostProcessData()->SetSolutionMessage(simulationSettings.solutionSettings.solutionInformation);
 
 	//some pre-checks for solver
-	if (!computationalSystem.IsSystemConsistent()) { PyError("SolverGeneralizedAlpha: system is inconsistent and cannot be solved (call Assemble() and check error messages)", file.solverFile); return false; }
+	if (!computationalSystem.IsSystemConsistent()) { PyError("Solver: system is inconsistent and cannot be solved (call Assemble() and check error messages)", file.solverFile); return false; }
 
 	computationalSystem.GetSystemData().GetNumberOfComputationCoordinates(data.nODE2, data.nODE1, data.nAE, data.nData);
 	data.nSys = data.nODE2 + data.nODE1 + data.nAE;
@@ -245,7 +245,7 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 
 	if (data.nSys == 0)
 	{
-		PyError("Solver cannot solve for system size = 0", file.solverFile);
+		PyError("Solver: cannot solve for system size = 0", file.solverFile);
 		return false;
 	}
 
@@ -265,7 +265,7 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 	}
 	else
 	{
-		PyError("CSolverBase::InitializeSolverPreChecks: Unsupported simulationSettings.linearSolverType", file.solverFile);
+		PyError("Solver:InitializeSolverPreChecks: Unsupported simulationSettings.linearSolverType", file.solverFile);
 		data.SetLinearSolverType(LinearSolverType::_None, false);
 		return false;
 	}
@@ -300,7 +300,7 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	//}
 	else
 	{
-		PyError("CSolverBase::InitializeSolverData: Unsupported simulationSettings.linearSolverType", file.solverFile);
+		PyError("Solver:InitializeSolverData: Unsupported simulationSettings.linearSolverType", file.solverFile);
 	}
 
 	//++++++++++++++++++++++++++++++
@@ -355,7 +355,7 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 
 	if (newton.newtonResidualMode != 0 && newton.newtonResidualMode != 1) //check residual mode: 0/1, otherwise not implemented by solvers!
 	{ 
-		PyError("MainSolverBase::InitializeSolverData: NewtonSettings.newtonResidualMode: unsupported mode"); 
+		PyError("Solver:InitializeSolverData: NewtonSettings.newtonResidualMode: unsupported mode"); 
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -29,13 +29,18 @@ Vector2D CObjectConnectorRollingDiscPenalty::ComputeSlipForce(const CObjectConne
 		if (dataSlipVelocity <= parameters.dryFrictionProportionalZone && parameters.dryFrictionProportionalZone != 0.)
 		{
 			Real fact = slipVelocity / parameters.dryFrictionProportionalZone; //in proportional zone, we can use the current slip velocity
-			phi = (2. - fact)*fact;
+			phi = fact;
+			if (!parameters.useLinearProportionalZone)
+			{
+				phi *= (2. - fact);
+			}
 
 			dataSlipDirection = slipDirection; //use current slip direction in this case, gives much better convergence in "sticking" case
 		}
 
 		//tangential contact force vector:
-		Matrix2D frictionMatrix(2, 2, { parameters.dryFriction[0],0,0,parameters.dryFriction[1] });
+		Matrix2D frictionMatrix(2, 2, { parameters.dryFriction[0] + parameters.viscousFriction[0]*slipVelocity,0,0,
+			parameters.dryFriction[1] + parameters.viscousFriction[1] * slipVelocity });
 		slipForce = -(phi * fabs(contactForce) * dataSlipDirection); //negative sign, as slip force acts against slip velocity
 		if (parameters.dryFrictionAngle == 0)
 		{

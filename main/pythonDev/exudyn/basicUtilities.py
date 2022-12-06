@@ -241,20 +241,20 @@ lobattoIntegrationWeights=[[ 1., 1.],
 #**function: compute numerical integration of functionOfX in interval [a,b] using Lobatto integration
 #**input: 
 #  functionOfX: scalar, vector or matrix-valued function with scalar argument (X or other variable)
-#  integrationOrder: even number in \{2,4,6\}; currently maximum order is 6
+#  integrationOrder: odd number in \{1,3,5\}; currently maximum order is 5
 #  a: integration range start 
 #  b: integration range end 
 #**output: (scalar or vectorized) integral value
 def LobattoIntegrate(functionOfX, integrationOrder, a, b):
     cnt = 0
     value = 0*functionOfX(0) #initialize value with correct shape
-    if integrationOrder > 6:
-        raise ValueError("LobattoIntegrate: maximum implemented integration order is 6!")
-    if integrationOrder%2 != 0 or integrationOrder < 2:
-        raise ValueError("LobattoIntegrate: integration order must be even (2,4,6,...) and > 1")
+    if integrationOrder > 5:
+        raise ValueError("LobattoIntegrate: maximum implemented integration order is 5!")
+    if integrationOrder%2 != 1 or integrationOrder < 1:
+        raise ValueError("LobattoIntegrate: integration order must be odd (1,3,5,...) and >= 1")
     
-    points = lobattoIntegrationPoints[int(integrationOrder/2)-1]
-    weights = lobattoIntegrationWeights[int(integrationOrder/2)-1]
+    points = lobattoIntegrationPoints[int(integrationOrder/2)]
+    weights = lobattoIntegrationWeights[int(integrationOrder/2)]
     
     for p in points:
         x = 0.5*(b - a)*p + 0.5*(b + a)

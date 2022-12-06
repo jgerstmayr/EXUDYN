@@ -992,6 +992,34 @@ def GetRigidBodyNode(nodeType,
             
         nodeItem = eii.NodeRigidBodyRotVecLG(referenceCoordinates=list(position) + list(rot0), 
                                          initialVelocities=list(velocity)+list(angularVelocityLocal))
+        
+    elif strNodeType == 'NodeType.LieGroupWithDirectUpdate':
+        if len(rotationParameters) == 0:
+            #raise ValueError('NodeType.RotationRotationVector not implemented!')
+            rot0 = RotationMatrix2RotationVector(rotationMatrix)
+        else:
+            rot0 = rotationParameters
+        
+        rotMatrix = RotationVector2RotationMatrix(rot0) #rotationMatrix needed!
+        angularVelocityLocal = np.dot(rotMatrix.transpose(),angularVelocity)
+            
+        nodeItem = eii.NodeRigidBodyRotVecLG(referenceCoordinates=list(position) + list(rot0), 
+                                         initialVelocities=list(velocity)+list(angularVelocityLocal))  
+        
+    # elif strNodeType == 'NodeType.LieGroupWithDataCoordinates':
+    #     if len(rotationParameters) == 0:
+    #         #raise ValueError('NodeType.RotationRotationVector not implemented!')
+    #         rot0 = RotationMatrix2RotationVector(rotationMatrix)
+    #     else:
+    #         rot0 = rotationParameters
+        
+    #     rotMatrix = RotationVector2RotationMatrix(rot0) #rotationMatrix needed!
+    #     angularVelocityLocal = np.dot(rotMatrix.transpose(),angularVelocity)
+            
+    #     nodeItem = eii.NodeRigidBodyRotVecDataLG(referenceCoordinates=list(position) + list(rot0),
+    #                                                     initialCoordinates=list(position)+list(rot0), #initializes data coordinates
+    #                                                     initialVelocities=list(velocity)+list(angularVelocityLocal))  
+        
     else:
         raise ValueError("GetRigidBodyNode: invalid node type:"+strNodeType)
 

@@ -10,15 +10,143 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.4.14.dev1, 
-  \item last change =  2022-10-20, 
-  \item Number of issues = 1284, 
-  \item Number of resolved issues = 1109 (14 in current version), 
+  \item Exudyn version = 1.4.32.dev1, 
+  \item last change =  2022-12-06, 
+  \item Number of issues = 1302, 
+  \item Number of resolved issues = 1127 (32 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.4.32}:  resolved Issue 1301: {\bf graphicsDataUtilities}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: AddEdgesAndSmoothenNormals fixed to process colors}
+    \item   date resolved: {\bf 2022-12-06 12:37},
+date raised: 2022-12-06 
+  \ei
+  \item {\bf Version 1.4.31}:  resolved Issue 1300: {\bf graphicsDataUtilities}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: GraphicsDataFromPointsAndTrigs extended to accept color per point or 4 RGBA values}
+    \item   date resolved: {\bf 2022-12-06 12:37},
+date raised: 2022-12-06 
+  \ei
+  \item {\bf Version 1.4.30}: {\bf \color{warningRed}  resolved BUG 1299}: {\bf GeneralContact}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: searchTreeBox not computed automatically (must be set manually)}
+    \item {\bf notes: computation of searchtree performed automatically now if no search tree box is specified; output message written in case of verboseMode=1}
+    \item   date resolved: {\bf 2022-12-02 12:51},
+date raised: 2022-12-02 
+  \ei
+  \item {\bf Version 1.4.29}:  resolved Issue 1297: {\bf ConnectorSpringDamper}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: return scalar spring-damper force with OutputVariableType ForceLocal}
+    \item   date resolved: {\bf 2022-12-01 16:31},
+date raised: 2022-12-01 
+  \ei
+  \item {\bf Version 1.4.28}:  resolved Issue 1296: {\bf dynamic solver}
+(check)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add check that useIndex2=True is consistent with useNewmark=True}
+    \item   date resolved: {\bf 2022-11-30 14:12},
+date raised: 2022-11-29 
+  \ei
+  \item {\bf Version 1.4.27}:  resolved Issue 0925: {\bf ReevingSystemSprings}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: create reeving system along points defined by markers, using massless springs and one total length; add rigid body markers for position of sheaves; use coordinate markers for prescribed change of length at end of reeving system}
+    \item {\bf notes: see new ObjectConnectorReevingSystemSprings}
+    \item   date resolved: {\bf 2022-11-19 01:11},
+date raised: 2022-02-03 
+  \ei
+  \item {\bf Version 1.4.26}:  resolved Issue 1295: {\bf BeamGeometricallyExact2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add damping terms for bending, axial and shear deformation}
+    \item   date resolved: {\bf 2022-11-17 15:59},
+date raised: 2022-11-17 
+  \ei
+  \item {\bf Version 1.4.25}:  resolved Issue 1294: {\bf BeamGeometricallyExact2D}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add reference strain/curvature}
+    \item   date resolved: {\bf 2022-11-17 15:59},
+date raised: 2022-11-17 
+  \ei
+  \item {\bf Version 1.4.24}:  resolved Issue 1293: {\bf MarkerDataStructure}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extend for more than 2 MarkerData; adjust caller functions}
+    \item   date resolved: {\bf 2022-11-13 16:53},
+date raised: 2022-11-13 
+  \ei
+  \item {\bf Version 1.4.23}:  resolved Issue 1291: {\bf Lie Group integration}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: CompositionRule in LieGroup nodes does not consider reference position; add reference configuration in composition rule (and subtract afterwards)}
+    \item   date resolved: {\bf 2022-11-09 15:00},
+date raised: 2022-11-09 
+  \ei
+  \item {\bf Version 1.4.22}: {\bf \color{warningRed}  resolved BUG 1289}: {\bf visualizationSettings}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: interactive.trackMarker has wrong type leading to crash when closing visualizationSettings}
+    \item   date resolved: {\bf 2022-11-05 14:15},
+date raised: 2022-11-05 
+  \ei
+  \item {\bf Version 1.4.21}:  resolved Issue 1286: {\bf trackMarker}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: selection of objects wrong / check mouse selection procedure}
+    \item   date resolved: {\bf 2022-11-04 20:46},
+date raised: 2022-11-02 
+  \ei
+  \item {\bf Version 1.4.20}:  resolved Issue 1288: {\bf ConnectorRollingDiscPenalty}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add useLinearProportionalZone which performs better in implicit time integration}
+    \item   date resolved: {\bf 2022-11-04 17:16},
+date raised: 2022-11-04 
+  \ei
+  \item {\bf Version 1.4.19}:  resolved Issue 1287: {\bf ConnectorRollingDiscPenalty}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add viscousFriction, using separate values for local X/Y coordinates}
+    \item   date resolved: {\bf 2022-11-04 17:16},
+date raised: 2022-11-04 
+  \ei
+  \item {\bf Version 1.4.18}:  resolved Issue 1276: {\bf Renderer: marker tracking}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option to track markers in renderer}
+    \item {\bf notes: see visualizationSettings.interactive for several trackMarker... options}
+    \item   date resolved: {\bf 2022-11-02 17:13},
+date raised: 2022-10-12 
+  \ei
+  \item {\bf Version 1.4.17}:  resolved Issue 1279: {\bf release\_assert}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: remove all asserts (in automatic code generation)}
+    \item   date resolved: {\bf 2022-11-02 17:10},
+date raised: 2022-10-13 
+  \ei
+  \item {\bf Version 1.4.16}:  resolved Issue 1285: {\bf Lobatto, LobattoIntegrate}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: order nomenclature is wrong. Lobatto2 needs to be renamed into Lobatto1 and so on}
+    \item   date resolved: {\bf 2022-11-02 16:43},
+date raised: 2022-11-02 
+  \ei
+  \item {\bf Version 1.4.15}:  resolved Issue 1284: {\bf extend ALEANCF beam}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add effects due to axial and bending viscous damping in case of movingMassFactor==1}
+    \item {\bf notes: new damping terms for axially moving beams implemented according to 2022 Paper of Pieber, Ntarladima, Gerstmayr only for case movingMassFactor=1}
+    \item   date resolved: {\bf 2022-10-31 15:43},
+date raised: 2022-10-25 
+  \ei
   \item {\bf Version 1.4.14}: {\bf \color{warningRed}  resolved BUG 1283}: {\bf ProcessParameterList}
   \begin{itemize}[label=$\bullet$]
     \item {description: in case useMultiProcessing=False the output file does not contain correct ranges}

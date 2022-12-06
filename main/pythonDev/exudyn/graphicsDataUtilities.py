@@ -123,12 +123,21 @@ def GraphicsData2PointsAndTrigs(g):
 #**input: 
 #  points: list of np.array with 3 floats per point 
 #  triangles: list of np.array with 3 int per triangle (0-based indices to triangles)
-#  color: provided as list of 4 RGBA values
+#  color: provided as list of 4 RGBA values or single list of (number of points)*[4 RGBA values]
 #**output: returns GraphicsData with type TriangleList
 def GraphicsDataFromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.]):
     pointList = list(np.array(points).flatten())
     triangleList = list(np.array(triangles).flatten())
-    colorList = color*int(len(pointList)/3)
+    nPoints = int(len(pointList)/3)
+    if len(color) == 4*nPoints:
+        colorList = color
+    elif len(color) == 4:
+        colorList = color*nPoints
+    else:
+        print('number of points=', nPoints)
+        print('number of trigs=', len(triangleList)/3)
+        print('number of colors=', len(color))
+        raise ValueError('GraphicsDataFromPointsAndTrigs: color must have either 4 RGBA values or 4*(number of points) RGBA values as a list')
     data = {'type':'TriangleList', 
             'colors': colorList, 
             'points':pointList, 
@@ -240,10 +249,14 @@ def MoveGraphicsData(g, pOff, Aoff):
     p0 = np.array(pOff)
     A0 = np.array(Aoff)
     
-    if g['type'] == 'TriangleList':
+    if g['type'] == 'TriangleList': 
         gNew = {'type':'TriangleList'}
         gNew['colors'] = copy.copy(g['colors'])
         gNew['triangles'] = copy.copy(g['triangles'])
+        if 'edges' in g:
+            gNew['edges'] = copy.copy(g['edges'])
+        if 'edgeColor' in g:
+            gNew['edgeColor'] = copy.copy(g['edgeColor'])
 
         n=int(len(g['points'])/3)
         v0 = np.array(g['points'])
@@ -290,7 +303,7 @@ def MoveGraphicsData(g, pOff, Aoff):
 #************************************************
 #**function: merge 2 different graphics data with triangle lists
 #**input: graphicsData dictionaries g1 and g2 obtained from GraphicsData functions
-#**output: one graphicsData dictionary with single triangle lists and compatible points and normals, to be used in visualization of EXUDYN objects
+#**output: one graphicsData dictionary with single triangle lists and compatible points and normals, to be used in visualization of EXUDYN objects; edges are merged; edgeColor is taken from graphicsData g1
 def MergeGraphicsDataTriangleList(g1,g2):
     np = int(len(g1['points'])/3) #number of points
     useNormals = False
@@ -313,6 +326,16 @@ def MergeGraphicsDataTriangleList(g1,g2):
     
     data['colors'] += g2['colors']
     data['points'] += g2['points']
+
+    #copy and merge edges; edges can be available only in one triangle list
+    if 'edges' in g1:
+        data['edges'] = copy.copy(g1['edges'])
+    if 'edges' in g2:
+        if 'edges' not in data:
+            data['edges'] = []
+        data['edges'] += copy.copy(g2['edges'])
+    if 'edgeColor' in g1 and 'edgeColor' in g2:
+        data['edgeColor'] = copy.copy(g1['edgeColor']) #only taken from g1
 
     for p in g2['triangles']:
         data['triangles'] += [int(p + np)] #add point offset for correct connectivity
@@ -910,7 +933,7 @@ def GraphicsDataFromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, densit
         raise ValueError('GraphicsDataFromSTLfile requires installation of numpy-stl; try "pip install numpy-stl"')
     
     data=mesh.Mesh.from_file(fileName)
-    nPoints = len(data.points)*3 #data.points has shape (nTrigs,9)
+    nPoints = 3*len(data.points) #data.points has shape (nTrigs,9), one triangle has 3 points!
     
     if scale != 1.:
         data.points *= scale
@@ -931,6 +954,7 @@ def GraphicsDataFromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, densit
         print('GraphicsDataFromSTLfile:')
         print('  max point=', list(data.max_))
         print('  min point=', list(data.min_))
+        print('  STL points=', nPoints)
     if density != 0:
         [volume, mass, COM, inertia] = data.get_mass_properties_with_density(density)
         dictData = {'minPos':data.min_,
@@ -944,6 +968,8 @@ def GraphicsDataFromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, densit
         print('  volume =', volume)
         print('  center of mass =', list(COM))
         print('  inertia =', list(inertia))
+    
+    # print('STL points3=', nPoints3)
     
     colors = color*nPoints
     #triangles = list(np.arange(0,nPoints))#wrong orientation ==> reverse
@@ -969,26 +995,47 @@ def GraphicsDataFromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, densit
 #  roundDigits: number of digits, relative to max dimensions of object, at which points are assumed to be equal
 #  smoothNormals: if True, algorithm tries to smoothen normals at vertices; otherwise, uses triangle normals
 #  addEdges: if True, the function returns a list of GraphicsData: one with the 3D triangles and one with the edges
+#  triangleColor: if triangleColor is set to a RGBA color, this color is used for the new triangle mesh throughout
 #**output: returns GraphicsData with added edges and smoothed normals
 #**notes: this function is suitable for STL import; it assumes that all colors in graphicsData are the same and only takes the first color!
 def AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color4black, edgeAngle = 0.25*np.pi,
-                           pointTolerance=5, addEdges=True, smoothNormals=True, roundDigits=5):
+                           pointTolerance=5, addEdges=True, smoothNormals=True, roundDigits=5, 
+                           triangleColor = []):
     from math import acos # ,sin, cos
 
-    oldColor = graphicsData['colors'][0:4]    
+    oldColors = graphicsData['colors'] #2022-12-06: accepts now all colors; graphicsData['colors'][0:4]    
     [points, trigs]=GraphicsData2PointsAndTrigs(graphicsData)
     # [points, trigs]=RefineMesh(points, trigs)
+
+    nPoints = len(points)
+    nColors = int(len(oldColors)/4)
+
+    if nColors != nPoints:
+        print('WARNING: AddEdgesAndSmoothenNormals: found inconsistent colors; they must match the point list in graphics data')
+        if triangleColor == []:
+            triangleColor = graphicsData['colors'][0:4]
+
+    if len(triangleColor) != 4 and len(triangleColor) != 0:
+        triangleColor = [1,0,0,1]
+        print('WARNING: AddEdgesAndSmoothenNormals: colors invalid; using default')
+
+    if len(triangleColor) == 4:
+        oldColors = list(triangleColor)*nPoints
+
+    colors = [np.zeros(4)]*nPoints
+    for i in range(nPoints):
+        colors[i] = np.array(oldColors[i*4:i*4+4])
     
     points = np.array(points)
     trigs = np.array(trigs)
+    colors = np.array(colors)
     pMax = np.max(points, axis=0)
     pMin = np.min(points, axis=0)
     maxDim = np.linalg.norm(pMax-pMin)
     if maxDim == 0: maxDim = 1.
 
     points = maxDim * np.round(points*(1./maxDim),roundDigits)
-    nPoints = len(points)
-    #print('np=', nPoints)
+    # print('smoothen np=', nPoints)
     
     sortIndices = np.lexsort((points[:,2], points[:,1], points[:,0]))
     #sortedPoints = points[sortIndices]
@@ -996,7 +1043,8 @@ def AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color4black, edgeAngle 
     #now eliminate duplicate points:
     remap = np.zeros(nPoints,dtype=int)#np.int64)
     remap[0] = 0
-    newPoints = [points[sortIndices[0],:]]
+    newPoints = [points[sortIndices[0],:]] #first point
+    newColors = [colors[sortIndices[0],:]]
     
     cnt = 0
     for i in range(len(sortIndices)-1):
@@ -1006,6 +1054,7 @@ def AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color4black, edgeAngle 
             cnt+=1
             remap[nextIndex] = cnt#i+1
             newPoints.append(points[nextIndex,:])
+            newColors.append(colors[nextIndex,:])
         else:
             remap[nextIndex] = cnt#newIndices[sortIndices[i]]
             # newIndices.append(newIndices[-1])
@@ -1078,6 +1127,7 @@ def AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color4black, edgeAngle 
         
         finalTrigs = []
         newPoints = list(newPoints)
+        newColors = list(newColors)
         pointNormals = list(pointNormals)
         for cnt, trig in enumerate(newTrigs):
             trigNew = [0,0,0]
@@ -1088,11 +1138,12 @@ def AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color4black, edgeAngle 
                     trigNew[i] = len(newPoints)
                     newPoints.append(newPoints[trig[i]])
                     pointNormals.append(normals[cnt])
+                    newColors.append(newColors[trig[i]])
             finalTrigs += [trigNew]
     else:
         finalTrigs = newTrigs
     
-    graphicsData = GraphicsDataFromPointsAndTrigs(newPoints, finalTrigs, oldColor)
+    graphicsData = GraphicsDataFromPointsAndTrigs(newPoints, finalTrigs, list(np.array(newColors).flatten()))
     if addEdges:
         graphicsData['edges'] = edges
         graphicsData['edgeColor'] = list(edgeColor)

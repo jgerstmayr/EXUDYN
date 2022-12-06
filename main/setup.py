@@ -205,6 +205,7 @@ cppFiles = [
                  'src/Objects/CObjectConnectorGravity.cpp',
                  'src/Objects/CObjectConnectorHydraulicsActuatorSimple.cpp',
                  'src/Objects/CObjectConnectorLinearSpringDamper.cpp',
+                 'src/Objects/CObjectConnectorReevingSystemSprings.cpp',
                  'src/Objects/CObjectConnectorRigidBodySpringDamper.cpp',
                  'src/Objects/CObjectConnectorRollingDiscPenalty.cpp',
                  'src/Objects/CObjectConnectorSpringDamper.cpp',
@@ -395,6 +396,8 @@ class BuildExt(build_ext):
          '-Wno-comment', #deactivate multiline comment warning /* ... * * ...*/
          '-Wno-unknown-pragmas', #warning from ngs_core.hpp/taskmanager.hpp (NGsolve)
          '-Wno-sign-compare', #warning from taskmanager.hpp (NGsolve)
+         '-Wno-array-bounds', #warnings in ConstSizeMatrix
+         '-Wno-maybe-uninitialized', #warnings in ConstSizeMatrix
  		 '-Wall',
          '-g0', #deactivate debug information (overrides default -g flags), decreases files size from 38MB to 2.6 MB in Python 3.6 version
          '-D'+exudynPythonMacro,

@@ -59,20 +59,130 @@ public:
 class MarkerDataStructure
 {
 public:
-	static const Index numberOfMarkerData = 2;
+	static const Index staticNumberOfMarkerData = 2; //! this is the absolute minimum of MarkerData; some functions access first markerData without checks (as it is always possible)
 private:
-	MarkerData markerData[numberOfMarkerData];
-	Real t; //!< add time for user functions or time in constraints, because they do not have nodes
-	LinkedDataVector lagrangeMultipliers; //for constraint equation evaluation; WORKAROUND, in order not to access system coordinates in ComputeAlgebraicEquations
-	//ResizableVector connectorForceJac; //for computation of connector jacobian; WORKAROUND; needs to be filled by connector on ComputeODE2LHS
+	MarkerData markerDataStatic[staticNumberOfMarkerData]; //!< for 0-2 markerData, otherwise use dynamic array !
+	MarkerData* markerData;					//!< dynamic marker data
+	Index numberOfMarkerData;				//!< currently operated marker data size; to check inconsistencies
+	Index allocatedMarkerDataSize;			//!< size of allocated data; either 0 or larger than staticNumberOfMarkerData
+	
+	//further transmitted data:
+	Real t;									//!< add time for user functions or time in constraints, because they do not have nodes
+	LinkedDataVector lagrangeMultipliers;	//!< for constraint equation evaluation; WORKAROUND, in order not to access system coordinates in ComputeAlgebraicEquations
 
 public:
+	//! initialize with static markerdata; works as in old case with static data; no memory allocation
+	MarkerDataStructure()
+	{
+		//pout << "MarkerDataStructure()\n";
+		//this is the standard:
+		allocatedMarkerDataSize = 0;
+		ResetMarkerData();
+	};
+
+	//! copy constructor; needed, because linking of markerData needs to be assigned to copied data!
+	MarkerDataStructure(const MarkerDataStructure& data)
+	{
+		CopyFrom(data);
+	}
+
+	//! copy data from other object, do not delete local data
+	void CopyFrom(const MarkerDataStructure& data)
+	{
+		for (Index i = 0; i < staticNumberOfMarkerData; i++)
+		{
+			markerDataStatic[i] = data.markerDataStatic[i];
+		}
+
+		numberOfMarkerData = data.numberOfMarkerData;
+		allocatedMarkerDataSize = data.allocatedMarkerDataSize;
+		t = data.t;
+		lagrangeMultipliers = data.lagrangeMultipliers;
+
+		if (allocatedMarkerDataSize == 0)
+		{
+			markerData = &markerDataStatic[0];
+		}
+		else
+		{
+			markerData = new MarkerData[allocatedMarkerDataSize](); //() adds initialization (needed for ResizableVector, etc.)
+			for (Index i = 0; i < allocatedMarkerDataSize; i++) //initialize data
+			{
+				markerData[i] = data.markerData[i];
+			}
+		}
+	}
+
+	//! remove move constructor as this needs to be designed specially
+	MarkerDataStructure(MarkerDataStructure&& other) = delete;
+
+	//! special assignment operator as with copy constructor
+	MarkerDataStructure& operator=(const MarkerDataStructure& data)
+	{
+		if (this == &data) { return *this; }
+
+		ResetMarkerData();
+		CopyFrom(data);
+		return *this;
+	}
+	//! reset function if reset for temporary data needed
+	void ResetMarkerData()
+	{
+		if (allocatedMarkerDataSize)
+		{
+			delete[] markerData;
+			allocatedMarkerDataSize = 0;
+		}
+		markerData = &markerDataStatic[0];
+		numberOfMarkerData = staticNumberOfMarkerData;
+	}
+
+	//! adjust memory to larger number of MarkerData if needed
+	void SetNumberOfMarkerData(Index size)
+	{
+		//pout << "SetNumberOfMarkerData: " << size << "()\n";
+		//CHECKandTHROW(size == 2, "MarkerDataStructure::SetNumberOfMarkerData called with size != 2");
+		if (size > staticNumberOfMarkerData && size > allocatedMarkerDataSize)
+		{
+			//in this case, we need (possibly more) allocated data
+			if (allocatedMarkerDataSize)
+			{
+				delete[] markerData;
+			}
+			markerData = new MarkerData[size](); //() adds initialization (needed for ResizableVector, etc.)
+			//for (Index i = 0; i < size; i++) //initialize data
+			//{
+			//	markerData[i] = MarkerData();
+			//}
+			allocatedMarkerDataSize = size;
+		}
+
+		numberOfMarkerData = size;
+	}
+
+	virtual ~MarkerDataStructure()
+	{
+		if (allocatedMarkerDataSize)
+		{
+			delete[] markerData;
+		}
+	}
+
+	static Index GetMaxNumberOfMarkerData() { return EXUstd::MAXINDEX; }
+	
 	//! get number of marker Data structures ==> for conventional connectors it is 2, but could be different for complex joints (e.g. sliding joint)
 	Index GetNumberOfMarkerData() const { return numberOfMarkerData; }
+
 	//! read access to markerData
-	const MarkerData& GetMarkerData(const Index& i) const { return markerData[i]; }
+	const MarkerData& GetMarkerData(const Index& i) const { 
+		CHECKandTHROW(i < numberOfMarkerData, "GetMarkerData const: invalid index");
+		return markerData[i]; 
+	}
 	//! write access to markerData
-	MarkerData& GetMarkerData(const Index& i) { return markerData[i]; }
+	MarkerData& GetMarkerData(const Index& i) { 
+		CHECKandTHROW(i < numberOfMarkerData, "GetMarkerData: invalid index");
+		return markerData[i];
+	}
 
 	//! write access to time t
 	void SetTime(Real time) { t = time; }
@@ -89,5 +199,45 @@ public:
 	////! write access to connectorForceJac
 	//ResizableVector& GetConnectorForceJac() { return connectorForceJac; }
 };
+
+
+//DELETE:
+//OLD const-sized MarkerData:
+//this class contains several MarkerData structures ==> derive from this class for special connectors
+//class MarkerDataStructure
+//{
+//public:
+//	//static const Index numberOfMarkerData = 2;
+//	Index GetMaxNumberOfMarkerData() const { return 2; }
+//private:
+//	MarkerData markerData[numberOfMarkerData]; //for 0-2 markerData, otherwise use dynamic array !
+//	Real t; //!< add time for user functions or time in constraints, because they do not have nodes
+//	LinkedDataVector lagrangeMultipliers; //for constraint equation evaluation; WORKAROUND, in order not to access system coordinates in ComputeAlgebraicEquations
+//	//ResizableVector connectorForceJac; //for computation of connector jacobian; WORKAROUND; needs to be filled by connector on ComputeODE2LHS
+//
+//public:
+//	//! get number of marker Data structures ==> for conventional connectors it is 2, but could be different for complex joints (e.g. sliding joint)
+//	Index GetNumberOfMarkerData() const { return numberOfMarkerData; }
+//	//! read access to markerData
+//	const MarkerData& GetMarkerData(const Index& i) const { return markerData[i]; }
+//	//! write access to markerData
+//	MarkerData& GetMarkerData(const Index& i) { return markerData[i]; }
+//
+//	//! write access to time t
+//	void SetTime(Real time) { t = time; }
+//	//! write access to time t
+//	Real GetTime() const { return t; }
+//
+//	//! read access to lagrangeMultipliers
+//	const LinkedDataVector& GetLagrangeMultipliers() const { return lagrangeMultipliers; }
+//	//! write access to lagrangeMultipliers
+//	LinkedDataVector& GetLagrangeMultipliers() { return lagrangeMultipliers; }
+//
+//	////! read access to connectorForceJac
+//	//const ResizableVector& GetConnectorForceJac() const { return connectorForceJac; }
+//	////! write access to connectorForceJac
+//	//ResizableVector& GetConnectorForceJac() { return connectorForceJac; }
+//};
+
 
 #endif

@@ -7,7 +7,7 @@ Exudyn 1.4 is out! It includes improved multi-threading support; a redundant coo
 If you like using Exudyn, please add a *star* on github, and send an email to \ ``reply.exudyn@gmail.com``\ such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
 
-A paper on Exudyn is planned to be presented at the `6th Joint International Conference on Multibody System Dynamics <http://imsdacmd2020.iitd.ac.in>`_
+A paper on Exudyn has been presented at the `6th Joint International Conference on Multibody System Dynamics <http://imsdacmd2020.iitd.ac.in>`_ and it can be cited as: J. Gerstmayr, Exudyn - A C++ based Python package for flexible multibody systems, Proceedings of The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020, New Delhi, India, 2022. `PDF <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/publications/GerstmayrIMSD2022.pdf>`_
 
 +  **A flexible multibody dynamics systems simulation code with Python and C++**
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
@@ -54,8 +54,13 @@ Enjoy the Python library for multibody dynamics modeling, simulation, creating l
 
 \mysection{Installation and Getting Started}
 \ignoreRST{
-The documentation for \codeName\ is split into this introductory section, including a quick start up, code structure and important hints, 
-as well as a couple of sections containing references to the available Python interfaces to interact with \codeName\ and finally some information on theory (e.g., 'Solver'). \vspace{6pt} \\
+The documentation for \codeName\ is split into this introductory section, including a quick start up, installation, code structure and important hints, 
+as well as a larger part containing the \codeName\ module description and interfaces, theory, references to the accessible items and data structures, solvers, settings and much more. \vspace{6pt} \\
+%
+How to cite:
+\bi
+  \item J. Gerstmayr, Exudyn - A C++ based Python package for flexible multibody systems, \\ Proceedings of The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020, New Delhi, India, 2022. \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/docs/publications/GerstmayrIMSD2022.pdf}{PDF} \cite{GerstmayrExudyn2022} %\vspace{6pt} \\
+\ei
 %
 Tutorial videos can be found in the \exuUrl{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx}{youtube channel of Exudyn}.
 }
@@ -106,7 +111,7 @@ Important discussions with researchers from the community were important for the
 
 The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications' contributes to the development of the code.
 
-The following people have contributed to Python and C++ library implementations:
+The following people have contributed to Python and C++ library implementations (as well as to testing, examples, theory, ...):
 \bi
   \item Joachim Sch{\"o}berl, TU Vienna (Providing specialized NGsolve \cite{Schoeberl1997,NGsolve2014,NGsolve2022} core library with \texttt{taskmanager} for \mybold{multi-threaded parallelization}; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
   \item Stefan Holzinger, University of Innsbruck (Lie group solvers in Python, Lie group node)
@@ -115,9 +120,9 @@ The following people have contributed to Python and C++ library implementations:
   \item Martin Sereinig, University of Innsbruck (special robotics functionality)
   \item Grzegorz Orzechowski, Lappeenranta University of Technology (coupling with openAI gym and running machine learning algorithms)
 \ei
-The following people have contributed to examples and other parts:
+The following people have contributed to examples, testing and theory:
 \bi
-  \item Stefan Holzinger, Michael Pieber, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Andreas Zw{\"o}lfer, Peter Manzl, Simon Scheiber
+  \item Michael Pieber, Konstantina Ntarladima, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Simon Scheiber
 \ei
 -- thanks a lot! --
 %

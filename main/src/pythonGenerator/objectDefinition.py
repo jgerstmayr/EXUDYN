@@ -1015,7 +1015,7 @@ Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D
 Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad -- not used for GroundObject" 
 #
 Fv,     M,      GetTypeName,                    ,               ,       const char*,                            "return 'Ground';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(0);\n        return 0;",       "Index localIndex",       CI,     "No nodenumber can be returned for ground object!" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(0, __EXUDYN_invalid_local_node0);\n        return 0;",       "Index localIndex",       CI,     "No nodenumber can be returned for ground object!" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 0;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return 0;",                ,       CI,     "number of \hac{ODE2} coordinates; needed for object?" 
 #as there are no node numbers, there is no check needed: Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return (Node::Type)(Node::Position2D + Node::Orientation2D);", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
@@ -1118,7 +1118,7 @@ F,      C,      GetAcceleration,                ,               ,       Vector3D
 Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
 #
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'MassPoint';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 #Fv,     C,      GetODE2LocalToGlobalCoordinates,,               ,       Index,      ,                ,       CDI,     "local to global coordinates of body --> not needed" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return nODE2coordinates;",                ,       CI,     "number of \hac{ODE2} coordinates; needed for object?" 
@@ -1210,7 +1210,7 @@ F,      C,      GetAcceleration,                ,               ,       Vector3D
 Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
 #
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'MassPoint2D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 #Fv,     C,      GetODE2LocalToGlobalCoordinates,,               ,       Index,      ,                ,       CDI,     "local to global coordinates of body --> not needed" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return nODE2coordinates;",                ,       CI,     "number of \hac{ODE2} coordinates; needed for object?" 
@@ -1309,7 +1309,7 @@ Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D
 Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
 #
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'Mass1D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 #Fv,     C,      GetODE2LocalToGlobalCoordinates,,               ,       Index,      ,                ,       CDI,     "local to global coordinates of body --> not needed" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return 1;",                ,       CI,     "number of \hac{ODE2} coordinates; needed for object?" 
@@ -1412,7 +1412,7 @@ Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D
 Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
 #
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'RotationalMass1D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 #Fv,     C,      GetODE2LocalToGlobalCoordinates,,               ,       Index,      ,                ,       CDI,     "local to global coordinates of body --> not needed" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return 1;",                ,       CI,     "number of \hac{ODE2} coordinates; needed for object?" 
@@ -1623,7 +1623,7 @@ Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D
 Fv,     C,      ComputeRigidBodyMarkerData,     ,               ,       void,       ,                           "const Vector3D& localPosition, bool computeJacobian, MarkerData& markerData",          CDI, "accelerator function for faster computation of MarkerData for rigid bodies/joints" 
 #
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'RigidBody';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 #Fv,     C,      GetODE2LocalToGlobalCoordinates,,               ,       Index,      ,                ,       CDI,     "local to global coordinates of body --> not needed" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      ,                ,       CDI,     "number of \hac{ODE2} coordinates; depends on node" 
@@ -1752,7 +1752,7 @@ F,      C,      GetAngularAcceleration,         ,               ,       Vector3D
 Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
 #
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'RigidBody2D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 #Fv,     C,      GetODE2LocalToGlobalCoordinates,,               ,       Index,      ,                ,       CDI,     "local to global coordinates of body --> not needed" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return nODE2coordinates;",                ,       CI,     "number of \hac{ODE2} coordinates; needed for object?" 
@@ -2324,19 +2324,19 @@ miniExample =
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,      "",                      ,       I,      "objects's unique name"
 V,      CP,     nodeNumber,                     ,               ,       NodeIndex,   "EXUstd::InvalidIndex",  ,       I,      "$n_0 \in \Ncal^n$node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; $n$ being the number of minimum coordinates"
-V,      CP,     gravity,                        ,               ,       Vector3D,    "Vector3D({0.,0.,0.})",  ,       I,      "$\LU{0}{\gv} in \Rcal^{3}$gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree"
-V,      CP,     baseOffset,                     ,               ,       Vector3D,    "Vector3D({0.,0.,0.})",  ,       I,      "$\LU{0}{\pv_b} in \Rcal^{3}$offset vector for base, in global coordinates"
-#not needed, because every link has preTransformation! V,      CP,     baseTransformation,             ,               ,       Matrix3D,    "EXUmath::unitMatrix3D", ,       I,      "$\Tm_b in \Rcal^{3 \times 3}$transformation of base"
+V,      CP,     gravity,                        ,               ,       Vector3D,    "Vector3D({0.,0.,0.})",  ,       I,      "$\LU{0}{\gv} \in \Rcal^{3}$gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree"
+V,      CP,     baseOffset,                     ,               ,       Vector3D,    "Vector3D({0.,0.,0.})",  ,       I,      "$\LU{0}{\pv_b} \in \Rcal^{3}$offset vector for base, in global coordinates"
+#not needed, because every link has preTransformation! V,      CP,     baseTransformation,             ,               ,       Matrix3D,    "EXUmath::unitMatrix3D", ,       I,      "$\Tm_b \in \Rcal^{3 \times 3}$transformation of base"
 #per link:
-V,      CP,     jointTypes,                     ,               ,       JointTypeList,"JointTypeList()",,I, "$\jv_T in \Ncal^{n}$joint types of kinematic Tree joints; must be always set"
-V,      CP,     linkParents,                    ,               ,       ArrayIndex,  "ArrayIndex()",          ,       I,      "$\iv_p = [p_0,\, p_1,\, \ldots] in \Ncal^{n}$index of parent joint/link; if no parent exists, the value is $-1$; by default, $p_0=-1$ because the $i$th parent index must always fulfill $p_i<i$; must be always set"
-V,      CP,     jointTransformations,           ,               ,       Matrix3DList,"Matrix3DList()",    ,       I,      "$\Tm = [\LU{p_0,j_0}{\Tm_0},\, \LU{p_1,j_1}{\Tm_1},\, \ldots ] in [\Rcal^{3 \times 3}, ...]$list of constant joint transformations from parent joint coordinates $p_0$ to this joint coordinates $j_0$; if no parent exists ($-1$), the base coordinate system $0$ is used; must be always set"
-V,      CP,     jointOffsets,                   ,               ,       Vector3DList,"Vector3DList()",    ,       I,      "$\Vm = [\LU{p_0}{o_0},\, \LU{p_1}{o_1},\, \ldots ] in [\Rcal^{3}, ...]$list of constant joint offsets from parent joint to this joint; $p_0$, $p_1$, $\ldots$ denote the parent coordinate systems; if no parent exists ($-1$), the base coordinate system $0$ is used; must be always set"
-V,      CP,     linkInertiasCOM,                ,               ,       Matrix3DList,"Matrix3DList()",    ,       I,      "$\Jm_{COM} = [\LU{j_0}{\Jm_0},\, \LU{j_1}{\Jm_1},\, \ldots ] in [\Rcal^{3 \times 3}, ...]$list of link inertia tensors w.r.t.\ \ac{COM} in joint/link $j_i$ coordinates; must be always set"
-V,      CP,     linkCOMs,                       ,               ,       Vector3DList,"Vector3DList()",    ,       I,      "$\Cm = [\LU{j_0}{\cv_0},\, \LU{j_1}{\cv_1},\, \ldots ] in [\Rcal^{3}, ...]$list of vectors for center of mass (COM) in joint/link $j_i$ coordinates; must be always set"
-V,      CP,     linkMasses,                     ,               ,       Vector,      "Vector()",              ,       I,      "$\mv in \Rcal^{n}$masses of links; must be always set"
-V,      CP,     linkForces,                     ,               ,       Vector3DList,"Vector3DList()",    ,       I,      "$\LU{0}{\Fm} in [\Rcal^{3}, ...]$list of 3D force vectors per link in global coordinates acting on joint frame origin; use force-torque couple to realize off-origin forces; defaults to empty list $[]$, adding no forces"
-V,      CP,     linkTorques,                    ,               ,       Vector3DList,"Vector3DList()",    ,       I,      "$\LU{0}{\Fm_\tau} in [\Rcal^{3}, ...]$list of 3D torque vectors per link in global coordinates; defaults to empty list $[]$, adding no torques"
+V,      CP,     jointTypes,                     ,               ,       JointTypeList,"JointTypeList()",,I, "$\jv_T \in \Ncal^{n}$joint types of kinematic Tree joints; must be always set"
+V,      CP,     linkParents,                    ,               ,       ArrayIndex,  "ArrayIndex()",          ,       I,      "$\iv_p = [p_0,\, p_1,\, \ldots] \in \Ncal^{n}$index of parent joint/link; if no parent exists, the value is $-1$; by default, $p_0=-1$ because the $i$th parent index must always fulfill $p_i<i$; must be always set"
+V,      CP,     jointTransformations,           ,               ,       Matrix3DList,"Matrix3DList()",    ,       I,      "$\Tm = [\LU{p_0,j_0}{\Tm_0},\, \LU{p_1,j_1}{\Tm_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]$list of constant joint transformations from parent joint coordinates $p_0$ to this joint coordinates $j_0$; if no parent exists ($-1$), the base coordinate system $0$ is used; must be always set"
+V,      CP,     jointOffsets,                   ,               ,       Vector3DList,"Vector3DList()",    ,       I,      "$\Vm = [\LU{p_0}{o_0},\, \LU{p_1}{o_1},\, \ldots ] \in [\Rcal^{3}, ...]$list of constant joint offsets from parent joint to this joint; $p_0$, $p_1$, $\ldots$ denote the parent coordinate systems; if no parent exists ($-1$), the base coordinate system $0$ is used; must be always set"
+V,      CP,     linkInertiasCOM,                ,               ,       Matrix3DList,"Matrix3DList()",    ,       I,      "$\Jm_{COM} = [\LU{j_0}{\Jm_0},\, \LU{j_1}{\Jm_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]$list of link inertia tensors w.r.t.\ \ac{COM} in joint/link $j_i$ coordinates; must be always set"
+V,      CP,     linkCOMs,                       ,               ,       Vector3DList,"Vector3DList()",    ,       I,      "$\Cm = [\LU{j_0}{\cv_0},\, \LU{j_1}{\cv_1},\, \ldots ] \in [\Rcal^{3}, ...]$list of vectors for center of mass (COM) in joint/link $j_i$ coordinates; must be always set"
+V,      CP,     linkMasses,                     ,               ,       Vector,      "Vector()",              ,       I,      "$\mv \in \Rcal^{n}$masses of links; must be always set"
+V,      CP,     linkForces,                     ,               ,       Vector3DList,"Vector3DList()",    ,       I,      "$\LU{0}{\Fm} \in [\Rcal^{3}, ...]$list of 3D force vectors per link in global coordinates acting on joint frame origin; use force-torque couple to realize off-origin forces; defaults to empty list $[]$, adding no forces"
+V,      CP,     linkTorques,                    ,               ,       Vector3DList,"Vector3DList()",    ,       I,      "$\LU{0}{\Fm_\tau} \in [\Rcal^{3}, ...]$list of 3D torque vectors per link in global coordinates; defaults to empty list $[]$, adding no torques"
 #forces and control: scalar values per joint:
 V,      CP,     jointForceVector,               ,               ,       Vector,"Vector()",                    ,       I,      "$\fv \in \Rcal^{n}$generalized force vector per coordinate added to RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint $i$, the torque $f[i]$ acts positive (w.r.t.\ rotation axis) on link $i$ and negative on parent link $p_i$; must be either empty list/array $[]$ (default) or have size $n$"
 V,      CP,     jointPositionOffsetVector,      ,               ,       Vector,"Vector()",                    ,       I,      "$\uv_o \in \Rcal^{n}$offset for joint coordinates used in P(D) control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array $[]$ (default) or have size $n$"
@@ -3386,7 +3386,7 @@ equations =
     \bn
       \item \texttt{useReducedOrderIntegration} = 0: $n_{ip}^\varepsilon = 5$ (Gauss order 9), $n_{ip}^K = 3$ (Gauss order 5) -- this is considered as full integration, leading to very small approximations; certainly, due to the high nonlinearity of expressions, this is only an approximation.
       \item \texttt{useReducedOrderIntegration} = 1: $n_{ip}^\varepsilon = 4$ (Gauss order 7), $n_{ip}^K = 2$ (Gauss order 3) -- this is considered as reduced integration, which is usually sufficiently accurate but leads to slightly less computational efforts, especially for bending terms.
-      \item \texttt{useReducedOrderIntegration} = 2: $n_{ip}^\varepsilon = 3$ (Lobatto order 4), $n_{ip}^K = 2$ (Gauss order 3) -- this is a further reduced integration, with the exceptional property that axial strain and bending strain terms are computed at completely disjointed locations: axial strain terms are evaluated at $0$, $L/2$ and $L$, while bending terms are evaluated at $\pm \frac{L}{2}\sqrt{1/3}$. This allows axial strains to freely follow the bending terms at $\pm \frac{L}{2}\sqrt{1/3}$, while axial strains are almost independent from bending terms at $0$, $L/2$ and $L$. However, due to the highly reduced integration, spurious (hourglass) modes may occur in certain applications!
+      \item \texttt{useReducedOrderIntegration} = 2: $n_{ip}^\varepsilon = 3$ (Lobatto order 3), $n_{ip}^K = 2$ (Gauss order 3) -- this is a further reduced integration, with the exceptional property that axial strain and bending strain terms are computed at completely disjointed locations: axial strain terms are evaluated at $0$, $L/2$ and $L$, while bending terms are evaluated at $\pm \frac{L}{2}\sqrt{1/3}$. This allows axial strains to freely follow the bending terms at $\pm \frac{L}{2}\sqrt{1/3}$, while axial strains are almost independent from bending terms at $0$, $L/2$ and $L$. However, due to the highly reduced integration, spurious (hourglass) modes may occur in certain applications!
     \en
     Note that the Jacobian of elastic forces is computed using automatic differentiation.
     
@@ -3442,8 +3442,8 @@ V,      CP,     physicsLength,                  ,               ,       UReal,  
 V,      CP,     physicsMassPerLength,           ,               ,       UReal,      "0.",                       ,       I,      "$\rho A$ [SI:kg/m] mass per length of beam"
 V,      CP,     physicsBendingStiffness,        ,               ,       UReal,      "0.",                       ,       I,      "$EI$ [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature"
 V,      CP,     physicsAxialStiffness,          ,               ,       UReal,      "0.",                       ,       I,      "$EA$ [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = |\rv^\prime|-1$ is the axial strain"
-V,      CP,     physicsBendingDamping,          ,               ,       UReal,      "0.",                       ,       I,      "$d_{\varepsilon}$ [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$"
-V,      CP,     physicsAxialDamping,            ,               ,       UReal,      "0.",                       ,       I,      "$d_{K}$ [SI:N/s] axial stiffness of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$"
+V,      CP,     physicsBendingDamping,          ,               ,       UReal,      "0.",                       ,       I,      "$d_{K}$ [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$"
+V,      CP,     physicsAxialDamping,            ,               ,       UReal,      "0.",                       ,       I,      "$d_{\varepsilon}$ [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$"
 V,      CP,     physicsReferenceAxialStrain,    ,               ,       Real,       "0.",                       ,       I,      "$\varepsilon_0$ [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value"
 V,      CP,     physicsReferenceCurvature,      ,               ,       Real,       "0.",                       ,       I,      "$\kappa_0$ [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value"
 V,      CP,     strainIsRelativeToReference,    ,               ,       Real,       "0.",                       ,       I,      "$f\cRef$ if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1."
@@ -3454,7 +3454,7 @@ V,      CP,     useReducedOrderIntegration,     ,               ,       Index,  
 #access to parameters for Base class:
 Fv,     C,      GetLength,                      ,               ,       Real,       "return parameters.physicsLength;", , IC,  "access to individual element paramters for base class functions" 
 Fv,     C,      GetMassPerLength,               ,               ,       Real,       "return parameters.physicsMassPerLength;", , IC,  "access to individual element paramters for base class functions" 
-Fv,     C,      GetMaterialParameters,          ,               ,       void,       "physicsBendingStiffness = parameters.physicsBendingStiffness; physicsAxialStiffness = parameters.physicsAxialStiffness; physicsBendingDamping = parameters.physicsBendingDamping; physicsAxialDamping = parameters.physicsAxialDamping; physicsReferenceAxialStrain = parameters.physicsReferenceAxialStrain; physicsReferenceCurvature = parameters.physicsReferenceCurvature;", "Real& physicsBendingStiffness, Real& physicsAxialStiffness, Real& physicsBendingDamping, Real& physicsAxialDamping, Real& physicsReferenceAxialStrain, Real& physicsReferenceCurvature", IC,  "access to individual element paramters for base class functions" 
+Fv,     C,      GetMaterialParameters,          ,               ,       void,       "physicsBendingStiffness = parameters.physicsBendingStiffness; physicsAxialStiffness = parameters.physicsAxialStiffness; physicsBendingDamping = parameters.physicsBendingDamping; physicsAxialDamping = parameters.physicsAxialDamping; physicsReferenceAxialStrain = parameters.physicsReferenceAxialStrain; physicsReferenceCurvature = parameters.physicsReferenceCurvature; physicsMovingMassFactor = 1.;", "Real& physicsBendingStiffness, Real& physicsAxialStiffness, Real& physicsBendingDamping, Real& physicsAxialDamping, Real& physicsReferenceAxialStrain, Real& physicsReferenceCurvature, Real& physicsMovingMassFactor", IC,  "access to individual element paramters for base class functions" 
 Fv,     C,      UseReducedOrderIntegration,     ,               ,       Index,       "return parameters.useReducedOrderIntegration;", , IC,  "access to useReducedOrderIntegration from derived class" 
 Fv,     C,      StrainIsRelativeToReference,    ,               ,       Real,       "return parameters.strainIsRelativeToReference;", , IC,  "access to strainIsRelativeToReference from derived class" 
 #
@@ -3471,7 +3471,7 @@ Fv,     C,      GetAvailableJacobians,          ,               ,       Jacobian
 #Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 #Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'ANCFCable2D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex <= 1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex <= 1, __EXUDYN_invalid_local_node1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 2;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return nODE2coordinates;",                ,       CI,     "number of \hac{ODE2} coordinates; needed for object?" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return (Node::Type)(Node::Position2D + Node::Orientation2D + Node::Point2DSlope1);", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
@@ -3539,8 +3539,8 @@ V,      CP,     physicsMassPerLength,           ,               ,       UReal,  
 V,      CP,     physicsMovingMassFactor,        ,               ,       UReal,      "1.",                       ,       I,      "this factor denotes the amount of $\rho A$ which is moving; physicsMovingMassFactor=1 means, that all mass is moving; physicsMovingMassFactor=0 means, that no mass is moving; factor can be used to simulate e.g. pipe conveying fluid, in which $\rho A$ is the mass of the pipe+fluid, while $physicsMovingMassFactor \cdot \rho A$ is the mass per unit length of the fluid"
 V,      CP,     physicsBendingStiffness,        ,               ,       UReal,      "0.",                       ,       I,      "$EI$ [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature"
 V,      CP,     physicsAxialStiffness,          ,               ,       UReal,      "0.",                       ,       I,      "$EA$ [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = |\rv^\prime|-1$ is the axial strain"
-V,      CP,     physicsBendingDamping,          ,               ,       UReal,      "0.",                       ,       I,      "$d_{\varepsilon}$ [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$"
-V,      CP,     physicsAxialDamping,            ,               ,       UReal,      "0.",                       ,       I,      "$d_{K}$ [SI:N/s] axial stiffness of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$"
+V,      CP,     physicsBendingDamping,          ,               ,       UReal,      "0.",                       ,       I,      "$d_{K}$ [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$"
+V,      CP,     physicsAxialDamping,            ,               ,       UReal,      "0.",                       ,       I,      "$d_{\varepsilon}$ [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$"
 V,      CP,     physicsReferenceAxialStrain,    ,               ,       Real,       "0.",                       ,       I,      "$\varepsilon_0$ [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value"
 V,      CP,     physicsReferenceCurvature,      ,               ,       Real,       "0.",                       ,       I,      "$\kappa_0$ [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value"
 #
@@ -3552,7 +3552,7 @@ V,      CP,     strainIsRelativeToReference,    ,               ,       Real,   
 #access to parameters for Base class:
 Fv,     C,      GetLength,                      ,               ,       Real,       "return parameters.physicsLength;", , IC,  "access to individual element paramters for base class functions" 
 Fv,     C,      GetMassPerLength,               ,               ,       Real,       "return parameters.physicsMassPerLength;", , IC,  "access to individual element paramters for base class functions" 
-Fv,     C,      GetMaterialParameters,          ,               ,       void,       "physicsBendingStiffness = parameters.physicsBendingStiffness; physicsAxialStiffness = parameters.physicsAxialStiffness; physicsBendingDamping = parameters.physicsBendingDamping; physicsAxialDamping = parameters.physicsAxialDamping; physicsReferenceAxialStrain = parameters.physicsReferenceAxialStrain; physicsReferenceCurvature = parameters.physicsReferenceCurvature;", "Real& physicsBendingStiffness, Real& physicsAxialStiffness, Real& physicsBendingDamping, Real& physicsAxialDamping, Real& physicsReferenceAxialStrain, Real& physicsReferenceCurvature", IC,  "access to individual element paramters for base class functions" 
+Fv,     C,      GetMaterialParameters,          ,               ,       void,       "physicsBendingStiffness = parameters.physicsBendingStiffness; physicsAxialStiffness = parameters.physicsAxialStiffness; physicsBendingDamping = parameters.physicsBendingDamping; physicsAxialDamping = parameters.physicsAxialDamping; physicsReferenceAxialStrain = parameters.physicsReferenceAxialStrain; physicsReferenceCurvature = parameters.physicsReferenceCurvature; physicsMovingMassFactor = parameters.physicsMovingMassFactor;", "Real& physicsBendingStiffness, Real& physicsAxialStiffness, Real& physicsBendingDamping, Real& physicsAxialDamping, Real& physicsReferenceAxialStrain, Real& physicsReferenceCurvature, Real& physicsMovingMassFactor", IC,  "access to individual element paramters for base class functions" 
 Fv,     C,      UseReducedOrderIntegration,     ,               ,       Index,      "return parameters.useReducedOrderIntegration;", , IC,  "access to useReducedOrderIntegration from derived class" 
 Fv,     C,      StrainIsRelativeToReference,    ,               ,       Real,       "return parameters.strainIsRelativeToReference;", , IC,  "access to strainIsRelativeToReference from derived class" 
 Fv,     C,      AddALEvariation,                ,               ,       bool,       "return parameters.physicsAddALEvariation;", , IC,  "access to physicsAddALEvariation" 
@@ -3570,7 +3570,7 @@ Fv,     C,      GetVelocity,                    ,               ,       Vector3D
 #Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 #Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'ALEANCFCable2D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex <= 2);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex <= 2, __EXUDYN_invalid_local_node2);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 3;",                ,       CI,     "number of nodes; needed for every object" 
 #Fv,     C,      GetODE2LocalToGlobalCoordinates,,               ,       Index,      ,                ,       CDI,     "local to global coordinates of body --> not needed" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return nODE2coordinates+1;",                ,       CI,     "number of \hac{ODE2} coordinates; needed for object?" 
@@ -3601,12 +3601,12 @@ writeFile = True
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class = ObjectANCFBeam3D
+class = ObjectANCFBeam
 classDescription = "OBJECT UNDER CONSTRUCTION: A 3D beam finite element based on the absolute nodal coordinate formulation, using two . The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes; assuming dimensions $w_y$ and $w_z$ in cross section, the local position range is $\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]$."
 cParentClass = CObjectBody
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
-pythonShortName = Beam3D
+pythonShortName = ANCFBeam
 addIncludesC = '#include "Main/StructuralElementsDataStructures.h"\n#include "Autogenerated/BeamSectionGeometry.h"\n'
 addIncludesMain = '#include "Autogenerated/PyStructuralElementsDataStructures.h"\n'
 addPublicC = "    static constexpr Index nODE2perNode = 9;//AUTO: number of element coordinates\n    static constexpr Index nNodes = 2;//AUTO: number of nodes for templates\n    static constexpr Index nODE2coordinates = nNodes * nODE2perNode;//AUTO: number of nodes for templates\n    static constexpr Index nSFperNode = 3;//AUTO: number of shape functions per node\n    mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation (should be in protected area, but needs nODE2perNode)\n"
@@ -3649,7 +3649,7 @@ F,      C,      GetAcceleration,                ,               ,       Vector3D
 Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'ObjectANCFBeam3D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex <= 1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex <= 1, __EXUDYN_invalid_local_node1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return nNodes;",           ,       CI,    "number of nodes; needed for every object" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return nODE2coordinates;", ,       CI,    "number of \hac{ODE2} coordinates"
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return (Node::Type)(Node::Position + Node::Orientation + Node::Point3DSlope23);", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
@@ -3692,7 +3692,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectBeamGeometricallyExact2D
-classDescription = "A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM})."
+classDescription = "A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D; FURTHER TESTS REQUIRED. Note that the orientation of the nodes need to follow the cross section orientation; e.g., an angle 0 represents the cross section pointing in $y$-direction, while and angle $\pi$ means that the cross section points in negative $x$-direction and the axis shows in positive $y$-direction. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM})."
 cParentClass = CObjectBody
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
@@ -3716,10 +3716,12 @@ V,      CP,     physicsBendingStiffness,        ,               ,       UReal,  
 V,      CP,     physicsAxialStiffness,          ,               ,       UReal,      "0.",                       ,       I,      "$EA$ [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon$ is the axial strain"
 V,      CP,     physicsShearStiffness,          ,               ,       UReal,      "0.",                       ,       I,      "$GA$ [SI:N] effective shear stiffness of beam, including stiffness correction"
 #not implemented:
-#V,      CP,     physicsBendingDamping,          ,               ,       UReal,      "0.",                       ,       I,      "$d_{\varepsilon}$ [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$"
-#V,      CP,     physicsAxialDamping,            ,               ,       UReal,      "0.",                       ,       I,      "$d_{K}$ [SI:N/s] axial stiffness of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$"
+V,      CP,     physicsBendingDamping,          ,               ,       UReal,      "0.",                       ,       I,      "$d_{K}$ [SI:Nm$^2$/s] viscous damping of bending deformation; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$"
+V,      CP,     physicsAxialDamping,            ,               ,       UReal,      "0.",                       ,       I,      "$d_{\varepsilon}$ [SI:N/s] viscous damping of axial deformation"
+V,      CP,     physicsShearDamping,            ,               ,       UReal,      "0.",                       ,       I,      "$d_{\gamma}$ [SI:N/s] viscous damping of shear deformation"
 #V,      CP,     physicsReferenceAxialStrain,    ,               ,       Real,       "0.",                       ,       I,      "$\varepsilon_0$ [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value"
-#V,      CP,     physicsReferenceCurvature,      ,               ,       Real,       "0.",                       ,       I,      "$\kappa_0$ [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value"
+V,      CP,     physicsReferenceCurvature,      ,               ,       Real,       "0.",                       ,       I,      "$\kappa_0$ [SI:1/m] reference curvature of beam (pre-deformation) of beam"
+V,      CP,     includeReferenceRotations,      ,               ,       bool,       "false",                    ,       I,      "if True, the computation of bending strains considers reference rotations in nodes; otherwise, the strains are relative to reference values (which allows to consider pre-curved geometries naturally)"
 #default: V,      CP,     useReducedOrderIntegration,     ,               ,       Bool,       false,                      ,       I,      "false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments"
 #
 Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber",       CDI,    "Computational function: compute mass matrix" 
@@ -3736,7 +3738,7 @@ Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D
 F,      C,      GetRotation,                    ,               ,       Real,       ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation of beam (Tait-Bryan angles); returns 3D Vector with z-component" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'BeamGeometricallyExact2D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex <= 1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex <= 1, __EXUDYN_invalid_local_node1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 2;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return nODE2coordinates;",                ,       CI,     "number of \hac{ODE2} coordinates; needed for object?" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return (Node::Type)(Node::Position2D + Node::Orientation2D);", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
@@ -3750,7 +3752,7 @@ F,      C,      MapCoordinates,                 ,               ,       Vector3D
 F,      C,      ComputeShapeFunctions,          ,               ,       Vector2D,   ,                           "Real x",          CDI, "get compressed shape function vector $\Sm_v$, depending local position $x \in [0,L]$"
 F,      C,      ComputeShapeFunctions_x,        ,               ,       Vector2D,   ,                           "Real x",          CDI, "get first derivative of compressed shape function vector $\frac{\partial \Sm_v}{\partial x}$, depending local position $x \in [0,L]$"
 F,      C,      GetRotationMatrix2D,            ,               4,      Matrix2D,   ,                           "Real theta",      CDI, "compute rotation matrix from angle theta" 
-F,      C,      ComputeGeneralizedStrains,      ,               ,       void,       ,                           "Real u1_x, Real u2_x, Real theta, const Vector2D& SV, const Vector2D& SV_x, const Vector2D& referenceSlopeVector, Real& gamma1, Real& gamma2, CSVector6D& deltaGamma1, CSVector6D& deltaGamma2",          CDI, "compute strains and variation of strains for given interpolated derivatives of displacement u1_x, u2_x, angle theta (incl. reference config.!), shape vector SV and shape vector derivatives SV_x and slope vector in reference configuration"
+F,      C,      ComputeGeneralizedStrains,      ,               ,       void,       ,                           "Real x, Real& theta, Vector2D& SV, Vector2D& SV_x, Real& gamma1, Real& gamma2, Real& theta_x, Real& gamma1_t, Real& gamma2_t, Real& theta_xt, CSVector6D& deltaGamma1, CSVector6D& deltaGamma2",          CDI, "compute strains and variation of strains for given interpolated derivatives of displacement u1_x, u2_x, angle theta (incl. reference config.!), shape vector SV and shape vector derivatives SV_x and slope vector in reference configuration"
 #not needed:
 #F,      C,      ComputeCurrentObjectCoordinates,,               ,       void,       ,                           "ConstSizeVector<4>& qObject",          CDI, "Compute object (finite element) coordinates in current configuration including reference coordinates" 
 #F,      C,      ComputeCurrentObjectVelocities, ,               ,       void,       ,                           "ConstSizeVector<4>& qObject_t",        CDI, "Compute object (finite element) velocities in current configuration" 
@@ -3768,7 +3770,7 @@ writeFile = True
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-class = ObjectBeamGeometricallyExact3D
+class = ObjectBeamGeometricallyExact
 classDescription = "OBJECT UNDER CONSTRUCTION: A 3D geometrically exact beam finite element, currently using two 3D rigid body nodes. The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes."
 cParentClass = CObjectBody
 mainParentClass = MainObjectBody
@@ -3810,7 +3812,7 @@ Fv,     C,      GetVelocity,                    ,               ,       Vector3D
 Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'BeamGeometricallyExact3D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex <= 1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex <= 1, __EXUDYN_invalid_local_node1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 2;",                ,       CI,    "number of nodes; needed for every object" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      ,                           ,       CDI,   "number of \hac{ODE2} coordinates; needed for object?" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return (Node::Type)(Node::Position + Node::Orientation);", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
@@ -3849,7 +3851,7 @@ pythonShortName = SpringDamper
 addIncludesC = 'class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
 classType = Object
 objectType = Connector
-outputVariables = "{'Distance':'distance between both points', 'Displacement':'relative displacement between both points', 'Velocity':'relative velocity between both points', 'Force':'spring-damper force'}"
+outputVariables = "{'Distance':'distance between both points', 'Displacement':'relative displacement between both points', 'Velocity':'relative velocity between both points', 'Force':'$\fv$3D spring-damper force vector', 'ForceLocal':'$f_{SD}$scalar spring-damper force'}"
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
     \mysubsubsubsection{Definition of quantities}
@@ -4052,7 +4054,7 @@ V,      CP,     stiffness,                      ,               ,       UReal,  
 V,      CP,     damping,                        ,               ,       UReal,      0.,                          ,       I,      "$d$damping [SI:N/(m s)] of damper; acts against d/dt(length)"
 V,      CP,     force,                          ,               ,       Real,       0.,                          ,       IO,     "$f_{a}$added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression; can be used to model actuator force"
 V,      CP,     velocityOffset,                 ,               ,       Real,       0.,                          ,       IO,     "$\dot L_0$velocity offset [SI:m/s] of damper, being equivalent to time change of reference length"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #questionable if the functions should go into Parameter class:
 V,      CP,     springForceUserFunction,        ,               ,       PyFunctionMbsScalarIndexScalar5, 0,                     ,       IO,     "$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below"
 #
@@ -4242,7 +4244,7 @@ V,      CP,     stiffness,                      ,               ,       Vector3D
 V,      CP,     damping,                        ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",       ,       IO,     "$\dv$damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction"
 V,      CP,     offset,                         ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",       ,       IO,     "$\vv_{\mathrm{off}}$offset between two springs"
 V,      CP,     springForceUserFunction,        ,               ,       PyFunctionVector3DmbsScalarIndexScalar4Vector3D, 0,           ,       IO,     "$\mathrm{UF} \in \Rcal^3$A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,      "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,      "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return (parameters.springForceUserFunction!=0);", "", CI,  "return true, if object has a computation user function"  
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
@@ -4431,13 +4433,13 @@ V,      CP,     damping,                        ,               ,       Matrix6D
 V,      CP,     rotationMarker0,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0"
 V,      CP,     rotationMarker1,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1"
 V,      CP,     offset,                         ,               ,       Vector6D,   "Vector6D({0.,0.,0.,0.,0.,0.})", ,   IO,     "translational and rotational offset considered in the spring force calculation"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 V,      CP,     springForceTorqueUserFunction,  ,               ,       PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D, 0, , IO,"$\mathrm{UF} \in \Rcal^6$A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below"
 V,      CP,     postNewtonStepUserFunction,     ,               ,       PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D, 0, , IO,"$\mathrm{UF}_{PN} \in \Rcal$A Python function which computes the error of the PostNewtonStep; see description below"
 #
 #++++++++++++++ for discontinuities:
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return (parameters.postNewtonStepUserFunction!=0);",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 #unused: Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return parameters.numberOfContactSegments;",                 ,       CI,     "Needs a data variable for every contact segment (tells if this segment is in contact or not)" 
@@ -4590,7 +4592,7 @@ V,      CP,     axisMarker0,                    ,               ,       Vector3D
 V,      CP,     offset,                         ,               ,       Real,   "0.", ,   IO,     "$x_\mathrm{off}$translational offset considered in the spring force calculation (this can be used as position control input!)"
 V,      CP,     velocityOffset,                 ,               ,       Real,   "0.", ,   IO,     "$v_\mathrm{off}$velocity offset considered in the damper force calculation (this can be used as velocity control input!)"
 V,      CP,     force,                          ,               ,       Real,   "0.", ,   IO,     "$f_c$additional constant force [SI:Nm] added to spring-damper; this can be used to prescribe a force between the two attached bodies (e.g., for actuation and control)"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 V,      CP,     springForceUserFunction,        ,               ,       PyFunctionMbsScalarIndexScalar5, 0, , IO,"$\mathrm{UF} \in \Rcal$A Python function which computes the scalar force between the two rigid body markers along axisMarker0 in $m0$ coordinates, if activeConnector=True; see description below"
 #
 #++++++++++++++ for discontinuities:
@@ -4749,14 +4751,14 @@ V,      CP,     rotationMarker1,                ,               ,       Matrix3D
 V,      CP,     offset,                         ,               ,       Real,   "0.", ,   IO,     "$v_\mathrm{off}$rotational offset considered in the spring torque calculation (this can be used as rotation control input!)"
 V,      CP,     velocityOffset,                 ,               ,       Real,   "0.", ,   IO,     "$\dot v_\mathrm{off}$angular velocity offset considered in the damper torque calculation (this can be used as angular velocity control input!)"
 V,      CP,     torque,                         ,               ,       Real,   "0.", ,   IO,     "$\tau_c$additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control)"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 V,      CP,     springTorqueUserFunction,       ,               ,       PyFunctionMbsScalarIndexScalar5, 0, , IO,"$\mathrm{UF} \in \Rcal$A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below"
 #V,      CP,     postNewtonStepUserFunction,     ,               ,       PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D, 0, , IO,"A Python function which computes the error of the PostNewtonStep; see description below"
 #
 #++++++++++++++ for discontinuities:
 Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return (parameters.springTorqueUserFunction!=0);", "", CI,  "return true, if object has a computation user function"  
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return (Index)(parameters.nodeNumber != EXUstd::InvalidIndex);",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 #unused: Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return parameters.numberOfContactSegments;",                 ,       CI,     "Needs a data variable for every contact segment (tells if this segment is in contact or not)" 
@@ -4798,7 +4800,7 @@ pythonShortName = CoordinateSpringDamper
 classType = Object
 objectType = Connector
 addIncludesC = 'class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
-outputVariables = "{'Displacement':'$\Delta q$relative scalar displacement of marker coordinates', 'Velocity':'$\Delta v$difference of scalar marker velocity coordinates', 'Force':'$f_{SD}$scalar spring force'}"
+outputVariables = "{'Displacement':'$\Delta q$relative scalar displacement of marker coordinates', 'Velocity':'$\Delta v$difference of scalar marker velocity coordinates', 'Force':'$f_{SD}$scalar force in connector'}"
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
     \mysubsubsubsection{Definition of quantities}
@@ -4903,7 +4905,7 @@ V,      CP,     damping,                        ,               ,       Real,   
 V,      CP,     offset,                         ,               ,       Real,       "0.",       ,       IO,      "$l_\mathrm{off}$offset between two coordinates (reference length of springs), see equation"
 V,      CP,     dryFriction,                    ,               ,       Real,       "0.",       ,       IO,      "$f_\mu$dry friction force [SI:N] against relative velocity; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$"
 V,      CP,     dryFrictionProportionalZone,    ,               ,       Real,       "0.",       ,       IO,      "$v_\mu$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 V,      CP,     springForceUserFunction,        ,               ,       PyFunctionMbsScalarIndexScalar7, 0,,       IO,     "$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with 8 parameters, see equations section / see description below"
 #
 Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return (parameters.springForceUserFunction!=0);", "", CI,  "return true, if object has a computation user function"  
@@ -5011,10 +5013,10 @@ V,      CP,     limitStopsStiffness,            ,               ,       Real,   
 V,      CP,     limitStopsDamping,              ,               ,       Real,       "0.",       ,       IO,      "$d_\mathrm{limits}$damping [SI:N/(m/s)] of limit stop (contact damping); following a linear contact model"
 V,      CP,     useLimitStops,                  ,               ,       bool,       "false",    ,       IO,      "if True, limit stops are considered and parameters must be set accordingly; furthermore, the NodeGenericData must have 3 data coordinates"
 #
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 V,      CP,     springForceUserFunction,        ,               ,       PyFunctionMbsScalarIndexScalar7, 0,,       IO,     "$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with 8 parameters, see equations section / see description below"
 #
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return 3*(useLimitStops || (dynamicFriction+);",                 ,       CI,     "needed in order to create ltg-lists for data variable of connector" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
@@ -5163,7 +5165,7 @@ V,      CP,     gravitationalConstant,          ,               ,       Real,   
 V,      CP,     mass0,                          ,               ,       UReal,      0.,                          ,       I,      "$mass_0$mass [SI:kg] of object attached to marker $m0$"
 V,      CP,     mass1,                          ,               ,       UReal,      0.,                          ,       I,      "$mass_1$mass [SI:kg] of object attached to marker $m1$"
 V,      CP,     minDistanceRegularization,      ,               ,       UReal,      0.,                          ,       IO,     "$d_{min}$distance [SI:m] at which a regularization is added in order to avoid singularities, if objects come close"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return false;", "", CI,  "return true, if object has a computation user function"  
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
@@ -5323,7 +5325,7 @@ V,      CP,     systemPressure,                 ,               ,       Real,   
 V,      CP,     tankPressure,                   ,               ,       Real,       0.,                          ,       I,      "$p_t$tank pressure [SI:N/(m$^2$)]"
 V,      CP,     useChamberVolumeChange,         ,               ,       Bool,       "false",                     ,       IO,     "if True, the pressure build up equations include the change of oil stiffness due to change of chamber volume"
 #
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #questionable if the functions should go into Parameter class:
 #V,      CP,     springForceUserFunction,        ,               ,       PyFunctionMbsScalarIndexScalar5, 0,                     ,       IO,     "$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below"
 #
@@ -5369,6 +5371,181 @@ V,      V,      colorPiston,                    ,               ,       Float4, 
 #file names automatically determined from class name
 writeFile = True
 
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = ObjectConnectorReevingSystemSprings
+classDescription = "A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by $nr$ rigid body markers $[m_0, \, m_1, \, \ldots, \, m_{nr-1}]$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by $m_{c0}$ and $m_{c1}$ ."
+cParentClass = CObjectConnector
+mainParentClass = MainObjectConnector
+visuParentClass = VisualizationObject
+pythonShortName = ReevingSystemSprings
+addIncludesC = 'class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
+outputVariables = "{'Distance':'$L$current total length of rope', 'VelocityLocal':'$\dot L$scalar time derivative of current total length of rope', 'ForceLocal':'$F$scalar force in reeving system (constant over length of rope)'}"
+classType = Object
+objectType = Connector
+equations =
+    %\mysubsubsubsection{Definition of quantities}
+    %\startTable{input parameter}{symbol}{description}
+    %\rowTable{stiffness}{$\kv \in \mathbb{R}^{6\times 6}$}{stiffness in $J0$ coordinates}
+    %\rowTable{TorqueLocal}{$\LU{J0}{\mv}$}{see below}
+    %\finishTable
+    %
+    \mysubsubsubsection{General model assumptions}
+    The \texttt{ConnectorReevingSystemSprings} model is based on a linear elastic, visco-elastic, and mass-less spring which
+    is tangent to a list of rolls. The contact with the rolls is friction-less, causing no torque w.r.t.\ the rolling axis of the sheave.
+    The force in the rope results from the difference of the total length $L$ compared to the reference length or the rope, which 
+    may be changed by adding or subtracting rope length at the end points. All geometric operations are performed in 3D, allowing to model
+    simple reeving systems in 3D.
+    
+    %++++++++++++++++++++++++
+    \begin{figure}[tbph]
+      \begin{center}
+      \includegraphics[width=10cm]{figures/CommonTangents3D.pdf}
+      \end{center}
+      \caption{Geometry of common tangent for two spatial circles defined by radii $R_A$ and $R_B$ as well as by the 
+      normalized axis vectors $\av_A$ and $\av_B$. The tangent is undefined, if one of the axis vectors is parallel to the 
+      vector $\cv$, which connects the two center points. The positive rotation sense is indicated by means of the 
+      angular velocities $\omega_A$ and $\omega_B$.}
+    	\label{fig:ReevingSystemSprings:tangents}
+    \end{figure}
+    %++++++++++++++++++++++++
+    \mysubsubsubsection{Common tangent of two circles in 3D}
+    In order to compute the total length of the rope of the reeving system, the tangent of two arbitrary circles in space needs to be computed.
+    Considering \fig{fig:ReevingSystemSprings:tangents}, the relations are based on the
+    center points of the circles $\pv_A$ and $\pv_B$, the radii $R_A$ and $R_B$ as well as
+    the axis vectors $\av_A$ and $\av_B$, the latter vectors also defining the side at which the tangent contacts.
+    For the definition of the tangent, the vectors $\rv_A$ and $\rv_B$ need to be computed.
+    
+    For the special case of $R_A=R_B=0$, it follows that $\rv_A=\pv_A$ and $\rv_B=\pv_B$.
+    Otherwise, we first compute the vector between circle centers,
+    \be
+      \cv = \pv_B - \pv_A, \quad \mathrm{and} \quad \cv_0 = \frac{\cv}{|\cv|} \eqComma
+    \ee
+    and obtain the tangent vectors
+    \be
+      \tv_A = \tv_B = \cv_0 \eqComma
+    \ee
+    as well as the normal vectors
+    \be
+      \nv_A = \av_A \times \cv_0, \quad \mathrm{and} \quad
+      \nv_B = \av_B \times \cv_0 \eqDot
+    \ee
+    Note that the orientation of the axis vectors $\av_A$ and $\av_B$ defines the orientation of the normals.
+    By definition, we assume the following conditions,
+    \be
+      \nv_A\tp \rv_A < 0, \quad \mathrm{and} \quad 
+      \nv_B\tp \rv_B < 0 \eqDot
+    \ee
+    For two circles with equal radius and axes orientations, the angles result in $\varphi_A=\varphi_B=\pi$.
+    In general, the unknown vectors $\rv_A$ and $\rv_B$ are computed by means of Newton's method.
+    The unknown tangent vector is given as 
+    \be
+      \tv_c = \pv_B + \rv_B - \pv_A - \rv_A = \cv + \rv_B - \rv_A \eqDot
+    \ee
+    We now parameterize the two unknown vectors by means of unknown angles $\varphi_A$ and $\varphi_B$,
+    \be
+      \rv_A = -R_A \left( \cos(\varphi_A) \tv_A - \sin(\varphi_A) \nv_A \right),
+      \quad \mathrm{and} \quad 
+      \rv_B = -R_B \left( \cos(\varphi_B) \tv_B - \sin(\varphi_B) \nv_B \right) \eqDot
+    \ee
+    As vectors $\rv_A$ and $\rv_B$ must be perpendicular to $\tv_c$, it follows that
+    \be
+      \rv_A\tp (\cv + \rv_B - \rv_A) = 0,
+      \quad \mathrm{and} \quad 
+      \rv_B\tp (\cv + \rv_B - \rv_A) = 0,
+    \ee
+    or
+    \be \label{eq:ReevingSystemSprings:Newton}
+      \rv_A\tp \cv + \rv_A\tp \rv_B - R_A^2 = 0,
+      \quad \mathrm{and} \quad 
+      \rv_B\tp \cv - \rv_B\tp\rv_A + R_B^2 = 0 \eqDot
+    \ee
+    The relations \eq{eq:ReevingSystemSprings:Newton} reduce to only one equation, if either $R_A=0$ or $R_B = 0$.
+    The equations can be solved by Newton's method by computing the jacobian of $\Jm_{CT}$ of \eq{eq:ReevingSystemSprings:Newton} w.r.t.\ the 
+    unknown angles $\varphi_A$ and $\varphi_B$. The iterations are started with
+    \be
+      \varphi_A = \pi \quad \mathrm{and} \quad \varphi_B = \pi,
+    \ee
+    and iterate until the error is below a certain tolerance, for details see the implementation in \texttt{Geometry.h}.
+    
+    \mysubsubsubsection{Connector forces}
+    The current rope length results from the configuration of sheaves, including start and end position:
+    \be
+      L = d_{m_0-m_1} + C_{m_1} + d_{m_1-m_2} + C_{m_2} + \ldots  + d_{m_{nr-2}-m_{nr-1}}
+    \ee
+    in which $d_{...}$ represents the free spans between two sheaves as computed from the common tangent in the previous section,
+    and $C_{...}$ represents the length along the circumference of the according marker if the according radius $r$ is non-zero.
+    The quantity $C_{...}$ can be computed easily as soon as the radius vectors to the tangents $\rv_A$ and $\rv_B$
+    are known. Within a series of tangents, the previous to the current tangent will always enclose an angle between $0$ and $2\cdot \pi$.
+    
+    In case that \texttt{hasCoordinateMarkers=True}, the total reference length and its derivative result as
+    \be
+      L_0 = L_{ref} + f_0 \cdot q_{m_{c0}} + f_1 \cdot q_{m_{c1}}, \quad
+      \dot L_0 = f_0 \cdot \dot q_{m_{c0}} + f_1 \cdot \dot q_{m_{c1}}, \quad
+    \ee
+    while we set $L_0 = L_{ref}$ and $\dot L_0=0$ otherwise.
+    The force in the reeving system (assumed to be constant all over the rope) reads
+    \be
+      F = (L-L_{0}) \frac{EA}{L_0} + (\dot L - \dot L_0)\frac{DA}{L_0}
+    \ee
+    Note that in case of $L_0=0$, the term $\frac{1}{L_0}$ is replaced by $1000$.
+    However, this case must be avoided by the user by choosing appropriate parameters for the system.
+
+    Additional damping may be added via the parameters $DT$ and $DS$, which have to be treated carefully. The shearing parameter may
+    be helpful to damp undesired oscillatory shearing motion, however, it may also damp rigid body motion of the overall mechanism.
+
+    Further details are given in the implementation and examples are provided in the \texttt{Examples} and \texttt{TestModels} folders.
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+#CObjectMarkerBodyPosition* automatically inserted!
+Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "connector's unique name"
+V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m_0, \, m_1, \, \ldots, \, m_{nr-1},\, m_{c0}, \, m_{c1}]\tp$list of position or rigid body markers used in reeving system and optional two coordinate markers ($m_{c0}, \, m_{c1}$); the first marker $m_0$ and the last rigid body marker $m_{nr-1}$ represent the ends of the rope and are directly connected to a position; the markers $m_1, \, \ldots, \, m_{nr-2}$ can be connected to sheaves, for which a radius and an axis can be prescribed. The coordinate markers are optional and represent prescribed length at the rope ends (marker $m_{c0}$ is added length at start, marker $m_{c1}$ is added length at end of the rope in the reeving system)"
+V,      CP,     hasCoordinateMarkers,           ,               ,       Bool,       "false",                  ,       IO,     "flag, which determines, the list of markers (markerNumbers) contains two coordinate markers at the end of the list, representing the prescribed change of length at both ends"
+V,      CP,     coordinateFactors,              ,               ,       Vector2D,   "Vector2D({1,1})",        ,       I,      "$[f_0,\, f_1]\tp$factors which are multiplied with the values of coordinate markers; this can be used, e.g., to change directions or to transform rotations (revolutions of a sheave) into change of length"
+V,      CP,     stiffnessPerLength,             ,               ,       UReal,      "0.",                     ,       I,      "$EA$stiffness per length [SI:N/m/m] of rope; in case of cross section $A$ and Young's modulus $E$, this parameter results in $E\cdot A$; the effective stiffness of the reeving system is computed as $EA/L$ in which $L$ is the current length of the rope"
+V,      CP,     dampingPerLength,               ,               ,       UReal,      "0.",                     ,       IO,     "$DA$axial damping per length [SI:N/(m/s)/m] of rope; the effective damping coefficient of the reeving system is computed as $DA/L$ in which $L$ is the current length of the rope"
+V,      CP,     dampingTorsional,               ,               ,       UReal,      "0.",                     ,       IO,     "$DT$torsional damping [SI:Nms] between sheaves; this effect can damp rotations around the rope axis, pairwise between sheaves; this parameter is experimental"
+V,      CP,     dampingShear,                   ,               ,       UReal,      "0.",                     ,       IO,     "$DS$damping of shear motion [SI:Ns] between sheaves; this effect can damp motion perpendicular to the rope between each pair of sheaves; this parameter is experimental"
+V,      CP,     referenceLength,                ,               ,       Real,       "0.",                     ,       IO,     "$L_{ref}$reference length for computation of roped force"
+V,      CP,     sheavesAxes,                    ,               ,       Vector3DList,"Vector3DList()",        ,       I,      "$\lv_a = [\LU{m0}{\av_0},\, \LU{m1}{\av_1},\, \ldots ] in [\Rcal^{3}, ...]$list of local vectors axes of sheaves; vectors refer to rigid body markers given in list of markerNumbers; first and last axes are ignored, as they represent the attachment of the rope ends"
+V,      CP,     sheavesRadii,                   ,               ,       Vector,      "Vector()",              ,       I,      "$\lv_r = [r_0,\, r_1,\, \ldots]\tp \in \Rcal^{n}$radius for each sheave, related to list of markerNumbers and list of sheaveAxes; first and last radii must always be zero."
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                   ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
+#
+#++++++++++++++ for discontinuities:
+V,      C,      tempPositionsList,              ,               ,       Vector3DList,"Vector3DList()",        ,       U,      "temporary list of vectors representing the rope local positions"
+Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
+Fv,     C,      RequestedNumberOfMarkers,       ,               ,       Index,      "return 0;",                      ,       CI,     "number of markers; 0 means no requirements"  
+#Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+#Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return (parameters.postNewtonStepUserFunction!=0);",                ,       CI,     "number of nodes; needed for every object" 
+#Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
+#unused: Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return parameters.numberOfContactSegments;",                 ,       CI,     "Needs a data variable for every contact segment (tells if this segment is in contact or not)" 
+#++++++++++++++
+#Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return (parameters.springForceTorqueUserFunction!=0);", "", CI,  "return true, if object has a computation user function"  
+Fv,     C,      HasUserFunction,                ,               ,       Bool,       "return false;", "", CI,  "return true, if object has a computation user function"  
+Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
+Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
+Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::_None;", ,   CI,     "provide requested markerType for connector" 
+Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,    "return object type (for node treatment in computation)" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ConnectorReevingSystemSprings';", , CI,     "Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
+#non-derived functions:
+F,      C,      ComputeReevingGeometry,         ,               ,       void,       , "const MarkerDataStructure& markerData, Index itemIndex, Vector3DList& positionsList, Real& actualLength, Real& actualLength_t, bool storePositions", CDI,    "compute reeving geometry based on tempPositionsList, length, time derivative of length" 
+F,      C,      ComputeForce,                   ,               ,       Real,       , "Real L, Real L0, Real L_t, Real L0_t, Real EA, Real DA", CDI,    "compute force in reeving system (including damping)" 
+#F,      C,      EvaluateUserFunctionForce,      ,               ,       void,       , "Vector6D& fLocVec6D, const MainSystemBase& mainSystem, Real t, Index itemIndex, Vector6D& uLoc6D, Vector6D& vLoc6D", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
+#VISUALIZATION:
+Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
+V,      V,      ropeRadius,                     ,               ,       float,  "0.001f",                        ,       IO,    "radius of rope"
+V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
+#V,      V,      tempPositionsListVis,           ,               ,       Vector3DList,"Vector3DList()",           ,       U,     "temporary list of vectors (for visualization) representing the rope local positions"
+#file names automatically determined from class name
+writeFile = True
 
 
 
@@ -5444,7 +5621,7 @@ miniExample =
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "constraints's unique name"
 V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector"
 V,      CP,     distance,                       ,               ,       UReal,      0.,                          ,       I,      "$d_0$prescribed distance [SI:m] of the used markers"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
@@ -5621,7 +5798,7 @@ V,      CP,     factorValue1,                   ,               ,       Real,   
 V,      CP,     velocityLevel,                  ,               ,       Bool,       false,                      ,       I,      "If true: connector constrains velocities (only works for \hac{ODE2} coordinates!); offset is used between velocities; in this case, the offsetUserFunction\_t is considered and offsetUserFunction is ignored"
 V,      CP,     offsetUserFunction,             ,               ,       PyFunctionMbsScalarIndexScalar, 0,                   ,       IO,     "$\mathrm{UF} \in \Rcal$A Python function which defines the time-dependent offset; see description below"
 V,      CP,     offsetUserFunction_t,           ,               ,       PyFunctionMbsScalarIndexScalar, 0,                   ,       IO,     "$\mathrm{UF}_t \in \Rcal$time derivative of offsetUserFunction; needed for velocity level constraints; see description below"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return (parameters.offsetUserFunction!=0) || (parameters.offsetUserFunction_t!=0);", "", CI,  "return true, if object has a computation user function"  
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
@@ -5774,8 +5951,8 @@ equations =
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs to}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
       \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^(n_{q_{m0}}+n_{q_{m1}})$}{connector coordinates, subsequently for marker $m0$ and marker $m1$, in current configuration}
-      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^(n_{q_{m0}}+n_{q_{m1}})$}{connector velocity coordinates in current configuration}
+      \rowTable{\texttt{q}}{Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$}{connector coordinates, subsequently for marker $m0$ and marker $m1$, in current configuration}
+      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$}{connector velocity coordinates in current configuration}
       \rowTable{\texttt{velocityLevel}}{Bool}{velocityLevel as currently stored in connector}
       \rowTable{\returnValue}{Vector $\in \Rcal^{n_{ae}}$}{returns vector (numpy array or list) of evaluated constraint equations for connector}
     \finishTable
@@ -5789,8 +5966,8 @@ equations =
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which object belongs to}
       \rowTable{\texttt{t}}{Real}{current time in mbs}
       \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
-      \rowTable{\texttt{q}}{Vector $\in \Rcal^(n_{q_{m0}}+n_{q_{m1}})$}{connector coordinates, subsequently for marker $m0$ and marker $m1$, in current configuration}
-      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^(n_{q_{m0}}+n_{q_{m1}})$}{connector velocity coordinates in current configuration}
+      \rowTable{\texttt{q}}{Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$}{connector coordinates, subsequently for marker $m0$ and marker $m1$, in current configuration}
+      \rowTable{\texttt{q\_t}}{Vector $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})}$}{connector velocity coordinates in current configuration}
       \rowTable{\texttt{velocityLevel}}{Bool}{velocityLevel as currently stored in connector}
       \rowTable{\returnValue}{MatrixContainer $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})\times n_{ae}}$}{returns special jacobian for connector, as exu.MatrixContainer, 
                               numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations;
@@ -5818,7 +5995,7 @@ V,      CP,     constraintUserFunction,         ,               ,       PyFuncti
 V,      CP,     jacobianUserFunction,           ,               ,       PyFunctionMatrixContainerMbsScalarIndex2VectorBool,0,,IO,"$\Jm_{user} \in \Rcal^{(n_{q_{m0}}+n_{q_{m1}}) \times n_{ae}}$A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t.\ the coordinates (times $f_{ODE2}$) and w.r.t.\ the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below"
 #V,      CP,     offsetUserFunction,             ,               ,       PyFunctionMbsScalarIndexScalar, 0,                   ,       IO,     "$\mathrm{UF} \in \Rcal$A Python function which defines the time-dependent offset; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; see description below"
 #V,      CP,     offsetUserFunction_t,           ,               ,       PyFunctionMbsScalarIndexScalar, 0,                   ,       IO,     "$\mathrm{UF}_t \in \Rcal$time derivative of offsetUserFunction; needed for 'velocityLevel=True', or for index2 time integration and for computation of initial accelerations in SecondOrderImplicit integrators; see description below"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return (parameters.constraintUserFunction!=0) || (parameters.jacobianUserFunction!=0);", "", CI,  "return true, if object has a computation user function"  
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
@@ -5938,12 +6115,22 @@ equations =
     \be
       \LU{J1}{\fv_t} = [f_{t,x} ,\; f_{t,y}]\tp = \LU{J1}{\tmu} \cdot \left( \phi(|\vv_t|,v_\mu) \cdot f_n \cdot \LU{J1}{\ev_t} \right) \eqComma
     \ee
-    with the regularization function, see Geradin and Cardona \cite{GeradinCardona2001} (Sec.\ 7.9.3):
+    with the regularization function, see Geradin and Cardona \cite{GeradinCardona2001} (Sec.\ 7.9.3), if \texttt{useLinearProportionalZone=False},
     \be
       \phi(v, v_\mu) = 
         \left\{ 
         	\begin{array}{ccl}
         		\displaystyle \left( 2-\frac{v}{v_\mu} \right)\frac{v}{v_\mu} & \mathrm{if} & v \le v_\mu \\
+        		1 & \mathrm{if} & v > v_\mu \\
+        	\end{array}
+        	\right.
+    \ee
+    and the linear regularization function, if \texttt{useLinearProportionalZone=True},
+    \be
+      \phi(v, v_\mu) = 
+        \left\{ 
+        	\begin{array}{ccl}
+        		\displaystyle \frac{v}{v_\mu} & \mathrm{if} & v \le v_\mu \\
         		1 & \mathrm{if} & v > v_\mu \\
         	\end{array}
         	\right.
@@ -5961,12 +6148,14 @@ equations =
     \ee
     The friction coefficient matrix $\LU{J1}{\tmu}$ is given in joint coordinates and computed from
     \be
-      \LU{J1}{\tmu} = \mp{\mu_x}{0}{0}{\mu_y}
+      \LU{J1}{\tmu} = \mp{\mu_x + d_x \cdot |\vv_t|}{0}{0}{\mu_y + d_y \cdot |\vv_t|}
     \ee
     where for isotropic behaviour of surface and wheel, it will give a diagonal matrix with the friction coefficient in the diagonal.
     In case that the dry friction angle $\alpha_t$ is not zero, the $\tmu$ changes to
     \be
-      \LU{J1}{\tmu} = \mp{\cos(\alpha_t)}{\sin(\alpha_t)}{-\sin(\alpha_t)}{\cos(\alpha_t)} \mp{\mu_x}{0}{0}{\mu_y} \mp{\cos(\alpha_t)}{-\sin(\alpha_t)}{\sin(\alpha_t)}{\cos(\alpha_t)}
+      \LU{J1}{\tmu} = \mp{\cos(\alpha_t)}{\sin(\alpha_t)}{-\sin(\alpha_t)}{\cos(\alpha_t)} 
+      \mp{\mu_x + d_x \cdot |\vv_t|}{0}{0}{\mu_y + d_y \cdot |\vv_t|} 
+      \mp{\cos(\alpha_t)}{-\sin(\alpha_t)}{\sin(\alpha_t)}{\cos(\alpha_t)}
     \ee
     %
     \mysubsubsubsection{Connector forces}
@@ -6003,11 +6192,13 @@ V,      CP,     contactStiffness,               ,               ,       Real,   
 V,      CP,     contactDamping,                 ,               ,       Real,       "0.",                       ,       IO,     "$d_c$normal contact damping [SI:N/(m s)]"
 V,      CP,     dryFriction,                    ,               ,       Vector2D,   "Vector2D({0,0})",          ,       IO,     "$[\mu_x,\mu_y]\tp$dry friction coefficients [SI:1] in local marker 1 joint $J1$ coordinates; if $\alpha_t==0$, lateral direction $l=x$ and forward direction $f=y$; assuming a normal force $f_n$, the local friction force can be computed as $\LU{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}$"
 V,      CP,     dryFrictionProportionalZone,    ,               ,       Real,       "0.",                       ,       IO,     "$v_\mu$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)"
+V,      CP,     viscousFriction,                ,               ,       Vector2D,   "Vector2D({0,0})",          ,       IO,     "$[d_x, d_y]\tp$viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint $J1$ coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity"
 V,      CP,     rollingFrictionViscous,         ,               ,       Real,       "0.",                       ,       IO,     "$\mu_r$rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground!"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     useLinearProportionalZone,      ,               ,       Bool,       "false",                    ,       IO,     "if True, a linear proportional zone is used; the linear zone performs better in implicit time integration as the Jacobian has a constant tangent in the sticking case"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return nDataVariables;",                 ,       CI,     "data (history) variable simplifies contact switching for implicit time integration and Newton method" 
 #
@@ -6161,11 +6352,11 @@ V,      C,      pContact,                       ,               ,       Vector3D
 # V,      C,      kBoundary,                      ,               ,       ConstSizeVector<2>,"ConstSizeVector<2>(0,0)",                 ,       IO,     "The maximum values the tangent to the polynomial can have, used to detect the edge and save iterations. "
 
 #
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #V,      CP,     planeNormal,                    ,               ,       Vector3D,   "Vector3D({0,0,1})",        ,       IO,     "$\LU{0}{\vv_{PN}}, \;\; |\LU{0}{\vv_{PN}}| = 1$normal to the contact / rolling plane (ground); Currently, this is not co-rotating with the ground body, but will do so in the future"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return nDataVariables;",                 ,       CI,     "data (history) variable simplifies contact switching for implicit time integration and Newton method" 
 #
@@ -6226,10 +6417,10 @@ V,      CP,     nodeNumber,                     ,               ,       NodeInde
 V,      CP,     contactStiffness,               ,               ,       UReal,      0.,                          ,       I,      "contact (penalty) stiffness [SI:N/m]; acts only upon penetration"
 V,      CP,     contactDamping,                 ,               ,       UReal,      0.,                          ,       I,      "contact damping [SI:N/(m s)]; acts only upon penetration"
 V,      CP,     offset,                         ,               ,       Real,       0.,                          ,       I,      "offset [SI:m] of contact"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return 1;",                 ,       CI,     "needed in order to create ltg-lists for data variable of connector" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
@@ -6287,10 +6478,10 @@ V,      CP,     contactDamping,                 ,               ,       UReal,  
 V,      CP,     circleRadius,                   ,               ,       UReal,      0.,                          ,       I,      "radius [SI:m] of contact circle"
 #delete: this is done by position marker! V,      CP,     circleMidpoint,                 ,               ,       Vector2D,   "Vector2D({0.,0.})",         ,       I,      "2D point [SI:m] of contact circle"
 V,      CP,     offset,                         ,               ,       Real,       0.,                          ,       I,      "offset [SI:m] of contact, e.g. to include thickness of cable element"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return parameters.numberOfContactSegments;",                 ,       CI,     "Needs a data variable for every contact segment (tells if this segment is in contact or not)" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
@@ -6709,10 +6900,10 @@ V,      CP,     circleRadius,                   ,               ,       UReal,  
 V,      CP,     useSegmentNormals,              ,               ,       Bool,       "true",                      ,       I,      " True: use normal and tangent according to linear segment; this is appropriate for very long (compared to circle) segments; False: use normals at segment points according to vector to circle center; this is more consistent for short segments, as forces are only applied in beam tangent and normal direction"
 #delete: this is done by position marker! V,      CP,     circleMidpoint,                 ,               ,       Vector2D,   "Vector2D({0.,0.})",         ,       I,      "2D point [SI:m] of contact circle"
 #now moved to MarkerBodyCable2DShape: #V,      CP,     offset,                         ,               ,       Real,       0.,                          ,       I,      "$h_o$offset [SI:m] of contact, e.g. to include thickness of cable element"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return 3*parameters.numberOfContactSegments;",                 ,       CI,     "Needs a data variable for every contact segment (tells if this segment is in contact or not), every friction condition (stick = 1, slip = 0), and the last sticking position in tangential direction in terms of an angle $\varphi$ in the local circle coordinates ($\varphi = 0$, if the vector to the contact position is aligned with the x-axis)" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
@@ -6912,7 +7103,7 @@ V,      CP,     markerNumbers,                  ,               2,      ArrayMar
 V,      CP,     constrainedAxes,                ,               6,      ArrayIndex, "ArrayIndex({1,1,1,1,1,1})", ,       IO,     "$\jv=[j_0,\,\ldots,\,j_5]$flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis"
 V,      CP,     rotationMarker0,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "$\LU{m0,J0}{\Rot}$local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0"
 V,      CP,     rotationMarker1,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "$\LU{m1,J1}{\Rot}$local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #V,      CP,     forceTorqueUserFunctionParameters, ,            ,       Vector6D,   "Vector6D({0.,0.,0.,0.,0.,0.})", ,    I,     "vector of 6 parameters for joint's forceTorqueUserFunction"
 V,      CP,     offsetUserFunctionParameters,   ,               ,       Vector6D,   "Vector6D({0.,0.,0.,0.,0.,0.})", ,    I,     "$\pv_{par}$vector of 6 parameters for joint's offsetUserFunction"
 #V,      CP,     forceTorqueUserFunction,        ,               ,       PyFunctionVector6DmbsScalarVector6D, 0,     ,       IO,     "A Python function which defines the time-dependent force (indices 0,1,2) and torque (indices 3,4,5) joint coordinates with parameters (mbs, t, forceTorqueUserFunctionParameters); the offset represents the current value of the object; it is highly RECOMMENDED to use sufficiently smooth functions, having consistent initial offsets with initial configuration of bodies, zero or compatible initial offset-velocity, and no accelerations; Example for Python function: def f(mbs, t, forceTorqueUserFunctionParameters): return [forceTorqueUserFunctionParameters[0]*(1 - np.cos(t*10*2*np.pi)), 0,0,0,0,0]"
@@ -7043,7 +7234,7 @@ Vp,     M,      name,                           ,               ,       String, 
 V,      CP,     markerNumbers,                  ,               2,      ArrayMarkerIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector"
 V,      CP,     rotationMarker0,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "$\LU{m0,J0}{\Rot}$local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0"
 V,      CP,     rotationMarker1,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "$\LU{m1,J1}{\Rot}$local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
@@ -7148,7 +7339,7 @@ Vp,     M,      name,                           ,               ,       String, 
 V,      CP,     markerNumbers,                  ,               2,      ArrayMarkerIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector"
 V,      CP,     rotationMarker0,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "$\LU{m0,J0}{\Rot}$local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0"
 V,      CP,     rotationMarker1,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "$\LU{m1,J1}{\Rot}$local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
@@ -7253,7 +7444,7 @@ equations =
 Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "constraints's unique name"
 V,      CP,     markerNumbers,                  ,               2,      ArrayMarkerIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector; $m1$ is the moving coin rigid body and $m0$ is the marker for the ground body, which use the localPosition=[0,0,0] for this marker!"
 V,      CP,     constrainedAxes,                ,               3,      ArrayIndex, "ArrayIndex({1,1,1})",      ,       IO,     "$\jv=[j_0,\,\ldots,\,j_2]$flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,       CI,     "constraints uses Lagrance multiplier formulation" 
@@ -7380,7 +7571,7 @@ equations =
 Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "constraints's unique name"
 V,      CP,     markerNumbers,                  ,               2,      ArrayMarkerIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers used in connector; $m0$ represents the ground and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point"
 V,      CP,     constrainedAxes,                ,               3,      ArrayIndex, "ArrayIndex({1,1,1})",      ,       IO,     "$\jv=[j_0,\,\ldots,\,j_2]$flag, which determines which constraints are active, in which $j_0,j_1$ represent the tangential motion and $j_2$ represents the normal (contact) direction"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 V,      CP,     discRadius,                     ,               ,       PReal,      "0",                        ,       I,      "defines the disc radius"
 V,      CP,     planeNormal,                    ,               ,       Vector3D,   "Vector3D({0,0,1})",        ,       IO,      "normal to the contact / rolling plane; cannot be changed at the moment"
 #
@@ -7424,7 +7615,7 @@ objectType = Joint
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "constraints's unique name"
 V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "list of markers used in connector"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
@@ -7465,7 +7656,7 @@ V,      CP,     markerNumbers,                  ,               ,       ArrayMar
 V,      CP,     axisMarker0,                    ,               ,       Vector3D,   "Vector3D({1.,0.,0.})",      ,       I,      "direction of prismatic axis, given as a 3D vector in Marker0 frame"
 V,      CP,     normalMarker1,                  ,               ,       Vector3D,   "Vector3D({0.,1.,0.})",      ,       I,      "direction of normal to prismatic axis, given as a 3D vector in Marker1 frame"
 V,      CP,     constrainRotation,              ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector also constrains the relative rotation of the two objects; if set to false, the constraint will keep an algebraic equation set equal zero"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,     "constraints uses Lagrance multiplier formulation" 
@@ -7641,10 +7832,10 @@ V,      CP,     nodeNumber,                     ,               ,       NodeInde
 V,      CP,     classicalFormulation,           ,               ,       Bool,       "true",                      ,       IO,     "True: uses a formulation with 3 (+1) equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; False: use local formulation, which only needs 2 (+1) equations and can be used with index 2 formulation"
 V,      CP,     constrainRotation,              ,               ,       Bool,       "false",                     ,       IO,     "True: add constraint on rotation of marker m0 relative to slope (if True, marker m0 must be a rigid body marker); False: marker m0 body can rotate freely"
 V,      CP,     axialForce,                     ,               ,       Real,       "0",                         ,       IO,     "$f_\mathrm{ax}$ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions."
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return 2;",                 ,       CI,     "data variables: [0] showing the current (local) index in slidingMarkerNumber list --> providing the cable element active in sliding; coordinate [1] stores the previous sliding coordinate" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
@@ -7801,10 +7992,10 @@ V,      CP,     slidingOffset,                  ,               ,       Real,   
 V,      CP,     nodeNumbers,                    ,               ,       ArrayNodeIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[n_{GD}, n_{ALE}]$node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one \hac{ODE2} coordinate"
 V,      CP,     usePenaltyFormulation,          ,               ,       Bool,       "false",                    ,       IO,     "flag, which determines, if the connector is formulated with penalty, but still using algebraic equations (IsPenaltyConnector() still false)"
 V,      CP,     penaltyStiffness,               ,               ,       Real,       0.,                         ,       I,      "$k$penalty stiffness [SI:N/m] used if usePenaltyFormulation=True"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex <= 1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex <= 1, __EXUDYN_invalid_local_node1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 2;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return 1;",                 ,       CI,     "data variables: [0] showing the current (local) index in slidingMarkerNumber list --> providing the cable element active in sliding; coordinate [1] stores the previous sliding coordinate" 
 #Done automatically? Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return 1;",                ,       CI,     "number of \hac{ODE2} coordinates; needed for object?" 
@@ -8734,9 +8925,9 @@ equations =
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "load's unique name"
 V,      CP,     markerNumber,                   ,               ,       MarkerIndex,"EXUstd::InvalidIndex",             ,       I,      "marker's number to which load is applied"
-V,      CP,     loadVector,                     ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "$\fv$vector-valued load [SI:N]"
+V,      CP,     loadVector,                     ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "$\fv$vector-valued load [SI:N]; in case of a user function, this vector is ignored"
 V,      CP,     bodyFixed,                      ,               ,       Bool,       "false",                    ,       IO,     "if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used"
-V,      CP,     loadVectorUserFunction,         ,               ,       PyFunctionVector3DmbsScalarVector3D, 0,    ,       IO,     "$\mathrm{UF} \in \Rcal^3$A Python function which defines the time-dependent load; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object"
+V,      CP,     loadVectorUserFunction,         ,               ,       PyFunctionVector3DmbsScalarVector3D, 0,    ,       IO,     "$\mathrm{UF} \in \Rcal^3$A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object"
 #
 #dimension must be known (1=scalar, 3=vector) Fv,     C,      Dimension,                      ,               ,       Index,      "return 3;",                ,       CI,     "dimensionality of load; 3D force vector==>dimension=3; scalar load==>dimension=1" 
 Fv,     C,      GetMarkerNumber,                ,               ,       Index,      "return parameters.markerNumber;", ,     CI,     "get according marker number where load is applied" 
@@ -8794,9 +8985,9 @@ equations =
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "load's unique name"
 V,      CP,     markerNumber,                   ,               ,       MarkerIndex,"EXUstd::InvalidIndex",             ,       I,      "marker's number to which load is applied"
-V,      CP,     loadVector,                     ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "$\ttau$vector-valued load [SI:N]"
+V,      CP,     loadVector,                     ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "$\ttau$vector-valued load [SI:N]; in case of a user function, this vector is ignored"
 V,      CP,     bodyFixed,                      ,               ,       Bool,       "false",                    ,       IO,     "if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower torque; if false: global coordinates are used"
-V,      CP,     loadVectorUserFunction,         ,               ,       PyFunctionVector3DmbsScalarVector3D, 0,    ,       IO,     "$\mathrm{UF} \in \Rcal^3$A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]"
+V,      CP,     loadVectorUserFunction,         ,               ,       PyFunctionVector3DmbsScalarVector3D, 0,    ,       IO,     "$\mathrm{UF} \in \Rcal^3$A Python function which defines the time-dependent load and replaces loadVector; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]"
 #
 #dimension must be known (1=scalar, 3=vector) Fv,     C,      Dimension,                      ,               ,       Index,      "return 3;",                ,       CI,     "dimensionality of load; 3D torque vector==>dimension=3; scalar load==>dimension=1" 
 Fv,     C,      GetMarkerNumber,                ,               ,       Index,      "return parameters.markerNumber;", ,     CI,     "get according marker number where load is applied" 
@@ -8861,7 +9052,7 @@ miniExample =
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "load's unique name"
 V,      CP,     markerNumber,                   ,               ,       MarkerIndex,"EXUstd::InvalidIndex",             ,       I,      "marker's number to which load is applied"
-V,      CP,     loadVector,                     ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "$\bv$vector-valued load [SI:N/kg = m/s$^2$]; typically, this will be the gravity vector in global coordinates"
+V,      CP,     loadVector,                     ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "$\bv$vector-valued load [SI:N/kg = m/s$^2$]; typically, this will be the gravity vector in global coordinates; in case of a user function, this v is ignored"
 V,      CP,     loadVectorUserFunction,         ,               ,       PyFunctionVector3DmbsScalarVector3D, 0,    ,       IO,     "$\mathrm{UF} \in \Rcal^3$A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!"
 #
 #dimension must be known (1=scalar, 3=vector) Fv,     C,      Dimension,                      ,               ,       Index,      "return 3;",                ,       CI,     "dimensionality of load; 3D force vector==>dimension=3; scalar load==>dimension=1" 
@@ -8925,8 +9116,8 @@ equations =
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "load's unique name"
 V,      CP,     markerNumber,                   ,               ,       MarkerIndex,"EXUstd::InvalidIndex",       ,       I,      "marker's number to which load is applied"
-V,      CP,     load,                           ,               ,       Real,       "0.",                       ,       I,      "$f$scalar load [SI:N]"
-V,      CP,     loadUserFunction,               ,               ,       PyFunctionMbsScalar2, 0,                    ,       IO,     "$\mathrm{UF} \in \Rcal$A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!"
+V,      CP,     load,                           ,               ,       Real,       "0.",                       ,       I,      "$f$scalar load [SI:N]; in case of a user function, this value is ignored"
+V,      CP,     loadUserFunction,               ,               ,       PyFunctionMbsScalar2, 0,                    ,       IO,     "$\mathrm{UF} \in \Rcal$A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector!"
 #
 Fv,     C,      GetMarkerNumber,                ,               ,       Index,      "return parameters.markerNumber;", ,     CI,     "get according marker number where load is applied" 
 Fv,     C,      SetMarkerNumber,                ,               ,       void,       "parameters.markerNumber = markerNumberInit;",    "Index markerNumberInit",     I,     "set according marker number where load is applied" 
@@ -9326,10 +9517,10 @@ V,      CP,     frictionCoefficient,            ,               ,       UReal,  
 V,      CP,     circleRadius,                   ,               ,       UReal,      0.,                          ,       I,      "$r$radius [SI:m] of contact circle"
 #delete: this is done by position marker! V,      CP,     circleMidpoint,                 ,               ,       Vector2D,   "Vector2D({0.,0.})",         ,       I,      "2D point [SI:m] of contact circle"
 V,      CP,     offset,                         ,               ,       Real,       0.,                          ,       I,      "$h_o$offset [SI:m] of contact, e.g. to include thickness of cable element"
-V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 #
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "release_assert(localIndex == 0);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return 3*parameters.numberOfContactSegments;",                 ,       CI,     "Needs a data variable for every contact segment (tells if this segment is in contact or not), every friction condition (stick = 1, slip = 0), and the last sticking position in tangential direction in terms of an angle $\varphi$ in the local circle coordinates ($\varphi = 0$, if the vector to the contact position is aligned with the x-axis)" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 

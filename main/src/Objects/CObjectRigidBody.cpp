@@ -444,7 +444,7 @@ void CObjectRigidBody::GetAccessFunctionBody(AccessFunctionType accessType, cons
 			value(1, 0) = 0.; value(1, 1) = m ; value(1, 2) = 0.;
 			value(2, 0) = 0.; value(2, 1) = 0.; value(2, 2) = m ;
 
-			//-A*uLocalTilde*Glocal part (=L in this case
+			//-A*uLocalTilde*Glocal part (=L) in this case
 			for (Index i = 0; i < nDim3D; i++)
 			{
 				for (Index j = 0; j < ((CNodeRigidBody*)GetCNode(0))->GetNumberOfRotationCoordinates(); j++)

@@ -339,8 +339,12 @@ private: //to be called internally only!
 	//! Render function called for every update of OpenGl window
 	static void Render(GLFWwindow* window); //GLFWwindow* needed in argument, because of glfwSetWindowRefreshCallback
 
-	static void SetProjection(int width, int height, float ratio, float& zoom, GLdouble& zFactor); //load GL_PROJECTION and set according to zoom, perspective, etc.
+	//! load GL_PROJECTION and set according to zoom, perspective, etc.; one function for render and mouse select
+	static void SetProjection(int width, int height, float ratio, float& zoom, GLdouble& zFactor);
 
+	//! set model view rotation and translation, unified for Render and mouse select
+	static void SetModelRotationTranslation(); 
+																								   
 	//! check if frame shall be grabed and saved to file using visualization options
 	static void SaveImage();
 

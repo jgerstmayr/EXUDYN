@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-09-24  19:27:20 (last modified)
+* @date         2022-11-02  16:59:59 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -101,7 +101,7 @@ public: // AUTO:
     //! AUTO:  Get type name of object; could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
     {
-        return "BeamGeometricallyExact";
+        return "BeamGeometricallyExact3D";
     }
 
     //! AUTO:  provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()

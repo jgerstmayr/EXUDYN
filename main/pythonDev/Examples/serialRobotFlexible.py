@@ -42,7 +42,7 @@ fileNames = ['testData/netgenRobotBase',
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 gravity=[0,0,-9.81]
-#geometry, arm lengths:
+#geometry, arm lengths:t
 L = [0.075,0.4318,0.15,0.4318]
 W = [0,0,0.015,0]
 rArm = 0.025 #radius arm

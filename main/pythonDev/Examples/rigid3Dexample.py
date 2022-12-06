@@ -1,4 +1,4 @@
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
 # Details:  A chain of 3D rigid bodies is simulated rigid bodies are connected via spring-dampers (no joints!)

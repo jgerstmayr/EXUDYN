@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-05-14  23:29:21 (last modified)
+* @date         2022-11-02  17:07:11 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -135,7 +135,7 @@ public: // AUTO:
     //! AUTO:  No nodenumber can be returned for ground object!
     virtual Index GetNodeNumber(Index localIndex) const override
     {
-        release_assert(0);
+        CHECKandTHROW(0, __EXUDYN_invalid_local_node0);
         return 0;
     }
 

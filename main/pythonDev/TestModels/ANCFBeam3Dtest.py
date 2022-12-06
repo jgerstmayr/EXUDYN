@@ -39,14 +39,14 @@ compute3D = True
 #2013 CND, Nachbagauer Gerstmayr (dynamic, 3D)
 cases = ['CantileverLinear2011', 'Cantilever2011', 'GeneralBending2013', 'Eigenmodes2013']
 nElementsList = [1,2,4,8,16,32,64,128,256,512,1024]
-nElementsList = [8]
-case = 2
+nElementsList = [128]
+case = 1
 useGraphics = False
 verbose = False
 
 bodyFixedLoad = False
 
-nElements = 1
+#nElements = 1
 
 print('case=', cases[case])
 
@@ -114,7 +114,9 @@ for nElements in nElementsList:
         ks1 = 0.229 #w/h=2
         
         print('J=', J, ', Iyy=', Iyy, ', Izz=', Izz)
-        ==> shear correction factor questionable; results do not agree (implementation bug?)
+        ==> case 0 and 1 agree well with literature, BUT:
+        ==> shear correction factor questionable for coupled bending/torsion; 
+            results do not agree (implementation bug?); check other references in literature
     
     sectionData.stiffnessMatrix = np.diag([Em*A, Gm*A*ks2, Gm*A*ks3, Gm*J*ks1, Em*Iyy, Em*Izz])
 
@@ -193,8 +195,10 @@ for nElements in nElementsList:
             mbs.AddLoad(Torque(markerNumber=mTip, loadVector = [MxTip, MyTip,0] ))
 
         for i in range(9):
-            nm0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nInit, coordinate=i))
-            mbs.AddObject(CoordinateConstraint(markerNumbers=[mnGround, nm0]))
+            #if i != 4 and i != 8: #exclude constraining the slope lengths
+            if True:
+                nm0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nInit, coordinate=i))
+                mbs.AddObject(CoordinateConstraint(markerNumbers=[mnGround, nm0]))
     
     
     # if compute2D:
@@ -337,7 +341,7 @@ for nElements in nElementsList:
 # exudynTestGlobals.testResult = uLast[1]
 
 
-# case= CantileverLinear2011
+# case= CantileverLinear2011 #agrees with NachbagauerPechsteinIrschikGerstmayrMUBO2011 (2D)
 # ne= 1 , ux= 9.122730371124987e-08 , uy= 0.0006166665660910742
 # ne= 2 , ux= 1.612930911054633e-07 , uy= 0.000761594059956051
 # ne= 4 , ux= 1.817632329093044e-07 , uy= 0.0007978259537503514
@@ -348,7 +352,7 @@ for nElements in nElementsList:
 # ne= 128 , ux= 1.8884218011550047e-07 , uy= 0.0008098914597375441
 # ne= 256 , ux= 1.8884741792568605e-07 , uy= 0.0008099003054159232
 
-# case= Cantilever2011
+# case= Cantilever2011 #agrees with NachbagauerPechsteinIrschikGerstmayrMUBO2011 (2D)
 # ne= 1 , ux= 0.07140273972210331 , uy= 0.5422582284347087
 # ne= 2 , ux= 0.12379212049042398 , uy= 0.6568711098369214
 # ne= 4 , ux= 0.14346766608034445 , uy= 0.6959356132426464

@@ -498,15 +498,44 @@ see also \refSection{sec:renderState}.
 %
 %
 
+\mysubsubsection{Renderer and 3D graphics}
+A 3D renderer is attached to the simulation. Visualization is started with  \texttt{exu.StartRenderer()}, see the examples and tutorials.
+The renderer uses an OpenGL window of a library called GLFW, which is platform-independent. 
+The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. There is no way to contruct models with the renderer. Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
+
+\noindent There are some main features in the renderer, using keyboard and mouse:
+\bi
+  \item press key H to show help in renderer
+  \item move model by pressing left mouse button and drag
+  \item rotate model by pressing right mouse button and drag
+  \item change visibility (wire frame, solid, transparent, ...) by pressing T
+  \item zoom all: key A
+  \item open visualization dialog: key V
+  \item show item number: click on graphics element with left mouse button
+  \item show item dictionary: click on graphics element with right mouse button  
+  \item ... (see \refSection{sec:VSettingsGeneral}ff.)
+\ei
+%
+Depending on your model (size, place, ...), you may need to adjust the following \texttt{openGL} parameters in \texttt{visualizationSettings}:
+\bi
+  \item light and light position 
+  \item shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
+  \item visibility of nodes, markers, etc. in according bodies, nodes, markers, ..., \texttt{visualizationSettings}
+  \item move camera with a selected marker: adjust \texttt{trackMarker} in \texttt{visualizationSettings.interactive}
+  \item ... (see \refSection{sec:VSettingsGeneral}ff.)
+\ei
+
+
 \mysubsubsection{Graphics pipeline}
 %deprecated, since there are user functions!: The user cannot interact with the visualization part for now.
 There are basically two loops during simulation, which feed the graphics pipeline.
 The solver runs a loop:
 \bi
-  \item compute new step
+  \item compute step (or set up initial values)
   \item finish computation step; results are in current state
   \item copy current state to visualization state (thread safe)
   \item signal graphics pipeline that new visualization data is available
+  \item the renderer may update the visualization depending on \texttt{graphicsUpdateInterval} in \texttt{visualizationSettings.general}
 \ei
 The openGL graphics thread (=separate thread) runs the following loop:
 \bi

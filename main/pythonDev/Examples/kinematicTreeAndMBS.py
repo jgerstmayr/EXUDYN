@@ -17,6 +17,7 @@ from math import pi, sin, cos#, sqrt
 from copy import copy, deepcopy
 
 import exudyn as exu
+from exudyn.utilities import *
 from exudyn.rigidBodyUtilities import Skew, Skew2Vec
 from exudyn.robotics import *
 

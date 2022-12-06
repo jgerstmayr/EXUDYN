@@ -67,7 +67,7 @@ def TestExamplesReferenceSolution():
         'scissorPrismaticRevolute2D.py':27.20255648904422,          #new 2022-07-11 (CState Parallel); #added JacobianODE2, but example computed with numDiff forODE2connectors, 2022-01-18: 27.202556489044145,
         'sensorUserFunctionTest.py':45.0,            
         'serialRobotTest.py':0.7681856909852399,                    #until 2022-04-21: 0.7680031232063571 wrong static torque compensation
-        'sliderCrank3Dbenchmark.py':3.3642761780921897,
+        'sliderCrank3Dtest.py':3.3642761780921897,
         'sliderCrankFloatingTest.py':0.591649163378833,
         'solverExplicitODE1ODE2test.py':3.3767933275970896,         #new 2022-07-11 (CState Parallel); 
         'sparseMatrixSpringDamperTest.py':-0.06779862812271394,     #changed to analytic Spring-Damper jacobian (missing d(vel)/dpos term): -0.06779862983767654,
@@ -216,7 +216,7 @@ errDiff = {#obtained on 2021-02-06 (Python3.7, 64bits): shows differences to old
  'rollingCoinPenaltyTest.py': 9.71445146547012e-17,
  'scissorPrismaticRevolute2D.py': 1.1823431123048067e-13,
  'serialRobotTest.py': 9.393517075295676e-12,
- 'sliderCrank3Dbenchmark.py': 0.0,
+ 'sliderCrank3Dtest.py': 0.0,
  'sliderCrankFloatingTest.py': 2.220446049250313e-16,
  'solverExplicitODE1ODE2test.py': 0.0,
  'sparseMatrixSpringDamperTest.py': -8.615330671091216e-15,
@@ -267,7 +267,7 @@ errDiff = {#obtained on 2021-02-06 (Python3.7, 64bits): shows differences to old
             # 'rollingCoinPenaltyTest.py':0.03489603106696451,
             # 'scissorPrismaticRevolute2D.py':27.202556489044575, #until 2021-03-20: 27.202556489044397,
             # 'serialRobotTest.py': 0.7680031232088501, #until 2021-09-10: 0.768003123206452, #until 2021-08-19(changed robotics.py): 0.7680031232091771 , #old controller (loadUserFunction): 0.7712176106978085,#change in EP constraints to nodes causes tiny error, seems to be error propagation; up to 2021-06-28: 0.7712176106955341; -4.309882450925784e-10 diff between old corrected and new gen alpha solver
-            # 'sliderCrank3Dbenchmark.py':3.3642761780921897,
+            # 'sliderCrank3Dtest.py':3.3642761780921897,
             # 'sliderCrankFloatingTest.py':0.5916491633788336,
             # 'solverExplicitODE1ODE2test.py':3.3767933275918964,
             # 'sparseMatrixSpringDamperTest.py':-0.06779862983767654,

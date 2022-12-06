@@ -103,7 +103,9 @@ if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https:
         # import netgen
         import netgen.gui
         ngs.Draw(mesh)
-        netgen.Redraw()
+        for i in range(10000000):
+            netgen.Redraw() #this makes the netgen window interactive
+            time.sleep(0.05)
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #Use fem to import FEM model and create FFRFreducedOrder object

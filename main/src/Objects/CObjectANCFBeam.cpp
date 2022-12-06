@@ -636,7 +636,7 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	const Index orderCurvature = 1; //reduced integration for two nodes, otherwise locking!
 	const Index orderAxialShear = 1;
-	const Index orderCrossSection = 2;
+	const Index orderCrossSection = 1; //Lobatto!!!
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//for thickness stiffness, take average of shear stiffness: 0.5*(GAy+GAz)
 

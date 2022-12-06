@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-06-16  11:58:37 (last modified)
+* @date         2022-12-01  20:24:37 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -44,7 +44,7 @@ public: // AUTO:
     Real systemPressure;                          //!< AUTO: system pressure [SI:N/(m\f$^2\f$)]
     Real tankPressure;                            //!< AUTO: tank pressure [SI:N/(m\f$^2\f$)]
     bool useChamberVolumeChange;                  //!< AUTO: if True, the pressure build up equations include the change of oil stiffness due to change of chamber volume
-    bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
+    bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorHydraulicActuatorSimpleParameters()
     {

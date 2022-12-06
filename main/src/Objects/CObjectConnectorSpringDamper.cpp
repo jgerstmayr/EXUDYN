@@ -203,6 +203,7 @@ void CObjectConnectorSpringDamper::GetOutputVariableConnector(OutputVariableType
 	case OutputVariableType::Displacement: value.CopyFrom(relPos); break;
 	case OutputVariableType::Velocity: value.CopyFrom(relVel); break;
 	case OutputVariableType::Force: value.CopyFrom(force*forceDirection); break;
+	case OutputVariableType::ForceLocal: value.CopyFrom(Vector1D(force)); break;
 	default:
 		SysError("CObjectConnectorSpringDamper::GetOutputVariable failed"); //error should not occur, because types are checked!
 	}

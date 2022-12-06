@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-03-16  23:34:41 (last modified)
+* @date         2022-12-01  20:24:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,7 +35,7 @@ public: // AUTO:
     Real damping;                                 //!< AUTO: damping [SI:N/(m s)] of damper; acts against d/dt(length)
     Real force;                                   //!< AUTO: added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression; can be used to model actuator force
     Real velocityOffset;                          //!< AUTO: velocity offset [SI:m/s] of damper, being equivalent to time change of reference length
-    bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
+    bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)> springForceUserFunction;//!< AUTO: A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorSpringDamperParameters()
@@ -149,7 +149,8 @@ public: // AUTO:
             (Index)OutputVariableType::Distance +
             (Index)OutputVariableType::Displacement +
             (Index)OutputVariableType::Velocity +
-            (Index)OutputVariableType::Force );
+            (Index)OutputVariableType::Force +
+            (Index)OutputVariableType::ForceLocal );
     }
 
 };

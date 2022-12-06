@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1284, 
-Number of resolved issues = 1109 (14 in current minor version), 
-Exudyn version = 1.4.14.dev1, 
-last change =  2022-10-20
+Number of issues = 1302, 
+Number of resolved issues = 1127 (32 in current minor version), 
+Exudyn version = 1.4.32.dev1, 
+last change =  2022-12-06
 
 
 <table style = "width:100%">
@@ -39,15 +39,15 @@ last change =  2022-10-20
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>1279</td>
-    <td>release_assert      </td>
+    <td>1298</td>
+    <td>ReevingSystemLinear </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> remove all asserts (in automatic code generation)</td>
-    <td>CHANGE</td>
+    <td> add test model to test suite</td>
+    <td>TESTING</td>
     <td></td>
-    <td>2022-10-13</td>
-    <td>2023-04-11</td>
+    <td>2022-12-01</td>
+    <td>2023-05-30</td>
     <td></td>
     <td></td>
     <td></td>
@@ -55,15 +55,31 @@ last change =  2022-10-20
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>1276</td>
-    <td>Renderer: marker tracking</td>
+    <td>1292</td>
+    <td>CSensorObject       </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> add option to track markers in renderer</td>
-    <td>EXTENSION</td>
+    <td> store MarkerDataStructure locally in order to avoid memory allocations for evaluation of sensor data; also do this for MainSystem::PyGetObjectOutputVariable</td>
+    <td>CHANGE</td>
     <td></td>
-    <td>2022-10-12</td>
-    <td>2023-04-10</td>
+    <td>2022-11-13</td>
+    <td>2023-05-12</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1290</td>
+    <td>ContactFrictionCircleCable2D</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> shows tangential forces in case of all friction stiffness and damping values are zero; may be caused by specific projection</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-11-05</td>
+    <td>2023-05-04</td>
     <td></td>
     <td></td>
     <td></td>
@@ -214,7 +230,7 @@ last change =  2022-10-20
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1247</td>
     <td>UserFunctions       </td>
     <td>JG</td>
@@ -230,7 +246,7 @@ last change =  2022-10-20
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1241</td>
     <td>Register Items      </td>
     <td>JG</td>
@@ -246,7 +262,7 @@ last change =  2022-10-20
     <td></td>
     <td></td>
   </tr>
-  <tr style = "background-color:#FFB266">
+  <tr style = "background-color:#FFAAAA">
     <td>1240</td>
     <td>Register unit tests </td>
     <td>JG</td>
@@ -892,22 +908,6 @@ last change =  2022-10-20
     <td>JG</td>
     <td>RAISED  </td>
     <td> rollingFrictionViscous only works for rolls with axis parallel to z-Plane; add MISSING formulas to Docu and adapt formulation</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-02-03</td>
-    <td>2022-04-04</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0925</td>
-    <td>ReevingSystemLinear </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> create reeving system along points defined by markers, using springs and one total length; extend MarkerDataStructure to cope with >2 markers</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2022-02-03</td>
@@ -2839,6 +2839,246 @@ last change =  2022-10-20
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1301</td>
+    <td>graphicsDataUtilities</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> AddEdgesAndSmoothenNormals fixed to process colors</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-06</td>
+    <td>2023-06-04</td>
+    <td>2022-12-06 12:37</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1300</td>
+    <td>graphicsDataUtilities</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> GraphicsDataFromPointsAndTrigs extended to accept color per point or 4 RGBA values</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-06</td>
+    <td>2023-06-04</td>
+    <td>2022-12-06 12:37</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1299</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> searchTreeBox not computed automatically (must be set manually)</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-12-02</td>
+    <td>2023-05-31</td>
+    <td>2022-12-02 12:51</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>computation of searchtree performed automatically now if no search tree box is specified; output message written in case of verboseMode=1</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1297</td>
+    <td>ConnectorSpringDamper</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> return scalar spring-damper force with OutputVariableType ForceLocal</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-01</td>
+    <td>2023-05-30</td>
+    <td>2022-12-01 16:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1296</td>
+    <td>dynamic solver      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add check that useIndex2=True is consistent with useNewmark=True</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-11-29</td>
+    <td>2023-05-28</td>
+    <td>2022-11-30 14:12</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1295</td>
+    <td>BeamGeometricallyExact2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add damping terms for bending, axial and shear deformation</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-11-17</td>
+    <td>2023-05-16</td>
+    <td>2022-11-17 15:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1294</td>
+    <td>BeamGeometricallyExact2D</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add reference strain/curvature</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-11-17</td>
+    <td>2023-05-16</td>
+    <td>2022-11-17 15:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1293</td>
+    <td>MarkerDataStructure </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend for more than 2 MarkerData; adjust caller functions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-11-13</td>
+    <td>2023-05-12</td>
+    <td>2022-11-13 16:53</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1291</td>
+    <td>Lie Group integration</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> CompositionRule in LieGroup nodes does not consider reference position; add reference configuration in composition rule (and subtract afterwards)</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-11-09</td>
+    <td>2023-05-08</td>
+    <td>2022-11-09 15:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1289</td>
+    <td>visualizationSettings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> interactive.trackMarker has wrong type leading to crash when closing visualizationSettings</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-11-05</td>
+    <td>2023-05-04</td>
+    <td>2022-11-05 14:15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1288</td>
+    <td>ConnectorRollingDiscPenalty</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add useLinearProportionalZone which performs better in implicit time integration</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-11-04</td>
+    <td>2023-05-03</td>
+    <td>2022-11-04 17:16</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1287</td>
+    <td>ConnectorRollingDiscPenalty</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add viscousFriction, using separate values for local X/Y coordinates</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-11-04</td>
+    <td>2023-05-03</td>
+    <td>2022-11-04 17:16</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1286</td>
+    <td>trackMarker         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> selection of objects wrong / check mouse selection procedure</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-11-02</td>
+    <td>2023-05-01</td>
+    <td>2022-11-04 20:46</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1285</td>
+    <td>Lobatto, LobattoIntegrate</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> order nomenclature is wrong. Lobatto2 needs to be renamed into Lobatto1 and so on</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-11-02</td>
+    <td>2023-05-01</td>
+    <td>2022-11-02 16:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1284</td>
+    <td>extend ALEANCF beam </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add effects due to axial and bending viscous damping in case of movingMassFactor==1</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-10-25</td>
+    <td>2023-04-23</td>
+    <td>2022-10-31 15:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>new damping terms for axially moving beams implemented according to 2022 Paper of Pieber, Ntarladima, Gerstmayr only for case movingMassFactor=1</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1283</td>
     <td>ProcessParameterList</td>
     <td>JG</td>
@@ -2903,6 +3143,22 @@ last change =  2022-10-20
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1279</td>
+    <td>release_assert      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove all asserts (in automatic code generation)</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-10-13</td>
+    <td>2023-04-11</td>
+    <td>2022-11-02 17:10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1278</td>
     <td>center point        </td>
     <td>JG</td>
@@ -2933,6 +3189,22 @@ last change =  2022-10-20
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1276</td>
+    <td>Renderer: marker tracking</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to track markers in renderer</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-10-12</td>
+    <td>2023-04-10</td>
+    <td>2022-11-02 17:13</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>see visualizationSettings.interactive for several trackMarker... options</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1275</td>
@@ -7701,6 +7973,22 @@ last change =  2022-10-20
     <td></td>
     <td></td>
     <td>adapted test to avoid move assignment</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0925</td>
+    <td>ReevingSystemSprings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> create reeving system along points defined by markers, using massless springs and one total length; add rigid body markers for position of sheaves; use coordinate markers for prescribed change of length at end of reeving system</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-02-03</td>
+    <td>2022-04-04</td>
+    <td>2022-11-19 01:11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>see new ObjectConnectorReevingSystemSprings</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0924</td>

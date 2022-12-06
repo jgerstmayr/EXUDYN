@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-12  00:06:26 (last modified)
+* @date         2022-12-01  20:24:37 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -36,7 +36,7 @@ public: // AUTO:
     Real offset;                                  //!< AUTO: translational offset considered in the spring force calculation (this can be used as position control input!)
     Real velocityOffset;                          //!< AUTO: velocity offset considered in the damper force calculation (this can be used as velocity control input!)
     Real force;                                   //!< AUTO: additional constant force [SI:Nm] added to spring-damper; this can be used to prescribe a force between the two attached bodies (e.g., for actuation and control)
-    bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
+    bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)> springForceUserFunction;//!< AUTO: A Python function which computes the scalar force between the two rigid body markers along axisMarker0 in \f$m0\f$ coordinates, if activeConnector=True; see description below
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorLinearSpringDamperParameters()

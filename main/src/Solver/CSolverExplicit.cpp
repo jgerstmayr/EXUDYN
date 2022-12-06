@@ -850,7 +850,7 @@ void CSolverExplicitTimeInt::PrecomputeConstraintElimination(CSystem& computatio
 
 				if (failed)
 				{
-					PyError(STDstring("SolverExplicit: explicit integrator detected CoordinateConstraint object ") + 
+					PyError(STDstring("SolverExplicit: explicit integrator detected object ") + 
 						EXUstd::ToString(cnt) + " which contains constraints that cannot be solved; aborting solver", file.solverFile);
 				}
 			}

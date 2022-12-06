@@ -392,6 +392,103 @@ namespace HGeometry {
 	}
 
 
+	//! compute common tangent of 2 spatial circles A and B defined by center point p, axis a, radius R; 
+	//! computes global radius vector r;
+	//! caseA and caseB shall be +1/-1 to define the required cases
+	//! returns true if successful, false in case of any error
+	inline bool CommonTangentOf2Circles(const Vector3D& pA, const Vector3D& pB, const Vector3D& aA, const Vector3D& aB, Real RA, Real RB,
+		Vector3D& rA, Vector3D& rB, Real caseA = 1., Real caseB = 1., bool throwException = true) //, Real& phiA, Real& phiB)
+	{
+		//if both radii, it needs no iterations
+		if (RA == 0. && RB == 0.)
+		{
+			rA = Vector3D(0.);
+			rB = Vector3D(0.);
+			return true;
+		}
+
+		Vector3D c = pB - pA;
+		Real cLen = c.GetL2Norm();
+		if (cLen == 0)
+		{
+			if (throwException) { CHECKandTHROWstring("CommonTangentOf2Circles: distance of center of two circles may not be zero; check your circles system"); }
+			else { return false; }
+		}
+
+		Vector3D c0 = c * (1. / cLen);
+		Vector3D nA = aA.CrossProduct(c0);
+		Vector3D nB = aB.CrossProduct(c0);
+		//nA needs to be normalized!!!
+		Real nAlen = nA.GetL2Norm();
+		Real nBlen = nA.GetL2Norm();
+		if (nAlen == 0. || nBlen == 0.)
+		{
+			if (throwException) { CHECKandTHROWstring("CommonTangentOf2Circles: axes may not be parallel to vector between circle midpoints"); }
+			else { return false; }
+		}
+		nA *= 1. / nAlen;
+		nB *= 1. / nBlen;
+
+		Vector3D tA = nA.CrossProduct(aA);
+		Vector3D tB = nB.CrossProduct(aB);
+		//pout << "common tangent:\n";
+		//pout << "nA=" << nA.GetL2Norm() << ", nB=" << nB.GetL2Norm() 
+		//	<< ", tA=" << tA.GetL2Norm() << ", tB=" << tB.GetL2Norm() 
+		//	<< ", aA=" << aA.GetL2Norm() << ", aB=" << aB.GetL2Norm() << "\n";
+		Vector2D x({ EXUstd::pi*0.5, EXUstd::pi*0.5 }); //phiA, phiB for Newton's method
+
+		const Real tol = 1e-12;
+		Real lastError = 1.;
+		Real tolFact = (cLen + RA + RB)*(RA + RB); //factor for error, resulting from approx. residual (Res) norm
+		Index nIt = 0;
+		const Index maxIt = 8;
+		while (lastError > tol && nIt++ < maxIt)
+		{
+			Real phiA = x[0];
+			Real phiB = x[1];
+			Real sinPhiA = sin(phiA);
+			Real sinPhiB = sin(phiB);
+			Real cosPhiA = cos(phiA);
+			Real cosPhiB = cos(phiB);
+			//residual:
+			rA = RA * (tA*cosPhiA - caseA * nA * sinPhiA);
+			rB = RB * (tB*cosPhiB - caseB * nB * sinPhiB);
+
+			//Tangent: tc=pB+rB-pA-rA = c+rB-rA
+			//Residual: tc*rA=0, tc*rB=0 
+			//     ==>  (c+rB-rA)*rA=0, (c+rB-rA)*rB=0 
+			Vector2D Res({ c*rA - RA * RA + rA * rB, c*rB + RB * RB - rA * rB });
+
+			//derivatives:
+			Vector3D rA_phiA = (-RA * sinPhiA)*tA - (RA*cosPhiA)*nA;
+			Vector3D rB_phiB = (-RB * sinPhiB)*tB - (RB*cosPhiB)*nB;
+
+			Matrix2D Jac(2, 2);
+			Jac(0, 0) = c * rA_phiA + rA_phiA * rB;
+			Jac(1, 0) = -rA_phiA * rB; //der. w.r.t. phiA
+			Jac(0, 1) = rA * rB_phiB;
+			Jac(1, 1) = c * rB_phiB - rA * rB_phiB; //der. w.r.t. phiB
+
+			//special cases if one of the radii is zero
+			if (RA == 0.) { Jac(0, 0) = 1.; Res[0] = 0.; } //in this case, 
+			if (RB == 0.) { Jac(1, 1) = 1.; Res[1] = 0.; } //in this case, 
+
+			Real det = Jac(0, 0)*Jac(1, 1) - Jac(0, 1)*Jac(1, 0);
+			if (det == 0)
+			{
+				if (throwException) { CHECKandTHROW(det != 0., "CommonTangentOf2Circles: tangent not found; possibly sheaves are arranged in inappropriate configuration"); }
+				else { return false; }
+			}
+			x -= Jac.GetInverse()*Res; //Newton step
+
+			lastError = Res.GetL2Norm() / tolFact;
+
+			//pout << "it" << nIt << ", phiA=" << phiA << ", phiB=" << phiB << ", rA=" << rA << ", rB=" << rB << ", err=" << lastError << "\n";
+		}
+		if (nIt == maxIt) { return false; }
+		return true;
+	}
+
 
 };
 

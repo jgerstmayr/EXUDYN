@@ -209,6 +209,7 @@ namespace EXUstd {
 	//not tested if works with MAC or linux
 	constexpr double LOWESTREAL = std::numeric_limits<Real>::lowest(); //lowest (neg) Real number
 	constexpr double MAXREAL = std::numeric_limits<Real>::max();  //highest (pos) Real number
+	constexpr Index MAXINDEX = std::numeric_limits<int>::max();  //highest (pos) Real number
 
 	//empty class for default initialization, cannot be converted from e.g. Real, Index, etc.
 	class Dummy
@@ -351,7 +352,7 @@ extern bool linalgPrintUsePythonFormat; //!< defined in Vector.cpp; true: use py
 	- EXAMPLES: write 'ODEsystem', BUT: 'ODE1Equations'
 	- do not use consecutive capitalized words, e.g. DO NOT WRITE 'ODEAE'
 	- for functions use ODEComputeCoords(), for variables avoid 'ODE' at beginning: use nODE or write odeCoords
-    - do not use '_' within variable or function names; exception: derivatives, release_assert
+    - do not use '_' within variable or function names; exception: derivatives
     - use name which exactly describes the function/variable: 'numberOfItems' instead of 'size' or 'l'
     - Examples for variable names: secondOrderSize, massMatrix, mThetaTheta
     - Examples for function/class names: SecondOrderSize, EvaluateMassMatrix, Position(const Vector3D& localPosition)

@@ -412,13 +412,13 @@ namespace ContactHelper
 		ConstSizeVector<4> integrationWeights;
 		if (settings.ancfCableUseExactMethod)
 		{
-			integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder4Points);
-			integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder4Weights);
+			integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder3Points);
+			integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder3Weights);
 		}
 		else
 		{
-			integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder4Points);
-			integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder4Weights);
+			integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder3Points);
+			integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder3Weights);
 			//integrationPoints.CopyFrom(EXUmath::gaussRuleOrder1Points);
 			//integrationWeights.CopyFrom(EXUmath::gaussRuleOrder1Weights);
 		}

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-01-30  18:19:34 (last modified)
+* @date         2022-12-01  20:24:37 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -32,7 +32,7 @@ public: // AUTO:
     Real mass0;                                   //!< AUTO: mass [SI:kg] of object attached to marker \f$m0\f$
     Real mass1;                                   //!< AUTO: mass [SI:kg] of object attached to marker \f$m1\f$
     Real minDistanceRegularization;               //!< AUTO: distance [SI:m] at which a regularization is added in order to avoid singularities, if objects come close
-    bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temorarily) a connector or constraint
+    bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorGravityParameters()
     {

@@ -1403,8 +1403,8 @@ class ObjectFFRFreducedOrderInterface:
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**class: helper calss for function ComputeHurtyCraigBamptonModes, declaring some computation options. It offers the following options:\\
 # - allBoundaryNodes:     compute a single static mode for every boundary coordinate\\
-# - RBE2:                 static modes only for rigid body motion at boundary nodes\\
-# - RBE3:                 [yet NOT AVAILABLE] averaged rigid body interfaces; for future implementations\\
+# - RBE2:                 static modes only for rigid body motion at boundary nodes; using rigid boundary surfaces (additional stiffening)\\
+# - RBE3:                 static modes only for rigid body motion at boundary nodes; averaged rigid body motion at boundary surfaces (leads to deformation at boundaries)\\
 # - noStaticModes:        do not compute static modes, only eigen modes (not recommended; usually only for tests)
 class HCBstaticModeSelection(Enum):
     allBoundaryNodes = 1    #compute a single static mode for every boundary coordinate; if this is used, 6 constraints need to be added to the ObjectFFRFreducedOrder, otherwise there is additional rigid body motion!
@@ -3414,7 +3414,7 @@ class FEMinterface:
 #        xBlock = np.kron(np.eye(nNodes), X) #create big block-diagonal matrix
 #        G=np.dot(xBlock,M)
         
-        if self.NumberOfCoordinates() > 1000:
+        if self.NumberOfCoordinates() > 1000 and useSparseSolver == False:
             print('WARNING: ComputeCampbellDiagram(...): system has more than 1000 coordinates, set useSparseSolver=True')
             if self.NumberOfCoordinates() > 5000:
                 raise ValueError('ComputeCampbellDiagram(...): system has more than 5000 coordinates, MUST set useSparseSolver=True')
@@ -3443,11 +3443,21 @@ class FEMinterface:
                 omega = val * terminalFrequency * 2*np.pi / frequencySteps
                 if verbose:
                     print("compute Campbell for frequency =", round(omega/(2*np.pi),3), " / ", terminalFrequency, '(Hz)')
-                A = np.block([[factorGyro*omega * G, M                    ],
-                              [                   M, np.zeros((nODE,nODE))]])
-        
+
+                if True:
+                    A = np.block([[factorGyro*omega * G, M                    ],
+                                  [                   M, np.zeros((nODE,nODE))]])
             
-                Amod = -np.dot(np.linalg.inv(A),B)
+                
+                    Amod = -np.dot(np.linalg.inv(A),B)
+                
+                else:
+                    Minv = np.linalg.inv(M)
+                    #alternative approach:
+                    Amod = np.block([[np.zeros((nODE,nODE)),  np.eye(nODE) ],
+                                     [              -Minv@K, -Minv@(factorGyro*omega * G)]])
+                    
+                
                 #print("Amod =", Amod)
                 [eigVals, eigVecs] = eig(Amod) #this gives omega^2 ... squared eigen frequencies (rad/s)
             
@@ -3502,6 +3512,8 @@ class FEMinterface:
 
             campbellFrequencies = []
             listFrequencies = []
+   
+            minNumberOfEigenvalues = 2*(nEigenfrequencies+1)
     
             for val in range(frequencySteps+1):
                 
@@ -3531,8 +3543,19 @@ class FEMinterface:
                 if verbose == 2:
                     print('  frequencies =',listEigAbs[0:nEigenfrequencies+1])
             
+                minNumberOfEigenvalues = min(minNumberOfEigenvalues, len(listEigAbs))
                 campbellFrequencies += [list(listEigAbs[0:nEigenfrequencies+1])] #+1 for rigid body mode 0
+                    
                 listFrequencies += [omega/(2*np.pi)]
+
+            #sometimes there are several duplicated eigenvalues, therefore need to clean up...
+            cfClean = []
+            for freq in campbellFrequencies:
+                cfClean += [freq[0:minNumberOfEigenvalues]]
+            campbellFrequencies = cfClean
+            # print('minNumberOfEigenvalues=',minNumberOfEigenvalues)
+            #adjust in case that less results are available
+            nEigenfrequencies = min(nEigenfrequencies,minNumberOfEigenvalues-1)
 
             
         if plotDiagram:
@@ -3544,7 +3567,7 @@ class FEMinterface:
             nPlotFrequencies = nEigenfrequencies
             if nEigenfrequencies > 27:
                 nPlotFrequencies = 27
-                print("only 28 eigenfrequencies can be plotted!")
+                print("only 27 eigenfrequencies can be plotted!")
             
             for i in range(nPlotFrequencies): #do not plot rigid body mode 0
                 plt.plot(listFrequencies, campbellFrequencies[:,i+1], PlotLineCode(i+1), label='freq '+str(i))

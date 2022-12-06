@@ -18,6 +18,8 @@ from exudyn.lieGroupIntegration import *
 import numpy as np
 from numpy import linalg as LA
 
+from math import pi, sin, cos
+
 useGraphics = True #without test
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #you can erase the following lines and all exudynTestGlobals related operations if this is not intended to be used as TestModel:
@@ -45,8 +47,10 @@ omega0 = [6,0,0] #initial crank angular velocity
 
 #initial values for bodies 1 and 2 computed from initial value problem with constant angular velocity
 v1Init = [1.2e-01, -2.400e-01, 0]
-#omega1Init = [7.29730172e-01, -1.39497250e+00, 4.79376439e-01]
-omega1Init = [1.6941176470530785, -0.8470588235366621, 0.705882352947701] #appr. 10 digits accuracy
+#omega1Init = [0,0,0]
+#omega1Init = [1.9199960831808043, -0.9600095615843229, 0.48000362878317626]
+omega1Init = [1.92, -0.96, 0.48] #approx. retrieved from fixedVelocity=True, looks like this is the exact values
+
 #initial values: 0.12,-0.24,0,-0.9343942376,-2.73093948,-0.6316790456
 v2Init = [0.24,0,0]
 omega2Init = [0,0,0]
@@ -66,17 +70,18 @@ pC = [xD, 0, 0]
 vCB = np.array(pC) - np.array(pB)
 exu.Print('vCB len=', LA.norm(vCB))
 #xAxis1 = (1/lBC)*vCB #local x-axis of conrod
-[xAxis1,zAxis1, vDummy] = GramSchmidt(vCB, pA) # compute projected pA to xAxis1 ==> gives z axis
+[xAxis1,zAxis1, vDummy] = GramSchmidt(vCB, [0, yA, zA+lAB]) # compute projected pA to xAxis1 ==> gives z axis
 yAxis1 = -np.cross(xAxis1, zAxis1)
 
-rotMatBC=np.array([xAxis1, yAxis1, zAxis1]).transpose()
+rotMatBC=np.array([xAxis1, yAxis1, zAxis1]).T #xAxis, etc. become row vectors ==> transpose needed!
+# rotMatBC=np.array([xAxis1, -vDummy, zAxis1]).T #xAxis, etc. become row vectors ==> transpose needed!
 
 #mass and inertia
 mAB = 0.12
 mBC = 0.5
 mSlider = 2
 
-iAB = np.diag([0.0001,0.00001,0.0001]) #crank inertia
+iAB = np.diag([0.0001,0.0001,0.00001]) #crank inertia
 #iBC = np.diag([0.004,0.0004,0.004])    #conrod inertia; iftomm: x=axis of conrod; McPhee: y=axis of conrod
 iSlider = np.diag([0.0001,0.0001,0.0001]) #slider inertia; McPhee: no inertia of slider / does not rotate
 
@@ -85,17 +90,22 @@ iSlider = np.diag([0.0001,0.0001,0.0001]) #slider inertia; McPhee: no inertia of
 #<Text-field prompt="&gt; " style="Maple Input" layout="Normal">Ixx1:= 0.0001; Ixx2:= 0.0004; Iyy2:= 0.004; Izz2:= 0.004; G:= 9.81;</Text-field>
 
 #we choose x-axis as conrod axis!
+#adjusted to benchmark example
 iBC = np.diag([0.0004,0.004,0.004])    #conrod inertia; iftomm: x=axis of conrod; McPhee: y=axis of conrod
-
+#original:
+# iBC = np.diag([0.004,0.0004,0.004])    #conrod inertia; iftomm: x=axis of conrod; McPhee: y=axis of conrod
 
 inertiaAB = RigidBodyInertia(mass=mAB, inertiaTensor=iAB)
+inertiaAB = inertiaAB.Translated([0,0,0.5*lAB])
+#inertiaAB.com = [0,0,0.5*lAB]
 inertiaBC = RigidBodyInertia(mass=mBC, inertiaTensor=iBC)
 inertiaSlider = RigidBodyInertia(mass=mSlider, inertiaTensor=iSlider)
 
 fixedVelocity = False #constrain angular velocity of crank
 
 nodeType=exu.NodeType.RotationEulerParameters
-#nodeType=exu.NodeType.RotationRxyz
+# nodeType=exu.NodeType.RotationRotationVector #Lie group integrator
+# nodeType=exu.NodeType.RotationRxyz
 
 
 ################ Body0: CRANK
@@ -105,7 +115,8 @@ graphicsAB = GraphicsDataRigidLink(p0=[0,0,0],p1=[0,0,lAB], axis0=[1,0,0],
                                    width = [0.02,0.02], color=color4steelblue)
 
 [n0,b0]=AddRigidBody(mainSys = mbs, inertia=inertiaAB, nodeType=str(nodeType), 
-                    position=pA, angularVelocity=omega0, gravity=g, 
+                    position=pA, 
+                    angularVelocity=omega0, gravity=g, 
                     graphicsDataList=[graphicsAB])
 
 ################ Body1: CONROD
@@ -118,14 +129,23 @@ pBC = ScalarMult(0.5,VAdd(pB,pC))
                     rotationMatrix=rotMatBC, gravity=g, graphicsDataList=[graphicsBC])
 
 ################ Body2: SLIDER
-d = 0.03
-graphicsSlider = GraphicsDataOrthoCube(-d/2,-d/2,-d/2, d/2,d/2, d/2, [0.5,0.5,0.5,0.5])
+dSlider = 0.02
+graphicsSlider = GraphicsDataOrthoCubePoint(size=[dSlider*2,dSlider,dSlider], color=color4dodgerblue[0:3]+[0.5])
 [n2,b2]=AddRigidBody(mainSys = mbs, inertia=inertiaSlider, nodeType=str(nodeType), 
-                    position=pC, velocity=v2Init, angularVelocity=[0,0,0], 
+                    position=pC, velocity=v2Init, angularVelocity=[0,0,0],
+                    gravity=g,
                     graphicsDataList=[graphicsSlider])
 
+dimT = 0.02
+dimZ = 0.2
+dimX = 0.3
+dimY = 0.24
+gGround = [GraphicsDataOrthoCubePoint([-0.5*dimT,0,0.5*dimZ-dimT],[dimT, dimY, dimZ], color=color4grey) ]
+gGround+= [GraphicsDataOrthoCubePoint([0.5*dimX-dimT,0,-dimT*0.5-dSlider*0.5],[dimX, dimY, dimT], color=color4darkgrey) ]
+gGround+= [GraphicsDataOrthoCubePoint([0.5*dimX-dimT,-dSlider*0.25-dimY*0.25,-dimT*0.5],[dimX, dimY*0.5-dSlider*0.5, dimT], color=color4grey) ]
+gGround+= [GraphicsDataOrthoCubePoint([0.5*dimX-dimT,+dSlider*0.25+dimY*0.25,-dimT*0.5],[dimX, dimY*0.5-dSlider*0.5, dimT], color=color4grey) ]
 
-oGround = mbs.AddObject(ObjectGround())
+oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=gGround)))
 markerGroundA = mbs.AddMarker(MarkerBodyRigid(name='markerGroundA', bodyNumber=oGround, localPosition=pA))
 markerGroundD = mbs.AddMarker(MarkerBodyRigid(name='markerGroundD', bodyNumber=oGround, localPosition=[0,0,0]))
 
@@ -146,30 +166,47 @@ mbs.AddObject(GenericJoint(markerNumbers=[markerGroundD, markerSlider], constrai
 mbs.AddObject(GenericJoint(markerNumbers=[markerCrankB, markerConrodB], constrainedAxes=[1,1,1,0,0,0],
                             visualization=VObjectJointGeneric(axesRadius=0.005, axesLength=0.02)))
 
-#classical cardan, x=locked
-#mbs.AddObject(GenericJoint(markerNumbers=[markerConrodC, markerSlider], constrainedAxes=[1,1,1,1,0,0],
-#                            visualization=VObjectJointGeneric(axesRadius=0.005, axesLength=0.02)))
 
-mbs.AddObject(GenericJoint(markerNumbers=[markerSlider, markerConrodC], constrainedAxes=[1,1,1,0,0,1], # xAxisMarker0=free, yAxisMarker1=free
+# mbs.AddObject(GenericJoint(markerNumbers=[markerConrodC, markerSlider], constrainedAxes=[1,1,1,1,0,0], 
+#                             visualization=VObjectJointGeneric(axesRadius=0.005, axesLength=0.02)))
+
+mbs.AddObject(GenericJoint(markerNumbers=[markerSlider, markerConrodC], constrainedAxes=[1,1,1,0,0,1],
                             visualization=VObjectJointGeneric(axesRadius=0.005, axesLength=0.02)))
 
+
+#markerCrankMid = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[0,0,0.5*lAB]))
+
+
 if useGraphics:
-    sCrankAngle=mbs.AddSensor(SensorNode(nodeNumber = n0, storeInternal=True,#fileName='solution/crankAngle.txt',
-                             outputVariableType=exu.OutputVariableType.Rotation))
-    sCrankAngVel=mbs.AddSensor(SensorNode(nodeNumber = n0, storeInternal=True,#fileName='solution/crankAngularVelocity.txt',
+    # sCrankAngle=mbs.AddSensor(SensorNode(nodeNumber = n0, storeInternal=True,fileName='solution/crankAngle.txt',
+    #                           outputVariableType=exu.OutputVariableType.Rotation))
+    sCrankAngVel=mbs.AddSensor(SensorNode(nodeNumber = n0, storeInternal=True,fileName='solution/crankAngularVelocity.txt',
                              outputVariableType=exu.OutputVariableType.AngularVelocity))
-    sSliderPos=mbs.AddSensor(SensorNode(nodeNumber = n2, storeInternal=True,#fileName='solution/sliderPosition.txt',
+    sSliderPos=mbs.AddSensor(SensorNode(nodeNumber = n2, storeInternal=True,fileName='solution/sliderPosition.txt',
                              outputVariableType=exu.OutputVariableType.Position))
-    sSliderVel=mbs.AddSensor(SensorNode(nodeNumber = n2, storeInternal=True,#fileName='solution/sliderVelocity.txt',
+    sSliderVel=mbs.AddSensor(SensorNode(nodeNumber = n2, storeInternal=True,fileName='solution/sliderVelocity.txt',
                              outputVariableType=exu.OutputVariableType.Velocity))
+    sSliderAngVel=mbs.AddSensor(SensorNode(nodeNumber = n2, storeInternal=True,fileName='solution/sliderAngularVelocity.txt',
+                             outputVariableType=exu.OutputVariableType.AngularVelocity))
+
+    #add TSD to measure full revolutions; measures around local Z-axis
+    nGeneric=mbs.AddNode(NodeGenericData(initialCoordinates=[0], numberOfDataCoordinates=1)) #for infinite rotations
+    oTSD = mbs.AddObject(TorsionalSpringDamper(markerNumbers=[markerGroundA, markerCrankA], nodeNumber=nGeneric,
+                                               rotationMarker0=RotationMatrixY(0.5*pi),
+                                               rotationMarker1=RotationMatrixY(0.5*pi),
+                                               visualization=VTorsionalSpringDamper(show=False)))
+    sCrankAngle=mbs.AddSensor(SensorObject(objectNumber = oTSD, storeInternal=True,fileName='solution/crankAngle.txt',
+                             outputVariableType=exu.OutputVariableType.Rotation))
 
 if fixedVelocity:
     groundNode = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) #add a coordinate fixed to ground
     markerGroundCoordinate = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=groundNode, coordinate=0))
-    markerRotX = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=3)) #Euler angle x
+    #markerRotX = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=3)) #Euler angle x
+    markerRotX = mbs.AddMarker(MarkerNodeRotationCoordinate(nodeNumber=n0, rotationCoordinate=0)) 
     
     mbs.AddObject(CoordinateConstraint(markerNumbers=[markerGroundCoordinate, markerRotX], 
                                        offset = 6, velocityLevel=True))
+
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 mbs.Assemble()
@@ -177,61 +214,87 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-fact = 1000 #1000 for testing
-outputFact = 1000
-simulationSettings.timeIntegration.numberOfSteps = 1*fact
-simulationSettings.timeIntegration.endTime = 0.2 #0.2 for testing
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/outputFact
-simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/outputFact
+stepSize = 1e-3*0.1 #slider position with 6 digits converged after 0.5 seconds
+writeStepSize = stepSize
+tEnd = 0.5*10
+# if fixedVelocity: #to check initial velocity
+#     stepSize = 1e-8
+#     tEnd = stepSize
+simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
+simulationSettings.timeIntegration.endTime = tEnd #0.2*5*4 #0.2 for testing
+simulationSettings.solutionSettings.solutionWritePeriod = writeStepSize*10
+simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
 simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
 simulationSettings.timeIntegration.verboseMode = 1
+simulationSettings.displayComputationTime = True
+simulationSettings.displayStatistics = True
 
-simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
-simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
-simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #0.6 works well 
+simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.9 #0.6 works well 
+simulationSettings.timeIntegration.newton.useModifiedNewton = True
+# simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep = True
+simulationSettings.linearSolverType=exu.LinearSolverType.EigenSparse
 
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
+simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator = False
 
 SC.visualizationSettings.connectors.showJointAxes = True
 SC.visualizationSettings.connectors.jointAxesLength = 0.02
 SC.visualizationSettings.connectors.jointAxesRadius = 0.002
 
+SC.visualizationSettings.nodes.drawNodesAsPoint = False
+SC.visualizationSettings.nodes.showBasis = True
+SC.visualizationSettings.nodes.basisSize = 0.05
+
 if useGraphics:
-#    simulationSettings.timeIntegration.numberOfSteps = 4*5000
-#    simulationSettings.timeIntegration.endTime = 5 #0.2 for testing
-    
+    SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
     exu.StartRenderer()
+    if 'renderState' in exu.sys:
+        SC.SetRenderState(exu.sys['renderState'])
     mbs.WaitForUserToContinue()
 
-exu.SolveDynamic(mbs, simulationSettings)
+
+exu.SolveDynamic(mbs, simulationSettings,
+                 # solverType=exu.DynamicSolverType.TrapezoidalIndex2
+                 )
 
 
 #compute initial velocities:
-#if fixedVelocity:
-#    v0 = mbs.GetNodeOutput(n0,exu.OutputVariableType.Coordinates_t)
-#    exu.Print('v0=',v0)
-#    
-#    v1 = mbs.GetNodeOutput(n1,exu.OutputVariableType.Coordinates_t)
-#    exu.Print('v1=',v1[0:3])
-#    omega1 = mbs.GetNodeOutput(n1,exu.OutputVariableType.AngularVelocity)
-#    exu.Print('omega1=',omega1[0],omega1[1],omega1[2])
-#    
-#    v2 = mbs.GetNodeOutput(n2,exu.OutputVariableType.Coordinates_t)
-#    exu.Print('v2=',v2[0:3])
+if fixedVelocity:
+    v0 = mbs.GetNodeOutput(n0,exu.OutputVariableType.Coordinates_t)
+    exu.Print('v0=',list(v0))
+    
+    v1 = mbs.GetNodeOutput(n1,exu.OutputVariableType.Coordinates_t)
+    exu.Print('v1=',list(v1[0:3]))
+    omega1 = mbs.GetNodeOutput(n1,exu.OutputVariableType.AngularVelocity)
+    exu.Print('omega1=',omega1[0],omega1[1],omega1[2])
+    
+    v2 = mbs.GetNodeOutput(n2,exu.OutputVariableType.Coordinates_t)
+    exu.Print('v2=',list(v2[0:3]))
+    omega2 = mbs.GetNodeOutput(n2,exu.OutputVariableType.AngularVelocity)
+    exu.Print('omega2=',omega2[0],omega2[1],omega2[2])
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++
 #compute TestModel error for EulerParameters and index2 solver
 sol = mbs.systemData.GetODE2Coordinates(); 
+sol_t = mbs.systemData.GetODE2Coordinates_t(); 
 solref = mbs.systemData.GetODE2Coordinates(configuration=exu.ConfigurationType.Reference); 
 #exu.Print('sol=',sol)
 u = 0
 for i in range(14): #take coordinates of first two bodies
     u += abs(sol[i]+solref[i])
 
-exu.Print('solution of 3D slidercrank iftomm benchmark=',u)
+p1 = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
+r1 = mbs.GetNodeOutput(n1, exu.OutputVariableType.Rotation)
+v1 = mbs.GetNodeOutput(n1, exu.OutputVariableType.Velocity)
+w1 = mbs.GetNodeOutput(n1, exu.OutputVariableType.AngularVelocity)
 
-exudynTestGlobals.testError = u - (3.36427617809219) #2020-04-22(corrected GenericJoint): 3.36427617809219;2020-02-19: 3.3642838177004832
+exu.Print('solution of 3D slidercrank iftomm benchmark=',p1, r1,v1,v1,w1)
+exu.Print('slider pos =', mbs.GetNodeOutput(n2, exu.OutputVariableType.Position))
+
+u = NormL2(p1) + NormL2(r1) + NormL2(v1) + NormL2(w1)
+exu.Print('error norm=', u)
+exudynTestGlobals.testError = u - (0)
 exudynTestGlobals.testResult = u
 
 
@@ -239,6 +302,15 @@ if useGraphics:
     #SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
+if False:
+    #%%+++++++++++++++++++++++
+    from exudyn.interactive import SolutionViewer
+    SolutionViewer(mbs)
+    
+
+
+
+#%%+++++++++++++++++++++++++++++++++
 if useGraphics:
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
@@ -246,41 +318,56 @@ if useGraphics:
     
     [fig1, ax1] = plt.subplots()
     [fig2, ax2] = plt.subplots()
-    # data1 = np.loadtxt('solution/crankAngularVelocity.txt', comments='#', delimiter=',')
+    [fig3, ax3] = plt.subplots()
     data1 = mbs.GetSensorStoredData(sCrankAngVel)
     ax1.plot(data1[:,0], data1[:,1], 'r-', label='crank angular velocity')  
-    # data1 = np.loadtxt('solution/crankAngle.txt', comments='#', delimiter=',')
+
+
     data1 = mbs.GetSensorStoredData(sCrankAngle)
     ax1.plot(data1[:,0], data1[:,1], 'b-', label='crank angle')  
-    if False: #only if available ...
-        data1 = np.loadtxt('../../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masarati.txt', comments='#', delimiter=',')
+    if True: #only if available ...
+        directory = '../../EXUDYN_git/docs/verification/'
+        data1 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masarati.txt', comments='#', delimiter=',')
         ax1.plot(data1[:,0], data1[:,2], 'r:', label='Ref Masarati: crank angle')  
-        data1 = np.loadtxt('../../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masoudi.txt', comments='#', delimiter='\t')
+        data1 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masoudi.txt', comments='#', delimiter='\t')
         ax1.plot(data1[:,0], data1[:,2], 'k:', label='Ref Masoudi: crank angle')  
-        data1 = np.loadtxt('../../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Chaojie.txt', comments='#', delimiter=',')
+        data1 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Chaojie.txt', comments='#', delimiter=',')
         ax1.plot(data1[:,0], data1[:,2], 'g:', label='Ref Chaojie: crank angle')  
-    
-
+        data1 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial rigid slider-crank_mechanism_KarthikBushan.txt', comments='#', delimiter=',')
+        ax1.plot(data1[:,0], data1[:,2], 'c:', label='Ref Bushan: crank angle')  
+        data1 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial rigid slider-crank_mechanism_PingZhou.txt', comments='#', delimiter=',')
+        ax1.plot(data1[:,0], data1[:,3], 'm:', label='Ref Zhou: crank angle')  
+	
     # data2 = np.loadtxt('solution/sliderPosition.txt', comments='#', delimiter=',')
     data2 = mbs.GetSensorStoredData(sSliderPos)
     ax2.plot(data2[:,0], data2[:,1], 'b-', label='slider position')  
     #data2 = np.loadtxt('solution/sliderPosition_1e-4.txt', comments='#', delimiter=',')
     #ax2.plot(data2[:,0], data2[:,1], 'r-', label='slider position, dt=1e-4')  
 #    data2 = np.loadtxt('solution/sliderVelocity.txt', comments='#', delimiter=',')
-#    ax2.plot(data2[:,0], data2[:,1], 'r-', label='slider velocity')  
+
+    # data2 = mbs.GetSensorStoredData(sSliderVel)
+    # ax3.plot(data2[:,0], data2[:,1], 'r-', label='slider velocity')  
+    # data2 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial rigid slider-crank_mechanism_PingZhou.txt', comments='#', delimiter=',')
+    # ax3.plot(data2[:,0], data2[:,2], 'm:', label='Ref Zhou: slider velocity')  
     
-    if False: #only if available ...
-        data2 = np.loadtxt('../../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masarati.txt', comments='#', delimiter=',')
+    if True: #only if available ...
+        data2 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masarati.txt', comments='#', delimiter=',')
         ax2.plot(data2[:,0], data2[:,1], 'r:', label='Ref Masarati: slider position')  
-        data2 = np.loadtxt('../../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masoudi.txt', comments='#', delimiter='\t')
+        data2 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masoudi.txt', comments='#', delimiter='\t')
         ax2.plot(data2[:,0], data2[:,1], 'k:', label='Ref Masoudi: slider position')  
-        data2 = np.loadtxt('../../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Chaojie.txt', comments='#', delimiter=',')
-        ax2.plot(data2[:,0], data2[:,1], 'g:', label='Ref Chaojie: slider position')  
+        # data2 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Chaojie.txt', comments='#', delimiter=',')
+        # ax2.plot(data2[:,0], data2[:,1], 'g:', label='Ref Chaojie: slider position')  
+        # data2 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial rigid slider-crank_mechanism_KarthikBushan.txt', comments='#', delimiter=',')
+        # ax2.plot(data2[:,0], data2[:,1], 'c:', label='Ref Bushan: slider position')  
+        # data2 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial rigid slider-crank_mechanism_PingZhou.txt', comments='#', delimiter=',')
+        # ax2.plot(data2[:,0], data2[:,1], 'm:', label='Ref Zhou: slider position')  
+
+        data2 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Gonzalez.txt', comments='#', delimiter=',')
+        ax2.plot(data2[:,0], data2[:,1], 'm:', label='Ref Fran: slider position')  
     
-    
-    axList=[ax1,ax2]
-    figList=[fig1, fig2]
-    
+    axList=[ax1,ax2]#,ax3]
+    figList=[fig1, fig2]#, fig3]
+        
     for ax in axList:
         ax.grid(True, 'major', 'both')
         ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 

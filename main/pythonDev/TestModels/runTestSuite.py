@@ -51,7 +51,7 @@ if len(sys.argv) > 1:
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #choose which tests to run:
-runUnitTests = True
+runUnitTests = False
 runTestExamples = True
 runMiniExamples = True
 runCppUnitTests = True

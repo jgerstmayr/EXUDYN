@@ -242,8 +242,8 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 	bool isALE = (ancfSize == nODE2coordinates+1); //simple check to see, if ale terms shall be added
 
 	Real L = GetLength();
-	Real EA, EI, axialStrain0, curvature0, bendingDamping, axialDamping;
-	GetMaterialParameters(EI, EA, bendingDamping, axialDamping, axialStrain0, curvature0);
+	Real EA, EI, axialStrain0, curvature0, bendingDamping, axialDamping, physicsMovingMassFactor;
+	GetMaterialParameters(EI, EA, bendingDamping, axialDamping, axialStrain0, curvature0, physicsMovingMassFactor);
 
 	Index cnt;
 	Real a = 0; //integration interval [a,b]
@@ -283,8 +283,8 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 	}
 	else if (UseReducedOrderIntegration() == 2) //A4-B3 ; gives excellent axial strain at 0, L/2 and L !!
 	{
-		integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder4Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
-		integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder4Weights);
+		integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder3Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
+		integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder3Weights);
 	}
 	else { CHECKandTHROWstring("ObjectANCFCable2DBase::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2"); }
 
@@ -313,9 +313,18 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 
 		if (axialDamping != 0.)
 		{
-			//Vector2D rx_t = MapCoordinates(SVx, q0_t, q1_t);
 			SlimVectorBase<TReal, dim> rx_t = MapCoordinates<TReal>(SVx, qANCF_t);
-			axialStrain_t = (rx * rx_t) / rxNorm; //rate of axial strain
+			if (!isALE || physicsMovingMassFactor != 1.)
+			{
+				axialStrain_t = (rx * rx_t) / rxNorm; //rate of axial strain
+			}
+			else
+			{
+				Vector4D SVxx = ComputeShapeFunctions_xx(x, L);
+				SlimVectorBase<TReal, dim> rxx = MapCoordinates<TReal>(SVxx, qANCF);
+				TReal vALE = qANCF_t[ancfSize - 1];
+				axialStrain_t = (rx * (vALE * rxx + rx_t) ) / rxNorm;
+			}
 		}
 
 		//term due to variation of axialStrain
@@ -373,8 +382,8 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 	//}
 	//else if (UseReducedOrderIntegration() == 4) //A5-B6
 	//{
-	//	integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder6Points);  
-	//	integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder6Weights);
+	//	integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder5Points);  
+	//	integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder5Weights);
 	//}
 	else { CHECKandTHROWstring("ObjectANCFCable2DBase::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2"); }
 
@@ -423,7 +432,26 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 			TReal rxCrossRxx_t = rx_t.CrossProduct2D(rxx) + rx.CrossProduct2D(rxx_t);	//f_t
 			TReal rxNorm2_t = 2.*(rx*rx_t);												//g_t
 
-			curvature_t = (rxCrossRxx_t * rxNorm2 - rxCrossRxx * rxNorm2_t) / EXUstd::Square(rxNorm2); //rate of bending strain; (f_t*g - f*g_t)/g^2
+			if (!isALE || physicsMovingMassFactor != 1.)
+			{
+				curvature_t = (rxCrossRxx_t * rxNorm2 - rxCrossRxx * rxNorm2_t) / EXUstd::Square(rxNorm2); //rate of bending strain; (f_t*g - f*g_t)/g^2
+			}
+			else
+			{
+				TReal vALE = qANCF_t[ancfSize - 1];
+				SlimVectorBase<TReal, dim> vx = vALE * rxx + rx_t;
+
+				Vector4D SVxxx = ComputeShapeFunctions_xxx(x, L);
+				SlimVectorBase<TReal, dim> rxxx = MapCoordinates<TReal>(SVxxx, qANCF);
+
+				SlimVectorBase<TReal, dim> vxx = vALE * rxxx + rxx_t;
+
+				TReal rxCrossVxx = vx.CrossProduct2D(rxx) + rx.CrossProduct2D(vxx); //this substitutes rxCrossRxx_t in curvature_t of ANCF
+
+				TReal rxvx = 2.*(rx*vx);  //this substitutes rxNorm2_t
+
+				curvature_t = (rxCrossVxx * rxNorm2 - rxCrossRxx * rxvx) / EXUstd::Square(rxNorm2);
+			}
 		}
 
 		for (Index i = 0; i < dim; i++)
@@ -729,6 +757,7 @@ void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableTy
 	//'Torque':'(local) bending moment (scalar)'}"
 	Real x = localPosition[0];
 	Real y = localPosition[1];
+	bool isALE = (GetNumberOfNodes() != 2);
 
 	switch (variableType)
 	{
@@ -803,8 +832,8 @@ void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableTy
 	}
 	case OutputVariableType::ForceLocal: {
 		//do not add this due to drawing function: CHECKandTHROW(y == 0., "CObjectANCFCable2DBase::GetOutputVariableBody: Y-component of localPosition must be zero for ForceLocal");
-		Real physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature;
-		GetMaterialParameters(physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature);
+		Real physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature, physicsMovingMassFactor;
+		GetMaterialParameters(physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature, physicsMovingMassFactor);
 
 		Real axialStrainRef = physicsReferenceAxialStrain;
 		if (StrainIsRelativeToReference() != 0.)
@@ -814,14 +843,14 @@ void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableTy
 		}
 
 		Real force = physicsAxialStiffness * (ComputeAxialStrain(x, configuration) - axialStrainRef);
-		if (axialDamping != 0) { force += axialDamping * ComputeAxialStrain_t(x, configuration); }
+		if (axialDamping != 0) { force += axialDamping * ComputeAxialStrain_t(x, isALE, physicsMovingMassFactor, configuration); }
 
 		value.SetVector({ force }); break;
 	}
 	case OutputVariableType::TorqueLocal: {
 		//do not add this due to drawing function: CHECKandTHROW(y == 0., "CObjectANCFCable2DBase::GetOutputVariableBody: Y-component of localPosition must be zero for TorqueLocal");
-		Real physicsBendingStiffness, physicsAxialStiffness, physicsReferenceAxialStrain, physicsReferenceCurvature, bendingDamping, axialDamping;
-		GetMaterialParameters(physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature);
+		Real physicsBendingStiffness, physicsAxialStiffness, physicsReferenceAxialStrain, physicsReferenceCurvature, bendingDamping, axialDamping, physicsMovingMassFactor;
+		GetMaterialParameters(physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature, physicsMovingMassFactor);
 
 		Real curvatureRef = physicsReferenceCurvature;
 		if (StrainIsRelativeToReference() != 0.)
@@ -835,7 +864,7 @@ void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableTy
 		}
 
 		Real torque = physicsBendingStiffness * (ComputeCurvature(x, configuration) - curvatureRef);
-		if (bendingDamping != 0) { torque += bendingDamping * ComputeCurvature_t(x, configuration); }
+		if (bendingDamping != 0) { torque += bendingDamping * ComputeCurvature_t(x, isALE, physicsMovingMassFactor, configuration); }
 		value.SetVector({ torque }); break;
 	}
 	default:
@@ -1069,8 +1098,10 @@ Vector2D CObjectANCFCable2DBase::ComputeSlopeVector_xt(Real x, ConfigurationType
 }
 
 //!  compute the axial strain at a certain axial position, for given configuration
-Real CObjectANCFCable2DBase::ComputeAxialStrain_t(Real x, ConfigurationType configuration) const
+Real CObjectANCFCable2DBase::ComputeAxialStrain_t(Real x, bool isALE, Real physicsMovingMassFactor, ConfigurationType configuration) const
 {
+	CHECKandTHROW(!(isALE && physicsMovingMassFactor == 1), "ANCFCable2d:ComputeAxialStrain_t not implemented for ALE case with physicsMovingMassFactor=1");
+
 	Vector2D rx = ComputeSlopeVector(x, configuration);
 	Vector2D rx_t = ComputeSlopeVector_t(x, configuration);
 	Real rxNorm2 = rx.GetL2NormSquared();
@@ -1081,8 +1112,10 @@ Real CObjectANCFCable2DBase::ComputeAxialStrain_t(Real x, ConfigurationType conf
 
 
 //!  compute the (bending) curvature at a certain axial position, for given configuration
-Real CObjectANCFCable2DBase::ComputeCurvature_t(Real x, ConfigurationType configuration) const
+Real CObjectANCFCable2DBase::ComputeCurvature_t(Real x, bool isALE, Real physicsMovingMassFactor, ConfigurationType configuration) const
 {
+	CHECKandTHROW(!(isALE && physicsMovingMassFactor == 1), "ANCFCable2d:ComputeCurvature_t not implemented for ALE case with physicsMovingMassFactor=1");
+
 	Vector2D rx = ComputeSlopeVector(x, configuration);
 	Vector2D rxx = ComputeSlopeVector_x(x, configuration);
 

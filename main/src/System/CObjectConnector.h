@@ -56,8 +56,12 @@ public:
 
 	//! connector may have nodes (data coordinates)
 	virtual Index GetNumberOfNodes() const override { return 0; }
-		
+
+	//! requested marker types (or Marker::_None if mixed)
 	virtual Marker::Type GetRequestedMarkerType() const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::RequestedMarkerType"); return Marker::_None; }
+
+	//! requested number of markers for PreAssemble checks; default = 2
+	virtual Index RequestedNumberOfMarkers() const { return 2; }
 
     virtual CObjectType GetCObjectType() const { return CObjectType::Connector; }
 

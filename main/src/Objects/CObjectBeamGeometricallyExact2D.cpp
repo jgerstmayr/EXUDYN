@@ -83,10 +83,48 @@ void CObjectBeamGeometricallyExact2D::ComputeMassMatrix(EXUmath::MatrixContainer
 	//pout << "M=" << massMatrix << "\n";
 }
 
-//! compute strains and variation of strains for given interpolated derivatives of displacement u1_x, u2_x, angle theta (incl. reference config.!), shape vector SV and shape vector derivatives SV_x
-void CObjectBeamGeometricallyExact2D::ComputeGeneralizedStrains(Real u1_x, Real u2_x, Real theta, const Vector2D& SV, const Vector2D& SV_x, const Vector2D& referenceSlopeVector,
-	Real& gamma1, Real& gamma2, CSVector6D& deltaGamma1, CSVector6D& deltaGamma2) const
+//! compute strains and variation of strains for given interpolated derivatives, time derivatives, etc. at position x
+void CObjectBeamGeometricallyExact2D::ComputeGeneralizedStrains(Real x, Real& theta, Vector2D& SV, Vector2D& SV_x, 
+	Real& gamma1, Real& gamma2, Real& theta_x, Real& gamma1_t, Real& gamma2_t, Real& theta_xt, 
+	CSVector6D& deltaGamma1, CSVector6D& deltaGamma2) const
 {
+	SV = ComputeShapeFunctions(x);
+	SV_x = ComputeShapeFunctions_x(x);
+
+	//could be speed up by only computing relevant components!
+	//const int ns = 2; //number of shape functions
+	CSVector3D qNode0(((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector(), 0); //displacement coordinates node 0
+	CSVector3D qNode1(((CNodeODE2*)GetCNode(1))->GetCurrentCoordinateVector(), 0); //displacement coordinates node 1
+
+	CSVector3D qNode0_t(((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector_t(), 0); //displacement coordinates node 0
+	CSVector3D qNode1_t(((CNodeODE2*)GetCNode(1))->GetCurrentCoordinateVector_t(), 0); //displacement coordinates node 1
+
+	CSVector3D qNode0Ref(((CNodeODE2*)GetCNode(0))->GetReferenceCoordinateVector(), 0);
+	CSVector3D qNode1Ref(((CNodeODE2*)GetCNode(1))->GetReferenceCoordinateVector(), 0);
+
+	Vector2D referenceSlopeVector({ SV_x[0] * qNode0Ref[0] + SV_x[1] * qNode1Ref[0] ,
+									SV_x[0] * qNode0Ref[1] + SV_x[1] * qNode1Ref[1] }); //reference slope vector, r'=d r / dx needed in reference configuration needed for computation of strains
+
+	qNode0Ref += qNode0;
+	qNode1Ref += qNode1;
+
+	theta = SV[0] * qNode0Ref[2] + SV[1] * qNode1Ref[2]; //rotations need also reference values
+
+	Real u1_x = SV_x[0] * qNode0[0] + SV_x[1] * qNode1[0]; //here, reference values are not directly meaningful: length L would need to be included
+	Real u2_x = SV_x[0] * qNode0[1] + SV_x[1] * qNode1[1];
+
+	if (parameters.includeReferenceRotations)
+	{
+		theta_x = SV_x[0] * qNode0Ref[2] + SV_x[1] * qNode1Ref[2] - parameters.physicsReferenceCurvature; //in precurved case, reference values shall not contribute to curvature
+		//u1_x = SV_x[0] * qNode0Ref[0] + SV_x[1] * qNode1Ref[0];
+		//u2_x = SV_x[0] * qNode0Ref[1] + SV_x[1] * qNode1Ref[1];
+	}
+	else
+	{
+		theta_x = SV_x[0] * qNode0[2] + SV_x[1] * qNode1[2] - parameters.physicsReferenceCurvature; //in precurved case, reference values shall not contribute to curvature
+	}
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	Real cosTheta = cos(theta);
 	Real sinTheta = sin(theta);
 	const Vector2D& RS = referenceSlopeVector;
@@ -103,6 +141,25 @@ void CObjectBeamGeometricallyExact2D::ComputeGeneralizedStrains(Real u1_x, Real 
 
 	deltaGamma2 = CSVector6D({ -sinTheta * SV_x[0], cosTheta * SV_x[0], termGamma2*SV[0],
 			-sinTheta * SV_x[1], cosTheta * SV_x[1], termGamma2*SV[1] });
+
+	theta_xt = 0.;
+	gamma1_t = 0.;
+	gamma2_t = 0.;
+
+	if (parameters.physicsBendingDamping != 0.)
+	{
+		theta_xt = SV_x[0] * qNode0_t[2] + SV_x[1] * qNode1_t[2]; //in precurved case, reference values shall not contribute to curvature
+	}
+
+	if (parameters.physicsAxialDamping != 0. || parameters.physicsShearDamping != 0.)
+	{
+		CSVector6D elementQ_t({ qNode0_t[0], qNode0_t[1], qNode0_t[2],
+			qNode1_t[0], qNode1_t[1], qNode1_t[2] }); //element velocity coordinates
+
+		gamma1_t = deltaGamma1 * elementQ_t;
+		gamma2_t = deltaGamma2 * elementQ_t;
+	}
+
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
@@ -111,49 +168,25 @@ void CObjectBeamGeometricallyExact2D::ComputeODE2LHS(Vector& ode2Lhs, Index obje
 	ode2Lhs.SetNumberOfItems(nODE2coordinates);
 	ode2Lhs.SetAll(0.);
 
-	//could be speed up by only computing relevant components!
-	//const int ns = 2; //number of shape functions
-	CSVector3D qNode0( ((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector(),0 ); //displacement coordinates node 0
-	CSVector3D qNode1( ((CNodeODE2*)GetCNode(1))->GetCurrentCoordinateVector(),0 ); //displacement coordinates node 1
-
-	CSVector3D qNode0Ref( ((CNodeODE2*)GetCNode(0))->GetReferenceCoordinateVector(), 0 );
-	CSVector3D qNode1Ref( ((CNodeODE2*)GetCNode(1))->GetReferenceCoordinateVector(), 0 );
-
 	//compute elastic forces at midpoint:
 	Real L = parameters.physicsLength;
 	Real x = 0; //midpoint, beam goes from -L/2 ... L/2
-	Vector2D SV = ComputeShapeFunctions(x);
-	Vector2D SV_x = ComputeShapeFunctions_x(x);
 
-	Real u1_x = SV_x[0] * qNode0[0] + SV_x[1] * qNode1[0];
-	Real u2_x = SV_x[0] * qNode0[1] + SV_x[1] * qNode1[1];
-
-	Real theta   = SV[0] * (qNode0[2]+ qNode0Ref[2]) + SV[1] * (qNode1[2] + qNode1Ref[2]); //rotations need also reference values
-	Real theta_x = SV_x[0] * qNode0[2] + SV_x[1] * qNode1[2]; //in precurved case, reference values shall not contribute to curvature
-
-	Vector2D refSlopeVector({ SV_x[0] * qNode0Ref[0] + SV_x[1] * qNode1Ref[0] ,
-		                      SV_x[0] * qNode0Ref[1] + SV_x[1] * qNode1Ref[1]}); //reference slope vector, r'=d r / dx needed in reference configuration needed for computation of strains
-	Real gamma1, gamma2;
+	Vector2D SV, SV_x;
+	Real theta, gamma1, gamma2, theta_x, gamma1_t, gamma2_t, theta_xt;
 	CSVector6D deltaGamma1, deltaGamma2;
-	ComputeGeneralizedStrains(u1_x, u2_x, theta, SV, SV_x, refSlopeVector, gamma1, gamma2, deltaGamma1, deltaGamma2);
+
+	ComputeGeneralizedStrains(x, theta, SV, SV_x, 
+		gamma1, gamma2, theta_x, gamma1_t, gamma2_t, theta_xt, 
+		deltaGamma1, deltaGamma2);
 
 	Real fact = L; //integration factor
 
-	ode2Lhs.MultAdd(parameters.physicsAxialStiffness*fact*gamma1, deltaGamma1);
-	ode2Lhs.MultAdd(parameters.physicsShearStiffness*fact*gamma2, deltaGamma2);
-	ode2Lhs[2+0] += parameters.physicsBendingStiffness*fact*theta_x*SV_x[0];
-	ode2Lhs[2+3] += parameters.physicsBendingStiffness*fact*theta_x*SV_x[1];
+	ode2Lhs.MultAdd((parameters.physicsAxialDamping*gamma1_t + parameters.physicsAxialStiffness*gamma1)*fact, deltaGamma1);
+	ode2Lhs.MultAdd((parameters.physicsShearDamping*gamma2_t + parameters.physicsShearStiffness*gamma2)*fact, deltaGamma2);
+	ode2Lhs[2 + 0] += (parameters.physicsBendingDamping*theta_xt + parameters.physicsBendingStiffness*theta_x)*fact*SV_x[0];
+	ode2Lhs[2 + 3] += (parameters.physicsBendingDamping*theta_xt + parameters.physicsBendingStiffness*theta_x)*fact*SV_x[1];
 
-	//pout << "refSlope=" << refSlopeVector << ", "
-	//	<< "u1_x=" << u1_x << ", "
-	//	<< "u2_x=" << u2_x << ", "
-	//	<< "theta=" << theta << ", "
-	//	<< "theta_x=" << theta_x << ", "
-	//	<< "gamma1=" << gamma1 << ", "
-	//	<< "gamma2=" << gamma2 << ", \n    "
-	//	<< "deltaGamma1=" << deltaGamma1 << ", "
-	//	<< "deltaGamma2=" << deltaGamma2 << ", "
-	//	<< "f=" << ode2Lhs << "\n";
 }
 
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
@@ -235,47 +268,24 @@ void CObjectBeamGeometricallyExact2D::GetAccessFunctionBody(AccessFunctionType a
 }
 
 //! provide according output variable in 'value'
-void CObjectBeamGeometricallyExact2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
+void CObjectBeamGeometricallyExact2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, 
+	ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
-	//(Index)OutputVariableType::Position +
-	//	(Index)OutputVariableType::Displacement +
-	//	(Index)OutputVariableType::Velocity +
-	//	(Index)OutputVariableType::Rotation +
-	//	(Index)OutputVariableType::StrainLocal +
-	//	(Index)OutputVariableType::CurvatureLocal );
-	Real gamma1, gamma2;
+	Real theta, gamma1, gamma2, theta_x, gamma1_t, gamma2_t, theta_xt;
 	CSVector6D deltaGamma1, deltaGamma2;
-	Real theta_x;
 
 	if (!EXUstd::IsOfType((Index)variableType, (Index)OutputVariableType::Position + (Index)OutputVariableType::Displacement +
 		(Index)OutputVariableType::Velocity + (Index)OutputVariableType::Rotation))
 	{
-		CSVector3D qNode0(((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), 0); //displacement coordinates node 0
-		CSVector3D qNode1(((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration), 0); //displacement coordinates node 1
-
-		CSVector3D qNode0Ref(((CNodeODE2*)GetCNode(0))->GetReferenceCoordinateVector(), 0);
-		CSVector3D qNode1Ref(((CNodeODE2*)GetCNode(1))->GetReferenceCoordinateVector(), 0);
-		if (configuration == ConfigurationType::Reference)
-		{
-			qNode0.SetAll(0);
-			qNode1.SetAll(0);
-		}
-
 		//compute elastic forces at midpoint:
-		Real L = parameters.physicsLength;
-		Real x = 0; //midpoint, beam goes from -L/2 ... L/2
-		Vector2D SV = ComputeShapeFunctions(x);
-		Vector2D SV_x = ComputeShapeFunctions_x(x);
+		//Real L = parameters.physicsLength;
+		//Real x = 0; //midpoint, beam goes from -L/2 ... L/2
 
-		Real u1_x = SV_x[0] * qNode0[0] + SV_x[1] * qNode1[0];
-		Real u2_x = SV_x[0] * qNode0[1] + SV_x[1] * qNode1[1];
+		Vector2D SV, SV_x;
 
-		Real theta = SV[0] * (qNode0[2] + qNode0Ref[2]) + SV[1] * (qNode1[2] + qNode1Ref[2]); //rotations need also reference values
-		theta_x = SV_x[0] * qNode0[2] + SV_x[1] * qNode1[2]; //in precurved case, reference values shall not contribute to curvature
-
-		Vector2D refSlopeVector({ SV_x[0] * qNode0Ref[0] + SV_x[1] * qNode1Ref[0] ,
-								  SV_x[0] * qNode0Ref[1] + SV_x[1] * qNode1Ref[1] }); //reference slope vector, r'=d r / dx needed in reference configuration needed for computation of strains
-		ComputeGeneralizedStrains(u1_x, u2_x, theta, SV, SV_x, refSlopeVector, gamma1, gamma2, deltaGamma1, deltaGamma2);
+		ComputeGeneralizedStrains(localPosition[0], theta, SV, SV_x,
+			gamma1, gamma2, theta_x, gamma1_t, gamma2_t, theta_xt,
+			deltaGamma1, deltaGamma2);
 	}
 
 	switch (variableType)
@@ -286,8 +296,9 @@ void CObjectBeamGeometricallyExact2D::GetOutputVariableBody(OutputVariableType v
 	case OutputVariableType::Rotation:		value.SetVector({ 0., 0., GetRotation(localPosition, configuration) }); break;
 	case OutputVariableType::StrainLocal:	value.SetVector({gamma1, 0., 0.,  0., 0., gamma2}); break;
 	case OutputVariableType::CurvatureLocal:value.SetVector({ 0., 0., theta_x }); break;
-	case OutputVariableType::ForceLocal:	value.SetVector({ parameters.physicsAxialStiffness*gamma1, parameters.physicsShearStiffness*gamma2, 0. }); break;
-	case OutputVariableType::TorqueLocal:	value.SetVector({ 0., 0., parameters.physicsBendingStiffness*theta_x }); break;
+	case OutputVariableType::ForceLocal:	value.SetVector({ (parameters.physicsAxialDamping*gamma1_t + parameters.physicsAxialStiffness*gamma1),
+		(parameters.physicsShearDamping*gamma2_t + parameters.physicsShearStiffness*gamma2), 0. }); break;
+	case OutputVariableType::TorqueLocal:	value.SetVector({ 0., 0., (parameters.physicsBendingDamping*theta_xt + parameters.physicsBendingStiffness*theta_x) }); break;
 	default:
 		SysError("CObjectBeamGeometricallyExact2D::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

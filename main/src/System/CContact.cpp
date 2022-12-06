@@ -504,7 +504,10 @@ void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTre
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//search tree autocompute must be done after creation of bounding boxes and initializations of jacobians
-	Box3D searchTreeBox(settings.searchTreeBoxMinInit, settings.searchTreeBoxMaxInit);
+	Box3D searchTreeBox;
+	searchTreeBox.PMin() = settings.searchTreeBoxMinInit; //this initialization gives Empty()=true or the specified value
+	searchTreeBox.PMax() = settings.searchTreeBoxMaxInit; //this initialization gives Empty()=true or the specified value
+
 	TemporaryComputationDataArray tempArray; //will allocate memory, but just done in finalize contact
 	if (searchTreeBox.Empty())
 	{
@@ -2026,8 +2029,8 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 	ConstSizeVector<4> integrationWeights;
 	//if (exactPolynomial)
 	{
-		integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder4Points);
-		integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder4Weights);
+		integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder3Points);
+		integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder3Weights);
 	}
 
 	Vector2D p0, p1;

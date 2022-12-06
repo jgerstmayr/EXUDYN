@@ -2,8 +2,8 @@
 Exudyn
 ======
 
-+  Exudyn version = 1.4.14.dev1 (Ellington)
-+  build date and time=2022-10-21  08:21
++  Exudyn version = 1.4.32.dev1 (Ellington)
++  build date and time=2022-12-06  12:37
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn 1.4 is out! It includes improved multi-threading support; a redundant coordinate (constraint) as well as a minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
@@ -11,7 +11,7 @@ Exudyn 1.4 is out! It includes improved multi-threading support; a redundant coo
 If you like using Exudyn, please add a *star* on github, and send an email to  ``reply.exudyn@gmail.com`` such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
 
-A paper on Exudyn is planned to be presented at the `6th Joint International Conference on Multibody System Dynamics <http://imsdacmd2020.iitd.ac.in>`_
+A paper on Exudyn has been presented at the `6th Joint International Conference on Multibody System Dynamics <http://imsdacmd2020.iitd.ac.in>`_ and it can be cited as: J. Gerstmayr, Exudyn - A C++ based Python package for flexible multibody systems, Proceedings of The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020, New Delhi, India, 2022. `PDF <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/publications/GerstmayrIMSD2022.pdf>`_
 
 +  **A flexible multibody dynamics systems simulation code with Python and C++**
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
@@ -112,7 +112,7 @@ Important discussions with researchers from the community were important for the
 
 The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications' contributes to the development of the code.
 
-The following people have contributed to Python and C++ library implementations:
+The following people have contributed to Python and C++ library implementations (as well as to testing, examples, theory, ...):
 
 +  Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with \ ``taskmanager``\  for \ **multi-threaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
 +  Stefan Holzinger, University of Innsbruck (Lie group solvers in Python, Lie group node)
@@ -121,9 +121,9 @@ The following people have contributed to Python and C++ library implementations:
 +  Martin Sereinig, University of Innsbruck (special robotics functionality)
 +  Grzegorz Orzechowski, Lappeenranta University of Technology (coupling with openAI gym and running machine learning algorithms)
 
-The following people have contributed to examples and other parts:
+The following people have contributed to examples, testing and theory:
 
-+  Stefan Holzinger, Michael Pieber, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Andreas Zwölfer, Peter Manzl, Simon Scheiber
++  Michael Pieber, Konstantina Ntarladima, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Simon Scheiber
 
 -- thanks a lot! --
 
@@ -1240,16 +1240,46 @@ Note that in the current version of Exudyn there is more data stored in render s
 see also theDoc.pdf.
 
 
+Renderer and 3D graphics
+========================
+
+A 3D renderer is attached to the simulation. Visualization is started with  \ ``exu.StartRenderer()``\ , see the examples and tutorials.
+The renderer uses an OpenGL window of a library called GLFW, which is platform-independent. 
+The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. There is no way to contruct models with the renderer. Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
+
+There are some main features in the renderer, using keyboard and mouse:
+
++  press key H to show help in renderer
++  move model by pressing left mouse button and drag
++  rotate model by pressing right mouse button and drag
++  change visibility (wire frame, solid, transparent, ...) by pressing T
++  zoom all: key A
++  open visualization dialog: key V
++  show item number: click on graphics element with left mouse button
++  show item dictionary: click on graphics element with right mouse button  
++  ... (see theDoc.pdfff.)
+
+Depending on your model (size, place, ...), you may need to adjust the following \ ``openGL``\  parameters in \ ``visualizationSettings``\ :
+
++  light and light position 
++  shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
++  visibility of nodes, markers, etc. in according bodies, nodes, markers, ..., \ ``visualizationSettings``\ 
++  move camera with a selected marker: adjust \ ``trackMarker``\  in \ ``visualizationSettings.interactive``\ 
++  ... (see theDoc.pdfff.)
+
+
+
 Graphics pipeline
 =================
 
 There are basically two loops during simulation, which feed the graphics pipeline.
 The solver runs a loop:
 
-+  compute new step
++  compute step (or set up initial values)
 +  finish computation step; results are in current state
 +  copy current state to visualization state (thread safe)
 +  signal graphics pipeline that new visualization data is available
++  the renderer may update the visualization depending on \ ``graphicsUpdateInterval``\  in \ ``visualizationSettings.general``\ 
 
 The openGL graphics thread (=separate thread) runs the following loop:
 
