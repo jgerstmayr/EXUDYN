@@ -2,6 +2,8 @@
 Exudyn
 ======
 
+**A flexible multibody dynamics systems simulation code with Python and C++**
+
 +  Exudyn version = 1.4.32.dev1 (Ellington)
 +  build date and time=2022-12-06  12:37
 +  **University of Innsbruck**, Austria, Department of Mechatronics
@@ -13,7 +15,6 @@ If you like using Exudyn, please add a *star* on github, and send an email to  `
 
 A paper on Exudyn has been presented at the `6th Joint International Conference on Multibody System Dynamics <http://imsdacmd2020.iitd.ac.in>`_ and it can be cited as: J. Gerstmayr, Exudyn - A C++ based Python package for flexible multibody systems, Proceedings of The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020, New Delhi, India, 2022. `PDF <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/publications/GerstmayrIMSD2022.pdf>`_
 
-+  **A flexible multibody dynamics systems simulation code with Python and C++**
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 +  *free, open source* and with plenty of *documentation* and *examples*
 +  **pre-built** for Python 3.6 - 3.10 under **Windows** ; Python 3.8 under **MacOS** available; Python 3.6 - 3.10 under **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
@@ -108,15 +109,15 @@ In the first phase most of the core code is written by Johannes Gerstmayr, imple
 Some important tests for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
 For the interoperability between C++ and Python, we extensively use \ **Pybind11**\ , originally written by Jakob Wenzel, see \ ``https://github.com/pybind/pybind11``\ . Without Pybind11 we couldn't have made this project -- Thanks a lot!
 
-Important discussions with researchers from the community were important for the design and development of Exudyn , where we like to mention Joachim Schöberl from TU-Vienna who boosted the design of the code with great concepts. 
+Important discussions with researchers from the community were important for the design and development of Exudyn , where we like to mention Joachim SchÃ¶berl from TU-Vienna who boosted the design of the code with great concepts. 
 
 The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications' contributes to the development of the code.
 
 The following people have contributed to Python and C++ library implementations (as well as to testing, examples, theory, ...):
 
-+  Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with \ ``taskmanager``\  for \ **multi-threaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
++  Joachim SchÃ¶berl, TU Vienna (Providing specialized NGsolve  core library with \ ``taskmanager``\  for \ **multi-threaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
 +  Stefan Holzinger, University of Innsbruck (Lie group solvers in Python, Lie group node)
-+  Andreas Zwölfer, Technical University Munich (FFRF and CMS formulation)
++  Andreas ZwÃ¶lfer, Technical University Munich (FFRF and CMS formulation)
 +  Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation / pip install on linux / wsl with graphics)
 +  Martin Sereinig, University of Innsbruck (special robotics functionality)
 +  Grzegorz Orzechowski, Lappeenranta University of Technology (coupling with openAI gym and running machine learning algorithms)
@@ -804,7 +805,7 @@ FAQ
 +  In \ ``GenerateStraightLineANCFCable2D``\  
 
   |  =>  coordinate constraints can be used to constrain position and rotation, e.g., \ ``fixedConstraintsNode0 = [1,1,0,1]``\  for a beam aligned along the global x-axis; 
-  |  =>  this \ **does not work**\  for beams with arbitrary rotation in reference configuration, e.g., 45°. Use a GenericJoint with a rotationMarker instead.
+  |  =>  this \ **does not work**\  for beams with arbitrary rotation in reference configuration, e.g., 45Â°. Use a GenericJoint with a rotationMarker instead.
 
 +  What is the difference between MarkerBodyPosition and MarkerBodyRigid?
 
