@@ -37,21 +37,16 @@
 
 
 //! Computational function: compute mass matrix
-void CObjectKinematicTree::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
+void CObjectKinematicTree::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
-	//massMatrixC.SetUseDenseMatrix(true); //uses sparse matrix with no entries.
-	//Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
-	//Index nODE2 = NumberOfLinks();
-	//massMatrix.SetNumberOfRowsAndColumns(nODE2, nODE2);
-	//massMatrix.SetAll(0.);
+	massMatrixC.SetUseDenseMatrix();
+	ComputeMassMatrixAndODE2LHS(&(massMatrixC.GetInternalDenseMatrix()), &ltg, nullptr, objectNumber, true);
 
-	//LinkedDataVector q(GetCNode(0)->GetCurrentCoordinateVector());
-	//LinkedDataVector q_t(((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector_t());
-
-	//LinkedDataVector qRef(GetCNode(0)->GetReferenceCoordinateVector());
-
-	ComputeMassMatrixAndODE2LHS(&massMatrixC, &ltg, nullptr, objectNumber, true);
-
+	if (computeInverse)
+	{
+		Index rv = massMatrixC.GetInternalDenseMatrix().InvertSpecial(tempMatrix, tempArrayIndex, false);
+		CHECKandTHROW(rv == -1, "CObjectKinematicTree::ComputeMassMatrix: inverse failed; check if mass parameters are non-zero or set computeMassMatrixInversePerBody=False");
+	}
 }
 
 //! Computational function: compute right-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
@@ -264,7 +259,7 @@ void CObjectKinematicTree::ComputeTreeTransformations(ConfigurationType configur
 }
 
 //! compute mass matrix and ODE2LHS; computeMass is optional, not needed for ODE2LHS case
-void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(EXUmath::MatrixContainer* massMatrixC, const ArrayIndex* ltg, Vector* ode2Lhs, 
+void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatrix, const ArrayIndex* ltg, Vector* ode2Lhs, 
 	Index objectNumber, bool computeMass) const
 {
 	Index n = NumberOfLinks();
@@ -398,12 +393,11 @@ void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(EXUmath::MatrixContainer*
 	}
 	else
 	{
-		massMatrixC->SetUseDenseMatrix();
-		ResizableMatrix& M = massMatrixC->GetInternalDenseMatrix();
+		ResizableMatrix& M = *massMatrix;
 		M.SetScalarMatrix(n, 0.);
 
 		//	#compute composite inertia
-		//	#IC = deepcopy(self.inertias) #may cause problems if referenced np.arrays used!
+		//	#IC = deepcopy(self.inertias) 
 		//	IC = [np.zeros((6, 6))] * n
 
 		//	for i in range(n) :

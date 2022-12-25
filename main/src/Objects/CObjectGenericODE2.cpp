@@ -71,8 +71,10 @@ void CObjectGenericODE2::ComputeObjectCoordinates_tt(Vector& coordinates_tt, Con
 }
 
 //! Computational function: compute mass matrix
-void CObjectGenericODE2::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
+void CObjectGenericODE2::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
+	CHECKandTHROW(!computeInverse, "CObjectGenericODE2::ComputeMassMatrix: computeInverse=True not implemented, change solver settings: computeMassMatrixInversePerBody=False");
+
 	if (parameters.massMatrixUserFunction)
 	{
 		Index nODE2 = GetODE2Size();

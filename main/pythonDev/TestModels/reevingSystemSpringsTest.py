@@ -145,7 +145,9 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-tEnd = 200
+tEnd = 2
+if useGraphics:
+    tEnd = 2 #200
 h=0.01  #use small step size to detext contact switching
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -165,7 +167,7 @@ SC.visualizationSettings.nodes.basisSize = 0.2
 SC.visualizationSettings.openGL.multiSampling = 4
 
 #SC.visualizationSettings.general.autoFitScene = False #use loaded render state
-useGraphics = True
+# useGraphics = True
 if useGraphics:
     exu.StartRenderer()
     if 'renderState' in exu.sys:

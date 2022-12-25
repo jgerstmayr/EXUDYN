@@ -17,10 +17,19 @@
 
 
 //! Computational function: compute mass matrix
-void CObjectMass1D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
+void CObjectMass1D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
-	massMatrix.SetScalarMatrix(1, parameters.physicsMass);
+
+	if (!computeInverse)
+	{
+		massMatrix.SetScalarMatrix(1, parameters.physicsMass);
+	}
+	else
+	{
+		CHECKandTHROW(parameters.physicsMass != 0., "CObjectMassPoint2D::ComputeMassMatrix: physicsMass may not be 0 in case of computeMassMatrixInversePerBody=True");
+		massMatrix.SetScalarMatrix(1, 1./parameters.physicsMass);
+	}
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"

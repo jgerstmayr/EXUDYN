@@ -871,9 +871,15 @@ bool MainObjectConnectorRollingDiscPenalty::CheckPreAssembleConsistency(const Ma
 {
 	CObjectConnectorRollingDiscPenalty* cObject = (CObjectConnectorRollingDiscPenalty*)GetCObject();
 
-	if (cObject->GetParameters().discRadius <= 0)
+	//delete: done automatically now
+	//if (cObject->GetParameters().discRadius <= 0)
+	//{
+	//	errorString = "CObjectConnectorRollingDiscPenalty: discRadius must be > 0";
+	//	return false;
+	//}
+	if ((cObject->GetParameters().planeNormal.GetL2Norm() - 1.) > 1e-13)
 	{
-		errorString = "CObjectConnectorRollingDiscPenalty: discRadius must be > 0";
+		errorString = "CObjectConnectorRollingDiscPenalty: planeNormal has length which is significantly different from 1; normalize vector required";
 		return false;
 	}
 	if (cObject->GetParameters().dryFriction[0] < 0 || cObject->GetParameters().dryFriction[1] < 0)
@@ -1686,11 +1692,18 @@ bool MainObjectJointRollingDisc::CheckPreAssembleConsistency(const MainSystem& m
 {
 	CObjectJointRollingDisc* cObject = (CObjectJointRollingDisc*)GetCObject();
 
-	if (cObject->GetParameters().discRadius <= 0)
+	//delete: checked as PReal parameter:
+	//if (cObject->GetParameters().discRadius <= 0)
+	//{
+	//	errorString = "CObjectJointRollingDisc: discRadius must be > 0";
+	//	return false;
+	//}
+	if ((cObject->GetParameters().planeNormal.GetL2Norm() - 1.) > 1e-13)
 	{
-		errorString = "CObjectJointRollingDisc: discRadius must be > 0";
+		errorString = "CObjectJointRollingDisc: planeNormal has length which is significantly different from 1; normalize vector required";
 		return false;
 	}
+
 	//check that marker m0 is either ground body or rigid body with reference position = 0
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
 	const CMarker& cMarker0 = mainSystem.GetCSystem()->GetSystemData().GetCMarker(nMarkers[0]);

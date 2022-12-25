@@ -2718,7 +2718,8 @@ void VisualizationObjectJointRollingDisc::UpdateGraphics(const VisualizationSett
 	if (color[0] != -1.f) { currentColor = color; }
 
 	Real discRadius = cItem->GetParameters().discRadius;
-	Vector3D vAxis({ rot[1](0,0), rot[1](1,0), rot[1](2,0) }); //x-axis is disc axis ==> vAxis = A*[1,0,0]
+	//Vector3D vAxis({ rot[1](0,0), rot[1](1,0), rot[1](2,0) }); //x-axis is disc axis ==> vAxis = A*[1,0,0]
+	Vector3D vAxis = rot[1] * cItem->GetParameters().discAxis;
 
 	//add drawing for disc
 	EXUvis::DrawCylinder(pos[1] - 0.5*discWidth*vAxis, discWidth*vAxis, discRadius, currentColor, vSystem->graphicsData,

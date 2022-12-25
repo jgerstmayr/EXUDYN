@@ -1160,7 +1160,7 @@ void CSystem::AssembleSystemInitialize(const MainSystem& mainSystem)
 // CSystem computation functions
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! compute system massmatrix; massmatrix must have according size; must be set to zero before calling!
-void CSystem::ComputeMassMatrix(TemporaryComputationDataArray& tempArray, GeneralMatrix& massMatrix)
+void CSystem::ComputeMassMatrix(TemporaryComputationDataArray& tempArray, GeneralMatrix& massMatrix, bool computeInverse)
 {
 	//size needs to be set accordingly in the caller function; components are addd to massMatrix!
 	//only call bodies with ODE2
@@ -1174,7 +1174,7 @@ void CSystem::ComputeMassMatrix(TemporaryComputationDataArray& tempArray, Genera
 			temp.massMatrix.SetUseDenseMatrix(true); //this is default, mass matrix must either switch to sparse or 
 
 			ArrayIndex& ltg = cSystemData.GetLocalToGlobalODE2()[j];
-			((CObjectBody*)(cSystemData.GetCObjects()[j]))->ComputeMassMatrix(temp.massMatrix, ltg, j); //ltg only used in sparse mode
+			((CObjectBody*)(cSystemData.GetCObjects()[j]))->ComputeMassMatrix(temp.massMatrix, ltg, j, computeInverse); //ltg only used in sparse mode
 
 			if (temp.massMatrix.UseDenseMatrix()) //dense matrix filled in and this is now transferred to dense system matrix
 			{
@@ -1220,7 +1220,7 @@ void CSystem::ComputeMassMatrix(TemporaryComputationDataArray& tempArray, Genera
 				temp.massMatrix.SetUseDenseMatrix(true); //this is default, mass matrix must either switch to sparse or just fill in
 
 				ArrayIndex& ltg = cSystemData.GetLocalToGlobalODE2()[j];
-				((CObjectBody*)(cSystemData.GetCObjects()[j]))->ComputeMassMatrix(temp.massMatrix, ltg, j); //ltg only used in sparse mode
+				((CObjectBody*)(cSystemData.GetCObjects()[j]))->ComputeMassMatrix(temp.massMatrix, ltg, j, computeInverse); //ltg only used in sparse mode
 
 				if (temp.massMatrix.UseDenseMatrix()) //dense matrix filled in and this is now transferred to dense system matrix
 				{
@@ -1267,7 +1267,7 @@ void CSystem::ComputeMassMatrix(TemporaryComputationDataArray& tempArray, Genera
 			Index nItems = cSystemData.objectsBodyWithODE2CoordsNoUF.NumberOfItems();
 			Index taskSplit = GetTaskSplit(nItems, nThreads);
 
-			exuThreading::ParallelFor(nItems, [this, &tempArray, &nItems](NGSsizeType i) //&temp,&systemODE2Rhs,&cSystemData
+			exuThreading::ParallelFor(nItems, [this, &tempArray, &nItems, &computeInverse](NGSsizeType i) //&temp,&systemODE2Rhs,&cSystemData
 			{
 				Index j = cSystemData.objectsBodyWithODE2CoordsNoUF[(Index)i];
 				Index threadID = exuThreading::TaskManager::GetThreadId();
@@ -1277,7 +1277,7 @@ void CSystem::ComputeMassMatrix(TemporaryComputationDataArray& tempArray, Genera
 				temp.massMatrix.SetUseDenseMatrix(true); //this is default, mass matrix must either switch to sparse or just fill in
 
 				ArrayIndex& ltg = cSystemData.GetLocalToGlobalODE2()[j];
-				((CObjectBody*)(cSystemData.GetCObjects()[j]))->ComputeMassMatrix(temp.massMatrix, ltg, j); //ltg only used in sparse mode
+				((CObjectBody*)(cSystemData.GetCObjects()[j]))->ComputeMassMatrix(temp.massMatrix, ltg, j, computeInverse); //ltg only used in sparse mode
 
 				if (temp.massMatrix.UseDenseMatrix()) //dense matrix filled in and this is now transferred to dense system matrix
 				{

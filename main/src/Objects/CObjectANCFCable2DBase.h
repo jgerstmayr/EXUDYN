@@ -46,7 +46,7 @@ public:
 	virtual Real StrainIsRelativeToReference() const { return 0.; }
 
 	//!  Computational function: compute mass matrix
-	virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const override;
+	virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false) const override;
 
 	//!  precompute mass terms if it has not been done yet
 	virtual void PreComputeMassTerms() const;

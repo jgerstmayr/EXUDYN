@@ -128,6 +128,10 @@ void MainSystem::DeleteGeneralContact(Index generalContactNumber)
 
 }
 
+Index MainSystem::NumberOfGeneralContacts() const
+{
+	return cSystem->GetGeneralContacts().NumberOfItems();
+}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

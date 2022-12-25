@@ -92,12 +92,14 @@ public:
 
 	MainObjectFactory& GetMainObjectFactory() { return mainObjectFactory; }
 
-	//create a new general contact and add to system
+	//!create a new general contact and add to system
 	PyGeneralContact& AddGeneralContact();
-	//obtain read/write access to general contact
+	//!obtain read/write access to general contact
 	PyGeneralContact& GetGeneralContact(Index generalContactNumber);
-	//delete general contact, resort indices
+	//!delete general contact, resort indices
 	void DeleteGeneralContact(Index generalContactNumber);
+	//!get current number of general contacts
+	Index NumberOfGeneralContacts() const;
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   SYSTEM FUNCTIONS

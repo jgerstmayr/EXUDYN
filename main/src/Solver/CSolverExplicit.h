@@ -62,6 +62,7 @@ public: //made public for access via pybind
 	ArrayIndex constrainedODE2Coordinates;
 
 	bool hasConstantMassMatrix; //!< avoid recomputation of mass matrix
+	bool computeMassMatrixInversePerBody;
 
 	bool minStepSizeWarned; //!< set true, if already warned because of reaching minimum step due to error control
 

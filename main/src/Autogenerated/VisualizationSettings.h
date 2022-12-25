@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -185,7 +185,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -277,7 +277,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -368,7 +368,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -462,7 +462,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -523,7 +523,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -601,7 +601,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -690,7 +690,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -759,7 +759,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -837,7 +837,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -906,7 +906,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -992,7 +992,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1079,7 +1079,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1103,6 +1103,7 @@ public: // AUTO:
   bool enableLight0;                              //!< AUTO: turn on/off light0
   bool enableLight1;                              //!< AUTO: turn on/off light1
   bool enableLighting;                            //!< AUTO: generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL\_LIGHTING)
+  Float4 faceEdgesColor;                          //!< AUTO: global RGBA color for face edges
   bool facesTransparent;                          //!< AUTO: True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers
   Float3 initialCenterPoint;                      //!< AUTO: centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True
   float initialMaxSceneSize;                      //!< AUTO: initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True
@@ -1130,8 +1131,9 @@ public: // AUTO:
   Float4 materialAmbientAndDiffuse;               //!< AUTO: 4f ambient color of material
   float materialShininess;                        //!< AUTO: shininess of material
   Float4 materialSpecular;                        //!< AUTO: 4f specular color of material
-  Index multiSampling;                            //!< AUTO: multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
+  Index multiSampling;                            //!< AUTO: NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
   float perspective;                              //!< AUTO: parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 0.5 (large amount of perspective); mouse coordinates will not work with perspective
+  float polygonOffset;                            //!< AUTO: general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models
   bool shadeModelSmooth;                          //!< AUTO: True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces
   float shadow;                                   //!< AUTO: parameter \f$\in [0 ... 1]\f$ prescribes amount of shadow for light0 (using light0position, etc.); if this parameter is different from 1, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows
   float shadowPolygonOffset;                      //!< AUTO: some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies
@@ -1154,6 +1156,7 @@ public: // AUTO:
     enableLight0 = true;
     enableLight1 = true;
     enableLighting = true;
+    faceEdgesColor = Float4({0.2f,0.2f,0.2f,1.f});
     facesTransparent = false;
     initialCenterPoint = Float3({0.f,0.f,0.f});
     initialMaxSceneSize = 1.f;
@@ -1183,6 +1186,7 @@ public: // AUTO:
     materialSpecular = Float4({0.6f,0.6f,0.6f,1.f});
     multiSampling = 1;
     perspective = 0.f;
+    polygonOffset = 0.01f;
     shadeModelSmooth = true;
     shadow = 0.f;
     shadowPolygonOffset = 0.1f;
@@ -1200,6 +1204,11 @@ public: // AUTO:
   void PySetDrawNormalsLength(const float& drawNormalsLengthInit) { drawNormalsLength = EXUstd::GetSafelyPFloat(drawNormalsLengthInit,"drawNormalsLength"); }
   //! AUTO: Read (Copy) access to: length of normals; used for debugging
   float PyGetDrawNormalsLength() const { return float(drawNormalsLength); }
+
+  //! AUTO: Set function (needed in pybind) for: global RGBA color for face edges
+  void PySetFaceEdgesColor(const std::array<float,4>& faceEdgesColorInit) { faceEdgesColor = faceEdgesColorInit; }
+  //! AUTO: Read (Copy) access to: global RGBA color for face edges
+  std::array<float,4> PyGetFaceEdgesColor() const { return std::array<float,4>(faceEdgesColor); }
 
   //! AUTO: Set function (needed in pybind) for: centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True
   void PySetInitialCenterPoint(const std::array<float,3>& initialCenterPointInit) { initialCenterPoint = initialCenterPointInit; }
@@ -1246,9 +1255,9 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: 4f specular color of material
   std::array<float,4> PyGetMaterialSpecular() const { return std::array<float,4>(materialSpecular); }
 
-  //! AUTO: Set function (needed in pybind) for: multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
+  //! AUTO: Set function (needed in pybind) for: NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
   void PySetMultiSampling(const Index& multiSamplingInit) { multiSampling = EXUstd::GetSafelyPInt(multiSamplingInit,"multiSampling"); }
-  //! AUTO: Read (Copy) access to: multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
+  //! AUTO: Read (Copy) access to: NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
   Index PyGetMultiSampling() const { return Index(multiSampling); }
 
   //! AUTO: Set function (needed in pybind) for: parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 0.5 (large amount of perspective); mouse coordinates will not work with perspective
@@ -1281,6 +1290,7 @@ public: // AUTO:
     os << "  enableLight0 = " << enableLight0 << "\n";
     os << "  enableLight1 = " << enableLight1 << "\n";
     os << "  enableLighting = " << enableLighting << "\n";
+    os << "  faceEdgesColor = " << faceEdgesColor << "\n";
     os << "  facesTransparent = " << facesTransparent << "\n";
     os << "  initialCenterPoint = " << initialCenterPoint << "\n";
     os << "  initialMaxSceneSize = " << initialMaxSceneSize << "\n";
@@ -1312,6 +1322,7 @@ public: // AUTO:
     os << "  materialSpecular = " << materialSpecular << "\n";
     os << "  multiSampling = " << multiSampling << "\n";
     os << "  perspective = " << perspective << "\n";
+    os << "  polygonOffset = " << polygonOffset << "\n";
     os << "  shadeModelSmooth = " << shadeModelSmooth << "\n";
     os << "  shadow = " << shadow << "\n";
     os << "  shadowPolygonOffset = " << shadowPolygonOffset << "\n";
@@ -1340,7 +1351,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1437,12 +1448,67 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
+* @class        VSettingsOpenVR
+* @brief        Functionality to interact openVR; requires special hardware or software emulator, see steam / openVR descriptions
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2022-12-21 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class VSettingsOpenVR // AUTO: 
+{
+public: // AUTO: 
+  bool enableOpenVR;                              //!< AUTO: True: openVR enabled (if compiled with according flag and installed openVR)
+  bool showCompanionWindow;                       //!< AUTO: True: openVR will show companion window containing left and right eye view
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsOpenVR()
+  {
+    enableOpenVR = false;
+    showCompanionWindow = true;
+  };
+
+  // AUTO: access functions
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsOpenVR" << ":\n";
+    os << "  enableOpenVR = " << enableOpenVR << "\n";
+    os << "  showCompanionWindow = " << showCompanionWindow << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsOpenVR& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
 * @class        VSettingsInteractive
 * @brief        Functionality to interact with render window; will include left and right mouse press actions and others in future.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1460,6 +1526,7 @@ public: // AUTO:
 class VSettingsInteractive // AUTO: 
 {
 public: // AUTO: 
+  VSettingsOpenVR openVR;                         //!< AUTO: openVR visualization settings
   Float4 highlightColor;                          //!< AUTO: cRGB color for highlighted item; 4th value is alpha-transparency
   Index highlightItemIndex;                       //!< AUTO: index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted
   ItemType highlightItemType;                     //!< AUTO: item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)
@@ -1538,6 +1605,7 @@ public: // AUTO:
   virtual void Print(std::ostream& os) const
   {
     os << "VSettingsInteractive" << ":\n";
+    os << "  openVR = " << openVR << "\n";
     os << "  highlightColor = " << highlightColor << "\n";
     os << "  highlightItemIndex = " << highlightItemIndex << "\n";
     os << "  highlightItemType = " << highlightItemType << "\n";
@@ -1576,7 +1644,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

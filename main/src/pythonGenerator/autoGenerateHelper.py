@@ -8,7 +8,7 @@ goal: automatically generate interfaces for structures
 currently: automatic generate structures with ostream and initialization
 """
 import datetime # for current date
-
+import copy
 
 #******************************************************************************************************
 def GetDateStr():
@@ -353,6 +353,15 @@ pyFunctionAccessConvert = {
 #example = string, which is put into latex documentation
 #isLambdaFunction = True: cName is intepreted as lambda function and copied into pybind definition
 def DefPyFunctionAccess(cClass, pyName, cName, description, argList=[], defaultArgs=[], example='', options='', isLambdaFunction = False): 
+    
+    def ReplaceDefaultArgs(s):
+        sNew = copy.copy(s)
+        if sNew.find('Vector3D') != -1:
+            sNew = sNew.replace('(std::vector<Real>)Vector3D','')
+            sNew = sNew.replace('{','').replace('}','')
+            sNew = sNew.replace('(','[').replace(')',']')
+        sNew = sNew.replace('py::','').replace('::','.') #replace C-style '::' (e.g. in ConfiguationType) to python-style '.'            
+        return sNew
     #make some checks:
     if (len(argList) != 0) & (len(defaultArgs) == 0):
         defaultArgs = ['']*len(argList)
@@ -393,7 +402,7 @@ def DefPyFunctionAccess(cClass, pyName, cName, description, argList=[], defaultA
             s += ', py::arg("' + argList[i] + '")'
             sLatex += argList[i]
             if (defaultArgs[i] != ''):
-                sLatex += ' = ' + defaultArgs[i].replace('py::','').replace('::','.') #replace C-style '::' (e.g. in ConfiguationType) to python-style '.'
+                sLatex += ' = ' + ReplaceDefaultArgs(defaultArgs[i])
                 s += ' = ' + defaultArgs[i].replace('exu.','') #remove exudyn 'exu.' for C-code
             sLatex += ', '
         sLatex = sLatex[:-2] #remove last ', '

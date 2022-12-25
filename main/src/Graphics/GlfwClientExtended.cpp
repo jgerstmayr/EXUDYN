@@ -514,6 +514,8 @@ void GlfwRenderer::CreateTexturedQuadsLists(GLuint& listBase, GLuint* textureNum
 	listBase = glGenLists(nCharacters);
 	//glBindTexture(MY_GL_TEXTURE_2D, textureNumber);
 	//glEnable(MY_GL_TEXTURE_2D);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	GLfloat wFact = (float)wCharacter / (float)wCharacter8 - 0.001f;
 	//GLfloat wFact = 1.f;
 
@@ -522,6 +524,7 @@ void GlfwRenderer::CreateTexturedQuadsLists(GLuint& listBase, GLuint* textureNum
 		glNewList(listBase + loop, GL_COMPILE);
 		glBindTexture(MY_GL_TEXTURE_2D, textureNumber[loop]);
 		//glColor3f(0.9f, 0.9f, 0.9f);
+		//glColor4f(0.1f, 0.1f, 0.1f, 0.3f);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.001f, 0);
 		glVertex2i(0, 0);
@@ -560,7 +563,7 @@ void GlfwRenderer::CreateFontTextures()
 		glTexParameteri(MY_GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //linear filter give nicer results than GL_NEAREST
 		glTexParameteri(MY_GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexImage2D(MY_GL_TEXTURE_2D, 0, 4, bitmapFont.characterByteWidth * 8, //bitmapFont.characterWidth,
-			bitmapFont.characterHeight/* *bitmapFont.nCharacters*/, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+				bitmapFont.characterHeight/* *bitmapFont.nCharacters*/, 0, GL_RGBA, GL_UNSIGNED_BYTE,
 			textureRGB);
 		delete[] textureRGB; //not needed lateron
 

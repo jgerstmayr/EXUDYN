@@ -18,6 +18,10 @@ if sys.version_info.major != 3 or sys.version_info.minor < 6:# or sys.version_in
     raise ImportError("EXUDYN only supports python versions >= 3.6")
 isMacOS = (sys.platform == 'darwin')
 isWindows = (sys.platform == 'win32')
+isARM = False
+if platform.processor().find('arm') != -1:
+    isARM = True
+
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #include right exudyn module now:
@@ -102,10 +106,19 @@ exuDateStr = str(exuDate.year) + '-' + NumTo2digits(exuDate.month) + '-' + NumTo
 
 platformString = platform.architecture()[0]#'32bit'
 platformString += 'P'+str(sys.version_info.major) +'.'+ str(sys.version_info.minor)
+
+if isARM:
+    processorString = 'ARM'
+else:
+    processorString = 'x86'
+
 if isMacOS:
     platformString += 'macOS'
+    platformString += '_'+processorString
 elif not isWindows:
-    platformString += sys.platform
+    platformString += sys.platform #usually linux
+    if isARM:
+        platformString += '_'+processorString
 
 logFileName = '../TestSuiteLogs/testSuiteLog_V'+exu.GetVersionString()+'_'+platformString+'.txt'
 exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=False) #write all testSuite logs to files
@@ -116,8 +129,9 @@ exu.Print('+++++        EXUDYN TEST SUITE        +++++')
 exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
 exu.Print('EXUDYN version      = '+exu.GetVersionString())
 exu.Print('EXUDYN build date   = '+exuDateStr)
-exu.Print('platform            = '+platform.architecture()[0])
-exu.Print('system              = '+sys.platform)
+exu.Print('architecture        = '+platform.architecture()[0])
+exu.Print('processor           = '+processorString)
+exu.Print('platform            = '+sys.platform)
 exu.Print('python version      = '+str(sys.version_info.major)+'.'+str(sys.version_info.minor)+'.'+str(sys.version_info.micro))
 exu.Print('test tolerance      =',testTolerance)
 exu.Print('testsuite date (now)= '+dateStr)

@@ -76,6 +76,27 @@ public:
 	}
 };
 
+class OpenVRaction
+{
+public:
+	Float2 trackpad;
+	float trigger;
+	bool button1;
+	bool button2;
+	bool button3;
+	bool button4;
+
+	void Init()
+	{
+		trackpad = Float2({ 0, 0 });
+		trigger = 0;
+		button1 = false;
+		button2 = false;
+		button3 = false;
+		button4 = false;
+	}
+};
+
 //MOVE to python generated class!!!
 //! rendering state to be controlled via pybind
 class RenderState
@@ -104,6 +125,11 @@ public:
 	Vector3D joystickPosition;		//!< stored position of joystick, if available
 	Vector3D joystickRotation;		//!< stored rotation of joystick, if available
 	Index joystickAvailable;		//!< -1 if no joystick available, otherwise the index of the available joystick
+
+	//for openVR
+	ResizableArray<Matrix4DF> openVRcontrollerPoses;		//!< stores current poses of openVR controllers
+	ResizableArray<OpenVRaction> openVRcontrollerActions;	//!< stored for according controllers (same size as poses)
+	ResizableArray<Matrix4DF> openVRtrackerPoses;			//!< stores current poses of openVR trackers
 };
 
 #endif

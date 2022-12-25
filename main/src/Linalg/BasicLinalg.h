@@ -36,6 +36,7 @@ typedef ConstSizeMatrix<16> Matrix4D; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrix<4> Matrix2D; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrix<6*6> Matrix6D;//will be changed to SlimMatrix<...>
 
+typedef ConstSizeMatrixBase<float, 16> Matrix4DF; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrixBase<float, 9> Matrix3DF; //will be changed to SlimMatrix<...>
 typedef ConstSizeMatrixBase<float,4> Matrix2DF; //will be changed to SlimMatrix<...>
 
@@ -864,6 +865,37 @@ namespace EXUmath {
 		}
 	};
 
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//openGL
+
+	//!set homogeneous transformation from rotation matrix and translation vector
+	//UNTESTED
+	template<class Matrix3, class Vector3, class Matrix4>
+	void Matrix3DVector3D2Matrix4D(const Matrix3& rot, const Vector3& vec, Matrix4& mat4)
+	{
+		CHECKandTHROW(rot.NumberOfRows() == 3 && rot.NumberOfColumns() == 3 && vec.NumberOfItems() == 3 &&
+			mat4.MaxDataSize() >= 16, "Vector3DMatrix3D2Matrix4D: invalid data types");
+		
+		mat4.SetScalarMatrix(4, 0.);
+		mat4(3, 3) = 1.;
+		for (Index i = 0; i < 3; i++)
+		{
+			mat4(i, 3) = vec[i];
+			for (Index j = 0; j < 3; j++)
+			{
+				mat4(i, j) = rot(i, j);
+			}
+		}
+
+	}
+
+	//!set homogeneous transformation as Float16 from rotation matrix
+	template<class T>
+	ConstSizeMatrixBase<T, 9> SlimVector16toMatrix3D(const SlimVectorBase<T, 16> & A)
+	{
+		return ConstSizeMatrixBase<T, 9>(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
+	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

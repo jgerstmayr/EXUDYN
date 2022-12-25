@@ -109,8 +109,11 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
      \phantom{XXXX} return [0,0] \tabnewline
      mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)}}\\ \hline 
   AddGeneralContact() & add a new general contact, used to enable efficient contact computation between objects (nodes or markers)\\ \hline 
-  GetGeneralContact(generalContactNumber) & get read/write access to GeneralContact with index 'generalContactNumber' stored in mbs\\ \hline 
-  DeleteGeneralContact(generalContactNumber) & delete GeneralContact with index 'generalContactNumber' in mbs; other general contacts are resorted (index changes!)\\ \hline 
+  GetGeneralContact(generalContactNumber) & get read/write access to GeneralContact with index generalContactNumber stored in mbs; Examples shows how to access the GeneralContact object added with last AddGeneralContact() command:\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{gc=mbs.GetGeneralContact(mbs.NumberOfGeneralContacts()-1)}}\\ \hline 
+  DeleteGeneralContact(generalContactNumber) & delete GeneralContact with index generalContactNumber in mbs; other general contacts are resorted (index changes!)\\ \hline 
+  NumberOfGeneralContacts() & Return number of GeneralContact objects in mbs\\ \hline 
   \_\_repr\_\_() & return the representation of the system, which can be, e.g., printed\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{print(mbs)}}\\ \hline 
@@ -209,7 +212,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
     \texttt{objectType = {\textquotesingle}MassPoint{\textquotesingle}\tabnewline
     objectDict = mbs.GetObjectDefaults(objectType)}}\\ \hline 
   GetObjectOutput(objectNumber, variableType, configuration = ConfigurationType.Current) & get object's current output variable from object number (type ObjectIndex) and OutputVariableType; for connectors, it can only be computed for exu.ConfigurationType.Current configuration!\\ \hline 
-  GetObjectOutputBody(objectNumber, variableType, localPosition = (std.vector<Real>)Vector3D({0,0,0}), configuration = ConfigurationType.Current) & get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition as defined in the body, and as used in MarkerBody and SensorBody\tabnewline 
+  GetObjectOutputBody(objectNumber, variableType, localPosition = [0,0,0], configuration = ConfigurationType.Current) & get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition as defined in the body, and as used in MarkerBody and SensorBody\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{u = mbs.GetObjectOutputBody(objectNumber = 1, variableType = exu.OutputVariableType.Position, localPosition=[1,0,0], configuration = exu.ConfigurationType.Initial)}}\\ \hline 
   GetObjectOutputSuperElement(objectNumber, variableType, meshNodeNumber, configuration = ConfigurationType.Current) & get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType; the meshNodeNumber is the object's local node number, not the global node number!\tabnewline 
@@ -257,7 +260,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
     markerDict = mbs.GetMarkerDefaults(markerType)}}\\ \hline 
   GetMarkerParameter(markerNumber, parameterName) & get markers's parameter from markerNumber and parameterName; parameter names can be found for the specific items in the reference manual\\ \hline 
   SetMarkerParameter(markerNumber, parameterName, value) & set parameter 'parameterName' of marker with markerNumber to value; parameter names can be found for the specific items in the reference manual\\ \hline 
-  GetMarkerOutput(markerNumber, variableType, configuration = ConfigurationType.Current) & get the ouput of the marker specified with the OutputVariableType; currently only provides Position and Velocitiy for position based markers and RotationMatrix as well as AngularVelocity(Local) for markers providing additionally orientation\tabnewline 
+  GetMarkerOutput(markerNumber, variableType, configuration = ConfigurationType.Current) & get the ouput of the marker specified with the OutputVariableType; currently only provides Position and Velocity for position based markers, and RotationMatrix, Rotation and AngularVelocity(Local) for markers providing orientation\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{mbs.GetMarkerOutput(markerNumber=0, variableType=exu.OutputVariableType.Position)}}\\ \hline 
 \end{longtable}
@@ -646,6 +649,7 @@ The Matrix6DList is used to represent lists of 6D Matrices. . This is used to tr
   isActive & default = True (compute contact); if isActive=False, no contact computation is performed for this contact set \\ \hline  
   verboseMode & default = 0; verboseMode = 1 or higher outputs useful information on the contact creation and computation \\ \hline  
   visualization & access visualization data structure \\ \hline  
+  resetSearchTreeInterval & (default=10000) number of search tree updates (contact computation steps) after which the search tree cells are re-created; this costs some time, will free memory in cells that are not needed any more \\ \hline  
   sphereSphereContact & activate/deactivate contact between spheres \\ \hline  
   sphereSphereFrictionRecycle & False: compute static friction force based on tangential velocity; True: recycle friction from previous PostNewton step, which greatly improves convergence, but may lead to unphysical artifacts; will be solved in future by step reduction \\ \hline  
   minRelDistanceSpheresTriangles & (default=1e-10) tolerance (relative to sphere radiues) below which the contact between triangles and spheres is ignored; used for spheres directly attached to triangles \\ \hline  
@@ -655,6 +659,7 @@ The Matrix6DList is used to represent lists of 6D Matrices. . This is used to tr
   		excludeDuplicatedTrigSphereContactPoints & (default=False) run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts \\ \hline  
   		ancfCableUseExactMethod & (default=True) if true, uses exact computation of intersection of 3rd order polynomials and contacting circles \\ \hline  
   		ancfCableNumberOfContactSegments & (default=1) number of segments to be used in case that ancfCableUseExactMethod=False; maximum number of segments=3 \\ \hline  
+  		ancfCableMeasuringSegments & (default=20) number of segments used to approximate geometry for ANCFCable2D elements for measuring with ShortestDistanceAlongLine; with 20 segments the relative error due to approximation as compared to 10 segments usually stays below 1e-8 \\ \hline  
   SetFrictionPairings(frictionPairings) & set Coulomb friction coefficients for pairings of materials (e.g., use material 0,1, then the entries (0,1) and (1,0) define the friction coefficients for this pairing); matrix should be symmetric!\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{\#set 3 surface friction types, all being 0.1:\tabnewline
@@ -667,9 +672,15 @@ The Matrix6DList is used to represent lists of 6D Matrices. . This is used to tr
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{gContact.SetSearchTreeBox(pMin=[-1,-1,-1],\tabnewline
        \phantom   pMax=[1,1,1])}}\\ \hline 
-  AddSphereWithMarker(markerIndex, radius, contactStiffness, contactDamping, frictionMaterialIndex) & add contact object using a marker (Position or Rigid), radius and contact/friction parameters; frictionMaterialIndex refers to frictionPairings in GeneralContact; contact is possible between spheres (circles in 2D) (if intraSphereContact = True), spheres and triangles and between sphere (=circle) and ANCFCable2D; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate)!\\ \hline 
-  AddANCFCable(objectIndex, halfHeight, contactStiffness, contactDamping, frictionMaterialIndex) & add contact object for an ANCF cable element, using the objectIndex of the cable element and the cable's half height as an additional distance to contacting objects (currently not causing additional torque in case of friction); currently only contact with spheres (circles in 2D) possible; contact computed using exact geometry of elements, finding max 3 intersecting contact regions\\ \hline 
-  AddTrianglesRigidBodyBased(rigidBodyMarkerIndex, contactStiffness, contactDamping, frictionMaterialIndex, pointList, triangleList) & add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; mesh can be produced with GraphicsData2TrigsAndPoints(...); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(...)\\ \hline 
+  AddSphereWithMarker(markerIndex, radius, contactStiffness, contactDamping, frictionMaterialIndex) & add contact object using a marker (Position or Rigid), radius and contact/friction parameters and return localIndex of the contact item in GeneralContact; frictionMaterialIndex refers to frictionPairings in GeneralContact; contact is possible between spheres (circles in 2D) (if intraSphereContact = True), spheres and triangles and between sphere (=circle) and ANCFCable2D; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper\\ \hline 
+  AddANCFCable(objectIndex, halfHeight, contactStiffness, contactDamping, frictionMaterialIndex) & add contact object for an ANCF cable element, using the objectIndex of the cable element and the cable's half height as an additional distance to contacting objects (currently not causing additional torque in case of friction), and return localIndex of the contact item in GeneralContact; currently only contact with spheres (circles in 2D) possible; contact computed using exact geometry of elements, finding max 3 intersecting contact regions\\ \hline 
+  AddTrianglesRigidBodyBased(rigidBodyMarkerIndex, contactStiffness, contactDamping, frictionMaterialIndex, pointList, triangleList) & add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; returns starting local index of trigsRigidBodyBased at which the triangles are stored; mesh can be produced with GraphicsData2TrigsAndPoints(...); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(...)\\ \hline 
+  GetItemsInBox(pMin, pMax) & Get all items in box defined by minimum coordinates given in pMin and maximum coordinates given by pMax, accepting 3D lists or numpy arrays; in case that no objects are found, False is returned; otherwise, a dictionary is returned, containing numpy arrays with indices of obtained MarkerBasedSpheres, TrigsRigidBodyBased, ANCFCable2D, ...; the indices refer to the local index in GeneralContact which can be evaluated e.g. by GetMarkerBasedSphere(localIndex)\tabnewline 
+    \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
+    \texttt{gContact.GetItemsInBox(pMin=[0,1,1],\tabnewline
+       \phantom   pMax=[2,3,2])}}\\ \hline 
+  GetMarkerBasedSphere(localIndex) & Get dictionary with position, radius and markerIndex for markerBasedSphere index, as returned e.g. from GetItemsInBox\\ \hline 
+  ShortestDistanceAlongLine(pStart = [0,0,0], direction = [1,0,0], minDistance = -1e-7, maxDistance = 1e7, asDictionary = false, cylinderRadius = 0, typeIndex = Contact.IndexEndOfEnumList) & Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is >= minDistance and < maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)\\ \hline 
   \_\_repr\_\_() & return the string representation of the GeneralContact, containing basic information and statistics\\ \hline 
 \end{longtable}
 \end{center}
@@ -918,5 +929,24 @@ This section shows the LinearSolverType structure, which is used for selecting l
   EXUdense & use dense matrices and according solvers for densly populated matrices (usually the CPU time grows cubically with the number of unknowns)\\ \hline 
   EigenSparse & use sparse matrices and according solvers; additional overhead for very small systems; specifically, memory allocation is performed during a factorization process\\ \hline 
   EigenSparseSymmetric & use sparse matrices and according solvers; NOTE: this is the symmetric mode, which assumes symmetric system matrices; this is EXPERIMENTAL and should only be used of user knows that the system matrices are (nearly) symmetric; does not work with scaled GeneralizedAlpha matrices; does not work with constraints, as it must be symmetric positive definite\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsubsection{ContactTypeIndex}
+\label{sec:ContactTypeIndex}
+This section shows the ContactTypeIndex structure, which is in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.
+
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  IndexSpheresMarkerBased & spheres attached to markers\\ \hline 
+  IndexANCFCable2D & ANCFCable2D contact items\\ \hline 
+  IndexTrigsRigidBodyBased & triangles attached to rigid body (or rigid body marker)\\ \hline 
+  IndexEndOfEnumList & signals end of list\\ \hline 
 \end{longtable}
 \end{center}

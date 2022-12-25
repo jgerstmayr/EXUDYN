@@ -15,7 +15,7 @@
 #constants and fixed structures:
 import numpy as np #LoadSolutionFile
 import exudyn.itemInterface as eii
-import exudyn as exu #do not import! causes troubles with exudynFast, etc.!!
+import exudyn as exu 
 from exudyn.basicUtilities import NormL2
 from math import sin, cos #, sqrt, atan2
 
@@ -1038,7 +1038,8 @@ def GetRigidBodyNode(nodeType,
 #   gravity: if provided as list or numpy array with 3 components, it adds gravity force to the body at the COM, i.e., fAdd = m*gravity
 #   graphicsDataList: list of graphicsData objects to define appearance of body
 #**output: returns list containing node number and body number: [nodeNumber, bodyNumber]
-def AddRigidBody(mainSys, inertia, nodeType, 
+def AddRigidBody(mainSys, inertia, 
+                 nodeType = exu.NodeType.RotationEulerParameters, 
                  position=[0,0,0], velocity=[0,0,0], 
                  rotationMatrix= [],
                  rotationParameters = [],

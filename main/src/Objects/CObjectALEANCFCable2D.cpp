@@ -80,15 +80,17 @@ void CObjectALEANCFCable2D::PreComputeMassTerms() const
 }
 
 //! Computational function: compute mass matrix
-void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
+void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
+	CHECKandTHROW(!computeInverse, "CObjectALEANCFCable2DBase::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings");
+
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	PreComputeMassTerms();
 	const int ns = 4; //number of shape functions
 
 	//if (!massMatrixComputed)
 	//{
-	//	CObjectANCFCable2DBase::ComputeMassMatrix(massMatrix, objectNumber); //also fills in massMatrix, but only in first step
+	//	CObjectANCFCable2DBase::ComputeMassMatrix(massMatrix, objectNumber, computeInverse); //also fills in massMatrix, but only in first step
 	//	//==>moves result into 'precomputedMassMatrix'
 	//}
 

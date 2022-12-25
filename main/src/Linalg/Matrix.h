@@ -751,9 +751,26 @@ public:
 	// redundantEquationsStart: this is the first index from which redundant equations may be ignored
 	// pivotTreshold: treshold used to produce error/ignore equation because of singularity / redundancy
 	// return -1 if successful inverse computed, other wise return errorIndex: contains (first) problematic row that caused error
-	//template<typename T>
 	Index InvertSpecial(MatrixBase<T>& m, ArrayIndex& rowSwaps, bool ignoreRedundantEquations = true,
 		Index redundantEquationsStart = 0, Real pivotTreshold = 0);
+
+	//! Compute matrix inverse, assuming maximum size of Matrix, therefore leading to no memory allocation
+	// return -1 if successful inverse computed, other wise return errorIndex: contains (first) problematic row that caused error
+	template<Index maxNumberOfRows>
+	Index InvertWithMaxSize()
+	{
+		CHECKandTHROW(maxNumberOfRows >= NumberOfRows(), "MatrixBase::InvertWithMaxSize: maxNumberOfRows is too small");
+
+		T data[maxNumberOfRows*maxNumberOfRows]; //no new
+		Index dataRows[maxNumberOfRows];
+
+		LinkedDataMatrixBase<T> tempMatrix(data, NumberOfRows(), NumberOfColumns());
+		ArrayIndex rowSwaps;
+		rowSwaps.SetDataUnsafe(&dataRows[0], NumberOfRows(), NumberOfRows()); //link to data, no new
+		Index rv = InvertSpecial(tempMatrix, rowSwaps, false);
+		rowSwaps.SetDataUnsafe(nullptr, 0, 0); //this is needed in order that ArrayIndex does not free memory
+		return rv;
+	}
 
 	//! Solve System of Equations with right hand side 'fv' and solution 'q'; needs memory allocation and may be slower than external functions, e.g. Eigen
 	//  NOT Threadsafe!
@@ -1321,7 +1338,7 @@ namespace EXUmath {
 // ignoreRedundantEquations: if redundant row i encountered (that factorizes down to zeros), set this row in the inverse to 0, 
 //        which sets the according row i in A^-1 to zero: x = A^-1 * f ==> x[i] = 0 for arbitrary f
 // redundantEquationsStart: this is the first index from which redundant equations may be ignored
-// return -1 if successful inverse computed, eles return errorIndex: contains (first) problematic row that caused error
+// return -1 if successful inverse computed, else return errorIndex: contains (first) problematic row that caused error
 template<typename T>
 Index MatrixBase<T>::InvertSpecial(MatrixBase<T>& m, ArrayIndex& rowSwaps, bool ignoreRedundantEquations,
 	Index redundantEquationsStart, Real pivotTreshold)
@@ -1415,7 +1432,5 @@ Index MatrixBase<T>::InvertSpecial(MatrixBase<T>& m, ArrayIndex& rowSwaps, bool 
 
 	return -1;
 }
-
-
 
 #endif

@@ -43,8 +43,10 @@ Matrix2D CObjectBeamGeometricallyExact2D::GetRotationMatrix2D(Real theta) const
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! Computational function: compute mass matrix
-void CObjectBeamGeometricallyExact2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
+void CObjectBeamGeometricallyExact2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
+	CHECKandTHROW(!computeInverse, "CObjectBeamGeometricallyExact2D::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings");
+
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	if (massMatrixComputed) //advantage due to precomputed mass matrix comparatively small (will improve in case of sparse matrices)
 	{

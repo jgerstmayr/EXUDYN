@@ -141,9 +141,9 @@ public:
 	const Real* PMinC() const { return pmin; }
 	const Real* PMaxC() const { return pmax; }
 
-	//! convert to Vector3D
-	Vector3D PMin() const { return Vector3D({ pmin[0], pmin[1], pmin[2] }); }
-	Vector3D PMax() const { return Vector3D({ pmax[0], pmax[1], pmax[2] }); }
+	//! convert to Vector3D; const added to raise error if assignment happens e.g. box.PMin() = ...
+	const Vector3D PMin() const { return Vector3D({ pmin[0], pmin[1], pmin[2] }); }
+	const Vector3D PMax() const { return Vector3D({ pmax[0], pmax[1], pmax[2] }); }
 
 	//! direct read access to Reals:
 	EXUINLINE const Real& PMinX() const { return pmin[0]; }
@@ -296,12 +296,21 @@ public:
 	{
 		if (data)
 		{
+			FlushCells();
+			delete[] data;
+			data = nullptr;
+		}
+	}
+
+	//! erase memory of cells, but keep search tree
+	void FlushCells()
+	{
+		if (data)
+		{
 			for (Index i = 0; i < TotalSize(); i++)
 			{
 				data[i].Flush();
 			}
-			delete[] data;
-			data = nullptr;
 		}
 	}
 
@@ -312,6 +321,8 @@ public:
 	Index SizeY() const { return sy; }
 	Index SizeZ() const { return sz; }
 	Index TotalSize() const { return sx*sy*sz; }
+
+	Index3 SizeCellsXYZ() const { return Index3({ sx, sy, sz }); }
 
 	void ResetSearchTree(Index sizex, Index sizey, Index sizez, Box3D b)
 	{
@@ -475,6 +486,9 @@ public:
 		}
 	}
 	
+	//!get items in box b; do not add duplicates by using indexFlags array, having one bool per index, all initialized with false
+	//!leave out items with index >= maxIndex or index < minIndex
+	//!by supplying the pre-computed bounding boxes of items, only items are considered, which really intersect with b
 	void GetSingleItemsInBoxMaxMinIndex(const Box3D& b, ArrayIndex& items, ResizableArray<bool>& indexFlags,
 		const ResizableArray<Box3D>& allBoundingBoxes, Index maxIndex, Index minIndex = 0, bool clearIndexFlags = true) const
 	{
@@ -681,6 +695,15 @@ public:
 		if (i < 0) { i = 0; }
 		if (i >= sz) { i = sz - 1; }
 		return i;
+	}
+
+	//! return x/y/z index for Real value and given axis in [0,1,2] corresponding to [x,y,z]
+	Index IndexOfReal(Real value, Index axis)
+	{
+		if (axis == 0) { return IndX(value); }
+		else if (axis == 1) { return IndY(value); }
+		else if (axis == 2) { return IndZ(value); }
+		else { CHECKandTHROWstring("SearchTree::IndexOfReal called with invalid axis"); return 0; }
 	}
 
 	//! get index in 3D list from 3 indices

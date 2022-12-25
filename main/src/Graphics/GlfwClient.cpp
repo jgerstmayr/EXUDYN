@@ -13,6 +13,7 @@
 
 #include "Graphics/GlfwClient.h"
 #include "Utilities/SlimArray.h"
+#include "Linalg/RigidBodyMath.h"
 
 
 
@@ -67,6 +68,19 @@ using namespace std::string_literals; // enables s-suffix for std::string litera
 extern bool globalPyRuntimeErrorFlag; //stored in Stdoutput.cpp; this flag is set true as soon as a PyError or SysError is raised; this causes to shut down secondary processes, such as graphics, etc.
 //extern bool deactivateGlobalPyRuntimeErrorFlag; //stored in Stdoutput.cpp; this flag is set true as soon as functions are called e.g. from command windows, which allow errors without shutting down the renderer
 //use PrintDelayed(...) or ShowMessage(...) instead #define rendererOut std::cout //defines the type of output for renderer: pout could be problematic because of parallel threads; std::cout does not work in Spyder
+
+
+//+++++++++++++++++++++++++++++++++++++
+#ifdef __EXUDYN_USE_OPENVR
+#include "Graphics/OpenVRinterface.h"
+OpenVRinterface openVRinterface;
+//extern void InitializeOpenVR(GLFWwindow* window, GlfwRenderer* glfwRenderer);
+//extern void RenderOpenVR(GLFWwindow* window, GlfwRenderer* glfwRenderer);
+//extern void getTrackedDevicePoseMatrices(std::vector<Matrix4DF> &Controller, std::vector<Matrix4DF> &Tracker);
+#endif
+//+++++++++++++++++++++++++++++++++++++
+
+
 
 
 GlfwRenderer glfwRenderer;
@@ -1169,13 +1183,10 @@ void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mou
 	glInitNames();
 	glPushName(1);
 
-	glPolygonOffset(1, 1); //why?
-	glEnable(GL_POLYGON_OFFSET_FILL);
 	const bool selectionMode = true;
 	RenderGraphicsData(selectionMode); //render scene with names
 	//glCallList (filledlist);
 
-	glDisable(GL_POLYGON_OFFSET_FILL);
 	glPopName();
 	//++++++++++++++++++++++++++++++++++++++++
 	glMatrixMode(GL_PROJECTION);
@@ -1472,7 +1483,10 @@ void GlfwRenderer::InitCreateWindow()
 		{
 			if (verboseRenderer) { PrintDelayed("glfwCreateWindow(...) successful"); }
 		}
-
+#ifdef __EXUDYN_USE_OPENVR
+		if (verboseRenderer) { PrintDelayed("Initialize OpenVR"); }
+		InitializeOpenVR(window, &glfwRenderer);
+#endif
 		//allow for very small windows, but never get 0 ...; x-size anyway limited due to windows buttons
 		glfwSetWindowSizeLimits(window, 2, 2, maxWidth, maxHeight);
 		if (verboseRenderer) { PrintDelayed("glfwSetWindowSizeLimits(...) successful"); }
@@ -1634,6 +1648,9 @@ void GlfwRenderer::DoRendererTasks()
 		}
 		Render(window);
 		SaveImage(); //in case of flag, save frame to image file
+#ifdef __EXUDYN_USE_OPENVR
+		RenderOpenVR(window, &glfwRenderer);
+#endif
 		lastGraphicsUpdate = time;
 		SetCallBackSignal(false);
 	}
@@ -1741,9 +1758,9 @@ void GlfwRenderer::SetModelRotationTranslation()
 {
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//model rotation and translation, include rotation center point
-	//Float16& A = state->modelRotation;
 	Float16 A(state->modelRotation); //copy, do not update model rotation, which is still modifiable
-	Matrix3DF rotationMV(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
+	//Matrix3DF rotationMV(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
+	Matrix3DF rotationMV = EXUmath::SlimVector16toMatrix3D(A);
 	Float3 translationMV = state->rotationCenterPoint * rotationMV + state->centerPoint;
 	//Float3 translationMV = state->centerPoint;// *rotationMV;
 
@@ -1794,6 +1811,7 @@ void GlfwRenderer::SetModelRotationTranslation()
 	glMultMatrixf(A.GetDataPointer());
 }
 
+Real phiact = 0;
 void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, because of glfwSetWindowRefreshCallback
 {
 	if (PyGetRendererCallbackLock()) { return; }
@@ -1813,9 +1831,6 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	float fontSize = visSettings->general.textSize * GetFontScaling(); //use this size for fonts throughout
 
 	glViewport(0, 0, width, height);
-	//std::cout << "h=" << height << ", w=" << width << "\n";
-
-	//original 2020-12-05: SetGLLights(); //must be very early, before anything to draw
 
 	//get available line width range:
 	//GLfloat LineRange[2];
@@ -1827,6 +1842,8 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	glStencilMask(~0); //make sure that all stencil bits are cleared
 	glClearStencil(0);
 
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//main render process
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
@@ -1839,33 +1856,15 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	//create special gradient background
-	if (visSettings->general.useGradientBackground)
-	{
-		Float4 bg2 = visSettings->general.backgroundColorBottom;
-		glDisable(GL_DEPTH_TEST);
-		glBegin(GL_QUADS);
-		//red color
-		glColor3f(bg2[0], bg2[1], bg2[2]);
-		float ax = zoom * ratio;
-		float ay = zoom;
-		glVertex2f(-ax, -ay);
-		glVertex2f(ax, -ay);
-		//blue color
-		glColor3f(bg[0], bg[1], bg[2]);
-		glVertex2f(ax, ay);
-		glVertex2f(-ax, ay);
-		glEnd();
-		glEnable(GL_DEPTH_TEST);
-	}
-
-	//put here, will be fixed light seen from camera:
+	AddGradientBackground(zoom, ratio);
+	//put here; light fixed relative to camera:
 	SetGLLights(); //moved here 2020-12-05; light should now be rotation independent!
 
 	SetModelRotationTranslation();
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	RenderGraphicsData();
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 	if (visSettings->openGL.perspective != 0)
@@ -1889,7 +1888,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		glLoadIdentity();
 		//float factor = 0.35f*zoom * 2.6f;
 		//glTranslated(-factor*ratio*1.05, factor, 0.f); //old ; DELETE
-		glDepthMask(GL_FALSE); //draw lines always in front
+		glDepthMask(GL_FALSE); //draw system information and coordinate system always in front
 
 		//float scale = 2.f*fontSize*zoom / ((float)height);
 		float hOff = 0.95f*(float)zFactor * 2.f*state->maxSceneSize; //draw in front; NEEDED since glDepthMask(GL_FALSE) ?
@@ -2155,19 +2154,71 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 
 	glfwSwapBuffers(window);
 
-	//DELETE:
-	//firstRun++;
-	////if (firstRun == 10) { ZoomAll(); }
-
-	//if ((firstRun *  visSettings->general.graphicsUpdateInterval) < 1. && visSettings->general.autoFitScene) { ZoomAll(); }
-
-	//std::cout << "  finish renderer\n";
-
 	//++++++++++++++++++++++++++++++++++++++++++
 	//renderFunctionRunning.clear(std::memory_order_release); //clear PostProcessData
 	EXUstd::ReleaseSemaphore(renderFunctionRunning);
 
 }
+
+void GlfwRenderer::Render3Dobjects(GLFWwindow* window, const Matrix3DF& projectionA, const Float3& projectionPos,
+	int width, int height, float ratio)
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	float zoom;
+	GLdouble zFactor;
+	SetProjection(width, height, ratio, zoom, zFactor); //set zoom, perspective, ...
+
+	//++++++++++++++++++++++++++++++
+	//add projection transformation here
+	//Matrix4DF A;
+	//EXUmath::Matrix3DVector3D2Matrix4D(RigidBodyMath::RotationMatrix3((float)(2 * sin(phiact))), Float3(0.), A);
+	//phiact += 0.04;
+	//glMultMatrixf(A.GetDataPointer());
+	glMultMatrixf(projectionA.GetDataPointer());
+	glTranslatef(projectionPos[0], projectionPos[1], projectionPos[2]); //CHECK if this needs to be done before rotation
+	//++++++++++++++++++++++++++++++
+
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	AddGradientBackground(zoom, ratio);
+	SetGLLights(); 
+
+	SetModelRotationTranslation(); //setup model rotation/translation for rendering 3D objects
+	RenderGraphicsData();
+
+}
+
+void GlfwRenderer::AddGradientBackground(float zoom , float ratio)
+{
+	//create special gradient background
+	if (visSettings->general.useGradientBackground)
+	{
+		Float4 bg = visSettings->general.backgroundColor;
+		Float4 bg2 = visSettings->general.backgroundColorBottom;
+		glDisable(GL_DEPTH_TEST);
+		glBegin(GL_QUADS);
+		//red color
+		glColor3f(bg2[0], bg2[1], bg2[2]);
+		float ax = zoom * ratio;
+		float ay = zoom;
+		glVertex2f(-ax, -ay);
+		glVertex2f(ax, -ay);
+		//blue color
+		glColor3f(bg[0], bg[1], bg[2]);
+		glVertex2f(ax, ay);
+		glVertex2f(-ax, ay);
+		glEnd();
+		glEnable(GL_DEPTH_TEST);
+	}
+
+}
+
+
+
 
 void GlfwRenderer::SaveImage()
 {
@@ -2363,7 +2414,6 @@ void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 					imageFile << color[0] << ", " << color[1] << ", " << color[2] << ", " << color[3] << "\n";
 
 					imageFile << "#TRIANGLE\n";
-					glColor4f(0.2f, 0.2f, 0.2f, 1.f);
 					for (Index i = 0; i < 3; i++)
 					{
 						Index j = i + 1;
@@ -2427,6 +2477,18 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 {
 	if (graphicsDataList)
 	{
+		//use this to draw coplanar lines in front polygons
+		//this seems to be affected by zoom size: glPolygonOffset(visSettings->openGL.polygonOffset * state->maxSceneSize, visSettings->openGL.polygonOffset * state->maxSceneSize); //
+		float factOffset = 1.f*state->maxSceneSize;
+		if (state->zoom != 0.f) { factOffset *=  1.f / state->zoom; }
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glPolygonOffset(visSettings->openGL.polygonOffset*factOffset, visSettings->openGL.polygonOffset*factOffset); //
+		glEnable(GL_POLYGON_OFFSET_FILL);
+		glDisable(GL_POLYGON_OFFSET_LINE);
+		//glDisable(GL_POLYGON_OFFSET_FILL);
+		//glEnable(GL_POLYGON_OFFSET_LINE);
+
 		Index lastItemID = invalidIndex;
 		if (selectionMode)
 		{
@@ -2475,8 +2537,58 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 		for (auto data : *graphicsDataList)
 		{
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			//DRAW POINTS
-			//GLfloat lineWidth = 0.5f; //has no action so far
+			//DRAW TEXT (before triangles, in order to make texts visible in case of transparency
+			if (visSettings->openGL.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
+
+			float textheight = visSettings->general.textSize;
+			float scaleFactor = 2.f * state->zoom / ((float)state->currentWindowSize[1]); //factor, which gives approximately 1pt textsize
+
+			Float16 m = state->modelRotation;
+
+			Float16 matTp({ m[0],m[4],m[8],m[12], //transpose of modelRotation
+						   m[1],m[5],m[9],m[13],
+						   m[2],m[6],m[10],m[14],
+						   m[3],m[7],m[11],m[15] });
+
+			float textFontSize;
+			//glDepthMask(GL_FALSE);
+
+			for (const GLText& t : data->glTexts)
+			{
+				if (selectionMode) { if (t.itemID != lastItemID) { glLoadName(t.itemID); lastItemID = t.itemID; } }
+				//delete: float scale = textheight * scaleFactor;
+				//delete: if (t.size != 0.f) { scale = t.size * scaleFactor; }
+				textFontSize = textheight * GetFontScaling();
+				if (t.size != 0.f) { textFontSize = t.size * GetFontScaling(); }
+
+				float offx = t.offsetX * scaleFactor * textFontSize;
+				float offy = t.offsetY * scaleFactor * textFontSize;
+				//draw strings without applying the rotation:
+				glPushMatrix(); //store current matrix -> before rotation
+				glTranslated(t.point[0], t.point[1], t.point[2]);
+				glMultMatrixf(matTp.GetDataPointer());
+
+				if (!highlight)
+				{
+					DrawString(t.text, textFontSize, Float3({ offx,offy,0.f }), t.color);
+				}
+				else
+				{
+					Float4 color = otherColor2;
+					if (t.itemID == highlightID) { color = highlightColor2; }
+
+					DrawString(t.text, textFontSize, Float3({ offx,offy,0.f }), color);
+				}
+
+
+				glPopMatrix(); //restore matrix
+			}
+			//glDepthMask(GL_TRUE);
+			//glPopMatrix(); //restore matrix
+
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			//DRAW POINTS before triangles (nodes shown in transparent scenes)
+
 			GLfloat d = visSettings->general.pointSize; //point drawing parameter --> put into settings!
 			glLineWidth(visSettings->openGL.lineWidth);
 			if (visSettings->openGL.lineSmooth) { glEnable(GL_LINE_SMOOTH); }
@@ -2539,155 +2651,6 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 			{
 				if (visSettings->openGL.enableLighting) { glDisable(GL_LIGHTING); } //only enabled when drawing triangle faces
 			}
-
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			//DRAW CIRCLES
-			//draw a circle in xy-plane
-			for (const GLCircleXY& item : data->glCirclesXY)
-			{
-				if (selectionMode){if (item.itemID != lastItemID) {glLoadName(item.itemID); lastItemID = item.itemID;}}
-				glBegin(GL_LINE_STRIP); //list of single points to define lines
-				if (!highlight)
-				{
-					glColor4f(item.color[0], item.color[1], item.color[2], item.color[3]);
-				}
-				else
-				{
-					if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
-					else { glColor4fv(highlightColor2.GetDataPointer()); }
-				}
-
-				const Float3& p = item.point;
-				GLfloat r = item.radius;
-				float nSeg = (float)item.numberOfSegments;
-				if (nSeg == 0.f) { nSeg = (float)visSettings->general.circleTiling; }
-
-				//for (float i = 0; i <= nSeg; i += 2.f*EXUstd::pi_f / nSeg)
-				for (float i = 0; i <= 2.f*EXUstd::pi_f+1e-5; i += 2.f*EXUstd::pi_f / nSeg)
-				{
-					glVertex3f(p[0] + r * sin(i), p[1] + r * cos(i), p[2]);
-				}
-
-				glEnd(); //GL_LINE_STRIP
-			}
-
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			//DRAW LINES
-			if (visSettings->openGL.showLines)
-			{
-				if (!highlight)
-				{
-					for (const GLLine& item : data->glLines)
-					{
-						if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
-						glBegin(GL_LINES);
-						glColor4f(item.color1[0], item.color1[1], item.color1[2], item.color1[3]);
-						glVertex3f(item.point1[0], item.point1[1], item.point1[2]);
-						glColor4f(item.color2[0], item.color2[1], item.color2[2], item.color2[3]);
-						glVertex3f(item.point2[0], item.point2[1], item.point2[2]);
-						glEnd();
-					}
-				}
-				else
-				{
-					for (const GLLine& item : data->glLines)
-					{
-						if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
-						glBegin(GL_LINES);
-						if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
-						else { glColor4fv(highlightColor2.GetDataPointer()); }
-						glVertex3f(item.point1[0], item.point1[1], item.point1[2]);
-
-						if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
-						else { glColor4fv(highlightColor2.GetDataPointer()); }
-						glVertex3f(item.point2[0], item.point2[1], item.point2[2]);
-						glEnd();
-					}
-				}
-			}
-
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			//DRAW TRIANGLES
-			if (visSettings->openGL.showFaceEdges || visSettings->openGL.showMeshEdges)
-			{
-				for (const GLTriangle& trig : data->glTriangles)
-				{ //draw lines
-					if (selectionMode) { if (trig.itemID != lastItemID) { glLoadName(trig.itemID); lastItemID = trig.itemID; } }
-					if ((visSettings->openGL.showFaceEdges && !trig.isFiniteElement)
-						|| (visSettings->openGL.showMeshEdges && trig.isFiniteElement))
-					{
-						if (!highlight)
-						{
-							glColor4f(0.2f, 0.2f, 0.2f, 1.f);
-						}
-						else
-						{
-							if (trig.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
-							else { glColor4fv(highlightColor2.GetDataPointer()); }
-						}
-						for (Index i = 0; i < 3; i++)
-						{
-							Index j = i + 1;
-							if (j >= 3) { j = 0; }
-							glBegin(GL_LINES);
-							const Float3& p = trig.points[i];
-							glVertex3f(p[0], p[1], p[2]);
-
-							const Float3& p1 = trig.points[j];
-							glVertex3f(p1[0], p1[1], p1[2]);
-							glEnd();
-						}
-					}
-				}
-			}
-
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			//DRAW TEXT (before triangles, in order to make texts visible in case of transparency
-			if (visSettings->openGL.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
-
-			float textheight = visSettings->general.textSize;
-			float scaleFactor = 2.f * state->zoom / ((float)state->currentWindowSize[1]); //factor, which gives approximately 1pt textsize
-
-			Float16 m = state->modelRotation;
-
-			Float16 matTp({ m[0],m[4],m[8],m[12], //transpose of modelRotation
-						   m[1],m[5],m[9],m[13],
-						   m[2],m[6],m[10],m[14],
-						   m[3],m[7],m[11],m[15] });
-
-			float textFontSize;
-
-			for (const GLText& t : data->glTexts)
-			{
-				if (selectionMode) { if (t.itemID != lastItemID) { glLoadName(t.itemID); lastItemID = t.itemID; } }
-				//delete: float scale = textheight * scaleFactor;
-				//delete: if (t.size != 0.f) { scale = t.size * scaleFactor; }
-				textFontSize = textheight * GetFontScaling();
-				if (t.size != 0.f) { textFontSize = t.size * GetFontScaling(); }
-
-				float offx = t.offsetX * scaleFactor * textFontSize;
-				float offy = t.offsetY * scaleFactor * textFontSize;
-				//draw strings without applying the rotation:
-				glPushMatrix(); //store current matrix -> before rotation
-				glTranslated(t.point[0], t.point[1], t.point[2]);
-				glMultMatrixf(matTp.GetDataPointer());
-				
-				if (!highlight)
-				{
-					DrawString(t.text, textFontSize, Float3({ offx,offy,0.f }), t.color);
-				}
-				else
-				{
-					Float4 color = otherColor2;
-					if (t.itemID == highlightID) { color = highlightColor2; }
-
-					DrawString(t.text, textFontSize, Float3({ offx,offy,0.f }), color);
-				}
-
-
-				glPopMatrix(); //restore matrix
-			}
-			//glPopMatrix(); //restore matrix
 
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//DRAW TRIANGLES
@@ -2762,12 +2725,49 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 					}
 				}
 				if (visSettings->openGL.enableLighting) { glDisable(GL_LIGHTING); } //only enabled when drawing triangle faces
-				//glDisable(GL_LIGHTING);
 			}
+
+
+			//++++++++++++++++++++++++++++++++++++++++++++++
+			//draw lines at end of rendering: lines shown nicely on top of faces with polygon offset
+			//++++++++++++++++++++++++++++++++++++++++++++++
+
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			//DRAW CIRCLES
+			//draw a circle in xy-plane
+			for (const GLCircleXY& item : data->glCirclesXY)
+			{
+				if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
+				glBegin(GL_LINE_STRIP); //list of single points to define lines
+				if (!highlight)
+				{
+					glColor4f(item.color[0], item.color[1], item.color[2], item.color[3]);
+				}
+				else
+				{
+					if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
+					else { glColor4fv(highlightColor2.GetDataPointer()); }
+				}
+
+				const Float3& p = item.point;
+				GLfloat r = item.radius;
+				float nSeg = (float)item.numberOfSegments;
+				if (nSeg == 0.f) { nSeg = (float)visSettings->general.circleTiling; }
+
+				//for (float i = 0; i <= nSeg; i += 2.f*EXUstd::pi_f / nSeg)
+				for (float i = 0; i <= 2.f*EXUstd::pi_f + 1e-5; i += 2.f*EXUstd::pi_f / nSeg)
+				{
+					glVertex3f(p[0] + r * sin(i), p[1] + r * cos(i), p[2]);
+				}
+
+				glEnd(); //GL_LINE_STRIP
+			}
+
 
 			//draw normals
 			if (visSettings->openGL.drawFaceNormals)
 			{
+				Float4 edgeColor = visSettings->openGL.faceEdgesColor;
 				float len = visSettings->openGL.drawNormalsLength;
 				for (const GLTriangle& trig : data->glTriangles)
 				{
@@ -2778,7 +2778,8 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 						midPoint += trig.points[i];
 					}
 					midPoint *= 1.f / 3.f;
-					glColor4f(0.2f, 0.2f, 0.2f, 1.f);
+					glColor4f(edgeColor[0], edgeColor[1], edgeColor[2], edgeColor[3]);
+					//glColor4f(0.2f, 0.2f, 0.2f, 1.f);
 					glBegin(GL_LINES);
 					const Float3& p = midPoint;
 					glVertex3f(p[0], p[1], p[2]);
@@ -2807,11 +2808,91 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 				}
 			}
 
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			//DRAW LINES
+			if (visSettings->openGL.showLines)
+			{
+				if (!highlight)
+				{
+					for (const GLLine& item : data->glLines)
+					{
+						if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
+						glBegin(GL_LINES);
+						glColor4f(item.color1[0], item.color1[1], item.color1[2], item.color1[3]);
+						glVertex3f(item.point1[0], item.point1[1], item.point1[2]);
+						glColor4f(item.color2[0], item.color2[1], item.color2[2], item.color2[3]);
+						glVertex3f(item.point2[0], item.point2[1], item.point2[2]);
+						glEnd();
+					}
+				}
+				else
+				{
+					for (const GLLine& item : data->glLines)
+					{
+						if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
+						glBegin(GL_LINES);
+						if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
+						else { glColor4fv(highlightColor2.GetDataPointer()); }
+						glVertex3f(item.point1[0], item.point1[1], item.point1[2]);
+
+						if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
+						else { glColor4fv(highlightColor2.GetDataPointer()); }
+						glVertex3f(item.point2[0], item.point2[1], item.point2[2]);
+						glEnd();
+					}
+				}
+			}
+
+
+			
+			//DRAW TRIANGLES MESH
+			if (visSettings->openGL.showFaces || visSettings->openGL.showMeshFaces)
+			{
+				//glEnable(GL_POLYGON_OFFSET_LINE);
+
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				Float4 edgeColor = visSettings->openGL.faceEdgesColor;
+
+				//if (visSettings->openGL.enableLighting) { glEnable(GL_LIGHTING); } //only enabled when drawing triangle faces
+				//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+				//glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+				for (const GLTriangle& trig : data->glTriangles)
+				{ //draw faces edges
+					if (selectionMode) { if (trig.itemID != lastItemID) { glLoadName(trig.itemID); lastItemID = trig.itemID; } }
+					if ((visSettings->openGL.showFaceEdges && !trig.isFiniteElement)
+						|| (visSettings->openGL.showMeshEdges && trig.isFiniteElement))
+					{
+						if (!highlight)
+						{
+							glColor4f(edgeColor[0], edgeColor[1], edgeColor[2], edgeColor[3]);
+						}
+						else
+						{
+							if (trig.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
+							else { glColor4fv(highlightColor2.GetDataPointer()); }
+						}
+						glBegin(GL_TRIANGLES);
+						for (Index i = 0; i < 3; i++)
+						{
+							glNormal3fv(trig.normals[i].GetDataPointer());
+							glVertex3fv(trig.points[i].GetDataPointer());
+						}
+						glEnd();
+					}
+				}
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				//glDisable(GL_POLYGON_OFFSET_LINE);
+			}
+
+
+
 		} //for (auto data : *graphicsDataList)
 		if (selectionMode)
 		{
 			glLoadName(invalidIndex); //to have some name in
 		}
+
+
 
 	} //if graphicsDataList
 }
@@ -2923,7 +3004,11 @@ void GlfwRenderer::DrawTrianglesWithShadow(GraphicsData* data)
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_POLYGON_OFFSET_FILL);
-		glPolygonOffset(0.0f, visSettings->openGL.shadowPolygonOffset * state->maxSceneSize); //original: 100.0f, may be too big
+
+		float factOffset = 1.f*state->maxSceneSize;
+		if (state->zoom != 0.f) { factOffset *= 1.f / state->zoom; }
+		//here, we must use the original offset and add a shadow offset ...
+		glPolygonOffset(visSettings->openGL.polygonOffset*factOffset, visSettings->openGL.polygonOffset*factOffset + visSettings->openGL.shadowPolygonOffset * state->maxSceneSize);
 
 		glCullFace(GL_FRONT);
 		glStencilFunc(GL_ALWAYS, 0x0, 0xff);
@@ -2960,9 +3045,12 @@ void GlfwRenderer::DrawTrianglesWithShadow(GraphicsData* data)
 
 		DrawShadowPlane(shadow);
 
-		//glEnable(GL_POLYGON_OFFSET_FILL);
 		glDisable(GL_STENCIL_TEST);
-		
+
+		glPolygonOffset(visSettings->openGL.polygonOffset*factOffset, visSettings->openGL.polygonOffset*factOffset); //
+		glEnable(GL_POLYGON_OFFSET_FILL);
+		glDisable(GL_POLYGON_OFFSET_LINE);
+
 	}
 }
 

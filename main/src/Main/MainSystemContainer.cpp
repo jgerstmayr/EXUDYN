@@ -126,9 +126,9 @@ void MainSystemContainer::PySetRenderState(py::dict renderState)
 }
 
 //! this function links the VisualizationSystem to renderer; returns true if renderer exists/running
-bool MainSystemContainer::AttachToRenderEngine()
+bool MainSystemContainer::AttachToRenderEngineInternal(bool warnNoRenderer)
 {
-	bool rv = visualizationSystems.AttachToRenderEngine();
+	bool rv = visualizationSystems.AttachToRenderEngine(warnNoRenderer); //raise warning
 	if (rv)
 	{
 		py::module exudynModule = py::module::import("exudyn");
@@ -140,11 +140,11 @@ bool MainSystemContainer::AttachToRenderEngine()
 }
 
 //! this function releases the VisualizationSystem from the render engine;
-bool MainSystemContainer::DetachFromRenderEngine()
+bool MainSystemContainer::DetachFromRenderEngineInternal(bool warnNoRenderer)
 {
 	py::module exudynModule = py::module::import("exudyn");
 	exudynModule.attr("sys")["currentRendererSystemContainer"] = 0;
-	return visualizationSystems.DetachFromRenderEngine(&visualizationSystems);
+	return visualizationSystems.DetachFromRenderEngine(&visualizationSystems, warnNoRenderer);
 }
 
 
@@ -179,7 +179,7 @@ MainSystem& MainSystemContainer::AddMainSystem()
 	mainSystem->SetInteractiveMode(false);
 	mainSystem->SetMainSystemIndex(GetCSystems().NumberOfItems()-1); //index will not change hereafter
 	mainSystem->SetMainSystemContainer(this);
-
+	
 	return *mainSystem;
 }
 

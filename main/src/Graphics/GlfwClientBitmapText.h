@@ -166,37 +166,38 @@ public:
 	}
 
 	//! get new RGBA image for opengl texture2D for given character (needs to be deleted hereafter)
-	gchar* GetRGBAFontBitmap()
-	{
-		const int colorSize = 4; //RGBA
-		gchar* font;
-		//guint w = characterByteWidth * 8; //make multiple of 8 (problems with overlapping area?)
-		guint w = characterWidth; 
-		guint h = characterHeight;
-		font = new gchar[nCharacters* w*h * colorSize]; //RGB bytes
+	//unused
+	//gchar* GetRGBAFontBitmap()
+	//{
+	//	const int colorSize = 4; //RGBA
+	//	gchar* font;
+	//	//guint w = characterByteWidth * 8; //make multiple of 8 (problems with overlapping area?)
+	//	guint w = characterWidth; 
+	//	guint h = characterHeight;
+	//	font = new gchar[nCharacters* w*h * colorSize]; //RGB bytes
 
-		for (guint iChar = 0; iChar < nCharacters; iChar++)
-		{
-			for (guint y = 0; y < h; y++)
-			{
-				for (guint x = 0; x < w; x++)
-				{
-					//gchar b = (1 - GetPixel(iChar, x, y)) * 255; //for RGB, use black as color
-					gchar b = GetPixel(iChar, x, y) * 255; //use black for background, white for color (color can then be changed with glColorf)
+	//	for (guint iChar = 0; iChar < nCharacters; iChar++)
+	//	{
+	//		for (guint y = 0; y < h; y++)
+	//		{
+	//			for (guint x = 0; x < w; x++)
+	//			{
+	//				//gchar b = (1 - GetPixel(iChar, x, y)) * 255; //for RGB, use black as color
+	//				gchar b = GetPixel(iChar, x, y) * 255; //use black for background, white for color (color can then be changed with glColorf)
 
-					font[iChar*h*w * colorSize + y*w * colorSize + x * colorSize + 0] = b;
-					font[iChar*h*w * colorSize + y*w * colorSize + x * colorSize + 1] = b;
-					font[iChar*h*w * colorSize + y * w * colorSize + x * colorSize + 2] = b;
-					font[iChar*h*w * colorSize + y * w * colorSize + x * colorSize + 3] = 255-b; //for white pixels, use no transparency; for black pixels full transparency
-				}
-			}
-		}
-		//for (int i = 0; i < nCharacters* w*h * colorSize; i++)
-		//{
-		//	font[i] = 0;
-		//}
-		return font;
-	}
+	//				font[iChar*h*w * colorSize + y*w * colorSize + x * colorSize + 0] = b;
+	//				font[iChar*h*w * colorSize + y*w * colorSize + x * colorSize + 1] = b;
+	//				font[iChar*h*w * colorSize + y * w * colorSize + x * colorSize + 2] = b;
+	//				font[iChar*h*w * colorSize + y * w * colorSize + x * colorSize + 3] = 255-b; //for white pixels, use no transparency; for black pixels full transparency
+	//			}
+	//		}
+	//	}
+	//	//for (int i = 0; i < nCharacters* w*h * colorSize; i++)
+	//	//{
+	//	//	font[i] = 0;
+	//	//}
+	//	return font;
+	//}
 
 	//! get pixel of current bitmap for char iChar at position x/y
 	guint GetPixel(guint iChar, guint x, guint y) const

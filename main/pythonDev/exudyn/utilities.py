@@ -27,7 +27,7 @@ from exudyn.itemInterface import *
 #for compatibility with older models:
 from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: helper functions for matplotlib, returns a list of 28 line codes to be used in plot, e.g. 'r-' for red solid line
 #**input: index in range(0:28)
 #**output: a color and line style code for matplotlib plot
@@ -312,6 +312,9 @@ def IsListOrArray(data, checkIfNoneEmpty=False):
         return False
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 #**function: function to hide all objects in mbs except for those listed in objectNumbers
 #**input: 
 #  mbs: mbs containing object
@@ -375,7 +378,106 @@ def HighlightItem(SC, mbs, itemNumber, itemType=exudyn.ItemType.Object, showNumb
     mbs.SendRedrawSignal()
 
 
-#**function: Internal SensorUserFunction, used in function AddSensorRecorder
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#**function: internal function used for AddDistanceSensor
+def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
+
+    generalContactIndex = int(factors[0])
+    dirSensor = factors[5:8]
+    markerNumber = int(factors[1])
+    if markerNumber != -1:
+        p0 = mbs.GetMarkerOutput(markerNumber, variableType=exudyn.OutputVariableType.Position)
+        A0 = mbs.GetMarkerOutput(markerNumber, variableType=exudyn.OutputVariableType.RotationMatrix).reshape((3,3))
+        dirSensor = A0 @ dirSensor
+    else:
+        p0 = np.array(factors[2:5])
+
+    [minDistance, maxDistance, cylinderRadius, selectedTypeIndex, measureVelocity, graphicsObject] = factors[8:14]
+    selectedTypeIndex = exudyn.ContactTypeIndex(int(selectedTypeIndex)) #only converts from int
+    measureVelocity = bool(measureVelocity)
+    graphicsObject = int(graphicsObject)
+
+    gContact = mbs.GetGeneralContact(generalContactIndex)
+    data = gContact.ShortestDistanceAlongLine(pStart = p0, direction = dirSensor, 
+                                           minDistance=minDistance, maxDistance=maxDistance,
+                                           cylinderRadius=cylinderRadius, asDictionary=(measureVelocity==True),
+                                           typeIndex=selectedTypeIndex,
+                                           )
+    if measureVelocity:
+        d = data['distance']
+        v = data['velocityAlongLine']
+        rv = [d, v]
+    else:
+        d = data
+        rv = [d]
+
+    if graphicsObject != -1:
+        mbs.SetObjectParameter(graphicsObject,'referencePosition',p0 + d*np.array(Normalize(dirSensor)))
+        
+    return rv
+
+#**function: Function to add distance sensor based on GeneralContact to mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
+#**input:
+#  generalContactIndex: the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(...) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1
+#  positionOrMarker: either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker
+#  dirSensor: the direction along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation
+#  minDistance: the minimum distance which is accepted; smaller distance will be ignored
+#  maxDistance: the maximum distance which is accepted; items being at maxDistance or futher are ignored; if no items are found, the function returns maxDistance
+#  cylinderRadius: in case of spheres (selectedTypeIndex=ContactTypeIndex.IndexSpheresMarkerBased), a cylinder can be used which measures the shortest distance at a certain radius (geometrically interpreted as cylinder)
+#  selectedTypeIndex: either this type has default value, meaning that all items in GeneralContact are measured, or there is a specific type index, which is the only type that is considered during measurement
+#  storeInternal: like with any SensorUserFunction, setting to True stores sensor data internally
+#  fileName: if defined, recorded data of SensorUserFunction is written to specified file
+#  measureVelocity: if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction 'dirSensor' and does not account for changes in geometry, thus it may be different from the time derivative of the distance!
+#  addGraphicsObject: if true, the distance sensor is also visualized graphically in a simplified manner; the distance sensor is also not rotating with the marker; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
+#**output: creates sensor and returns according sensor number of SensorUserFunction
+def AddDistanceSensor(mbs, generalContactIndex,
+                      positionOrMarker, dirSensor, minDistance=-1e7, 
+                      maxDistance=1e7, cylinderRadius=0, 
+                      selectedTypeIndex=exudyn.ContactTypeIndex.IndexEndOfEnumList,
+                      storeInternal = False, fileName = '', measureVelocity = False,
+                      addGraphicsObject=False):
+    
+    markerNumber = -1
+    p0list = [0,0,0]
+    if type(positionOrMarker) == list or type(positionOrMarker) == np.ndarray:
+        p0list = list(positionOrMarker)
+    elif type(positionOrMarker)==exudyn.MarkerIndex:
+        markerNumber = float(int(positionOrMarker))
+    else:
+        raise ValueError('AddDistanceSensor: positionOrMarker must be either MarkerIndex or 3D position as list or numpy.array')
+
+    graphicsObject = -1 #signals that there is no graphics object
+    if addGraphicsObject:
+        if cylinderRadius == 0:
+            gData = GraphicsDataLine([[0,0,0],list(-np.array(dirSensor))], color = color4red)
+        else: 
+            gData = GraphicsDataCylinder([0,0,0],-np.array(dirSensor), radius=cylinderRadius, color = color4red)
+            
+        graphicsObject=mbs.AddObject(ObjectGround(referencePosition= p0list,
+                                      visualization=VObjectGround(graphicsData=[gData])))
+
+
+    dataUF = [float(generalContactIndex)]
+    dataUF += [markerNumber] + p0list + list(dirSensor)
+    dataUF += [ minDistance, maxDistance, cylinderRadius, float(int(selectedTypeIndex)), float(measureVelocity), float(int(graphicsObject))] 
+
+
+    sUF = mbs.AddSensor(SensorUserFunction(sensorNumbers=[], factors=dataUF,
+                                              storeInternal=True,
+                                              sensorUserFunction=__UFsensorDistance))
+
+    return sUF
+
+
+
+
+
+
+
+#**function: DEPRECATED: Internal SensorUserFunction, used in function AddSensorRecorder
+#**notes: Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
 def UFsensorRecord(mbs, t, sensorNumbers, factors, configuration):
     iSensor = sensorNumbers[0]
     val = mbs.GetSensorValues(iSensor, configuration=configuration) #get all values
@@ -388,7 +490,7 @@ def UFsensorRecord(mbs, t, sensorNumbers, factors, configuration):
         
     return val #return value usually not used further
 
-#**function: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecord'+str(sensorNumber)] where sensorNumber is the mbs sensor number
+#**function: DEPRECATED: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecord'+str(sensorNumber)] where sensorNumber is the mbs sensor number
 #**input: 
 #  mbs: mbs containing object
 #  sensorNumber: integer sensor number to be recorded
@@ -398,6 +500,7 @@ def UFsensorRecord(mbs, t, sensorNumbers, factors, configuration):
 #**output: adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables['sensorRecord'+str(sensorNumber)] and the information is written row-wise: [time, sensorValue1, sensorValue2, ...]
 #**notes: Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
 def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutputSize=3):
+    print('WARNING: AddSensorRecorder is DEPRECATED, use sensors and set storeInternal=True to achieve similar functionality')
     nSteps = int(endTime/sensorsWritePeriod)
     mbs.variables['sensorRecord'+str(sensorNumber)] = np.zeros((nSteps+1,1+sensorOutputSize)) #time+3 sensor values
 
@@ -409,7 +512,7 @@ def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutp
     return sUserRecord    
     
     
-#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++   LOAD SOLUTION AND ANIMATION   ++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -421,8 +524,9 @@ def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutp
 #  saveMode: if True, it loads lines directly to load inconsistent lines as well; use this for huge files (>2GB); is slower but needs less memory!
 #  verbose: if True, some information is written when importing file (use for huge files to track progress)
 #  maxRows: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
+#  hasHeader: set to False, if file is expected to have no header; if False, then some error checks related to file header are not performed
 #**output: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
-def LoadSolutionFile(fileName, safeMode=False, maxRows=-1, verbose=True):
+def LoadSolutionFile(fileName, safeMode=False, maxRows=-1, verbose=True, hasHeader=True):
 
     #check if is binary or ASCII
     isBinary = False
@@ -437,25 +541,26 @@ def LoadSolutionFile(fileName, safeMode=False, maxRows=-1, verbose=True):
         return LoadBinarySolutionFile(fileName,maxRows,verbose)
     
     #read HEADER
-    with open(fileName) as fileRead:
-        # fileRead=open(fileName,'r') 
-        fileLines = []
-        fileLines += [fileRead.readline()]
-        fileLines += [fileRead.readline()]
-        fileLines += [fileRead.readline()]
-        fileLines += [fileRead.readline()]
-        fileLines += [fileRead.readline()]
-        # fileRead.close()
-
-    if len(fileLines[4]) == 0:
-        raise ValueError('ERROR in LoadSolution: file empty or header missing')
-        
-    leftStr=fileLines[4].split('=')[0]
-    if leftStr[0:30] != '#number of written coordinates': 
-        raise ValueError('ERROR in LoadSolution: file header corrupted')
-
-    columnsExported = eval(fileLines[4].split('=')[1]) #load according column information into vector: [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData]
-    nColumns = sum(columnsExported)
+    if hasHeader:
+        with open(fileName) as fileRead:
+            # fileRead=open(fileName,'r') 
+            fileLines = []
+            fileLines += [fileRead.readline()]
+            fileLines += [fileRead.readline()]
+            fileLines += [fileRead.readline()]
+            fileLines += [fileRead.readline()]
+            fileLines += [fileRead.readline()]
+            # fileRead.close()
+    
+        if len(fileLines[4]) == 0:
+            raise ValueError('ERROR in LoadSolution: file empty or header missing')
+            
+        leftStr=fileLines[4].split('=')[0]
+        if leftStr[0:30] != '#number of written coordinates': 
+            raise ValueError('ERROR in LoadSolution: file header corrupted')
+    
+        columnsExported = eval(fileLines[4].split('=')[1]) #load according column information into vector: [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData]
+        nColumns = sum(columnsExported)
 
     #read DATA
     if not safeMode:
@@ -471,13 +576,21 @@ def LoadSolutionFile(fileName, safeMode=False, maxRows=-1, verbose=True):
         
         cntDataRows = 0
         dataRowStart = -1
+        dataRowLast = 0
+
         cnt = 0
+        cntComments = 0
         for line in lines: 
             if line[0]!='#': 
                 if dataRowStart == -1:
                     dataRowStart = cnt
                 cntDataRows+=1
+                dataRowLast = cnt
+            else:
+                cntComments += 1
             cnt+=1
+        
+        if verbose: print('found',cntComments,'lines with comments, which are ignored')
             
         if maxRows != -1 and cntDataRows > maxRows:
             cntDataRows = maxRows
@@ -485,19 +598,24 @@ def LoadSolutionFile(fileName, safeMode=False, maxRows=-1, verbose=True):
         if cntDataRows == 0 or dataRowStart == -1:
             raise ValueError('LoadSolutionFile: no rows found')
         else:
-            print('data starts at',dataRowStart, ', found', cntDataRows, 'rows')
+            if verbose: print('data starts at ',dataRowStart, ', found ', cntDataRows, ' rows', sep='')
 
         if verbose: print('check columns ...')
         
         cols = len(lines[dataRowStart].split(','))
-        if cols != nColumns+1:
-            raise ValueError('ERROR in LoadSolution: number of columns in first data row is inconsistent: got ',cols,' columns, but expected ', nColumns+1)
-        
+        if hasHeader:
+            if cols != nColumns+1:
+                raise ValueError('ERROR in LoadSolution: number of columns in first data row is inconsistent: got ',cols,' columns, but expected ', nColumns+1)
+        else:
+            nColumns=cols-1
+            columnsExported=[] #unknown ...
+            
         #check last line, which may be incomplete:
-        colsLastLine = len(lines[dataRowStart+cntDataRows-1].split(','))
+        #colsLastLine = len(lines[dataRowStart+cntDataRows-1].split(','))
+        colsLastLine = len(lines[dataRowLast].split(','))
         skipLast = 0
         if colsLastLine != cols:
-            print('LoadSolution: WARNING number of columns in last data row is inconsistent; will be skipped')
+            if verbose: print('LoadSolution: WARNING number of columns in last data row is inconsistent; will be skipped')
             skipLast = 1
         
         if verbose: print('file contains ',cntDataRows, ' rows and ', cols, ' columns (incl. time)',sep='')
@@ -506,17 +624,22 @@ def LoadSolutionFile(fileName, safeMode=False, maxRows=-1, verbose=True):
         
         progress = 0
         progressInfo = 5000000
+        skipLine = 0 #counter for skipping additional lines with comments
         for i in range(cntDataRows-skipLast):
             if verbose and progress>=progressInfo: #update progress
                 print('import data row', i, '/', cntDataRows)
                 progress = 0
             progress+=nColumns
-            ylist = lines[i+dataRowStart].split(',')
+            
+            while i+dataRowStart+skipLine<len(lines) and lines[i+dataRowStart+skipLine][0]=='#':
+                skipLine += 1
+            
+            ylist = lines[i+dataRowStart+skipLine].split(',')
             if len(ylist) == nColumns+1:
                 y=np.array(ylist, dtype=float)
                 data[i,:] = y[:]
             elif verbose:
-                print('  data row', i, 'is inconsistent ... skipped')
+                print('  data row', i, 'is inconsistent:',len(ylist), nColumns+1,' ... skipped')
 
     if verbose: print('columns imported =', columnsExported)
     if verbose: print('total columns to be imported =', nColumns, ', array size of file =', np.size(data,1))

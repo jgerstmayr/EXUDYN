@@ -1,34 +1,83 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# special hints for compilation on MacOS with OS X El Capitan 10.11.6
+# special hints for compilation on MacOS with OS X Big Sur with Apple M1 processors 
 # author: Johannes Gerstmayr
-# date: 2021-05-10
+# date: 2022-12-24
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-note: on newer systems these adaptions may not be necessary!
-
-visualizationSettings.h:
-- comment line:
-  os << "  initialModelRotation = " << Matrix3DF(initialModelRotation) << "\n";
-  ==> does not work as compiler does not get clue for conversion from 3x3 into <float,9> matrix
-
-
-basicLinalg.h:
-- inline auto NumIntegrate ==> inline does not work, put #ifndef __APPLE__
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#tkinter issue:
-python.org/download/mac/tcltk
-
-
+#currently, for newer Mac OS, precompiled versions exist for Apple M1 (ARM) (Python 3.8-3.10) and for _x86 processors (Python 3.7-3.10)
+#==> compile may not be needed!
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#if you use Apple M1 CPUs or MacOS 11, you may need to replace the glfw lib with newer library
+#install Python with virtual environments
+#you should first install a regular Anaconda for your MacOS (either Miniconda or Anaconda)
+#https://docs.anaconda.com/anaconda/install/mac-os/
 
+APPLE M1 installations, the following worked:
+conda create -n venvP38 python=3.8 scipy matplotlib ipywidgets tqdm spyder-kernels=2.1 ipykernel jupyter -y
+conda create -n venvP39 python=3.9 scipy matplotlib ipywidgets tqdm spyder-kernels=2.1 ipykernel jupyter -y
+conda create -n venvP310 python=3.10 scipy matplotlib ipywidgets tqdm ipykernel jupyter -y
+
+OLDER versions of Python are NOT working for M1: Python3.7 is not available for Apple M1: conda create -n venvP37 python=3.7 scipy matplotlib ipywidgets tqdm spyder-kernels=2.1 ipykernel jupyter -y
+
+********************************************************************************************
+Rosetta x86 installations, the following worked:
+
+CONDA_SUBDIR=osx-64 conda create -n venvP37_x86 python=3.7 scipy matplotlib ipywidgets tqdm spyder-kernels=2.1 ipykernel jupyter -y
+conda activate venvP37_x86
+conda config --env --set subdir osx-64
+
+CONDA_SUBDIR=osx-64 conda create -n venvP38_x86 python=3.8 scipy matplotlib ipywidgets tqdm spyder-kernels=2.1 ipykernel jupyter -y
+conda activate venvP38_x86
+conda config --env --set subdir osx-64
+
+Repeat with:
+CONDA_SUBDIR=osx-64 conda create -n venvP39_x86 python=3.9 scipy matplotlib ipywidgets tqdm spyder-kernels=2.1 ipykernel jupyter -y
+conda activate venvP39_x86
+conda config --env --set subdir osx-64
+
+CONDA_SUBDIR=osx-64 conda create -n venvP310_x86 python=3.10 scipy matplotlib ipywidgets tqdm spyder-kernels=2.1 ipykernel jupyter -y
+conda activate venvP310_x86
+conda config --env --set subdir osx-64
+
+********************************************************************************************
+Install Spyder 5.4.0 with standalone install (allows Spyder to start from Apps:
+https://docs.spyder-ide.org/current/installation.html
+********************************************************************************************
+
+==> go to Examples and try, e.g.:
+python stiffFlyballGovernor2.py
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#COMPILE 
+
+#get git repo
 #go into some local, empty folder (e.g. exudyn_git)
 #clone downloads the whole repo and may take some time depending on your internet connection (>300MB)
 git clone https://github.com/jgerstmayr/EXUDYN --depth 1
 
+#+++++++++++++++++++++++++++++++++++++++++
+#compile 
 
-#do following steps to compile:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#DEPRECATED:
+#on older setup.py files, there were some errors, which could be resolved by the following tricks:
 
 python setup.py bdist_wheel
 ==>gives some clang errors, like error: unknown argument '-framework Cocoa', etc.
@@ -43,8 +92,6 @@ python setup.py bdist_wheel
 pip install dist/exudyn-1.0.215- ... .whl
 ==> installs exudyn
 
-==> go to Examples
-python stiffFlyballGovernor2.py
 
 #switch between arm and x86 environments:
 #activate
@@ -60,6 +107,7 @@ source opt/anaconda3/bin/activate or similar to activate anaconda3/bin/activate
 
 
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #TRIALS with VirtualBox and MacOS 10.15 Mojave
 #install virtual box and MacOS as described in https://www.wikigain.com/install-macos-mojave-on-virtualbox-windows/

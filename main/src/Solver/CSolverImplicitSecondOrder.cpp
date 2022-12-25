@@ -931,9 +931,9 @@ void CSolverImplicitSecondOrderTimeIntUserFunction::InitializeStep(CSystem& comp
 	else { userFunctionInitializeStep(*mainSolver, *mainSystem, simulationSettings); }
 }
 
-void CSolverImplicitSecondOrderTimeIntUserFunction::FinishStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+void CSolverImplicitSecondOrderTimeIntUserFunction::FinishStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool writeSolution)
 {
-	if (userFunctionFinishStep == 0) { CSolverImplicitSecondOrderTimeInt::FinishStep(computationalSystem, simulationSettings); }
+	if (userFunctionFinishStep == 0) { CSolverImplicitSecondOrderTimeInt::FinishStep(computationalSystem, simulationSettings, writeSolution); }
 	else { userFunctionFinishStep(*mainSolver, *mainSystem, simulationSettings); }
 }
 

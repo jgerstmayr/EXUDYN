@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-09-14  15:15:19 (last modified)
+* @date         2022-12-13  20:41:02 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,6 +106,8 @@ protected: // AUTO:
     CObjectKinematicTreeParameters parameters; //! AUTO: contains all parameters for CObjectKinematicTree
     mutable ResizableVector tempVector;           //!< AUTO: temporary vector during computation of mass and ODE2LHS
     mutable ResizableVector tempVector2;          //!< AUTO: second temporary vector during computation of mass and ODE2LHS
+    mutable ResizableMatrix tempMatrix;           //!< AUTO: temporary matrix during computation of inverse of mass matrix
+    mutable ArrayIndex tempArrayIndex;            //!< AUTO: temporary array during computation of inverse of mass matrix
     mutable Transformation66List jointTransformationsTemp;//!< AUTO: temporary list containing transformations (Pluecker transforms) per joint
     mutable Vector6DList jointVelocitiesTemp;     //!< AUTO: temporary list containing 6D velocities per joint
     mutable Vector6DList jointAccelerationsTemp;  //!< AUTO: temporary list containing 6D accelerations per joint
@@ -124,6 +126,8 @@ public: // AUTO:
     {
         tempVector = ResizableVector();
         tempVector2 = ResizableVector();
+        tempMatrix = ResizableMatrix();
+        tempArrayIndex = ArrayIndex();
         jointTransformationsTemp = Transformation66List();
         jointVelocitiesTemp = Vector6DList();
         jointAccelerationsTemp = Vector6DList();
@@ -155,6 +159,20 @@ public: // AUTO:
     const ResizableVector& GetTempVector2() const { return tempVector2; }
     //! AUTO:  Read (Reference) access to:second temporary vector during computation of mass and ODE2LHS
     ResizableVector& GetTempVector2() { return tempVector2; }
+
+    //! AUTO:  Write (Reference) access to:temporary matrix during computation of inverse of mass matrix
+    void SetTempMatrix(const ResizableMatrix& value) { tempMatrix = value; }
+    //! AUTO:  Read (Reference) access to:temporary matrix during computation of inverse of mass matrix
+    const ResizableMatrix& GetTempMatrix() const { return tempMatrix; }
+    //! AUTO:  Read (Reference) access to:temporary matrix during computation of inverse of mass matrix
+    ResizableMatrix& GetTempMatrix() { return tempMatrix; }
+
+    //! AUTO:  Write (Reference) access to:temporary array during computation of inverse of mass matrix
+    void SetTempArrayIndex(const ArrayIndex& value) { tempArrayIndex = value; }
+    //! AUTO:  Read (Reference) access to:temporary array during computation of inverse of mass matrix
+    const ArrayIndex& GetTempArrayIndex() const { return tempArrayIndex; }
+    //! AUTO:  Read (Reference) access to:temporary array during computation of inverse of mass matrix
+    ArrayIndex& GetTempArrayIndex() { return tempArrayIndex; }
 
     //! AUTO:  Write (Reference) access to:\f$\Xm \in \Rcal^{n \times (6 \times 6)}\f$temporary list containing transformations (Pluecker transforms) per joint
     void SetJointTransformationsTemp(const Transformation66List& value) { jointTransformationsTemp = value; }
@@ -233,7 +251,7 @@ public: // AUTO:
     }
 
     //! AUTO:  Computational function: compute mass matrix
-    virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const override;
+    virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false) const override;
 
     //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
     virtual void ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const override;
@@ -338,7 +356,7 @@ public: // AUTO:
     void ComputeTreeTransformations(ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, Transformation66List& Xup, Vector6DList& V, Vector6DList& A) const;
 
     //! AUTO:  compute mass matrix if computeMass = true and compute ODE2LHS vector if computeMass=false
-    void ComputeMassMatrixAndODE2LHS(EXUmath::MatrixContainer* massMatrixC, const ArrayIndex* ltg, Vector* ode2Lhs, Index objectNumber, bool computeMass) const;
+    void ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatrix, const ArrayIndex* ltg, Vector* ode2Lhs, Index objectNumber, bool computeMass) const;
 
     //! AUTO:  function which adds 3D torques/forces per joint to Fvp
     void AddExternalForces6D(const Transformation66List& Xup, Vector6DList& Fvp) const;

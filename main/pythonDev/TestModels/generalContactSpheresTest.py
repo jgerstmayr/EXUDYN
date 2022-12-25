@@ -37,8 +37,8 @@ np.random.seed(1) #always get same results
 
 
 isPerformanceTest = exudynTestGlobals.isPerformanceTest
-#useGraphics = False
-#isPerformanceTest = True
+# useGraphics = False
+# isPerformanceTest = True
 
 L = 1
 n = 500
@@ -180,7 +180,7 @@ simulationSettings.solutionSettings.outputPrecision = 5 #make files smaller
 simulationSettings.solutionSettings.exportAccelerations = False
 simulationSettings.solutionSettings.exportVelocities = False
 simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/test.txt'
-# simulationSettings.displayComputationTime = True
+simulationSettings.displayComputationTime = True
 #simulationSettings.displayStatistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.parallel.numberOfThreads = 1 #use 1 thread to create reproducible results (due to round off errors in sparse vector?)
@@ -217,6 +217,8 @@ if useGraphics:
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
+simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody = True ##2022-12-16: increase performance for multi-threading, Newton increment faster by factor 6 for 8 threads
+
 exu.SolveDynamic(mbs, simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
 
 u = mbs.GetNodeOutput(sNodeNum, exu.OutputVariableType.Coordinates)

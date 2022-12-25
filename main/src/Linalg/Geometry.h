@@ -17,7 +17,6 @@ namespace HGeometry {
 	//! compute shortest distance of a point to line defined by two points; EXCLUDING endpoints; 
 	//! on output, the relativePosition is a value between 0 and 1, showing the projected position (0=point0, 1=point1, other: point in between)
 	//! should work for Vector2D, Vector3D, ConstVector<> ...; will be slow for Vector!
-	//! UNTESTED
 	template<class TVector>
 	inline Real ShortestDistanceRelativePosition(const TVector& linePoint0, const TVector& linePoint1, const TVector& point, Real& relativePosition)
 	{
@@ -33,16 +32,10 @@ namespace HGeometry {
 			return vLinePoint0Point.GetL2Norm(); 
 		}
 
-		Real den2 = vLinePoint0Point * vLinePoint0Point;
-		if (den2 == 0) //point == linePoint0
-		{
-			relativePosition = 0;
-			return 0.;
-		}
-
-		relativePosition = num / sqrt(den * den2);
-
-		return sqrt(vLinePoint0Point*vLinePoint0Point - num * num / den);
+		relativePosition = num / den;
+		Real val = vLinePoint0Point * vLinePoint0Point - num * relativePosition;
+		if (val < 0.) { return 0.; } //for pathological cases?
+		return sqrt(val);
 	}
 
 	//! compute shortest distance of a point to line defined by two points; INCLUDING endpoints; 
@@ -279,6 +272,23 @@ namespace HGeometry {
 		return fabs((pPlane - p) * nPlane);
 	}
 
+	//!Compute line-plane intersection of plane given by point and normal and line given by pLine and direction vLine
+	//!return true if success and false if fails (line and plane are parallel)
+	//!the resulting intersection point follows from pLine+relativeDistance*vLine
+	//!if vLine has length 1, the relativeDistance gives the distance from pLine
+	inline bool LinePlaneIntersection(const Vector3D& pPlane, const Vector3D& nPlane, const Vector3D& pLine, const Vector3D& vLine, Real& relativeDistance)
+	{
+		Real den = nPlane * vLine;
+		if (den == 0.) 
+		{ 
+			relativeDistance = 0.; 
+			return false; 
+		}
+
+		relativeDistance = ((pPlane - pLine)*nPlane)/den;
+		return true;
+	}
+
 	//compute local triangle coordinates
 	inline void LocalTriangleCoordinates(const Vector3D & e1, const Vector3D & e2,
 		const Vector3D & v, Real & lam1, Real & lam2)
@@ -391,6 +401,25 @@ namespace HGeometry {
 		return res;
 	}
 
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//+++ LINES                                                                                      +++
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	
+	//! compute relative cutting positions of two line segments defined by point and vector
+	//! returns relative position along segment, where 0 <= relPos <= 1 means a cutting point
+	//! returns false if line segments are parallel (and relPos is arbitrary), otherwise true
+	inline bool CuttingOf2DLineSegments(const Vector2D& p0, const Vector2D& v0, 
+		const Vector2D& p1, const Vector2D& v1, 
+		Real& relPos0, Real& relPos1)
+	{
+		ConstSizeMatrix<4> A(2, 2, {v0[0], -v1[0], v0[1], -v1[1]});
+		if (A(0, 0)*A(1, 1) - A(0, 1)*A(1, 0) == 0) { return false; }
+
+		Vector2D r = A.GetInverse()*(p1-p0);
+		relPos0 = r[0];
+		relPos1 = r[1];
+		return true;
+	}
 
 	//! compute common tangent of 2 spatial circles A and B defined by center point p, axis a, radius R; 
 	//! computes global radius vector r;

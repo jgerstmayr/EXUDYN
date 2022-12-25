@@ -49,7 +49,7 @@ bool CObjectRigidBody::HasConstantMassMatrix() const
 }
 
 //! Computational function: compute mass matrix
-void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
+void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	//STARTGLOBALTIMER(TSrigidMass);
@@ -106,6 +106,18 @@ void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, 
 
 	//pout << "mass=" << massMatrix << "\n";
 	//STOPGLOBALTIMER(TSrigidMass);
+
+	if (computeInverse)
+	{
+		Index rv = massMatrix.InvertWithMaxSize<CNodeRigidBody::maxRotationCoordinates + nDisplacementCoordinates>();
+		if (rv != -1)
+		{
+			CHECKandTHROWstring("CObjectRigidBody::ComputeMassMatrix: inverse failed; check if node type fits, if mass parameters are non-zero or set computeMassMatrixInversePerBody=False");
+		}
+	}
+
+
+
 }
 
 
@@ -703,8 +715,10 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 //#define useNewCObjectRigidBody
 //#ifndef useNewCObjectRigidBody
 ////! Computational function: compute mass matrix
-//void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
+//void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 //{
+//CHECKandTHROW(!computeInverse, "CObjectRigidBody::ComputeMassMatrix: computeInverse=True not implemented, change solver settings: computeMassMatrixInversePerBody=False");
+//
 //	static_assert(nDisplacementCoordinates == CNodeRigidBody::maxDisplacementCoordinates); //add this code to raise compiler error, if max. number of displacement coordiantes changes in RigidBodyNode ==> requires reimplementation in this file!
 //
 //	//set mass terms in first 3 diagonal entries and set remaining entries to zero (the last 4x4 entries will be overwritten when filling in inertia terms)

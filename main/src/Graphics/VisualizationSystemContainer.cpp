@@ -26,7 +26,7 @@
 //#ifdef USE_GLFW_GRAPHICS
 //#endif
 
-bool VisualizationSystemContainer::AttachToRenderEngine()
+bool VisualizationSystemContainer::AttachToRenderEngine(bool warnNoRenderer)
 {
 #ifdef USE_GLFW_GRAPHICS
 
@@ -40,17 +40,23 @@ bool VisualizationSystemContainer::AttachToRenderEngine()
 	}
 	return true;
 #else
-	PyWarning("AttachToRenderEngine(): has no effect as GLFW_GRAPHICS is deactivated in your exudyn module (needs recompile or another version)");
+	if (warnNoRenderer)
+	{
+		PyWarning("AttachToRenderEngine(): has no effect as GLFW_GRAPHICS is deactivated in your exudyn module (needs recompile or another version)");
+	}
 	return false;
 #endif
 }
 
-bool VisualizationSystemContainer::DetachFromRenderEngine(VisualizationSystemContainer* detachingVisualizationSystemContainer)
+bool VisualizationSystemContainer::DetachFromRenderEngine(VisualizationSystemContainer* detachingVisualizationSystemContainer, bool warnNoRenderer)
 {
 #ifdef USE_GLFW_GRAPHICS
 	return glfwRenderer.DetachVisualizationSystem(detachingVisualizationSystemContainer);
 #else
-	PyWarning("DetachFromRenderEngine(): has no effect as GLFW_GRAPHICS is deactivated in your exudyn module (needs recompile or another version)");
+	if (warnNoRenderer)
+	{
+		PyWarning("DetachFromRenderEngine(): has no effect as GLFW_GRAPHICS is deactivated in your exudyn module (needs recompile or another version)");
+	}
 	return false;
 #endif
 	

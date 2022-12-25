@@ -233,6 +233,8 @@ public:
 	T* GetDataPointer() { return data; }									//!< return pointer to first data containing T numbers
 	bool IsConstSizeMatrix() const { return true; }						//!< for derived classes: determine, if matrix has constant size
 
+	constexpr Index MaxDataSize() const { return dataSize; }
+
 	//! Set rows and columns sizes (also used in derived classes)
 	void SetNumberOfRowsAndColumns(Index numberOfRowsInit, Index numberOfColumnsInit)
 	{
@@ -792,7 +794,10 @@ public:
 				ConstSizeMatrixBase<T, dataSize> result(false);
 				ConstSizeMatrixBase<T, dataSize> copyMatrix(*this);
 				bool rv = copyMatrix.ComputeInverse(result);
-				CHECKandTHROW(rv, "ConstSizeMatrixBase::GetInverse: matrix is singular");
+				if (!rv)
+				{
+					CHECKandTHROWstring("ConstSizeMatrixBase::GetInverse: matrix is singular");
+				}
 				return result;
 			}
 		}

@@ -85,8 +85,10 @@ void CObjectFFRFreducedOrder::InitializeObject()
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! Computational function: compute mass matrix
-void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
+void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
+	CHECKandTHROW(!computeInverse, "CObjectFFRFreducedOrder::ComputeMassMatrix: computeInverse=True not implemented, change solver settings: computeMassMatrixInversePerBody=False");
+
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	if (!objectIsInitialized) { PyError("CObjectFFRFreducedOrder::ComputeMassMatrix: objectIsInitialized = false: run Assemble() before computation."); }
 

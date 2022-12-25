@@ -113,10 +113,6 @@ if addHand:
     dataLAL[1]['inertia'] = rbiLAL.InertiaCOM()
     dataLAL[1]['COM'] = rbiLAL.COM()
 #++++++++++++++++++++++++++++++++++
-x=GraphicsDataFromSTLfile(fileName=myDir+'Torso.stl', 
-                                        color=color4grey, verbose=True, density=density,
-                                        scale = scaleBody)[0]
-Y=GraphicsData2PointsAndTrigs(x)
 graphicsBody += [AddEdgesAndSmoothenNormals(GraphicsDataFromSTLfile(fileName=myDir+'Torso.stl', 
                                         color=color4grey, verbose=verbose, density=density,
                                         scale = scaleBody)[0], addEdges=False)]

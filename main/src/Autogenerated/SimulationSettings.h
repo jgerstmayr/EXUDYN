@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -41,6 +41,7 @@ public: // AUTO:
   std::string restartFileName;                    //!< AUTO: filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart
   Real restartWritePeriod;                        //!< AUTO: time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance
   bool sensorsAppendToFile;                       //!< AUTO: flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations
+  bool sensorsWriteFileFooter;                    //!< AUTO: flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration)
   bool sensorsWriteFileHeader;                    //!< AUTO: flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)
   Real sensorsWritePeriod;                        //!< AUTO: time span (period), determines how often the sensor output is written to file or internal storage during a simulation
   std::string solutionInformation;                //!< AUTO: special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in \refSection{sec:utf8}, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)
@@ -48,6 +49,7 @@ public: // AUTO:
   std::string solverInformationFileName;          //!< AUTO: filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '\_' only
   bool writeFileFooter;                           //!< AUTO: flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics
   bool writeFileHeader;                           //!< AUTO: flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)
+  bool writeInitialValues;                        //!< AUTO: flag (true/false); if true, initial values are exported for the start time; applies to coordinatesSolution and sensor files; this may not be wanted in the append file mode if the initial values are identical to the final values of a previous computation
   bool writeRestartFile;                          //!< AUTO: flag (true/false), which determines if restart file is written regularly, see restartFileName for details
   bool writeSolutionToFile;                       //!< AUTO: flag (true/false), which determines if (global) solution vector is written to the solution file (coordinatesSolutionFile); standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional coordinates in the solution file, see the options below
 
@@ -71,12 +73,14 @@ public: // AUTO:
     restartFileName = "restartFile.txt";
     restartWritePeriod = 0.01;
     sensorsAppendToFile = false;
+    sensorsWriteFileFooter = false;
     sensorsWriteFileHeader = true;
     sensorsWritePeriod = 0.01;
     solutionWritePeriod = 0.01;
     solverInformationFileName = "solverInformation.txt";
     writeFileFooter = true;
     writeFileHeader = true;
+    writeInitialValues = true;
     writeRestartFile = false;
     writeSolutionToFile = true;
   };
@@ -126,6 +130,7 @@ public: // AUTO:
     os << "  restartFileName = " << restartFileName << "\n";
     os << "  restartWritePeriod = " << restartWritePeriod << "\n";
     os << "  sensorsAppendToFile = " << sensorsAppendToFile << "\n";
+    os << "  sensorsWriteFileFooter = " << sensorsWriteFileFooter << "\n";
     os << "  sensorsWriteFileHeader = " << sensorsWriteFileHeader << "\n";
     os << "  sensorsWritePeriod = " << sensorsWritePeriod << "\n";
     os << "  solutionInformation = " << solutionInformation << "\n";
@@ -133,6 +138,7 @@ public: // AUTO:
     os << "  solverInformationFileName = " << solverInformationFileName << "\n";
     os << "  writeFileFooter = " << writeFileFooter << "\n";
     os << "  writeFileHeader = " << writeFileHeader << "\n";
+    os << "  writeInitialValues = " << writeInitialValues << "\n";
     os << "  writeRestartFile = " << writeRestartFile << "\n";
     os << "  writeSolutionToFile = " << writeSolutionToFile << "\n";
     os << "\n";
@@ -153,7 +159,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -236,7 +242,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -304,7 +310,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -434,7 +440,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -519,7 +525,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -538,6 +544,7 @@ class ExplicitIntegrationSettings // AUTO:
 {
 public: // AUTO: 
   bool computeEndOfStepAccelerations;             //!< AUTO: accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different
+  bool computeMassMatrixInversePerBody;           //!< AUTO: If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded)
   DynamicSolverType dynamicSolverType;            //!< AUTO: selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, ...), for detailed description see DynamicSolverType, \refSection{sec:DynamicSolverType}, but only referring to explicit solvers.
   bool eliminateConstraints;                      //!< AUTO: True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!
   bool useLieGroupIntegration;                    //!< AUTO: True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates!
@@ -548,6 +555,7 @@ public: // AUTO:
   ExplicitIntegrationSettings()
   {
     computeEndOfStepAccelerations = true;
+    computeMassMatrixInversePerBody = false;
     dynamicSolverType = DynamicSolverType::DOPRI5;
     eliminateConstraints = true;
     useLieGroupIntegration = true;
@@ -559,6 +567,7 @@ public: // AUTO:
   {
     os << "ExplicitIntegrationSettings" << ":\n";
     os << "  computeEndOfStepAccelerations = " << computeEndOfStepAccelerations << "\n";
+    os << "  computeMassMatrixInversePerBody = " << computeMassMatrixInversePerBody << "\n";
     os << "  dynamicSolverType = " << dynamicSolverType << "\n";
     os << "  eliminateConstraints = " << eliminateConstraints << "\n";
     os << "  useLieGroupIntegration = " << useLieGroupIntegration << "\n";
@@ -580,7 +589,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -793,7 +802,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -959,7 +968,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1028,7 +1037,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1133,7 +1142,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-11-29 (last modfied)
+* @date         AUTO: 2022-12-21 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

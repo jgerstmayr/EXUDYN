@@ -608,8 +608,10 @@ void CObjectANCFBeam::GetDeltaCrossSectionDeformation(Real x, ConstSizeMatrix<EX
 
 
 //! Computational function: compute mass matrix
-void CObjectANCFBeam::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
+void CObjectANCFBeam::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
+	CHECKandTHROW(!computeInverse, "CObjectANCFBeam::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings");
+	
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	PreComputeMassTerms();
 	massMatrix.CopyFrom(precomputedMassMatrix); //copy

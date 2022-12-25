@@ -421,9 +421,10 @@ MySignal registerSignal;
 PYBIND11_MODULE(exudynCPPfast, m) {
 	m.doc() = "EXUDYN binding Python<->C++\n This is the 'fast' version without range/memory/whatsoever checks and uses /fp:fast compiler options!\n -> usage:\nSC=exu.SystemContainer()\nmbs=SC.AddSystem()\n see theDoc.pdf for tutorials, interface description and further information"; // module docstring
 #pragma message("***** pybind: building exudynCPPfast module *****")
-//#pragma message("***** pybind: building exudynCPPfast module *****")
-//#pragma message("***** pybind: building exudynCPPfast module *****")
-//#pragma message("***** pybind: building exudynCPPfast module *****")
+#elif defined(__EXUDYN_COMPILE_NOAVX)
+PYBIND11_MODULE(exudynCPPnoAVX, m) {
+	m.doc() = "EXUDYN binding Python<->C++\n This is the version without AVX(2) compiler options for high CPU compatibility!\n -> usage:\nSC=exu.SystemContainer()\nmbs=SC.AddSystem()\n see theDoc.pdf for tutorials, interface description and further information"; // module docstring
+#pragma message("***** pybind: building exudynCPPnoAVX module *****")
 #else
 PYBIND11_MODULE(exudynCPP, m) {
 	m.doc() = "EXUDYN binding Python<->C++\n -> usage:\nSC=exu.SystemContainer()\nmbs=SC.AddSystem()\n see theDoc.pdf for tutorials, interface description and further information"; // module docstring

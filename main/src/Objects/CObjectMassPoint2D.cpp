@@ -16,17 +16,21 @@
 
 
 //! Computational function: compute mass matrix
-void CObjectMassPoint2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
+void CObjectMassPoint2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
-	//Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
-	//massMatrix.SetScalarMatrix(nODE2coordinates, parameters.physicsMass);
-
 	massMatrixC.SetUseDenseMatrix(false);
 	SparseTripletVector& triplets = massMatrixC.GetInternalSparseTripletMatrix().GetTriplets();
-	if (parameters.physicsMass != 0.)
+
+	Real m = parameters.physicsMass;
+	if (computeInverse)
 	{
-		triplets.AppendPure(EXUmath::Triplet(ltg[0], ltg[0], parameters.physicsMass));
-		triplets.AppendPure(EXUmath::Triplet(ltg[1], ltg[1], parameters.physicsMass));
+		CHECKandTHROW(m != 0., "CObjectMassPoint2D::ComputeMassMatrix: physicsMass may not be 0 in case of computeMassMatrixInversePerBody=True");
+		m = 1. / m;
+	}
+	if (m != 0.)
+	{
+		triplets.AppendPure(EXUmath::Triplet(ltg[0], ltg[0], m));
+		triplets.AppendPure(EXUmath::Triplet(ltg[1], ltg[1], m));
 	}
 }
 

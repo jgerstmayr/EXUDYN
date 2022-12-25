@@ -180,8 +180,10 @@ void CObjectFFRF::InitializeObject()
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! Computational function: compute mass matrix
-void CObjectFFRF::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
+void CObjectFFRF::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
+	CHECKandTHROW(!computeInverse, "CObjectFFRF::ComputeMassMatrix: computeInverse=True not implemented, change solver settings: computeMassMatrixInversePerBody=False");
+
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 
 	//#define CObjectFFRFComputeMassMatrixOutput

@@ -149,7 +149,7 @@ public:
 	// Computation FUNCTIONS
 
 	//! compute object massmatrix to massMatrix; offers interface to dense and sparse mass matrix computation; standard is dense mode; ltg only used in sparse mode; only possible for bodies
-	virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrix, const ArrayIndex& ltg, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::ComputeMassMatrix"); }
+	virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrix, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::ComputeMassMatrix"); }
 	//old: virtual void ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::ComputeMassMatrix"); }
 
 	//! return true if object has time and coordinate independent (=constant) mass matrix; used by solver

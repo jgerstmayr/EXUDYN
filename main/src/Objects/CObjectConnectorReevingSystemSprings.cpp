@@ -42,7 +42,7 @@ void CObjectConnectorReevingSystemSprings::ComputeReevingGeometry(const MarkerDa
 
 	if (storePositions) { positionsList.SetNumberOfItems(nRigidBodyMarkers * 2 - 2); }
 	Vector3D lastRB;
-	Vector3D lastRB_t;
+	//Vector3D lastRB_t;
 
 	for (Index i = 0; i < nRigidBodyMarkers-1; i++)
 	{

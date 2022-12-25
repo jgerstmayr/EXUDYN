@@ -235,8 +235,8 @@ public: //
 		CheckInitialized(mainSystem); GetCSolver().InitializeStep(*(mainSystem.cSystem), simulationSettings);
 	}
 
-	//! finish static step / time step; write output of results to file
-	virtual void FinishStep(MainSystem& mainSystem, const SimulationSettings& simulationSettings) 
+	//! finish static step / time step; write output of results to file; writeSolution not available here as compared to CSolverBase.h!
+	virtual void FinishStep(MainSystem& mainSystem, const SimulationSettings& simulationSettings)
 	{
 		CheckInitialized(mainSystem); GetCSolver().FinishStep(*(mainSystem.cSystem), simulationSettings);
 	}

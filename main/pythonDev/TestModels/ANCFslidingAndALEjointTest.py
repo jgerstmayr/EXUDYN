@@ -289,8 +289,9 @@ sol = mbs.systemData.GetODE2Coordinates();
 uDynamic = sol[nc]; #y-displacement of first node of four bar mechanism
 exu.Print('dynamic solution of cable1 =',uDynamic)
 
-exudynTestGlobals.testError += uDynamic - (-2.229081157258582) #before 2022-03-09 (old ObjectContactFrictionCircleCable2D) : (-2.2290811574753953)   #2020-03-05(corrected Cable2DshapeMarker): -2.2290811574753953 #2019-12-26: -2.2290811558815617; 2019-12-18: -2.229126333291627
+exudynTestGlobals.testError += uDynamic - (-2.229086503625397) #before 2022-12-25(resolved BUG 1274): -2.229081157258582; before 2022-03-09 (old ObjectContactFrictionCircleCable2D) : (-2.2290811574753953)   #2020-03-05(corrected Cable2DshapeMarker): -2.2290811574753953 #2019-12-26: -2.2290811558815617; 2019-12-18: -2.229126333291627
 exudynTestGlobals.testResult += uDynamic
 
+exu.Print('result of ANCFslidingAndALEjointTest=',exudynTestGlobals.testResult)
 
 

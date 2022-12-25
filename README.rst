@@ -4,11 +4,11 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-+  Exudyn version = 1.4.32.dev1 (Ellington)
-+  build date and time=2022-12-06  12:37
++  Exudyn version = 1.5.0 (Fitzgerald)
++  build date and time=2022-12-25  20:26
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
-Exudyn 1.4 is out! It includes improved multi-threading support; a redundant coordinate (constraint) as well as a minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
+Exudyn 1.5 is out! It includes now Python 3.7/8 - 3.10 wheels for MacOS, improved compatibility for AVX2, simple reeving system, improved Lie group integration, improved RollingDisc, DistanceSensor, and many fixes; further features are multi-threading support; minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
 
 If you like using Exudyn, please add a *star* on github, and send an email to  ``reply.exudyn@gmail.com`` such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
@@ -109,15 +109,15 @@ In the first phase most of the core code is written by Johannes Gerstmayr, imple
 Some important tests for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
 For the interoperability between C++ and Python, we extensively use \ **Pybind11**\ , originally written by Jakob Wenzel, see \ ``https://github.com/pybind/pybind11``\ . Without Pybind11 we couldn't have made this project -- Thanks a lot!
 
-Important discussions with researchers from the community were important for the design and development of Exudyn , where we like to mention Joachim SchÃ¶berl from TU-Vienna who boosted the design of the code with great concepts. 
+Important discussions with researchers from the community were important for the design and development of Exudyn , where we like to mention Joachim Schöberl from TU-Vienna who boosted the design of the code with great concepts. 
 
 The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications' contributes to the development of the code.
 
 The following people have contributed to Python and C++ library implementations (as well as to testing, examples, theory, ...):
 
-+  Joachim SchÃ¶berl, TU Vienna (Providing specialized NGsolve  core library with \ ``taskmanager``\  for \ **multi-threaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
++  Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with \ ``taskmanager``\  for \ **multi-threaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
 +  Stefan Holzinger, University of Innsbruck (Lie group solvers in Python, Lie group node)
-+  Andreas ZwÃ¶lfer, Technical University Munich (FFRF and CMS formulation)
++  Andreas Zwölfer, Technical University Munich (FFRF and CMS formulation)
 +  Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation / pip install on linux / wsl with graphics)
 +  Martin Sereinig, University of Innsbruck (special robotics functionality)
 +  Grzegorz Orzechowski, Lappeenranta University of Technology (coupling with openAI gym and running machine learning algorithms)
@@ -141,15 +141,14 @@ Requirements for Exudyn ?
 Exudyn only works with Python. Thus, you need an appropriate Python installation.
 So far (2021-07), we tested
 
-+  \ **Anaconda, 64bit, Python 3.7.7**\  (Anaconda3 64bit with Python3.7.7 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-2020.02-Windows-x86_64.exe``\ ) (but Python 3.8 and 3.9 (since 2021-11) are also working well!)
-+  \ **Spyder 4.1.3**\  (with Python 3.7.7, 64bit), which is included in the Anaconda installation (or 64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.)
++  \ **Anaconda 2021-11, 64bit, Python 3.9**\  (older Anaconda3 versions can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\ )
++  Currently, we work with Python 3.6 - Python 3.10 \ **conda environments**\  on Windows, Linux and MacOS (3.8-3.10).
++  \ **Spyder 5.1.5**\  (with Python 3.9.7, 64bit) and \ **Spyder 4.1.3**\  (with Python 3.7.7, 64bit), which is included in the Anaconda installation (or 64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments
 
 Many alternative options exist:
 
-+  In case that you have an older CPU, which does not support AVX2, use: Exudyn with Python 3.6.5, or compile without AVX flags for your machine. (e.g. Anaconda 32bit with Python3.6 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-5.2.0-Windows-x86.exe``\ .)
 +  Users report successful use of Exudyn with \ **Visual Studio Code**\ . \ **Jupyter**\  has been tested with some examples; both environments should work with default settings.
-+  Anaconda 2020-11 with \ **Python 3.8**\  and Spyder 4.1.5: no problems up to now (2021-07), TestSuite runs without problems since Exudyn version 1.0.182.
-+  Anaconda 2021-11 with \ **Python 3.9**\  and Spyder 5.1.5: Tested with current version (1.1.99), TestSuite runs without problems.
++  Anaconda 2020-11 with \ **Python 3.8**\  and Spyder 4.1.5: no problems except some regular crashes of Spyder, TestSuite runs without problems since Exudyn version 1.0.182.
 +  Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5) (Anaconda 64bit with Python3.6 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-5.2.0-Windows-x86_64.exe``\  for 64bit.)
 
 If you plan to extend the C++ code, we recommend to use VS2017 (previously, VS2019 was recommended: However, VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.) to compile your code, which offers Python 3.7 compatibility.
@@ -264,12 +263,12 @@ Note that there are a couple of pre-requisites, depending on your system and ins
 +  run 'activate.bat' [may not be necessary]
   
 +  go to 'main' of your cloned github folder of Exudyn 
-+  run: \ ``python setup.py install``\ 
++  run: (the \ ``--parallel``\  option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x) \ ``python setup.py install --parallel``\ 
 +  read the output; if there are errors, try to solve them by installing appropriate modules
 
 You can also create your own wheels, doing the above steps to activate the according Python version and then calling:
 
-   \ ``python setup.py bdist_wheel``\ 
+   \ ``python setup.py bdist_wheel --parallel``\ 
 
 This will add a wheel in the \ ``dist``\  folder.
 
@@ -277,32 +276,27 @@ Build and install Exudyn under Mac OS X?
 ===========================================
 
 
-Installation and building on Mac OS X is rarely tested, but first successful compilation including GLFW has been achieved.
+Installation and building on Mac OS X is less frequently tested, but successful compilation including GLFW has been achieved.
 Requirements are an according Anaconda (or Miniconda) installation.
 
 \ **Tested configurations**\ :
 
 +  Mac OS 11.x 'Big Sur', Mac Mini (2021), Apple M1, 16GB Memory
-+  Anaconda (x86 / i368 based with Rosetta 2) with Python 3.8
-+  this configuration is currently evaluated but showed general compatibility
-   => some wheels are already available on pypi (you may need to download them manually)!
++  Miniconda with conda environments (x86 / i368 based with Rosetta 2) with Python 3.7 - 3.10
++  Miniconda with conda environments (ARM) with Python 3.8 - 3.10
+   => wheels are available on pypi since Exudyn 1.5.0 
 
 \ **NOTE**\ :
 
-+  on Apple M1 processors, there are significant problems with Miniconda; scipy cannot be installed properly (April 2022)
-+  a significant number of Exudyn test models does not run properly! Optimization and processing functions do not run (especially multiprocessing and tqdm); 
-+  as eigensolvers were not available for tests on M1, all these test models fail 
-+  note that even some test result deviate from Windows results significantly!
-
++  on Apple M1 processors, there are significant problems with Miniconda; scipy could not be installed properly in the beginning (April 2022)
++  Tkinter still does not run.
++  Some optimization and processing functions do not run (especially multiprocessing and tqdm); 
 
 
 Alternatively, we tested on:
 
 +  Mac OS X 10.11.6 'El Capitan', Mac Pro (2010), 3.33GHz 6-Core Intel Xeon, 4GB Memory, Anaconda Navigator 1.9.7, Python 3.7.0, Spyder 3.3.6
 
-Note, that in all cases tkinter does not run properly on MacOS (help appreciated), while otherwise we produced a stable version. The AppleM1 native version is in some cases superior to the Windows version and also to the Rosetta version on Apple!
-
-For a compatible Mac OS X system some pre-built wheels will be available via pypi.org. Note that these my be built on an emulated AppleM1, thus being much slower than the Windows or Linux compliant.
 
 \ **Compile from source**\ :
 
@@ -310,13 +304,13 @@ For a compatible Mac OS X system some pre-built wheels will be available via pyp
 If you would like to compile from source, just use a bash terminal on your Mac, and do the following steps inside the \ ``main``\  directory of your repository and type
 
 +  uninstall if old version exists (may need to repeat this!): \ ``pip uninstall exudyn``\ 
-+  \ ``python setup.py bdist_wheel``\ 
-   => this compiles and takes approx.~5 minutes, depending on your machine
-   => it may produce some errors, depending on your version; if there are some liker errors (saying that there is no '\ ``-framework Cocoa' and '-framework OpenGL``\ ', just go back in the terminal and copy everything from '\ ``g++ ...``\ ' until the end of the last command '\ ``-mmacosx-verion-min...``\ ' and paste it into the terminal. Calling that again will finalize linking; then run again
-   \ ``python setup.py bdist_wheel``\ 
-   => this now creates the wheel (if you want to distribute) in the \ ``dist``\  folder; note that this wheel has a wrong version number (11.0) while it may need to be changed to 10.9 manually in order that it can be installed
-+  \ ``python setup.py install``\ 
-   to install exudyn
++  remove the \ ``build``\  directory if you would like to re-compile without changes
++  to perform compilation from source, write: (the \ ``--parallel``\  option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x)
++  \ ``python setup.py bdist_wheel --parallel``\ 
++  which takes 75 seconds on Apple M1 in parallel mode, otherwise 5 minutes. To install Exudyn , run
+   \ ``python setup.py install``\ 
+   => this will only install, but not re-compile. Otherwise, just use pip install from the created wheel in the dist folder
+   \ **NOTE**\  that conda environments are highly recommended
 
 Then just go to the \ ``pythonDev/Examples``\  folder and run an example:
 
@@ -380,11 +374,11 @@ If graphics is used (\ ``\#define USE_GLFW_GRAPHICS``\  in \ ``BasicDefinitions.
 
 
 
-With all of these libs, you can run the setup.py installer (go to \ ``Exudyn_git/main``\  folder), which takes some minutes for compilation (the --user option is used to install in local user folder):
+With all of these libs, you can run the setup.py installer (go to \ ``Exudyn_git/main``\  folder), which takes some minutes for compilation (the --user option is used to install in local user folder) (the \ ``--parallel``\  option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x):
 
 .. code-block::
 
-  sudo python3 setup.py install --user
+  sudo python3 setup.py install --user --parallel
 
 
 
@@ -397,7 +391,7 @@ Congratulation! \ **Now, run a test example**\  (will also open an OpenGL window
 You can also create a UBUNTU wheel which can be easily installed on the same machine (x64), same operating system (UBUNTU18.04) and with same Python version (e.g., 3.6):
 
    \ ``sudo pip3 install wheel``\ 
-   \ ``sudo python3 setup.py bdist_wheel``\ 
+   \ ``sudo python3 setup.py bdist_wheel --parallel``\ 
 
 
 \ **Exudyn under Ubuntu / WSL**\ :
@@ -605,12 +599,25 @@ Trouble shooting
   |  =>  You mixed up 32 and 64 bits version (see below) 
   |  =>  You are using an exudyn version for Python x_1.y_1 (e.g., 3.6.z_1) different from the Python x_2.y_2 version in your Anaconda (e.g., 3.7.z_2); note that x_1=x_2 and y_1=y_2 must be obeyed while z_1 and z_2 may be different
 
-+  \ **ModuleNotFoundError: No module named 'exudynCPP'**\ :
++  \ **Import of exudyn C++ module failed Warning: ... **\ :
 
 
 
+  |  =>  ... and similar messages with: ModuleNotFoundError, Warning, with AVX2, without AVX2
   |  =>  A known reason is that your CPU \ **does not support AVX2**\ , while Exudyn is compiled with the AVX2 option (not support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this).
-  |  =>  \ **workaround**\  to solve the AVX problem: use the Python 3.6 version (up to Exudyn V1.2.28 only the 32bit version), which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \ ``setup.py``\  file in the \ ``main``\  folder.
+  |  =>  \ **solution**\ : the release versions without the .dev1 ending in the wheel contain C++ libraries which are compiled without AVX/AVX2; the module loader will usually detect automatically, if your CPU supports AVX/AVX2; if not, it will load the 
+exudynCPPnoAVX.cp ... .pyd file; if this does not work, try
+
+
+\ ``import sys``\ 
+
+
+\ ``sys.exudynCPUhasAVX2 = False``\ 
+
+
+to explicitly load the version without AVX2.
+  |  =>  you can also compile for your specific Python version without AVX if you adjust the \ ``setup.py``\  file in the \ ``main``\  folder.
+  |  =>  \ **DEPRECATED workaround**\  to solve the AVX problem: use the Python 3.6 version (up to Exudyn V1.2.28 only the 32bit version), which is compiled without AVX2.
   |  =>  The \ ``ModuleNotFoundError``\  may also happen if something went wrong during installation (paths, problems with Anaconda, ..) => very often a new installation of Anaconda and Exudyn helps.
 
 
@@ -805,7 +812,7 @@ FAQ
 +  In \ ``GenerateStraightLineANCFCable2D``\  
 
   |  =>  coordinate constraints can be used to constrain position and rotation, e.g., \ ``fixedConstraintsNode0 = [1,1,0,1]``\  for a beam aligned along the global x-axis; 
-  |  =>  this \ **does not work**\  for beams with arbitrary rotation in reference configuration, e.g., 45Â°. Use a GenericJoint with a rotationMarker instead.
+  |  =>  this \ **does not work**\  for beams with arbitrary rotation in reference configuration, e.g., 45°. Use a GenericJoint with a rotationMarker instead.
 
 +  What is the difference between MarkerBodyPosition and MarkerBodyRigid?
 
@@ -1518,7 +1525,7 @@ However, there are many \ **ways to speed up Exudyn in general**\ :
 +  for models with more than 50 coordinates, switching to sparse solvers might greatly improve speed: \ ``simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse``\ 
 +  try to avoid Python functions or try to speed up Python functions
 +  instead of user functions in objects or loads (computed in every iteration), some problems would also work if these parameters are only updated in \ ``mbs.SetPreStepUserFunction(...)``\ 
-+  user functions can be speed up using the Python numba package, using \ ``@jit``\  in front of functions (for more options, see `https://numba.pydata.org/numba-doc/dev/user/index.html <https://numba.pydata.org/numba-doc/dev/user/index.html>`_); Example given in \ ``Examples/springDamperUserFunctionNumbaJIT.py``\  showing speedups of factor 4; more complicated Python functions may see speedups of 10 - 50
++  Python user functions can be speed up using the Python numba package, using \ ``@jit``\  in front of functions (for more options, see `https://numba.pydata.org/numba-doc/dev/user/index.html <https://numba.pydata.org/numba-doc/dev/user/index.html>`_); Example given in \ ``Examples/springDamperUserFunctionNumbaJIT.py``\  showing speedups of factor 4; more complicated Python functions may see speedups of 10 - 50
 +  for \ **discontinuous problems**\ , try to adjust solver parameters; especially the discontinuous.iterationTolerance which may be too tight and cause many iterations; iterations may be limited by discontinuous.maxIterations, which at larger values solely multiplies the computation time with a factor if all iterations are performed
 +  For multiple computations / multiple runs of Exudyn (parameter variation, optimization, compute sensitivities), you can use the processing sub module of Exudyn to parallelize computations and achieve speedups proporional to the number of cores/threads of your computer; specifically using the \ ``multiThreading``\  option or even using a cluster (using \ ``dispy``\ , see \ ``ParameterVariation(...)``\  function)
 +  In case of multiprocessing and cluster computing, you may see a very high CPU usage of "Antimalware Service Executable", which is the Microsoft Defender Antivirus; you can turn off such problems by excluding \ ``python.exe``\  from the defender (on your own risk!) in your settings:
@@ -1535,6 +1542,7 @@ However, there are many \ **ways to speed up Exudyn in general**\ :
 +  try to switch to \ **explicit solvers**\ , if problem has no constraints and if problem is not stiff
 +  try to have \ **constant mass matrices**\  (see according objects, which have constant mass matrices; e.g. rigid bodies using RotationVector Lie group node have constant mass matrix)
 +  for explicit integration, set \ ``computeEndOfStepAccelerations = False``\ , if you do not need accurate evaluation of accelerations at end of time step (will then be taken from beginning)
++  for explicit integration, set \ ``explicitIntegration.computeMassMatrixInversePerBody=True``\ , which avoids factorization and back substitution, which may speed up computations with many bodies / particles
 +  if you are sure that your mass matrix is constant, set \ ``simulationSettings.timeIntegration.reuseConstantMassMatrix = True``\ ; check results!
 +  check that \ ``simulationSettings.timeIntegration.simulateInRealtime = False``\ ; if set True, it breaks down simulation to real time
 +  do not record images, if not needed: \ ``simulationSettings.solutionSettings.recordImagesInterval = -1``\ 

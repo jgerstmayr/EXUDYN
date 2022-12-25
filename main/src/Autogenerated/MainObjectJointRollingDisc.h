@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-07-21  19:29:29 (last modified)
+* @date         2022-12-07  19:53:51 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectJointRollingDisc
-* @brief        A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global \f$x\f$-\f$y\f$ plane. The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly). The ground body can be a rigid body which is moving. In this case, the flat surface is assumed to be in the \f$x\f$-\f$y\f$-plane at \f$z=0\f$. Note that the rolling body must have the reference point at the center of the disc. NOTE: the case of a moving ground body needs to be tested further, check your results!
+* @brief        A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global \f$x\f$-\f$y\f$ plane. The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly). The ground body can be a rigid body which is moving. In this case, the flat surface is assumed to be in the \f$x\f$-\f$y\f$-plane at \f$z=0\f$. Note that the rolling body must have the reference point at the center of the disc. NOTE: the cases of normal other than \f$z\f$-direction, wheel axis other than \f$x\f$-axis and moving ground body needs to be tested further, check your results!
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -112,6 +112,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "constrainedAxes")) { cObjectJointRollingDisc->GetParameters().constrainedAxes = py::cast<std::vector<Index>>(d["constrainedAxes"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectJointRollingDisc->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         cObjectJointRollingDisc->GetParameters().discRadius = py::cast<Real>(d["discRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "discAxis")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "discAxis", cObjectJointRollingDisc->GetParameters().discAxis); /*! AUTO:  safely cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "planeNormal")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "planeNormal", cObjectJointRollingDisc->GetParameters().planeNormal); /*! AUTO:  safely cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectJointRollingDisc->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -129,6 +130,7 @@ public: // AUTO:
         d["constrainedAxes"] = (std::vector<Index>)cObjectJointRollingDisc->GetParameters().constrainedAxes; //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectJointRollingDisc->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         d["discRadius"] = (Real)cObjectJointRollingDisc->GetParameters().discRadius; //! AUTO: cast variables into python (not needed for standard types) 
+        d["discAxis"] = EPyUtils::SlimVector2NumPy(cObjectJointRollingDisc->GetParameters().discAxis); //! AUTO: cast variables into python (not needed for standard types) 
         d["planeNormal"] = EPyUtils::SlimVector2NumPy(cObjectJointRollingDisc->GetParameters().planeNormal); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectJointRollingDisc->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -145,6 +147,7 @@ public: // AUTO:
         else if (parameterName.compare("constrainedAxes") == 0) { return py::cast((std::vector<Index>)cObjectJointRollingDisc->GetParameters().constrainedAxes);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectJointRollingDisc->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("discRadius") == 0) { return py::cast((Real)cObjectJointRollingDisc->GetParameters().discRadius);} //! AUTO: get parameter
+        else if (parameterName.compare("discAxis") == 0) { return EPyUtils::SlimVector2NumPy(cObjectJointRollingDisc->GetParameters().discAxis);} //! AUTO: get parameter
         else if (parameterName.compare("planeNormal") == 0) { return EPyUtils::SlimVector2NumPy(cObjectJointRollingDisc->GetParameters().planeNormal);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectJointRollingDisc->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdiscWidth") == 0) { return py::cast((float)visualizationObjectJointRollingDisc->GetDiscWidth());} //! AUTO: get parameter
@@ -162,6 +165,7 @@ public: // AUTO:
         else if (parameterName.compare("constrainedAxes") == 0) { cObjectJointRollingDisc->GetParameters().constrainedAxes = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectJointRollingDisc->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("discRadius") == 0) { cObjectJointRollingDisc->GetParameters().discRadius = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("discAxis") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectJointRollingDisc->GetParameters().discAxis); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("planeNormal") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectJointRollingDisc->GetParameters().planeNormal); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectJointRollingDisc->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdiscWidth") == 0) { visualizationObjectJointRollingDisc->GetDiscWidth() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

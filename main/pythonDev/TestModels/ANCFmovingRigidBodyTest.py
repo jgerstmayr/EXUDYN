@@ -229,16 +229,16 @@ mbs.SetObjectParameter(cAleConstraint, 'activeConnector', False)
 solveDynamic = True
 if solveDynamic:
     # time related settings:
-    steps=100*2
-    tend=0.05*2
+    steps=200
+    tend=0.1
     h=tend/steps
     
     #fact = 15000
     simulationSettings.timeIntegration.numberOfSteps = steps #1*fact
     simulationSettings.timeIntegration.endTime = tend #0.002*fact
     # Integrator related settings:
-    simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
-    simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
+    # simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
+    # simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.3
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
 
@@ -259,6 +259,8 @@ sol2 = mbs.systemData.GetODE2Coordinates();
 u2 = sol2[int(ncables/4)*4+1]; #y-displacement of node in first quater of rope
 exu.Print('static deflection  =',u)      #2020-03-05(corrected Cable2DshapeMarker): -0.06446474690480661    2019-12-17(new static solver): -0.06446474690512931;  2019-12-16: -0.06446474679809994
 exu.Print('dynamic deflection =',u2)       #2020-03-05(corrected Cable2DshapeMarker):0.06446627698400298; 2020-01-09: -0.06446627698121662(computeInitialAccelerations = False) 2020-01-09: -0.06446627843202835; 2019-12-26: -0.06446627698104967; 2019-12-17(update residual): -0.06446627698121662;  2019-12-16 (late): -0.06446627699890756; 2019-12-16: -0.06446610364603222
-exudynTestGlobals.testError = u + u2 - (-0.06446474690480661-0.06446627698400298)
+#exudynTestGlobals.testError = u + u2 - (-0.06446474690480661-0.06446627698400298)
+exu.Print('ANCFmovingRigidBodyTest=',u+u2)       
+exudynTestGlobals.testError = u + u2 - (-0.06446474690612931 - 0.06446622244370685) #updated 2022-12-25
 exudynTestGlobals.testResult = u + u2
 

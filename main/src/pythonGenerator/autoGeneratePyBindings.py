@@ -251,6 +251,25 @@ sLenum += DefLatexStartClass(sectionName = pyClass,
 s +=	'		.export_values();\n\n'
 sLenum += DefLatexFinishClass()
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++
+pyClass = 'ContactTypeIndex'
+cClass = 'Contact'
+
+descriptionStr = 'This section shows the ' + pyClass + ' structure, which is in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.\n\n'
+
+s +=	'  py::enum_<' + cClass + '::TypeIndex' + '>(m, "' + pyClass + '")\n'
+sLenum += DefLatexStartClass(sectionName = pyClass, 
+                            description=descriptionStr, 
+                            subSection=True, labelName=pyClass)
+#keep this list synchronized with the accoring enum structure in C++!!!
+[s1,sL1] = AddEnumValue(cClass, 'IndexSpheresMarkerBased', 'spheres attached to markers'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(cClass, 'IndexANCFCable2D', 'ANCFCable2D contact items'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(cClass, 'IndexTrigsRigidBodyBased', 'triangles attached to rigid body (or rigid body marker)'); s+=s1; sLenum+=sL1
+[s1,sL1] = AddEnumValue(cClass, 'IndexEndOfEnumList', 'signals end of list'); s+=s1; sLenum+=sL1
+
+s +=	'		.export_values();\n\n'
+sLenum += DefLatexFinishClass()
+
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Access functions to EXUDYN
@@ -510,16 +529,21 @@ s+=s1; sL+=sL1
 
 #contact:                                      
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddGeneralContact', cName='AddGeneralContact', 
-                                description="add a new general contact, used to enable efficient contact computation between objects (nodes or markers)", options='py::return_value_policy::reference'); s+=s1; sL+=sL1
+                                description="add a new general contact, used to enable efficient contact computation between objects (nodes or markers)", 
+                                options='py::return_value_policy::reference'); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetGeneralContact', cName='GetGeneralContact', 
-                                description="get read/write access to GeneralContact with index 'generalContactNumber' stored in mbs",
+                                description="get read/write access to GeneralContact with index generalContactNumber stored in mbs; Examples shows how to access the GeneralContact object added with last AddGeneralContact() command:",
+                                example = 'gc=mbs.GetGeneralContact(mbs.NumberOfGeneralContacts()-1)',
                                 argList=['generalContactNumber']); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='DeleteGeneralContact', cName='DeleteGeneralContact', 
-                                description="delete GeneralContact with index 'generalContactNumber' in mbs; other general contacts are resorted (index changes!)",
+                                description="delete GeneralContact with index generalContactNumber in mbs; other general contacts are resorted (index changes!)",
                                 argList=['generalContactNumber']); s+=s1; sL+=sL1
 
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='NumberOfGeneralContacts', cName='NumberOfGeneralContacts', 
+                                description="Return number of GeneralContact objects in mbs", 
+                                ); s+=s1; sL+=sL1
 #++++++++++++++++
 
 #old version, with variables: [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const MainSystem &ms) {\n            return "<systemData: \\n" + ms.GetMainSystemData().PyInfoSummary() + "\\nmainSystem:\\n  variables = " + EXUstd::ToString(ms.variables) + "\\n  sys = " + EXUstd::ToString(ms.systemVariables) + "\\n>\\n"; }', 
@@ -1497,6 +1521,9 @@ sL += '  verboseMode & default = 0; verboseMode = 1 or higher outputs useful inf
 s +=  '        .def_readwrite("visualization", &PyGeneralContact::visualization, py::return_value_policy::reference)\n' 
 sL += '  visualization & access visualization data structure \\\\ \\hline  \n'
 
+s +=  '        .def_property("resetSearchTreeInterval", &PyGeneralContact::GetResetSearchTreeInterval, &PyGeneralContact::SetResetSearchTreeInterval)\n' 
+sL += '  resetSearchTreeInterval & (default=10000) number of search tree updates (contact computation steps) after which the search tree cells are re-created; this costs some time, will free memory in cells that are not needed any more \\\\ \\hline  \n'
+
 #s +=  '        .def_readwrite("intraSpheresContact", &PyGeneralContact::settings.intraSpheresContact, py::return_value_policy::reference)\n' 
 s +=  '        .def_property("sphereSphereContact", &PyGeneralContact::GetSphereSphereContact, &PyGeneralContact::SetSphereSphereContact)\n' 
 sL += '  sphereSphereContact & activate/deactivate contact between spheres \\\\ \\hline  \n'
@@ -1525,6 +1552,9 @@ sL += '  		ancfCableUseExactMethod & (default=True) if true, uses exact computat
 s +=  '        .def_property("ancfCableNumberOfContactSegments", &PyGeneralContact::GetAncfCableNumberOfContactSegments, &PyGeneralContact::SetAncfCableNumberOfContactSegments)\n' 
 sL += '  		ancfCableNumberOfContactSegments & (default=1) number of segments to be used in case that ancfCableUseExactMethod=False; maximum number of segments=3 \\\\ \\hline  \n'
 
+s +=  '        .def_property("ancfCableMeasuringSegments", &PyGeneralContact::GetAncfCableMeasuringSegments, &PyGeneralContact::SetAncfCableMeasuringSegments)\n' 
+sL += '  		ancfCableMeasuringSegments & (default=20) number of segments used to approximate geometry for ANCFCable2D elements for measuring with ShortestDistanceAlongLine; with 20 segments the relative error due to approximation as compared to 10 segments usually stays below 1e-8 \\\\ \\hline  \n'
+
 
 # [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='FinalizeContact', cName='PyFinalizeContact', 
 #                                 argList=['mainSystem','searchTreeSize','frictionPairingsInit','searchTreeBoxMin','searchTreeBoxMax'],
@@ -1551,15 +1581,36 @@ sL += '  		ancfCableNumberOfContactSegments & (default=1) number of segments to 
                                                       
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddSphereWithMarker', cName='AddSphereWithMarker', 
                                 argList=['markerIndex','radius','contactStiffness','contactDamping','frictionMaterialIndex'],
-                                description="add contact object using a marker (Position or Rigid), radius and contact/friction parameters; frictionMaterialIndex refers to frictionPairings in GeneralContact; contact is possible between spheres (circles in 2D) (if intraSphereContact = True), spheres and triangles and between sphere (=circle) and ANCFCable2D; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate)!"); s+=s1; sL+=sL1
+                                description="add contact object using a marker (Position or Rigid), radius and contact/friction parameters and return localIndex of the contact item in GeneralContact; frictionMaterialIndex refers to frictionPairings in GeneralContact; contact is possible between spheres (circles in 2D) (if intraSphereContact = True), spheres and triangles and between sphere (=circle) and ANCFCable2D; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper"); s+=s1; sL+=sL1
                                                       
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddANCFCable', cName='AddANCFCable', 
                                 argList=['objectIndex','halfHeight','contactStiffness','contactDamping','frictionMaterialIndex'],
-                                description="add contact object for an ANCF cable element, using the objectIndex of the cable element and the cable's half height as an additional distance to contacting objects (currently not causing additional torque in case of friction); currently only contact with spheres (circles in 2D) possible; contact computed using exact geometry of elements, finding max 3 intersecting contact regions"); s+=s1; sL+=sL1
+                                description="add contact object for an ANCF cable element, using the objectIndex of the cable element and the cable's half height as an additional distance to contacting objects (currently not causing additional torque in case of friction), and return localIndex of the contact item in GeneralContact; currently only contact with spheres (circles in 2D) possible; contact computed using exact geometry of elements, finding max 3 intersecting contact regions"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='AddTrianglesRigidBodyBased', cName='PyAddTrianglesRigidBodyBased', 
                                 argList=['rigidBodyMarkerIndex','contactStiffness','contactDamping','frictionMaterialIndex','pointList','triangleList'],
-                                description="add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; mesh can be produced with GraphicsData2TrigsAndPoints(...); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(...)"); s+=s1; sL+=sL1
+                                description="add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; returns starting local index of trigsRigidBodyBased at which the triangles are stored; mesh can be produced with GraphicsData2TrigsAndPoints(...); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(...)"); s+=s1; sL+=sL1
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#access functions:
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetItemsInBox', cName='PyGetItemsInBox', 
+                                argList=['pMin','pMax'],
+                                example='gContact.GetItemsInBox(pMin=[0,1,1],\\\\   \\phantom   pMax=[2,3,2])',
+                                description="Get all items in box defined by minimum coordinates given in pMin and maximum coordinates given by pMax, accepting 3D lists or numpy arrays; in case that no objects are found, False is returned; otherwise, a dictionary is returned, containing numpy arrays with indices of obtained MarkerBasedSpheres, TrigsRigidBodyBased, ANCFCable2D, ...; the indices refer to the local index in GeneralContact which can be evaluated e.g. by GetMarkerBasedSphere(localIndex)"); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetMarkerBasedSphere', cName='PyGetMarkerBasedSphere', 
+                                argList=['localIndex'],
+                                description="Get dictionary with position, radius and markerIndex for markerBasedSphere index, as returned e.g. from GetItemsInBox"); s+=s1; sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='ShortestDistanceAlongLine', cName='PyShortestDistanceAlongLine', 
+                                argList=['pStart','direction','minDistance','maxDistance','asDictionary','cylinderRadius','typeIndex'],
+                                defaultArgs=['(std::vector<Real>)Vector3D({0,0,0})','(std::vector<Real>)Vector3D({1,0,0})','-1e-7','1e7','false','0','Contact::IndexEndOfEnumList'],
+                                description="Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is >= minDistance and < maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)"); s+=s1; sL+=sL1
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                                                       
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const PyGeneralContact &item) {\n            return EXUstd::ToString(item); }', 
                                 description="return the string representation of the GeneralContact, containing basic information and statistics",

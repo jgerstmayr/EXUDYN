@@ -239,7 +239,7 @@ print('------------------------------------------')
 print('converting latex docu into README.rst file...')
 
 sRST = '======\nExudyn\n======\n' #add header for .rst file
-
+sRST += '\n**A flexible multibody dynamics systems simulation code with Python and C++**\n'
 for fileName in filesParsed:
     fileLines = []
     file=open(sourceDir+fileName,'r') 

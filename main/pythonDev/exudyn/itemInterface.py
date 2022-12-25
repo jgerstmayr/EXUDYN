@@ -2039,16 +2039,16 @@ class VObjectConnectorRollingDiscPenalty:
     def __repr__(self):
         return str(dict(self))
 class ObjectConnectorRollingDiscPenalty:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), discRadius = 0, discAxis = [1,0,0], planeNormal = [0,0,1], dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., viscousFriction = [0,0], rollingFrictionViscous = 0., useLinearProportionalZone = False, activeConnector = True, visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), discRadius = 0., discAxis = [1,0,0], planeNormal = [0,0,1], dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., viscousFriction = [0,0], rollingFrictionViscous = 0., useLinearProportionalZone = False, activeConnector = True, visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.nodeNumber = nodeNumber
-        self.discRadius = discRadius
+        self.discRadius = CheckForValidPReal(discRadius,"discRadius","ObjectConnectorRollingDiscPenalty")
         self.discAxis = discAxis
         self.planeNormal = planeNormal
         self.dryFrictionAngle = dryFrictionAngle
-        self.contactStiffness = contactStiffness
-        self.contactDamping = contactDamping
+        self.contactStiffness = CheckForValidUReal(contactStiffness,"contactStiffness","ObjectConnectorRollingDiscPenalty")
+        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectConnectorRollingDiscPenalty")
         self.dryFriction = dryFriction
         self.dryFrictionProportionalZone = dryFrictionProportionalZone
         self.viscousFriction = viscousFriction
@@ -2456,12 +2456,13 @@ class VObjectJointRollingDisc:
     def __repr__(self):
         return str(dict(self))
 class ObjectJointRollingDisc:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1], activeConnector = True, discRadius = 0, planeNormal = [0,0,1], visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], constrainedAxes = [1,1,1], activeConnector = True, discRadius = 0, discAxis = [1,0,0], planeNormal = [0,0,1], visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.constrainedAxes = constrainedAxes
         self.activeConnector = activeConnector
         self.discRadius = CheckForValidPReal(discRadius,"discRadius","ObjectJointRollingDisc")
+        self.discAxis = discAxis
         self.planeNormal = planeNormal
         self.visualization = visualization
 
@@ -2472,6 +2473,7 @@ class ObjectJointRollingDisc:
         yield 'constrainedAxes', self.constrainedAxes
         yield 'activeConnector', self.activeConnector
         yield 'discRadius', self.discRadius
+        yield 'discAxis', self.discAxis
         yield 'planeNormal', self.planeNormal
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdiscWidth', dict(self.visualization)["discWidth"]

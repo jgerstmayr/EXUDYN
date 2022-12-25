@@ -211,7 +211,7 @@ public:
     // CSystem computation functions
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     //! compute system massmatrix and ADD to given massMatrix; matrix needs to have according size; set entries to zero beforehand, if only the mass matrix is required
-	void ComputeMassMatrix(TemporaryComputationDataArray& temp, GeneralMatrix& massMatrix);
+	void ComputeMassMatrix(TemporaryComputationDataArray& temp, GeneralMatrix& massMatrix, bool computeInverse=false);
 	//! run through all bodies and check if has constant mass matrix; used for solver
 	bool HasConstantMassMatrix();
 	//void ComputeMassMatrixOLD(TemporaryComputationData& temp, Matrix& massMatrix);

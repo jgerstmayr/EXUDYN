@@ -57,44 +57,50 @@ Vector2D CObjectConnectorRollingDiscPenalty::ComputeSlipForce(const CObjectConne
 }
 
 //! compute contact force helper function; vectors pC, vC provide position and velocity of contact point in global coordinate system
-//  vectors wLateral, w2 and w3 provide a joint J1 coordinate system, vectors also given in global coordinate system
+//  vectors wLateral, w2 and n0 provide a joint J1 coordinate system, vectors also given in global coordinate system
 //  contact force fContact is given in local joint J1 coordinates
 //  computeCurrent: if true, the contact forces are computed for current values, but for the data/history variables
 void CObjectConnectorRollingDiscPenalty::ComputeContactForces(const MarkerDataStructure& markerData, 
 	const CObjectConnectorRollingDiscPenaltyParameters& parameters, bool computeCurrent, Vector3D& pC, Vector3D& vC, 
-	Vector3D& wLateral, Vector3D& w2, Vector3D& w3, Vector3D& fContact, Vector2D& localSlipVelocity) const
+	Vector3D& wLateral, Vector3D& w2, Vector3D& n0, Vector3D& w3, Vector3D& fContact, Vector2D& localSlipVelocity) const
 {
 	const Vector3D& p1 = markerData.GetMarkerData(1).position;
 	const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
 	const Vector3D& v1 = markerData.GetMarkerData(1).velocity;
 	Vector3D omega1 = A1 * markerData.GetMarkerData(1).angularVelocityLocal;
-	//const Vector3D& p0 = markerData.GetMarkerData(0).position; //use already z-position ..., but no transformation
+
+	const Vector3D& p0 = markerData.GetMarkerData(0).position; 
+	const Vector3D& v0 = markerData.GetMarkerData(0).velocity; 
+	const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
+	const Vector3D& omega0 = A0 * markerData.GetMarkerData(0).angularVelocityLocal;
 
 	//Vector3D vAxisLocal({ 1,0,0 });
 	Vector3D w1 = A1 * parameters.discAxis;
+	n0 = A0 * parameters.planeNormal;
 
-	w2 = w1.CrossProduct(parameters.planeNormal); //longitudinal direction; cross product has length != 1
+	w2 = w1.CrossProduct(n0); //longitudinal direction; cross product has length != 1
 	w2.Normalize();
 	w3 = w1.CrossProduct(w2); //w1 and w2 are perpendicular ==> w3 already normalized
-	wLateral = parameters.planeNormal.CrossProduct(w2);
+	wLateral = n0.CrossProduct(w2);
 
-	//compute contact point position and velocity:
-	pC = p1 + parameters.discRadius * w3;
-	vC = v1 + omega1.CrossProduct(parameters.discRadius * w3);
+	//compute relative contact point position and relative velocity:
+	pC = p1 + parameters.discRadius * w3 - p0;
+	vC = v1 + omega1.CrossProduct(parameters.discRadius * w3) - (v0 + omega0.CrossProduct(pC));
 
 	fContact.SetAll(0); //if no contact or no friction
-	Real contactForce = 0;
+	Real contactForce = 0; //will be positive in plane normal direction
 
 	Real currentGapState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[2];
-	if (computeCurrent) { currentGapState = pC * parameters.planeNormal; }
+	if (computeCurrent) { currentGapState = pC * n0; }
 
 	Vector2D dataLocalSlipVelocity({ ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[0],
 		((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[1] });
 	localSlipVelocity = Vector2D({ vC*wLateral, vC*w2 });
 
-	if (currentGapState < 0) //only if gap smaller zero ==> use GenericDataVariable HERE!
+	if (currentGapState < 0) //only if gap smaller zero
 	{
-		contactForce = -(parameters.contactStiffness * pC[2] + parameters.contactDamping * vC[2]);
+		//old, no planeNormal considered: contactForce = -(parameters.contactStiffness * pC[2] + parameters.contactDamping * vC[2]);
+		contactForce = -(parameters.contactStiffness * (pC * n0) + parameters.contactDamping * (vC * n0));
 
 		Vector2D slipForce = ComputeSlipForce(parameters, localSlipVelocity, dataLocalSlipVelocity, contactForce);
 
@@ -121,22 +127,35 @@ void CObjectConnectorRollingDiscPenalty::ComputeODE2LHS(Vector& ode2Lhs, const M
 		Vector3D pC; //deviation of contact conditions
 		Vector3D vC; //deviation of velocity at contact point
 		Vector3D w2; //normalized vector in longitudinal direction
+		Vector3D n0; //current plane normal
 		Vector3D w3; //normalized vector from wheel center to contact point
 		Vector3D wLateral; //normalized vector from wheel center to contact point
 		Vector3D fContact; //contact force (0=lateral, 1=longitudinal, 2=normal direction), local coordinates
 		Vector2D localSlipVelocity;
-		ComputeContactForces(markerData, parameters, false, pC, vC, wLateral, w2, w3, fContact, localSlipVelocity);
+		ComputeContactForces(markerData, parameters, false, pC, vC, wLateral, w2, n0, w3, fContact, localSlipVelocity);
 
-		Vector3D fPos = -(fContact[0]* wLateral + fContact[1] * w2 + fContact[2] * parameters.planeNormal); //in global coordinates now
+		//compute contact force
+		Vector3D fPos = -(fContact[0]* wLateral + fContact[1] * w2 + fContact[2] * n0); //in global coordinates now
 
+		//compute contact torques: 
+		//NOTE: in regular joints or connectors, connector forces are applied at marker position, using the respective positionJacobian of marker
+		//HERE, torques appear, because forces are not applied at marker position, but with some offset (which is different for both markers!)
 		Vector3D fRotDisc = (parameters.discRadius*w3).CrossProduct(fPos);
 		Vector3D fRotGround = pC.CrossProduct(fPos); //CHECK sign as soon as ground can rotate!!!
 
 		if (parameters.rollingFrictionViscous) //not acting on rotation!
 		{
 			//this is the rolling friction approximated for disc axis parallel to ground:
-			Vector3D velGround = markerData.GetMarkerData(1).velocity;
-			velGround[2] = 0;
+			//OLD, only for plane normal in Z-direction:
+			//Vector3D velGround = markerData.GetMarkerData(1).velocity;
+			//velGround[2] = 0;
+
+			//relative velocity on ground, without rolling; plane rotation should have small effect (only in case of rotating table ...)
+			Vector3D omega0 = markerData.GetMarkerData(0).orientation*markerData.GetMarkerData(0).angularVelocityLocal;
+			Vector3D velGround = markerData.GetMarkerData(1).velocity - (markerData.GetMarkerData(0).velocity + omega0.CrossProduct(pC));
+			
+			velGround -= (velGround*n0)*n0; //subtract normal velocity, as it is not part of rolling friction
+
 			fPos += parameters.rollingFrictionViscous*fabs(fContact[2])*velGround;
 		}
 
@@ -172,21 +191,24 @@ void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariab
 	const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
 	const Vector3D& v1 = markerData.GetMarkerData(1).velocity;
 	Vector3D omega1 = A1 * markerData.GetMarkerData(1).angularVelocityLocal;
+	const Vector3D& v0 = markerData.GetMarkerData(0).velocity;
+	Vector3D omega0 = markerData.GetMarkerData(0).orientation*markerData.GetMarkerData(0).angularVelocityLocal;
 
 	Vector3D pC; //deviation of contact conditions
 	Vector3D vC; //deviation of velocity at contact point
 	Vector3D w2; //normalized vector in longitudinal direction
 	Vector3D w3; //normalized vector from wheel center to contact point
+	Vector3D n0; //current plane normal
 	Vector3D wLateral; //normalized vector from wheel center to contact point
 	Vector3D fContact; //contact force (0=lateral, 1=longitudinal, 2=normal direction)
 	Vector2D localSlipVelocity;
-	ComputeContactForces(markerData, parameters, false, pC, vC, wLateral, w2, w3, fContact, localSlipVelocity);
+	ComputeContactForces(markerData, parameters, false, pC, vC, wLateral, w2, n0, w3, fContact, localSlipVelocity);
 
 	//special joint transformation matrix
 	Matrix3D AJ1(3, 3, {
-		wLateral[0], w2[0], parameters.planeNormal[0],
-		wLateral[1], w2[1], parameters.planeNormal[1],
-		wLateral[2], w2[2], parameters.planeNormal[2] });
+		wLateral[0], w2[0], n0[0],
+		wLateral[1], w2[1], n0[1],
+		wLateral[2], w2[2], n0[2] });
 	////transpose of special joint transformation matrix
 	//Matrix3D AJ1T(3, 3, {
 	//	wLateral[0], wLateral[1], wLateral[2],
@@ -197,24 +219,50 @@ void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariab
 	Vector3D vTrail; //velocity of the trail, in joint coordinates; computed by neglegting the rotation of the wheel for the contact point
 	Real r = parameters.discRadius;
 
-	//compute trail velocity: point projected from pC to wheel axis:
-	//Real cosAlpha = p1[2] / r;
-	//REWRITE IN TERMS OF SIN(...) !!! more stable
-	Real cosAlpha = -w3 * parameters.planeNormal; //alternative, without using z-coordinate; more accurate because z-drift
-	Real sign = 1.;
-	if (w3*wLateral > 0) { sign = -1.; }
-	//Real lP = r / cosAlpha; //=r^2/p1[2]
-	if (cosAlpha*cosAlpha > 1) { cosAlpha = EXUstd::Sgn(cosAlpha); }
-	Real axisOffsetX = sign * r * sqrt(1. - cosAlpha * cosAlpha) / cosAlpha;
-	Real cosAlpha_t = v1[2] / r;
-	Real axisOffsetX_t = 0;
-	if (1. - cosAlpha * cosAlpha > 1e-15 && fabs(cosAlpha_t) > 1e-8)
+	if (false) //old trail:
 	{
-		axisOffsetX_t = sign * r * cosAlpha_t / EXUstd::Square(cosAlpha) *(-1. / sqrt(1. - cosAlpha * cosAlpha) * cosAlpha * cosAlpha - sqrt(1. - cosAlpha * cosAlpha));
-	}
+		//compute trail velocity: point projected from pC to wheel axis:
+		//Real cosAlpha = p1[2] / r;
+		//REWRITE IN TERMS OF SIN(...) !!! more stable
+		Real cosAlpha = -w3 * n0; //alternative, without using z-coordinate; more accurate because z-drift
+		Real sign = 1.;
+		if (w3*wLateral > 0) { sign = -1.; }
+		//Real lP = r / cosAlpha; //=r^2/p1[2]
+		if (cosAlpha*cosAlpha > 1) { cosAlpha = EXUstd::Sgn(cosAlpha); }
+		Real axisOffsetX = sign * r * sqrt(1. - cosAlpha * cosAlpha) / cosAlpha;
+		//Real cosAlpha_t = v1[2] / r;
+		Real cosAlpha_t = (v1 - v0 - omega0.CrossProduct(pC))*n0 / r;
+		Real axisOffsetX_t = 0;
+		if (1. - cosAlpha * cosAlpha > 1e-15 && fabs(cosAlpha_t) > 1e-8)
+		{
+			axisOffsetX_t = sign * r * cosAlpha_t / EXUstd::Square(cosAlpha) *(-1. / sqrt(1. - cosAlpha * cosAlpha) * cosAlpha * cosAlpha - sqrt(1. - cosAlpha * cosAlpha));
+		}
 
-	vTrail = v1 - omega1.CrossProduct(A1*(axisOffsetX*parameters.discAxis)) - A1 * ( axisOffsetX_t*parameters.discAxis);
-	vTrail[2] = 0; //z-velocity
+		vTrail = v1 - omega1.CrossProduct(A1*(axisOffsetX*parameters.discAxis)) - A1 * (axisOffsetX_t*parameters.discAxis);
+		//OLD: for plane normal in z-direction: vTrail[2] = 0; //z-velocity
+		vTrail -= (vTrail*n0)*n0;
+	}
+	else //new, based on fact that wheel rotation does not account for trail
+	{
+		//compute time derivative of pC computed from pC = p1 + r*w3;
+		Vector3D w1 = A1 * parameters.discAxis;
+		Vector3D w1_t = omega1.CrossProduct(w1);
+		Vector3D n0_t = omega0.CrossProduct(n0);
+		Vector3D f = w1.CrossProduct(n0);
+		Real g = f.GetL2Norm();
+		Vector3D f_t = w1_t.CrossProduct(n0) + w1.CrossProduct(n0_t); //MISSING n0_t term
+
+		Vector3D w3_t(0.);
+		if (g != 0.)
+		{
+			Real g_t = 1 / g * (f*f_t);
+
+			Vector3D w2_t = (f_t * g - f * g_t) * (1. / (g*g));
+			w3_t = w1_t.CrossProduct(w2) + w1.CrossProduct(w2_t);
+
+		}
+		vTrail = v1 + r * w3_t - (v0 + omega0.CrossProduct(pC));		
+	}
 
 	switch (variableType)
 	{
@@ -248,12 +296,13 @@ Real CObjectConnectorRollingDiscPenalty::PostNewtonStep(const MarkerDataStructur
 	Vector3D pC; //deviation of contact conditions
 	Vector3D vC; //deviation of velocity at contact point
 	Vector3D w2; //normalized vector in longitudinal direction
+	Vector3D n0; //current plane normal
 	Vector3D w3; //normalized vector from wheel center to contact point
 	Vector3D wLateral; //normalized vector from wheel center to contact point
 	Vector3D fContact; //contact force (0=lateral, 1=longitudinal, 2=normal direction), local coordinates
 	Vector2D localSlipVelocity;
-	ComputeContactForces(markerDataCurrent, parameters, true, pC, vC, wLateral, w2, w3, fContact, localSlipVelocity);
-	Real currentGap = pC * parameters.planeNormal;
+	ComputeContactForces(markerDataCurrent, parameters, true, pC, vC, wLateral, w2, n0, w3, fContact, localSlipVelocity);
+	Real currentGap = pC * n0; //includes offset p0 correctly with normal n0
 
 	//delete: Real previousState = currentState;
 	if ((currentGap > 0 && dataGapState <= 0) || (currentGap <= 0 && dataGapState > 0)) //action: state1=dataGapState, error = |currentGap*k|

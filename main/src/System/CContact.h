@@ -76,6 +76,26 @@ namespace Contact {
 
 		return t;
 	}
+
+	//this type maps to some arrays:
+	enum TypeIndex {
+		IndexSpheresMarkerBased = 0,
+		IndexANCFCable2D = 1,
+		IndexTrigsRigidBodyBased = 2,
+		IndexEndOfEnumList = 3
+	};
+
+	inline STDstring GetTypeIndexString(TypeIndex var)
+	{
+		STDstring t; //empty string
+		if (var == IndexSpheresMarkerBased) { t = "SpheresMarkerBased"; }
+		else if (var == IndexANCFCable2D) { t = "ANCFCable2D"; }
+		else if (var == IndexTrigsRigidBodyBased) { t = "TrigsRigidBodyBased"; }
+		else { CHECKandTHROWstring("Contact::GetTypeIndexString(...) called for invalid type!"); }
+
+		return t;
+	}
+
 };
 
 //short-term contacts:
@@ -206,6 +226,8 @@ public:
 	Index3 searchTreeSizeInit;						//!< initialization for search tree sizes
 	Vector3D searchTreeBoxMinInit;					//!< initialization for searchTree box
 	Vector3D searchTreeBoxMaxInit;					//!< initialization for searchTree box
+	Index resetSearchTreeInterval;					//!< number of iterations after which the search tree is re-created
+
 	bool sphereSphereContact;						//!< if false, contact between spheres is deactivated
 	bool sphereSphereFrictionRecycle;				//!< if true, static friction force is recycled from previous PostNewton step, which greatly improves convergence but may behave unphysically
 	Real frictionProportionalZone;					//!< regularization for friction (m/s); global for all contacts
@@ -213,10 +235,13 @@ public:
 	Real minRelDistanceSpheresTriangles;			//!< minimum relative distance between spheres and triangles, below that there is no contact computation
 	bool excludeOverlappingTrigSphereContacts;		//!< for consistent, closed meshes, we can exclude duplicate contacts
 	bool excludeDuplicatedTrigSphereContactPoints;  //!< run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts
+
 	Real tolEquivalentPoints;						//!< tolerance distance of projected points that are considered to be equivalent; 
 	Real tolEquivalentPointsSquared;				//!< squared tolerance distance of projected points, considered to be equivalent;
+
 	bool ancfCableUseExactMethod;					//!< if true, uses exact computation of intersection of 3rd order polynomials and contacting circles
-	Index ancfCableNumberOfContactSegments;				//!< if ancfCableUseExactMethod=false, then this specifies the number of contact segments for ANCF element
+	Index ancfCableNumberOfContactSegments;			//!< if ancfCableUseExactMethod=false, then this specifies the number of contact segments for ANCF element
+	Index ancfCableMeasuringSegments;			    //!< number of segments used to approximate geometry for ANCFCable2D elements for measuring distance
 	//++++++++++++++++++++++++++++++++
 	//contact behaviour
 	Matrix frictionPairings;						//!< contains pairing coefficients between two materials; if rows=columns=1, it only uses one pairing for all materials
@@ -227,6 +252,8 @@ public:
 		searchTreeSizeInit = Index3({ 10, 10, 10 }); //surely not optimal, but better than {1,1,1}
 		searchTreeBoxMinInit = Vector3D(EXUstd::MAXREAL);
 		searchTreeBoxMaxInit = Vector3D(EXUstd::LOWESTREAL);
+		resetSearchTreeInterval = 10000;
+
 		sphereSphereContact = true;
 		sphereSphereFrictionRecycle = false;
 		frictionProportionalZone = 0.001;
@@ -240,6 +267,7 @@ public:
 
 		ancfCableUseExactMethod = true;
 		ancfCableNumberOfContactSegments = 1;
+		ancfCableMeasuringSegments = 20;
 
 		frictionPairings = Matrix();
 	}
@@ -251,9 +279,10 @@ public:
 class GeneralContact
 {
 public: //make public in order to directly access from Python
-	bool isActive;													//!< if false, no contact computation is performed
-	Index verboseMode;												//!< if >0, it outputs a couple of information on contact creation and computation
-	VisuGeneralContact visualization; //!< data structure for visualization
+	bool isActive;						//!< if false, no contact computation is performed
+	Index verboseMode;					//!< if >0, it outputs a couple of information on contact creation and computation
+	bool contactIsFinalized;			//!< this flag is only true if contact is finalized and no further items added
+	VisuGeneralContact visualization;	//!< data structure for visualization
 
 	GeneralContactSettings settings; //!< settings for GeneralContact, easy to be modified via Python
 
@@ -304,6 +333,7 @@ protected:
 	//! updated at every contact computation:
 	//! bounding boxes, created prior to contact search:
 	SearchTree searchTree;											//!< search tree containing all contact objects
+	Index searchTreeUpdateCounter;									//!< number of search tree updates; used to reset tree after specific number of updates
 
 	ArrayIndex globalContactIndexOffsets;							//!< offsets corresponding to contact lists (allBoundingBoxes;allActiveContacts)
 	//the followoing lists follow the globalContactIndices:
@@ -347,6 +377,8 @@ public:
 	const ResizableArray<Box3D>& GetAllBoundingBoxes() const { return allBoundingBoxes; }
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//! convert global contact index / bounding box index into local item index (e.g. markerBasedSpheres) and type
+	void GlobalToLocalItemAndTypeIndex(Index globalIndex, Index& localIndex, Contact::TypeIndex& itemType);
 
 	//! helper function that is called for every contact set
 	template<typename T>
@@ -391,17 +423,17 @@ public:
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//FUNCTIONS FOR CONTACT INITIALIZATION:
 
-	//! add contact object using a marker (Position or Rigid), radius and contact/friction parameters; 
+	//! add contact object using a marker (Position or Rigid), radius and contact/friction parameters; return local index in spheresMarkerBased
 	//contact is possible between spheres (circles) (if intraSphereContact = true) and between sphere (circle) and ANCFCable2D
-	void AddSphereWithMarker(Index markerIndex, Real radius, Real contactStiffness, Real contactDamping, Index frictionMaterialIndex);
+	Index AddSphereWithMarker(Index markerIndex, Real radius, Real contactStiffness, Real contactDamping, Index frictionMaterialIndex);
 
-	//! add contact object for ANCFCable element; currently only possible for ANCFCable2D elements
+	//! add contact object for ANCFCable element; currently only possible for ANCFCable2D elements; return local index in ancfCable2D
 	//contact is possible between sphere (circle) and ANCFCable2D
-	void AddANCFCable(Index objectIndex, Real halfHeight, Real contactStiffness, Real contactDamping, Index frictionMaterialIndex);
+	Index AddANCFCable(Index objectIndex, Real halfHeight, Real contactStiffness, Real contactDamping, Index frictionMaterialIndex);
 
-	//! add contact object for Triangles attached to rigidBodyMarker
+	//! add contact object for Triangles attached to rigidBodyMarker; return starting index of trigsRigidBodyBased
 	//contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle!
-	void AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Real contactStiffness, Real contactDamping, 
+	Index AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Real contactStiffness, Real contactDamping, 
 		Index frictionMaterialIndex, ResizableArray<Vector3D> pointList, ResizableArray<Index3> triangleList);
 
 	//! set up necessary parameters for contact: friction, SearchTree, etc.; automatically done in mbs.Assemble()
@@ -438,18 +470,6 @@ public:
 		Index nThreads, bool updateBoundingBoxes);
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//! update search tree with previously computed bounding boxes
-	//UNUSED:
-	//void UpdateSearchTree()
-	//{
-	//	searchTree.ClearItems();
-	//	Index globalIndex = 0; //
-	//	for (const Box3D& box : allBoundingBoxes)
-	//	{
-	//		if (!box.Empty()) { searchTree.AddItem(box, globalIndex); } //check needed?
-	//		globalIndex++;
-	//	}
-	//}
 
 	enum ComputeContactMode { CCactiveSets = 1 << 0, CCode2rhsFull = 1 << 1, CCode2rhsFromActiveSets = 1 << 2 };
 	//! compute 1) active sets (PostNewtonStep), 2) ODE2RHS (fully) or 3) ODE2RHS from active sets
@@ -467,7 +487,7 @@ public:
 	template<Index opMode>
 	void ComputeContactTrigsRigidBodyBased(TemporaryComputationDataArray& tempArray, Index nThreads);
 
-
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! compute contact forces and add to global system vector
 	void ComputeODE2RHS(const CSystem& cSystem, TemporaryComputationDataArray& tempArray, Vector& systemODE2Rhs);
 
@@ -488,6 +508,25 @@ public:
 	//! PostNewtonStep: update active sets for contact
 	//! recommended step size \f$h_{recom}\f$ after PostNewton(...): \f$h_{recom} < 0\f$: no recommendation, \f$h_{recom}==0\f$: use minimum step size, \f$h_{recom}>0\f$: use specific step size, if no smaller size requested by other reason
 	Real PostNewtonStep(const CSystem& cSystem, TemporaryComputationDataArray& tempArray, Real& recommendedStepSize);
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//access / output functions
+		
+	//! return all items in sub-arrays and total count
+	Index GetItemsInBox(const Box3D& box,
+		ArrayIndex& arrayMarkerBasedSpheres,
+		ArrayIndex& arrayTrigsRigidBodyBased,
+		ArrayIndex& arrayANCFCable2D);
+
+	//! measure shortest distance to object along line with start point and direction; return false, if no item found inside given min/max distance
+	//! only points accepted in range [minDistance, maxDistance] including min, but excluding maxDistance
+	//! the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction
+	//! search will only be done for selectedTypeIndex, if it is not equal to Contact::IndexEndOfEnumList
+	//! returns also velocity, which is the velocity of the object in direction, not necessarily the time derivative of the distance
+	bool ShortestDistanceAlongLine(const Vector3D& pStart, const Vector3D& direction, Real minDistance, Real maxDistance,
+		Index& foundLocalIndex, Contact::TypeIndex& foundTypeIndex, Real& foundDistance, Real& foundVelocityAlongLine,
+		Real cylinderRadius=0, Contact::TypeIndex selectedTypeIndex = Contact::IndexEndOfEnumList);
 
 };
 #endif //USE_GENERAL_CONTACT

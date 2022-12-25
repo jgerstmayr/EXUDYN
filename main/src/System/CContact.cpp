@@ -39,8 +39,7 @@
 #include "Graphics/VisualizationSystemContainer.h"
 #include "Graphics/VisualizationPrimitives.h"
 
-#define experimentalGeneralContact
-//#undef experimentalGeneralContact
+//#define experimentalGeneralContact
 
 bool warnedComputeEigenValuesANCFcableCircleContact = false;
 Index TScontactANCFCableEig;
@@ -165,6 +164,9 @@ void GeneralContact::Reset(bool freeMemory)
 	isActive = true;
 	verboseMode = 0;
 	initializeData = true;
+	searchTreeUpdateCounter = 0;
+
+	contactIsFinalized = false;
 
 	if (freeMemory)
 	{
@@ -246,8 +248,10 @@ TimerStructureRegistrator TSRcontactANCFCable("Contact:ANCFCable", TScontactANCF
 
 //! add contact object using a marker (Position or Rigid), radius and contact/friction parameters; 
 //contact is possible between spheres (if intraSphereContact = true) and between sphere (=circle) and ANCFCable2D or sphere and line
-void GeneralContact::AddSphereWithMarker(Index markerIndex, Real radius, Real contactStiffness, Real contactDamping, Index frictionMaterialIndex)
+Index GeneralContact::AddSphereWithMarker(Index markerIndex, Real radius, Real contactStiffness, Real contactDamping, Index frictionMaterialIndex)
 {
+	contactIsFinalized = false;
+
 	ContactSpheresMarkerBased item;
 	item.markerIndex = markerIndex;
 	item.radius = radius;
@@ -257,18 +261,21 @@ void GeneralContact::AddSphereWithMarker(Index markerIndex, Real radius, Real co
 
 	if (contactStiffness <= 0)
 	{
-		PyWarning("GeneralConact: AddSphereWithMarker(...): contactStiffness should be non-zero and positive (markerIndex=" +
+		PyWarning("GeneralContact: AddSphereWithMarker(...): contactStiffness should be non-zero and positive (markerIndex=" +
 			EXUstd::ToString(markerIndex) + ")");
 	}
 
 	spheresMarkerBased.Append(item);
+	return spheresMarkerBased.NumberOfItems() - 1;
 }
 
 //! add contact object for ANCFCable element; currently only possible for ANCFCable2D elements
 //contact is possible between sphere (circle) and ANCFCable2D
-void GeneralContact::AddANCFCable(Index objectIndex, Real halfHeight, Real contactStiffness, Real contactDamping, 
+Index GeneralContact::AddANCFCable(Index objectIndex, Real halfHeight, Real contactStiffness, Real contactDamping, 
 	Index frictionMaterialIndex)
 {
+	contactIsFinalized = false;
+
 	ContactANCFCable2D item;
 
 	item.isALE = false;
@@ -289,14 +296,15 @@ void GeneralContact::AddANCFCable(Index objectIndex, Real halfHeight, Real conta
 	}
 
 	ancfCable2D.Append(item);
+	return ancfCable2D.NumberOfItems() - 1;
 }
 
 //! add contact object for ANCFCable element; currently only possible for ANCFCable2D elements
 //contact is possible between sphere (circle) and ANCFCable2D
-void GeneralContact::AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Real contactStiffness, Real contactDamping,
+Index GeneralContact::AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Real contactStiffness, Real contactDamping,
 	Index frictionMaterialIndex, ResizableArray<Vector3D> pointList, ResizableArray<Index3> triangleList)
 {
-#ifdef experimentalGeneralContact
+	contactIsFinalized = false;
 
 	ContactRigidBodyMarkerBased itemRB;
 
@@ -312,6 +320,7 @@ void GeneralContact::AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Real
 			EXUstd::ToString(rigidBodyMarkerIndex) + ")");
 	}
 
+	Index startIndex = trigsRigidBodyBased.NumberOfItems();
 	//now add triangles as single items
 	ContactTriangleRigidBodyBased itemTrig;
 	itemTrig.contactRigidBodyIndex = contactRigidBodyIndex; //always same ...
@@ -331,7 +340,7 @@ void GeneralContact::AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Real
 		trigsRigidBodyBased.Append(itemTrig); //only add points; in future also add weight ...?
 		cnt++;
 	}
-#endif // experimentalGeneralContact
+	return startIndex;
 }
 
 
@@ -341,7 +350,6 @@ void GeneralContact::AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Real
 //! empty box will autocompute size!
 void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTreeSize, const Matrix& frictionPairingsInit, Vector3D searchTreeBoxMin, Vector3D searchTreeBoxMax)
 {
-
 	initializeData = true; //will be set false after first call to ComputeContactDataAndBoundingBoxes
 	//check if frictionPairings matrix is large enough:
 	maxFrictionMaterialIndex = 0;
@@ -373,6 +381,7 @@ void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTre
 		}
 	}
 
+	searchTreeUpdateCounter = 0;
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//create relation between local and global contact indices
 	globalContactIndexOffsets.Flush();
@@ -505,8 +514,8 @@ void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTre
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//search tree autocompute must be done after creation of bounding boxes and initializations of jacobians
 	Box3D searchTreeBox;
-	searchTreeBox.PMin() = settings.searchTreeBoxMinInit; //this initialization gives Empty()=true or the specified value
-	searchTreeBox.PMax() = settings.searchTreeBoxMaxInit; //this initialization gives Empty()=true or the specified value
+	searchTreeBox.SetPMin(settings.searchTreeBoxMinInit); //this initialization gives Empty()=true or the specified value
+	searchTreeBox.SetPMax(settings.searchTreeBoxMaxInit); //this initialization gives Empty()=true or the specified value
 
 	TemporaryComputationDataArray tempArray; //will allocate memory, but just done in finalize contact
 	if (searchTreeBox.Empty())
@@ -529,6 +538,7 @@ void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTre
 	//if (verboseMode >= 2) { pout << "FinalizeContact: call PostNewtonStep\n"; }
 	PostNewtonStep(cSystem, tempArray, recommendedStepSize);
 	//if (verboseMode >= 2) { pout << "FinalizeContact: finish\n"; }
+	contactIsFinalized = true;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -552,6 +562,12 @@ void GeneralContact::ComputeContactDataAndBoundingBoxes(const CSystem& cSystem, 
 	if (updateBoundingBoxes && addToSearchTree)
 	{
 		STARTGLOBALTIMERmain(TSsearchTree);
+		searchTreeUpdateCounter++;
+		if (searchTreeUpdateCounter > settings.resetSearchTreeInterval)
+		{
+			searchTree.FlushCells(); //keeps search tree in general, but flushes sub-cell memory
+			searchTreeUpdateCounter = 0;
+		}
 		searchTree.ClearItems();
 		Index gi = 0;
 		for (const auto& box : allBoundingBoxes)
@@ -688,7 +704,6 @@ void GeneralContact::ComputeDataAndBBancfCable2D(const CSystemData& systemData, 
 void GeneralContact::ComputeDataAndBBtrigsRigidBodyBased(const CSystemData& systemData, TemporaryComputationDataArray& tempArray,
 	Index nThreads, bool updateBoundingBoxes)
 {
-//#ifdef experimentalGeneralContact
 	//CHECKandTHROWstring("GeneralContact::ComputeDataAndBBtrigsRigidBodyBased: not implemented");
 
 	//compute marker data; assume only small number of rigid bodies (<1000) with large number of triangles ==> done serially
@@ -752,7 +767,6 @@ void GeneralContact::ComputeDataAndBBtrigsRigidBodyBased(const CSystemData& syst
 
 		}, taskSplit); //nTasksPerThread
 	}
-//#endif // experimentalGeneralContact
 }
 
 
@@ -1012,8 +1026,6 @@ void GeneralContact::ComputeContactMarkerBasedSpheres(TemporaryComputationDataAr
 							if (verboseMode >= 2) pout << "  ** add active contact sphere " << gj - globalContactIndexOffsets[spheresMarkerBasedIndex] << " to sphere " << i << "\n";
 						}
 						allActiveContacts[gi]->AppendPure(IndexRegularizedFriction2ActiveContact(gj, frictionRegularizedRegion));
-
-						//errorMax = EXUstd::Maximum(errorMax, fabs(pen));
 					}
 				}
 			}
@@ -1260,7 +1272,6 @@ void GeneralContact::ComputeContactANCFCable2D(const CSystem& cSystem, Temporary
 template<Index opMode>
 void GeneralContact::ComputeContactTrigsRigidBodyBased(TemporaryComputationDataArray& tempArray, Index nThreads)
 {
-//#ifdef experimentalGeneralContact
 	//loop over all contact trigs, compute contact with spheres:
 	NGSsizeType nItems = (NGSsizeType)spheresMarkerBased.NumberOfItems();
 
@@ -1536,8 +1547,6 @@ void GeneralContact::ComputeContactTrigsRigidBodyBased(TemporaryComputationDataA
 			(addedObjects[threadID])->SetNumberOfItems(0);
 		}
 	}, taskSplit); //must be multiple of number of treads, but better 8*nThreads or larger for large problems
-//#endif // experimentalGeneralContact
-
 }
 
 
@@ -2337,11 +2346,310 @@ Real GeneralContact::PostNewtonStep(const CSystem& cSystem, TemporaryComputation
 	return 0.;
 }
 
+//! convert global contact index / bounding box index into local item index (e.g. markerBasedSpheres) and type
+void GeneralContact::GlobalToLocalItemAndTypeIndex(Index globalIndex, Index& localIndex, Contact::TypeIndex& itemType)
+{
+	Index typeIndex = 0;
+	while (typeIndex < Contact::IndexEndOfEnumList)
+	{
+		if (globalIndex < globalContactIndexOffsets[typeIndex+1])
+		{
+			localIndex = globalIndex - globalContactIndexOffsets[typeIndex];
+			itemType = (Contact::TypeIndex)typeIndex;
+
+			return;
+		}
+		typeIndex++;
+	}
+	itemType = Contact::IndexEndOfEnumList;
+	localIndex = -1;
+}
+
+Index GeneralContact::GetItemsInBox(const Box3D& box,
+	ArrayIndex& arrayMarkerBasedSpheres, ArrayIndex& arrayTrigsRigidBodyBased, ArrayIndex& arrayANCFCable2D)
+{
+	ArrayIndex& tempArray = *(addedObjects[0]); //thread 0 always exists
+	ResizableArray<bool>& tempIndexFlags = *(addedObjectsFlags[0]); //thread 0 always exists
+
+	searchTree.GetSingleItemsInBox(box, tempArray, tempIndexFlags);
+
+	ArrayIndex* listArrays[(Index)Contact::IndexEndOfEnumList];
+	listArrays[Contact::IndexSpheresMarkerBased] = &arrayMarkerBasedSpheres;
+	listArrays[Contact::IndexANCFCable2D] = &arrayANCFCable2D;
+	listArrays[Contact::IndexTrigsRigidBodyBased] = &arrayTrigsRigidBodyBased;
+
+	Index localIndex;
+	Contact::TypeIndex typeIndex;
+	//now sort items into different kinds;
+	for (Index gi : tempArray)
+	{
+		GlobalToLocalItemAndTypeIndex(gi, localIndex, typeIndex);
+		CHECKandTHROW(typeIndex < Contact::IndexEndOfEnumList, "GeneralContact::GetItemsInBox: invalid typeIndex");
+		listArrays[typeIndex]->AppendPure(localIndex);
+	}
+	return tempArray.NumberOfItems();
+}
+
+//! measure shortest distance to object along line with start point and direction; return false, if no item found inside given min/max distance
+//! only points accepted in range [minDistance, maxDistance] including min, but excluding maxDistance
+bool GeneralContact::ShortestDistanceAlongLine(const Vector3D& pStart, const Vector3D& direction, Real minDistance, Real maxDistance,
+	Index& foundLocalIndex, Contact::TypeIndex& foundTypeIndex, Real& foundDistance, Real& foundVelocityAlongLine, Real cylinderRadius, Contact::TypeIndex selectedTypeIndex)
+{
+	if (maxDistance <= minDistance) { PyError("GeneralContact::ShortestDistanceAlongLine: minDistance must be smaller than maxDistance"); }
+
+	//decide along which axis to search:
+	Real dirLen = direction.GetL2Norm();
+	if (dirLen == 0.) { PyError("GeneralContact::ShortestDistanceAlongLine: direction vector may not be [0,0,0]"); }
+
+	Vector3D dir0 = direction * (1. / dirLen);
+	
+	//select along which axis to search (X, Y, Z)
+	Index searchAxis = 0;
+	if (fabs(dir0[1]) > fabs(dir0[0])) { searchAxis = 1; }
+	if (fabs(dir0[2]) > fabs(dir0[1]) && fabs(dir0[2]) > fabs(dir0[0])) { searchAxis = 2; }
+	//pout << "dir0=" << dir0 << ", searchAxis=" << searchAxis << "\n";
+
+	CHECKandTHROW(dir0[searchAxis] != 0., "GeneralContact::ShortestDistanceAlongLine: search dir axis length should not be zero");
+
+	Box3D boxST = searchTree.GetBox();
+	Real minVal = boxST.PMin()[searchAxis];
+	Real maxVal = boxST.PMax()[searchAxis];
+	
+	Real dAxis = dir0[searchAxis];
+	Real pAxis = pStart[searchAxis];
+	Real sizeAxis = maxVal - minVal;
+
+	////find start and end values for searching in search tree box / min dist to cells
+	Real minDistCells = (minVal - pAxis) / dAxis;
+	Real maxDistCells = (maxVal - pAxis) / dAxis;
+	//Index sign = (dAxis >= 0) ? 1 : -1;
+	//if (maxDistCells < minDistCells)
+	//if (pAxis > maxVal)
+	//{
+	//	EXUstd::Swap(minDistCells, maxDistCells); //check if minDistCells fits below: make drawing for pos/neg dir0!
+	//}
+	//Real minDistCells = 0.; //offset if sensor point placed outside searchTree cells
+	//if (minVal > pAxis) { minDistCells = (minVal - pAxis) / dAxis; }
+	//else if (maxVal < pAxis) { minDistCells = (pAxis - maxVal) / dAxis; }
 
 
+	//search along given axis:
+	Real startAxis = pAxis + minDistance * dAxis;
+	Real endAxis = pAxis + maxDistance * dAxis;
 
+	Index startIndex = searchTree.IndexOfReal(startAxis, searchAxis);
+	Index endIndex = searchTree.IndexOfReal(endAxis, searchAxis);
+	Index numCells = searchTree.SizeCellsXYZ()[searchAxis];
+	Real stepSize = fabs(sizeAxis / (dAxis*(Real)numCells));
+	//Index incr = 1;
+	Index nSteps = endIndex - startIndex;
 
+	//Real factDir = 1.; //for transverse direction of search tree
+	if (nSteps < 0)  
+	{ //reversed search
+		nSteps = -nSteps;
+		startIndex = numCells - startIndex - 1;
+		minDistCells = maxDistCells;
+	}
 
+	//pout << "startIndex=" << startIndex
+	//	<< ", nSteps=" << nSteps
+	//	<< ", numCells=" << numCells
+	//	<< ", startAxis=" << startAxis
+	//	<< ", endAxis=" << endAxis
+	//	<< ", stepSize=" << stepSize
+	//	<< ", minDistCells=" << minDistCells
+	//	<< ", pStart=" << pStart
+	//	<< ", pA=" << pStart + minDistance * dir0
+	//	<< ", pB=" << pStart + maxDistance * dir0
+	//	<< "\n";
+
+	ArrayIndex itemsFound;
+	foundLocalIndex = -1;
+	foundTypeIndex = Contact::IndexEndOfEnumList;
+	foundDistance = maxDistance; //found distance must be smaller!
+	foundVelocityAlongLine = 0.;
+
+	Vector3D pStartDir = pStart + dir0;
+	Vector2D pStart2D({ pStart[0], pStart[1] });
+	//Vector2D pStartDir2D({ pStartDir[0], pStartDir[1] });
+	Vector2D dir2D0({ dir0[0], dir0[1] });
+
+	for (Index i = 0; i <= nSteps; i++) 
+	{
+		Vector3D p0 = pStart + dir0 * (minDistCells+(Real)(startIndex+i)*stepSize*(1. + 1e-7)); //enlarge slightly
+		Vector3D p1 = pStart + dir0 * (minDistCells+(Real)(startIndex+(i+1))*stepSize*(1. - 1e-7)); //shrink slightly
+		
+		Box3D box(p0, p1);
+		box.Increase(cylinderRadius); //this is partly inefficient because much more cells need to be searched for, but no simple solution for arbitrary orientation ...
+		
+		//pout << "dir0=" << dir0 << "\n";
+		searchTree.GetItemsInBox(box, itemsFound); //may contain duplicates!
+		//{
+		//	Index6 bi; searchTree.GetBoxIndizes(box, bi);
+		//	pout << "box=" << box << ", index0=" << bi[0] << "," << bi[1] << "," << bi[2] << "," << bi[3] << "," << bi[4] << "," << bi[5] << "\n";
+		//  pout << "itemsFound=" << itemsFound << "\n";
+		//}
+
+		Index localIndex;
+		Contact::TypeIndex typeIndex;
+		//pout << "itemsFound=" << itemsFound.NumberOfItems() << "\n";
+		for (Index item : itemsFound)
+		{
+			GlobalToLocalItemAndTypeIndex(item, localIndex, typeIndex);
+
+			if (typeIndex == Contact::IndexSpheresMarkerBased && 
+				(selectedTypeIndex == Contact::IndexEndOfEnumList || selectedTypeIndex == Contact::IndexSpheresMarkerBased))
+			{
+				Vector3D pos = spheresMarkerBased[localIndex].position;
+				Real r = spheresMarkerBased[localIndex].radius;
+				Real relPos;
+				Real d = HGeometry::ShortestDistanceRelativePosition(pStart, pStartDir, pos, relPos);
+				if (d <= (r+cylinderRadius)) //tangent point still works ...
+				{
+					Real deltaX;
+					if (d <= cylinderRadius) { d = 0.; deltaX = r; } //in this case, sphere center point is inside cylinder => deltaX = r
+					else 
+					{ 
+						d -= cylinderRadius;
+						Real x = r * r - d * d;
+						if (x < 0.) { x = 0.; } //for safety in case of rounding errors
+						deltaX = sqrt(x); 
+					}
+
+					relPos -= deltaX;
+					if (relPos >= minDistance && relPos < foundDistance)
+					{
+						//pout << "pos=" << pos << "\n";
+						foundLocalIndex = localIndex;
+						foundTypeIndex = typeIndex;
+						foundDistance = relPos;
+						foundVelocityAlongLine = dir0 * spheresMarkerBased[localIndex].velocity;
+					}
+				}
+
+			}
+			else if (typeIndex == Contact::IndexTrigsRigidBodyBased &&
+				(selectedTypeIndex == Contact::IndexEndOfEnumList || selectedTypeIndex == Contact::IndexTrigsRigidBodyBased)) 
+
+			{
+				std::array<Vector3D, 3> trigPoints; //global triangle points
+
+				const ContactTriangleRigidBodyBased& trigJ = trigsRigidBodyBased[localIndex];
+				const ContactRigidBodyMarkerBased& rigid = rigidBodyMarkerBased[trigJ.contactRigidBodyIndex];
+
+				//compute global points
+				for (Index k = 0; k < (Index)trigPoints.size(); k++)
+				{
+					trigPoints[k] = rigid.orientation * trigJ.points[k] + rigid.position;
+				}
+
+				Vector3D nPlane = HGeometry::ComputeTriangleNormal(trigPoints);
+				Real relativeDistance; //this is the distance from pStart to cutting point
+				bool rv = HGeometry::LinePlaneIntersection(trigPoints[0], nPlane, pStart, dir0, relativeDistance);
+				Vector3D pp = pStart + relativeDistance * dir0; //point in plane
+				//pout << "index=" << localIndex << ", pp=" << pp << ", dist=" << relativeDistance 
+				//	<< ", fd=" << foundDistance
+				//	<< ", min=" << minDistance
+				//	<< ", max=" << maxDistance
+				//	<< "\n";
+
+				if (rv && relativeDistance >= minDistance && relativeDistance < foundDistance) //only if not parallel
+				{
+					Vector3D pp = pStart + relativeDistance * dir0; //point in plane
+					Real lam1, lam2; //relative triangle coordinates
+					Vector3D e1 = trigPoints[1] - trigPoints[0];
+					Vector3D e2 = trigPoints[2] - trigPoints[0];
+
+					HGeometry::LocalTriangleCoordinates(e1, e2, pp - trigPoints[0], lam1, lam2);
+					//check if pp is inside triangle or on edges
+					const Real& TOL = settings.tolEquivalentPoints;
+					bool inside = (lam1 >= -TOL) && (lam2 >= -TOL) && (lam1 + lam2 <= (1. + TOL));
+					//pout << "index=" << localIndex << ", dist=" << relativeDistance << "  lam1=" << lam1 << ", lam2=" << lam2
+					//	<< ", in=" << inside << "\n";
+
+					if (inside)
+					{
+						foundLocalIndex = localIndex;
+						foundTypeIndex = typeIndex;
+						foundDistance = relativeDistance;
+
+						Vector3D relPos = (trigPoints[0] + lam1 * e1 + lam2 * e2) - rigid.position;
+						Vector3D velocity = rigid.velocity + (rigid.orientation * rigid.angularVelocity).CrossProduct(relPos);
+						foundVelocityAlongLine = dir0 * velocity;
+					}
+
+				}
+			}
+			else if (typeIndex == Contact::IndexANCFCable2D && 
+				(selectedTypeIndex == Contact::IndexEndOfEnumList || selectedTypeIndex == Contact::IndexANCFCable2D) &&
+				(dir0[2] == 0)) //must be planar
+
+			{
+				const ConstSizeVector<DANCFmaxCoordinates>& q = ancfCable2D[localIndex].coordinates;
+				const ConstSizeVector<DANCFmaxCoordinates>& q_t = ancfCable2D[localIndex].coordinates_t;
+				Real L = ancfCable2D[localIndex].L;
+				//Real halfHeight = ancfCable2D[localIndex].halfHeight;
+				Index nSegments = settings.ancfCableMeasuringSegments;
+
+				ConstSizeVector<4> c4x;
+				ConstSizeVector<4> c4y;
+				ConstSizeVector<4> c4x_t;
+				ConstSizeVector<4> c4y_t;
+				CObjectANCFCable2DBase::ComputePolynomialCoeffs<ConstSizeVector<DANCFmaxCoordinates>>(q, L, c4x, c4y);
+				CObjectANCFCable2DBase::ComputePolynomialCoeffs<ConstSizeVector<DANCFmaxCoordinates>>(q_t, L, c4x_t, c4y_t);
+
+				Real lSeg = L / (Real)nSegments;
+				for (Index ix = 0; ix < nSegments; ix++)
+				{
+					Real x0 = ix * lSeg;
+					Real x1 = (ix + 1) * lSeg;
+					Vector2D p0({ EXUmath::EvaluatePolynomial(c4x, x0), EXUmath::EvaluatePolynomial(c4y, x0) });
+					Vector2D p1({ EXUmath::EvaluatePolynomial(c4x, x1), EXUmath::EvaluatePolynomial(c4y, x1) });
+					Real relPosDist;
+					Real relPosANCF;
+					bool rv = HGeometry::CuttingOf2DLineSegments(pStart2D, dir2D0, p0, p1 - p0, relPosDist, relPosANCF);
+
+					if (rv && relPosANCF >= -settings.tolEquivalentPoints && relPosANCF <= 1. + settings.tolEquivalentPoints && relPosDist >= minDistance && relPosDist < foundDistance)
+					{
+						//foundLocalIndex = localIndex;
+						//foundTypeIndex = typeIndex;
+						//foundDistance = relPosDist;
+
+						//make refinement: //with nSegments=20, this gives relative errors around 1e-8 against nSegments=10
+						x1 = x0 + (relPosANCF + 0.5e-2)*lSeg; //refine area by factor of 100
+						x0 = x0 + (relPosANCF - 0.5e-2)*lSeg; //refine area by factor of 100
+
+						Vector2D p0({ EXUmath::EvaluatePolynomial(c4x, x0), EXUmath::EvaluatePolynomial(c4y, x0) });
+						Vector2D p1({ EXUmath::EvaluatePolynomial(c4x, x1), EXUmath::EvaluatePolynomial(c4y, x1) });
+						rv = HGeometry::CuttingOf2DLineSegments(pStart2D, dir2D0, p0, p1 - p0, relPosDist, relPosANCF);
+						//==> gives refined relPosDist, which should have at least an accuracy around 1e-6
+
+						if (rv && relPosDist >= minDistance && relPosDist < foundDistance)
+						{
+							Real xFound = x0 + relPosANCF * (x1-x0);
+							Vector2D pFound({ EXUmath::EvaluatePolynomial(c4x, xFound), EXUmath::EvaluatePolynomial(c4y, xFound) });
+							Real distFound = (pFound - pStart2D)*dir2D0; //this should give more accurate values than relPosDist
+
+							foundLocalIndex = localIndex;
+							foundTypeIndex = typeIndex;
+							foundDistance = distFound; //simple tests showed that this value is converged up to 15 digits for "regular" large deformation per element
+
+							//also compute velocity:
+							Vector2D vANCF({ EXUmath::EvaluatePolynomial(c4x_t, xFound), EXUmath::EvaluatePolynomial(c4y_t, xFound) });
+							foundVelocityAlongLine = dir2D0 * vANCF;
+						}
+					}
+
+				}
+
+			}
+		}
+		//if (foundLocalIndex != -1) { break; } 
+	}
+	//pout << "dist=" << foundDistance << "\n";
+	return foundLocalIndex != -1;
+}
 
 
 

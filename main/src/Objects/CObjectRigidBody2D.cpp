@@ -16,25 +16,29 @@
 
 
 //! Computational function: compute mass matrix
-void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
+void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
-	//Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
-	//massMatrix.SetMatrix(nODE2coordinates, nODE2coordinates,
-	//	{ parameters.physicsMass,0.,0., 
-	//	  0.,parameters.physicsMass,0., 
-	//	  0.,0.,parameters.physicsInertia });
-
 	massMatrixC.SetUseDenseMatrix(false);
 	SparseTripletVector& triplets = massMatrixC.GetInternalSparseTripletMatrix().GetTriplets();
 	
+	Real m = parameters.physicsMass;
+	Real J = parameters.physicsInertia;
+
+	if (computeInverse)
+	{
+		CHECKandTHROW(m != 0., "CObjectRigidBody2D::ComputeMassMatrix: physicsMass may not be 0 in case of computeMassMatrixInversePerBody=True");
+		CHECKandTHROW(J != 0., "CObjectRigidBody2D::ComputeMassMatrix: physicsInertia may not be 0 in case of computeMassMatrixInversePerBody=True");
+		m = 1. / m;
+		J = 1. / J;
+	}
 	if (parameters.physicsMass != 0.)
 	{
-		triplets.AppendPure(EXUmath::Triplet(ltg[0], ltg[0], parameters.physicsMass));
-		triplets.AppendPure(EXUmath::Triplet(ltg[1], ltg[1], parameters.physicsMass));
+		triplets.AppendPure(EXUmath::Triplet(ltg[0], ltg[0], m));
+		triplets.AppendPure(EXUmath::Triplet(ltg[1], ltg[1], m));
 	}
 	if (parameters.physicsInertia != 0.)
 	{
-		triplets.AppendPure(EXUmath::Triplet(ltg[2], ltg[2], parameters.physicsInertia));
+		triplets.AppendPure(EXUmath::Triplet(ltg[2], ltg[2], J));
 	}
 
 }

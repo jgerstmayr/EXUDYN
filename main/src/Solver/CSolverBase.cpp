@@ -113,7 +113,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 			fileMode = fileMode | std::ofstream::app; 
 		}
 
-		if (solutionSettings.binarySolutionFile) { fileMode = std::ofstream::binary; } //no append right now!
+		if (solutionSettings.binarySolutionFile) { fileMode = std::ofstream::binary; } //no append right now as loading is more involved!
 
 		//if (solutionSettings.appendToFile) { file.solutionFile.open(solutionFileName, std::ofstream::app); }
 		//else { file.solutionFile.open(solutionFileName, std::ofstream::out); }
@@ -130,6 +130,8 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 		}
 	}
 	else { output.writeToSolutionFile = false; }
+
+	if (solutionSettings.writeRestartFile) { PyWarning("solutionSettings.writeRestartFile=True, but feature is yet not implemented"); }
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//open solver information file
@@ -621,17 +623,31 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 
 	if (simulationSettings.solutionSettings.writeFileFooter && output.writeToSolutionFile)
 	{
+		STDstring footer = "";
+		footer += "#simulation finished=" + EXUstd::GetDateTimeString() + "\n";
+		footer += "#Solver Info:";
+		footer += " cpuTime=" + EXUstd::ToString(timer.total);
+		footer += " stepReductionFailed(or step failed)=" + EXUstd::ToString(conv.stepReductionFailed);
+		footer += ",discontinuousIterationSuccessful=" + EXUstd::ToString(conv.discontinuousIterationSuccessful);
+		footer += ",newtonSolutionDiverged=" + EXUstd::ToString(conv.newtonSolutionDiverged);
+		footer += ",massMatrixNotInvertible=" + EXUstd::ToString(conv.massMatrixNotInvertible);
+		footer += ",total time steps=" + EXUstd::ToString(it.currentStepIndex - 1); //initial step is also counted in it.currentStepIndex
+		footer += ",total Newton iterations=" + EXUstd::ToString(it.newtonStepsCount);
+		footer += ",total Newton jacobians=" + EXUstd::ToString(it.newtonJacobiCount) + "\n";
+
 		if (!simulationSettings.solutionSettings.binarySolutionFile)
 		{
-			file.solutionFile << "#simulation finished=" << EXUstd::GetDateTimeString() << "\n";
-			file.solutionFile << "#Solver Info:";
-			file.solutionFile << " stepReductionFailed(or step failed)=" << conv.stepReductionFailed;
-			file.solutionFile << ",discontinuousIterationSuccessful=" << conv.discontinuousIterationSuccessful;
-			file.solutionFile << ",newtonSolutionDiverged=" << conv.newtonSolutionDiverged;
-			file.solutionFile << ",massMatrixNotInvertible=" << conv.massMatrixNotInvertible;
-			file.solutionFile << ",total time steps=" << it.currentStepIndex - 1; //initial step is also counted in it.currentStepIndex
-			file.solutionFile << ",total Newton iterations=" << it.newtonStepsCount;
-			file.solutionFile << ",total Newton jacobians=" << it.newtonJacobiCount << "\n";
+			//file.solutionFile << "#simulation finished=" << EXUstd::GetDateTimeString() << "\n";
+			//file.solutionFile << "#Solver Info:";
+			//file.solutionFile << " stepReductionFailed(or step failed)=" << conv.stepReductionFailed;
+			//file.solutionFile << ",discontinuousIterationSuccessful=" << conv.discontinuousIterationSuccessful;
+			//file.solutionFile << ",newtonSolutionDiverged=" << conv.newtonSolutionDiverged;
+			//file.solutionFile << ",massMatrixNotInvertible=" << conv.massMatrixNotInvertible;
+			//file.solutionFile << ",total time steps=" << it.currentStepIndex - 1; //initial step is also counted in it.currentStepIndex
+			//file.solutionFile << ",total Newton iterations=" << it.newtonStepsCount;
+			//file.solutionFile << ",total Newton jacobians=" << it.newtonJacobiCount << "\n";
+
+			file.solutionFile << footer;
 		}
 		else
 		{
@@ -652,6 +668,26 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 				(Index)it.newtonJacobiCount });
 			ExuFile::BinaryWrite(info, file.solutionFile, bfs);
 			ExuFile::BinaryWrite("EXUEND", file.solutionFile, bfs);
+		}
+
+		if (simulationSettings.solutionSettings.sensorsWriteFileFooter)
+		{
+			Index cnt = 0;
+			for (auto item : computationalSystem.GetSystemData().GetCSensors())
+			{
+				if ((Index)file.sensorFileList.size() > cnt && file.sensorFileList[cnt] != nullptr)
+				{
+					std::ofstream* sFile = file.sensorFileList[cnt];
+					(*sFile) << footer;
+				}
+				else
+				{
+					//evaluate sensors, especially for UserSensors, which may do some tricky (recording) things internally, but which are not written
+					item->GetSensorValues(computationalSystem.GetSystemData(), output.sensorValuesTemp, ConfigurationType::Current); //only for checking size of sensor output, computed values not used
+				}
+				cnt++;
+			}
+
 		}
 	}
 
@@ -703,7 +739,9 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 
 	if (IsVerbose(2)) { Verbose(2, "\nWrite initial step to solution file and visualize ...\n"); }
 	//perform initialization for initial values (write to file, show solution, ...); 
-	FinishStep(computationalSystem, simulationSettings); //visualization, console output, file output, ...
+	
+	//flag to switch off writing of initial values for solution files and sensors
+	FinishStep(computationalSystem, simulationSettings, simulationSettings.solutionSettings.writeInitialValues); //visualization, console output, file output, ...
 
 
 	bool simulationEndTimeReached = false; //signals that end time has been reached (tEnd in time integration, loadFactor=1 in static solver)
@@ -896,9 +934,8 @@ STDstring SolverTimeToString(double timeInSeconds)
 		return EXUstd::ToString(timeInSeconds / (3600.*24)) + " days";
 	}
 }
-
-//! finish static step / time step; write output of results to file
-void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+//! finish static step / time step; write output of results to file; writeSolution will switch on/off writing solution and sensor outputs
+void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool writeSolution)
 {
 	Real t = computationalSystem.GetSystemData().GetCData().GetCurrent().GetTime();
 	Real tCPU = EXUstd::GetTimeInSeconds();
@@ -990,7 +1027,7 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 		STOPTIMER(timer.overhead);
 	}
 
-	if (output.writeToSolutionFile)
+	if (output.writeToSolutionFile && writeSolution)
 	{
 
 		//modify lastSolutionWritten to include last step in output file
@@ -1003,7 +1040,7 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 		STOPTIMER(timer.writeSolution);
 	}
 
-	if (computationalSystem.GetSystemData().GetCSensors().NumberOfItems() != 0)
+	if (computationalSystem.GetSystemData().GetCSensors().NumberOfItems() != 0 && writeSolution)
 	{
 		//modify lastSolutionWritten to include last step in output file
 		if (fabs(t - it.endTime) <= 1e-10) {
@@ -1827,10 +1864,12 @@ void CSolverBase::WriteCoordinatesToFile(const CSystem& computationalSystem, con
 //! write unique sensor file header, depending on static/dynamic simulation
 void CSolverBase::WriteSensorsFileHeader(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
+	if (!simulationSettings.solutionSettings.sensorsWriteFileHeader) { return; }
+
 	Index cnt = 0;
 	for (auto item : computationalSystem.GetSystemData().GetCSensors())
 	{
-		if ((Index)file.sensorFileList.size() >= cnt && file.sensorFileList[cnt] != nullptr)
+		if ((Index)file.sensorFileList.size() > cnt && file.sensorFileList[cnt] != nullptr)
 		{
 			std::ofstream* sFile = file.sensorFileList[cnt];
 			(*sFile) << "#Exudyn " << GetSolverName() << " ";
@@ -1884,7 +1923,7 @@ void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const S
 		for (auto item : computationalSystem.GetSystemData().GetCSensors())
 		{
 			bool sensorValuesCalled = false;
-			if ((Index)file.sensorFileList.size() >= cnt && file.sensorFileList[cnt] != nullptr)
+			if ((Index)file.sensorFileList.size() > cnt && file.sensorFileList[cnt] != nullptr)
 			{
 				std::ofstream* sFile = file.sensorFileList[cnt];
 

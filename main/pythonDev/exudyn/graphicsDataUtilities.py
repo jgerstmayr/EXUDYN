@@ -346,9 +346,12 @@ def MergeGraphicsDataTriangleList(g1,g2):
 #************************************************
 #**function: generate graphics data for lines, given by list of points and color; transforms to GraphicsData dictionary
 #**input: 
-#  pList: list of3D numpy arrays or lists (to achieve closed curve, set last point equal to first point)
+#  pList: list of 3D numpy arrays or lists (to achieve closed curve, set last point equal to first point)
 #  color: provided as list of 4 RGBA values
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
+#**example:
+##create simple 3-point lines
+#gLine=GraphicsDataLine([[0,0,0],[1,0,0],[2,0.5,0]], color=color4red)
 def GraphicsDataLine(pList, color=[0.,0.,0.,1.]): 
     data = [0]*(len(pList)*3)
     for i, p in enumerate(pList):

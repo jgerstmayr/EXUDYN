@@ -121,6 +121,7 @@
 	// operators for AVX2 & AVX512; used from ngsolve project
 	// note: in case of AVX2-DoublePrecision, AVX2 intrinsics in simd.hpp is deactivated and the instructions below will be used by ngs
 	// note: in case of AVX2-SinglePrecision and AVX512, the AVX2-DoublePrecision Intrinsics will be activated in simd.hpp for ngs
+#ifndef __EXUDYN__LINUX__ //not working with gcc, does not allow overload, but also does not need to!
 	EXUINLINE PReal operator- (PReal a) { return _mm_xor_(a, _mm_set1_(-0.0)); }
 	EXUINLINE PReal operator+ (PReal a, PReal b) { return _mm_add_(a, b); }
 	EXUINLINE PReal operator- (PReal a, PReal b) { return _mm_sub_(a, b); }
@@ -132,6 +133,7 @@
 	EXUINLINE PReal operator-= (PReal &a, PReal b) { return a = a - b; }
 	EXUINLINE PReal operator*= (PReal &a, PReal b) { return a = a * b; }
 	EXUINLINE PReal operator/= (PReal &a, PReal b) { return a = a / b; }
+#endif //__EXUDYN__LINUX__
 #endif
 
 #endif

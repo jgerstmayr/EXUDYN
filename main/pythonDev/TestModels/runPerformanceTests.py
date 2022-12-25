@@ -24,7 +24,7 @@ isWindows = (sys.platform == 'win32')
 #include right exudyn module now:
 import numpy as np
 if (sys.version_info.major == 3 and 
-    (sys.version_info.minor == 7 or sys.version_info.minor == 8)): #for these versions, we use exudynFast
+    (sys.version_info.minor == 7 or sys.version_info.minor == 10)): #for these versions, we use exudynFast; since 2022-12-19/exudynV1.4.53: 3.7 and 3.10 in performance tests
     sys.exudynFast = True
 else:
     sys.exudynFast = False
@@ -210,7 +210,7 @@ else:
         exu.Print('  PERFORMANCE TEST ' + str(i) + ' (' + testFileList[i] + ') FAILED')
 
 exu.Print('TOTAL PERFORMANCE TEST TIME = ' + str(totalTime) + ' seconds')
-exu.Print('Reference value (i9)        = 88.12 seconds (P3.6 32bit) / 74.11 seconds (P3.7) / 57.30 seconds (P3.8)')
+exu.Print('Reference value (i9)        = 88.12 seconds (32bit) / 74.11 seconds (regular) / 57.30 seconds (exudynFast)')
 #exu.Print('Reference value (i9)        =  seconds (P3.7) / 42.7 seconds (P3.8)')
 exu.Print('****************************************************')
 

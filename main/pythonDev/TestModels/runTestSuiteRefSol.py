@@ -21,8 +21,8 @@ def TestExamplesReferenceSolution():
         'ANCFcontactCircleTest.py':-0.4842698420787613,
         'ANCFcontactFrictionTest.py':-0.014187561328096003, #with old ObjectContactFrictionCircleCable2D until : 2022-03-09: -0.014188649931059739,
         'ANCFgeneralContactCircle.py':-0.5816542531620952,          #new 2022-07-11 (CState Parallel); #before some update to contact module(iterations decreased!):-0.5816521429557808, #2022-02-01
-        'ANCFmovingRigidBodyTest.py':-0.12893096921737698,
-        'ANCFslidingAndALEjointTest.py':-4.426403044189653, #with old ObjectContactFrictionCircleCable2D until: 2022-03-09: -4.42640304418963,
+        'ANCFmovingRigidBodyTest.py':-0.12893096934983617,          #new 2022-12-25; old solution differs for 1e-10 since several updates -0.12893096921737698,
+        'ANCFslidingAndALEjointTest.py':-4.426408390697862,         #before 2022-12-25(resolved BUG 1274): -4.426403044189653; with old ObjectContactFrictionCircleCable2D until: 2022-03-09: -4.42640304418963,
         'carRollingDiscTest.py':-0.23940048717113782,
         'compareAbaqusAnsysRotorEigenfrequencies.py':0.0004185480476228555,
         'compareFullModifiedNewton.py':0.00020079676000188396,
@@ -33,6 +33,7 @@ def TestExamplesReferenceSolution():
         'ConvexContactTest.py':0.011770267410694153,                #new 2022-07-11 (CState Parallel); #before 2022-01-25?: 0.05737886603111926, 
         'coordinateVectorConstraint.py':-1.0825265797698322,
         'coordinateVectorConstraintGenericODE2.py':-1.0825265797698322,
+        'distanceSensor.py':1.867764310778691,
         'driveTrainTest.py':-9.269311940229841e-08,
         'explicitLieGroupIntegratorPythonTest.py':149.8473939540758,
         'explicitLieGroupIntegratorTest.py':0.16164013319819065,
@@ -59,6 +60,7 @@ def TestExamplesReferenceSolution():
         'pendulumFriction.py':0.39999998776982304,
         'plotSensorTest.py':1,
         'postNewtonStepContactTest.py':0.057286638346409235,
+        'reevingSystemSpringsTest.py':2.213190117855691,
         'revoluteJointprismaticJointTest.py':1.2538806799249342,    #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver (modified Newton restart, etc.); before 2022-01-18: 1.2538806799243265,
         'rigidBodyAsUserFunctionTest.py':8.950865271552148,
         'rigidBodyCOMtest.py':3.409431467726291,
@@ -148,8 +150,9 @@ def MiniExamplesReferenceSolution():
     if 'experimentalNewSolver' in exu.sys: #needs some corrected results
         refSol['ObjectConnectorRigidBodySpringDamper.py'] = -0.5349299542344889 #diff to other solvers: 3.6e-9
 
-    if (sys.version_info.major == 3 and sys.version_info.minor == 6): #different solutions without AVX
-            #Python version without AVX leads to different solution: since 2022-07-11 (StateVector with ResizableVectorParallel)
+    if 'AVX2' not in exu.GetVersionString(True): #for nonAVX2 versions in Windows as well as other platforms
+        #if (sys.version_info.major == 3 and sys.version_info.minor == 6): #different solutions without AVX
+        #Python version without AVX leads to different solution: since 2022-07-11 (StateVector with ResizableVectorParallel)
         refSol['ObjectConnectorRigidBodySpringDamper.py'] = -0.534929955894111
 
     

@@ -134,8 +134,6 @@ public:
 		updateGraphicsDataNowInternal = false;
 		updateGraphicsDataNow = false;
 		stopSimulationFlag = false;
-
-		//now done in MainSystemContainer: AttachToRenderEngine(); //links to render engine at the very beginning of the creation of the VisualizationSystemContainer
 	}
 
 	virtual ~VisualizationSystemContainer() { Reset(); }
@@ -160,10 +158,11 @@ public:
 	//void LinkPostProcessData(PostProcessData* postProcessDataInit);
 
 	//! this function links the VisualizationSystem to a render engine, such that the changes in the graphics structure drawn upon updates, etc.
-	bool AttachToRenderEngine();
+	//! warnNoRenderer is used to raise warnings in case of call from Python side
+	bool AttachToRenderEngine(bool warnNoRenderer = false);
 
 	//! this function releases the VisualizationSystemContainer from the render engine (but not other VisualizationSystemContainers!);
-	bool DetachFromRenderEngine(VisualizationSystemContainer* detachingVisualizationSystemContainer);
+	bool DetachFromRenderEngine(VisualizationSystemContainer* detachingVisualizationSystemContainer, bool warnNoRenderer = false);
 
 	//! this function waits for the stop flag in the render engine;
 	bool WaitForRenderEngineStopFlag();

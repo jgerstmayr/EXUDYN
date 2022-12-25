@@ -2,14 +2,13 @@
 \onlyRST{
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
-Exudyn 1.4 is out! It includes improved multi-threading support; a redundant coordinate (constraint) as well as a minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
+Exudyn 1.5 is out! It includes now Python 3.7/8 - 3.10 wheels for MacOS, improved compatibility for AVX2, simple reeving system, improved Lie group integration, improved RollingDisc, DistanceSensor, and many fixes; further features are multi-threading support; minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
 
 If you like using Exudyn, please add a *star* on github, and send an email to \ ``reply.exudyn@gmail.com``\ such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
 
-A paper on Exudyn has been presented at the `6th Joint International Conference on Multibody System Dynamics <http://imsdacmd2020.iitd.ac.in>`_ and it can be cited as: J. Gerstmayr, Exudyn - A C++ based Python package for flexible multibody systems, Proceedings of The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020, New Delhi, India, 2022. `PDF <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/publications/GerstmayrIMSD2022.pdf>`_
+A paper on Exudyn has been presented at the `6th Joint International Conference on Multibody System Dynamics <http://imsdacmd2020.iitd.ac.in>`_ and **submitted** to the proceedings: J. Gerstmayr, Exudyn - A C++ based Python package for flexible multibody systems, Proceedings of The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020, New Delhi, India, 2022. `PDF <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/publications/GerstmayrIMSD2022.pdf>`_
 
-+  **A flexible multibody dynamics systems simulation code with Python and C++**
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 +  *free, open source* and with plenty of *documentation* and *examples*
 +  **pre-built** for Python 3.6 - 3.10 under **Windows** ; Python 3.8 under **MacOS** available; Python 3.6 - 3.10 under **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
@@ -138,16 +137,17 @@ The following people have contributed to examples, testing and theory:
 \codeName\ only works with Python. Thus, you need an appropriate Python installation.
 So far (2021-07), we tested
 \bi
-  \item \mybold{Anaconda, 64bit, Python 3.7.7}\footnote{Anaconda3 64bit with Python3.7.7 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-2020.02-Windows-x86\_64.exe}} (but Python 3.8 and 3.9 (since 2021-11) are also working well!)
-  \item \mybold{Spyder 4.1.3} (with Python 3.7.7, 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, Python and \codeName\  are \mybold{either} 32bit \mybold{or} 64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.}
+  \item \mybold{Anaconda 2021-11, 64bit, Python 3.9}\footnote{older Anaconda3 versions can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/}}
+  \item Currently, we work with Python 3.6 - Python 3.10 \mybold{conda environments} on Windows, Linux and MacOS (3.8-3.10).
+  \item \mybold{Spyder 5.1.5} (with Python 3.9.7, 64bit) and \mybold{Spyder 4.1.3} (with Python 3.7.7, 64bit), which is included in the Anaconda installation\footnote{Note that it is important that Spyder, Python and \codeName\  are \mybold{either} 32bit \mybold{or} 64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.}; Spyder works with all virtual environments
 \ei
 Many alternative options exist:
 \bi
-  \item In case that you have an older CPU, which does not support AVX2, use: \codeName\ with Python 3.6.5, or compile without AVX flags for your machine.\footnote{e.g.\ Anaconda 32bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86.exe}.}
+  %\item In case that you have an older CPU, which does not support AVX2, use: \codeName\ with Python 3.6.5, or compile without AVX flags for your machine.\footnote{e.g.\ Anaconda 32bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86.exe}.}
   %\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, Python and exudyn are \mybold{either} 32bit \mybold{or} 64bit. 
   \item Users report successful use of \codeName\ with \mybold{Visual Studio Code}. \mybold{Jupyter} has been tested with some examples; both environments should work with default settings.
-  \item Anaconda 2020-11 with \mybold{Python 3.8} and Spyder 4.1.5: no problems up to now (2021-07), TestSuite runs without problems since \codeName\ version 1.0.182.
-  \item Anaconda 2021-11 with \mybold{Python 3.9} and Spyder 5.1.5: Tested with current version (1.1.99), TestSuite runs without problems.
+  \item Anaconda 2020-11 with \mybold{Python 3.8} and Spyder 4.1.5: no problems except some regular crashes of Spyder, TestSuite runs without problems since \codeName\ version 1.0.182.
+  %\item Anaconda 2021-11 with \mybold{Python 3.9} and Spyder 5.1.5: Tested with current version (1.1.99), TestSuite runs without problems.
   \item Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5)\footnote{Anaconda 64bit with Python3.6 can be downloaded via the repository archive \texttt{https://repo.anaconda.com/archive/} choosing \texttt{Anaconda3-5.2.0-Windows-x86\_64.exe} for 64bit.}
   %\item Spyder 3.2.8 with Python 3.6.5 32 bit (alternatively 64bit), which is included in the Anaconda installation\footnote{It is important that Spyder, Python and exudyn are \mybold{either} 32bit \mybold{or} 64bit. 
 %Anaconda3-5.2.0-Windows-x86\_64.exe
@@ -269,12 +269,12 @@ Note that there are a couple of pre-requisites, depending on your system and ins
     \item run 'activate.bat' [may not be necessary]
   \ei
   \item go to 'main' of your cloned github folder of \codeName\ 
-  \item run: \texttt{python setup.py install}
+  \item run:\footnote{the \texttt{--parallel} option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x} \texttt{python setup.py install --parallel}
   \item read the output; if there are errors, try to solve them by installing appropriate modules
 \ei
 You can also create your own wheels, doing the above steps to activate the according Python version and then calling:
 \bi
-  \item[] \texttt{python setup.py bdist\_wheel}
+  \item[] \texttt{python setup.py bdist\_wheel --parallel}
 \ei
 This will add a wheel in the \texttt{dist} folder.
 
@@ -282,32 +282,33 @@ This will add a wheel in the \texttt{dist} folder.
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Build and install \codeName\ under Mac OS X?}
 \label{sec:build:MacOS}
-Installation and building on Mac OS X is rarely tested, but first successful compilation including GLFW has been achieved.
+Installation and building on Mac OS X is less frequently tested, but successful compilation including GLFW has been achieved.
 Requirements are an according Anaconda (or Miniconda) installation.
 
 \noindent \mybold{Tested configurations}:
 \bi
   \item Mac OS 11.x 'Big Sur', Mac Mini (2021), Apple M1, 16GB Memory
-  \item Anaconda (x86 / i368 based with Rosetta 2) with Python 3.8
-  \item this configuration is currently evaluated but showed general compatibility
-  \item[] $\ra$ some wheels are already available on pypi (you may need to download them manually)!
+  \item Miniconda with conda environments (x86 / i368 based with Rosetta 2) with Python 3.7 - 3.10
+  \item Miniconda with conda environments (ARM) with Python 3.8 - 3.10
+  \item[] $\ra$ wheels are available on pypi since \codeName\ 1.5.0 
 \ei
 \noindent \mybold{NOTE}:
 \bi
-  \item on Apple M1 processors, there are significant problems with Miniconda; scipy cannot be installed properly (April 2022)
-  \item a significant number of Exudyn test models does not run properly! Optimization and processing functions do not run (especially multiprocessing and tqdm); 
-  \item as eigensolvers were not available for tests on M1, all these test models fail 
-  \item note that even some test result deviate from Windows results significantly!
+  \item on Apple M1 processors, there are significant problems with Miniconda; scipy could not be installed properly in the beginning (April 2022)
+  \item Tkinter still does not run.
+  \item Some optimization and processing functions do not run (especially multiprocessing and tqdm); 
+  %resolved: \item As eigensolvers were not available for tests on M1, all these test models fail 
+  %resolved: \item Note that even some test result deviate from Windows results significantly!
 \ei
-
 
 Alternatively, we tested on:
 \bi
   \item Mac OS X 10.11.6 'El Capitan', Mac Pro (2010), 3.33GHz 6-Core Intel Xeon, 4GB Memory, Anaconda Navigator 1.9.7, Python 3.7.0, Spyder 3.3.6
 \ei
-Note, that in all cases tkinter does not run properly on MacOS (help appreciated), while otherwise we produced a stable version. The AppleM1 native version is in some cases superior to the Windows version and also to the Rosetta version on Apple!
-
-For a compatible Mac OS X system some pre-built wheels will be available via pypi.org. Note that these my be built on an emulated AppleM1, thus being much slower than the Windows or Linux compliant.
+%Note, that in all cases tkinter does not run properly on MacOS (help appreciated), while otherwise we produced a stable version. 
+%The AppleM1 native version is in some cases superior to the Windows version and also to the Rosetta version on Apple!
+%
+%For a compatible Mac OS X system some pre-built wheels will be available via pypi.org. Note that these my be built on an emulated AppleM1, thus being much slower than the Windows or Linux compliant.
 %Go to the \texttt{main/dist} directory in your back terminal and type, e.g.,
 %\bi
 %\item[] \texttt{pip install exudyn-1.0.218-cp37-cp37m-macosx\_10\_9\_x86\_64.whl} %\vspace{9pt}\\
@@ -318,13 +319,18 @@ For a compatible Mac OS X system some pre-built wheels will be available via pyp
 If you would like to compile from source, just use a bash terminal on your Mac, and do the following steps inside the \texttt{main} directory of your repository and type
 \bi
   \item uninstall if old version exists (may need to repeat this!): \texttt{pip uninstall exudyn}
-  \item \texttt{python setup.py bdist\_wheel}
-  \item[] $\ra$ this compiles and takes approx.~5 minutes, depending on your machine
-  \item[] $\ra$ it may produce some errors, depending on your version; if there are some liker errors (saying that there is no '\texttt{-framework Cocoa' and '-framework OpenGL}', just go back in the terminal and copy everything from '\texttt{g++ ...}' until the end of the last command '\texttt{-mmacosx-verion-min...}' and paste it into the terminal. Calling that again will finalize linking; then run again
-  \item[] \texttt{python setup.py bdist\_wheel}
-  \item[] $\ra$ this now creates the wheel (if you want to distribute) in the \texttt{dist} folder; note that this wheel has a wrong version number (11.0) while it may need to be changed to 10.9 manually in order that it can be installed
-  \item \texttt{python setup.py install}
-  \item[] to install exudyn
+  \item remove the \texttt{build} directory if you would like to re-compile without changes
+  \item to perform compilation from source, write:\footnote{the \texttt{--parallel} option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x}
+  \item \texttt{python setup.py bdist\_wheel --parallel}
+  \item which takes 75 seconds on Apple M1 in parallel mode, otherwise 5 minutes. To install \codeName\ , run
+  \item[] \texttt{python setup.py install}
+  \item[] $\ra$ this will only install, but not re-compile. Otherwise, just use pip install from the created wheel in the dist folder
+  \item[] \mybold{NOTE} that conda environments are highly recommended
+  %\item[] $\ra$ it may produce some errors, depending on your version; if there are some liker errors (saying that there is no '\texttt{-framework Cocoa' and '-framework OpenGL}', just go back in the terminal and copy everything from '\texttt{g++ ...}' until the end of the last command '\texttt{-mmacosx-verion-min...}' and paste it into the terminal. Calling that again will finalize linking; then run again
+  %%\item[] \texttt{python setup.py bdist\_wheel}
+  %\item[] $\ra$ this now creates the wheel (if you want to distribute) in the \texttt{dist} folder; note that this wheel has a wrong version number (11.0) while it may need to be changed to 10.9 manually in order that it can be installed
+  %\item \texttt{python setup.py install}
+  %\item[] to install exudyn
 \ei
 Then just go to the \texttt{pythonDev/Examples} folder and run an example:
 \bi
@@ -376,9 +382,9 @@ If graphics is used (\texttt{\#define USE\_GLFW\_GRAPHICS} in \texttt{BasicDefin
 \end{lstlisting}
 
 \noindent 
-With all of these libs, you can run the setup.py installer (go to \texttt{Exudyn\_git/main} folder), which takes some minutes for compilation (the --user option is used to install in local user folder):
+With all of these libs, you can run the setup.py installer (go to \texttt{Exudyn\_git/main} folder), which takes some minutes for compilation (the --user option is used to install in local user folder)\footnote{the \texttt{--parallel} option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x}:
 \begin{lstlisting}
-  sudo python3 setup.py install --user
+  sudo python3 setup.py install --user --parallel
 \end{lstlisting}
 
 \noindent 
@@ -390,7 +396,7 @@ Congratulation! \mybold{Now, run a test example} (will also open an OpenGL windo
 \noindent You can also create a UBUNTU wheel which can be easily installed on the same machine (x64), same operating system (UBUNTU18.04) and with same Python version (e.g., 3.6):
 \bi
   \item[] \texttt{sudo pip3 install wheel}
-  \item[] \texttt{sudo python3 setup.py bdist\_wheel}
+  \item[] \texttt{sudo python3 setup.py bdist\_wheel --parallel}
 \ei
 
 \noindent \mybold{Exudyn under Ubuntu / WSL}:
@@ -582,10 +588,18 @@ This information is also provided in the sensor output files.
 \item[$\ra$] You mixed up 32 and 64 bits version (see below) 
 \item[$\ra$] You are using an exudyn version for Python $x_1.y_1$ (e.g., 3.6.$z_1$) different from the Python $x_2.y_2$ version in your Anaconda (e.g., 3.7.$z_2$); note that $x_1=x_2$ and $y_1=y_2$ must be obeyed while $z_1$ and $z_2$ may be different
 \ei
-\item \mybold{ModuleNotFoundError: No module named 'exudynCPP'}:\\
+%\item \mybold{ModuleNotFoundError: No module named 'exudynCPP' ... }:\\
+\item \mybold{Import of exudyn C++ module failed Warning: ... }:\\
 \bi
+\item[$\ra$] ... and similar messages with: ModuleNotFoundError, Warning, with AVX2, without AVX2
 \item[$\ra$] A known reason is that your CPU \mybold{does not support AVX2}, while \codeName\ is compiled with the AVX2 option\footnote{modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, especially Zen and Zen-2 architectures should have no problems with AVX2; however, low-cost Celeron, Pentium and older AMD processors do \mybold{not} support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this}.
-\item[$\ra$] \mybold{workaround} to solve the AVX problem: use the Python 3.6 version (up to \codeName V1.2.28 only the 32bit version), which is compiled without AVX2; you can also compile for your specific Python version without AVX if you adjust the \texttt{setup.py} file in the \texttt{main} folder.
+\item[$\ra$] \mybold{solution}: the release versions without the .dev1 ending in the wheel contain C++ libraries which are compiled without AVX/AVX2; the module loader will usually detect automatically, if your CPU supports AVX/AVX2; if not, it will load the 
+exudynCPPnoAVX.cp ... .pyd file; if this does not work, try\\
+\texttt{import sys}\\
+\texttt{sys.exudynCPUhasAVX2 = False}\\
+to explicitly load the version without AVX2.
+\item[$\ra$] you can also compile for your specific Python version without AVX if you adjust the \texttt{setup.py} file in the \texttt{main} folder.
+\item[$\ra$] \mybold{DEPRECATED workaround} to solve the AVX problem: use the Python 3.6 version (up to \codeName V1.2.28 only the 32bit version), which is compiled without AVX2.
 \item[$\ra$] The \texttt{ModuleNotFoundError} may also happen if something went wrong during installation (paths, problems with Anaconda, ..) $\ra$ very often a new installation of Anaconda and \codeName\ helps.
 \ei
 \ei

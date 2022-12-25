@@ -144,8 +144,8 @@ public:
 	//! initialize static step / time step; python-functions; do some outputs, checks, etc.
 	virtual void InitializeStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
 
-	//! finish static step / time step; write output of results to file
-	virtual void FinishStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
+	//! finish static step / time step; write output of results to file; writeSolution will switch on/off writing solution and sensor outputs
+	virtual void FinishStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool writeSolution=true);
 
 	//! perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual 
 	virtual bool DiscontinuousIteration(CSystem& computationalSystem, const SimulationSettings& simulationSettings);

@@ -31,7 +31,7 @@ protected:
 public:
 	MainSystemContainer()
 	{
-		AttachToRenderEngine(); //also sets exu.sys['currentRendererSystemContainer']
+		AttachToRenderEngineInternal(); //also sets exu.sys['currentRendererSystemContainer']
 	}
 
 	//! delete all systems (otherwise they could do illegal operations)
@@ -55,10 +55,16 @@ public:
 	bool WaitForRenderEngineStopFlag() { return visualizationSystems.WaitForRenderEngineStopFlag(); }
 
 	//! this function links the VisualizationSystemContainer to a render engine, such that the changes in the graphics structure drawn upon updates, etc.
-	bool AttachToRenderEngine(); 
+	bool AttachToRenderEngine() { return AttachToRenderEngineInternal(true); }; //only warn in this case!
+
+	//! internal function with option for warning
+	bool AttachToRenderEngineInternal(bool warnNoRenderer = false);
 
 	//! this function releases the VisualizationSystemContainer from the render engine;
-	bool DetachFromRenderEngine();
+	bool DetachFromRenderEngine() { return DetachFromRenderEngineInternal(true); } //only warn in this case
+
+	//! internal function with option for warning
+	bool DetachFromRenderEngineInternal(bool warnNoRenderer = false);
 
 	void PyZoomAll() { visualizationSystems.zoomAllRequest = true; }
 

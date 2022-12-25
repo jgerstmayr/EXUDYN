@@ -88,6 +88,7 @@ V,  coordinatesSolutionFileName,        ,       , FileName,                 "coo
 V,  writeSolutionToFile,                ,       , bool,                     true,       ,       P   , "flag (true/false), which determines if (global) solution vector is written to the solution file (coordinatesSolutionFile); standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional coordinates in the solution file, see the options below"
 V,  writeFileHeader,                    ,       , bool,                     true,       ,       P   , "flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)"
 V,  writeFileFooter,                    ,       , bool,                     true,       ,       P   , "flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics"
+V,  writeInitialValues,                 ,       , bool,                     true,       ,       P   , "flag (true/false); if true, initial values are exported for the start time; applies to coordinatesSolution and sensor files; this may not be wanted in the append file mode if the initial values are identical to the final values of a previous computation"
 V,  solutionWritePeriod,                ,       , UReal,                    0.01,       ,       P   , "time span (period), determines how often the solution file (coordinatesSolutionFile) is written during a simulation"
 V,  binarySolutionFile,                 ,       , bool,                     false,      ,       P   , "if true, the solution file is written in binary format for improved speed and smaller file sizes; setting outputPrecision >= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that appendToFile is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files"
 #                                                                                               
@@ -109,6 +110,7 @@ V,  restartWritePeriod,                 ,       , UReal,                    0.01
 #   
 V,  sensorsAppendToFile,                ,       , bool,                     false,      ,       P   , "flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations"
 V,  sensorsWriteFileHeader,             ,       , bool,                     true,       ,       P   , "flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)"
+V,  sensorsWriteFileFooter,             ,       , bool,                     false,      ,       P   , "flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration)"
 V,  sensorsWritePeriod,                 ,       , UReal,                    0.01,       ,       P   , "time span (period), determines how often the sensor output is written to file or internal storage during a simulation"
 #   
 V,  solutionInformation,                ,       , String,                   "",         ,       P   , "special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in \refSection{sec:utf8}, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)"
@@ -200,6 +202,7 @@ V,  dynamicSolverType,                  ,       , DynamicSolverType,"DynamicSolv
 V,  eliminateConstraints,               ,       , bool,                     true,       ,       P   , "True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!"
 V,  useLieGroupIntegration,             ,       , bool,                     true,       ,       P   , "True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates!"
 V,  computeEndOfStepAccelerations,      ,       , bool,                     true,       ,       P   , "accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different"
+V,  computeMassMatrixInversePerBody,    ,       , bool,                     false,      ,       P   , "If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded)"
 #
 writeFile=SimulationSettings.h
 
@@ -593,8 +596,9 @@ V,      initialModelRotation,           ,                  3x3,    StdArray33F, 
 V,      perspective,                    ,                  ,     UFloat,       "0.f",                  , P,      "parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 0.5 (large amount of perspective); mouse coordinates will not work with perspective"
 V,      shadow,                         ,                  ,     UFloat,       "0.f",                  , P,      "parameter $\in [0 ... 1]$ prescribes amount of shadow for light0 (using light0position, etc.); if this parameter is different from 1, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows"
 V,      shadowPolygonOffset,            ,                  ,     PFloat,       "0.1f",                 , P,      "some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies"
+V,      polygonOffset,                  ,                  ,     float,        "0.01f",                , P,      "general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models"
 # 
-V,      multiSampling,                  ,                  1,    PInt,         "1",                    , P,      "multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!"
+V,      multiSampling,                  ,                  1,    PInt,         "1",                    , P,      "NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!"
 V,      lineWidth,                      ,                  1,    UFloat,       "1.f",                  , P,      "width of lines used for representation of lines, circles, points, etc."
 V,      lineSmooth,                     ,                  1,    bool,         true,                   , P,      "draw lines smooth"
 V,      textLineWidth,                  ,                  1,    UFloat,       "1.f",                  , P,      "width of lines used for representation of text"
@@ -605,6 +609,7 @@ V,      showFaceEdges,                  ,                  1,    bool,         f
 V,      showLines,                      ,                  1,    bool,         true,                   , P,      "show lines (different from edges of faces)"
 V,      showMeshFaces,                  ,                  1,    bool,         true,                   , P,      "show faces of finite elements; independent of showFaces"
 V,      showMeshEdges,                  ,                  1,    bool,         true,                   , P,      "show edges of finite elements; independent of showFaceEdges"
+V,      faceEdgesColor,                 ,                  4,    Float4,       "Float4({0.2f,0.2f,0.2f,1.f})",,P,"global RGBA color for face edges"
 #
 V,      shadeModelSmooth,               ,                  1,    bool,         true,                   , P,      "True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces"
 V,      materialAmbientAndDiffuse,      ,                  4,    Float4,       "Float4({0.6f,0.6f,0.6f,1.f})",, P,"4f ambient color of material"
@@ -661,6 +666,19 @@ V,      heightAlignment,                ,                  ,     PInt,         2
 #
 writeFile=VisualizationSettings.h
 
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#settings for openVR
+class = VSettingsOpenVR
+appendToFile=True
+writePybindIncludes = True
+classDescription = "Functionality to interact openVR; requires special hardware or software emulator, see steam / openVR descriptions"
+#V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
+#have been in VSettingsWindows earlier:
+V,      enableOpenVR,                   ,                  ,     bool,         false,                 , P,      "True: openVR enabled (if compiled with according flag and installed openVR)"
+V,      showCompanionWindow,            ,                  ,     bool,         true,                  , P,      "True: openVR will show companion window containing left and right eye view"
+writeFile=VisualizationSettings.h
+
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #settings that are used for interaction with renderer: 
 class = VSettingsInteractive
@@ -669,6 +687,7 @@ writePybindIncludes = True
 classDescription = "Functionality to interact with render window; will include left and right mouse press actions and others in future."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 #have been in VSettingsWindows earlier:
+V,      openVR,                         ,                  ,     VSettingsOpenVR,    ,                 , PS,     "openVR visualization settings"
 V,      keypressRotationStep,           ,                  ,     float,        "5.f",                  , P,      "rotation increment per keypress in degree (full rotation = 360 degree)"
 V,      mouseMoveRotationFactor,        ,                  ,     float,        "1.f",                  , P,      "rotation increment per 1 pixel mouse movement in degree"
 V,      keypressTranslationStep,        ,                  ,     float,        "0.1f",                 , P,      "translation increment per keypress relative to window size"

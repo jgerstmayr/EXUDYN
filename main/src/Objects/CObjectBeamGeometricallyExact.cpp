@@ -117,8 +117,10 @@ Vector3D CObjectBeamGeometricallyExact::MapVectors(const Vector2D& SV, const Vec
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! Computational function: compute mass matrix
-void CObjectBeamGeometricallyExact::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
+void CObjectBeamGeometricallyExact::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
+	CHECKandTHROW(!computeInverse, "CObjectBeamGeometricallyExact::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings");
+
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	massMatrix.SetScalarMatrix(GetODE2Size(), 0.); //set 6x6 matrix
 

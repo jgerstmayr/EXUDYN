@@ -91,33 +91,39 @@ void CSolverExplicitTimeInt::PostInitializeSolverSpecific(CSystem& computational
 	//++++++++++++++++++++++++++++++++++++++
 	//initialize special for Explicit solver:
 	hasConstantMassMatrix = computationalSystem.HasConstantMassMatrix();
+	computeMassMatrixInversePerBody = simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody;
+
+	if (!simulationSettings.timeIntegration.reuseConstantMassMatrix) { hasConstantMassMatrix = false; }
 
 	if (hasConstantMassMatrix)
 	{
 		//compute mass matrix
 		STARTTIMER(timer.massMatrix);
 		data.systemMassMatrix->SetAllZero();
-		computationalSystem.ComputeMassMatrix(data.tempCompDataArray, *(data.systemMassMatrix));
+		computationalSystem.ComputeMassMatrix(data.tempCompDataArray, *(data.systemMassMatrix), computeMassMatrixInversePerBody);
 		STOPTIMER(timer.massMatrix);
 
-		//factorize mass matrix
-		STARTTIMER(timer.factorization); //for mass matrix
-		data.systemMassMatrix->FinalizeMatrix();
-
-		Index factorizeOutput = data.systemMassMatrix->FactorizeNew();
-		if (factorizeOutput != -1)
+		if (!computeMassMatrixInversePerBody) //no factorization needed!
 		{
-			std::string s = "CSolverExplicit: Initialization (with constant mass matrix): System mass matrix seems to be singular / not invertible!";
-			if (factorizeOutput < data.systemJacobian->NumberOfRows())
+			//factorize mass matrix
+			STARTTIMER(timer.factorization); //for mass matrix
+			data.systemMassMatrix->FinalizeMatrix();
+
+			Index factorizeOutput = data.systemMassMatrix->FactorizeNew();
+			if (factorizeOutput != -1)
 			{
-				s += "The solver returned the causing system equation number (coordinate number) = " + EXUstd::ToString(factorizeOutput) + "\n";
+				std::string s = "CSolverExplicit: Initialization (with constant mass matrix): System mass matrix seems to be singular / not invertible!";
+				if (factorizeOutput < data.systemJacobian->NumberOfRows())
+				{
+					s += "The solver returned the causing system equation number (coordinate number) = " + EXUstd::ToString(factorizeOutput) + "\n";
+				}
+				conv.linearSolverFailed = true;
+				conv.massMatrixNotInvertible = true;
+				conv.linearSolverCausingRow = factorizeOutput;
+				SysError(s); //this error is not recoverable
 			}
-			conv.linearSolverFailed = true;
-			conv.massMatrixNotInvertible = true;
-			conv.linearSolverCausingRow = factorizeOutput;
-			SysError(s); //this error is not recoverable
+			STOPTIMER(timer.factorization);
 		}
-		STOPTIMER(timer.factorization);
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++
@@ -575,7 +581,7 @@ bool CSolverExplicitTimeInt::ComputeODE2Acceleration(CSystem& computationalSyste
 	{
 		STARTTIMER(timer.massMatrix);
 		massMatrix->SetAllZero();
-		computationalSystem.ComputeMassMatrix(data.tempCompDataArray, *massMatrix);
+		computationalSystem.ComputeMassMatrix(data.tempCompDataArray, *massMatrix, computeMassMatrixInversePerBody);
 		STOPTIMER(timer.massMatrix);
 	}
 	STARTTIMER(timer.ODE2RHS);
@@ -584,11 +590,16 @@ bool CSolverExplicitTimeInt::ComputeODE2Acceleration(CSystem& computationalSyste
 
 	if (IsVerbose(3))
 	{
-		Verbose(3, "  mass matrix  = " + EXUstd::ToString(*(massMatrix)) + "\n");
+		if (!hasConstantMassMatrix) //in case hasConstantMassMatrix=true, this will be either the finalized sparse matrix or the inverted dense matrix ...
+		{
+			STDstring strInv = "";
+			if (computeMassMatrixInversePerBody) { strInv = "inverted "; }
+				Verbose(3, "  " + strInv + "mass matrix  = " + EXUstd::ToString(*(massMatrix)) + "\n");
+		}
 		Verbose(3, "  RHS          = " + EXUstd::ToString(ode2Rhs) + "\n");
 	}
 
-	if (!hasConstantMassMatrix)
+	if (!hasConstantMassMatrix && !computeMassMatrixInversePerBody)
 	{
 		//factorize mass matrix
 		STARTTIMER(timer.factorization); //for mass matrix
@@ -620,7 +631,14 @@ bool CSolverExplicitTimeInt::ComputeODE2Acceleration(CSystem& computationalSyste
 	if (!conv.linearSolverFailed)
 	{
 		STARTTIMER(timer.newtonIncrement);
-		data.systemMassMatrix->Solve(ode2Rhs, ode2Acceleration);
+		if (!computeMassMatrixInversePerBody)
+		{
+			data.systemMassMatrix->Solve(ode2Rhs, ode2Acceleration);
+		}
+		else
+		{
+			data.systemMassMatrix->MultMatrixVector(ode2Rhs, ode2Acceleration);
+		}
 		STOPTIMER(timer.newtonIncrement);
 	}
 	return !conv.linearSolverFailed;

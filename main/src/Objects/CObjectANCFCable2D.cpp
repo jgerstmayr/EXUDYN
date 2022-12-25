@@ -176,8 +176,10 @@ void CObjectANCFCable2DBase::PreComputeMassTerms() const
 }
 
 //! Computational function: compute mass matrix
-void CObjectANCFCable2DBase::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber) const
+void CObjectANCFCable2DBase::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
+	CHECKandTHROW(!computeInverse, "CObjectANCFCable2DBase::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings");
+
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	PreComputeMassTerms();
 	massMatrix.CopyFrom(precomputedMassMatrix); //copy

@@ -10,15 +10,265 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.4.32.dev1, 
-  \item last change =  2022-12-06, 
-  \item Number of issues = 1302, 
-  \item Number of resolved issues = 1127 (32 in current version), 
+  \item Exudyn version = 1.5.0, 
+  \item last change =  2022-12-25, 
+  \item Number of issues = 1337, 
+  \item Number of resolved issues = 1161 (0 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.5.0}:  resolved Issue 1336: {\bf test suite}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: resolve linux problem with RigidBodySpringDamper.py MiniExample}
+    \item {\bf notes: problem in testsuite due to AVX differences, causing all non-AVX cases to fail (also linux); fixed with special case in reference solutions}
+    \item   date resolved: {\bf 2022-12-25 20:10},
+date raised: 2022-12-25 
+  \ei
+  \item {\bf Version 1.4.65}:  resolved Issue 1264: {\bf RollingDiscPenalty}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: correct torque on ground, which currently has no effect, but will be used for moving ground}
+    \item {\bf notes: resolved earlier}
+    \item   date resolved: {\bf 2022-12-25 12:15},
+date raised: 2022-09-17 
+  \ei
+  \item {\bf Version 1.4.64}:  resolved Issue 1298: {\bf ReevingSystemLinear}
+(testing)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add test model to test suite}
+    \item   date resolved: {\bf 2022-12-25 12:11},
+date raised: 2022-12-01 
+  \ei
+  \item {\bf Version 1.4.63}:  resolved Issue 1333: {\bf gcc linux}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: adjust -march compilation options for improved performance on linux; try -march=skylake for AVX2 optimization}
+    \item {\bf notes: did not work: either gives compilation errors or segmentation faults}
+    \item   date resolved: {\bf 2022-12-25 00:45},
+date raised: 2022-12-24 
+  \ei
+  \item {\bf Version 1.4.62}:  resolved Issue 1334: {\bf NOGLFW}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: remove SystemContainer constructor warning for AttachToRenderEngine in case of NOGLFW}
+    \item {\bf notes: also done for DetachFromRenderEngine}
+    \item   date resolved: {\bf 2022-12-25 00:06},
+date raised: 2022-12-25 
+  \ei
+  \item {\bf Version 1.4.61}:  resolved Issue 1332: {\bf MacOS}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: compilation does not finish due to -framework Cocoa, etc. errors}
+    \item {\bf notes: changed -framework library lists by separating commands into two separate strings; compilation now runs through for Python 3.8-3.10 on MacOS with M1 and 3.7.-3.10 on \_x86 emulation}
+    \item   date resolved: {\bf 2022-12-24 22:20},
+date raised: 2022-12-24 
+  \ei
+  \item {\bf Version 1.4.60}:  resolved Issue 1330: {\bf AVX2}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: fix check for AVX and AVX2 on module import}
+    \item   date resolved: {\bf 2022-12-21 19:33},
+date raised: 2022-12-21 
+  \ei
+  \item {\bf Version 1.4.59}:  resolved Issue 1329: {\bf SolutionViewer}
+(example)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add example for SolutionViewer with multiple static simulations performed, writing results into single file; see Examples/solutionViewerMultipleSimulations.py}
+    \item   date resolved: {\bf 2022-12-21 18:05},
+date raised: 2022-12-21 
+  \ei
+  \item {\bf Version 1.4.58}:  resolved Issue 1328: {\bf simulationSettings.solutionSettings}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option writeInitialValues in order to turn on/off writing of initial values for coordinatesSolution and sensors; by default turned on as was done so far}
+    \item   date resolved: {\bf 2022-12-21 14:07},
+date raised: 2022-12-21 
+  \ei
+  \item {\bf Version 1.4.57}:  resolved Issue 1037: {\bf sensor files}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add file footer information same as in coordinatesSolutionFile including CPUtimeElapsed with 3 digits}
+    \item {\bf notes: turned on by default, but should be switched off if it causes compatibility problems for your postprocessing tool}
+    \item   date resolved: {\bf 2022-12-21 12:09},
+date raised: 2022-04-07 
+  \ei
+  \item {\bf Version 1.4.56}:  resolved Issue 1327: {\bf sensorsWriteFileHeader}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: not working}
+    \item {\bf notes: added option into solver, now turning on/off as desired; added option into solver, now turning on/off as desired; added option into solver, now turning on/off as desired}
+    \item   date resolved: {\bf 2022-12-21 12:06},
+date raised: 2022-12-21 
+  \ei
+  \item {\bf Version 1.4.55}:  resolved Issue 1317: {\bf DistanceSensor}
+(example)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: Add example with distance sensor}
+    \item   date resolved: {\bf 2022-12-20 13:49},
+date raised: 2022-12-16 
+  \ei
+  \item {\bf Version 1.4.54}:  resolved Issue 1318: {\bf DistanceSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: Add measurement for GeneralContact trigsRigidBody}
+    \item   date resolved: {\bf 2022-12-19 21:49},
+date raised: 2022-12-16 
+  \ei
+  \item {\bf Version 1.4.53}:  resolved Issue 1316: {\bf DistanceSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add utilities function to create DistanceSensor based on general contact}
+    \item {\bf notes: added AddDistanceSensor to exudyn utilities.py}
+    \item   date resolved: {\bf 2022-12-19 01:09},
+date raised: 2022-12-16 
+  \ei
+  \item {\bf Version 1.4.52}:  resolved Issue 1324: {\bf DistanceSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: utilities function AddDistanceSensor extended for measureVelocity to measure velocity similar as in a laser Doppler vibrometer (LDV)}
+    \item   date resolved: {\bf 2022-12-18 20:59},
+date raised: 2022-12-18 
+  \ei
+  \item {\bf Version 1.4.51}:  resolved Issue 1320: {\bf GeneralContact}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add binary contact types to pybind interface; add conversion of binary types to type indices}
+    \item {\bf notes: only TypeIndex added which is sufficient for DistanceSensor}
+    \item   date resolved: {\bf 2022-12-17 00:32},
+date raised: 2022-12-16 
+  \ei
+  \item {\bf Version 1.4.50}:  resolved Issue 1319: {\bf DistanceSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: Add radius for option to measure with cylinder with given radius instead of line; useful for particles}
+    \item   date resolved: {\bf 2022-12-17 00:32},
+date raised: 2022-12-16 
+  \ei
+  \item {\bf Version 1.4.49}:  resolved Issue 1321: {\bf DistanceSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: Add option to select which contact types are considered}
+    \item   date resolved: {\bf 2022-12-17 00:31},
+date raised: 2022-12-16 
+  \ei
+  \item {\bf Version 1.4.48}:  resolved Issue 1322: {\bf AVX2 import}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add checks based on numpy.core.\_multiarray\_umath to find if CPU has AVX2 support; in release, user may directly import noAVX version by setting sys.exudynCPUhasAVX2=False}
+    \item   date resolved: {\bf 2022-12-16 23:42},
+date raised: 2022-12-16 
+  \ei
+  \item {\bf Version 1.4.47}: {\bf \color{warningRed}  resolved BUG 1315}: {\bf SetSearchTreeBox}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: has no effect, and searchTree is always computed automatically}
+    \item {\bf notes: now search tree can be initialized smaller or larger than initial geometry in order to optimize for specific problem}
+    \item   date resolved: {\bf 2022-12-15 21:20},
+date raised: 2022-12-15 
+  \ei
+  \item {\bf Version 1.4.46}:  resolved Issue 1268: {\bf DistanceSensor}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add simple distance sensor}
+    \item {\bf notes: can be realized with GeneralContact and SensorUserFunction}
+    \item   date resolved: {\bf 2022-12-15 20:23},
+date raised: 2022-09-21 
+  \ei
+  \item {\bf Version 1.4.45}:  resolved Issue 1271: {\bf GeneralContact}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: Add interface functions for GeneralContact: allowing to measure distance along a line; get markers/spheres in box; get beams in box; etc.}
+    \item   date resolved: {\bf 2022-12-15 20:20},
+date raised: 2022-09-21 
+  \ei
+  \item {\bf Version 1.4.44}:  resolved Issue 1313: {\bf AVX2}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add additional library without AVX and use try/except to import exudynCPPnoAVX in case that AVX2 is not available}
+    \item   date resolved: {\bf 2022-12-14 20:27},
+date raised: 2022-12-14 
+  \ei
+  \item {\bf Version 1.4.43}:  resolved Issue 1312: {\bf SolveDynamic}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add flag computeMassMatrixInversePerBody for explicit time integration to compute mass matrix inverse per body; read theDoc and use with care!}
+    \item {\bf notes: check your models! ComputeMassMatrix has been adapted for every body!!!}
+    \item   date resolved: {\bf 2022-12-13 21:00},
+date raised: 2022-12-13 
+  \ei
+  \item {\bf Version 1.4.42}:  resolved Issue 1311: {\bf DynamicSolver}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: include flag timeIntegration.reuseConstantMassMatrix into explicit solver; up to now, this option was always turned on}
+    \item   date resolved: {\bf 2022-12-13 18:51},
+date raised: 2022-12-13 
+  \ei
+  \item {\bf Version 1.4.41}:  resolved Issue 1310: {\bf searchTreeUpdateCounter}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: needs reset to 0 after reaching limit}
+    \item   date resolved: {\bf 2022-12-13 17:58},
+date raised: 2022-12-13 
+  \ei
+  \item {\bf Version 1.4.40}:  resolved Issue 0847: {\bf GeneralContact searchtree}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add options to recompute searchtree size if particles are moving out of region; add option to flush all dynamical arrays (searchtree, allActiveContacts, etc.) after certain time}
+    \item {\bf notes: added option resetSearchTreeInterval into GeneralContact settings}
+    \item   date resolved: {\bf 2022-12-12 10:40},
+date raised: 2021-12-23 
+  \ei
+  \item {\bf Version 1.4.39}:  resolved Issue 1309: {\bf rigidBodyUtilities}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: AddRigidBody: add default argument for nodeType as RotationEulerParameters; simplifies creation of rigid bodies}
+    \item   date resolved: {\bf 2022-12-08 18:16},
+date raised: 2022-12-08 
+  \ei
+  \item {\bf Version 1.4.38}:  resolved Issue 1302: {\bf GL\_POLYGON\_OFFSET\_FILL}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: correct polygon offset setting for regular faces/lines and add adjustable parameter in visualizationSettings}
+    \item   date resolved: {\bf 2022-12-08 01:50},
+date raised: 2022-12-06 
+  \ei
+  \item {\bf Version 1.4.37}:  resolved Issue 1307: {\bf OpenGL}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: change line and polygon drawing in order to avoid line artifacts; newly introduced polygon offset may cause problems: check your visualization, send reports if problems and set polygonOffset=0 in severe cases}
+    \item   date resolved: {\bf 2022-12-08 01:06},
+date raised: 2022-12-08 
+  \ei
+  \item {\bf Version 1.4.36}:  resolved Issue 1304: {\bf ConnectorRollingDiscPenalty}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extend docu for arbitrary planeNormal and moving ground}
+    \item   date resolved: {\bf 2022-12-07 21:57},
+date raised: 2022-12-07 
+  \ei
+  \item {\bf Version 1.4.35}:  resolved Issue 1306: {\bf ObjectJointRollingDisc}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add discAxis to object parameters, being able to change from default x-axis}
+    \item   date resolved: {\bf 2022-12-07 20:18},
+date raised: 2022-12-07 
+  \ei
+  \item {\bf Version 1.4.34}:  resolved Issue 1305: {\bf ObjectJointRollingDisc}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: change computation of trail, generalized for two bodies moving relative to each other (needs further testing)}
+    \item   date resolved: {\bf 2022-12-07 20:18},
+date raised: 2022-12-07 
+  \ei
+  \item {\bf Version 1.4.33}:  resolved Issue 1303: {\bf ConnectorRollingDiscPenalty}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: extended formulation for arbitrary planeNormal; ground body can now also move in space (testing needed)}
+    \item   date resolved: {\bf 2022-12-07 17:49},
+date raised: 2022-12-07 
+  \ei
   \item {\bf Version 1.4.32}:  resolved Issue 1301: {\bf graphicsDataUtilities}
 (fix)
   \begin{itemize}[label=$\bullet$]

@@ -79,9 +79,9 @@ print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-fact = 10000
+fact = 20000 #10000
 simulationSettings.timeIntegration.numberOfSteps = 1*fact
-simulationSettings.timeIntegration.endTime = 0.001*fact*0.5
+simulationSettings.timeIntegration.endTime = 0.001*fact*0.5*4
 simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact*10
 simulationSettings.timeIntegration.verboseMode = 1
 

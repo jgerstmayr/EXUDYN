@@ -19,23 +19,56 @@
 #import exudyn
 
 import sys
-useExudynFast = hasattr(sys, 'exudynFast')
-if useExudynFast:
-    useExudynFast = sys.exudynFast #could also be False!
+__useExudynFast = hasattr(sys, 'exudynFast')
+if __useExudynFast:
+    __useExudynFast = sys.exudynFast #could also be False!
+
+__cpuHasAVX2 = hasattr(sys, 'exudynCPUhasAVX2')
+if __cpuHasAVX2:
+    __cpuHasAVX2 = sys.exudynCPUhasAVX2 #could also be False!
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#use numpy.core to find if AVX+AVX2 is available ...
+try:
+    if sys.platform != 'darwin': #MacOS does not support AVX2, therefore there are not non-AVX modules compiled ...
+        from numpy.core._multiarray_umath import __cpu_features__
+        if (('AVX' in __cpu_features__) and ('AVX2' in __cpu_features__) and
+            (__cpu_features__['AVX'] == True) and (__cpu_features__['AVX2'] == True)):
+            if not __cpuHasAVX2 and hasattr(sys, 'exudynCPUhasAVX2'):
+                print('WARNING: user deactivated AVX2 support, but support detected on current CPU')
+            else:
+                __cpuHasAVX2 = True
+        elif __cpuHasAVX2:
+            print('WARNING: user activated AVX2 support, but no AVX2 support has been detected on current CPU; may crash')
+    else:
+        __cpuHasAVX2 = True
+except:
+    print('Warning: during import of exudyn, it was detected that either numpy or the numpy.core module "_multiarray_umath" is missing')
 
 try:
     #for regular loading in installed python package
-    if useExudynFast:
-        print('Importing exudyn fast version without range checks...')
+    if __useExudynFast and __cpuHasAVX2:
         try:
             from .exudynCPPfast import *
+            print('Imported exudyn fast version without range checks')
         except:
-            useExudynFast = False
+            __useExudynFast = False
             print('Import of exudyn fast version failed; falling back to regular version')
+    else:
+        __useExudynFast = False #in case __useExudynFast=True but no AVX
+
+    if not __useExudynFast:
+        if __cpuHasAVX2:
+            try:
+                from .exudynCPP import *
+            except:
+                raise ImportError('Warning: Import of exudyn C++ module (with AVX2) failed; check your installation or try to import without VX by settings sys.exudynCPUhasAVX2=False')
+        else:
+            try:
+                from .exudynCPPnoAVX import *
+            except:
+                raise ImportError('Import of exudyn C++ module (without AVX2) failed; non-AVX2 versions are only available in release versions (without .dev1 appendix); check your installation, Python version, conda environment and site-packages for exudyn; try re-installation')
             
-    if not useExudynFast:
-        from .exudynCPP import *
 except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders); no exudynFast! :
     try:

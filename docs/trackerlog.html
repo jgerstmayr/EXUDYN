@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1302, 
-Number of resolved issues = 1127 (32 in current minor version), 
-Exudyn version = 1.4.32.dev1, 
-last change =  2022-12-06
+Number of issues = 1337, 
+Number of resolved issues = 1161 (0 in current minor version), 
+Exudyn version = 1.5.0, 
+last change =  2022-12-25
 
 
 <table style = "width:100%">
@@ -39,15 +39,111 @@ last change =  2022-12-06
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>1298</td>
-    <td>ReevingSystemLinear </td>
+    <td>1335</td>
+    <td>RollingDiscPenalty  </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> add test model to test suite</td>
-    <td>TESTING</td>
+    <td> add test example for ground moving (rotating table</td>
+    <td>EXTENSION</td>
     <td></td>
-    <td>2022-12-01</td>
-    <td>2023-05-30</td>
+    <td>2022-12-25</td>
+    <td>2023-06-23</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1331</td>
+    <td>exudyn cpp          </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add __repr__ and help which writes some information on workflow (github, theDoc, Examples, ...)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-21</td>
+    <td>2023-06-19</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1326</td>
+    <td>OpenVR              </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add OpenVR license and mention in getting started</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-12-20</td>
+    <td>2023-06-18</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1325</td>
+    <td>MergeGraphicsDataTriangleList</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> merging of edges erroneous or problems with GraphicsDataCylinder</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-19</td>
+    <td>2023-06-17</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1323</td>
+    <td>AVX2                </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> update documentation for improved functionality with AVX2 code</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-17</td>
+    <td>2023-06-15</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1314</td>
+    <td>Pybind11            </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> test compilation with higher version of pybind11 (currently pybind11=2.6.0 in setup.py</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-12-14</td>
+    <td>2023-06-12</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1308</td>
+    <td>OpenGL texts        </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add sub function for drawing text bitmaps; use different order of drawing for transparent and non-transparent triangles to get improved text drawing</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-08</td>
+    <td>2023-06-06</td>
     <td></td>
     <td></td>
     <td></td>
@@ -119,22 +215,6 @@ last change =  2022-12-06
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>1271</td>
-    <td>DistanceSensor      </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Add way to collect visualization object triangulation during computation; needed for distance sensors; add ConfigurationType to GraphicsUpdate interface; alternatively, would only work single-threaded</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-09-21</td>
-    <td>2023-03-20</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
     <td>1270</td>
     <td>DistanceSensor      </td>
     <td>JG</td>
@@ -156,22 +236,6 @@ last change =  2022-12-06
     <td>JG</td>
     <td>RAISED  </td>
     <td> add advanced distance sensors replicating laser scanner (with axis, revolution speed and initial direction)</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-09-21</td>
-    <td>2023-03-20</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1268</td>
-    <td>DistanceSensor      </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add simple distance sensor</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2022-09-21</td>
@@ -208,22 +272,6 @@ last change =  2022-12-06
     <td></td>
     <td>2022-09-21</td>
     <td>2023-03-20</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1264</td>
-    <td>RollingDiscPenalty  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> correct torque on ground, which currently has no effect, but will be used for moving ground</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-09-17</td>
-    <td>2023-03-16</td>
     <td></td>
     <td></td>
     <td></td>
@@ -640,22 +688,6 @@ last change =  2022-12-06
     <td></td>
     <td>2022-04-25</td>
     <td>2022-06-24</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>1037</td>
-    <td>sensor files        </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add file footer information same as in coordinatesSolutionFile including CPUtimeElapsed with 3 digits</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-04-07</td>
-    <td>2022-06-06</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1328,22 +1360,6 @@ last change =  2022-12-06
     <td></td>
     <td>2021-12-26</td>
     <td>2022-02-24</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0847</td>
-    <td>GeneralContact searchtree</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add options to recompute searchtree size if particles are moving out of region; add option to flush all dynamical arrays (searchtree, allActiveContacts, etc.) after certain time</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-12-23</td>
-    <td>2022-02-21</td>
     <td></td>
     <td></td>
     <td></td>
@@ -2839,6 +2855,454 @@ last change =  2022-12-06
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1336</td>
+    <td>test suite          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> resolve linux problem with RigidBodySpringDamper.py MiniExample</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-25</td>
+    <td>2023-06-23</td>
+    <td>2022-12-25 20:10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>problem in testsuite due to AVX differences, causing all non-AVX cases to fail (also linux); fixed with special case in reference solutions</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1334</td>
+    <td>NOGLFW              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove SystemContainer constructor warning for AttachToRenderEngine in case of NOGLFW</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-12-25</td>
+    <td>2023-06-23</td>
+    <td>2022-12-25 00:06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>also done for DetachFromRenderEngine</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1333</td>
+    <td>gcc linux           </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> adjust -march compilation options for improved performance on linux; try -march=skylake for AVX2 optimization</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-12-24</td>
+    <td>2023-06-22</td>
+    <td>2022-12-25 00:45</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>did not work: either gives compilation errors or segmentation faults</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1332</td>
+    <td>MacOS               </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> compilation does not finish due to -framework Cocoa, etc. errors</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-24</td>
+    <td>2023-06-22</td>
+    <td>2022-12-24 22:20</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>changed -framework library lists by separating commands into two separate strings; compilation now runs through for Python 3.8-3.10 on MacOS with M1 and 3.7.-3.10 on _x86 emulation</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1330</td>
+    <td>AVX2                </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fix check for AVX and AVX2 on module import</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-21</td>
+    <td>2023-06-19</td>
+    <td>2022-12-21 19:33</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1329</td>
+    <td>SolutionViewer      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add example for SolutionViewer with multiple static simulations performed, writing results into single file; see Examples/solutionViewerMultipleSimulations.py</td>
+    <td>EXAMPLE</td>
+    <td></td>
+    <td>2022-12-21</td>
+    <td>2023-06-19</td>
+    <td>2022-12-21 18:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1328</td>
+    <td>simulationSettings.solutionSettings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option writeInitialValues in order to turn on/off writing of initial values for coordinatesSolution and sensors; by default turned on as was done so far</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-21</td>
+    <td>2023-06-19</td>
+    <td>2022-12-21 14:07</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1327</td>
+    <td>sensorsWriteFileHeader</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> not working</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-21</td>
+    <td>2023-06-19</td>
+    <td>2022-12-21 12:06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added option into solver, now turning on/off as desired; added option into solver, now turning on/off as desired; added option into solver, now turning on/off as desired</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1324</td>
+    <td>DistanceSensor      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> utilities function AddDistanceSensor extended for measureVelocity to measure velocity similar as in a laser Doppler vibrometer (LDV)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-18</td>
+    <td>2023-06-16</td>
+    <td>2022-12-18 20:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1322</td>
+    <td>AVX2 import         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add checks based on numpy.core._multiarray_umath to find if CPU has AVX2 support; in release, user may directly import noAVX version by setting sys.exudynCPUhasAVX2=False</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-16</td>
+    <td>2023-06-14</td>
+    <td>2022-12-16 23:42</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1321</td>
+    <td>DistanceSensor      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add option to select which contact types are considered</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-16</td>
+    <td>2023-06-14</td>
+    <td>2022-12-17 00:31</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1320</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add binary contact types to pybind interface; add conversion of binary types to type indices</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-16</td>
+    <td>2023-06-14</td>
+    <td>2022-12-17 00:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>only TypeIndex added which is sufficient for DistanceSensor</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1319</td>
+    <td>DistanceSensor      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add radius for option to measure with cylinder with given radius instead of line; useful for particles</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-16</td>
+    <td>2023-06-14</td>
+    <td>2022-12-17 00:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1318</td>
+    <td>DistanceSensor      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add measurement for GeneralContact trigsRigidBody</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-16</td>
+    <td>2023-06-14</td>
+    <td>2022-12-19 21:49</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1317</td>
+    <td>DistanceSensor      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add example with distance sensor</td>
+    <td>EXAMPLE</td>
+    <td></td>
+    <td>2022-12-16</td>
+    <td>2023-06-14</td>
+    <td>2022-12-20 13:49</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1316</td>
+    <td>DistanceSensor      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add utilities function to create DistanceSensor based on general contact</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-16</td>
+    <td>2023-06-14</td>
+    <td>2022-12-19 01:09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added AddDistanceSensor to exudyn utilities.py</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1315</td>
+    <td>SetSearchTreeBox    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> has no effect, and searchTree is always computed automatically</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2022-12-15</td>
+    <td>2023-06-13</td>
+    <td>2022-12-15 21:20</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>now search tree can be initialized smaller or larger than initial geometry in order to optimize for specific problem</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1313</td>
+    <td>AVX2                </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add additional library without AVX and use try/except to import exudynCPPnoAVX in case that AVX2 is not available</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-14</td>
+    <td>2023-06-12</td>
+    <td>2022-12-14 20:27</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1312</td>
+    <td>SolveDynamic        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add flag computeMassMatrixInversePerBody for explicit time integration to compute mass matrix inverse per body; read theDoc and use with care!</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-13</td>
+    <td>2023-06-11</td>
+    <td>2022-12-13 21:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>check your models! ComputeMassMatrix has been adapted for every body!!!</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1311</td>
+    <td>DynamicSolver       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> include flag timeIntegration.reuseConstantMassMatrix into explicit solver; up to now, this option was always turned on</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-13</td>
+    <td>2023-06-11</td>
+    <td>2022-12-13 18:51</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1310</td>
+    <td>searchTreeUpdateCounter</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> needs reset to 0 after reaching limit</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-13</td>
+    <td>2023-06-11</td>
+    <td>2022-12-13 17:58</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1309</td>
+    <td>rigidBodyUtilities  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> AddRigidBody: add default argument for nodeType as RotationEulerParameters; simplifies creation of rigid bodies</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-08</td>
+    <td>2023-06-06</td>
+    <td>2022-12-08 18:16</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1307</td>
+    <td>OpenGL              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change line and polygon drawing in order to avoid line artifacts; newly introduced polygon offset may cause problems: check your visualization, send reports if problems and set polygonOffset=0 in severe cases</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-12-08</td>
+    <td>2023-06-06</td>
+    <td>2022-12-08 01:06</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1306</td>
+    <td>ObjectJointRollingDisc</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add discAxis to object parameters, being able to change from default x-axis</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-07</td>
+    <td>2023-06-05</td>
+    <td>2022-12-07 20:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1305</td>
+    <td>ObjectJointRollingDisc</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change computation of trail, generalized for two bodies moving relative to each other (needs further testing)</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-12-07</td>
+    <td>2023-06-05</td>
+    <td>2022-12-07 20:18</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1304</td>
+    <td>ConnectorRollingDiscPenalty</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend docu for arbitrary planeNormal and moving ground</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-12-07</td>
+    <td>2023-06-05</td>
+    <td>2022-12-07 21:57</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1303</td>
+    <td>ConnectorRollingDiscPenalty</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extended formulation for arbitrary planeNormal; ground body can now also move in space (testing needed)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-07</td>
+    <td>2023-06-05</td>
+    <td>2022-12-07 17:49</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1302</td>
+    <td>GL_POLYGON_OFFSET_FILL</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> correct polygon offset setting for regular faces/lines and add adjustable parameter in visualizationSettings</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-06</td>
+    <td>2023-06-04</td>
+    <td>2022-12-08 01:50</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1301</td>
     <td>graphicsDataUtilities</td>
     <td>JG</td>
@@ -2885,6 +3349,22 @@ last change =  2022-12-06
     <td></td>
     <td></td>
     <td>computation of searchtree performed automatically now if no search tree box is specified; output message written in case of verboseMode=1</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1298</td>
+    <td>ReevingSystemLinear </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add test model to test suite</td>
+    <td>TESTING</td>
+    <td></td>
+    <td>2022-12-01</td>
+    <td>2023-05-30</td>
+    <td>2022-12-25 12:11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1297</td>
@@ -3239,6 +3719,38 @@ last change =  2022-12-06
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1271</td>
+    <td>GeneralContact      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add interface functions for GeneralContact: allowing to measure distance along a line; get markers/spheres in box; get beams in box; etc.</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-09-21</td>
+    <td>2023-03-20</td>
+    <td>2022-12-15 20:20</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1268</td>
+    <td>DistanceSensor      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add simple distance sensor</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-09-21</td>
+    <td>2023-03-20</td>
+    <td>2022-12-15 20:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>can be realized with GeneralContact and SensorUserFunction</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1265</td>
     <td>RollingDisc         </td>
     <td>JG</td>
@@ -3253,6 +3765,22 @@ last change =  2022-12-06
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1264</td>
+    <td>RollingDiscPenalty  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> correct torque on ground, which currently has no effect, but will be used for moving ground</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-09-17</td>
+    <td>2023-03-16</td>
+    <td>2022-12-25 12:15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>resolved earlier</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1263</td>
@@ -6455,6 +6983,22 @@ last change =  2022-12-06
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1037</td>
+    <td>sensor files        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add file footer information same as in coordinatesSolutionFile including CPUtimeElapsed with 3 digits</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-04-07</td>
+    <td>2022-06-06</td>
+    <td>2022-12-21 12:09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>turned on by default, but should be switched off if it causes compatibility problems for your postprocessing tool</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1036</td>
     <td>solution file       </td>
     <td>JG</td>
@@ -8805,6 +9349,22 @@ last change =  2022-12-06
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0847</td>
+    <td>GeneralContact searchtree</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add options to recompute searchtree size if particles are moving out of region; add option to flush all dynamical arrays (searchtree, allActiveContacts, etc.) after certain time</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-23</td>
+    <td>2022-02-21</td>
+    <td>2022-12-12 10:40</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added option resetSearchTreeInterval into GeneralContact settings</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0846</td>

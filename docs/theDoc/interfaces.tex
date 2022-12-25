@@ -70,6 +70,7 @@ SolutionSettings has the following items:
     restartFileName &     FileName &      &     'restartFile.txt' &     filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart\\ \hline
     restartWritePeriod &     UReal &      &     0.01 &     time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance\\ \hline
     sensorsAppendToFile &     bool &      &     False &     flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations\\ \hline
+    sensorsWriteFileFooter &     bool &      &     False &     flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration)\\ \hline
     sensorsWriteFileHeader &     bool &      &     True &     flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)\\ \hline
     sensorsWritePeriod &     UReal &      &     0.01 &     time span (period), determines how often the sensor output is written to file or internal storage during a simulation\\ \hline
     solutionInformation &     String &      &     '' &     special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in \refSection{sec:utf8}, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)\\ \hline
@@ -77,6 +78,7 @@ SolutionSettings has the following items:
     solverInformationFileName &     FileName &      &     'solverInformation.txt' &     \tabnewline filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '\_' only\\ \hline
     writeFileFooter &     bool &      &     True &     flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics\\ \hline
     writeFileHeader &     bool &      &     True &     flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)\\ \hline
+    writeInitialValues &     bool &      &     True &     flag (true/false); if true, initial values are exported for the start time; applies to coordinatesSolution and sensor files; this may not be wanted in the append file mode if the initial values are identical to the final values of a previous computation\\ \hline
     writeRestartFile &     bool &      &     False &     flag (true/false), which determines if restart file is written regularly, see restartFileName for details\\ \hline
     writeSolutionToFile &     bool &      &     True &     flag (true/false), which determines if (global) solution vector is written to the solution file (coordinatesSolutionFile); standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional coordinates in the solution file, see the options below\\ \hline
 	  \end{longtable}
@@ -182,6 +184,7 @@ ExplicitIntegrationSettings has the following items:
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     computeEndOfStepAccelerations &     \tabnewline bool &      &     True &     accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different\\ \hline
+    computeMassMatrixInversePerBody &     \tabnewline bool &      &     False &     If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded)\\ \hline
     dynamicSolverType &     DynamicSolverType &      &     DynamicSolverType::DOPRI5 &     \tabnewline selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, ...), for detailed description see DynamicSolverType, \refSection{sec:DynamicSolverType}, but only referring to explicit solvers.\\ \hline
     eliminateConstraints &     bool &      &     True &     True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!\\ \hline
     useLieGroupIntegration &     bool &      &     True &     True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates!\\ \hline
@@ -630,6 +633,7 @@ VSettingsOpenGL has the following items:
     enableLight0 &     bool &     1 &     True &     turn on/off light0\\ \hline
     enableLight1 &     bool &     1 &     True &     turn on/off light1\\ \hline
     enableLighting &     bool &     1 &     True &     generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL\_LIGHTING)\\ \hline
+    faceEdgesColor &     Float4 &     4 &     [0.2,0.2,0.2,1.] &     \tabnewline global RGBA color for face edges\\ \hline
     facesTransparent &     bool &     1 &     False &     True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers\\ \hline
     initialCenterPoint &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True\\ \hline
     initialMaxSceneSize &     PFloat &      &     1. &     initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True\\ \hline
@@ -657,8 +661,9 @@ VSettingsOpenGL has the following items:
     materialAmbientAndDiffuse &     Float4 &     4 &     [0.6,0.6,0.6,1.] &     \tabnewline 4f ambient color of material\\ \hline
     materialShininess &     float &     1 &     32. &     shininess of material\\ \hline
     materialSpecular &     Float4 &     4 &     [0.6,0.6,0.6,1.] &     \tabnewline 4f specular color of material\\ \hline
-    multiSampling &     PInt &     1 &     1 &     multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!\\ \hline
+    multiSampling &     PInt &     1 &     1 &     NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!\\ \hline
     perspective &     UFloat &      &     0. &     parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 0.5 (large amount of perspective); mouse coordinates will not work with perspective\\ \hline
+    polygonOffset &     float &      &     0.01 &     general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models\\ \hline
     shadeModelSmooth &     bool &     1 &     True &     True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces\\ \hline
     shadow &     UFloat &      &     0. &     parameter $\in [0 ... 1]$ prescribes amount of shadow for light0 (using light0position, etc.); if this parameter is different from 1, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows\\ \hline
     shadowPolygonOffset &     PFloat &      &     0.1 &     some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies\\ \hline
@@ -698,6 +703,22 @@ VSettingsExportImages has the following items:
 	\end{center}
 
 %+++++++++++++++++++++++++++++++++++
+\mysubsubsection{VSettingsOpenVR} \label{sec:VSettingsOpenVR}
+Functionality to interact openVR; requires special hardware or software emulator, see steam / openVR descriptions. \\ 
+%
+VSettingsOpenVR has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    enableOpenVR &     bool &      &     False &     True: openVR enabled (if compiled with according flag and installed openVR)\\ \hline
+    showCompanionWindow &     bool &      &     True &     True: openVR will show companion window containing left and right eye view\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
 \mysubsubsection{VSettingsInteractive} \label{sec:VSettingsInteractive}
 Functionality to interact with render window; will include left and right mouse press actions and others in future.\\ 
 %
@@ -708,6 +729,7 @@ VSettingsInteractive has the following items:
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    openVR &     VSettingsOpenVR &      &      &     openVR visualization settings\\ \hline
     highlightColor &     Float4 &     4 &     [0.8,0.05,0.05,0.75] &     \tabnewline cRGB color for highlighted item; 4th value is alpha-transparency\\ \hline
     highlightItemIndex &     Int &      &     -1 &     index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted\\ \hline
     highlightItemType &     ItemType &      &     ItemType::\_None &     item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)\\ \hline
