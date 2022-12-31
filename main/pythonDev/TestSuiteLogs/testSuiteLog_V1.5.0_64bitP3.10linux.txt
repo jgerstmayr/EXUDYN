@@ -1,0 +1,1525 @@
+
++++++++++++++++++++++++++++++++++++++++++++ 
++++++        EXUDYN TEST SUITE        +++++ 
++++++++++++++++++++++++++++++++++++++++++++ 
+EXUDYN version      = 1.5.0 
+EXUDYN build date   = 2022-12-26 02:09:42 
+architecture        = 64bit 
+processor           = x86 
+platform            = linux 
+python version      = 3.10.4 
+test tolerance      = 3e-11 
+testsuite date (now)= 2022-12-26 02:09:48 
++++++++++++++++++++++++++++++++++++++++++++ 
+
+
+****************************************** 
+  START EXAMPLE 0 ("ANCFcontactCircleTest.py"): 
+****************************************** 
+load f=0.012937500000000003 
+EI=0.01725 
+tip displacement: x=-0.10207143792176661, y=-0.4842698420787613 
+refsol= -0.4842698420787613 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 0 ("ANCFcontactCircleTest.py") FINISHED SUCCESSFUL 
+  RESULT = -0.4842698420787613 
+  ERROR = 0.0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 1 ("ANCFcontactFrictionTest.py"): 
+****************************************** 
+load f=129.37500000000003 
+EI=172.50000000000003 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP300, t = 0.15s, timeToGo = 0s, Nit/step = 3.21333
+solver finished after 0.32154 seconds.
+Solver iteration statistics:
+total number of steps:        300
+total number of Newton iterations: 964
+total number of Newton Jacobians:  964
+tip displacement: y=-0.014187561328096003 
+test result= -0.014187561328096003 
+refsol= -0.014187561328096003 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 1 ("ANCFcontactFrictionTest.py") FINISHED SUCCESSFUL 
+  RESULT = -0.014187561328096003 
+  ERROR = 0.0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 2 ("ANCFgeneralContactCircle.py"): 
+****************************************** 
+exudyn version= 1.5.0 
+pre-stretch force= -80.0 
+beam mass per length= 0.004 
+auto computed searchTree box={[-0.5,-0.5,-0.5], [2.5,0.5,0.5]}
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+  Solve steps: adaptive increase to step size = 0.0005 due to fast convergence, time = 0.00725
+  Solve steps: adaptive increase to step size = 0.001 due to fast convergence, time = 0.01825
+STEP130, t = 0.1s, timeToGo = 0s, Nit/step = 8.2
+solver finished after 0.290695 seconds.
+Solver iteration statistics:
+total number of steps:        130
+total number of Newton iterations: 1066
+total number of Newton Jacobians:  117
+rejected modified Newton steps:      6
+node0 pos:  [-0.09227833 -0.48937593  0.        ] 
+ANCFgeneralContactCircle sol= -0.5816542531639006 
+refsol= -0.5816542531620952 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 2 ("ANCFgeneralContactCircle.py") FINISHED SUCCESSFUL 
+  RESULT = -0.5816542531639006 
+  ERROR = -1.8054446826454296e-12 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 3 ("ANCFmovingRigidBodyTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: nonlinear static solver
+STEP2, factor = 1, timeToGo = 0s, Nit/step = 14
+solver finished after 0.0169707 seconds.
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP200, t = 0.1s, timeToGo = 0s, Nit/step = 1.16
+solver finished after 0.251441 seconds.
+static deflection  = -0.06446474690612931 
+dynamic deflection = -0.06446622244366207 
+ANCFmovingRigidBodyTest= -0.12893096934979137 
+refsol= -0.12893096934983617 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 3 ("ANCFmovingRigidBodyTest.py") FINISHED SUCCESSFUL 
+  RESULT = -0.12893096934979137 
+  ERROR = 4.4797499043625066e-14 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 4 ("ANCFslidingAndALEjointTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: nonlinear static solver
+
+Python WARNING [file '/home/johannes/miniconda3/envs/venvP310/lib/python3.10/site-packages/exudyn/solver.py', line 163]: 
+WARNING: SlidingJoint2D: sliding coordinate < 0; further warnings suppressed!
+
+
+WARNING: JointALEMoving2D: sliding coordinate < 0; further warnings suppressed!
+STEP10, factor = 1, timeToGo = 0s, Nit/step = 4.8
+solver finished after 0.0617815 seconds.
+select cable coordinate 42 
+static solution of cable1 = -2.197321887072465 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP400, t = 0.8s, timeToGo = 0s, Nit/step = 4.9925
+solver finished after 1.14241 seconds.
+Solver iteration statistics:
+total number of steps:        400
+total number of Newton iterations: 1997
+total number of Newton Jacobians:  1997
+dynamic solution of cable1 = -2.2290865036253926 
+result of ANCFslidingAndALEjointTest= -4.4264083906978575 
+refsol= -4.426408390697862 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 4 ("ANCFslidingAndALEjointTest.py") FINISHED SUCCESSFUL 
+  RESULT = -4.4264083906978575 
+  ERROR = 4.440892098500626e-15 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 5 ("carRollingDiscTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP250, t = 0.5s, timeToGo = 0s, Nit/step = 2.336
+solver finished after 0.129507 seconds.
+carRollingDiscTest u= -0.2394004871711386 
+refsol= -0.23940048717113782 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 5 ("carRollingDiscTest.py") FINISHED SUCCESSFUL 
+  RESULT = -0.2394004871711386 
+  ERROR = -7.771561172376096e-16 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 6 ("compareAbaqusAnsysRotorEigenfrequencies.py"): 
+****************************************** 
+natural frequencies from Ansys model, sparse= False : 104.63701055079551 
+natural frequencies from Abaqus model, sparse= False : 104.6370132606343 
+natural frequencies from Ansys model, sparse= True : 104.63701055079027 
+natural frequencies from Abaqus model, sparse= True : 104.63701326063902 
+error of compareAbaqusAnsysRotorEigenfrequencies (due to sparse solver)= 1.6569856597925535e-17 
+solution of compareAbaqusAnsysRotorEigenfrequencies (with treshold)= 0 
+refsol= 0.0004185480476228555 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 6 ("compareAbaqusAnsysRotorEigenfrequencies.py") FINISHED SUCCESSFUL 
+  RESULT = 0.00041854804762285903 
+  ERROR = 3.5236570605778894e-18 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 7 ("compareFullModifiedNewton.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP100, t = 2s, timeToGo = 0s, Nit/step = 6.13
+solver finished after 0.0017739 seconds.
+Solver iteration statistics:
+total number of steps:        100
+total number of Newton iterations: 613
+total number of Newton Jacobians:  49
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP100, t = 2s, timeToGo = 0s, Nit/step = 2.78
+solver finished after 0.0017685 seconds.
+Solver iteration statistics:
+total number of steps:        100
+total number of Newton iterations: 278
+total number of Newton Jacobians:  278
+compareFullModifiedNewton u= 0.00020079676000188396 
+refsol= 0.00020079676000188396 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 7 ("compareFullModifiedNewton.py") FINISHED SUCCESSFUL 
+  RESULT = 0.00020079676000188396 
+  ERROR = 0.0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 8 ("computeODE2EigenvaluesTest.py"): 
+****************************************** 
+EI=172.50000000000003 
+rhoA=0.78 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: nonlinear static solver
+eigenvalues= [ 83.17966446 229.28844645 449.50021797] 
+omega analytical = [ 83.17963697 229.28787233 449.4959069 ] 
+omega difference= -2.7480612004637806e-05 
+refsol= -2.749026293713541e-11 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 8 ("computeODE2EigenvaluesTest.py") FINISHED SUCCESSFUL 
+  RESULT = -2.7480612004637804e-11 
+  ERROR = 9.650932497606869e-15 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 9 ("connectorGravityTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: explicit time integration (RK67)
+STEP1000, t = 1e+06s, timeToGo = 0s, Nit/step = 0
+solver finished after 0.0170276 seconds.
+Solver iteration statistics:
+total number of steps:        1000
+total number of Newton iterations: 0
+total number of Newton Jacobians:  0
+result for ObjectConnectorGravity = 1014867.2330320379 
+refsol= 1014867.2330320379 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 9 ("connectorGravityTest.py") FINISHED SUCCESSFUL 
+  RESULT = 1014867.2330320379 
+  ERROR = 0.0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 10 ("connectorRigidBodySpringDamperTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP100, t = 0.1s, timeToGo = 0s, Nit/step = 1
+solver finished after 0.0061261 seconds.
+Solver iteration statistics:
+total number of steps:        100
+total number of Newton iterations: 100
+total number of Newton Jacobians:  100
+solution of connectorRigidBodySpringDamperTest= 0.18276224743611413 
+refsol= 0.1827622474318292 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 10 ("connectorRigidBodySpringDamperTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.18276224743611413 
+  ERROR = 4.284933519116407e-12 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 11 ("contactCoordinateTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP1281, t = 0.25s, timeToGo = 0s, Nit/step = 1.01874
+solver finished after 0.0052526 seconds.
+Solver iteration statistics:
+total number of steps:        1281
+total number of Newton iterations: 1305
+total number of Newton Jacobians:  1305
+contactCoordinateTest= 0.0553131995062827 
+refsol= 0.0553131995062827 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 11 ("contactCoordinateTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.0553131995062827 
+  ERROR = 0.0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 12 ("ConvexContactTest.py"): 
+****************************************** 
+PostNewton Connector 2: 0.0005: changed from gap 0 to 0.000920964
+PostNewton Connector 2: 0.014: changed from gap 2.8254e-05 to -3.91898e-05
+PostNewton Connector 2: 0.027: changed from gap -3.66667e-05 to 5.02363e-06
+PostNewton Connector 2: 0.0385: changed from gap 5.76866e-06 to -3.62366e-05
+result of ConvexContactTest= 0.011770267410492743 
+refsol= 0.011770267410694153 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 12 ("ConvexContactTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.011770267410492743 
+  ERROR = -2.014100691782872e-13 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 13 ("coordinateVectorConstraint.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP1000, t = 1s, timeToGo = 0s, Nit/step = 1.989
+solver finished after 0.0565152 seconds.
+p0= [-0.7056836384521086, -0.37684294131772444, 0.0] 
+solution of coordinateVectorConstraint= -1.0825265797698331 
+refsol= -1.0825265797698322 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 13 ("coordinateVectorConstraint.py") FINISHED SUCCESSFUL 
+  RESULT = -1.0825265797698331 
+  ERROR = -8.881784197001252e-16 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 14 ("coordinateVectorConstraintGenericODE2.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP1000, t = 1s, timeToGo = 0s, Nit/step = 1.989
+solver finished after 0.0496876 seconds.
+p0= [-0.7056836384521086, -0.37684294131772444, 0.0] 
+solution of coordinateVectorConstraint= -1.0825265797698331 
+refsol= -1.0825265797698322 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 14 ("coordinateVectorConstraintGenericODE2.py") FINISHED SUCCESSFUL 
+  RESULT = -1.0825265797698331 
+  ERROR = -8.881784197001252e-16 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 15 ("distanceSensor.py"): 
+****************************************** 
+auto computed searchTree box={[-1.03536,-1,-0.1], [1.9,1,0.1]}
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: explicit time integration (RK44)
+STEP2500, t = 0.25s, timeToGo = 1.81237e-14s, Nit/step = 0
+solver finished after 0.403805 seconds.
+pLast= [-0.6061511314921352, -0.27540810053094056, 0.0] 
+ 
+sensors= [ 1.56720969e-01 -4.00266307e-18] [1.08660730e-01 4.46753745e-17] [0.11237434 0.41190196] [0.2754081  0.93573925] [ 2.00000000e-01  4.00266307e-18 -4.46753745e-17] 
+ 
+solution of distanceSensor= 1.86776431077868 
+refsol= 1.867764310778691 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 15 ("distanceSensor.py") FINISHED SUCCESSFUL 
+  RESULT = 1.86776431077868 
+  ERROR = -1.0880185641326534e-14 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 16 ("driveTrainTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP1000, t = 0.1s, timeToGo = 0s, Nit/step = 6.414
+solver finished after 0.433978 seconds.
+phiCrank 0.8813172426357359 
+phiFlyWheel 0.881317335328855 
+solution of driveTrainTest= -9.26931191802538e-08 
+refsol= -9.269311940229841e-08 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 16 ("driveTrainTest.py") FINISHED SUCCESSFUL 
+  RESULT = -9.26931191802538e-08 
+  ERROR = 2.220446049250313e-16 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 17 ("explicitLieGroupIntegratorPythonTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP400, t = 0.01s, timeToGo = 0s, Nit/step = 0
+solver finished after 0.260763 seconds.
+explicitLieGroupIntegratorPythonTest= 149.84739395407578 
+refsol= 149.8473939540758 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 17 ("explicitLieGroupIntegratorPythonTest.py") FINISHED SUCCESSFUL 
+  RESULT = 149.84739395407578 
+  ERROR = -2.842170943040401e-14 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 18 ("explicitLieGroupIntegratorTest.py"): 
+****************************************** 
+DynamicSolverType.ExplicitMidpoint,h= 0.001 :
+  omega = [  -9.25903319 -100.05787564 -111.5601492 ] 
+  coords= [  0.           0.         -19.62        -0.29022561   1.22720976
+  -2.81489467] 
+DynamicSolverType.RK44,h= 0.001 :
+  omega = [ -27.67663523 -106.16651966 -102.45471373] 
+  coords= [  0.           0.         -19.62        -1.43361238   1.02208338
+  -2.29792145] 
+DynamicSolverType.RK67,h= 0.001 :
+  omega = [ -27.65849136 -106.16380496 -102.46246956] 
+  coords= [  0.           0.         -19.62        -1.43257991   1.02227719
+  -2.29872218] 
+DynamicSolverType.DOPRI5,h= 0.001 :
+  omega = [ -27.65851484 -106.16380357 -102.46246458] 
+  coords= [  0.           0.         -19.62        -1.43258163   1.02227688
+  -2.29872073] 
+nSteps= 8517 
+explicitLieGrouIntegratorTest result= 0.16164013319819048 
+explicitLieGrouIntegratorTest error= -2.7755575615628914e-16 
+refsol= 0.16164013319819065 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 18 ("explicitLieGroupIntegratorTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.16164013319819048 
+  ERROR = -1.6653345369377348e-16 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 19 ("fourBarMechanismTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP2000, t = 2s, timeToGo = 0s, Nit/step = 1.8385
+solver finished after 0.0343855 seconds.
+solution of fourbar mechanism = -2.376335780518213 
+refsol= -2.376335780518213 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 19 ("fourBarMechanismTest.py") FINISHED SUCCESSFUL 
+  RESULT = -2.376335780518213 
+  ERROR = 0.0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 20 ("generalContactFrictionTests.py"): 
+****************************************** 
+expect u0z= 0.001 
+expect uFy= 0.010000000000000002 
+force rolling= 0.5 , torque= 0.020000000000000004 
+auto computed searchTree box={[-1.25,-0.5125,-0.05], [0.5125,0.649,0.1875]}
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: explicit time integration (ExplicitEuler)
+STEP4000, t = 0.8s, timeToGo = 2.74527e-14s, Nit/step = 0
+solver finished after 0.395648 seconds.
+coords node2 = [ 8.49907263e-02  5.58639922e-01 -1.04989758e-03 -2.44482427e+00
+  1.31531977e+00  2.45961772e+00] 
+coords node5 = [ 0.         -0.00798223  0.          0.          0.          0.        ] 
+coords node7 = [0.         0.         0.         1.57793778 0.         0.        ] 
+coords node8 = [-2.31293519e-01  9.65140454e-04 -7.50578980e-02  5.20161111e-03
+  1.75628938e+00  4.17386641e-03] 
+coords node9 = [-8.04273961e-01  1.55718267e-01 -1.87877384e-02 -7.69549408e-04
+ -3.98160735e-04  1.21605752e+00] 
+solution of generalContactFrictionTest= 12.719348937635539 
+refsol= 12.464092000879125 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 20 ("generalContactFrictionTests.py") *FAILED* 
+  RESULT = 12.719348937635539 
+  ERROR = 0.2552569367564139 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 21 ("generalContactSpheresTest.py"): 
+****************************************** 
+create mass 0 
+treesize= 8000 
+finish gContact 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: explicit time integration (ExplicitEuler)
+STEP500, t = 0.1s, timeToGo = 0s, Nit/step = 0
+solver finished after 0.414201 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.414 seconds
+  measured time= 0.406 seconds (=98.1%) 
+  non-zero timer [__ sub-timer]:
+  newtonIncrement   = 0.558%
+  integrationFormula= 0.466%
+  ODE2RHS           = 97.4%
+  Python          = 0.133%
+  writeSolution     = 1.02%
+  overhead          = 0.299%
+  visualization/user= 0.129%
+special timers:
+  Contact:BoundingBoxes = 0.035195s
+  Contact:SearchTree = 0.024247s
+  Contact:ODE2RHS = 0.34975s
+
+u = [ 0.11531681 -0.26257086 -0.96660072] 
+solution of generalContactSpheresTest= -1.113854772025744 
+refsol= -1.1138547720263323 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 21 ("generalContactSpheresTest.py") FINISHED SUCCESSFUL 
+  RESULT = -1.113854772025744 
+  ERROR = 5.88418203051333e-13 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 22 ("genericJointUserFunctionTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP500, t = 2.5s, timeToGo = 0s, Nit/step = 7.578
+solver finished after 0.157035 seconds.
+pos= [0.23743829 0.6528568  0.30194331] 
+solution of GenericJointTest= 1.1922383967562014 
+refsol= 1.1922383967562884 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 22 ("genericJointUserFunctionTest.py") FINISHED SUCCESSFUL 
+  RESULT = 1.1922383967562014 
+  ERROR = -8.704148513061227e-14 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 23 ("genericODE2test.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP2000, t = 1s, timeToGo = 0s, Nit/step = 1
+solver finished after 0.129415 seconds.
+solution of genericODE2test= 0.036045463498998426 
+refsol= 0.036045463499024655 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 23 ("genericODE2test.py") FINISHED SUCCESSFUL 
+  RESULT = 0.036045463498998426 
+  ERROR = -2.6229018956769323e-14 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 24 ("geneticOptimizationTest.py"): 
+****************************************** 
+--- 0.07841730117797852 seconds --- 
+[pOpt, vOpt]= [{'mass': 2.532848072009533, 'spring': 6921.681730138393, 'force': 217.16911303068966}, 0.0030262381366063158] 
+optimum= 0.0030262381366063158 
+geneticOptimizationTest testResult= 0.10117518366826603 
+geneticOptimizationTest error= 0.0 
+refsol= 0.10117518366826603 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 24 ("geneticOptimizationTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.10117518366826603 
+  ERROR = 0.0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 25 ("geometricallyExactBeam2Dtest.py"): 
+****************************************** 
+n0= [0. 0. 0.] 
+p= [0.04419417 0.04419417 0.        ] 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: nonlinear static solver
+STEP10, factor = 1, timeToGo = 0s, Nit/step = 4.3
+solver finished after 0.002673 seconds.
+n = 16 , uTip = [-1.19715078 -2.21150284] 
+solution of geometricallyExactBeam2Dtest= -2.2115028353806525 
+refsol= -2.2115028353806547 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 25 ("geometricallyExactBeam2Dtest.py") FINISHED SUCCESSFUL 
+  RESULT = -2.2115028353806525 
+  ERROR = 2.220446049250313e-15 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 26 ("heavyTop.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP2000, t = 0.2s, timeToGo = 0s, Nit/step = 2.8585
+solver finished after 0.0899144 seconds.
+solution of heavy top = 33.42312575176969 
+refsol= 33.42312575174431 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 26 ("heavyTop.py") FINISHED SUCCESSFUL 
+  RESULT = 33.42312575176969 
+  ERROR = 2.538058652135078e-11 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 27 ("hydraulicActuatorSimpleTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP400, t = 0.4s, timeToGo = 0s, Nit/step = 2.405
+solver finished after 0.0059419 seconds.
+Solver iteration statistics:
+total number of steps:        400
+total number of Newton iterations: 962
+total number of Newton Jacobians:  1
+hydraulics C++: 
+pressures= [6443407.76152317 2988633.30906246] 
+velocity= [-0.00506708  0.20480658  0.        ] 
+solution of hydraulicActuatorSimpleTest = 7.130440021870296 
+refsol= 7.130440021870293 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 27 ("hydraulicActuatorSimpleTest.py") FINISHED SUCCESSFUL 
+  RESULT = 7.130440021870296 
+  ERROR = 2.6645352591003757e-15 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 28 ("kinematicTreeAndMBStest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP500, t = 0.5s, timeToGo = 0s, Nit/step = 7.336
+solver finished after 0.117628 seconds.
+Solver iteration statistics:
+total number of steps:        500
+total number of Newton iterations: 3668
+total number of Newton Jacobians:  32
+sensor MBS 0= [0.09649755382208104, 0.2, 0.3] 
+sensor KT 0 = [0.09649755964889589, 0.2, 0.3] 
+sensor MBS 1= [-0.036499862989128336, -1.7579704200596897e-47, 9.199695702533587e-21] 
+sensor KT 1 = [-0.036589024032178105, 0.0, 0.0] 
+sensor MBS 2= [4.343389797927872, -1.51956347605377, 4.0796542260661656e-19] 
+sensor KT 2 = [4.344370428538906, -1.5199923515106868, 0.0] 
+sensor MBS 3= [-4.871588806604391, 11.57551151719751, 9.57278575496325] 
+sensor KT 3 = [-4.871082209667621, 11.574798311096515, 9.573370704366695] 
+sensor MBS 4= [0.4096877204163693, 0.5407346039060749, -0.055733977059071904] 
+sensor KT 4 = [0.4096863782967384, 0.540725168099452, -0.05572705501765307] 
+sensor MBS 5= [-0.12931282908328592, 0.776942759276233, 0.9383230151459222] 
+sensor KT 5 = [-0.12930401977404407, 0.7769439243217634, 0.9383506256106702] 
+sensor MBS 6= [0.9828403825905387, -3.520885678828643, -0.46080266227913924] 
+sensor KT 6 = [0.9827936303138582, -3.520942263370706, -0.4606867367813093] 
+sensor MBS 7= [-9.762331477982084, -1.2803761283843413, -9.967031406616016] 
+sensor KT 7 = [-9.762063351236907, -1.2802252295518004, -9.966992566925343] 
+sensor MBS 8= [0.06234580991889782, -0.05869332788515269, -14.009884441702354] 
+sensor KT 8 = [0.062488139584255975, -0.05879655347456185, -14.009655118481668] 
+sensor MBS 9= [-7.2301226081903955, -28.751191683708186, 20.00356819229083] 
+sensor KT 9 = [-7.230364341111836, -28.75131454087253, 20.004135590274572] 
+sensor MBS 10= [-14.727606387334088, -0.7291537724340085, -35.429776373678365] 
+sensor KT 10 = [-14.725446877365442, -0.7262283175770201, -35.43283157505526] 
+solution of kinematicTreeAndMBStest 1= 257.1080065778336 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP500, t = 0.5s, timeToGo = 0s, Nit/step = 6.694
+solver finished after 0.165002 seconds.
+sensor MBS 0= [0.22016409 1.41968647 0.        ] 
+sensor KT 0 = [0.22016733 1.41968519 0.        ] 
+solution of kinematicTreeAndMBStest 2= 2.873312232230265 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP250, t = 0.25s, timeToGo = 0s, Nit/step = 6.508
+solver finished after 0.206761 seconds.
+sensor MBS 0= [-0.56035361  1.86769344  0.        ] 
+sensor KT 0 = [-0.56035363  1.86769408  0.        ] 
+solution of kinematicTreeAndMBStest 3= 3.899885210580135 
+solution of kinematicTreeAndMBStest all= 2.6388120402064396e-05 
+refsol= 2.6388120463802767e-05 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 28 ("kinematicTreeAndMBStest.py") FINISHED SUCCESSFUL 
+  RESULT = 2.6388120402064396e-05 
+  ERROR = -6.173837144101378e-14 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 29 ("kinematicTreeConstraintTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP125, t = 0.5s, timeToGo = 0s, Nit/step = 8.2
+solver finished after 0.0639009 seconds.
+sensor MBS 0= [ 0.77858018 -0.46489694  0.        ] 
+sensor KT 0 = [ 0.77853324 -0.46490618  0.        ] 
+solution of kinematicTreeConstraintTest= 1.8135975384620369 
+refsol= 1.8135975384620484 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 29 ("kinematicTreeConstraintTest.py") FINISHED SUCCESSFUL 
+  RESULT = 1.8135975384620369 
+  ERROR = -1.1546319456101628e-14 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 30 ("kinematicTreeTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: explicit time integration (RK44)
+STEP200, t = 1s, timeToGo = 0s, Nit/step = 0
+solver finished after 0.0071254 seconds.
+coordinates= [-1.31995028 -0.03667128 -0.0406166  -0.60654163  0.69439583] 
+solution of genericODE2test= -1.3093839602164095 
+refsol= -1.309383960216414 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 30 ("kinematicTreeTest.py") FINISHED SUCCESSFUL 
+  RESULT = -1.3093839602164095 
+  ERROR = 4.440892098500626e-15 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 31 ("manualExplicitIntegrator.py"): 
+****************************************** 
+
+
+++++++++++++++++++++++++++
+Start EXUDYN version 1.5.0
+ 
+load f=12.937500000000005 
+EI=17.250000000000007 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: nonlinear static solver
+ev= 2.2801835384819467 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP5000, t = 0.05s, timeToGo = 0s, Nit/step = 0
+solver finished after 0.208703 seconds.
+uy= -0.22048490878964977 
+testResult= 2.059698629692297 
+refsol= 2.059698629692295 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 31 ("manualExplicitIntegrator.py") FINISHED SUCCESSFUL 
+  RESULT = 2.059698629692297 
+  ERROR = 2.220446049250313e-15 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 32 ("mecanumWheelRollingDiscTest.py"): 
+****************************************** 
+solution of mecanumWheelRollingDiscTest= 0.2714267238324341 
+refsol= 0.2714267238324343 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 32 ("mecanumWheelRollingDiscTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.2714267238324341 
+  ERROR = -2.220446049250313e-16 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 33 ("objectFFRFreducedOrderAccelerations.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP10, t = 0.001s, timeToGo = 0s, Nit/step = 7.4
+solver finished after 0.0607258 seconds.
+solution of ObjectFFRFreducedOrderAccelerations= 61579.777475610885 
+ObjectFFRFreducedOrderAccelerations test result= 0.10000570245887004 
+refsol= 0.1000057024588858 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 33 ("objectFFRFreducedOrderAccelerations.py") FINISHED SUCCESSFUL 
+  RESULT = 0.10000570245887004 
+  ERROR = -1.5765166949677223e-14 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 34 ("objectFFRFreducedOrderTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP100, t = 0.01s, timeToGo = 0s, Nit/step = 7.99
+solver finished after 0.0420271 seconds.
+solution of ObjectFFRFreducedOrder= 0.5355233268054713 
+refsol= 0.0053552332680605694 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 34 ("objectFFRFreducedOrderTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.005355233268054713 
+  ERROR = -5.856426454897701e-15 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 35 ("objectFFRFTest.py"): 
+****************************************** 
+nodes size= (115, 3) 
+elements size= (48, 8) 
+nNodes= 115 , nODE2= 345 
+eigenvalues = [8.53965546883864e-06, 1.331542464263243e-05, 1.3817842902178758e-05, 2.8254986286890525e-05, 3.0383062350482162e-05, 4.31985607413431e-05, 104.38283651620547, 104.6171900245637, 187.80080789125057, 212.2835422640522, 224.18335038650764, 237.76424090025665, 284.0318283421754, 284.16865147043853, 394.14008453785704, 394.5041682997187, 405.4717329962703, 406.42193610635394] 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP10, t = 0.001s, timeToGo = 0s, Nit/step = 5.4
+solver finished after 1.22914 seconds.
+solution of ObjectFFRF= 0.0064600108120842666 
+refsol= 0.0064600108120842666 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 35 ("objectFFRFTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.0064600108120842666 
+  ERROR = 0.0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 36 ("objectFFRFTest2.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP25, t = 0.0025s, timeToGo = 2.87266e-16s, Nit/step = 7.32
+solver finished after 1.2517 seconds.
+solution of ObjectFFRFtest2= 0.03552188069017914 
+refsol= 0.03552188069017914 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 36 ("objectFFRFTest2.py") FINISHED SUCCESSFUL 
+  RESULT = 0.03552188069017914 
+  ERROR = 0.0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 37 ("objectGenericODE2Test.py"): 
+****************************************** 
+eigen freq.= [  0.      57.6318  57.6318 132.5577 132.5577 136.3306 187.8241 212.3297
+ 231.9987 231.9987 238.6879 261.7874 401.3941 401.3941] 
+eigen freq. first mode = 57.63178639763623 
+excitation node= 112 
+nMid= 110 
+nTopMid= 103 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP50, t = 0.05s, timeToGo = 0s, Nit/step = 3.18
+solver finished after 0.283383 seconds.
+solution of ObjectGenericODE2= -2.3163788976600013e-05 
+refsol= -2.316378897486015e-05 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 37 ("objectGenericODE2Test.py") FINISHED SUCCESSFUL 
+  RESULT = -2.3163788976600013e-05 
+  ERROR = -1.7398632719007462e-15 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 38 ("PARTS_ATEs_moving.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP50, t = 0.05s, timeToGo = 0s, Nit/step = 2
+solver finished after 0.390852 seconds.
+Solver iteration statistics:
+total number of steps:        50
+total number of Newton iterations: 100
+total number of Newton Jacobians:  100
+uy= 0.44656762760262075 
+refsol= 0.44656762760262214 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 38 ("PARTS_ATEs_moving.py") FINISHED SUCCESSFUL 
+  RESULT = 0.44656762760262075 
+  ERROR = -1.3877787807814457e-15 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 39 ("pendulumFriction.py"): 
+****************************************** 
+mass= 2.5 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP4000, t = 0.4s, timeToGo = 0s, Nit/step = 1.55975
+solver finished after 0.142738 seconds.
+p0= [ 0.11878348 -0.38195612  0.        ] 
+p0= [ 0.11878348 -0.38195612  0.        ] (marker) 
+solution of pendulumFriction= 0.3999999877698236 
+refsol= 0.39999998776982304 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 39 ("pendulumFriction.py") FINISHED SUCCESSFUL 
+  RESULT = 0.3999999877698236 
+  ERROR = 5.551115123125783e-16 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 40 ("plotSensorTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP100, t = 1s, timeToGo = 0s, Nit/step = 6.13
+solver finished after 0.0051481 seconds.
+remove file: solution/plotSensorLoad.txt 
+remove file: solution/plotSensorNode.txt 
+remove file: solution/plotSensorNodeRotation.txt 
+remove file: solution/plotSensorBody.txt 
+remove file: solution/plotSensorObject.txt 
+remove file: solution/plotSensorMarker.txt 
+refsol= 1 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 40 ("plotSensorTest.py") FINISHED SUCCESSFUL 
+  RESULT = 1 
+  ERROR = 0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 41 ("postNewtonStepContactTest.py"): 
+****************************************** 
+EXUDYN version=1.5.0 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP181, t = 0.5s, timeToGo = 0s, Nit/step = 1.53591
+solver finished after 0.0102643 seconds.
+Solver iteration statistics:
+total number of steps:        181
+total number of Newton iterations: 278
+total number of Newton Jacobians:  278
+postNewtonStepContactTest= 0.057286638346409235 
+refsol= 0.057286638346409235 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 41 ("postNewtonStepContactTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.057286638346409235 
+  ERROR = 0.0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 42 ("reevingSystemSpringsTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP200, t = 2s, timeToGo = 0s, Nit/step = 5.94
+solver finished after 0.0230654 seconds.
+solution of ReevingSystemSprings= 2.2131901178556905 
+refsol= 2.213190117855691 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 42 ("reevingSystemSpringsTest.py") FINISHED SUCCESSFUL 
+  RESULT = 2.2131901178556905 
+  ERROR = -4.440892098500626e-16 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 43 ("revoluteJointprismaticJointTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP250, t = 0.25s, timeToGo = 0s, Nit/step = 6.46
+solver finished after 0.0322885 seconds.
+u0= [-0.091739   -0.34905059  0.16378972] , rot0= [-0.00912885 -0.28756518  0.35260735] 
+solution of revoluteJointprismaticJointTest= 1.2538806799241744 
+refsol= 1.2538806799249342 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 43 ("revoluteJointprismaticJointTest.py") FINISHED SUCCESSFUL 
+  RESULT = 1.2538806799241744 
+  ERROR = -7.598366380534571e-13 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 44 ("rigidBodyAsUserFunctionTest.py"): 
+****************************************** 
+M = [[2 0 0]
+ [0 2 0]
+ [0 0 2]] 
+J = [[6 0 1]
+ [0 1 0]
+ [1 0 6]] 
+<systemData: 
+  Number of nodes= 3
+  Number of objects = 4
+  Number of markers = 4
+  Number of loads = 1
+  Number of sensors = 0
+  Number of ODE2 coordinates = 14
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 2
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP50, t = 0.05s, timeToGo = 0s, Nit/step = 3
+solver finished after 0.0673315 seconds.
+u0= [0.0, 0.0, 0] , rot0= [-2.09660405  0.22104041  2.13552568] 
+u1= [0.5, 0.0, 0] , rot1= [-2.09660405  0.22104041  2.13552568] 
+solution of rigidBodyAsUserFunctionTest= 8.950865271552146 
+refsol= 8.950865271552148 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 44 ("rigidBodyAsUserFunctionTest.py") FINISHED SUCCESSFUL 
+  RESULT = 8.950865271552146 
+  ERROR = -1.7763568394002505e-15 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 45 ("rigidBodyCOMtest.py"): 
+****************************************** 
+AddRigidBody COM= [ 0.4   0.22 -0.35] 
+inertia6D= [14.2725, 14.0625, 11.21, 4.925, 5.5, -1.2000000000000002] 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP100, t = 1s, timeToGo = 0s, Nit/step = 7.8
+solver finished after 0.0147676 seconds.
+solution of rigidBodyCOMtest= 3.409431467726291 
+refsol= 3.409431467726291 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 45 ("rigidBodyCOMtest.py") FINISHED SUCCESSFUL 
+  RESULT = 3.409431467726291 
+  ERROR = 0.0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 46 ("rollingCoinTest.py"): 
+****************************************** 
+solution of rollingCoinTest= 0.00200409992733393 
+refsol= 0.0020040999273379673 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 46 ("rollingCoinTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.00200409992733393 
+  ERROR = -4.037135209467024e-15 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 47 ("rollingCoinPenaltyTest.py"): 
+****************************************** 
+solution of rollingCoinPenaltyTest= 0.03489603106786701 
+refsol= 0.03489603106689881 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 47 ("rollingCoinPenaltyTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.03489603106786701 
+  ERROR = 9.682046830938873e-13 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 48 ("scissorPrismaticRevolute2D.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP500, t = 10s, timeToGo = 0s, Nit/step = 3.002
+solver finished after 0.126122 seconds.
+Solver iteration statistics:
+total number of steps:        500
+total number of Newton iterations: 1501
+total number of Newton Jacobians:  1501
+uy= 1.131033204186729 
+solver.it.newtonStepsCount= 1501 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP500, t = 10s, timeToGo = 0s, Nit/step = 2.434
+solver finished after 0.125482 seconds.
+Solver iteration statistics:
+total number of steps:        500
+total number of Newton iterations: 1217
+total number of Newton Jacobians:  1217
+uy= 1.1246157002324417 
+solver.it.newtonStepsCount= 1217 
+refsol= 27.20255648904422 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 48 ("scissorPrismaticRevolute2D.py") FINISHED SUCCESSFUL 
+  RESULT = 27.20255648904419 
+  ERROR = -2.842170943040401e-14 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 49 ("sensorUserFunctionTest.py"): 
+****************************************** 
+sensor= 45.0 
+refsol= 45 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 49 ("sensorUserFunctionTest.py") FINISHED SUCCESSFUL 
+  RESULT = 45.0 
+  ERROR = 0.0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 50 ("serialRobotTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP200, t = 0.2s, timeToGo = 0s, Nit/step = 2.955
+solver finished after 0.237233 seconds.
+torques at tEnd= 0.7681856909818718 
+refsol= 0.7681856909852399 
+tol= 3e-09 
+****************************************** 
+  EXAMPLE 50 ("serialRobotTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.7681856909818718 
+  ERROR = -3.3680835898053374e-12 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 51 ("sliderCrank3Dtest.py"): 
+****************************************** 
+slider initial position = 0.19999999999999996 
+vCB len= 0.3 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP1000, t = 0.2s, timeToGo = 0s, Nit/step = 2
+solver finished after 0.112526 seconds.
+solution of 3D slidercrank iftomm benchmark= 3.3642761780921897 
+refsol= 3.3642761780921897 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 51 ("sliderCrank3Dtest.py") FINISHED SUCCESSFUL 
+  RESULT = 3.3642761780921897 
+  ERROR = 0.0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 52 ("sliderCrankFloatingTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP5000, t = 0.3s, timeToGo = 0s, Nit/step = 6.055
+solver finished after 0.166123 seconds.
+sol = 0.29485998988749146 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP5000, t = 0.3s, timeToGo = 0s, Nit/step = 6.0214
+solver finished after 0.406938 seconds.
+sol = 0.29678917349134215 
+solutionSliderCrankIndex2= 0.5916491633788337 
+refsol= 0.591649163378833 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 52 ("sliderCrankFloatingTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.5916491633788337 
+  ERROR = 6.661338147750939e-16 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 53 ("solverExplicitODE1ODE2test.py"): 
+****************************************** 
+EXUDYN version=1.5.0 
+solverExplicitODE1ODE2 err= 3.3767933275918964 
+refsol= 3.3767933275970896 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 53 ("solverExplicitODE1ODE2test.py") FINISHED SUCCESSFUL 
+  RESULT = 3.3767933275918964 
+  ERROR = -5.193179219986632e-12 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 54 ("sparseMatrixSpringDamperTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: nonlinear static solver
+*********************
+Static solver (1 load steps):
+*********************
+
+Start steps solving loop
+
+Write initial step to solution file and visualize ...
+STEP0, factor = 0, timeToGo = 0s
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 1, step size = 1
+  START discontinuous iteration 0:
+Newton: initial residual = 0.515994; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 660.542: relTol = 1280.14: contr. = 1280.14
+    update initial residual with current residual; initial residual = 660.542
+    NEWTON STEP 2: residual = 0.0172949: relTol = 2.61829e-05: contr. = 2.61829e-05
+    NEWTON STEP 3: residual = 0.00015339: relTol = 2.32219e-07: contr. = 0.00886909
+    NEWTON STEP 4: residual = 7.5745e-10: relTol = 1.14671e-12: contr. = 4.93806e-06
+  Newton: converged after 4 steps; relative error = 1.14671e-12
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 1 ... REACHED)
+STEP1, factor = 1, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
+solver finished after 0.620524 seconds.
+static tip displacement (y)= -6.779862812271389 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: nonlinear static solver
+*********************
+Static solver (1 load steps):
+*********************
+
+Start steps solving loop
+
+Write initial step to solution file and visualize ...
+STEP0, factor = 0, timeToGo = 0s
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 1, step size = 1
+  START discontinuous iteration 0:
+Newton: initial residual = 0.515994; goals: relTol=1e-08, absTol=1e-10
+    NEWTON STEP 1: residual = 660.542: relTol = 1280.14: contr. = 1280.14
+    update initial residual with current residual; initial residual = 660.542
+    NEWTON STEP 2: residual = 0.0172949: relTol = 2.61829e-05: contr. = 2.61829e-05
+    NEWTON STEP 3: residual = 0.00015339: relTol = 2.32219e-07: contr. = 0.00886909
+    NEWTON STEP 4: residual = 7.73411e-10: relTol = 1.17087e-12: contr. = 5.04211e-06
+  Newton: converged after 4 steps; relative error = 1.17087e-12
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 1 ... REACHED)
+STEP1, factor = 1, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
+solver finished after 0.0106385 seconds.
+static tip displacement (y)= -6.77986281227139 
+refsol= -0.06779862812271394 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 54 ("sparseMatrixSpringDamperTest.py") FINISHED SUCCESSFUL 
+  RESULT = -0.06779862812271391 
+  ERROR = 2.7755575615628914e-17 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 55 ("sphericalJointTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP1000, t = 1s, timeToGo = 0s, Nit/step = 6.77
+solver finished after 0.0853653 seconds.
+solution of sphericalJointTest= 4.409080446575154 
+refsol= 4.409080446575089 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 55 ("sphericalJointTest.py") FINISHED SUCCESSFUL 
+  RESULT = 4.409080446575154 
+  ERROR = 6.483702463810914e-14 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 56 ("springDamperUserFunctionTest.py"): 
+****************************************** 
+EXUDYN version=1.5.0 
+resonance frequency = 50.0 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP5000, t = 50s, timeToGo = 0s, Nit/step = 1.98
+solver finished after 0.169735 seconds.
+Solver iteration statistics:
+total number of steps:        5000
+total number of Newton iterations: 9900
+total number of Newton Jacobians:  9900
+displacement= 0.5062872273010939 
+refsol= 0.5062872273010911 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 56 ("springDamperUserFunctionTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.5062872273010939 
+  ERROR = 2.7755575615628914e-15 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 57 ("stiffFlyballGovernor.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP20, t = 0.001s, timeToGo = 0s, Nit/step = 0
+solver finished after 0.037696 seconds.
+solution of stiffFlyballGovernor= 0.8962488779114738 
+refsol= 0.8962488779114738 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 57 ("stiffFlyballGovernor.py") FINISHED SUCCESSFUL 
+  RESULT = 0.8962488779114738 
+  ERROR = 0.0 
+****************************************** 
+
+
+****************************************** 
+  START EXAMPLE 58 ("superElementRigidJointTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: implicit second order time integration
+STEP5, t = 0.005s, timeToGo = 0s, Nit/step = 2.4
+solver finished after 0.058904 seconds.
+solution of superElementRigidJointTest= 0.015217208913989078 
+refsol= 0.015217208913989071 
+tol= 3e-11 
+****************************************** 
+  EXAMPLE 58 ("superElementRigidJointTest.py") FINISHED SUCCESSFUL 
+  RESULT = 0.015217208913989078 
+  ERROR = 6.938893903907228e-18 
+****************************************** 
+
+
+****************************************** 
+  START MINI EXAMPLE 0 ("ObjectMassPoint.py"): 
+start mini example for class ObjectMassPoint 
+example for ObjectMassPoint completed, test result = 2.0 
+  MINI EXAMPLE 0 ("ObjectMassPoint.py") FINISHED SUCCESSFUL 
+  RESULT = 2.0 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 1 ("ObjectMassPoint2D.py"): 
+start mini example for class ObjectMassPoint2D 
+example for ObjectMassPoint2D completed, test result = 2.0 
+  MINI EXAMPLE 1 ("ObjectMassPoint2D.py") FINISHED SUCCESSFUL 
+  RESULT = 2.0 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 2 ("ObjectMass1D.py"): 
+start mini example for class ObjectMass1D 
+example for ObjectMass1D completed, test result = 2.0 
+  MINI EXAMPLE 2 ("ObjectMass1D.py") FINISHED SUCCESSFUL 
+  RESULT = 2.0 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 3 ("ObjectRotationalMass1D.py"): 
+start mini example for class ObjectRotationalMass1D 
+example for ObjectRotationalMass1D completed, test result = 2.0 
+  MINI EXAMPLE 3 ("ObjectRotationalMass1D.py") FINISHED SUCCESSFUL 
+  RESULT = 2.0 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 4 ("ObjectRigidBody2D.py"): 
+start mini example for class ObjectRigidBody2D 
+example for ObjectRigidBody2D completed, test result = 4.356194490192344 
+  MINI EXAMPLE 4 ("ObjectRigidBody2D.py") FINISHED SUCCESSFUL 
+  RESULT = 4.356194490192344 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 5 ("ObjectGenericODE2.py"): 
+start mini example for class ObjectGenericODE2 
+example for ObjectGenericODE2 completed, test result = 1.0039999999354785 
+  MINI EXAMPLE 5 ("ObjectGenericODE2.py") FINISHED SUCCESSFUL 
+  RESULT = 1.0039999999354785 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 6 ("ObjectGenericODE1.py"): 
+start mini example for class ObjectGenericODE1 
+example for ObjectGenericODE1 completed, test result = -0.8206847097689384 
+  MINI EXAMPLE 6 ("ObjectGenericODE1.py") FINISHED SUCCESSFUL 
+  RESULT = -0.8206847097689384 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 7 ("ObjectKinematicTree.py"): 
+start mini example for class ObjectKinematicTree 
+example for ObjectKinematicTree completed, test result = -3.1340185518085906 
+  MINI EXAMPLE 7 ("ObjectKinematicTree.py") FINISHED SUCCESSFUL 
+  RESULT = -3.1340185518085906 
+  ERROR  = 4.440892098500626e-16 
+
+
+****************************************** 
+  START MINI EXAMPLE 8 ("ObjectANCFCable2D.py"): 
+start mini example for class ObjectANCFCable2D 
++++++++++++++++++++++++++++++++
+EXUDYN V1.5.0 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0s, Nit/step = 6
+solver finished after 0.0045645 seconds.
+example for ObjectANCFCable2D completed, test result = -0.5013058140308901 
+  MINI EXAMPLE 8 ("ObjectANCFCable2D.py") FINISHED SUCCESSFUL 
+  RESULT = -0.5013058140308901 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 9 ("ObjectConnectorSpringDamper.py"): 
+start mini example for class ObjectConnectorSpringDamper 
+example for ObjectConnectorSpringDamper completed, test result = 0.9733828995763039 
+  MINI EXAMPLE 9 ("ObjectConnectorSpringDamper.py") FINISHED SUCCESSFUL 
+  RESULT = 0.9733828995763039 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 10 ("ObjectConnectorCartesianSpringDamper.py"): 
+start mini example for class ObjectConnectorCartesianSpringDamper 
+example for ObjectConnectorCartesianSpringDamper completed, test result = -0.0009999999999750209 
+  MINI EXAMPLE 10 ("ObjectConnectorCartesianSpringDamper.py") FINISHED SUCCESSFUL 
+  RESULT = -0.0009999999999750209 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 11 ("ObjectConnectorRigidBodySpringDamper.py"): 
+start mini example for class ObjectConnectorRigidBodySpringDamper 
+example for ObjectConnectorRigidBodySpringDamper completed, test result = -0.534929955894111 
+  MINI EXAMPLE 11 ("ObjectConnectorRigidBodySpringDamper.py") FINISHED SUCCESSFUL 
+  RESULT = -0.534929955894111 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 12 ("ObjectConnectorLinearSpringDamper.py"): 
+start mini example for class ObjectConnectorLinearSpringDamper 
+example for ObjectConnectorLinearSpringDamper completed, test result = 0.0004999866342440002 
+  MINI EXAMPLE 12 ("ObjectConnectorLinearSpringDamper.py") FINISHED SUCCESSFUL 
+  RESULT = 0.0004999866342440002 
+  ERROR  = 7.134050294954619e-17 
+
+
+****************************************** 
+  START MINI EXAMPLE 13 ("ObjectConnectorTorsionalSpringDamper.py"): 
+start mini example for class ObjectConnectorTorsionalSpringDamper 
+example for ObjectConnectorTorsionalSpringDamper completed, test result = 0.0004999866342439527 
+  MINI EXAMPLE 13 ("ObjectConnectorTorsionalSpringDamper.py") FINISHED SUCCESSFUL 
+  RESULT = 0.0004999866342439527 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 14 ("ObjectConnectorCoordinateSpringDamper.py"): 
+start mini example for class ObjectConnectorCoordinateSpringDamper 
+example for ObjectConnectorCoordinateSpringDamper completed, test result = 0.0019995154213252597 
+  MINI EXAMPLE 14 ("ObjectConnectorCoordinateSpringDamper.py") FINISHED SUCCESSFUL 
+  RESULT = 0.0019995154213252597 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 15 ("ObjectConnectorGravity.py"): 
+start mini example for class ObjectConnectorGravity 
+example for ObjectConnectorGravity completed, test result = 1.0000000000000484 
+  MINI EXAMPLE 15 ("ObjectConnectorGravity.py") FINISHED SUCCESSFUL 
+  RESULT = 1.0000000000000484 
+  ERROR  = 4.440892098500626e-16 
+
+
+****************************************** 
+  START MINI EXAMPLE 16 ("ObjectConnectorDistance.py"): 
+start mini example for class ObjectConnectorDistance 
+example for ObjectConnectorDistance completed, test result = -0.9861806726069355 
+  MINI EXAMPLE 16 ("ObjectConnectorDistance.py") FINISHED SUCCESSFUL 
+  RESULT = -0.9861806726069355 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 17 ("ObjectConnectorCoordinate.py"): 
+start mini example for class ObjectConnectorCoordinate 
+example for ObjectConnectorCoordinate completed, test result = 0.04999999999999982 
+  MINI EXAMPLE 17 ("ObjectConnectorCoordinate.py") FINISHED SUCCESSFUL 
+  RESULT = 0.04999999999999982 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 18 ("ObjectJointRevoluteZ.py"): 
+start mini example for class ObjectJointRevoluteZ 
+example for ObjectJointRevoluteZ completed, test result = 0.49999999999999795 
+  MINI EXAMPLE 18 ("ObjectJointRevoluteZ.py") FINISHED SUCCESSFUL 
+  RESULT = 0.49999999999999795 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 19 ("MarkerSuperElementPosition.py"): 
+start mini example for class MarkerSuperElementPosition 
+example for MarkerSuperElementPosition completed, test result = 1.0039999999354785 
+  MINI EXAMPLE 19 ("MarkerSuperElementPosition.py") FINISHED SUCCESSFUL 
+  RESULT = 1.0039999999354785 
+  ERROR  = 0.0 
+
+
+****************************************** 
+  START MINI EXAMPLE 20 ("LoadMassProportional.py"): 
+start mini example for class LoadMassProportional 
+example for LoadMassProportional completed, test result = -4.904999999999998 
+  MINI EXAMPLE 20 ("LoadMassProportional.py") FINISHED SUCCESSFUL 
+  RESULT = -4.904999999999998 
+  ERROR  = 0.0 
+
+ 
+****************************************** 
+TEST SUITE RESULTS SUMMARY: 
+****************************************** 
+time elapsed = 18.351 seconds 
+UNIT TESTS SKIPPED 
+1 EXAMPLE TEST(S) OUT OF 59 FAILED:  
+  EXAMPLE 20 (generalContactFrictionTests.py) FAILED 
+ALL 21 MINI EXAMPLE TESTS SUCCESSFUL 
+******************************************
+ 
+CPP UNIT TESTS SKIPPED 
