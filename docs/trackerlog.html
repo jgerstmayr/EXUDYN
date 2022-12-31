@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1337, 
-Number of resolved issues = 1161 (0 in current minor version), 
-Exudyn version = 1.5.0, 
-last change =  2022-12-25
+Number of issues = 1356, 
+Number of resolved issues = 1176 (15 in current minor version), 
+Exudyn version = 1.5.15.dev1, 
+last change =  2022-12-31
 
 
 <table style = "width:100%">
@@ -38,6 +38,86 @@ last change =  2022-12-25
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1355</td>
+    <td>visualizationSettings</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check possibility for update loop to continue simulation</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-12-31</td>
+    <td>2023-06-29</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1354</td>
+    <td>visualizationSettings</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> double click on bool variables changes state</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-31</td>
+    <td>2023-06-29</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1353</td>
+    <td>visualizationSettings</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add KEY Q shortcut to close dialog</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-31</td>
+    <td>2023-06-29</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1341</td>
+    <td>MacOS multithreading</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> resolve compilation problems with NGsolve taskmanager on Apple MacOS</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-26</td>
+    <td>2023-06-24</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1337</td>
+    <td>Newton              </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> C++: check if SysError(s) in CSolverBase::Newton() can be changed into regular failure and step reduction for adaptiveStep</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-12-26</td>
+    <td>2023-06-24</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>1335</td>
     <td>RollingDiscPenalty  </td>
@@ -1703,22 +1783,6 @@ last change =  2022-12-25
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0752</td>
-    <td>tkinter MacOS       </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> tkinter fails when loaded inside interactive.py; early call to Tk() inside an example works and seems to help; check options to correctly load tkinter in MacOS (Rosetta 2, on M1)</td>
-    <td>BUG</td>
-    <td></td>
-    <td>2021-09-20</td>
-    <td>2021-11-19</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0746</td>
     <td>ComputeODEEigenvalues</td>
     <td>JG</td>
@@ -2853,6 +2917,230 @@ last change =  2022-12-25
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1352</td>
+    <td>tkinter dialogs     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option for transparency to dialogs</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-31</td>
+    <td>2023-06-29</td>
+    <td>2022-12-31 11:01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>visualizationSettings.dialogs.transparency</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1351</td>
+    <td>tkinter MacOS       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> adjust font size and row size in ttk right mouse dialog</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-31</td>
+    <td>2023-06-29</td>
+    <td>2022-12-31 11:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>visualizationSettings.dialogs.fontScalingMacOS</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1350</td>
+    <td>tkinter MacOS       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> adjust font size and row size in ttk visualization settings dialog</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-31</td>
+    <td>2023-06-29</td>
+    <td>2022-12-31 11:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>visualizationSettings.dialogs.fontScalingMacOS</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1349</td>
+    <td>RequireVersion      </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> some bugs including exu.GetVersionString and not raising exception</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-30</td>
+    <td>2023-06-28</td>
+    <td>2022-12-30 15:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1348</td>
+    <td>EditDictionaryWithTypeInfo</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change interface to pass directly visualizationSettings, allowing to update data</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-12-28</td>
+    <td>2023-06-26</td>
+    <td>2022-12-28 21:50</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1347</td>
+    <td>visualization settings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add flag visualizationSettings.dialog.multiThreadedDialogs to turn on/off immediate apply of visualization settings changes; extend exudyn.GUI and rendererPythonInterface.h accordingly</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-28</td>
+    <td>2023-06-26</td>
+    <td>2022-12-28 23:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>NOTE that this flag should be turned off in case of crashes during/after dialogs; could make problems on special platforms such as MacOS</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1346</td>
+    <td>visualization settings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check if visualiuation settings dialog can be installed such that updating of data immediately affects renderer window</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-12-28</td>
+    <td>2023-06-26</td>
+    <td>2022-12-28 16:53</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1345</td>
+    <td>interface default args </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change true/false to True/False in theDoc for PYthon command interface</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-27</td>
+    <td>2023-06-25</td>
+    <td>2022-12-27 23:24</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1344</td>
+    <td>exudyn              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add function IsRendererRunning(), to avoid Warnings when renderer is restarted</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-27</td>
+    <td>2023-06-25</td>
+    <td>2022-12-27 23:23</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1343</td>
+    <td>tkinter in exudyn   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add comment in FAQ on potential problems with tkinter; add option to let exudyn know if tkinter is already running</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2022-12-27</td>
+    <td>2023-06-25</td>
+    <td>2022-12-28 23:39</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1342</td>
+    <td>MacOS M1            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add string ARM to Platform string, e.g., used in solution and sensor files</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-27</td>
+    <td>2023-06-25</td>
+    <td>2022-12-27 17:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1340</td>
+    <td>MacOS multithreading</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> activate simplified multithreading by switching to TinyThreading in case of MacOS</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-12-26</td>
+    <td>2023-06-24</td>
+    <td>2022-12-27 17:19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1339</td>
+    <td>tkinter MacOS       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add tkinter.Tk() into exudyn.sys["tkinterRoot"] before call to StartRenderer(); check for tkinterRoot in exudyn.sys on startup of interactive dialog; resolves crash on MacOS for SolutionViewer</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-26</td>
+    <td>2023-06-24</td>
+    <td>2022-12-27 23:50</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1338</td>
+    <td>MacOS               </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> DoRendererIdleTasks() crashes if no Renderer is active; add check in python call to avoid crash</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2022-12-26</td>
+    <td>2023-06-24</td>
+    <td>2022-12-27 17:36</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>crash resolved on Windows; MacOS test still open</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1336</td>
@@ -10533,6 +10821,22 @@ last change =  2022-12-25
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0752</td>
+    <td>tkinter MacOS       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> tkinter fails when loaded inside interactive.py; early call to Tk() inside an example works and seems to help; check options to correctly load tkinter in MacOS (Rosetta 2, on M1)</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2021-09-20</td>
+    <td>2021-11-19</td>
+    <td>2022-12-31 01:01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>problem fixed with single threaded renderer, doing illegal operations in glfw callbacks</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0751</td>

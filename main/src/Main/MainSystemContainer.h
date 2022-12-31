@@ -133,6 +133,7 @@ public:
 	//! return reference to a MainSystem
 	MainSystem& GetMainSystem(Index systemNumber);
 
+	void SendRedrawSignal();
 };
 
 #endif

@@ -2,7 +2,7 @@
 \onlyRST{
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
-Exudyn 1.5 is out! It includes now Python 3.7/8 - 3.10 wheels for MacOS, improved compatibility for AVX2, simple reeving system, improved Lie group integration, improved RollingDisc, DistanceSensor, and many fixes; further features are multi-threading support; minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
+Exudyn 1.5 is out! It includes now Python 3.7/8 - 3.10 wheels for MacOS (since 1.5.11.dev1 also showing tkinter dialogs!), improved compatibility for AVX2, simple reeving system, improved Lie group integration, improved RollingDisc, DistanceSensor, and many fixes; further features are multi-threading support; minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
 
 If you like using Exudyn, please add a *star* on github, and send an email to \ ``reply.exudyn@gmail.com``\ such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
@@ -294,11 +294,11 @@ Requirements are an according Anaconda (or Miniconda) installation.
 \ei
 \noindent \mybold{NOTE}:
 \bi
-  \item on Apple M1 processors, there are significant problems with Miniconda; scipy could not be installed properly in the beginning (April 2022)
-  \item Tkinter still does not run.
+  \item Multi-threading is not fully supported, but may work in some applications
+  \item On Apple M1 processors the newest Anaconda supports now all required features; environments with Python 3.8-3.10 have been successfully tested;
+  \item The Rosetta (x86 emulation) mode on Apple M1 also works now without much restrictions; these files should also work on older Macs
+  \item \texttt{tkinter} has been adapted (some workarounds needed on MacOS!), available since \codeName\ 1.5.15.dev1
   \item Some optimization and processing functions do not run (especially multiprocessing and tqdm); 
-  %resolved: \item As eigensolvers were not available for tests on M1, all these test models fail 
-  %resolved: \item Note that even some test result deviate from Windows results significantly!
 \ei
 
 Alternatively, we tested on:
@@ -637,6 +637,16 @@ to explicitly load the version without AVX2.
 \end{lstlisting}
 %
 \item[$\ra$] see installation instructions to install missing Python modules, \refSection{sec:installationInstructions}.
+
+\item Problems with \mybold{tkinter}, especially on MacOS:\\
+  \codeName\ uses \texttt{tkinter}, based on tcl/tk, to provide some basic dialogs, such as visualizationSettings\\
+  As Python is not suited for multithreading, this causes problems in window and dialog workflows. Especially on MacOS
+  \texttt{tkinter} is less stable and compatible with the window manager. Especially, \texttt{tkinter} already needs to run
+  before the application's OpenGL window (renderer) is opened. Therefore, on MacOS \texttt{tkinter.Tk()} is called before the 
+  renderer is started.
+  In some cases, visualizationSettings dialog may not be available and changes have to be made inside the code.
+\item[$\ra$] To resolve issues, the following visualizationSettings may help (before starting renderer!), but may reduce functionality: 
+    dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False
 \ei 
 
 

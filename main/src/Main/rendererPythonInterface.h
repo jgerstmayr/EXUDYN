@@ -51,8 +51,22 @@ namespace ProcessID
 
 //! lock renderer callbacks during critical operations 
 void PySetRendererCallbackLock(bool flag);
+
 //! get state of callback lock
 bool PyGetRendererCallbackLock();
+
+//! lock renderer Python command execution (e.g. opening of dialogs) during critical operations 
+void PySetRendererPythonCommandLock(bool flag);
+
+//! get state of Python command execution lock
+bool PyGetRendererPythonCommandLock();
+
+//the following is a workaround, because here we do not have simple access to visualizationSettings
+//! set state of multithreaded dialog (interaction with renderer during settings dialogs)
+void PySetRendererMultiThreadedDialogs(bool flag);
+
+//! get state of multithreaded dialog (interaction with renderer during settings dialogs)
+bool PyGetRendererMultiThreadedDialogs();
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //FILL QUQUES
@@ -91,7 +105,7 @@ void PyProcessShowRightMouseSelectionDialog(Index itemID);
 
 //! execute str as Python commands; lock Renderer during this time to prevent from further commands, Python conflicts and crashing!
 //! this function MAY BE ONLY CALLED FROM PYTHON THREAD, NOT from GLFW!!:
-void PyProcessExecuteStringAsPython(const STDstring& str);
+void PyProcessExecuteStringAsPython(const STDstring& str, bool lockRendererCallbacks=true, bool lockPythonCommands=true);
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

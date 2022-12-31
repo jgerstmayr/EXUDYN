@@ -354,8 +354,15 @@ pyFunctionAccessConvert = {
 #isLambdaFunction = True: cName is intepreted as lambda function and copied into pybind definition
 def DefPyFunctionAccess(cClass, pyName, cName, description, argList=[], defaultArgs=[], example='', options='', isLambdaFunction = False): 
     
-    def ReplaceDefaultArgs(s):
+    def ReplaceDefaultArgsCpp(s):
         sNew = copy.copy(s)
+        sNew = sNew.replace('exu.','') #remove exudyn 'exu.' for C-code
+        sNew = sNew.replace('True','true').replace('False','false') #docu shows True, C++ code needs true
+        return sNew
+    
+    def ReplaceDefaultArgsLatex(s):
+        sNew = copy.copy(s)
+        sNew = sNew.replace('true','True').replace('false','False')
         if sNew.find('Vector3D') != -1:
             sNew = sNew.replace('(std::vector<Real>)Vector3D','')
             sNew = sNew.replace('{','').replace('}','')
@@ -402,8 +409,8 @@ def DefPyFunctionAccess(cClass, pyName, cName, description, argList=[], defaultA
             s += ', py::arg("' + argList[i] + '")'
             sLatex += argList[i]
             if (defaultArgs[i] != ''):
-                sLatex += ' = ' + ReplaceDefaultArgs(defaultArgs[i])
-                s += ' = ' + defaultArgs[i].replace('exu.','') #remove exudyn 'exu.' for C-code
+                sLatex += ' = ' + ReplaceDefaultArgsLatex(defaultArgs[i])
+                s += ' = ' + ReplaceDefaultArgsCpp(defaultArgs[i])
             sLatex += ', '
         sLatex = sLatex[:-2] #remove last ', '
 

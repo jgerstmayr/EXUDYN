@@ -170,7 +170,7 @@ void VisualizationSystemContainer::ContinueSimulation()
 bool VisualizationSystemContainer::RendererIsRunning() const
 {
 #ifdef USE_GLFW_GRAPHICS
-	return glfwRenderer.WindowIsInitialized();
+	return glfwRenderer.IsGlfwInitAndRendererActive();
 #else
 	return false;
 #endif

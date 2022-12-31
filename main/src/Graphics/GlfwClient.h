@@ -164,13 +164,17 @@ public:
 	//! stop the renderer engine and its thread; @todo StopRenderer currently also stops also main thread (python)
 	static void StopRenderer();
 
-	//! return renderState object
-	static RenderState GetRenderState() { return *state; }
+    //! return renderState object
+    static RenderState GetRenderState() { return *state; }
+
+    //! return renderState object
+    static VisualizationSettings* GetVisualizationSettings() { return visSettings; }
+    //static const VisualizationSettings& GetVisualizationSettings() const { return *visSettings; }
 
 	//! reset some state machines, e.g., left mouse click, item select, etc.
 	static void ResetStateMachine();
 
-	static bool WindowIsInitialized()
+	static bool IsGlfwInitAndRendererActive()
 	{
 		if (window && rendererActive) { return true; }
 		else { return false; }
@@ -280,7 +284,7 @@ public:
 	//! access keypress user function from current SC; only available if SC linked:
 	static std::function<bool(int, int, int)> GetKeyPressUserFunction() 
 	{ 
-		if (WindowIsInitialized() && visSettings != nullptr)
+		if (IsGlfwInitAndRendererActive() && visSettings != nullptr)
 		{
 			return visSettings->window.keyPressUserFunction;
 		}

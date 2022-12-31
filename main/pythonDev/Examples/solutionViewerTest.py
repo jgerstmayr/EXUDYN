@@ -121,7 +121,7 @@ SC.visualizationSettings.openGL.lineWidth=2
 SC.visualizationSettings.window.renderWindowSize = [800,600]
 SC.visualizationSettings.general.drawCoordinateSystem=False
 SC.visualizationSettings.general.drawWorldBasis=True
-
+# SC.visualizationSettings.general.useMultiThreadedRendering = False
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 useGraphics = True
 if useGraphics:

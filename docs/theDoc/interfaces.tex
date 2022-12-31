@@ -595,7 +595,7 @@ VSettingsContact has the following items:
 
 %+++++++++++++++++++++++++++++++++++
 \mysubsubsection{VSettingsWindow} \label{sec:VSettingsWindow}
-Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.\\ 
+OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.\\ 
 %
 VSettingsWindow has the following items:
 %reference manual TABLE
@@ -613,6 +613,24 @@ VSettingsWindow has the following items:
     showMouseCoordinates &     bool &      &     False &     True: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'\\ \hline
     showWindow &     bool &      &     True &     True: OpenGL render window is shown on startup; False: window will be iconified at startup (e.g. if you are starting multiple computations automatically)\\ \hline
     startupTimeout &     PInt &      &     2500 &     OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)\\ \hline
+	  \end{longtable}
+	\end{center}
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{VSettingsDialogs} \label{sec:VSettingsDialogs}
+Settings related to dialogs (e.g., visualization settings dialog).\\ 
+%
+VSettingsDialogs has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    alphaTransparency &     UFloat &      &     0.94 &     alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)\\ \hline
+    alwaysTopmost &     bool &      &     True &     True: dialogs are always topmost (otherwise, they are sometimes hidden)\\ \hline
+    fontScalingMacOS &     UFloat &      &     1.35 &     font scaling value for MacOS systems (on Windows, system display scaling is used)\\ \hline
+    multiThreadedDialogs &     bool &      &     True &     True: During dialogs, the OpenGL render window will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -768,6 +786,7 @@ VisualizationSettings has the following items:
     connectors &     VSettingsConnectors &      &      &     connector visualization settings\\ \hline
     contact &     VSettingsContact &      &      &     contact visualization settings\\ \hline
     contour &     VSettingsContour &      &      &     contour plot visualization settings\\ \hline
+    dialogs &     VSettingsDialogs &      &      &     dialogs settings\\ \hline
     exportImages &     VSettingsExportImages &      &      &     settings for exporting (saving) images to files in order to create animations\\ \hline
     general &     VSettingsGeneral &      &      &     general visualization settings\\ \hline
     interactive &     VSettingsInteractive &      &      &     Settings for interaction with renderer\\ \hline

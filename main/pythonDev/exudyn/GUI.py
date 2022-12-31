@@ -17,6 +17,7 @@ import tkinter.ttk as ttk
 import tkinter.font as tkFont
 import numpy as np #for array checks
 import ast #for ast.literal_eval
+import sys
 import exudyn
 
 useRenderWindowDisplayScaling = True #using this, scaling will change with render window
@@ -28,6 +29,40 @@ treeEditDefaultWidth = 1024     #unscaled width of e.g. visualizationSettings
 treeEditDefaultHeight = 800     #unscaled height of e.g. visualizationSettings
 dialogDefaultWidth = 800        #unscaled width of e.g. right mouse edit
 dialogDefaultHeight = 600       #unscaled height of e.g. right mouse edit
+
+def IsApple():
+    if sys.platform == 'darwin':
+        return True
+    else:
+        return False
+
+def GetRendererSystemContainer():
+    try:
+        if 'currentRendererSystemContainer' in exudyn.sys: 
+            guiSC = exudyn.sys['currentRendererSystemContainer']
+            if guiSC != 0 and type(guiSC) == exudyn.SystemContainer:
+                return guiSC
+    except: 
+        pass
+    return None
+
+#**function: get new or current root and new window app; return list of [tkRoot, tkWindow, tkRuns]
+def GetTkRootAndNewWindow():
+    if tk._default_root == None:
+        root = tk.Tk()
+        tkWindow = root
+        tkRuns = False
+    else:
+        root = tk._default_root
+        tkWindow = tk.Toplevel(root)
+        tkRuns = True
+    return [root, tkWindow, tkRuns]
+
+#**function: this function returns True, if tkinter has already a root window (which is assumed to have already a mainloop running)
+def TkRootExists():
+    return (tk._default_root != None)
+
+
 
 #unique text height for tk with given scaling
 def TkTextHeight(systemScaling):
@@ -76,17 +111,17 @@ def GetExudynDisplayScaling():
         return 1
 
 #return either exudyn or tkinter scaling, unified approach
-def GetGUIContentScaling(tkMaster):
+def GetGUIContentScaling(root):
     try:
         if useRenderWindowDisplayScaling:
             #print('exudyn scaling      =',GetExudynDisplayScaling())
-            #print('tkinter scaling(OLD)=',tkMaster.tk.call('tk', 'scaling'))
+            #print('tkinter scaling(OLD)=',root.tk.call('tk', 'scaling'))
             s = 1.4*GetExudynDisplayScaling() #gives similar size as other programs; factor 1.4 is empirical
-            tkMaster.tk.call('tk', 'scaling', s) #needed to update font size internally ...
-            #print('tkinter scaling(NEW)=',tkMaster.tk.call('tk', 'scaling'))
+            root.tk.call('tk', 'scaling', s) #needed to update font size internally ...
+            #print('tkinter scaling(NEW)=',root.tk.call('tk', 'scaling'))
             return s
         else:
-            return tkMaster.tk.call('tk', 'scaling') #obtains current scaling?
+            return root.tk.call('tk', 'scaling') #obtains current scaling?
     except:
         return 1
     
@@ -253,16 +288,21 @@ def CheckType(valueStr, vType, vSize):
     return [True, '']
 
 #this class gets a dictionary with type information structure in, but a plain dictionary with types (int, float, string, list, ...) out
-#dictionaryTypes contains a dictionary which the available types, e.g. bool, etc.
+#settingsStructure: contains hierarchical settings structure with function GetDictionaryWithTypeInfo() to obtain dictionary for editing
+#dictionaryTypes: contains a dictionary with the available types, e.g. bool, etc.
+#updateOnChange: every change is directly applied to the settingsStructure and redraw is signaled in stored renderer
 class TkinterEditDictionaryWithTypeInfo(tk.Frame):
-    def __init__(self, parent, dictionaryData, dictionaryTypesT, treeOpen=False, textHeight = 15):
+    def __init__(self, parent, settingsStructure, dictionaryTypesT, updateOnChange=False, treeOpen=False, textHeight = 15):
         tk.Frame.__init__(self, parent)
         
         self.parentFrame = parent #parent frame stored for member functions
-        #self.dictionaryTypes = dictionaryTypes #as string
+        self.settingsStructure = settingsStructure
         self.dictionaryTypesT = dictionaryTypesT #as type
+        self.updateOnChange = updateOnChange
         self.treeOpen = treeOpen
         self.textHeight = textHeight
+
+        self.dictionaryData = settingsStructure.GetDictionaryWithTypeInfo()
 
         #additional storage for type, size, etc.
         self.typeStorage = dict() #dictionary is stored as {'ID1': 'type1', 'ID2': 'type2', ...}
@@ -290,7 +330,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.tree.heading("description",text="Description (press H to show)",anchor=tk.W)
 
 
-        self.AddNodeFromDictionaryWithTypeInfo(value=dictionaryData, parentNode="")
+        self.AddNodeFromDictionaryWithTypeInfo(value=self.dictionaryData, parentNode="")
         self.tree.bind('<<TreeviewSelect>>', self.TreeviewSelect) #selection changed
         self.tree.bind("<Double-1>", self.OnTreeDoubleClick) #an item has been selected for change
         self.tree.bind("<Return>", self.OnTreeDoubleClick) #an item has been selected for change
@@ -405,8 +445,6 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
     def OnTreeDoubleClick(self,event):
         item = self.tree.selection()[0]
         nchilds = len(self.tree.get_children(item))
-        #print('item=',item)
-        #print('nchilds=',nchilds)
 
         #only edit items which have no subitems (no folders!)
         if nchilds == 0:
@@ -462,9 +500,18 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.editItemName.set('')
         self.comboItem.lower(self.editItem) #bring entry item to front
         
-#        if self.selectedItem != '':
-#            self.editItemVar.set(self.tree.item(self.selectedItem,'values')[0])
-#            self.selectedItem = '' #now item can be modified
+    #if visualizationSettings are accordingly, the renderer will obtain an update signal
+    def UpdateSettingsStructure(self):
+        #++++++++++++++++++++++++++++++++++++++++++++++++
+        #update changes
+        self.settingsStructure.SetDictionary(self.modifiedDictionary)  #this may also change dialogs.multiThreadedDialogs itself
+        if 'currentRendererSystemContainer' in exudyn.sys:
+            guiSC = exudyn.sys['currentRendererSystemContainer']
+            if guiSC != 0:
+                if guiSC.visualizationSettings.dialogs.multiThreadedDialogs:
+                    guiSC.SendRedrawSignal()
+                    exudyn.DoRendererIdleTasks()
+        #++++++++++++++++++++++++++++++++++++++++++++++++
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
     #user has now edited the Entry dialog and valid updates are copied to treeview
@@ -486,6 +533,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 self.editItem.bind('<FocusOut>', self.OnEditEntryItem) #bind again
             
             self.modifiedDictionary = self.GetDictionary('') #update stored dictionary
+            self.UpdateSettingsStructure() #only if according flag set in visualizationSettings
 
     def OnEscapeEntryItem(self,event):
         #print('escape')
@@ -515,6 +563,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             self.tree.focus(currentItem)
 
             self.modifiedDictionary = self.GetDictionary('') #update stored dictionary
+            self.UpdateSettingsStructure() #only if according flag set in visualizationSettings
 
     def OnEscapeComboItem(self,event):
         #print('escape')
@@ -529,75 +578,69 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
 
 #**function: edit dictionaryData and return modified (new) dictionary
 #**input: 
-#   dictionaryData: dictionary obtained from SC.visualizationSettings.GetDictionaryWithTypeInfo()
-#   exu: exudyn module
-#   dictionaryName: name displayed in dialog
+#  settingsStructure: hierarchical settings structure, e.g., SC.visualizationSettings
+#  exu: exudyn module
+#  dictionaryName: name displayed in dialog
 #**output: returns modified dictionary, which can be used, e.g., for SC.visualizationSettings.SetDictionary(...)
-def EditDictionaryWithTypeInfo(dictionaryData, exu=None, dictionaryName='edit'):
-    tkinterAlreadyRunning = False
-    root = -1
-    if 'tkinterRoot' in exudyn.sys:
-        root = exudyn.sys['tkinterRoot']
-        master = tk.Toplevel(root)
-        #print('EditDictionaryWithTypeInfo: tkinter already running, using toplevel')
-        tkinterAlreadyRunning = True
-        tkMaster = root
-    else:
-        master = tk.Tk()
-        tkMaster = master
+def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit'):
+
+    [root, tkWindow, tkinterAlreadyRunning] = GetTkRootAndNewWindow()
     
-    master.geometry(str(treeEditDefaultWidth)+'x'+str(treeEditDefaultHeight))
-    #master.geometry("1024x800")
-    systemScaling = GetGUIContentScaling(tkMaster)
+    tkWindow.geometry(str(treeEditDefaultWidth)+'x'+str(treeEditDefaultHeight))
 
+    guiSC = GetRendererSystemContainer()
+    updateOnChange = False
+    systemScaling = 1.35 #ideal for MacOS 
+    topmost = True
+    alphaTransparency = 1 #<1 means transparency
+    if guiSC != None:
+        updateOnChange = guiSC.visualizationSettings.dialogs.multiThreadedDialogs
+        systemScaling = guiSC.visualizationSettings.dialogs.fontScalingMacOS
+        topmost = guiSC.visualizationSettings.dialogs.alwaysTopmost
+        if guiSC.visualizationSettings.dialogs.alphaTransparency <= 1:
+            alphaTransparency = guiSC.visualizationSettings.dialogs.alphaTransparency
+        
+    fontFactor = systemScaling
+    if not IsApple():
+        #it seems that the font size should not be changed (what is done due to scaling internally ...)
+        fontFactor = 1
+        systemScaling = GetGUIContentScaling(root)
 
-    master.lift() #brings it to front of other; not always "strong" enough
-    master.attributes("-topmost", True) #puts window topmost (permanent)
-    #master.attributes("-topmost", False) #puts window topmost (remove permanent)
-    master.title(dictionaryName)
-    master.focus_force() #window has focus
-
-
-    # if tkinterAlreadyRunning:
-    #     #systemScaling = root.tk.call('tk', 'scaling') #obtains current scaling?
-    #     systemScaling = GetExudynDisplayScaling() #obtains current scaling?
-    # else:
-    #     #systemScaling = master.tk.call('tk', 'scaling') #obtains current scaling
-    #     systemScaling = GetExudynDisplayScaling() #obtains current scaling?
-
-    # print('TK display scaling=',systemScaling)
-    # print('exudyn display scaling=',GetExudynDisplayScaling())
+    tkWindow.lift() #brings it to front of other; not always "strong" enough
+    if topmost:
+        root.attributes("-topmost", True) #puts window topmost (permanent)
+    if alphaTransparency <= 1:
+        tkWindow.attributes("-alpha", alphaTransparency) 
+        
+    tkWindow.title(dictionaryName)
+    tkWindow.focus_force() #window has focus
 
     textHeight = TkTextHeight(systemScaling)
-    #fontSize = TkFontSize(systemScaling)
 
     #no effect:
-    # defaultFont = tkFont.Font(root=tkMaster, family = "TkDefaultFont")
+    # defaultFont = tkFont.Font(root=root, family = "TkDefaultFont")
     # defaultFont.configure(size=fontSize)
     
-    style = ttk.Style(master)
+    style = ttk.Style(tkWindow)
     style.configure('Treeview', rowheight=textHeight) 
-    #it seems that the font size should not be changed (what is done due to scaling internally ...)
-    fontFactor = 1
     
     style.configure("Treeview.Heading", font=(None, int(treeviewDefaultFontSize*fontFactor) ) )
-    style.configure("Treeview", font=(None, int(treeviewDefaultFontSize*fontFactor) ) )
+    style.configure("Treeview", font=(None, int(treeviewDefaultFontSize*fontFactor) ))
     
     #style.configure("Vertical.TScrollbar", width=4)
     
-    def closeEditDictionary(event):
-        master.destroy() 
-
     comboListsT = GetComboBoxListsDict(exu)
-    ex=TkinterEditDictionaryWithTypeInfo(parent=master, dictionaryData=dictionaryData, dictionaryTypesT=comboListsT, treeOpen=True, textHeight = textHeight)
+    ex=TkinterEditDictionaryWithTypeInfo(parent=tkWindow, settingsStructure=settingsStructure, dictionaryTypesT=comboListsT, 
+                                         updateOnChange=updateOnChange, treeOpen=True, textHeight = textHeight)
     ex.pack(fill="both", expand=True)
 
     if not tkinterAlreadyRunning:
-        master.mainloop() #run second main loop? will crash
+        tk.mainloop()
     else:
-        root.wait_window(master)
-        
-    return ex.modifiedDictionary
+        root.wait_window(tkWindow)
+    
+    settingsStructure.SetDictionary(ex.modifiedDictionary)
+    #return ex.modifiedDictionary
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -805,58 +848,59 @@ class TkinterEditDictionary(tk.Frame):
 
 #edit dictionaryData and return modified (new) dictionary
 def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
-    tkinterAlreadyRunning = False
-    root = -1
-    if 'tkinterRoot' in exudyn.sys:
-        root = exudyn.sys['tkinterRoot']
-        master = tk.Toplevel(root)
-        #print('EditDictionary: tkinter already running, using toplevel')
-        tkinterAlreadyRunning = True
-        tkMaster = root
-    else:
-        master = tk.Tk()
-        tkMaster = master
+    [root, tkWindow, tkinterAlreadyRunning] = GetTkRootAndNewWindow()
 
-    master.geometry(str(dialogDefaultWidth)+'x'+str(dialogDefaultHeight))
-    #master.geometry("600x600")
-    systemScaling = GetGUIContentScaling(tkMaster)
+    tkWindow.geometry(str(dialogDefaultWidth)+'x'+str(dialogDefaultHeight))
 
-    master.lift() #brings it to front of other; is not always strong enough
-    master.attributes("-topmost", True) #puts window topmost (permanent)
-    #master.attributes("-topmost", False) #puts window topmost (remove permanent)
+    guiSC = GetRendererSystemContainer()
+    systemScaling = 1.35 #ideal for MacOS 
+    topmost = True
+    alphaTransparency = 1 #<1 means transparency
+    if guiSC != None:
+        systemScaling = guiSC.visualizationSettings.dialogs.fontScalingMacOS
+        topmost = guiSC.visualizationSettings.dialogs.alwaysTopmost
+        if guiSC.visualizationSettings.dialogs.alphaTransparency <= 1:
+            alphaTransparency = guiSC.visualizationSettings.dialogs.alphaTransparency
+        
+    fontFactor = systemScaling
+    if not IsApple():
+        #it seems that the font size should not be changed (what is done due to scaling internally ...)
+        fontFactor = 1
+        systemScaling = GetGUIContentScaling(root)
+
+    tkWindow.lift() #brings it to front of other; not always "strong" enough
+    if topmost:
+        tkWindow.attributes("-topmost", True) #puts window topmost (permanent)
+    if alphaTransparency:
+        tkWindow.attributes("-alpha", alphaTransparency) 
     
 
     textHeight = TkTextHeight(systemScaling)
     #fontSize = TkFontSize(systemScaling)
 
     #no effect:
-    # defaultFont = tkFont.Font(root=tkMaster, family = "TkDefaultFont")
+    # defaultFont = tkFont.Font(root=root, family = "TkDefaultFont")
     # defaultFont.configure(size=fontSize)
 
-    master.title(dialogName)
-    master.focus_force() #window has focus
+    tkWindow.title(dialogName)
+    tkWindow.focus_force() #window has focus
 
-    style = ttk.Style(master)
+    style = ttk.Style(tkWindow)
     style.configure('Treeview', rowheight=textHeight) 
     #it seems that the font size should not be changed (what is done due to scaling internally ...)
 
-    fontFactor = 1
-    
     style.configure("Treeview.Heading", font=(None, int(treeviewDefaultFontSize*fontFactor) ) )
     style.configure("Treeview", font=(None, int(treeviewDefaultFontSize*fontFactor) ) )
 
     #this has no effect style.configure("Vertical.TScrollbar", width=4)
-    
-    def closeEditDictionary(event):
-        master.destroy() 
 
-    ex=TkinterEditDictionary(master, dictionaryData, dictionaryIsEditable, textHeight)
+    ex=TkinterEditDictionary(tkWindow, dictionaryData, dictionaryIsEditable, textHeight)
     ex.pack(fill="both", expand=True)
 
     if not tkinterAlreadyRunning:
-        master.mainloop() #run second main loop? will crash
+        tk.mainloop() #run second main loop? will crash
     else:
-        root.wait_window(master)
+        root.wait_window(tkWindow)
     
     if dictionaryIsEditable:
         return ex.modifiedDictionary

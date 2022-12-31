@@ -420,7 +420,6 @@ class BuildExt(build_ext):
          '-Wno-unknown-pragmas', #warning from ngs_core.hpp/taskmanager.hpp (NGsolve)
          '-Wno-sign-compare', #warning from taskmanager.hpp (NGsolve)
          '-Wno-array-bounds', #warnings in ConstSizeMatrix
-         '-Wno-maybe-uninitialized', #warnings in ConstSizeMatrix
  		 '-Wall',
          '-g0', #deactivate debug information (overrides default -g flags), decreases files size from 38MB to 2.6 MB in Python 3.6 version
          '-D'+exudynPythonMacro,
@@ -481,6 +480,7 @@ class BuildExt(build_ext):
         c_opts['unix'] += [
         '-Wno-non-template-friend', #deactivate warning for several vector/array templates
         '-Wno-class-memaccess', #warning in SearchTree Box3D; BUT: does not work on older gcc; avoid warnings on gcc-8 regarding memory access in class
+        '-Wno-maybe-uninitialized', #warnings in ConstSizeMatrix
         ]
 
     def build_extensions(self):

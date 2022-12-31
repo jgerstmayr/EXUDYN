@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -185,7 +185,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -277,7 +277,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -368,7 +368,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -462,7 +462,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -523,7 +523,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -601,7 +601,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -690,7 +690,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -759,7 +759,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -837,7 +837,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -906,7 +906,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -988,11 +988,11 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        VSettingsWindow
-* @brief        Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.
+* @brief        OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1074,12 +1074,83 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
+* @class        VSettingsDialogs
+* @brief        Settings related to dialogs (e.g., visualization settings dialog).
+*
+* @author       AUTO: Gerstmayr Johannes
+* @date         AUTO: 2019-07-01 (generated)
+* @date         AUTO: 2022-12-31 (last modfied)
+*
+* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
+* @note         Bug reports, support and further information:
+                - email: johannes.gerstmayr@uibk.ac.at
+                - weblink: missing
+                
+************************************************************************************************ **/
+#include <ostream>
+
+#include "Utilities/ReleaseAssert.h"
+#include "Utilities/BasicDefinitions.h"
+#include "Main/OutputVariable.h"
+#include "Linalg/BasicLinalg.h"
+
+class VSettingsDialogs // AUTO: 
+{
+public: // AUTO: 
+  float alphaTransparency;                        //!< AUTO: alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)
+  bool alwaysTopmost;                             //!< AUTO: True: dialogs are always topmost (otherwise, they are sometimes hidden)
+  float fontScalingMacOS;                         //!< AUTO: font scaling value for MacOS systems (on Windows, system display scaling is used)
+  bool multiThreadedDialogs;                      //!< AUTO: True: During dialogs, the OpenGL render window will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed
+
+
+public: // AUTO: 
+  //! AUTO: default constructor with parameter initialization
+  VSettingsDialogs()
+  {
+    alphaTransparency = 0.94f;
+    alwaysTopmost = true;
+    fontScalingMacOS = 1.35f;
+    multiThreadedDialogs = true;
+  };
+
+  // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)
+  void PySetAlphaTransparency(const float& alphaTransparencyInit) { alphaTransparency = EXUstd::GetSafelyUFloat(alphaTransparencyInit,"alphaTransparency"); }
+  //! AUTO: Read (Copy) access to: alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)
+  float PyGetAlphaTransparency() const { return float(alphaTransparency); }
+
+  //! AUTO: Set function (needed in pybind) for: font scaling value for MacOS systems (on Windows, system display scaling is used)
+  void PySetFontScalingMacOS(const float& fontScalingMacOSInit) { fontScalingMacOS = EXUstd::GetSafelyUFloat(fontScalingMacOSInit,"fontScalingMacOS"); }
+  //! AUTO: Read (Copy) access to: font scaling value for MacOS systems (on Windows, system display scaling is used)
+  float PyGetFontScalingMacOS() const { return float(fontScalingMacOS); }
+
+  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
+  virtual void Print(std::ostream& os) const
+  {
+    os << "VSettingsDialogs" << ":\n";
+    os << "  alphaTransparency = " << alphaTransparency << "\n";
+    os << "  alwaysTopmost = " << alwaysTopmost << "\n";
+    os << "  fontScalingMacOS = " << fontScalingMacOS << "\n";
+    os << "  multiThreadedDialogs = " << multiThreadedDialogs << "\n";
+    os << "\n";
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const VSettingsDialogs& object)
+  {
+    object.Print(os);
+    return os;
+  }
+
+};
+
+
+/** ***********************************************************************************************
 * @class        VSettingsOpenGL
 * @brief        OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL functionality
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1351,7 +1422,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1453,7 +1524,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1508,7 +1579,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1644,7 +1715,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-21 (last modfied)
+* @date         AUTO: 2022-12-31 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1666,6 +1737,7 @@ public: // AUTO:
   VSettingsConnectors connectors;                 //!< AUTO: connector visualization settings
   VSettingsContact contact;                       //!< AUTO: contact visualization settings
   VSettingsContour contour;                       //!< AUTO: contour plot visualization settings
+  VSettingsDialogs dialogs;                       //!< AUTO: dialogs settings
   VSettingsExportImages exportImages;             //!< AUTO: settings for exporting (saving) images to files in order to create animations
   VSettingsGeneral general;                       //!< AUTO: general visualization settings
   VSettingsInteractive interactive;               //!< AUTO: Settings for interaction with renderer
@@ -1688,6 +1760,7 @@ public: // AUTO:
     os << "  connectors = " << connectors << "\n";
     os << "  contact = " << contact << "\n";
     os << "  contour = " << contour << "\n";
+    os << "  dialogs = " << dialogs << "\n";
     os << "  exportImages = " << exportImages << "\n";
     os << "  general = " << general << "\n";
     os << "  interactive = " << interactive << "\n";

@@ -46,6 +46,8 @@ const int queuedPythonProcessIDlistLength = 2;					//!< amount of entries
 std::atomic_flag queuedPythonProcessAtomicFlag = ATOMIC_FLAG_INIT;//!< flag for queued processID
 ResizableArray<SlimArray<int, queuedPythonProcessIDlistLength>>  queuedPythonProcessIDlist;	//!< this queued (processID, processInformation)
 bool rendererCallbackLock = false;								//!< callbacks deactivated as long as Python dialogs open (avoid crashes)
+bool rendererPythonCommandLock = false;							//!< callbacks deactivated as long as Python dialogs open (avoid crashes)
+bool rendererMultiThreadedDialogs = true;						//!< renderer stays interactive during rendering (immediate apply of changes, e.g., visualizationSettings)
 
 std::atomic_flag queuedPythonExecutableCodeAtomicFlag = ATOMIC_FLAG_INIT;			//!< flag for executable python code (String)
 STDstring queuedPythonExecutableCodeStr;						//!< this string contains (accumulated) python code which shall be executed
@@ -55,13 +57,22 @@ ResizableArray<SlimArray<int, 3>> queuedRendererKeyList;	//!< this list contains
 std::function<int(int, int, int)> keyPressUserFunction = 0; //!< must be set by GLFW, before that nothing is done; should not be changed too often, as it is not stored in list
 
 //! lock renderer callbacks during critical operations 
-void PySetRendererCallbackLock(bool flag)
-{
-	rendererCallbackLock = flag;
-}
+void PySetRendererCallbackLock(bool flag) { rendererCallbackLock = flag; }
 
 //! get state of callback lock
 bool PyGetRendererCallbackLock() { return rendererCallbackLock; }
+
+//! lock renderer callbacks during critical operations 
+void PySetRendererPythonCommandLock(bool flag) { rendererPythonCommandLock = flag; }
+
+//! get state of callback lock
+bool PyGetRendererPythonCommandLock() { return rendererPythonCommandLock; }
+
+//! set state of multithreaded dialog (interaction with renderer during settings dialogs)
+void PySetRendererMultiThreadedDialogs(bool flag) { rendererMultiThreadedDialogs = flag; }
+
+//! get state of multithreaded dialog (interaction with renderer during settings dialogs)
+bool PyGetRendererMultiThreadedDialogs() { return rendererMultiThreadedDialogs; }
 
 
 //! put process ID into queue, which is then called from main (Python) thread
@@ -71,7 +82,8 @@ void PyQueuePythonProcess(ProcessID::Type processID, Index info)
 	queuedPythonProcessIDlist.Append(SlimArray<int, queuedPythonProcessIDlistLength>({ processID, info}));
 	EXUstd::ReleaseSemaphore(queuedPythonProcessAtomicFlag); 
 
-	if (RendererIsSingleThreadedOrNotRunning()) { PyProcessPythonProcessQueue(); PyProcessExecutableStringQueue();  } //immediately process queue...+executable string for right-mouse-button
+    //do not process here: will not work on Apple, as it is done inside key callback function
+	//if (RendererIsSingleThreadedOrNotRunning()) { PyProcessPythonProcessQueue(); PyProcessExecutableStringQueue();  } //immediately process queue...+executable string for right-mouse-button
 }
 
 //! put executable string into queue, which is then called from main (Python) thread
@@ -81,7 +93,7 @@ void PyQueueExecutableString(STDstring str) //call python function and execute s
 	queuedPythonExecutableCodeStr += '\n' + str; //for safety add a "\n", as the last command may include spaces, tabs, ... at the end
 	EXUstd::ReleaseSemaphore(queuedPythonExecutableCodeAtomicFlag); //clear queuedPythonExecutableCodeStr
 
-	if (RendererIsSingleThreadedOrNotRunning()) { PyProcessExecutableStringQueue(); } //immediately process queue...
+	//if (RendererIsSingleThreadedOrNotRunning()) { PyProcessExecutableStringQueue(); } //immediately process queue...
 }
 
 //! put executable key codes into queue, which are the processed in main (Python) thread
@@ -92,7 +104,7 @@ void PyQueueKeyPressed(int key, int action, int mods)
 	queuedRendererKeyList.Append(SlimArray<int, 3>({ key, action, mods }));
 	EXUstd::ReleaseSemaphore(queuedRendererKeyListAtomicFlag); //clear queuedRendererKeyListAtomicFlag
 
-	if (RendererIsSingleThreadedOrNotRunning()) { PyProcessRendererKeyQueue(); } //immediately process queue...
+	//if (RendererIsSingleThreadedOrNotRunning()) { PyProcessRendererKeyQueue(); } //immediately process queue...
 }
 
 
@@ -169,8 +181,6 @@ void PyProcessPythonProcessQueue()
 	{
 		EXUstd::ReleaseSemaphore(queuedPythonProcessAtomicFlag); //clear queuedPythonExecutableCodeStr
 	}
-
-
 }
 
 //! process waiting queue: strings
@@ -235,7 +245,7 @@ void PyProcessRendererKeyQueue()
 		//std::cout << "keylist=" << keyList << "\n";
 		bool glfwInitialized = false;
 #ifdef USE_GLFW_GRAPHICS
-		glfwInitialized = GetGlfwRenderer().WindowIsInitialized();
+		glfwInitialized = GetGlfwRenderer().IsGlfwInitAndRendererActive();
 #endif //USE_GLFW_GRAPHICS
 		if (glfwInitialized) //otherwise makes no sense ...! ==> ignore
 		{
@@ -307,48 +317,62 @@ void PyProcessRendererKeyQueue()
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void PyProcessShowVisualizationSettingsDialog()
 {
-	//open window to execute a python command ... 
-	std::string str = R"(
+    //open window to execute a python command ... 
+    std::string str = R"(
 import exudyn
 import numpy as np
-import exudyn.GUI
 try:
-    if 'currentRendererSystemContainer' not in exudyn.sys: 
-        print('ERROR: problems with SystemContainer, probably not attached yet to renderer')
-    else:
-        guiSC = exudyn.sys['currentRendererSystemContainer']
-        if guiSC != 0: #this would mean that renderer is detached
-            vis=guiSC.visualizationSettings.GetDictionaryWithTypeInfo()
-            guiSC.visualizationSettings.SetDictionary(exudyn.GUI.EditDictionaryWithTypeInfo(vis, exu, 'Visualization Settings'))
-except Exception as exceptionVariable:
-    print("edit dialog for visualizationSettings failed")
-    print(exceptionVariable) #not necessary, but can help to identify reason
+    import exudyn.GUI #this may also fail because of tkinter
+    try:
+        guiSC = exudyn.GUI.GetRendererSystemContainer()
+        if guiSC == None:
+            print('ERROR: problems with SystemContainer, probably not attached yet to renderer')
+        else:
+            exudyn.GUI.EditDictionaryWithTypeInfo(guiSC.visualizationSettings, exu, 'Visualization Settings') 
+    except Exception as exceptionVariable:
+        print("edit dialog for visualizationSettings failed")
+        print(exceptionVariable) #not necessary, but can help to identify reason
+except:
+    print("visualizationSettings dialog failed: cannot import exudyn.GUI / tkinter; tkinter probably missing")
+
 )";
-	PyProcessExecuteStringAsPython(str);
+    PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
 }
 
 
 
 void PyProcessShowHelpDialog()
 {
-	std::string str = R"(
+    float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
+    std::string str = R"(
 import tkinter as tk
 import exudyn
-if 'tkinterRoot' not in exudyn.sys: #avoid crash if tkinter running
-	root = tk.Tk()
-	root.attributes("-topmost", True) #puts window topmost (permanent)
-	root.title("Help on keyboard commands and mouse")
-	root.lift() #window has focus
-	root.bind("<Escape>", lambda x: root.destroy())
-	root.focus_force() #window has focus
-	scrollW = tk.Scrollbar(root)
-	textW = tk.Text(root, height = 30, width = 90)
-	textW.focus_set()
-	scrollW.pack(side = tk.RIGHT, fill = tk.Y)
-	textW.pack(side = tk.LEFT, fill = tk.Y)
-	scrollW.config(command = textW.yview)
-	textW.config(yscrollcommand = scrollW.set)
-	msg = """
+from exudyn.GUI import GetTkRootAndNewWindow
+
+[root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
+
+)";
+    if (GetGlfwRenderer().GetVisualizationSettings()->dialogs.alwaysTopmost)
+    {
+        str += "tkWindow.attributes('-topmost', True) #puts window topmost (permanent)\n";
+    }
+    if (alphaTransparency < 1.f)
+    {
+        str += "tkWindow.attributes('-alpha'," + EXUstd::ToString(alphaTransparency) + ") #transparency\n";
+    }
+    str += R"(
+tkWindow.title("Help on keyboard commands and mouse")
+tkWindow.lift() #window has focus
+tkWindow.bind("<Escape>", lambda x: tkWindow.destroy())
+tkWindow.focus_force() #window has focus
+scrollW = tk.Scrollbar(tkWindow)
+textW = tk.Text(tkWindow, height = 30, width = 90,)
+textW.focus_set()
+scrollW.pack(side = tk.RIGHT, fill = tk.Y)
+textW.pack(side = tk.LEFT, fill = tk.Y)
+scrollW.config(command = textW.yview)
+textW.config(yscrollcommand = scrollW.set)
+msg = """
 Mouse action:
 left mouse button     ... hold and drag: move model
 left mouse button     ... click: select item (deactivated if mouse coordinates shown)
@@ -390,89 +414,106 @@ X      ... execute command; dialog may appear behind the visualization window! m
 V      ... visualization settings; dialog may appear behind the visualization window!
 ESCAPE ... close render window and stop all simulations (same as close window button)
 SPACE ... continue simulation
-	"""
-	textW.insert(tk.END, msg)
-	tk.mainloop()
+"""
+textW.insert(tk.END, msg)
+textW.configure(state='disabled') #unable to edit
+if tkRuns:
+    root.wait_window(tkWindow)
+else:
+    tk.mainloop()
 )";
-	PyProcessExecuteStringAsPython(str);
+    PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
 
 }
 
 void PyProcessShowPythonCommandDialog()
 {
-	//open window to execute a python command ... 
-	//trys to catch errors made by user in this window
-	//std::string str =
-	std::string str = R"(
+    //open window to execute a python command ... 
+    float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
+    std::string str = R"(
 import exudyn
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
-if 'tkinterRoot' not in exudyn.sys: #avoid crash if tkinter running
-	commandString = ''
-	commandSet = False
-	singleCommandMainwin = tk.Tk()
-	singleCommandMainwin.focus_force() #window has focus
-	#singleCommandMainwin.lift() #brings it to front of other
-	singleCommandMainwin.attributes("-topmost", True) #puts window topmost (permanent)
-	#singleCommandMainwin.attributes("-topmost", False)#keeps window topmost, but not permanent
-	singleCommandMainwin.bind("<Escape>", lambda x: singleCommandMainwin.destroy())
+from exudyn.GUI import GetTkRootAndNewWindow
 
-	def OnSingleCommandReturn(event): #set command string, but do not execute
-		commandString = singleCommandEntry.get()
-		print(commandString) #printout the command
-		#exec(singleCommandEntry.get(), globals()) #OLD version, does not print return value!
-		try:
-			exec(f"""locals()['tempEXUDYNexecute'] = {commandString}""", globals(), locals())
-			if locals()['tempEXUDYNexecute']!=None:
-				print(locals()['tempEXUDYNexecute'])
-			singleCommandMainwin.destroy()
-		except:
-			print("Execution of command failed. check your code!")
-
-	tk.Label(singleCommandMainwin, text="Single command (press return to execute):", justify=tk.LEFT).grid(row=0, column=0)
-	singleCommandEntry = tk.Entry(singleCommandMainwin, width=70);
-	singleCommandEntry.grid(row=1, column=0)
-	singleCommandEntry.bind('<Return>',OnSingleCommandReturn)
-	singleCommandMainwin.mainloop()
+[root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
+commandString = ''
+commandSet = False
+tkWindow.focus_force() #window has focus
 )";
-	PyProcessExecuteStringAsPython(str);
+    if (GetGlfwRenderer().GetVisualizationSettings()->dialogs.alwaysTopmost)
+    {
+        str += "tkWindow.attributes('-topmost', True) #puts window topmost (permanent)\n";
+    }
+    if (alphaTransparency < 1.f)
+    {
+        str += "tkWindow.attributes('-alpha'," + EXUstd::ToString(alphaTransparency) + ") #transparency\n";
+    }
+    str += R"(
+tkWindow.bind("<Escape>", lambda x: tkWindow.destroy())
+
+def OnSingleCommandReturn(event): #set command string, but do not execute
+    commandString = singleCommandEntry.get()
+    print(commandString) #printout the command
+    #exec(singleCommandEntry.get(), globals()) #OLD version, does not print return value!
+    try:
+        exec(f"""locals()['tempEXUDYNexecute'] = {commandString}""", globals(), locals())
+        if locals()['tempEXUDYNexecute']!=None:
+            print(locals()['tempEXUDYNexecute'])
+        tkWindow.destroy()
+    except:
+        print("Execution of command failed. check your code!")
+
+tk.Label(tkWindow, text="Single command (press return to execute):", justify=tk.LEFT).grid(row=0, column=0)
+singleCommandEntry = tk.Entry(tkWindow, width=70);
+singleCommandEntry.grid(row=1, column=0)
+singleCommandEntry.bind('<Return>',OnSingleCommandReturn)
+
+if tkRuns:
+    root.wait_window(tkWindow)
+else:
+    tk.mainloop()
+)";
+    PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
 }
 
 void PyProcessShowRightMouseSelectionDialog(Index itemID)
 {
 #ifdef USE_GLFW_GRAPHICS //only works with renderer active
-	GetGlfwRenderer().PySetRendererSelectionDict(itemID);
-	STDstring strName = "edit item";
-	STDstring str = "import exudyn\n";
-	str += "import numpy as np\n";
-	str += "import exudyn.GUI\n";
-	//str += "d=exudyn.GetInternalSelectionDict()\n";
-	str += "d=exudyn.sys['currentRendererSelectionDict']\n";
-	str += "try:\n";
-	str += "    strName = 'properties of <' + d['name'] + '>'\n";
-	str += "    exudyn.GUI.EditDictionary(d,False,dialogName=strName)\n";
-	str += "except:\n";
-	str += "    print('showing of dictionary failed')\n";
-	PyProcessExecuteStringAsPython(str);
+    GetGlfwRenderer().PySetRendererSelectionDict(itemID);
+    STDstring strName = "edit item";
+    STDstring str = "import exudyn\n";
+    str += "import numpy as np\n";
+    str += "import exudyn.GUI\n";
+    //str += "d=exudyn.GetInternalSelectionDict()\n";
+    str += "d=exudyn.sys['currentRendererSelectionDict']\n";
+    str += "try:\n";
+    str += "    strName = 'properties of <' + d['name'] + '>'\n";
+    str += "    exudyn.GUI.EditDictionary(d,False,dialogName=strName)\n";
+    str += "except:\n";
+    str += "    print('showing of dictionary failed')\n";
+    PyProcessExecuteStringAsPython(str);
 #endif // USE_GLFW_GRAPHICS
 
 }
 
 
-void PyProcessExecuteStringAsPython(const STDstring& str)
+void PyProcessExecuteStringAsPython(const STDstring& str, bool lockRendererCallbacks, bool lockPythonCommands)
 {
-	py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
-	PySetRendererCallbackLock(true);
-	py::exec(str.c_str(), scope);
-	PySetRendererCallbackLock(false);
+    py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
+    PySetRendererCallbackLock(lockRendererCallbacks);
+    PySetRendererPythonCommandLock(lockPythonCommands);
+    py::exec(str.c_str(), scope);
+    PySetRendererCallbackLock(false);
+    PySetRendererPythonCommandLock(false);
 }
 
 //! check if renderer is single-threaded or not running
 bool RendererIsSingleThreadedOrNotRunning()
 {
 #ifdef USE_GLFW_GRAPHICS //only works with renderer active
-	if (!GetGlfwRenderer().UseMultiThreadedRendering() || !GetGlfwRenderer().WindowIsInitialized())
-	{
+    if (!GetGlfwRenderer().UseMultiThreadedRendering() || !GetGlfwRenderer().IsGlfwInitAndRendererActive())
+    {
 		return true;
 	}
 	return false;
@@ -485,7 +526,7 @@ bool RendererIsSingleThreadedOrNotRunning()
 void RendererDoSingleThreadedIdleTasks()
 {
 #ifdef USE_GLFW_GRAPHICS //only works with renderer active
-	if (GetGlfwRenderer().WindowIsInitialized() && !GetGlfwRenderer().UseMultiThreadedRendering())
+	if (GetGlfwRenderer().IsGlfwInitAndRendererActive() && !GetGlfwRenderer().UseMultiThreadedRendering())
 	{
 		GetGlfwRenderer().DoRendererIdleTasks(0);
 	}

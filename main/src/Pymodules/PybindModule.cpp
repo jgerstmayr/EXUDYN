@@ -325,6 +325,20 @@ void PyWriteToSysDictionary(const STDstring& key, py::object item)
 bool PyStartOpenGLRenderer(bool verbose=true)
 {
 #ifdef USE_GLFW_GRAPHICS
+	#if defined(__EXUDYN__APPLE__)
+	//on APPLE, tkinter must be imported before start of OpenGL - workaround for BUG, #1339
+	STDstring str = "";
+	str += "try:\n";
+	str += "    import tkinter as tk\n";
+	str += "    rootTk = tk.Tk()\n";
+	str += "    rootTk.withdraw()\n";
+	str += "except:\n";
+	str += "    pass\n"; //no error at this point as tkinter may just not be available for no-glfw use
+
+	py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
+	py::exec(str.c_str(), scope);
+
+	#endif
 	return glfwRenderer.SetupRenderer(verbose);
 #else
 	PyWarning("StartRenderer(): has no effect as GLFW_GRAPHICS is deactivated in your exudyn module (needs recompile or another version)");
@@ -339,6 +353,16 @@ void PyStopOpenGLRenderer()
 	glfwRenderer.StopRenderer();
 #else
 	PyWarning("StopRenderer(): has no effect as GLFW_GRAPHICS is deactivated in your exudyn module (needs recompile or another version)");
+#endif
+}
+
+//! start glfw renderer; return true if successful
+bool PyIsRendererActive()
+{
+#ifdef USE_GLFW_GRAPHICS
+	return glfwRenderer.IsGlfwInitAndRendererActive();
+#else
+	return false;
 #endif
 }
 
@@ -437,10 +461,12 @@ PYBIND11_MODULE(exudynCPP, m) {
 	py::dict exudynVariables; //!< global dictionary which can be used by the user to store local variables
 	py::dict exudynSystemVariables; //!< global dictionary which is used by system functions to store local variables
 
-	//put into pybindings.py: m.def("GetVersionString", &PyGetVersionString, "get version as string as a function which is passed trough exudyn package");
+	//no effect:
+	//m.def("__repr__", [](const PyModuleDef&) {
+	//	return STDstring("This is the exudyn module; see theDoc.pdf on https://github.com/jgerstmayr/EXUDYN tutorials how to create multibody models");
+	//}, "return the string representation of module");
 
-	//m.def("PrintLF", &PyPrintLF, "this allows printing via exudyn with similar syntax as in python print(...) except for keyword arguments: print('test=',42); allows to redirect all output to file given by SetWriteToFile(...)");
-	
+
 	//m.def("PyThrowTest", &PyThrowTest, "PyThrowTest");
 
 	//m.def("GetVector", &GetVector, "GetVector");
@@ -779,6 +805,8 @@ PYBIND11_MODULE(exudynCPP, m) {
 		.def("AttachToRenderEngine", &MainSystemContainer::AttachToRenderEngine, "Links the SystemContainer to the render engine, such that the changes in the graphics structure drawn upon updates, etc.; done automatically on creation of SystemContainer; return False, if no renderer exists (e.g., compiled without GLFW) or cannot be linked (if other SystemContainer already linked)")
 
 		.def("DetachFromRenderEngine", &MainSystemContainer::DetachFromRenderEngine, "Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed")
+
+		.def("SendRedrawSignal", &MainSystemContainer::SendRedrawSignal, "This function is used to send a signal to the renderer that all MainSystems (mbs) shall be redrawn")
 
 		.def("GetCurrentMouseCoordinates", &MainSystemContainer::PyGetCurrentMouseCoordinates, "Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(True) to obtain OpenGLcoordinates of projected plane", py::arg("useOpenGLcoordinates") = true)
 

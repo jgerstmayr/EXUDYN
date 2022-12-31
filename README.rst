@@ -4,11 +4,11 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-+  Exudyn version = 1.5.0 (Fitzgerald)
-+  build date and time=2022-12-25  20:26
++  Exudyn version = 1.5.15.dev1 (Fitzgerald)
++  build date and time=2022-12-31  12:59
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
-Exudyn 1.5 is out! It includes now Python 3.7/8 - 3.10 wheels for MacOS, improved compatibility for AVX2, simple reeving system, improved Lie group integration, improved RollingDisc, DistanceSensor, and many fixes; further features are multi-threading support; minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
+Exudyn 1.5 is out! It includes now Python 3.7/8 - 3.10 wheels for MacOS (since 1.5.11.dev1 also showing tkinter dialogs!), improved compatibility for AVX2, simple reeving system, improved Lie group integration, improved RollingDisc, DistanceSensor, and many fixes; further features are multi-threading support; minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
 
 If you like using Exudyn, please add a *star* on github, and send an email to  ``reply.exudyn@gmail.com`` such that we can add you to our newsletter. Let us know, which features you are using or which **features you are missing** and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
@@ -288,8 +288,10 @@ Requirements are an according Anaconda (or Miniconda) installation.
 
 \ **NOTE**\ :
 
-+  on Apple M1 processors, there are significant problems with Miniconda; scipy could not be installed properly in the beginning (April 2022)
-+  Tkinter still does not run.
++  Multi-threading is not fully supported, but may work in some applications
++  On Apple M1 processors the newest Anaconda supports now all required features; environments with Python 3.8-3.10 have been successfully tested;
++  The Rosetta (x86 emulation) mode on Apple M1 also works now without much restrictions; these files should also work on older Macs
++  \ ``tkinter``\  has been adapted (some workarounds needed on MacOS!), available since Exudyn 1.5.15.dev1
 +  Some optimization and processing functions do not run (especially multiprocessing and tqdm); 
 
 
@@ -657,6 +659,20 @@ to explicitly load the version without AVX2.
 
 
   |  =>  see installation instructions to install missing Python modules, theDoc.pdf.
+
++  Problems with \ **tkinter**\ , especially on MacOS:
+
+
+  Exudyn uses \ ``tkinter``\ , based on tcl/tk, to provide some basic dialogs, such as visualizationSettings
+
+
+  As Python is not suited for multithreading, this causes problems in window and dialog workflows. Especially on MacOS
+  \ ``tkinter``\  is less stable and compatible with the window manager. Especially, \ ``tkinter``\  already needs to run
+  before the application's OpenGL window (renderer) is opened. Therefore, on MacOS \ ``tkinter.Tk()``\  is called before the 
+  renderer is started.
+  In some cases, visualizationSettings dialog may not be available and changes have to be made inside the code.
+  |  =>  To resolve issues, the following visualizationSettings may help (before starting renderer!), but may reduce functionality: 
+    dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False
  
 
 
@@ -1309,17 +1325,17 @@ There are some user functions in order to customize drawing:
 
 Note that all kinds of \ ``graphicsDataUserFunction``\ s need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the \ ``graphicsDataUserFunction``\  between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.
 
-Color and RGBA
-==============
+Color, RGBA and alpha-transparency
+==================================
 
-Many functions and objects include color information. In order to allow transparency, all colors contain a list of 4 RGBA values, all values being in the range [0..1]:
+Many functions and objects include color information. In order to allow alpha-transparency, all colors contain a list of 4 RGBA values, all values being in the range [0..1]:
 
 +  red (R) channel 
 +  green (G) channel  
 +  blue (B) channel 
-+  alpha (A) value, representing transparency (A=0: fully transparent, A=1: solid)
++  alpha (A) value, representing the so-called \ **alpha-transparency**\  (A=0: fully transparent, A=1: solid)
 
-E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in \ ``exudynGraphicsDataUtilities.py``\ , e.g., \ ``color4red``\  or \ ``color4steelblue``\  as well a list of 10 colors \ ``color4list``\ , which is convenient to be used in a loop creating objects.
+E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in \ ``exudynGraphicsDataUtilities.py``\ , e.g., \ ``color4red``\  or \ ``color4steelblue``\  as well a list of 16 colors \ ``color4list``\ , which is convenient to be used in a loop creating objects.
 
 Camera following objects and interacting with model view
 ========================================================

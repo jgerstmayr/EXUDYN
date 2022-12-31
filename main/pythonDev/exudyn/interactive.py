@@ -18,6 +18,7 @@ import tkinter
 import tkinter.font as tkFont
 import copy		   #copy numpy objects
 import exudyn
+from exudyn.GUI import GetTkRootAndNewWindow
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -124,12 +125,14 @@ class InteractiveDialog:
 
 
         #create tkinter instance
-        root = self.root = tkinter.Tk()
-        exudyn.sys['tkinterRoot'] = root
-        root.protocol("WM_DELETE_WINDOW", self.OnQuit) #always leave app with OnQuit
-        root.title(title)
+        [self.root, self.tkWindow, tkRuns] = GetTkRootAndNewWindow()
+
+        # root = self.root = tkinter.Tk()
+        #exudyn.sys['tkinterRoot'] = root #not needed anymore, as GUI.GetTkRootAndNewWindow() is used
+        self.tkWindow.protocol("WM_DELETE_WINDOW", self.OnQuit) #always leave app with OnQuit
+        self.tkWindow.title(title)
         try:
-            systemScaling = root.call('tk', 'scaling') #obtains current scaling?
+            systemScaling = self.tkWindow.call('tk', 'scaling') #obtains current scaling?
         except:
             pass
         #print('systemScaling=',systemScaling)
@@ -137,11 +140,10 @@ class InteractiveDialog:
 
         #change global font size
         if True:
-            defaultFont = tkFont.Font(root=root, family = "TkDefaultFont")#,weight = "bold")
+            defaultFont = tkFont.Font(root=self.tkWindow, family = "TkDefaultFont")#,weight = "bold")
             defaultFont.configure(size=int(systemScaling*self.fontSize))
-            root.option_add("*Font", "TkDefaultFont") #all widgets should use TkDefaultFont; does not work
+            self.tkWindow.option_add("*Font", "TkDefaultFont") #all widgets should use TkDefaultFont; does not work
         
-        self.root = root
         self.counter = 0 #counter for simulationFunction
         self.simulationStopped = True
         self.variableList = [] #list of tuples: (widget, mbs variable name); value obtained with widget.get()
@@ -171,21 +173,21 @@ class InteractiveDialog:
                 setGrid = True
                 if addLabelStringVariables:
                     stringVar = tkinter.StringVar()
-                    widget = tkinter.Label(root, textvariable = stringVar, 
+                    widget = tkinter.Label(self.tkWindow, textvariable = stringVar, 
                                            borderwidth = self.itemBorder, 
                                            #justify=tkinter.LEFT, #needed?
                                            font=defaultFont)
                     stringVar.set(text)
                     self.labelStringVariables += [stringVar] #store in list
                 else:
-                    widget = tkinter.Label(root, text = text, 
+                    widget = tkinter.Label(self.tkWindow, text = text, 
                                            borderwidth = self.itemBorder, 
                                            font=defaultFont)
 
             #++++++++++++++++++++++++++++++++++
             elif item['type'] == 'button':
                 setGrid = True
-                widget = tkinter.Button(root, text = text, 
+                widget = tkinter.Button(self.tkWindow, text = text, 
                                        borderwidth = self.itemBorder, 
                                        font=defaultFont)
                 if 'callFunction' in item:
@@ -215,7 +217,7 @@ class InteractiveDialog:
                     nDigits = 0
                 
                 if not addSliderVariables:
-                    widget = tkinter.Scale(root, from_=minValue, to=maxValue,
+                    widget = tkinter.Scale(self.tkWindow, from_=minValue, to=maxValue,
                                            length = steps, digits=nDigits, resolution=resolutionItem,
                                            orient=tkinter.HORIZONTAL,
                                            font=defaultFont)
@@ -224,7 +226,7 @@ class InteractiveDialog:
                     #add option to modify scale from outside
                     tkVariable = tkinter.DoubleVar()
                     tkVariable.set(initialValue)
-                    widget = tkinter.Scale(root, from_=minValue, to=maxValue,
+                    widget = tkinter.Scale(self.tkWindow, from_=minValue, to=maxValue,
                                            length = steps, digits=nDigits, resolution=resolutionItem,
                                            orient=tkinter.HORIZONTAL,
                                            variable=tkVariable,
@@ -243,7 +245,7 @@ class InteractiveDialog:
                 var.set(item['value'])
                 cnt = 0
                 for opt in item['textValueList']:
-                    widget = tkinter.Radiobutton(root, 
+                    widget = tkinter.Radiobutton(self.tkWindow, 
                                                 text=opt[0],
                                                 padx = 20, 
                                                 variable=var, 
@@ -294,7 +296,7 @@ class InteractiveDialog:
         #show current time 
         if self.showTime:
             self.currentTime = tkinter.StringVar()
-            widget = tkinter.Label(root, textvariable = self.currentTime, 
+            widget = tkinter.Label(self.tkWindow, textvariable = self.currentTime, 
                                    borderwidth = self.itemBorder, justify=tkinter.LEFT,
                                    font=defaultFont)
             self.currentTime.set('t = ')
@@ -302,7 +304,7 @@ class InteractiveDialog:
 
         #add run button into last row:
         self.RunButtonText = tkinter.StringVar()
-        self.Run = tkinter.Button(root, textvariable=self.RunButtonText,
+        self.Run = tkinter.Button(self.tkWindow, textvariable=self.RunButtonText,
                                   borderwidth = self.itemBorder, font=defaultFont)
         self.RunButtonText.set('Run')
         
@@ -310,15 +312,14 @@ class InteractiveDialog:
         self.Run['command'] = self.StartSimulation
         self.Run.focus_set() #does not work
         
-        self.root.bind('<space>', func=self.StartSimulation) #if focus is not set to button ...
-        self.root.bind('<Escape>', self.OnQuit) #Escape causes immediate quit (no further checks)
-        self.root.bind('q', self.OnQuit) #Button 'Q' causes immediate quit (no further checks)
-        
+        self.tkWindow.bind('<space>', func=self.StartSimulation) #if focus is not set to button ...
+        self.tkWindow.bind('<Escape>', self.OnQuit) #Escape causes immediate quit (no further checks)
+        self.tkWindow.bind('q', self.OnQuit) #Button 'Q' causes immediate quit (no further checks)
 
-        root.update()
-        if root.winfo_width() < 320:
-            root.minsize(320,root.winfo_height())
-        #root.minsize(280,50) #will create windows which are too small
+        self.tkWindow.update()
+        if self.tkWindow.winfo_width() < 320:
+            self.tkWindow.minsize(320,self.tkWindow.winfo_height())
+        #self.tkWindow.minsize(280,50) #will create windows which are too small
 
         self.InitializeSolver() #solver gets ready to be called repeatedly
         self.InitializePlots()  #set up all structures for plots
@@ -326,17 +327,18 @@ class InteractiveDialog:
 
         if runOnStart:          #immediately activate run function on startup
             self.StartSimulation()
-        root.deiconify()
-        root.mainloop()
+        self.tkWindow.deiconify()
+        # self.tkWindow.mainloop()
+        tkinter.mainloop()
 
     #**classFunction: function called when pressing escape or closing dialog
     def OnQuit(self, event=None):
         self.simulationStopped = True
         self.RunButtonText.set('Stop')
         self.FinalizeSolver()
-        del exudyn.sys['tkinterRoot'] #this is not thread safe, but interuption should not happen ...
-        self.root.quit()
-        self.root.destroy()
+        #del exudyn.sys['tkinterRoot'] #this is not thread safe, but interuption should not happen ...
+        self.tkWindow.quit()
+        self.tkWindow.destroy()
 
     #**classFunction: function called on button 'Run'
     def StartSimulation(self, event=None):
@@ -365,13 +367,14 @@ class InteractiveDialog:
             #print(".")
             if self.mbs.GetRenderEngineStopFlag() and self.checkRenderStop:
                 self.OnQuit()
-                
-            t = self.RunSimulationPeriod()
-            if self.showTime:
-                self.currentTime.set('t = '+str(round(t,6)))
-            self.counter += 1
-            delay = max(1, int(self.period*1000/self.realtimeFactor))
-            self.Run.after(delay, self.ContinuousRunFunction)
+            else:
+                t = self.RunSimulationPeriod()
+                if self.showTime:
+                    self.currentTime.set('t = '+str(round(t,6)))
+                self.counter += 1
+                delay = max(1, int(self.period*1000/self.realtimeFactor))
+                self.tkWindow.after(delay, self.ContinuousRunFunction)
+                # self.Run.after(delay, self.ContinuousRunFunction)
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #**classFunction: initialize figure and subplots for plots structure
@@ -670,9 +673,9 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
            if mbs.variables['modeShapeRunModus'] > 1: #one cylce or static once
                dialog.StartSimulation()
         
-
-    exudyn.StartRenderer()
-    if 'renderState' in exudyn.sys: SC.SetRenderState(exudyn.sys['renderState']) #load last model view
+    if not exudyn.IsRendererActive():
+        exudyn.StartRenderer()
+        if 'renderState' in exudyn.sys: SC.SetRenderState(exudyn.sys['renderState']) #load last model view
 
     simulationSettings = exudyn.SimulationSettings() #not used, but needed in dialog
      #   self.mbs.sys['solver'].InitializeSolver(self.mbs, self.simulationSettings)
@@ -835,8 +838,9 @@ def SolutionViewer(mainSystem, solution=[], rowIncrement = 1, timeout=0.04, runO
 
         
 
-    exudyn.StartRenderer()
-    if 'renderState' in exudyn.sys: SC.SetRenderState(exudyn.sys['renderState']) #load last model view
+    if not exudyn.IsRendererActive():
+        exudyn.StartRenderer()
+        if 'renderState' in exudyn.sys: SC.SetRenderState(exudyn.sys['renderState']) #load last model view
 
     simulationSettings = exudyn.SimulationSettings() #not used, but needed in dialog
      #   self.mbs.sys['solver'].InitializeSolver(self.mbs, self.simulationSettings)

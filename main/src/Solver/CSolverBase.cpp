@@ -1297,15 +1297,6 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 			Index factorizeOutput = data.systemJacobian->FactorizeNew(ignoreRedundantEquations, redundantEqStart);
 			if (factorizeOutput != -1)
 			{
-				//if (IsVerboseCheck(1)) 
-				//{
-				//	STDstring str = "  Solver (time/load step #" + EXUstd::ToString(it.currentStepIndex) +
-				//		"): factorization of system Jacobian failed";
-				//	if (IsStaticSolver()) { str += ", load factor = " + EXUstd::ToString(computationalSystem.GetSolverData().loadFactor); }
-				//	str += ", time = " + EXUstd::ToString(it.currentTime);
-				//	str += "\n";
-				//	VerboseWrite(1, str);
-				//}
 				std::string s = "CSolverBase::Newton: System Jacobian seems to be singular / not invertible!\n";
 				s += "  time/load step #" + EXUstd::ToString(it.currentStepIndex);
 				if (IsStaticSolver()) { s += ", load factor = " + EXUstd::ToString(computationalSystem.GetSolverData().loadFactor); }
@@ -1477,12 +1468,11 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 						if (IsVerbose(2)) { Verbose(2, "    ... switch to full Newton due to repeated bad contractivity\n"); }
 					}
 
+					//check if Newton step has to be fully restarted!
 					if (!conv.stopNewton && (conv.newtonSolutionDiverged || conv.contractivity > 2 || fullNewtonRequested))  //this might indicate divergence ==> restart Newton if modified newton is used
 					{
 						modifiedNewtonRestarted = true;
-						conv.jacobianUpdateRequested = true;
-
-						//lastResidual = EXUstd::Maximum(lastResidual, initialResidual)*1.e6; //safety of 1e6 to relieve the contracticity condition of next step
+						//conv.jacobianUpdateRequested = true; #2022-12-22; redundant to 12 lines before
 
 						conv.residual = initialResidual;  //current residual
 						conv.lastResidual = initialResidual; //to determine contractivity

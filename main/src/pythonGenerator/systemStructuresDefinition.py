@@ -567,7 +567,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsWindow
 appendToFile=True
 writePybindIncludes = True
-classDescription = "Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes."
+classDescription = "OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 V,      renderWindowSize,               ,                  2,    Index2,       "Index2({1024,768})",   , P,      "initial size of OpenGL render window in pixel"
 V,      startupTimeout,                 ,                  ,     PInt,         "2500",                 , P,      "OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)"
@@ -579,6 +579,19 @@ V,      keyPressUserFunction,           ,                  ,     KeyPressUserFun
 V,      showMouseCoordinates,           ,                  ,     bool,         "false",                , P,      "True: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'"
 V,      ignoreKeys,                     ,                  ,     bool,         "false",                , P,      "True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'"
 F,      ResetKeyPressUserFunction,      ,                ,     void,         "keyPressUserFunction = 0;", , P,      "set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself"
+#
+writeFile=VisualizationSettings.h
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = VSettingsDialogs
+appendToFile=True
+writePybindIncludes = True
+classDescription = "Settings related to dialogs (e.g., visualization settings dialog)."
+#V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
+V,      multiThreadedDialogs,           ,                  ,     bool,         true,                   , P,      "True: During dialogs, the OpenGL render window will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed"
+V,      alwaysTopmost,                  ,                  ,     bool,         true,                   , P,      "True: dialogs are always topmost (otherwise, they are sometimes hidden)"
+V,      alphaTransparency,              ,                  ,     UFloat,       "0.94f",                , P,      "alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)"
+V,      fontScalingMacOS,               ,                  ,     UFloat,       "1.35f",                , P,      "font scaling value for MacOS systems (on Windows, system display scaling is used)"
 #
 writeFile=VisualizationSettings.h
 
@@ -734,6 +747,7 @@ V,      sensors,                    ,                  ,     VSettingsSensors,  
 V,      contact,                    ,                  ,     VSettingsContact,  ,                 , PS,      "contact visualization settings"
 #
 V,      window,                     ,                  ,     VSettingsWindow,   ,                 , PS,      "visualization window and interaction settings"
+V,      dialogs,                    ,                  ,     VSettingsDialogs,  ,                 , PS,      "dialogs settings"
 V,      openGL,                     ,                  ,     VSettingsOpenGL,   ,                 , PS,      "OpenGL rendering settings"
 V,      interactive,                ,                  ,     VSettingsInteractive, ,              , PS,      "Settings for interaction with renderer"
 V,      exportImages,               ,                  ,     VSettingsExportImages,,              , PS,      "settings for exporting (saving) images to files in order to create animations"

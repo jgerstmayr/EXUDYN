@@ -10,15 +10,125 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.5.0, 
-  \item last change =  2022-12-25, 
-  \item Number of issues = 1337, 
-  \item Number of resolved issues = 1161 (0 in current version), 
+  \item Exudyn version = 1.5.15.dev1, 
+  \item last change =  2022-12-31, 
+  \item Number of issues = 1356, 
+  \item Number of resolved issues = 1176 (15 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \footnotesize 
+  \item {\bf Version 1.5.15}:  resolved Issue 1352: {\bf tkinter dialogs}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add option for transparency to dialogs}
+    \item {\bf notes: visualizationSettings.dialogs.transparency}
+    \item   date resolved: {\bf 2022-12-31 11:01},
+date raised: 2022-12-31 
+  \ei
+  \item {\bf Version 1.5.14}:  resolved Issue 1351: {\bf tkinter MacOS}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: adjust font size and row size in ttk right mouse dialog}
+    \item {\bf notes: visualizationSettings.dialogs.fontScalingMacOS}
+    \item   date resolved: {\bf 2022-12-31 11:00},
+date raised: 2022-12-31 
+  \ei
+  \item {\bf Version 1.5.13}:  resolved Issue 1350: {\bf tkinter MacOS}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: adjust font size and row size in ttk visualization settings dialog}
+    \item {\bf notes: visualizationSettings.dialogs.fontScalingMacOS}
+    \item   date resolved: {\bf 2022-12-31 11:00},
+date raised: 2022-12-31 
+  \ei
+  \item {\bf Version 1.5.12}: {\bf \color{warningRed}  resolved BUG 0752}: {\bf tkinter MacOS}
+  \begin{itemize}[label=$\bullet$]
+    \item {description: tkinter fails when loaded inside interactive.py; early call to Tk() inside an example works and seems to help; check options to correctly load tkinter in MacOS (Rosetta 2, on M1)}
+    \item {\bf notes: problem fixed with single threaded renderer, doing illegal operations in glfw callbacks}
+    \item   date resolved: {\bf 2022-12-31 01:01},
+date raised: 2021-09-20 
+  \ei
+  \item {\bf Version 1.5.11}:  resolved Issue 1349: {\bf RequireVersion}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: some bugs including exu.GetVersionString and not raising exception}
+    \item   date resolved: {\bf 2022-12-30 15:03},
+date raised: 2022-12-30 
+  \ei
+  \item {\bf Version 1.5.10}:  resolved Issue 1343: {\bf tkinter in exudyn}
+(docu)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add comment in FAQ on potential problems with tkinter; add option to let exudyn know if tkinter is already running}
+    \item   date resolved: {\bf 2022-12-28 23:39},
+date raised: 2022-12-27 
+  \ei
+  \item {\bf Version 1.5.9}:  resolved Issue 1347: {\bf visualization settings}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add flag visualizationSettings.dialog.multiThreadedDialogs to turn on/off immediate apply of visualization settings changes; extend exudyn.GUI and rendererPythonInterface.h accordingly}
+    \item {\bf notes: NOTE that this flag should be turned off in case of crashes during/after dialogs; could make problems on special platforms such as MacOS}
+    \item   date resolved: {\bf 2022-12-28 23:05},
+date raised: 2022-12-28 
+  \ei
+  \item {\bf Version 1.5.8}:  resolved Issue 1348: {\bf EditDictionaryWithTypeInfo}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: change interface to pass directly visualizationSettings, allowing to update data}
+    \item   date resolved: {\bf 2022-12-28 21:50},
+date raised: 2022-12-28 
+  \ei
+  \item {\bf Version 1.5.7}:  resolved Issue 1346: {\bf visualization settings}
+(check)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: check if visualiuation settings dialog can be installed such that updating of data immediately affects renderer window}
+    \item   date resolved: {\bf 2022-12-28 16:53},
+date raised: 2022-12-28 
+  \ei
+  \item {\bf Version 1.5.6}:  resolved Issue 1339: {\bf tkinter MacOS}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add tkinter.Tk() into exudyn.sys["tkinterRoot"] before call to StartRenderer(); check for tkinterRoot in exudyn.sys on startup of interactive dialog; resolves crash on MacOS for SolutionViewer}
+    \item   date resolved: {\bf 2022-12-27 23:50},
+date raised: 2022-12-26 
+  \ei
+  \item {\bf Version 1.5.5}:  resolved Issue 1345: {\bf interface default args}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: change true/false to True/False in theDoc for PYthon command interface}
+    \item   date resolved: {\bf 2022-12-27 23:24},
+date raised: 2022-12-27 
+  \ei
+  \item {\bf Version 1.5.4}:  resolved Issue 1344: {\bf exudyn}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add function IsRendererRunning(), to avoid Warnings when renderer is restarted}
+    \item   date resolved: {\bf 2022-12-27 23:23},
+date raised: 2022-12-27 
+  \ei
+  \item {\bf Version 1.5.3}:  resolved Issue 1338: {\bf MacOS}
+(fix)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: DoRendererIdleTasks() crashes if no Renderer is active; add check in python call to avoid crash}
+    \item {\bf notes: crash resolved on Windows; MacOS test still open}
+    \item   date resolved: {\bf 2022-12-27 17:36},
+date raised: 2022-12-26 
+  \ei
+  \item {\bf Version 1.5.2}:  resolved Issue 1340: {\bf MacOS multithreading}
+(change)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: activate simplified multithreading by switching to TinyThreading in case of MacOS}
+    \item   date resolved: {\bf 2022-12-27 17:19},
+date raised: 2022-12-26 
+  \ei
+  \item {\bf Version 1.5.1}:  resolved Issue 1342: {\bf MacOS M1}
+(extension)
+  \begin{itemize}[label=$\bullet$]
+    \item {description: add string ARM to Platform string, e.g., used in solution and sensor files}
+    \item   date resolved: {\bf 2022-12-27 17:03},
+date raised: 2022-12-27 
+  \ei
   \item {\bf Version 1.5.0}:  resolved Issue 1336: {\bf test suite}
 (fix)
   \begin{itemize}[label=$\bullet$]
@@ -5653,11 +5763,6 @@ date raised: 2020-07-20
   \begin{itemize}[label=$\bullet$]
     \item {description: PostNewton missing in explicit solvers; add warning or add after single steps (but exclude in contact computation!)}
     \item date raised: 2021-12-15 
-  \ei
-  \item open {\bf BUG 0752}:  {\bf tkinter MacOS}
-  \begin{itemize}[label=$\bullet$]
-    \item {description: tkinter fails when loaded inside interactive.py; early call to Tk() inside an example works and seems to help; check options to correctly load tkinter in MacOS (Rosetta 2, on M1)}
-    \item date raised: 2021-09-20 
   \ei
   \item open {\bf BUG 0738}:  {\bf ObjectContactCoordinate}
   \begin{itemize}[label=$\bullet$]

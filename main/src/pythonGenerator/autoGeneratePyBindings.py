@@ -278,7 +278,7 @@ sLenum += DefLatexFinishClass()
 
 [s1,sL1] = DefPyFunctionAccess('', 'GetVersionString', 'PyGetVersionString', 
                                argList=['addDetails'],
-                               defaultArgs=['false'],
+                               defaultArgs=['False'],
                                description='Get Exudyn built version as string (if addDetails=True, adds more information on Python version, platform, etc.)',
                                ); s+=s1; sL+=sL1
 
@@ -288,14 +288,15 @@ sLenum += DefLatexFinishClass()
 sL+=sL1; #s+=s1;  #this function is defined in __init__.py ==> do not add to cpp bindings
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='StartRenderer', cName='PyStartOpenGLRenderer', 
-                                defaultArgs=['false'],
+                                defaultArgs=['False'],
                                 argList=['verbose'],
                                 description="Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of Spyder"); s+=s1; sL+=sL1
 
-#old, without [s1,sL1] = DefPyFunctionAccess('', 'StopRenderer', 'PyStopOpenGLRenderer', "Stop OpenGL rendering engine"); s+=s1; sL+=sL1
-
 #new, defined in C++ as lambda function:
 [s1,sL1] = DefPyFunctionAccess('', 'StopRenderer', 'no direct link to C++ here', "Stop OpenGL rendering engine"); sL+=sL1; #s+=s1
+
+[s1,sL1] = DefPyFunctionAccess(cClass='', pyName='IsRendererActive', cName='PyIsRendererActive', 
+                                description="returns True if GLFW renderer is available and running; otherwise False"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='DoRendererIdleTasks', cName='PyDoRendererIdleTasks', 
                                 defaultArgs=['0'],
@@ -334,7 +335,7 @@ sL+=sL1; #s+=s1;  #this function is defined in __init__.py ==> do not add to cpp
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='SetWriteToFile', cName='PySetWriteToFile', 
                             description="set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write exu.SetWriteToFile('', False) to close the output file",
                             argList=['filename', 'flagWriteToFile', 'flagAppend'],
-                            defaultArgs=['', 'true', 'false'],
+                            defaultArgs=['', 'True', 'False'],
                             example="exu.SetWriteToConsole(False) \\#no output to console\\\\exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=False)\\\\exu.Print('print this to file')\\\\exu.SetWriteToFile('', False) \\#terminate writing to file which closes the file"
                             ); s+=s1; sL+=sL1
 
@@ -354,7 +355,7 @@ sL+=sL1; #s+=s1;  #this function is defined in __init__.py ==> do not add to cpp
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='InfoStat', cName='PythonInfoStat', 
                                description='Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag',
                                argList=['writeOutput'],
-                               defaultArgs=['true']); s+=s1; sL+=sL1
+                               defaultArgs=['True']); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess('', 'Go', 'PythonGo', 'Creates a SystemContainer SC and a main system mbs'); s+=s1; sL+=sL1
 
@@ -433,6 +434,9 @@ sL += '  visualizationSettings & this structure is read/writeable and contains v
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='DetachFromRenderEngine', cName='DetachFromRenderEngine', 
                                 description="Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed"); sL+=sL1
+
+[s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SendRedrawSignal', cName='SendRedrawSignal', 
+                                description="This function is used to send a signal to the renderer that all MainSystems (mbs) shall be redrawn"); sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetCurrentMouseCoordinates', cName='PyGetCurrentMouseCoordinates', 
                                 description="Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane",
@@ -516,7 +520,7 @@ s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='ActivateRendering', cName='ActivateRendering', 
                                 argList=['flag'],
-                                defaultArgs=['true'],
+                                defaultArgs=['True'],
                                 description="activate (flag=True) or deactivate (flag=False) rendering for this system"); s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetPreStepUserFunction', cName='PySetPreStepUserFunction', 
@@ -689,7 +693,7 @@ sL += DefLatexStartClass(classStr+': Object', '\label{sec:mainsystem:object}\n T
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetObject', cName='PyGetObject', 
                                 description="get object's dictionary by object number (type ObjectIndex); NOTE: visualization parameters have a prefix 'V'; in order to also get graphicsData written, use addGraphicsData=True (which is by default False, as it would spoil the information)",
                                 argList=['objectNumber','addGraphicsData'],
-                                defaultArgs=['','false'],
+                                defaultArgs=['','False'],
                                 example = "objectDict = mbs.GetObject(0)"
                                 ); s+=s1; sL+=sL1
 
@@ -1227,12 +1231,12 @@ s+= '        .def(py::init<const py::object&>(), py::arg("matrix"))\n' #construc
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetWithDenseMatrix', cName='SetWithDenseMatrix', 
                                 argList=['pyArray','useDenseMatrix'],
-                                defaultArgs=['','false'],
+                                defaultArgs=['','False'],
                                 description="set MatrixContainer with dense numpy array; array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)"); s+=s1; sL+=sL1
                                                       
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='SetWithSparseMatrixCSR', cName='SetWithSparseMatrixCSR', 
                                 argList=['numberOfRowsInit', 'numberOfColumnsInit', 'pyArrayCSR','useDenseMatrix'],
-                                defaultArgs=['','','','true'],
+                                defaultArgs=['','','','True'],
                                 description="set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix"); s+=s1; sL+=sL1
                                                       
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='GetPythonObject', cName='GetPythonObject', 
@@ -1509,7 +1513,7 @@ s+=s1; sL+=sL1
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset', 
                                 argList=['freeMemory'],
-                                defaultArgs=['true'],
+                                defaultArgs=['True'],
                                 description="remove all contact objects and reset contact parameters"); s+=s1; sL+=sL1
 
 s +=  '        .def_readwrite("isActive", &PyGeneralContact::isActive, py::return_value_policy::reference)\n' 
@@ -1547,7 +1551,7 @@ s +=  '        .def_property("excludeDuplicatedTrigSphereContactPoints", &PyGene
 sL += '  		excludeDuplicatedTrigSphereContactPoints & (default=False) run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts \\\\ \\hline  \n'
 
 s +=  '        .def_property("ancfCableUseExactMethod", &PyGeneralContact::GetAncfCableUseExactMethod, &PyGeneralContact::SetAncfCableUseExactMethod)\n' 
-sL += '  		ancfCableUseExactMethod & (default=True) if true, uses exact computation of intersection of 3rd order polynomials and contacting circles \\\\ \\hline  \n'
+sL += '  		ancfCableUseExactMethod & (default=True) if True, uses exact computation of intersection of 3rd order polynomials and contacting circles \\\\ \\hline  \n'
 
 s +=  '        .def_property("ancfCableNumberOfContactSegments", &PyGeneralContact::GetAncfCableNumberOfContactSegments, &PyGeneralContact::SetAncfCableNumberOfContactSegments)\n' 
 sL += '  		ancfCableNumberOfContactSegments & (default=1) number of segments to be used in case that ancfCableUseExactMethod=False; maximum number of segments=3 \\\\ \\hline  \n'
@@ -1605,7 +1609,7 @@ sL += '  		ancfCableMeasuringSegments & (default=20) number of segments used to 
 
 [s1,sL1] = DefPyFunctionAccess(cClass=classStr, pyName='ShortestDistanceAlongLine', cName='PyShortestDistanceAlongLine', 
                                 argList=['pStart','direction','minDistance','maxDistance','asDictionary','cylinderRadius','typeIndex'],
-                                defaultArgs=['(std::vector<Real>)Vector3D({0,0,0})','(std::vector<Real>)Vector3D({1,0,0})','-1e-7','1e7','false','0','Contact::IndexEndOfEnumList'],
+                                defaultArgs=['(std::vector<Real>)Vector3D({0,0,0})','(std::vector<Real>)Vector3D({1,0,0})','-1e-7','1e7','False','0','Contact::IndexEndOfEnumList'],
                                 description="Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is >= minDistance and < maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)"); s+=s1; sL+=sL1
 
 

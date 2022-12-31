@@ -43,7 +43,10 @@
 
 //check some platform / architecture or compiler specific things at which is compiled and define globally used flags:
 #if defined(__APPLE__)
-#define __EXUDYN__APPLE__
+	#define __EXUDYN__APPLE__
+	#if defined(__arm__) || defined(__ARM_ARCH) || defined(__arm64__) || defined(__aarch64__)
+		#define __EXUDYN__APPLE__ARM__ //this is the APPLE M1 processor
+	#endif
 #elif defined(_WIN32) || defined(_WIN64)
 #define __EXUDYN__WINDOWS__
 #elif defined(__arm__) || defined(__aarch64__) || defined(__ARM_ARCH) //ARM architecture: RaspberryPi on UbuntuMate 20.04 (64bits): gcc shows __aarch64__ but not __arm__
@@ -227,6 +230,9 @@ namespace EXUstd {
 	#endif
 	#if defined(__EXUDYN__APPLE__)
 		s += "MacOS";
+		#if defined(__EXUDYN__APPLE__ARM__)
+			s += "(ARM)";
+		#endif
 	#endif
 		#if defined(__EXUDYN__LINUX__)
 			s += "Linux";

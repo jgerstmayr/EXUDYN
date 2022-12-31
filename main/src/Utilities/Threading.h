@@ -174,8 +174,10 @@ namespace MicroThreading {
 		Exception * ex;
 
 		ResizableArray<std::atomic_int*> sync; //is initialized when started up
-		std::atomic_int syncStart;
+#ifdef USE_FETCHADD
+        std::atomic_int syncStart;
 		std::atomic_int syncEnd;
+#endif
 
 	public:
 

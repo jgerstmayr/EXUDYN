@@ -187,16 +187,8 @@ void GlfwRenderer::window_close_callback(GLFWwindow* window)
 	basicVisualizationSystemContainer->StopSimulation();		//stop solver if running
 	basicVisualizationSystemContainer->ForceQuitSimulation();	//if solver is not running, also tell that it shall be shut down if started
 
-	//glfwSetWindowShouldClose(window, GL_TRUE);
 	glfwSetWindowShouldClose(window, GL_FALSE);
 	stopRenderer = true;
-	//FinishRunLoop(); //shut down similar to StopRenderer(), but called from renderer thread ...
-
-	//OLD
-	//glfwSetWindowShouldClose(window, GLFW_FALSE); //do not close ....
-	//if (PyGetRendererCallbackLock()) { return; }
-	//ShowMessage("PRESS ESC or Q to close window!", 5);
-
 }
 
 void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -445,29 +437,54 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 		}
 		if (key == GLFW_KEY_X && action == GLFW_PRESS)
 		{
-			ShowMessage("execute command ... (see other window)", 2);
-			UpdateGraphicsDataNow();
-			Render(window);
-			PyQueuePythonProcess(ProcessID::ShowPythonCommandDialog);
+			if (PyGetRendererPythonCommandLock())
+			{
+				ShowMessage("execute command not possible; other dialog already running", 5);
+			}
+			else
+			{
+				ShowMessage("execute command ... (see other window)", 2);
+				UpdateGraphicsDataNow();
+				Render(window);
+				//queue process and execute as soon as possible in Python (main) thread
+				PySetRendererMultiThreadedDialogs(visSettings->dialogs.multiThreadedDialogs);
+				PyQueuePythonProcess(ProcessID::ShowPythonCommandDialog);
+			}
 		}
 		//visualization settings dialog
 		if (key == GLFW_KEY_V && action == GLFW_PRESS)
 		{
-			ShowMessage("edit VisualizationSettings (see other window)", 2);
-			UpdateGraphicsDataNow();
-			Render(window);
-			//queue process and execute as soon as possible in Python (main) thread
-			PyQueuePythonProcess(ProcessID::ShowVisualizationSettingsDialog);
-			UpdateGraphicsDataNow();
+			if (PyGetRendererPythonCommandLock())
+			{
+				ShowMessage("edit VisualizationSettings not possible; other dialog already running", 5);
+			}
+			else
+			{
+				ShowMessage("edit VisualizationSettings (see other window)", 2);
+				UpdateGraphicsDataNow();
+				Render(window);
+				//queue process and execute as soon as possible in Python (main) thread
+				PySetRendererMultiThreadedDialogs(visSettings->dialogs.multiThreadedDialogs);
+				PyQueuePythonProcess(ProcessID::ShowVisualizationSettingsDialog);
+				UpdateGraphicsDataNow();
+			}
 		}
 		//help key
 		if (key == GLFW_KEY_H && action == GLFW_PRESS)
 		{
-			ShowMessage("show help information (see other window)", 2);
-			UpdateGraphicsDataNow();
-			Render(window);
-			//queue process and execute as soon as possible in Python (main) thread
-			PyQueuePythonProcess(ProcessID::ShowHelpDialog);
+			if (PyGetRendererPythonCommandLock())
+			{
+				ShowMessage("show help information not possible; other dialog already running", 5);
+			}
+			else
+			{
+				ShowMessage("show help information (see other window)", 2);
+				UpdateGraphicsDataNow();
+				Render(window);
+				//queue process and execute as soon as possible in Python (main) thread
+				PySetRendererMultiThreadedDialogs(visSettings->dialogs.multiThreadedDialogs);
+				PyQueuePythonProcess(ProcessID::ShowHelpDialog);
+			}
 		}
 
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -837,7 +854,8 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 		//check, if it was a regular mouse press without moving
 		if (stateMachine.lastMousePressedX == stateMachine.mousePositionX &&
 			stateMachine.lastMousePressedY == stateMachine.mousePositionY &&
-			visSettings->interactive.selectionRightMouse)
+			visSettings->interactive.selectionRightMouse &&
+			!PyGetRendererPythonCommandLock())
 		{
 			//rendererOut << "mouse pressed!\n";
 			//MouseSelect(window, stateMachine.mousePositionX, stateMachine.mousePositionY);
@@ -856,6 +874,7 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 				UpdateGraphicsDataNow();
 				Render(window);
 				//queue process and execute as soon as possible in Python (main) thread
+				PySetRendererMultiThreadedDialogs(visSettings->dialogs.multiThreadedDialogs);
 				PyQueuePythonProcess(ProcessID::ShowRightMouseSelectionDialog, itemID);
 				//PyQueueExecutableString(STDstring("print('+++++++++++++++++++++++++++++++++++')\n") + "print(" + strDict + ")\n");
 			}
@@ -1243,6 +1262,7 @@ bool GlfwRenderer::SetupRenderer(bool verbose)
 	else if (basicVisualizationSystemContainer != nullptr) //check that renderer is not already running and that link to SystemContainer exists
 	{
 		PySetRendererCallbackLock(false); //reset callback lock if still set from earlier run (for safety ...)
+		PySetRendererPythonCommandLock(false); //reset command callback lock if still set from earlier run (for safety ...)
 
 		basicVisualizationSystemContainer->InitializeView(); //initializes renderState; this is done to make OpenGL zoom and maxSceneCoordinates work
 		basicVisualizationSystemContainer->SetComputeMaxSceneRequest(true); //computes maxSceneCoordinates for perspective and shadow
@@ -1671,7 +1691,10 @@ void GlfwRenderer::FinishRunLoop()
 	{
 		PrintDelayed("render window stopped because of error");
 	}
-	basicVisualizationSystemContainer->StopSimulation(); //if user waits for termination of render engine, it tells that window is closed
+	if (basicVisualizationSystemContainer)
+	{
+		basicVisualizationSystemContainer->StopSimulation(); //if user waits for termination of render engine, it tells that window is closed
+	}
 
 	if (window)
 	{
@@ -1691,37 +1714,41 @@ void GlfwRenderer::DoRendererIdleTasks(Real waitSeconds)
 {
 	Real time = EXUstd::GetTimeInSeconds();
 	bool continueTask = true;
-	while (rendererActive && 
-		!glfwWindowShouldClose(window) &&
-		!stopRenderer && 
-		!globalPyRuntimeErrorFlag &&
-		continueTask)
+	if (IsGlfwInitAndRendererActive()) //in case that renderer is not running, the following should not be processed (MacOS!)
 	{
-		if (!useMultiThreadedRendering)
+		while (rendererActive &&
+			!glfwWindowShouldClose(window) &&
+			!stopRenderer &&
+			!globalPyRuntimeErrorFlag &&
+			continueTask)
 		{
-			DoRendererTasks();
-		}
-		else
-		{
-			basicVisualizationSystemContainer->DoIdleOperations(); //this calls the Python functions, which is ok, because DoRendererIdleTasks() called from Python!
-		}
-		if (waitSeconds != -1. && EXUstd::GetTimeInSeconds() > time + waitSeconds)
-		{
-			continueTask = false;
-		}
-		else
-		{
-			//wait small amount of time, not fully blocking CPU
-			std::this_thread::sleep_for(std::chrono::milliseconds(5));
-		}
-	}
+			if (!useMultiThreadedRendering)
+			{
+				DoRendererTasks();
+			}
+			else
+			{
+				basicVisualizationSystemContainer->DoIdleOperations(); //this calls the Python functions, which is ok, because DoRendererIdleTasks() called from Python!
+			}
 
-	if (!(rendererActive &&
-		!glfwWindowShouldClose(window) &&
-		!stopRenderer &&
-		!globalPyRuntimeErrorFlag))
-	{
-		FinishRunLoop();
+            if (waitSeconds != -1. && EXUstd::GetTimeInSeconds() > time + waitSeconds)
+			{
+				continueTask = false;
+			}
+			else
+			{
+				//wait small amount of time, not fully blocking CPU ==> only done, if called directly with DoRendererIdleTasks(100)
+				std::this_thread::sleep_for(std::chrono::milliseconds(5));
+			}
+		}
+
+		if (!(rendererActive &&
+			!glfwWindowShouldClose(window) &&
+			!stopRenderer &&
+			!globalPyRuntimeErrorFlag))
+		{
+			FinishRunLoop();
+		}
 	}
 }
 
@@ -1816,7 +1843,6 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 {
 	if (PyGetRendererCallbackLock()) { return; }
 	EXUstd::WaitAndLockSemaphore(renderFunctionRunning); //lock Render(...) function, no second call possible
-	//std::cout << "start renderer\n";
 
 	int width, height;
 

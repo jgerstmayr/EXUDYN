@@ -217,3 +217,15 @@ MainSystem& MainSystemContainer::GetMainSystem(Index systemNumber)
 		return AddMainSystem();
 	}
 }
+
+//! send redraw to all MainSystems
+void MainSystemContainer::SendRedrawSignal()
+{
+	for (auto item : mainSystems)
+	{
+		//not necessary, because anyway checked in UpdateGraphicsData ...:
+		//if (item->GetCSystem()->IsSystemConsistent()) //otherwise, redraw is impossible ...
+		item->GetCSystem()->GetPostProcessData()->SendRedrawSignal();
+	}
+}
+

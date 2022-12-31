@@ -1,22 +1,34 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# This the EXUDYN module initialization file
+# This is the EXUDYN module initialization file
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-08-14
+# Update:   2022-12-26
+#
+# Notes:    see https://github.com/jgerstmayr/EXUDYN for first steps
+#           see theDoc.pdf for instructions, tutorials, etc.: https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf
+# Example (without visualization):
+#    import exudyn as exu
+#    from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
+#    SC = exu.SystemContainer()
+#    mbs = SC.AddSystem()
+#    #add a new system to work with
+#    nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
+#    mbs.AddObject(ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))
+#    mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
+#    mbs.AddLoad(Force(markerNumber = mMP, loadVector=[0.001,0,0]))
+#    mbs.Assemble() #assemble system and solve
+#    exu.SolveDynamic(mbs, exu.SimulationSettings())
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#This is a workaround to let users define the 'fast' track, 
-#  avoiding range checks in exudyn (speedup may be 30% and more)
-#  to activate the __FAST_EXUDYN_LINALG compiled version, use the 
-#  following lines (must be done befor first import of exudyn);
-#  Note that this is a hack and may be changed in future; it is only available for certain exudyn versions:
+#  Use the following workaround to define the 'fast' track, avoiding range checks in exudyn (speedup may be 30% and more);
+#  to activate the __FAST_EXUDYN_LINALG compiled version, use the following lines (must be done befor first import of exudyn):
 #import sys
 #sys.exudynFast = True
-#import exudyn
+#import exudyn #now exudyn loads with fast mode
 
 import sys
 __useExudynFast = hasattr(sys, 'exudynFast')
@@ -126,8 +138,8 @@ def RequireVersion(requiredVersionString):
             if int(vExudyn[2]) < int(vRequired[2]): #check micro version
                 isOk = False
     if not isOk:
-        print("EXUDYN version "+requiredVersionString+" required, but only " + exu.GetVersionString() + " available")
-        #raise RuntimeError("EXUDYN version "+requiredVersionString+" required, but only " + exu.GetVersionString() + "available")
+        #print("EXUDYN version "+requiredVersionString+" required, but only " + GetVersionString() + " available")
+        raise RuntimeError("EXUDYN version "+requiredVersionString+" required, but only " + GetVersionString() + " available")
     
 
 #do not import itemInterface here, as it would go into exu. scope

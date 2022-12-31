@@ -509,49 +509,6 @@ public:
 		}
 	}
 
-	//! add vector scalar * v to *this vector
-	//large vector: use AVX
-	//huge vector: use AVX + multithreading
-	//may not be used if LinkedDataVector is linked to unaligned part of vector
-	//template<class Tvector, bool largeVector = false, bool hugeVector = false>
-	//void MultAdd(T scalar, const Tvector& v)
-	//{
-	//	copy first part of this function to LinkedDataVector to avoid operation on non-aligned data!
-
-	//	CHECKandTHROW((v.NumberOfItems() == NumberOfItems()), "VectorBase::MultAdd: incompatible size of vectors");
-	//	if constexpr (largeVector == false || exuVectorLengthAlignment == 1)
-	//	{
-	//		for (Index i = 0; i < NumberOfItems(); i++)
-	//		{
-	//			data[i] += scalar * v[i];
-	//		}
-	//	}
-	//	else
-	//	{
-	//		for (Index i = 0; i < NumberOfItems(); i++)
-	//		{
-	//			data[i] += scalar * v[i];
-	//		}
-
-	//		Index nShift = NumberOfItems() / exuVectorLengthAlignment;
-	//		PReal* vP = (PReal*)v.GetDataPointer();
-	//		PReal* dataP = (PReal*)data.GetDataPointer();
-	//		for (Index i = 0; i < (nShift*(exuVectorLengthAlignment/exuMemoryAlignment)); i+= (exuVectorLengthAlignment / exuMemoryAlignment))
-	//		{
-	//			//optimize for latency; using 4 PReal speeds up only slightly
-	//			PReal a = dataP[i] + scalar * vP[i];
-	//			PReal b = dataP[i + 1] + scalar * vP[i + 1];
-	//			dataP[i] = a;
-	//			dataP[i + 1] = b;
-	//		}
-	//		for (Index i = nShift * exuVectorLengthAlignment; i < NumberOfItems(); i++)
-	//		{
-	//			data[i] += scalar * v[i];
-	//		}
-	//	}
-	//}
-
-
     //! returns the sum of squared components (v[0]^2 + v[1]^2 + v[2]^2 ....)
     T GetL2NormSquared() const
     {

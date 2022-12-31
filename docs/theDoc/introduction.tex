@@ -555,15 +555,15 @@ There are some user functions in order to customize drawing:
 \ei
 Note that all kinds of \texttt{graphicsDataUserFunction}s need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the \texttt{graphicsDataUserFunction} between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.
 
-\mysubsubsection{Color and RGBA}
-Many functions and objects include color information. In order to allow transparency, all colors contain a list of 4 RGBA values, all values being in the range [0..1]:
+\mysubsubsection{Color, RGBA and alpha-transparency}
+Many functions and objects include color information. In order to allow alpha-transparency, all colors contain a list of 4 RGBA values, all values being in the range [0..1]:
 \bi
   \item red (R) channel 
   \item green (G) channel  
   \item blue (B) channel 
-  \item alpha (A) value, representing transparency (A=0: fully transparent, A=1: solid)
+  \item alpha (A) value, representing the so-called \mybold{alpha-transparency} (A=0: fully transparent, A=1: solid)
 \ei
-E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in \texttt{exudynGraphicsDataUtilities.py}, e.g., \texttt{color4red} or \texttt{color4steelblue} as well a list of 10 colors \texttt{color4list}, which is convenient to be used in a loop creating objects.
+E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in \texttt{exudynGraphicsDataUtilities.py}, e.g., \texttt{color4red} or \texttt{color4steelblue} as well a list of 16 colors \texttt{color4list}, which is convenient to be used in a loop creating objects.
 
 \mysubsubsection{Camera following objects and interacting with model view}
 \label{secInteractModelView}

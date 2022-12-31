@@ -4,7 +4,15 @@
 #WSL2 runs on Windows 10 
 #author: Johannes Gerstmayr
 #date: 20.11.2020
+#update: 31.12.2022
 #+++++++++++++++++++++++++++++++++++++++++++
+
+#graphics with updated wsl:
+#DOES NOT WORK!
+#install GPU drivers:
+#  https://learn.microsoft.com/en-us/windows/wsl/tutorials/gui-apps
+#wsl --update
+#==>directly should allows graphics on windows
 
 #installation of WSL2: follow:
 https://docs.microsoft.com/en-us/windows/wsl/install-win10#install-windows-subsystem-for-linux
