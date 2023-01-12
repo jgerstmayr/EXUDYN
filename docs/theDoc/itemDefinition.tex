@@ -1287,6 +1287,7 @@ A ground object behaving like a rigid body, but having no degrees of freedom; us
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
     referencePosition &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline reference point = reference position for ground object; local position is added on top of reference position for a ground object\\ \hline
+    referenceRotation &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates\\ \hline
     visualization & VObjectGround & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -1309,14 +1310,15 @@ The item VObjectGround has the following parameters:\vspace{-1cm}\\
 \paragraph{Information on input parameters:} 
 \startTable{input parameter}{symbol}{description see tables above}
 \rowTable{referencePosition}{$\pRefG$}{}
+\rowTable{referenceRotation}{$\LU{0b}{\Rot} \in \Rcal^{3 \times 3}$}{}
 \finishTable
 {\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
 \startTable{output variable}{symbol}{description}
-\rowTable{Position}{$\LU{0}{\pv} = \pRefG + \LU{0b}{\ImThree} \pLocB$}{global position vector of translated local position}
+\rowTable{Position}{$\LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB$}{global position vector of translated local position}
 \rowTable{Displacement}{$\Null$}{global displacement vector of local position}
 \rowTable{Velocity}{$\Null$}{global velocity vector of local position}
 \rowTable{AngularVelocity}{$\Null$}{angular velocity of body}
-\rowTable{RotationMatrix}{$\Im$}{rotation matrix in vector form (stored in row-major order)}
+\rowTable{RotationMatrix}{$\LU{0b}{\Rot}$}{rotation matrix in vector form (stored in row-major order)}
 \finishTable
  \noindent
     \mysubsubsubsection{Equations}
@@ -1326,9 +1328,9 @@ The item VObjectGround has the following parameters:\vspace{-1cm}\\
     In combination with markers, the \texttt{localPosition} $\pLocB$ is transformed by the \texttt{ObjectGround} to
     a global point $\LU{0}{\pv}$ using the reference point $\pRefG$,
     \be
-      \LU{0}{\pv} = \pRefG + \LU{0b}{\ImThree} \pLocB
+      \LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB \eqDot
+      %\LU{0}{\pv} = \pRefG + \LU{0b}{\ImThree} \pLocB 
     \ee
-    in which $\LU{0b}{\ImThree}$ is the identity transformation, leading to $\LU{0}{\pLoc} = \LU{0b}{\ImThree} \pLocB = \pLocB$.
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     A user function, which is called by the visualization thread in order to draw user-defined objects.
@@ -4924,6 +4926,7 @@ The item VObjectJointRollingDisc has the following parameters:\vspace{-1cm}\\
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinTest.py}{\texttt{rollingCoinTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rotatingTableTest.py}{\texttt{rotatingTableTest.py}} (TestModels/)
 \ei
 
 %
@@ -6141,6 +6144,7 @@ The item VObjectConnectorRigidBodySpringDamper has the following parameters:\vsp
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py}{\texttt{stiffFlyballGovernor2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorRigidBodySpringDamperTest.py}{\texttt{connectorRigidBodySpringDamperTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rotatingTableTest.py}{\texttt{rotatingTableTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py}{\texttt{stiffFlyballGovernor.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/superElementRigidJointTest.py}{\texttt{superElementRigidJointTest.py}} (TestModels/)
 \ei
@@ -6483,6 +6487,7 @@ The item VObjectConnectorTorsionalSpringDamper has the following parameters:\vsp
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py}{\texttt{serialRobotKinematicTree.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py}{\texttt{serialRobotTSD.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rotatingTableTest.py}{\texttt{rotatingTableTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py}{\texttt{sliderCrank3Dbenchmark.py}} (TestModels/)
 \ei
 
@@ -7441,6 +7446,7 @@ The item VObjectConnectorRollingDiscPenalty has the following parameters:\vspace
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinPenaltyTest.py}{\texttt{rollingCoinPenaltyTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rotatingTableTest.py}{\texttt{rotatingTableTest.py}} (TestModels/)
 \ei
 
 %
@@ -10817,6 +10823,7 @@ The item VSensorLoad has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py}{\texttt{serialRobotTestDH2.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simulateInteractively.py}{\texttt{simulateInteractively.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py}{\texttt{sliderCrank3DwithANCFbeltDrive2.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py}{\texttt{movingGroundRobotTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/plotSensorTest.py}{\texttt{plotSensorTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py}{\texttt{serialRobotTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/springDamperUserFunctionTest.py}{\texttt{springDamperUserFunctionTest.py}} (TestModels/)

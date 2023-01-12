@@ -513,7 +513,9 @@ up-to-date with changes.
 \label{sec:issueTracker}
 \iftoggle{compileAll}
 {
+\renewcommand{\baselinestretch}{1.0} %smaller linespace for issues
 \input{trackerlog}
+\renewcommand{\baselinestretch}{1.2} %larger linespace
 \clearpage
 }
 

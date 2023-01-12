@@ -370,7 +370,7 @@ The solvers provide a number of options in \texttt{solutionSettings} to generate
 
 
 
-\mysubsubsection{Visualization settings}
+\mysubsubsection{Visualization settings dialog}
 \label{sec:introduction:visualizationSettings}
 %
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
@@ -379,21 +379,20 @@ Details on visualization settings and its substructures are provided in Sections
 \texttt{mbs.WaitForUserToContinue()} ).
 \ignoreRST{The visualization settings dialog is shown exemplarily in \fig{fig_visualizationSettings}.}
 Note that this dialog is automatically created and uses Python's \texttt{tkinter}, which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for \codeName\ .
-The appearance of settings dialogs may be adjusted by \texttt{exudyn.GUI} variables:
-\bi
-  \item \texttt{exudyn.GUI.useRenderWindowDisplayScaling}: if True, the scaling will follow the current scaling of the render window; if False, it will use the \texttt{tkinter} internal scaling, which uses the main screen where the dialog is created (which won't scale well, if the window is moved to another screen).
-  \item \texttt{exudyn.GUI.treeviewDefaultFontSize}: this is the base font size of the dialog (also right-mouse-button dialog)
-  \item \texttt{exudyn.GUI.useRenderWindowDisplayScaling}: this factor is used to increase height of lines as compared to font size
-  \item \texttt{exudyn.GUI.treeEditDefaultWidth}: unscaled width of, e.g., visualizationSettings
-  \item \texttt{exudyn.GUI.treeEditDefaultHeight}: unscaled height of, e.g., visualizationSettings
-  \item \texttt{exudyn.GUI.dialogDefaultWidth}: unscaled width of, e.g., right-mouse-button dialog
-  \item \texttt{exudyn.GUI.treeEditDefaultHeight}: unscaled height of, e.g., right-mouse-button dialog
-\ei
-For example, to change some parameters, write:
+
+The appearance of visualization settings dialogs may be adjusted by directly modifying \texttt{exudyn.GUI} variables (this may change in the future). For example write in your code before opening the render window\footnote{treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click}:
 \pythonstyle\begin{lstlisting}
   import exudyn.GUI
-  exudyn.GUI.treeEditDefaultWidth = 1600
-  exudyn.GUI.useRenderWindowDisplayScaling = False
+  exudyn.GUI.dialogDefaultWidth             #unscaled width of, e.g., right-mouse-button dialog
+  exudyn.GUI.treeEditDefaultWidth = 800
+  exudyn.GUI.treeEditDefaultHeight = 600
+  exudyn.GUI.treeEditMaxInitialHeight = 600 #otherwise height is increased for larger screens
+  exudyn.GUI.treeEditOpenItems = ['general','contact'] #these tree items are opened each time the dialog is opened
+  #
+  exudyn.GUI.treeviewDefaultFontSize        #this is the base font size of the dialog (also right-mouse-button dialog)
+  exudyn.GUI.useRenderWindowDisplayScaling  #if True, the scaling will follow the current scaling of the render window; if False, it will use the \texttt{tkinter} internal scaling, which uses the main screen where the dialog is created (which won't scale well, if the window is moved to another screen).
+  #
+  exudyn.GUI.textHeightFactor = 1.45        #this factor is used to increase height of lines in tree view as compared to font size
 \end{lstlisting}
 %
 \onlyRST{
@@ -407,11 +406,11 @@ For example, to change some parameters, write:
 
 }
 \ignoreRST{
-\begin{figure}[tbh]%
+\begin{figure}[tbhp]%
 \begin{center}
-\includegraphics[width=0.7\columnwidth]{figures/visualizationSettings}
+\includegraphics[width=0.8\columnwidth]{figures/visualizationSettings}
 \end{center}
-\caption{View of visualization settings (press 'V' in render window to open dialog).}%
+\caption{View of visualization settings (as of \codeName\ 1.5.51.dev1) (press 'V' in render window to open dialog).}%
 \label{fig_visualizationSettings}%
 \end{figure}
 }
@@ -535,7 +534,7 @@ The solver runs a loop:
   \item finish computation step; results are in current state
   \item copy current state to visualization state (thread safe)
   \item signal graphics pipeline that new visualization data is available
-  \item the renderer may update the visualization depending on \texttt{graphicsUpdateInterval} in \texttt{visualizationSettings.general}
+  \item the renderer may update the visualization depending on \texttt{graphicsUpdateInterval} in \\ \texttt{visualizationSettings.general}
 \ei
 The openGL graphics thread (=separate thread) runs the following loop:
 \bi
@@ -600,7 +599,25 @@ For this, you can use
   \item \texttt{interactive.SolutionViewer}, see Section \ref{sec:interactive:SolutionViewer}
   \item \texttt{interactive.AnimateModes}, lets you view the animation of computed modes, see Section \ref{sec:interactive:AnimateModes}
 \ei
-The \texttt{SolutionViewer} adds a \texttt{tkinter} interactive dialog, which lets you interact with the model ('Player').
+\ignoreRST{
+shown exemplary in \fig{fig_solutionViewer}.
+\begin{figure}[tbhp]%
+\begin{center}
+\includegraphics[width=0.98\columnwidth]{figures/solutionViewer}
+\end{center}
+\caption{View of \texttt{SolutionViewer} (as of \codeName\ 1.5.42.dev1).}%
+\label{fig_solutionViewer}%
+\end{figure}
+}
+The \texttt{SolutionViewer} adds a \texttt{tkinter} interactive dialog, which lets you interact with the model, with the following features:
+\bi
+\item The SolutionViewer represents a 'Player' for the dynamic solution or a series of static solutions, which is available after simulation if \texttt{solutionSettings.writeSolutionToFile = True}
+\item The parameter \texttt{solutionSettings.solutionWritePeriod} represents the time period used to store solutions during dynamic computations.
+\item As soon as 'Run' is pressed, the player runs (and it may be started automatically as well)
+\item In the 'Static' mode, drag the slider 'Solution steps' to view the solution steps
+\item In the 'Continuous run' mode, the player runs in an infinite loop
+\item In the 'One cycle' mode, the player runs from the current position to the end; this is perfectly suited to record series of images for \mybold{creating animations}, see \refSection{secGeneratingAnimations} and works together with the visualization settings dialog.
+\ei
 The solution should be loaded with
 \texttt{LoadSolutionFile('coordinatesSolution.txt')}, where 'coordinatesSolution.txt' represents the stored solution file, 
 see 
@@ -761,7 +778,7 @@ import sys
 sys.exudynFast = True #this variable is used to signal to load the fast exudyn module
 import exudyn as exu
 \end{lstlisting}
-The faster versions are only pre-compiled for some Python versions, which can be determined by trying \texttt{import exudyn.exudynCPPfast}.
+The faster versions are available for all release versions, but only for some \texttt{.dev1} development versions (Python 3.10), which can be determined by trying \texttt{import exudyn.exudynCPPfast}.
 
 \noindent However, there are many \mybold{ways to speed up \codeName\ in general}:
 \bi

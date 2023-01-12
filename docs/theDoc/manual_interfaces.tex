@@ -9,8 +9,9 @@ These are the access functions to the \codeName\ module.
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
   GetVersionString(addDetails = False) & Get Exudyn built version as string (if addDetails=True, adds more information on Python version, platform, etc.)\\ \hline 
+  Help() & Show basic help information\\ \hline 
   RequireVersion(requiredVersionString) & Checks if the installed version is according to the required version. Major, micro and minor version must agree the required level. Example: RequireVersion("1.0.31")\\ \hline 
-  StartRenderer(verbose = False) & Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of Spyder\\ \hline 
+  StartRenderer(verbose = 0) & Start OpenGL rendering engine (in separate thread); use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g. Spyder\\ \hline 
   StopRenderer() & Stop OpenGL rendering engine\\ \hline 
   IsRendererActive() & returns True if GLFW renderer is available and running; otherwise False\\ \hline 
   DoRendererIdleTasks(waitSeconds = 0) & Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 to wait until window is closed\\ \hline 

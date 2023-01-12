@@ -141,9 +141,9 @@ Rotation & $[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$ & vector with 3 comp
 		\mr{1}{0}{0} {0}{\cos(\theta_0)}{-\sin(\theta_0)} {0}{\sin(\theta_0)}{\cos(\theta_0)}$ & rotation matrix for rotation around $X$ axis (axis 0), transforming a vector from frame 1 to frame 0\\ \hline    
     %
 		RotationMatrixY & $\LU{01}{\Rot_1(\theta_1)} = 
-		\mr{\cos(\theta_0)}{0}{\sin(\theta_0)} {0}{1}{0} {-\sin(\theta_0)}{0}{\cos(\theta_0)}$ & rotation matrix for rotation around $X$ axis (axis 0), transforming a vector from frame 1 to frame 0\\ \hline    %
+		\mr{\cos(\theta_1)}{0}{\sin(\theta_1)} {0}{1}{0} {-\sin(\theta_1)}{0}{\cos(\theta_1)}$ & rotation matrix for rotation around $Y$ axis (axis 1), transforming a vector from frame 1 to frame 0\\ \hline    %
     RotationMatrixZ & $\LU{01}{\Rot_2(\theta_2)} = 
-		\mr{\cos(\theta_0)}{-\sin(\theta_0)}{0} {\sin(\theta_0)}{\cos(\theta_0)}{0} {0}{0}{1}$ & rotation matrix for rotation around $X$ axis (axis 0), transforming a vector from frame 1 to frame 0\\ \hline    
+		\mr{\cos(\theta_2)}{-\sin(\theta_2)}{0} {\sin(\theta_2)}{\cos(\theta_2)}{0} {0}{0}{1}$ & rotation matrix for rotation around $Z$ axis (axis 2), transforming a vector from frame 1 to frame 0\\ \hline    
 		Position & $\LU{0}{\pv} = [p_0,\, p_1,\, p_2]\tp$ & global position vector with 3 position coordinates $p_i$ in any configuration\\ \hline
 		Velocity & $\LU{0}{\vv} = \LU{0}{\dot \uv} = [v_0,\, v_1,\, v_2]\tp$ & global velocity vector with 3 displacement coordinates $v_i$ in any configuration\\ \hline
     AngularVelocity & $\LU{0}{\tomega} = [\omega_0,\, \ldots,\, \omega_2]\tp$ & global angular velocity vector with $3$ coordinates $\omega_i$ in any configuration\\ \hline

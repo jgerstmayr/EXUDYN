@@ -4,8 +4,8 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-+  Exudyn version = 1.5.15.dev1 (Fitzgerald)
-+  build date and time=2022-12-31  12:59
++  Exudyn version = 1.5.65.dev1 (Fitzgerald)
++  build date and time=2023-01-12  22:42
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn 1.5 is out! It includes now Python 3.7/8 - 3.10 wheels for MacOS (since 1.5.11.dev1 also showing tkinter dialogs!), improved compatibility for AVX2, simple reeving system, improved Lie group integration, improved RollingDisc, DistanceSensor, and many fixes; further features are multi-threading support; minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
@@ -1130,8 +1130,8 @@ Typical output settings are:
 
 
 
-Visualization settings
-======================
+Visualization settings dialog
+=============================
 
 
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
@@ -1140,23 +1140,22 @@ Details on visualization settings and its substructures are provided in Sections
 \ ``mbs.WaitForUserToContinue()``\  ).
 
 Note that this dialog is automatically created and uses Python's \ ``tkinter``\ , which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn .
-The appearance of settings dialogs may be adjusted by \ ``exudyn.GUI``\  variables:
 
-+  \ ``exudyn.GUI.useRenderWindowDisplayScaling``\ : if True, the scaling will follow the current scaling of the render window; if False, it will use the \ ``tkinter``\  internal scaling, which uses the main screen where the dialog is created (which won't scale well, if the window is moved to another screen).
-+  \ ``exudyn.GUI.treeviewDefaultFontSize``\ : this is the base font size of the dialog (also right-mouse-button dialog)
-+  \ ``exudyn.GUI.useRenderWindowDisplayScaling``\ : this factor is used to increase height of lines as compared to font size
-+  \ ``exudyn.GUI.treeEditDefaultWidth``\ : unscaled width of, e.g., visualizationSettings
-+  \ ``exudyn.GUI.treeEditDefaultHeight``\ : unscaled height of, e.g., visualizationSettings
-+  \ ``exudyn.GUI.dialogDefaultWidth``\ : unscaled width of, e.g., right-mouse-button dialog
-+  \ ``exudyn.GUI.treeEditDefaultHeight``\ : unscaled height of, e.g., right-mouse-button dialog
-
-For example, to change some parameters, write:
+The appearance of visualization settings dialogs may be adjusted by directly modifying \ ``exudyn.GUI``\  variables (this may change in the future). For example write in your code before opening the render window (treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click):
 
 .. code-block:: python
 
   import exudyn.GUI
-  exudyn.GUI.treeEditDefaultWidth = 1600
-  exudyn.GUI.useRenderWindowDisplayScaling = False
+  exudyn.GUI.dialogDefaultWidth             #unscaled width of, e.g., right-mouse-button dialog
+  exudyn.GUI.treeEditDefaultWidth = 800
+  exudyn.GUI.treeEditDefaultHeight = 600
+  exudyn.GUI.treeEditMaxInitialHeight = 600 #otherwise height is increased for larger screens
+  exudyn.GUI.treeEditOpenItems = ['general','contact'] #these tree items are opened each time the dialog is opened
+  #
+  exudyn.GUI.treeviewDefaultFontSize        #this is the base font size of the dialog (also right-mouse-button dialog)
+  exudyn.GUI.useRenderWindowDisplayScaling  #if True, the scaling will follow the current scaling of the render window; if False, it will use the \ ``tkinter``\  internal scaling, which uses the main screen where the dialog is created (which won't scale well, if the window is moved to another screen).
+  #
+  exudyn.GUI.textHeightFactor = 1.45        #this factor is used to increase height of lines in tree view as compared to font size
 
 
 
@@ -1303,7 +1302,7 @@ The solver runs a loop:
 +  finish computation step; results are in current state
 +  copy current state to visualization state (thread safe)
 +  signal graphics pipeline that new visualization data is available
-+  the renderer may update the visualization depending on \ ``graphicsUpdateInterval``\  in \ ``visualizationSettings.general``\ 
++  the renderer may update the visualization depending on \ ``graphicsUpdateInterval``\  in \ \ ``visualizationSettings.general``\ 
 
 The openGL graphics thread (=separate thread) runs the following loop:
 
@@ -1377,7 +1376,16 @@ For this, you can use
 +  \ ``interactive.SolutionViewer``\ , see Section [theDoc.pdf]
 +  \ ``interactive.AnimateModes``\ , lets you view the animation of computed modes, see Section [theDoc.pdf]
 
-The \ ``SolutionViewer``\  adds a \ ``tkinter``\  interactive dialog, which lets you interact with the model ('Player').
+
+The \ ``SolutionViewer``\  adds a \ ``tkinter``\  interactive dialog, which lets you interact with the model, with the following features:
+
++  The SolutionViewer represents a 'Player' for the dynamic solution or a series of static solutions, which is available after simulation if \ ``solutionSettings.writeSolutionToFile = True``\ 
++  The parameter \ ``solutionSettings.solutionWritePeriod``\  represents the time period used to store solutions during dynamic computations.
++  As soon as 'Run' is pressed, the player runs (and it may be started automatically as well)
++  In the 'Static' mode, drag the slider 'Solution steps' to view the solution steps
++  In the 'Continuous run' mode, the player runs in an infinite loop
++  In the 'One cycle' mode, the player runs from the current position to the end; this is perfectly suited to record series of images for \ **creating animations**\ , see theDoc.pdf and works together with the visualization settings dialog.
+
 The solution should be loaded with
 \ ``LoadSolutionFile('coordinatesSolution.txt')``\ , where 'coordinatesSolution.txt' represents the stored solution file, 
 see 
@@ -1534,7 +1542,7 @@ sys.exudynFast = True #this variable is used to signal to load the fast exudyn m
 import exudyn as exu
 
 
-The faster versions are only pre-compiled for some Python versions, which can be determined by trying \ ``import exudyn.exudynCPPfast``\ .
+The faster versions are available for all release versions, but only for some \ ``.dev1``\  development versions (Python 3.10), which can be determined by trying \ ``import exudyn.exudynCPPfast``\ .
 
 However, there are many \ **ways to speed up Exudyn in general**\ :
 
