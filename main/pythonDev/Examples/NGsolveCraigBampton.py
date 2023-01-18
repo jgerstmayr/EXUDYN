@@ -63,6 +63,7 @@ nModes = 8
 rho = 1000
 Emodulus=1e7*10
 nu=0.3
+meshCreated = False
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 if True: #needs netgen/ngsolve to be installed with pip install; to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases
@@ -93,16 +94,19 @@ if True: #needs netgen/ngsolve to be installed with pip install; to compute mesh
             netgen.Redraw() #this makes the window interactive
             time.sleep(0.05)
 
+    meshCreated = True
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #Use fem to import FEM model and create FFRFreducedOrder object
     fem.ImportMeshFromNGsolve(mesh, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
-    fem.SaveToFile(fileName)
+    if h == 1.25*a:
+        fem.SaveToFile(fileName)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #compute Hurty-Craig-Bampton modes
-if True: #now import mesh as mechanical model to EXUDYN
+if not meshCreated: #now import mesh as mechanical model to EXUDYN
     fem.LoadFromFile(fileName)
 
+if True:
     pLeft = [0,-a,-b]
     pRight = [L,-a,-b]
     nTip = fem.GetNodeAtPoint(pRight) #tip node (do not use midpoint, as this may not be a mesh node ...)

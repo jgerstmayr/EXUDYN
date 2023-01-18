@@ -45,7 +45,7 @@ d = 0.03    #diameter of bolt
 D = d*2 #diameter of bushing
 b = 0.05 #length of bolt
 nModes = 8
-meshH = 0.005 #0.01 is default, 0.002 gives 100000 nodes and is fairly converged
+meshH = 0.01 #0.01 is default, 0.002 gives 100000 nodes and is fairly converged; 
 #meshH = 0.0014 #203443 nodes, takes 1540 seconds for eigenmode computation (free-free) and 753 seconds for postprocessing on i9
 
 #steel:
@@ -96,7 +96,11 @@ if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https:
 
     geo.Add(block+bolt0+bolt+bushing)
 
-    mesh = ngs.Mesh( geo.GenerateMesh(maxh=meshH))
+    curvaturesafety = 5
+    if meshH==0.04: 
+        curvaturesafety = 1.2#this case is for creating very small files ...
+
+    mesh = ngs.Mesh( geo.GenerateMesh(maxh=meshH, curvaturesafety=curvaturesafety))
     mesh.Curve(1)
 
     if False: #set this to true, if you want to visualize the mesh inside netgen/ngsolve
@@ -111,7 +115,9 @@ if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https:
     #Use fem to import FEM model and create FFRFreducedOrder object
     [bfM, bfK, fes] = fem.ImportMeshFromNGsolve(mesh, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
     meshCreated = True
-    if (meshH==0.01): fem.SaveToFile(fileName)
+    if (meshH==0.04): 
+        print('save file')
+        fem.SaveToFile(fileName)
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
