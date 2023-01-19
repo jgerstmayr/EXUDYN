@@ -4,8 +4,8 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-+  Exudyn version = 1.5.75.dev1 (Fitzgerald)
-+  build date and time=2023-01-19  08:08
++  Exudyn version = 1.5.76.dev1 (Fitzgerald)
++  build date and time=2023-01-19  19:00
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn 1.5 is out! It includes now Python 3.7/8 - 3.10 wheels for MacOS (since 1.5.11.dev1 also showing tkinter dialogs!), improved compatibility for AVX2, simple reeving system, improved Lie group integration, improved RollingDisc, DistanceSensor, and many fixes; further features are multi-threading support; minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
@@ -598,19 +598,16 @@ Trouble shooting
   ImportError: DLL load failed: \%1 is not a valid Win32 application.
 
 
-  \ **There are several reasons and workarounds**\ :
+\ **There are several reasons and workarounds**\ :
 
   |  =>  You mixed up 32 and 64 bits version (see below) 
   |  =>  You are using an exudyn version for Python x_1.y_1 (e.g., 3.6.z_1) different from the Python x_2.y_2 version in your Anaconda (e.g., 3.7.z_2); note that x_1=x_2 and y_1=y_2 must be obeyed while z_1 and z_2 may be different
 
-+  \ **Import of exudyn C++ module failed Warning: ... **\ :
-
-
++  \ **Import of exudyn C++ module failed Warning: ...**\ :
 
   |  =>  ... and similar messages with: ModuleNotFoundError, Warning, with AVX2, without AVX2
   |  =>  A known reason is that your CPU \ **does not support AVX2**\ , while Exudyn is compiled with the AVX2 option (not support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this).
-  |  =>  \ **solution**\ : the release versions without the .dev1 ending in the wheel contain C++ libraries which are compiled without AVX/AVX2; the module loader will usually detect automatically, if your CPU supports AVX/AVX2; if not, it will load the 
-exudynCPPnoAVX.cp ... .pyd file; if this does not work, try
+  |  =>  \ **solution**\ : the release versions without the .dev1 ending in the wheel contain C++ libraries which are compiled without AVX/AVX2; the module loader will usually detect automatically, if your CPU supports AVX/AVX2; if not, it will load the exudynCPPnoAVX.cp ... .pyd file; if this does not work, try
 
 
 \ ``import sys``\ 
@@ -674,7 +671,7 @@ to explicitly load the version without AVX2.
   renderer is started.
   In some cases, visualizationSettings dialog may not be available and changes have to be made inside the code.
   |  =>  To resolve issues, the following visualizationSettings may help (before starting renderer!), but may reduce functionality: 
-    dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False
+  dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False
  
 
 
@@ -1539,9 +1536,9 @@ To activate the Exudyn C++ versions without range checks, which may be approx. 3
 
 .. code-block:: python
 
-import sys
-sys.exudynFast = True #this variable is used to signal to load the fast exudyn module
-import exudyn as exu
+  import sys
+  sys.exudynFast = True #this variable is used to signal to load the fast exudyn module
+  import exudyn as exu
 
 
 The faster versions are available for all release versions, but only for some \ ``.dev1``\  development versions (Python 3.10), which can be determined by trying \ ``import exudyn.exudynCPPfast``\ .
@@ -1616,8 +1613,8 @@ To connect to any other code, it is convenient to use a TCP/IP connection. This 
 the \ ``exudyn.utilities``\  functions
 
 +  \ ``CreateTCPIPconnection``\ 
-+  \ `` TCPIPsendReceive ``\ 
-+  \ ``CloseTCPIPconnection ``\ 
++  \ ``TCPIPsendReceive``\ 
++  \ ``CloseTCPIPconnection``\ 
 
 Basically, data can be transmitted in both directions, e.g., within a preStepUserFunction. In Examples, you can find 
  TCPIPexudynMatlab.py which shows a basic example for such a connectivity.
@@ -1675,13 +1672,13 @@ The following \ **entry points**\  into the C++ code can be found:
     \ ``main/src/Pymodules/PybindModule.cpp``\ 
 
 
-  it includes large header files, which are automatically created for binding C++ code with Python.
+  it includes large header files, which are automatically created for binding C++ code with Python.%blank line needed for .rst:
+  
 +  The object factory for creation of items (calling \ ``mbs.AddNode(...)``\  and similar): 
 
 
     \ ``main/src/Main/MainObjectFactory.h / .cpp``\ 
-+  Using the VisualStudio \ ``.sln``\  file and using the Debug mode allows you to smoothly walk from Python to C++ code (though that this takes 
-  some time to start up and it does not work always; and it does not work for graphics if it runs in a separate thread).
++  Using the VisualStudio \ ``.sln``\  file and using the Debug mode allows you to smoothly walk from Python to C++ code (though that this takes some time to start up and it does not work always; and it does not work for graphics if it runs in a separate thread).
 
 
 The functionality of the code is mainly based on systems (MainSystem and CSystem), items and solvers representing the multibody system or similar physical systems to be simulated. Parts of the core structure of Exudyn are:

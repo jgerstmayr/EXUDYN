@@ -36,6 +36,12 @@ git clone (also LFUI git):
 - clone into this directory 
 - possibly enter log in information
 
+UNDO previous commit:
+go to powershell into git directory, type:
+git reset HEAD~1
+==> this will undo the last commit and also does not add files to working tree
+==> it does not affect changes in files locally
+
 +++++++++++++++++++++++++++++++++
 ADVANCED:
 +++++++++++++++++++++++++++++++++

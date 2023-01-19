@@ -773,9 +773,9 @@ In general, to see where CPU time is lost, use the option turn on \texttt{simula
 
 To activate the \codeName\ C++ versions without range checks, which may be approx.\ 30 percent faster in some situations, use the following code snippet before first import of \texttt{exudyn}:
 \pythonstyle\begin{lstlisting}
-import sys
-sys.exudynFast = True #this variable is used to signal to load the fast exudyn module
-import exudyn as exu
+  import sys
+  sys.exudynFast = True #this variable is used to signal to load the fast exudyn module
+  import exudyn as exu
 \end{lstlisting}
 The faster versions are available for all release versions, but only for some \texttt{.dev1} development versions (Python 3.10), which can be determined by trying \texttt{import exudyn.exudynCPPfast}.
 
@@ -841,8 +841,8 @@ To connect to any other code, it is convenient to use a TCP/IP connection. This 
 the \texttt{exudyn.utilities} functions
 \bi
 \item \texttt{CreateTCPIPconnection}
-\item \texttt{ TCPIPsendReceive }
-\item \texttt{CloseTCPIPconnection }
+\item \texttt{TCPIPsendReceive}
+\item \texttt{CloseTCPIPconnection}
 \ei
 Basically, data can be transmitted in both directions, e.g., within a preStepUserFunction. In Examples, you can find 
  TCPIPexudynMatlab.py which shows a basic example for such a connectivity.
@@ -888,11 +888,11 @@ The following \mybold{entry points} into the C++ code can be found:
 \bi
   \item Python -- C++: the creation of the module \texttt{exudyn} is found in:\\
     \texttt{main/src/Pymodules/PybindModule.cpp}\\
-  it includes large header files, which are automatically created for binding C++ code with Python.
+  it includes large header files, which are automatically created for binding C++ code with Python.%blank line needed for .rst:
+  
   \item The object factory for creation of items (calling \texttt{mbs.AddNode(...)} and similar): \\
     \texttt{main/src/Main/MainObjectFactory.h / .cpp}
-  \item Using the VisualStudio \texttt{.sln} file and using the Debug mode allows you to smoothly walk from Python to C++ code (though that this takes 
-  some time to start up and it does not work always; and it does not work for graphics if it runs in a separate thread).
+  \item Using the VisualStudio \texttt{.sln} file and using the Debug mode allows you to smoothly walk from Python to C++ code (though that this takes some time to start up and it does not work always; and it does not work for graphics if it runs in a separate thread).
 \ei
 
 The functionality of the code is mainly based on systems (MainSystem and CSystem), items and solvers representing the multibody system or similar physical systems to be simulated. Parts of the core structure of Exudyn are:

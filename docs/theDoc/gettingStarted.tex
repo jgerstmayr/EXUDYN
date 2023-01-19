@@ -585,18 +585,17 @@ This information is also provided in the sensor output files.
   ImportError: DLL load failed: \%1 is not a valid Win32 application.
 \end{lstlisting}
 %
-  \mybold{There are several reasons and workarounds}:
+\mybold{There are several reasons and workarounds}:
 \bi
 \item[$\ra$] You mixed up 32 and 64 bits version (see below) 
 \item[$\ra$] You are using an exudyn version for Python $x_1.y_1$ (e.g., 3.6.$z_1$) different from the Python $x_2.y_2$ version in your Anaconda (e.g., 3.7.$z_2$); note that $x_1=x_2$ and $y_1=y_2$ must be obeyed while $z_1$ and $z_2$ may be different
 \ei
-%\item \mybold{ModuleNotFoundError: No module named 'exudynCPP' ... }:\\
-\item \mybold{Import of exudyn C++ module failed Warning: ... }:\\
+%
+\item \mybold{Import of exudyn C++ module failed Warning: ...}:
 \bi
 \item[$\ra$] ... and similar messages with: ModuleNotFoundError, Warning, with AVX2, without AVX2
 \item[$\ra$] A known reason is that your CPU \mybold{does not support AVX2}, while \codeName\ is compiled with the AVX2 option\footnote{modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, especially Zen and Zen-2 architectures should have no problems with AVX2; however, low-cost Celeron, Pentium and older AMD processors do \mybold{not} support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this}.
-\item[$\ra$] \mybold{solution}: the release versions without the .dev1 ending in the wheel contain C++ libraries which are compiled without AVX/AVX2; the module loader will usually detect automatically, if your CPU supports AVX/AVX2; if not, it will load the 
-exudynCPPnoAVX.cp ... .pyd file; if this does not work, try\\
+\item[$\ra$] \mybold{solution}: the release versions without the .dev1 ending in the wheel contain C++ libraries which are compiled without AVX/AVX2; the module loader will usually detect automatically, if your CPU supports AVX/AVX2; if not, it will load the exudynCPPnoAVX.cp ... .pyd file; if this does not work, try\\
 \texttt{import sys}\\
 \texttt{sys.exudynCPUhasAVX2 = False}\\
 to explicitly load the version without AVX2.
@@ -648,7 +647,7 @@ to explicitly load the version without AVX2.
   renderer is started.
   In some cases, visualizationSettings dialog may not be available and changes have to be made inside the code.
 \item[$\ra$] To resolve issues, the following visualizationSettings may help (before starting renderer!), but may reduce functionality: 
-    dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False
+  dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False
 \ei 
 
 
