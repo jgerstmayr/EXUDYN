@@ -55,7 +55,7 @@ InertiaRoll = InertiaCylinder(density=7800, length=length, outerRadius=3e-3, axi
                               nodeType = str(exu.NodeType.RotationEulerParameters), 
                               position = [0,0,poly[-1]*1.2],  
                               rotationMatrix =RotationMatrixY(np.pi/16),
-                              angularVelocity = RotationMatrixY(np.pi/16) @ np.array([[-1000],[0],[0]]),  # in Global coordinates
+                              angularVelocity = RotationMatrixY(np.pi/16) @ np.array([-1000,0,0]),  # in Global coordinates
                               velocity= [0,0,0],
                               gravity = [0,0,-9.81], 
                               graphicsDataList = graphRoll) 

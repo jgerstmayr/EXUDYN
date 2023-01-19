@@ -282,15 +282,19 @@ sLenum += DefLatexFinishClass()
                                description='Get Exudyn built version as string (if addDetails=True, adds more information on Python version, platform, etc.)',
                                ); s+=s1; sL+=sL1
 
+[s1,sL1] = DefPyFunctionAccess('', 'Help', 'PyHelp', 
+                               description='Show basic help information',
+                               ); s+=s1; sL+=sL1
+
 [s1,sL1] = DefPyFunctionAccess('', 'RequireVersion', '', 
                                argList=['requiredVersionString'],
                                description = 'Checks if the installed version is according to the required version. Major, micro and minor version must agree the required level. Example: RequireVersion("1.0.31")')
 sL+=sL1; #s+=s1;  #this function is defined in __init__.py ==> do not add to cpp bindings
 
 [s1,sL1] = DefPyFunctionAccess(cClass='', pyName='StartRenderer', cName='PyStartOpenGLRenderer', 
-                                defaultArgs=['False'],
+                                defaultArgs=['0'],
                                 argList=['verbose'],
-                                description="Start OpenGL rendering engine (in separate thread); use verbose=True to output information during OpenGL window creation; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of Spyder"); s+=s1; sL+=sL1
+                                description="Start OpenGL rendering engine (in separate thread); use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g. Spyder"); s+=s1; sL+=sL1
 
 #new, defined in C++ as lambda function:
 [s1,sL1] = DefPyFunctionAccess('', 'StopRenderer', 'no direct link to C++ here', "Stop OpenGL rendering engine"); sL+=sL1; #s+=s1

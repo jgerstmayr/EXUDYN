@@ -35,8 +35,16 @@ void CMarkerSuperElementRigid::GetFloatingFrameNodeData(const CSystemData& cSyst
 
 		framePosition = cNodeRigid.GetPosition(configuration);
 		frameRotationMatrix = cNodeRigid.GetRotationMatrix(configuration);
-		frameVelocity = cNodeRigid.GetVelocity(configuration);
-		frameAngularVelocityLocal = cNodeRigid.GetAngularVelocityLocal(configuration);
+		if (configuration != ConfigurationType::Reference)
+		{
+			frameVelocity = cNodeRigid.GetVelocity(configuration);
+			frameAngularVelocityLocal = cNodeRigid.GetAngularVelocityLocal(configuration);
+		}
+		else
+		{
+			frameVelocity.SetAll(0);
+			frameAngularVelocityLocal.SetAll(0);
+		}
 	}
 	else
 	{
@@ -52,12 +60,14 @@ void CMarkerSuperElementRigid::GetWeightedRotations(const CSystemData& cSystemDa
 {
 	const ArrayIndex& nodeNumbers = parameters.meshNodeNumbers;
 	const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(GetObjectNumber())); //always possible
-
-																													  //compute rotations according to given formula
+	
+	//compute rotations according to given formula
 	Real factor = 0; //sum w_i * |pRef_i|^2
 	Matrix3D factorMatrix(3, 3, 0.); //W in docu
 
 	weightedRotations.SetAll(0); //sum w_i * pRef_i x u_i
+	if (configuration == ConfigurationType::Reference) { return; } //otherwise would not work
+
 	Vector3D pRef; //mesh node local reference position
 
 	Vector3D translationPart(0); //this term occurs if the mesh at the Marker is not symmetric regarding rotations => translation causes rotation ...
@@ -66,7 +76,7 @@ void CMarkerSuperElementRigid::GetWeightedRotations(const CSystemData& cSystemDa
 	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
 	{
 		pRef0 += parameters.weightingFactors[i] * cObject.GetMeshNodeLocalPosition(nodeNumbers[i], ConfigurationType::Reference);
-		translationPart += parameters.weightingFactors[i] * cObject.GetMeshNodeLocalPosition(nodeNumbers[i], ConfigurationType::Current);
+		translationPart += parameters.weightingFactors[i] * cObject.GetMeshNodeLocalPosition(nodeNumbers[i], configuration); //usually Current
 	}
 	translationPart -= pRef0;
 
@@ -123,7 +133,7 @@ void CMarkerSuperElementRigid::GetWeightedAngularVelocity(const CSystemData& cSy
 	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
 	{
 		pRef0 += parameters.weightingFactors[i] * cObject.GetMeshNodeLocalPosition(nodeNumbers[i], ConfigurationType::Reference);
-		translationPart += parameters.weightingFactors[i] * cObject.GetMeshNodeLocalVelocity(nodeNumbers[i], ConfigurationType::Current);
+		translationPart += parameters.weightingFactors[i] * cObject.GetMeshNodeLocalVelocity(nodeNumbers[i], configuration);
 	}
 
 	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
@@ -162,16 +172,8 @@ void CMarkerSuperElementRigid::GetPosition(const CSystemData& cSystemData, Vecto
 	Matrix3D frameRotationMatrix;
 	Vector3D frameVelocity;
 	Vector3D frameAngularVelocityLocal;
+	//also works for ConfigurationType::Reference:
 	GetFloatingFrameNodeData(cSystemData, framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, configuration);
-
-	//compute local position:
-	//position = parameters.referencePosition;
-	//for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
-	//{
-	//	//add weighted displacements: could be optimized if SuperElement has additional GetMeshNodeLocalDisplacement(...)
-	//	position += parameters.weightingFactors[i] * (cObject.GetMeshNodeLocalPosition(nodeNumbers[i], configuration) -
-	//													   cObject.GetMeshNodeLocalPosition(nodeNumbers[i], ConfigurationType::Reference));
-	//}
 
 	position = parameters.offset;
 	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
@@ -197,15 +199,6 @@ void CMarkerSuperElementRigid::GetVelocity(const CSystemData& cSystemData, Vecto
 
 	Vector3D localDisplacement = parameters.offset;
 	velocity.SetAll(0);
-	//for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
-	//{
-	//	velocity += parameters.weightingFactors[i] * cObject.GetMeshNodeVelocity(nodeNumbers[i], configuration);
-	//	
-	//	//add weighted displacements: 
-	//	localDisplacement += parameters.weightingFactors[i] * (cObject.GetMeshNodeLocalPosition(nodeNumbers[i], configuration) -
-	//		cObject.GetMeshNodeLocalPosition(nodeNumbers[i], ConfigurationType::Reference));
-	//}
-	//velocity += frameAngularVelocityLocal.CrossProduct(parameters.referencePosition + localDisplacement);
 
 	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
 	{

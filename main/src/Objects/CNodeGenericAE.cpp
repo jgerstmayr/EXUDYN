@@ -26,7 +26,7 @@ void CNodeGenericAE::GetOutputVariable(OutputVariableType variableType, Configur
 	{
 	case OutputVariableType::Coordinates:
 	{
-		if (IsConfigurationInitialCurrentReferenceVisualization(configuration))
+		if (IsValidConfiguration(configuration))
 		{
 			value = GetCoordinateVector(configuration);
 		}

@@ -64,7 +64,7 @@ void CNodePoint::GetOutputVariable(OutputVariableType variableType, Configuratio
 	case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(configuration)); break;
 	case OutputVariableType::Coordinates:
 	{
-		if (IsConfigurationInitialCurrentReferenceVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
+		if (IsValidConfiguration(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
 		{
 			value = GetCoordinateVector(configuration);
 		} else
@@ -75,7 +75,7 @@ void CNodePoint::GetOutputVariable(OutputVariableType variableType, Configuratio
 	}
 	case OutputVariableType::Coordinates_t: 
 	{
-		if (IsConfigurationInitialCurrentVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
+		if (IsValidConfigurationButNotReference(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
 		{
 			value = GetCoordinateVector_t(configuration);
 		}
@@ -88,7 +88,7 @@ void CNodePoint::GetOutputVariable(OutputVariableType variableType, Configuratio
 	}
 	case OutputVariableType::Coordinates_tt:
 	{
-		if (IsConfigurationInitialCurrentVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
+		if (IsValidConfigurationButNotReference(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
 		{
 			value = GetCoordinateVector_tt(configuration);
 		}

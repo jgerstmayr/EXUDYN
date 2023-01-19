@@ -37,6 +37,11 @@
 #include "deps/stb_image_write.h" //for save image as .PNG
 #endif
 
+#ifdef __EXUDYN_USE_OPENVR 
+#include "Graphics/OpenVRinterface.h"
+extern OpenVRinterface glfwOpenVRinterface;
+#endif __EXUDYN_USE_OPENVR 
+
 
 using namespace std::string_literals; // enables s-suffix for std::string literals
 
@@ -71,6 +76,7 @@ extern bool globalPyRuntimeErrorFlag; //stored in Stdoutput.cpp; this flag is se
 
 
 //+++++++++++++++++++++++++++++++++++++
+//#undef __EXUDYN_USE_OPENVR
 #ifdef __EXUDYN_USE_OPENVR
 #include "Graphics/OpenVRinterface.h"
 OpenVRinterface openVRinterface;
@@ -99,7 +105,7 @@ GLFWwindow* GlfwRenderer::window = nullptr;
 RenderState* GlfwRenderer::state;
 RenderStateMachine GlfwRenderer::stateMachine;
 std::thread GlfwRenderer::rendererThread;
-bool GlfwRenderer::verboseRenderer = false;        
+Index GlfwRenderer::verboseRenderer = 0;         //0=False, 1=True (main output), 2=more info, 3=debug
 //DELETE: Index GlfwRenderer::firstRun = 0; //zoom all in first run
 std::atomic_flag GlfwRenderer::renderFunctionRunning = ATOMIC_FLAG_INIT;  //!< semaphore to check if Render(...)  function is currently running (prevent from calling twice); initialized with clear state
 std::atomic_flag GlfwRenderer::showMessageSemaphore = ATOMIC_FLAG_INIT;   //!< semaphore for ShowMessage
@@ -111,11 +117,12 @@ BitmapFont GlfwRenderer::bitmapFontSmall;			//!< bitmap font for small texts, in
 BitmapFont GlfwRenderer::bitmapFontLarge;			//!< bitmap font for large texts, initialized upon start of renderer
 BitmapFont GlfwRenderer::bitmapFontHuge;			//!< bitmap font for huge texts, initialized upon start of renderer
 #else
-GLuint GlfwRenderer::textureNumberRGBbitmap[256];	//!< store texture number for our bitmap font
+GLuint GlfwRenderer::textureNumberRGBbitmap[256*NUMBER_OF_TEXTUREFONT_LISTS];	//!< store texture number for our bitmap font; in ultimate case, there are 2*nCharacter lists
 GLuint GlfwRenderer::bitmapFontListBase;			//!< starting index for GLlists for font bitmap textured quads
 ResizableArray<GLubyte> GlfwRenderer::charBuffer;	//!< buffer for converstion of UTF8 into internal unicode-like format
 #endif
-
+bool GlfwRenderer::depthMask;                   //!< state of glDepthMask (except for fonts)
+GLdouble GlfwRenderer::zFactor;                 //!< for clipping in ortho projection
 GLuint GlfwRenderer::spheresListBase;			//!< starting index for GLlists for spheres
 
 
@@ -133,6 +140,8 @@ GlfwRenderer::GlfwRenderer()
 	graphicsDataList = nullptr;
 	window = nullptr;
 	state = nullptr;
+    depthMask = false;
+    zFactor = 100.; //z-factor to avoid clipping; original:100; could be set via options ...
 
 	//moved to renderState: fontScale = 1; //initialized if needed before bitmap initialization
 	//renderState state cannot be initialized here, because it will be linked later to visualizationSystemContainer
@@ -161,7 +170,6 @@ void GlfwRenderer::ResetStateMachine()
 	stateMachine.highlightTimeout = 0.;
 
 	stateMachine.selectionMouseCoordinates = Vector2D({ 0.,0. });
-
 }
 
 //! add status message, e.g., if button is pressed
@@ -684,7 +692,7 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 		}
 		if (key == GLFW_KEY_O && action == GLFW_PRESS)
 		{
-			const Float16& A = state->modelRotation;
+			const float* A = state->modelRotation.GetDataPointer();
 			Matrix3DF rotationMV(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
 
 			//Float3 p = state->rotationCenterPoint * rotationMV + (state->centerPoint - state->rotationCenterPoint);
@@ -1175,7 +1183,7 @@ void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mou
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	//++++++++++++++++++++++++++++++++++++++++
-	//from Render(...) / different to meshDoc implementation (uses Projection)
+	//from Render(...) 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
@@ -1185,8 +1193,7 @@ void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mou
 
 	//++++++++++++++++++++++++++++++++++++++++
 	float zoom;
-	GLdouble zFactor;
-	SetProjection(width, height, ratio, zoom, zFactor); //set zoom, perspective, ...; may not work for larger perspective
+	SetProjection(width, height, ratio, zoom); //set zoom, perspective, ...; may not work for larger perspective
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
@@ -1240,7 +1247,7 @@ void GlfwRenderer::MouseSelectOpenGL(GLFWwindow* window, Index mouseX, Index mou
 }
 
 
-bool GlfwRenderer::SetupRenderer(bool verbose)
+bool GlfwRenderer::SetupRenderer(Index verbose)
 {
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//initializat and detect running renderer
@@ -1503,10 +1510,6 @@ void GlfwRenderer::InitCreateWindow()
 		{
 			if (verboseRenderer) { PrintDelayed("glfwCreateWindow(...) successful"); }
 		}
-#ifdef __EXUDYN_USE_OPENVR
-		if (verboseRenderer) { PrintDelayed("Initialize OpenVR"); }
-		InitializeOpenVR(window, &glfwRenderer);
-#endif
 		//allow for very small windows, but never get 0 ...; x-size anyway limited due to windows buttons
 		glfwSetWindowSizeLimits(window, 2, 2, maxWidth, maxHeight);
 		if (verboseRenderer) { PrintDelayed("glfwSetWindowSizeLimits(...) successful"); }
@@ -1533,6 +1536,15 @@ void GlfwRenderer::InitCreateWindow()
 		//joystick
 		state->joystickAvailable = invalidIndex; //this causes to search for new joystick and, if fourn, initialize stateMachine!
 		ResetStateMachine();
+
+#ifdef __EXUDYN_USE_OPENVR
+		if (verboseRenderer) { PrintDelayed("Initialize OpenVR"); }
+		if (visSettings->interactive.openVR.enable) 
+		{ 
+			glfwOpenVRinterface.SetLogLevel(visSettings->interactive.openVR.logLevel);
+			state->openVRstate.isActivated = glfwOpenVRinterface.InitOpenVR(&glfwRenderer);
+		}
+#endif
 
 		//+++++++++++++++++
 		//initialize opengl
@@ -1646,7 +1658,7 @@ void GlfwRenderer::DoRendererTasks()
 			lastEventUpdate = time;
 			PyProcessExecuteQueue(); //if still some elements open in queue; MAY ONLY BE DONE IN SINGLE-THREADED MODE
 			ProcessJoystick();
-		}
+        }
 	}
 
 
@@ -1659,17 +1671,18 @@ void GlfwRenderer::DoRendererTasks()
 			ComputeMaxSceneSize(state->maxSceneSize, state->centerPoint); 
 			maxSceneComputed = true;
 			basicVisualizationSystemContainer->SetComputeMaxSceneRequest(false);
-			//pout << "maxSceneSize=" << state->maxSceneSize << ", center=" << state->centerPoint << "\n";
-			//pout << "ComputeMaxSceneSize\n";
+
 		}
 		if (basicVisualizationSystemContainer->GetAndResetZoomAllRequest()) {
 			ZoomAll(false, !maxSceneComputed, false); 
-			//pout << "Zoom all\n";
 		}
 		Render(window);
 		SaveImage(); //in case of flag, save frame to image file
 #ifdef __EXUDYN_USE_OPENVR
-		RenderOpenVR(window, &glfwRenderer);
+		if (glfwOpenVRinterface.IsActivated())
+		{
+			glfwOpenVRinterface.RenderAndUpdateDevices();
+		}
 #endif
 		lastGraphicsUpdate = time;
 		SetCallBackSignal(false);
@@ -1679,7 +1692,16 @@ void GlfwRenderer::DoRendererTasks()
 	{
 		glfwWaitEventsTimeout((double)updateInterval); //wait x seconds for next event
 		ProcessJoystick();
-	}
+#ifdef __EXUDYN_USE_OPENVR
+        if (glfwOpenVRinterface.IsActivated())
+        {
+            //in future, this should be a GlfwRenderer function, which transmits data to renderState
+            glfwOpenVRinterface.GetState(state->openVRstate);
+            //OpenVRparameters p; //currently without any functionality
+            //glfwOpenVRinterface.SetDataAndParameters(p);
+        }
+#endif
+    }
 
 }
 
@@ -1698,7 +1720,10 @@ void GlfwRenderer::FinishRunLoop()
 
 	if (window)
 	{
-		glfwDestroyWindow(window); //should be called from main thread, but also works this way!
+#ifdef __EXUDYN_USE_OPENVR
+        glfwOpenVRinterface.ShutDown();
+#endif
+        glfwDestroyWindow(window); //should be called from main thread, but also works this way!
 		window = nullptr;
 	}
 	rendererActive = false; //for new startup of renderer
@@ -1753,30 +1778,49 @@ void GlfwRenderer::DoRendererIdleTasks(Real waitSeconds)
 }
 
 //load GL_PROJECTION and set according to zoom, perspective, etc.
-void GlfwRenderer::SetProjection(int width, int height, float ratio, float& zoom, GLdouble& zFactor)
+void GlfwRenderer::SetProjection(int width, int height, float ratio, float& zoom)
 {
-	zoom = state->zoom;
-	zFactor = 100.; //z-factor to avoid clipping; original:100
-
-	if (visSettings->openGL.perspective <= 0)
+	if (visSettings->interactive.lockModelView)
 	{
-		glOrtho(-ratio * zoom, ratio*zoom, -zoom, zoom, -zFactor * 2.*state->maxSceneSize, zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
-		//void glOrtho(GLdouble left,GLdouble right,GLdouble bottom,GLdouble top,GLdouble nearVal,GLdouble farVal);
+		zoom = visSettings->openGL.initialZoom;
+		state->zoom = zoom;
 	}
 	else
 	{
-		//visSettings->openGL.perspective
-		float fact = 1.f / (float)visSettings->openGL.perspective;
-		float factZoom = 0.5f; //correction, to show same zoom level as orthographic projection
+		zoom = state->zoom;
+	}
 
-		float zNear = state->maxSceneSize*fact;
-		float zFar = state->maxSceneSize * (4.f*fact + 2.f);
-		float right = ratio * zoom*factZoom;
-		float left = -right;
-		float top = zoom * factZoom;
-		float bottom = -zoom * factZoom;
-		glFrustum(left, right, bottom, top, zNear, zFar);
-		glTranslatef(0.f, 0.f, -2 * fact * state->maxSceneSize);
+	const Matrix4DF& P = state->projectionMatrix;
+	if (P(0, 0) == 1.f && P(1, 1) == 1.f && P(2, 2) == 1.f && P(3, 3) == 1.f) //in this case, no projection has been provided
+	{
+		if (visSettings->openGL.perspective <= 0)
+		{
+			glOrtho(-ratio * zoom, ratio*zoom, -zoom, zoom, -zFactor * 2.*state->maxSceneSize, zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
+			//void glOrtho(GLdouble left,GLdouble right,GLdouble bottom,GLdouble top,GLdouble nearVal,GLdouble farVal);
+		}
+		else
+		{
+			//visSettings->openGL.perspective
+			float fact = 1.f / (float)visSettings->openGL.perspective;
+			float factZoom = 0.5f; //correction, to show same zoom level as orthographic projection
+
+			float zNear = state->maxSceneSize*fact;
+			float zFar = state->maxSceneSize * (4.f*fact + 2.f);
+			float right = ratio * zoom*factZoom;
+			float left = -right;
+			float top = zoom * factZoom;
+			float bottom = -zoom * factZoom;
+			glFrustum(left, right, bottom, top, zNear, zFar);
+			glTranslatef(0.f, 0.f, -2 * fact * state->maxSceneSize);
+		}
+	}
+	else
+	{
+		//additional projection has been provided and is added after glOrtho
+		glOrtho(-ratio * zoom, ratio*zoom, -zoom, zoom, -zFactor * 2.*state->maxSceneSize, zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
+		//glOrtho(-ratio , ratio, -1, 1, 0.1, 30); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
+		//glLoadMatrixf(state->projectionMatrix.GetDataPointer());
+		glMultMatrixf(state->projectionMatrix.GetDataPointer());
 	}
 }
 
@@ -1785,11 +1829,28 @@ void GlfwRenderer::SetModelRotationTranslation()
 {
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//model rotation and translation, include rotation center point
-	Float16 A(state->modelRotation); //copy, do not update model rotation, which is still modifiable
-	//Matrix3DF rotationMV(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
-	Matrix3DF rotationMV = EXUmath::SlimVector16toMatrix3D(A);
-	Float3 translationMV = state->rotationCenterPoint * rotationMV + state->centerPoint;
-	//Float3 translationMV = state->centerPoint;// *rotationMV;
+	Matrix4DF A;
+	Matrix3DF rotationMV;
+	Float3 translationMV;
+	if (!visSettings->interactive.lockModelView)
+	{
+		A = state->modelRotation; //copy, do not update model rotation, which is still modifiable
+		rotationMV = EXUmath::Matrix4DtoMatrix3D(A);
+		translationMV = state->rotationCenterPoint * rotationMV + state->centerPoint;
+	}
+	else
+	{
+		A = state->modelRotation; //copy, do not update model rotation, which is still modifiable
+		for (Index i = 0; i < 3; i++) //overwrite initial rotation
+		{
+			for (Index j = 0; j < 3; j++)
+			{
+				A(i, j) = visSettings->openGL.initialModelRotation[i][j];
+			}
+		}
+		rotationMV = EXUmath::Matrix4DtoMatrix3D(A);
+		translationMV = visSettings->openGL.initialCenterPoint;
+	}
 
 	//update center point if tracked by marker
 	if (visSettings->interactive.trackMarker != -1)
@@ -1809,15 +1870,13 @@ void GlfwRenderer::SetModelRotationTranslation()
 			rotationMV = markerOrientation3DF * rotationMV; //superimposed initial rotation
 
 			//map rotation matrix to part of 16 components in A
-			A[0] = rotationMV(0, 0);
-			A[1] = rotationMV(0, 1);
-			A[2] = rotationMV(0, 2);
-			A[4] = rotationMV(1, 0);
-			A[5] = rotationMV(1, 1);
-			A[6] = rotationMV(1, 2);
-			A[8] = rotationMV(2, 0);
-			A[9] = rotationMV(2, 1);
-			A[10] = rotationMV(2, 2);
+			for (Index i = 0; i < 3; i++)
+			{
+				for (Index j = 0; j < 3; j++)
+				{
+					A(i, j) = rotationMV(i, j);
+				}
+			}
 		}
 		if (hasPosition)
 		{  //track position
@@ -1845,61 +1904,20 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	EXUstd::WaitAndLockSemaphore(renderFunctionRunning); //lock Render(...) function, no second call possible
 
 	int width, height;
-
-	glfwGetFramebufferSize(window, &width, &height);
-
+	GetWindowSize(width, height);
 	//rendererOut << "current window: width=" << width << ", height=" << height << "\n";
-	state->currentWindowSize[0] = width;
-	state->currentWindowSize[1] = height;
 
-	
+	float ratio, zoom;
+	Render3Dobjects(width, height, ratio, zoom);
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	float fontSize = visSettings->general.textSize * GetFontScaling(); //use this size for fonts throughout
 
-	glViewport(0, 0, width, height);
-
-	//get available line width range:
-	//GLfloat LineRange[2];
-	//glGetFloatv(GL_LINE_WIDTH_RANGE, LineRange);
-
-	Float4 bg = visSettings->general.backgroundColor;
-	glClearColor(bg[0], bg[1], bg[2], bg[3]); //(float red, float green, float blue, float alpha);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glStencilMask(~0); //make sure that all stencil bits are cleared
-	glClearStencil(0);
-
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//main render process
+	//do this always, e.g. in openVR case or if projection is modified:
+	//for texts, axes, etc.: draw without perspective
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
-	float ratio = (float)width;
-	if (height != 0) { ratio = width / (float)height; }
-	float zoom;
-	GLdouble zFactor;
-	SetProjection(width, height, ratio, zoom, zFactor); //set zoom, perspective, ...
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	AddGradientBackground(zoom, ratio);
-	//put here; light fixed relative to camera:
-	SetGLLights(); //moved here 2020-12-05; light should now be rotation independent!
-
-	SetModelRotationTranslation();
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-	RenderGraphicsData();
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-	if (visSettings->openGL.perspective != 0)
-	{
-		//for texts, axes, etc.: draw without perspective
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(-ratio * zoom, ratio*zoom, -zoom, zoom, -zFactor * 2.*state->maxSceneSize, zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
-	}
+	glOrtho(-ratio * zoom, ratio*zoom, -zoom, zoom, -zFactor * 2.*state->maxSceneSize, zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
 
 	//glPushMatrix(); //store current matrix
 	//glPopMatrix(); //restore matrix
@@ -1914,10 +1932,10 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		glLoadIdentity();
 		//float factor = 0.35f*zoom * 2.6f;
 		//glTranslated(-factor*ratio*1.05, factor, 0.f); //old ; DELETE
-		glDepthMask(GL_FALSE); //draw system information and coordinate system always in front
+		SetGLdepthMask(GL_FALSE); //draw system information and coordinate system always in front
 
 		//float scale = 2.f*fontSize*zoom / ((float)height);
-		float hOff = 0.95f*(float)zFactor * 2.f*state->maxSceneSize; //draw in front; NEEDED since glDepthMask(GL_FALSE) ?
+		float hOff = 0.95f*(float)zFactor * 2.f*state->maxSceneSize; //draw in front; NEEDED since SetGLdepthMask(GL_FALSE) ?
 
 
 		if (visSettings->general.showComputationInfo)
@@ -1998,7 +2016,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 			//Float3 poff({ 0.f*zoom,-1.88f*zoom, hOff }); //old, using vertex coordinates
 			DrawString(mouseStr.c_str(), fontSize*fontSmallFactor, poff, textColor);
 		} 
-		glDepthMask(GL_TRUE); //draw lines always in front
+        SetGLdepthMask(GL_TRUE); //draw lines always in front
 	}
 
 	if (visSettings->contour.showColorBar && visSettings->contour.outputVariable != OutputVariableType::_None) //draw coordinate system
@@ -2008,7 +2026,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		//float factor = 0.35f*zoom * 2.6f;
 		//glTranslated(-factor * ratio*1.05, factor, 0.f); //old: now use pixel coordinates
 
-		glDepthMask(GL_FALSE); //draw lines always in front
+        SetGLdepthMask(GL_FALSE); //draw lines always in front
 		float hOff = 0.9f*(float)zFactor * 2.f*state->maxSceneSize;   //quads in front
 		float hOff2 = 0.95f*(float)zFactor * 2.f*state->maxSceneSize; //lines in front
 
@@ -2028,7 +2046,6 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 			if (graphicsDataList->NumberOfItems() > 1) 
 			{
 				ShowMessage("WARNING: contour plot color bar only works for one single system");
-				//pout << "WARNING: contour plot color bar only works for one single system\n"; 
 			}
 
 			minVal = graphicsDataList->GetItem(0)->GetContourCurrentMinValue();
@@ -2093,7 +2110,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 			p0 += Float3({ 0.f,-sizeY,0.f });
 
 		}
-		glDepthMask(GL_TRUE);
+        SetGLdepthMask(GL_TRUE);
 	}
 
 	if (visSettings->general.drawCoordinateSystem) //draw coordinate system
@@ -2124,8 +2141,11 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		glTranslated(pPix[0], pPix[1], 0.f);
 
 		//glTranslated(factor*ratio, factor, 0.f);
-		glMultMatrixf(state->modelRotation.GetDataPointer());
-		glDepthMask(GL_FALSE);
+		if (!visSettings->interactive.lockModelView)
+		{
+			glMultMatrixf(state->modelRotation.GetDataPointer());
+		}
+        SetGLdepthMask(GL_FALSE);
 
 		glLineWidth(visSettings->openGL.lineWidth);
 		if (visSettings->openGL.lineSmooth) { glEnable(GL_LINE_SMOOTH); }
@@ -2144,11 +2164,20 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		const char* X2 = "Y(1)";
 		const char* X3 = "Z(2)";
 
-		Float16 m = state->modelRotation;
-		Float16 matTp({m[0],m[4],m[ 8],m[12],
-					   m[1],m[5],m[ 9],m[13],
-					   m[2],m[6],m[10],m[14],
-					   m[3],m[7],m[11],m[15]});
+		Matrix4DF matTp;
+		if (!visSettings->interactive.lockModelView)
+		{
+			matTp = state->modelRotation.GetTransposed();
+		}
+		else
+		{
+			matTp.SetScalarMatrix(4, 1.f);
+		}
+		//Matrix4DF m = state->modelRotation;
+		//Float16 matTp({m[0],m[4],m[ 8],m[12],
+		//			   m[1],m[5],m[ 9],m[13],
+		//			   m[2],m[6],m[10],m[14],
+		//			   m[3],m[7],m[11],m[15]});
 
 		Float3 poff({ 0.4f*scale, 0.4f*scale,0.f }); //small offset from axes
 
@@ -2173,7 +2202,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		DrawString(X3, fontSize, poff, textColor);
 		glPopMatrix(); //restore matrix
 
-		glDepthMask(GL_TRUE);
+        SetGLdepthMask(GL_TRUE);
 	}
 
 
@@ -2186,35 +2215,41 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 
 }
 
-void GlfwRenderer::Render3Dobjects(GLFWwindow* window, const Matrix3DF& projectionA, const Float3& projectionPos,
-	int width, int height, float ratio)
+void GlfwRenderer::Render3Dobjects(int screenWidth, int screenHeight, float& screenRatio, float& zoom)
 {
+	state->currentWindowSize[0] = screenWidth;
+	state->currentWindowSize[1] = screenHeight;
+
+	glViewport(0, 0, screenWidth, screenHeight);
+
+	Float4 bg = visSettings->general.backgroundColor;
+	glClearColor(bg[0], bg[1], bg[2], bg[3]); //(float red, float green, float blue, float alpha);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glStencilMask(~0); //make sure that all stencil bits are cleared
+	glClearStencil(0);
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//main render process
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	float zoom;
-	GLdouble zFactor;
-	SetProjection(width, height, ratio, zoom, zFactor); //set zoom, perspective, ...
-
-	//++++++++++++++++++++++++++++++
-	//add projection transformation here
-	//Matrix4DF A;
-	//EXUmath::Matrix3DVector3D2Matrix4D(RigidBodyMath::RotationMatrix3((float)(2 * sin(phiact))), Float3(0.), A);
-	//phiact += 0.04;
-	//glMultMatrixf(A.GetDataPointer());
-	glMultMatrixf(projectionA.GetDataPointer());
-	glTranslatef(projectionPos[0], projectionPos[1], projectionPos[2]); //CHECK if this needs to be done before rotation
-	//++++++++++++++++++++++++++++++
-
+	screenRatio = (float)screenWidth;
+	if (screenHeight != 0) { screenRatio = screenWidth / (float)screenHeight; }
+	SetProjection(screenWidth, screenHeight, screenRatio, zoom); //set zoom, perspective, ...
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	AddGradientBackground(zoom, ratio);
-	SetGLLights(); 
+	AddGradientBackground(zoom, screenRatio);
+	//put here; light fixed relative to camera:
+	SetGLLights(); //moved here 2020-12-05; light should now be rotation independent!
 
-	SetModelRotationTranslation(); //setup model rotation/translation for rendering 3D objects
+	SetModelRotationTranslation();
+
 	RenderGraphicsData();
+
+
+
 
 }
 
@@ -2498,6 +2533,76 @@ void GlfwRenderer::SaveSceneToFile(const STDstring& filename)
 	//else : ignored
 }
 
+//! Render particulary the text of multibody system; selectionMode==true adds names
+void GlfwRenderer::RenderGraphicsDataText(GraphicsData* data, Index lastItemID, bool highlight, Index highlightID, Float4 highlightColor2, Float4 otherColor2, bool selectionMode)
+{
+    if (visSettings->openGL.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
+
+    float textheight = visSettings->general.textSize;
+    float scaleFactor = 2.f * state->zoom / ((float)state->currentWindowSize[1]); //factor, which gives approximately 1pt textsize
+
+    //Float16 m = state->modelRotation;
+    //Float16 matTp({ m[0],m[4],m[8],m[12], //transpose of modelRotation
+    //               m[1],m[5],m[9],m[13],
+    //               m[2],m[6],m[10],m[14],
+    //               m[3],m[7],m[11],m[15] });
+
+	Matrix4DF matTp = state->modelRotation.GetTransposed();
+
+	float textFontSize;
+    //SetGLdepthMask(GL_FALSE);
+    float offz = 0.f; //positive values make it more visible than other objects!
+    if (visSettings->general.textAlwaysInFront)
+    {
+        if (visSettings->openGL.perspective > 0)
+        {
+            offz = visSettings->general.textOffsetFactor*state->maxSceneSize; //larger value does not work for perspective!
+            //offz = 1.05f* (1.f / (float)visSettings->openGL.perspective * state->maxSceneSize); //the bracket term is the near plane which we need to surpass
+        }
+        else
+        {
+            offz = 0.95f*(float)zFactor * 2.f*state->maxSceneSize;
+        }
+    }
+    else
+    {
+        offz = visSettings->general.textOffsetFactor*state->maxSceneSize; //is always positive
+    }
+    bool transparent = !visSettings->general.textHasBackground;
+
+    for (const GLText& t : data->glTexts)
+    {
+        if (selectionMode) { if (t.itemID != lastItemID) { glLoadName(t.itemID); lastItemID = t.itemID; } }
+        //delete: float scale = textheight * scaleFactor;
+        //delete: if (t.size != 0.f) { scale = t.size * scaleFactor; }
+        textFontSize = textheight * GetFontScaling();
+        if (t.size != 0.f) { textFontSize = t.size * GetFontScaling(); }
+
+        float offx = t.offsetX * scaleFactor * textFontSize;
+        float offy = t.offsetY * scaleFactor * textFontSize;
+        //draw strings without applying the rotation:
+        glPushMatrix(); //store current matrix -> before rotation
+        glTranslated(t.point[0], t.point[1], t.point[2]);
+        glMultMatrixf(matTp.GetDataPointer());
+
+        if (!highlight)
+        {
+            DrawString(t.text, textFontSize, Float3({ offx,offy,offz }), t.color, transparent);
+        }
+        else
+        {
+            Float4 color = otherColor2;
+            if (t.itemID == highlightID) { color = highlightColor2; }
+
+            DrawString(t.text, textFontSize, Float3({ offx,offy,offz }), color, transparent);
+        }
+
+
+        glPopMatrix(); //restore matrix
+    }
+
+}
+
 
 void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 {
@@ -2562,55 +2667,13 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 
 		for (auto data : *graphicsDataList)
 		{
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			//DRAW TEXT (before triangles, in order to make texts visible in case of transparency
-			if (visSettings->openGL.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
-
-			float textheight = visSettings->general.textSize;
-			float scaleFactor = 2.f * state->zoom / ((float)state->currentWindowSize[1]); //factor, which gives approximately 1pt textsize
-
-			Float16 m = state->modelRotation;
-
-			Float16 matTp({ m[0],m[4],m[8],m[12], //transpose of modelRotation
-						   m[1],m[5],m[9],m[13],
-						   m[2],m[6],m[10],m[14],
-						   m[3],m[7],m[11],m[15] });
-
-			float textFontSize;
-			//glDepthMask(GL_FALSE);
-
-			for (const GLText& t : data->glTexts)
-			{
-				if (selectionMode) { if (t.itemID != lastItemID) { glLoadName(t.itemID); lastItemID = t.itemID; } }
-				//delete: float scale = textheight * scaleFactor;
-				//delete: if (t.size != 0.f) { scale = t.size * scaleFactor; }
-				textFontSize = textheight * GetFontScaling();
-				if (t.size != 0.f) { textFontSize = t.size * GetFontScaling(); }
-
-				float offx = t.offsetX * scaleFactor * textFontSize;
-				float offy = t.offsetY * scaleFactor * textFontSize;
-				//draw strings without applying the rotation:
-				glPushMatrix(); //store current matrix -> before rotation
-				glTranslated(t.point[0], t.point[1], t.point[2]);
-				glMultMatrixf(matTp.GetDataPointer());
-
-				if (!highlight)
-				{
-					DrawString(t.text, textFontSize, Float3({ offx,offy,0.f }), t.color);
-				}
-				else
-				{
-					Float4 color = otherColor2;
-					if (t.itemID == highlightID) { color = highlightColor2; }
-
-					DrawString(t.text, textFontSize, Float3({ offx,offy,0.f }), color);
-				}
-
-
-				glPopMatrix(); //restore matrix
-			}
-			//glDepthMask(GL_TRUE);
-			//glPopMatrix(); //restore matrix
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //DRAW TEXT (before triangles, in order to make texts visible in case of transparency
+            if (visSettings->openGL.facesTransparent)
+            {
+                RenderGraphicsDataText(data, lastItemID, highlight, highlightID, highlightColor2, otherColor2, selectionMode);
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//DRAW POINTS before triangles (nodes shown in transparent scenes)
@@ -2872,7 +2935,7 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 
 			
 			//DRAW TRIANGLES MESH
-			if (visSettings->openGL.showFaces || visSettings->openGL.showMeshFaces)
+			if (visSettings->openGL.showFaceEdges || visSettings->openGL.showMeshEdges)
 			{
 				//glEnable(GL_POLYGON_OFFSET_LINE);
 
@@ -2910,6 +2973,23 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 				//glDisable(GL_POLYGON_OFFSET_LINE);
 			}
 
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            //DRAW TEXT finally to be in front of everything if no transparency is activated
+            if (!visSettings->openGL.facesTransparent)
+            {
+                if (visSettings->general.textAlwaysInFront)
+                {
+                    glDepthMask(GL_FALSE); //draw system information and coordinate system always in front
+                }
+
+                
+                RenderGraphicsDataText(data, lastItemID, highlight, highlightID, highlightColor2, otherColor2, selectionMode);
+                if (GetGLdepthMask())
+                {
+                    glDepthMask(GL_TRUE); //switch back to original state
+                }
+            }
+            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 		} //for (auto data : *graphicsDataList)
@@ -3025,7 +3105,7 @@ void GlfwRenderer::DrawTrianglesWithShadow(GraphicsData* data)
 		//add shadow now:
 
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-		glDepthMask(GL_FALSE);
+        SetGLdepthMask(GL_FALSE);
 		//glDepthFunc(GL_ALWAYS); //added ...?
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_STENCIL_TEST);
@@ -3064,7 +3144,7 @@ void GlfwRenderer::DrawTrianglesWithShadow(GraphicsData* data)
 		glDisable(GL_POLYGON_OFFSET_FILL);
 		glDisable(GL_CULL_FACE);
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-		glDepthMask(GL_TRUE);
+        SetGLdepthMask(GL_TRUE);
 
 		glStencilFunc(GL_NOTEQUAL, 0x0, 0xff);
 		glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);

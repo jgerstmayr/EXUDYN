@@ -1,5 +1,15 @@
 for installation use:
   pip install exudyn
+
 pre-compiled binaries are available via pypi.org
-For building instructions and detailed information on installation see docs/theDoc/theDoc.pdf
+
+for installation of pre-release versions, use:
+  pip install exudyn --pre
+
+For Examples see: 
+https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples
+https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels
+
+For building instructions and detailed information on installation see:
+https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf
 

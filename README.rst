@@ -4,8 +4,8 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-+  Exudyn version = 1.5.65.dev1 (Fitzgerald)
-+  build date and time=2023-01-12  22:42
++  Exudyn version = 1.5.75.dev1 (Fitzgerald)
++  build date and time=2023-01-19  08:08
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn 1.5 is out! It includes now Python 3.7/8 - 3.10 wheels for MacOS (since 1.5.11.dev1 also showing tkinter dialogs!), improved compatibility for AVX2, simple reeving system, improved Lie group integration, improved RollingDisc, DistanceSensor, and many fixes; further features are multi-threading support; minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
@@ -116,15 +116,17 @@ The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training
 The following people have contributed to Python and C++ library implementations (as well as to testing, examples, theory, ...):
 
 +  Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with \ ``taskmanager``\  for \ **multi-threaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
-+  Stefan Holzinger, University of Innsbruck (Lie group solvers in Python, Lie group node)
++  Stefan Holzinger, University of Innsbruck (Lie group module and solvers in Python, Lie group node, testing)
 +  Andreas Zwölfer, Technical University Munich (FFRF and CMS formulation)
-+  Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation / pip install on linux / wsl with graphics)
++  Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation, pip install on linux, wsl with graphics)
 +  Martin Sereinig, University of Innsbruck (special robotics functionality)
++  Michael Pieber, University of Innsbruck (helped in several Python libraries)
 +  Grzegorz Orzechowski, Lappeenranta University of Technology (coupling with openAI gym and running machine learning algorithms)
++  Aaron Bacher, University of Innsbruck (helped to integrated OpenVR, connection with Franka Emika Panda)
 
 The following people have contributed to examples, testing and theory:
 
-+  Michael Pieber, Konstantina Ntarladima, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Simon Scheiber
++  Konstantina Ntarladima, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Simon Scheiber
 
 -- thanks a lot! --
 
@@ -1198,8 +1200,58 @@ The visualization settings structure can be accessed in the system container \ `
 
 
 
+Renderer and 3D graphics
+========================
+
+A 3D renderer is attached to the simulation. Visualization is started with  \ ``exu.StartRenderer()``\ , see the examples and tutorials.
+The renderer uses an OpenGL window of a library called GLFW, which is platform-independent. 
+The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. There is no way to contruct models with the renderer. Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
+
+There are some main features in the renderer, using keyboard and mouse:
+
++  press key H to show help in renderer
++  move model by pressing left mouse button and drag
++  rotate model by pressing right mouse button and drag
++  change visibility (wire frame, solid, transparent, ...) by pressing T
++  zoom all: key A
++  open visualization dialog: key V
++  show item number: click on graphics element with left mouse button
++  show item dictionary: click on graphics element with right mouse button  
++  ... (see theDoc.pdfff.)
+
+Depending on your model (size, place, ...), you may need to adjust the following \ ``openGL``\  parameters in \ ``visualizationSettings``\ :
+
++  light and light position 
++  shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
++  visibility of nodes, markers, etc. in according bodies, nodes, markers, ..., \ ``visualizationSettings``\ 
++  move camera with a selected marker: adjust \ ``trackMarker``\  in \ ``visualizationSettings.interactive``\ 
++  ... (see theDoc.pdfff.)
+
+
+
+Graphics pipeline
+=================
+
+There are basically two loops during simulation, which feed the graphics pipeline.
+The solver runs a loop:
+
++  compute step (or set up initial values)
++  finish computation step; results are in current state
++  copy current state to visualization state (thread safe)
++  signal graphics pipeline that new visualization data is available
++  the renderer may update the visualization depending on \ ``graphicsUpdateInterval``\  in \ \ ``visualizationSettings.general``\ 
+
+The openGL graphics thread (=separate thread) runs the following loop:
+
++  render openGL scene with a given graphicsData structure (containing lines, faces, text, ...)
++  go idle for some milliseconds
++  check if openGL rendering needs an update (e.g. due to user interaction)
+   => if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
++  check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
+
+
 Storing the model view
-----------------------
+======================
 
 
 There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \ ``SC.GetRenderState()``\  and \ ``SC.SetRenderState()``\ ,
@@ -1263,58 +1315,8 @@ Note that in the current version of Exudyn there is more data stored in render s
 see also theDoc.pdf.
 
 
-Renderer and 3D graphics
-========================
-
-A 3D renderer is attached to the simulation. Visualization is started with  \ ``exu.StartRenderer()``\ , see the examples and tutorials.
-The renderer uses an OpenGL window of a library called GLFW, which is platform-independent. 
-The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. There is no way to contruct models with the renderer. Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
-
-There are some main features in the renderer, using keyboard and mouse:
-
-+  press key H to show help in renderer
-+  move model by pressing left mouse button and drag
-+  rotate model by pressing right mouse button and drag
-+  change visibility (wire frame, solid, transparent, ...) by pressing T
-+  zoom all: key A
-+  open visualization dialog: key V
-+  show item number: click on graphics element with left mouse button
-+  show item dictionary: click on graphics element with right mouse button  
-+  ... (see theDoc.pdfff.)
-
-Depending on your model (size, place, ...), you may need to adjust the following \ ``openGL``\  parameters in \ ``visualizationSettings``\ :
-
-+  light and light position 
-+  shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
-+  visibility of nodes, markers, etc. in according bodies, nodes, markers, ..., \ ``visualizationSettings``\ 
-+  move camera with a selected marker: adjust \ ``trackMarker``\  in \ ``visualizationSettings.interactive``\ 
-+  ... (see theDoc.pdfff.)
-
-
-
-Graphics pipeline
-=================
-
-There are basically two loops during simulation, which feed the graphics pipeline.
-The solver runs a loop:
-
-+  compute step (or set up initial values)
-+  finish computation step; results are in current state
-+  copy current state to visualization state (thread safe)
-+  signal graphics pipeline that new visualization data is available
-+  the renderer may update the visualization depending on \ ``graphicsUpdateInterval``\  in \ \ ``visualizationSettings.general``\ 
-
-The openGL graphics thread (=separate thread) runs the following loop:
-
-+  render openGL scene with a given graphicsData structure (containing lines, faces, text, ...)
-+  go idle for some milliseconds
-+  check if openGL rendering needs an update (e.g. due to user interaction)
-   => if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
-+  check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
-
-
-Graphics user Python functions
-==============================
+Graphics user functions via Python
+==================================
 
 There are some user functions in order to customize drawing:
 
@@ -1581,8 +1583,52 @@ However, there are many \ **ways to speed up Exudyn in general**\ :
 
 
 
+---------------
+Advanced topics
+---------------
+ 
+This section covers some advanced topics, which may be only relevant for a smaller group of people. 
+Functionality may be extended but also removed in future
+
+------
+OpenVR
+------
+ 
+The general open source libraries from Valve, see
+
+   https://github.com/ValveSoftware/openvr
+
+have been linked to Exudyn . In order to get OpenVR fully integrated, you need to run \ ``setup.py``\  Exudyn with the \ ``--openvr``\  flag. For general installation instructions, see theDoc.pdf.
+
+Running OpenVR either requires an according head mounted display (HMD) or a virtualization using, e.g., Riftcat 2 to use a mobile phone with an according adapter. Visualization settings are available in \ ``interactive.openVR``\ , but need to be considered with care.
+An example is provided in \ ``engineOpenVR.py``\ , showing some optimal flags like locking the model rotation, zoom or translation.
+
+Everything is experimental, but contributions are welcome!
 
 
+----------------------------
+Interaction with other codes
+----------------------------
+ 
+Interaction with other codes and computers (E.g., MATLAB or other C++ codes, or other Python versions)
+is possible. 
+To connect to any other code, it is convenient to use a TCP/IP connection. This is enabled via 
+the \ ``exudyn.utilities``\  functions
+
++  \ ``CreateTCPIPconnection``\ 
++  \ `` TCPIPsendReceive ``\ 
++  \ ``CloseTCPIPconnection ``\ 
+
+Basically, data can be transmitted in both directions, e.g., within a preStepUserFunction. In Examples, you can find 
+ TCPIPexudynMatlab.py which shows a basic example for such a connectivity.
+
+
+---
+ROS
+---
+ 
+Basic interaction with ROS has been tested. However, make sure to use Python 3, as there is (and will never be) a Python 2
+support for Exudyn .
 
 
 

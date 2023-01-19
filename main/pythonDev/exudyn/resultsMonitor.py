@@ -26,7 +26,7 @@ argList = sys.argv
 import matplotlib.pyplot as plt
 import numpy as np
 from exudyn.plot import ParseOutputFileHeader
-from exudyn.utilities import PlotLineCode
+from exudyn.advancedUtilities import PlotLineCode
 from exudyn.processing import SingleIndex2SubIndices
 
 listMarkerStyles = ['. ', '+', 'x ', 'v ', '^ ', '< ', '> ', '* ', 'd ', 'D', 's', 'X ', 'P', 'o', 'p ', 'h ', 'H ']

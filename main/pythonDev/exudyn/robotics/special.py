@@ -14,8 +14,8 @@
 
 import numpy as np
 import exudyn.robotics as rob
-from exudyn.utilities import HT2rotationMatrix, HT2translation, Skew, HTtranslate, ScalarMult
-from exudyn.rigidBodyUtilities import RotationMatrix2RotZYZ
+from exudyn.basicUtilities import ScalarMult
+from exudyn.rigidBodyUtilities import RotationMatrix2RotZYZ, HT2rotationMatrix, HT2translation, Skew, HTtranslate
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++

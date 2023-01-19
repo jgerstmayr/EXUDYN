@@ -134,7 +134,7 @@ if calcEig:
     m = staticSolver.GetSystemMassMatrix()
     #exu.Print("m =",m)
 
-    staticSolver.ComputeJacobianODE2RHS(mbs)
+    staticSolver.ComputeJacobianODE2RHS(mbs, scalarFactor_ODE2=-1, scalarFactor_ODE2_t=0)
     staticSolver.ComputeJacobianAE(mbs)
     K = staticSolver.GetSystemJacobian()
     #exu.Print("K =",K)

@@ -26,7 +26,7 @@ void CNodeGenericODE1::GetOutputVariable(OutputVariableType variableType, Config
 	{
 	case OutputVariableType::Coordinates:
 	{
-		if (IsConfigurationInitialCurrentReferenceVisualization(configuration))
+		if (IsValidConfiguration(configuration))
 		{
 			value = GetCoordinateVector(configuration);
 		}
@@ -38,7 +38,7 @@ void CNodeGenericODE1::GetOutputVariable(OutputVariableType variableType, Config
 	}
 	case OutputVariableType::Coordinates_t:
 	{
-		if (IsConfigurationInitialCurrentVisualization(configuration)) 
+		if (IsValidConfigurationButNotReference(configuration)) 
 		{
 			value = GetCoordinateVector_t(configuration);
 		}

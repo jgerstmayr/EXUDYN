@@ -140,7 +140,8 @@ public:
 	}
 
 	//! get new RGB image for opengl texture2D for given character (needs to be deleted hereafter)
-	gchar* GetRGBFontCharacter(guint iChar)
+    //! transparent flag gives only transparent background, transparent=false always gives background
+	gchar* GetRGBFontCharacter(guint iChar, bool transparent=true)
 	{
 		const int colorSize = 4; //RGBA
 		gchar* font;
@@ -153,51 +154,28 @@ public:
 		{
 			for (guint x = 0; x < w; x++)
 			{
-				gchar b = (1 - GetPixel(iChar, x, y)) * 255; 
-				//gchar b = GetPixel(iChar, x, y) * 255;
+                gchar b = GetPixel(iChar, x, y) * 255;
+                gchar binv = (1 - GetPixel(iChar, x, y)) * 255;
 
-				font[y*w * colorSize + x * colorSize + 0] = 255; //all color white ==> text color will be added; 
-				font[y*w * colorSize + x * colorSize + 1] = 255;
-				font[y*w * colorSize + x * colorSize + 2] = 255;
-				font[y*w * colorSize + x * colorSize + 3] = 255-b; //color has no effect ==> character will be visible ...
-			}
+                if (transparent)
+                {
+                    font[y*w * colorSize + x * colorSize + 0] = 255; //all color white ==> text color will be added; 
+                    font[y*w * colorSize + x * colorSize + 1] = 255;
+                    font[y*w * colorSize + x * colorSize + 2] = 255;
+                    font[y*w * colorSize + x * colorSize + 3] = 255 - binv; //color has no effect ==> character will be visible ...
+                }
+                else
+                {
+                    //this works, but then the text color may not be black (color of texture is multiplied with glColor!)
+                    font[y*w * colorSize + x * colorSize + 0] = 255 - b; //all color white ==> text color will be added; 
+                    font[y*w * colorSize + x * colorSize + 1] = 255 - b;
+                    font[y*w * colorSize + x * colorSize + 2] = 255 - b;
+                    font[y*w * colorSize + x * colorSize + 3] = 255; //color has no effect ==> character will be visible ...
+                }
+            }
 		}
 		return font;
 	}
-
-	//! get new RGBA image for opengl texture2D for given character (needs to be deleted hereafter)
-	//unused
-	//gchar* GetRGBAFontBitmap()
-	//{
-	//	const int colorSize = 4; //RGBA
-	//	gchar* font;
-	//	//guint w = characterByteWidth * 8; //make multiple of 8 (problems with overlapping area?)
-	//	guint w = characterWidth; 
-	//	guint h = characterHeight;
-	//	font = new gchar[nCharacters* w*h * colorSize]; //RGB bytes
-
-	//	for (guint iChar = 0; iChar < nCharacters; iChar++)
-	//	{
-	//		for (guint y = 0; y < h; y++)
-	//		{
-	//			for (guint x = 0; x < w; x++)
-	//			{
-	//				//gchar b = (1 - GetPixel(iChar, x, y)) * 255; //for RGB, use black as color
-	//				gchar b = GetPixel(iChar, x, y) * 255; //use black for background, white for color (color can then be changed with glColorf)
-
-	//				font[iChar*h*w * colorSize + y*w * colorSize + x * colorSize + 0] = b;
-	//				font[iChar*h*w * colorSize + y*w * colorSize + x * colorSize + 1] = b;
-	//				font[iChar*h*w * colorSize + y * w * colorSize + x * colorSize + 2] = b;
-	//				font[iChar*h*w * colorSize + y * w * colorSize + x * colorSize + 3] = 255-b; //for white pixels, use no transparency; for black pixels full transparency
-	//			}
-	//		}
-	//	}
-	//	//for (int i = 0; i < nCharacters* w*h * colorSize; i++)
-	//	//{
-	//	//	font[i] = 0;
-	//	//}
-	//	return font;
-	//}
 
 	//! get pixel of current bitmap for char iChar at position x/y
 	guint GetPixel(guint iChar, guint x, guint y) const
@@ -391,7 +369,7 @@ public:
 				{
 					glBitmap(characterWidth, characterHeight, 
 						-(GLfloat)(columnNumber*characterWidth), (GLfloat)(lineNumber*characterHeight),
-						(GLfloat)(characterWidth)*0, 0, GetCharacterBitmap(cUnicode -characterOffset)); // &bitmapFont.openGLBitmap[ii*bitmapFont.characterBytes]);
+						(GLfloat)(characterWidth)*0, 0, GetCharacterBitmap(cUnicode - characterOffset)); // &bitmapFont.openGLBitmap[ii*bitmapFont.characterBytes]);
 				}
 				columnNumber++;
 			}

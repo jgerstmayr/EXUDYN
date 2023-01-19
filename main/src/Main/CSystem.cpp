@@ -1143,7 +1143,7 @@ void CSystem::AssembleInitializeSystemCoordinates(const MainSystem& mainSystem)
 	cSystemData.GetCData().currentState = cSystemData.GetCData().initialState;
 	cSystemData.GetCData().visualizationState = cSystemData.GetCData().initialState; //from this point on, drawing should be possible
 	postProcessData.SetVisualizationStateUpdateAvailable(false);
-	//done at beginning of solver/time integration: cSystemData.GetCData().startOfStepState = cSystemData.GetCData().initialState;
+	cSystemData.GetCData().startOfStepState = cSystemData.GetCData().initialState; //2023-01-12: done also at beginning of solver/time integration, but to be consistent with all configurations!
 }
 
 

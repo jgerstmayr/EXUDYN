@@ -33,7 +33,7 @@ void CNodePointGround::GetOutputVariable(OutputVariableType variableType, Config
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
 	case OutputVariableType::Coordinates:
 	{
-		if (IsConfigurationInitialCurrentReferenceVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
+		if (IsValidConfiguration(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
 		{
 			value = Vector();
 		}
@@ -45,7 +45,7 @@ void CNodePointGround::GetOutputVariable(OutputVariableType variableType, Config
 	}
 	case OutputVariableType::Coordinates_t:
 	{
-		if (IsConfigurationInitialCurrentVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
+		if (IsValidConfigurationButNotReference(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
 		{
 			value = Vector();
 		}

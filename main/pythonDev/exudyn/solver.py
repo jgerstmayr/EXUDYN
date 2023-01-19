@@ -314,21 +314,21 @@ def ComputeLinearizedSystem(mbs,
     staticSolver.ComputeMassMatrix(mbs)
     M = staticSolver.GetSystemMassMatrix()
 
-    staticSolver.ComputeJacobianODE2RHS(mbs)    #compute ODE2 part of jacobian ==> stored internally in solver
-    #staticSolver.ComputeJacobianAE(mbs)         #compute algebraic part of jacobian (not needed here...)
+    nODE2 = staticSolver.GetODE2size()
+    staticSolver.ComputeJacobianODE2RHS(mbs,scalarFactor_ODE2=-1,
+                                        scalarFactor_ODE2_t=0, 
+                                        scalarFactor_ODE1=0)    #compute ODE2 part of jacobian ==> stored internally in solver
     jacobian = staticSolver.GetSystemJacobian() #read out stored jacobian
 
-    nODE2 = staticSolver.GetODE2size()
+    K = jacobian[0:nODE2,0:nODE2]    #obtain ODE2 part from jacobian == stiffness matrix
 
-    #obtain ODE2 part from jacobian == stiffness matrix
-    K = jacobian[0:nODE2,0:nODE2]
-
-    staticSolver.ComputeJacobianODE2RHS(mbs, scalarFactor=0)    #reset jacobian
-    staticSolver.ComputeJacobianODE2RHS_t(mbs)                  #compute ODE2_t part of jacobian ==> stored internally in solver
+    staticSolver.ComputeJacobianODE2RHS(mbs,scalarFactor_ODE2=0,
+                                        scalarFactor_ODE2_t=-1, 
+                                        scalarFactor_ODE1=0)    #reset jacobian
     jacobian_t = staticSolver.GetSystemJacobian() #read out stored jacobian
     
-    #obtain ODE2_t part from jacobian == damping matrix
-    D = jacobian_t[0:nODE2,0:nODE2]
+    
+    D = jacobian_t[0:nODE2,0:nODE2] #obtain ODE2_t part from jacobian == damping matrix
 
     return [M, K, D]
 
@@ -341,6 +341,7 @@ def ComputeLinearizedSystem(mbs,
 #   numberOfEigenvalues: number of eigenvalues and eivenvectors to be computed; if numberOfEigenvalues==0, all eigenvalues will be computed (may be impossible for larger problems!)
 #   constrainedCoordinates: if this list is non-empty, the integer indices represent constrained coordinates of the system, which are fixed during eigenvalue/vector computation; according rows/columns of mass and stiffness matrices are erased
 #   convert2Frequencies: if True, the eigen values are converted into frequencies (Hz) and the output is [eigenFrequencies, eigenVectors]
+#   useAbsoluteValues: if True, abs(eigenvalues) is used, which avoids problems for small (close to zero) eigen values; needed, when converting to frequencies
 #**output: [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values ($\omega_i^2$, being the squared eigen frequencies in ($\omega_i$ in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
 #**example:
 #  #take any example from the Examples or TestModels folder, e.g., 'cartesianSpringDamper.py' and run it
@@ -351,7 +352,7 @@ def ComputeLinearizedSystem(mbs,
 def ComputeODE2Eigenvalues(mbs, 
                            simulationSettings = exudyn.SimulationSettings(),
                            useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates=[],
-                           convert2Frequencies = False):
+                           convert2Frequencies = False, useAbsoluteValues = True):
     import numpy as np
     #use static solver, as it does not include factors from time integration (and no velocity derivatives) in the jacobian
     staticSolver = exudyn.MainSolverStatic()
@@ -362,8 +363,10 @@ def ComputeODE2Eigenvalues(mbs,
     staticSolver.ComputeMassMatrix(mbs)
     M = staticSolver.GetSystemMassMatrix()
 
-    staticSolver.ComputeJacobianODE2RHS(mbs)    #compute ODE2 part of jacobian ==> stored internally in solver
-    staticSolver.ComputeJacobianAE(mbs)         #compute algebraic part of jacobian (not needed here...)
+    staticSolver.ComputeJacobianODE2RHS(mbs,scalarFactor_ODE2=-1,
+                                        scalarFactor_ODE2_t=0, 
+                                        scalarFactor_ODE1=0)    #compute ODE2 part of jacobian ==> stored internally in solver
+    #staticSolver.ComputeJacobianAE(mbs)         #compute algebraic part of jacobian (not needed here...)
     jacobian = staticSolver.GetSystemJacobian() #read out stored jacobian
 
     nODE2 = staticSolver.GetODE2size()
@@ -380,8 +383,12 @@ def ComputeODE2Eigenvalues(mbs,
     if not useSparseSolver:
         from scipy.linalg import eigh  #eigh for symmetric matrices, positive definite; eig for standard eigen value problems
         [eigenValuesUnsorted, eigenVectors] = eigh(K, M) #this gives omega^2 ... squared eigen frequencies (rad/s)
-        sortIndices = np.argsort(abs(eigenValuesUnsorted)) #get resorting index
-        eigenValues = np.sort(a=abs(eigenValuesUnsorted)) #eigh returns unsorted eigenvalues...
+        if useAbsoluteValues:
+            sortIndices = np.argsort(abs(eigenValuesUnsorted)) #get resorting index
+            eigenValues = np.sort(a=abs(eigenValuesUnsorted)) #eigh returns unsorted eigenvalues...
+        else:
+            sortIndices = np.argsort(eigenValuesUnsorted) #get resorting index
+            eigenValues = np.sort(a=eigenValuesUnsorted) #eigh returns unsorted eigenvalues...
         if numberOfEigenvalues > 0:
             eigenValues = eigenValues[0:numberOfEigenvalues]
             eigenVectors = eigenVectors[:,sortIndices[0:numberOfEigenvalues]] #eigenvectors are given in columns!
@@ -401,8 +408,12 @@ def ComputeODE2Eigenvalues(mbs,
                                    which='LM', sigma=0, mode='normal') 
 
         #sort eigenvalues
-        sortIndices = np.argsort(abs(eigenValues)) #get resorting index
-        eigenValues = np.sort(a=abs(eigenValues))
+        if useAbsoluteValues:
+            sortIndices = np.argsort(abs(eigenValues)) #get resorting index
+            eigenValues = np.sort(a=abs(eigenValues))
+        else:
+            sortIndices = np.argsort(eigenValues) #get resorting index
+            eigenValues = np.sort(a=eigenValues)
         eigenVectors = eigenVectors[:,sortIndices] #eigenvectors are given in columns!
 
     eigenVectorsNew = np.zeros((nODE2,numberOfEigenvalues))

@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1356, 
-Number of resolved issues = 1176 (15 in current minor version), 
-Exudyn version = 1.5.15.dev1, 
-last change =  2022-12-31
+Number of issues = 1406, 
+Number of resolved issues = 1236 (75 in current minor version), 
+Exudyn version = 1.5.75.dev1, 
+last change =  2023-01-19
 
 
 <table style = "width:100%">
@@ -39,15 +39,15 @@ last change =  2022-12-31
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>1355</td>
-    <td>visualizationSettings</td>
+    <td>1405</td>
+    <td>AddDistanceSensor   </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> check possibility for update loop to continue simulation</td>
-    <td>CHECK</td>
+    <td> add rotation of Marker to ObjectGround in SensorUserFunction</td>
+    <td>EXTENSION</td>
     <td></td>
-    <td>2022-12-31</td>
-    <td>2023-06-29</td>
+    <td>2023-01-19</td>
+    <td>2023-07-18</td>
     <td></td>
     <td></td>
     <td></td>
@@ -55,15 +55,15 @@ last change =  2022-12-31
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>1354</td>
-    <td>visualizationSettings</td>
+    <td>1404</td>
+    <td>Lie group method    </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> double click on bool variables changes state</td>
-    <td>EXTENSION</td>
+    <td> add consistent numerical derivatives for Lie group nodes, needing the composition rule for incremental changes</td>
+    <td>FIX</td>
     <td></td>
-    <td>2022-12-31</td>
-    <td>2023-06-29</td>
+    <td>2023-01-18</td>
+    <td>2023-07-17</td>
     <td></td>
     <td></td>
     <td></td>
@@ -71,15 +71,47 @@ last change =  2022-12-31
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>1353</td>
-    <td>visualizationSettings</td>
+    <td>1403</td>
+    <td>Lie group nodes     </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> add KEY Q shortcut to close dialog</td>
+    <td> remoge LieGroup node RigidBodyRotVecDataLG as it is not needed any more as it can be substituted with more efficient RigidBodyRotVecLG</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-18</td>
+    <td>2023-07-17</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1395</td>
+    <td>ComputeLinearizedSystem</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add test model</td>
+    <td>TESTING</td>
+    <td></td>
+    <td>2023-01-12</td>
+    <td>2023-07-11</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1356</td>
+    <td>CHECK               </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> Add security question on quit/escape if computation Renderer runs longer than 15 minutes</td>
     <td>EXTENSION</td>
     <td></td>
-    <td>2022-12-31</td>
-    <td>2023-06-29</td>
+    <td>2023-01-01</td>
+    <td>2023-06-30</td>
     <td></td>
     <td></td>
     <td></td>
@@ -119,54 +151,6 @@ last change =  2022-12-31
     <td></td>
   </tr>
   <tr style = "background-color:#FFB266">
-    <td>1335</td>
-    <td>RollingDiscPenalty  </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add test example for ground moving (rotating table</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-12-25</td>
-    <td>2023-06-23</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1331</td>
-    <td>exudyn cpp          </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add __repr__ and help which writes some information on workflow (github, theDoc, Examples, ...)</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-12-21</td>
-    <td>2023-06-19</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1326</td>
-    <td>OpenVR              </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add OpenVR license and mention in getting started</td>
-    <td>CHANGE</td>
-    <td></td>
-    <td>2022-12-20</td>
-    <td>2023-06-18</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
     <td>1325</td>
     <td>MergeGraphicsDataTriangleList</td>
     <td>JG</td>
@@ -176,54 +160,6 @@ last change =  2022-12-31
     <td></td>
     <td>2022-12-19</td>
     <td>2023-06-17</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1323</td>
-    <td>AVX2                </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> update documentation for improved functionality with AVX2 code</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-12-17</td>
-    <td>2023-06-15</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1314</td>
-    <td>Pybind11            </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> test compilation with higher version of pybind11 (currently pybind11=2.6.0 in setup.py</td>
-    <td>CHECK</td>
-    <td></td>
-    <td>2022-12-14</td>
-    <td>2023-06-12</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1308</td>
-    <td>OpenGL texts        </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add sub function for drawing text bitmaps; use different order of drawing for transparent and non-transparent triangles to get improved text drawing</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-12-08</td>
-    <td>2023-06-06</td>
     <td></td>
     <td></td>
     <td></td>
@@ -1527,22 +1463,6 @@ last change =  2022-12-31
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0839</td>
-    <td>multithreaded jacobian</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add functionality for multithreaded jacobian and mass matrix</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-12-19</td>
-    <td>2022-02-17</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0838</td>
     <td>GeneralContact jacobian</td>
     <td>JG</td>
@@ -1671,43 +1591,11 @@ last change =  2022-12-31
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0828</td>
-    <td>MT integration2     </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add multithreading to mass matrix and jacobian; add multithreaded adding of vector with special templated functions to allow special (templated) solver functions</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-12-09</td>
-    <td>2022-02-07</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0792</td>
     <td>test Pardiso integration</td>
     <td>JG</td>
     <td>RAISED  </td>
     <td> VS2017 settings with Intel Performance Libraries and test interface via Eigen</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2021-11-02</td>
-    <td>2022-01-01</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0791</td>
-    <td>test Eigen SimplicialLDLT</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> use systemMatricesArePD to enable LDLT solver</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2021-11-02</td>
@@ -2327,22 +2215,6 @@ last change =  2022-12-31
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0437</td>
-    <td>solvercontainer+ systemcontainer</td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> remove SolverContainer and SystemContainer from systemStructuresDefinition and work manually</td>
-    <td>CHANGE</td>
-    <td></td>
-    <td>2020-07-21</td>
-    <td>2020-09-19</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0436</td>
     <td>virtual functions   </td>
     <td>JG</td>
@@ -2503,22 +2375,6 @@ last change =  2022-12-31
     <td></td>
   </tr>
   <tr style = "background-color:#FFAAAA">
-    <td>0315</td>
-    <td>Add user object     </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add user object</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2020-01-10</td>
-    <td>2020-03-10</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
     <td>0314</td>
     <td>Add user marker     </td>
     <td>JG</td>
@@ -2560,22 +2416,6 @@ last change =  2022-12-31
     <td></td>
     <td>2019-12-26</td>
     <td>2020-02-24</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>0261</td>
-    <td>MarkerDataJacobians </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> Add access functions for jacobians and other marker data: SetPositionJacobian, GetPositionJacobian, etc.; add jacobian types = markertypes, which check if wrong jacobian is accessed</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2019-09-11</td>
-    <td>2019-11-10</td>
     <td></td>
     <td></td>
     <td></td>
@@ -2919,6 +2759,774 @@ last change =  2022-12-31
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1402</td>
+    <td>openVR              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add flag to set compilation with openVR in setup.py; copy .dll in Windows case</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-17</td>
+    <td>2023-07-16</td>
+    <td>2023-01-18 22:57</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1401</td>
+    <td>lockModelView       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add flag which allows to fully lock rotation, zoom, etc.; in this case, only initial values in openGL settings are accepted for setup of view, but mouse or key input is ignored</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-17</td>
+    <td>2023-07-16</td>
+    <td>2023-01-17 09:20</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1400</td>
+    <td>renderState         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> vectors and matrices are returned in numpy format; this allows simpler computation, but does not anymore allow to treat output as list (+ operator!)</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-16</td>
+    <td>2023-07-15</td>
+    <td>2023-01-16 21:11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1399</td>
+    <td>renderState         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> initialization now done consistently for SC.AttachToRenderEngine() and exudyn.StartRenderer(); behavior should be as before</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-16</td>
+    <td>2023-07-15</td>
+    <td>2023-01-16 21:10</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1398</td>
+    <td>renderState         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add projectionMatrix containing the current projection usd (usually identity matrix)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-16</td>
+    <td>2023-07-15</td>
+    <td>2023-01-16 20:09</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1397</td>
+    <td>showFaceEdges, showMeshEdges</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> wrong switching causing to show edges only if also some faces are activated</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2023-01-12</td>
+    <td>2023-07-11</td>
+    <td>2023-01-12 22:32</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1396</td>
+    <td>Demo                </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add a two demos included into the python module; put into exudyn.demos; add hint for larger examples; Demo1() = without graphics, just creating output file; Demo2() is rigid3Dexample with SolutionViewer</td>
+    <td>EXTNESION</td>
+    <td></td>
+    <td>2023-01-12</td>
+    <td>2023-07-11</td>
+    <td>2023-01-12 18:51</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1394</td>
+    <td>eigenvalues test    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> refine test model for ComputeODE2Eigenvalues</td>
+    <td>TESTING</td>
+    <td></td>
+    <td>2023-01-12</td>
+    <td>2023-07-11</td>
+    <td>2023-01-12 17:44</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1393</td>
+    <td>ComputeJacobianAE   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change default values to fit to conventional tangential stiffness matrix computation</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-12</td>
+    <td>2023-07-11</td>
+    <td>2023-01-12 17:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1392</td>
+    <td>ComputeJacobianODE1RHS</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change default values to fit to conventional tangential stiffness matrix computation</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-12</td>
+    <td>2023-07-11</td>
+    <td>2023-01-12 17:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1391</td>
+    <td>ComputeJacobianODE2RHS</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change default values to fit to conventional tangential stiffness matrix computation</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-12</td>
+    <td>2023-07-11</td>
+    <td>2023-01-12 17:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1390</td>
+    <td>ComputeLinearizedSystem</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> not working because of wrong interface to ComputeJacobianODE2RHS</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2023-01-12</td>
+    <td>2023-07-11</td>
+    <td>2023-01-12 17:53</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1389</td>
+    <td>configuration checks</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check all systemData C++ interface functions regarding illegal configuration</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-12</td>
+    <td>2023-07-11</td>
+    <td>2023-01-12 22:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1388</td>
+    <td>configuration checks</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> IsConfigurationInitialCurrentReferenceVisualization and IsConfigurationInitialCurrentVisualization shall be extended for StartOfStep; add hint that a calling function may have used an illegal configuration or None</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-12</td>
+    <td>2023-07-11</td>
+    <td>2023-01-12 22:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1387</td>
+    <td>Get...Output        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add way to work for Reference configuration</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-12</td>
+    <td>2023-07-11</td>
+    <td>2023-01-12 22:14</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>nodes, bodies and markers allow reference configuration; sensors also allow it for GetSensorValues</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1386</td>
+    <td>GetMarkerOutput     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> crashes if used with any configuration before Assemble(); add check that it may be only called after Assemble()</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2023-01-12</td>
+    <td>2023-07-11</td>
+    <td>2023-01-12 14:15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>add check and raise error</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1385</td>
+    <td>help                </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add exudyn.help() function for short notes</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-12</td>
+    <td>2023-07-11</td>
+    <td>2023-01-12 18:04</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1384</td>
+    <td>visualizationSettings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add textOffsetFactor in general options to adjust text offset if not drawn always in front</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-11</td>
+    <td>2023-07-10</td>
+    <td>2023-01-11 20:42</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>also adjusted some text appearance settings</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1383</td>
+    <td>visualizationSettings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> update docu of Visualization settings dialog in introduction</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2023-01-11</td>
+    <td>2023-07-10</td>
+    <td>2023-01-11 17:41</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1382</td>
+    <td>visualizationSettings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> increase initial size of visualizations dialog for larger screens; see  \refSection{sec:introduction:visualizationSettings} how to change to a smaller window size</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-11</td>
+    <td>2023-07-10</td>
+    <td>2023-01-11 16:57</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1381</td>
+    <td>visualizationSettings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change order of items to have easier access to each tree node</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-11</td>
+    <td>2023-07-10</td>
+    <td>2023-01-11 16:34</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>dialogs.openTreeView=True can be used to switch to original behavior</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1380</td>
+    <td>loads               </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> draw load numbers at end of load vectors</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-11</td>
+    <td>2023-07-10</td>
+    <td>2023-01-11 14:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>made Force consistent with Torque and LoadMassProportional</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1379</td>
+    <td>item text color     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> draw colors in item texts (node numbers, etc.) different from item color to improve visibility</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-11</td>
+    <td>2023-07-10</td>
+    <td>2023-01-11 16:28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1378</td>
+    <td>font drawing        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add visualizationSettings.general for textDrawInFront and textHasBackGround for having a (currently) white background color</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-11</td>
+    <td>2023-07-10</td>
+    <td>2023-01-11 09:46</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1377</td>
+    <td>openvr              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> not compatible right now with Exudyn under Windows while linux seems to work</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-09</td>
+    <td>2023-07-08</td>
+    <td>2023-01-09 21:11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1376</td>
+    <td>advancedUtilities   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> move functions exudyn.utilities from to exudyn.advancedUtilities; still included in exudyn.utilities</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-06</td>
+    <td>2023-07-05</td>
+    <td>2023-01-06 22:54</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1375</td>
+    <td>initial accelerations</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add flag to decide whether initial accelerations are erased at beginning of simulation; the background is that they should not be erased, if they are prolonged for subsequent simulation; check if this changes behavior, as ODE2_tt coordinates are anyway resetted at Assemble()</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-06</td>
+    <td>2023-07-05</td>
+    <td>2023-01-07 01:56</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1374</td>
+    <td>InteractiveDialog   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> accelerations are not reused from last period; need to copy current accelerations into initial accelerations</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2023-01-06</td>
+    <td>2023-07-05</td>
+    <td>2023-01-06 21:21</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1373</td>
+    <td>GraphicsData        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option to add edges in GraphicsData...Cube... functions; switch some order of options </td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-06</td>
+    <td>2023-07-05</td>
+    <td>2023-01-06 19:25</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1372</td>
+    <td>utilities           </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> ComputeSkewMatrix: remove duplicate (with less functionality) from utilities and put into rigidBodyUtilities; correct import in FEM</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2023-01-06</td>
+    <td>2023-07-05</td>
+    <td>2023-01-06 19:19</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1371</td>
+    <td>exudyn.utilities    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove functions CheckInputVector and CheckInputIndexArray as they are unused and replaced with improved functions in advancedUtilities</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-06</td>
+    <td>2023-07-05</td>
+    <td>2023-01-06 17:46</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1370</td>
+    <td>advancedUtilities   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add advanced utilities depnding on numpy and math; functions not suitable for exudyn.basicUtilities or exudyn.utilities</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-06</td>
+    <td>2023-07-05</td>
+    <td>2023-01-07 01:57</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1369</td>
+    <td>add sub-module machines</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> will include mechanical engineering and machine element relevant topics, such as bearings, gears, mechanisms, etc.</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-06</td>
+    <td>2023-07-05</td>
+    <td>2023-01-06 11:47</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1368</td>
+    <td>GraphicsDataCylinder</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> new option to only add edges without faces</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-05</td>
+    <td>2023-07-04</td>
+    <td>2023-01-05 23:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1367</td>
+    <td>GraphicsDataSolidExtrusion</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add edges and normals for smoothening</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-05</td>
+    <td>2023-07-04</td>
+    <td>2023-01-05 23:03</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1366</td>
+    <td>GraphicsData        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add functionality for GraphicsDataSolidExtrusion to include circles: CirclePointsAndSegments() and to manipulate point lists defining geometries: SegmentsFromPoints()</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-05</td>
+    <td>2023-07-04</td>
+    <td>2023-01-05 18:15</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1365</td>
+    <td>OpenVR              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add Python example with openVR</td>
+    <td>EXAMPLE</td>
+    <td></td>
+    <td>2023-01-03</td>
+    <td>2023-07-02</td>
+    <td>2023-01-19 01:02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1364</td>
+    <td>OpenVR              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> test simple use case</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-03</td>
+    <td>2023-07-02</td>
+    <td>2023-01-17 09:32</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td></td>
+    <td>basic functionality added; enable compilation with openVR by setting '-D__EXUDYN_USE_OPENVR' in cpp compiler flags of setup.py</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1363</td>
+    <td>test OpenVR with basic OpenGL</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check if current openGL is sufficient with textures</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2023-01-03</td>
+    <td>2023-07-02</td>
+    <td>2023-01-16 23:11</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1362</td>
+    <td>add OpenVR interface</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add interface, but by default not compiled</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-03</td>
+    <td>2023-07-02</td>
+    <td>2023-01-03 23:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1361</td>
+    <td>Python 3.11         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> create first development wheels for Python 3.11; Windows+Linux</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-03</td>
+    <td>2023-07-02</td>
+    <td>2023-01-03 18:48</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>problems to get conda with Python3.11 running, especially on ubuntu</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1360</td>
+    <td>Python 3.11         </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> adjust setup.py to support Python 3.11; requires Pybind11 2.10</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-03</td>
+    <td>2023-07-02</td>
+    <td>2023-01-03 14:37</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1359</td>
+    <td>ObjectGround        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> extend for referenceRotation to allow rotation of ground objects (especially for visualization and contact)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-02</td>
+    <td>2023-07-01</td>
+    <td>2023-01-02 11:49</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1358</td>
+    <td>DictionariesGetSet  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add new types VectorFloat and MatrixFloat in order to distinguish from double values</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-02</td>
+    <td>2023-07-01</td>
+    <td>2023-01-02 00:47</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>also fixed matrix conversion in visualizationSettings</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1357</td>
+    <td>visualizationSettings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add single click edit event</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-01</td>
+    <td>2023-06-30</td>
+    <td>2023-01-01 23:27</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1355</td>
+    <td>visualizationSettings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> check possibility for update loop to continue simulation</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-12-31</td>
+    <td>2023-06-29</td>
+    <td>2023-01-02 00:48</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>not feasible now, as it requires to modify time integration loop</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1354</td>
+    <td>visualizationSettings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> double click on bool variables changes state</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-31</td>
+    <td>2023-06-29</td>
+    <td>2023-01-01 23:22</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1353</td>
+    <td>visualizationSettings</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add KEY Q shortcut to close dialog</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-31</td>
+    <td>2023-06-29</td>
+    <td>2023-01-02 00:48</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1352</td>
     <td>tkinter dialogs     </td>
     <td>JG</td>
@@ -2955,7 +3563,7 @@ last change =  2022-12-31
     <td>tkinter MacOS       </td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> adjust font size and row size in ttk visualization settings dialog</td>
+    <td> adjust font size and row size in ttk visualizationSettings dialog</td>
     <td>FIX</td>
     <td></td>
     <td>2022-12-31</td>
@@ -3000,10 +3608,10 @@ last change =  2022-12-31
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1347</td>
-    <td>visualization settings</td>
+    <td>visualizationSettings</td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> add flag visualizationSettings.dialog.multiThreadedDialogs to turn on/off immediate apply of visualization settings changes; extend exudyn.GUI and rendererPythonInterface.h accordingly</td>
+    <td> add flag visualizationSettings.dialog.multiThreadedDialogs to turn on/off immediate apply of visualizationSettings changes; extend exudyn.GUI and rendererPythonInterface.h accordingly</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2022-12-28</td>
@@ -3016,7 +3624,7 @@ last change =  2022-12-31
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1346</td>
-    <td>visualization settings</td>
+    <td>visualizationSettings</td>
     <td>JG</td>
     <td>RESOLVED</td>
     <td> check if visualiuation settings dialog can be installed such that updating of data immediately affects renderer window</td>
@@ -3159,6 +3767,22 @@ last change =  2022-12-31
     <td>problem in testsuite due to AVX differences, causing all non-AVX cases to fail (also linux); fixed with special case in reference solutions</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1335</td>
+    <td>RollingDiscPenalty  </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add test example for ground moving (rotating table</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-25</td>
+    <td>2023-06-23</td>
+    <td>2023-01-02 19:07</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1334</td>
     <td>NOGLFW              </td>
     <td>JG</td>
@@ -3205,6 +3829,22 @@ last change =  2022-12-31
     <td></td>
     <td></td>
     <td>changed -framework library lists by separating commands into two separate strings; compilation now runs through for Python 3.8-3.10 on MacOS with M1 and 3.7.-3.10 on _x86 emulation</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1331</td>
+    <td>exudyn cpp          </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add __repr__ and help which writes some information on workflow (github, theDoc, Examples, ...)</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-21</td>
+    <td>2023-06-19</td>
+    <td>2023-01-02 00:51</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>not possible</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1330</td>
@@ -3271,6 +3911,22 @@ last change =  2022-12-31
     <td>added option into solver, now turning on/off as desired; added option into solver, now turning on/off as desired; added option into solver, now turning on/off as desired</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1326</td>
+    <td>OpenVR              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add OpenVR license and mention in getting started</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2022-12-20</td>
+    <td>2023-06-18</td>
+    <td>2023-01-19 01:02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1324</td>
     <td>DistanceSensor      </td>
     <td>JG</td>
@@ -3285,6 +3941,22 @@ last change =  2022-12-31
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1323</td>
+    <td>AVX2                </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> update documentation for improved functionality with AVX2 code</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-17</td>
+    <td>2023-06-15</td>
+    <td>2023-01-02 00:50</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>already done when resolving #1330</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1322</td>
@@ -3415,6 +4087,22 @@ last change =  2022-12-31
     <td>now search tree can be initialized smaller or larger than initial geometry in order to optimize for specific problem</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1314</td>
+    <td>Pybind11            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> test compilation with higher version of pybind11 (currently pybind11=2.6.0 in setup.py</td>
+    <td>CHECK</td>
+    <td></td>
+    <td>2022-12-14</td>
+    <td>2023-06-12</td>
+    <td>2023-01-19 01:04</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>already done earlier; works well and allows compilation with Python3.11; added some switches in setup.py as not all Pybind11 versions work everywhere</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1313</td>
     <td>AVX2                </td>
     <td>JG</td>
@@ -3493,6 +4181,22 @@ last change =  2022-12-31
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1308</td>
+    <td>OpenGL texts        </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add sub function for drawing text bitmaps; use different order of drawing for transparent and non-transparent triangles to get improved text drawing</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-12-08</td>
+    <td>2023-06-06</td>
+    <td>2023-01-11 16:28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>now having possibility to draw item texts in front or transparent</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1307</td>
@@ -4251,7 +4955,7 @@ last change =  2022-12-31
     <td>use display scaling in GUI</td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> use display scaling in visualization settings, etc.</td>
+    <td> use display scaling in visualizationSettings, etc.</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2022-09-13</td>
@@ -9687,6 +10391,22 @@ last change =  2022-12-31
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>0839</td>
+    <td>multithreaded jacobian</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add functionality for multithreaded jacobian and mass matrix</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-19</td>
+    <td>2022-02-17</td>
+    <td>2023-01-02 01:04</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>mass matrix resolved; other is redundant with #1203</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>0832</td>
     <td>explicit integrator </td>
     <td>JG</td>
@@ -9717,6 +10437,22 @@ last change =  2022-12-31
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0828</td>
+    <td>MT integration2     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add multithreading to mass matrix and jacobian; add multithreaded adding of vector with special templated functions to allow special (templated) solver functions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-12-09</td>
+    <td>2022-02-07</td>
+    <td>2023-01-02 01:02</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>redundant with #839</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0827</td>
@@ -10277,6 +11013,22 @@ last change =  2022-12-31
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0791</td>
+    <td>test Eigen SimplicialLDLT</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> use systemMatricesArePD to enable LDLT solver</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2021-11-02</td>
+    <td>2022-01-01</td>
+    <td>2023-01-02 01:01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>tested earlier; does not work in most cases</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0790</td>
@@ -11739,7 +12491,7 @@ last change =  2022-12-31
     <td>openGL.multisampling</td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> Mac OS multisampling option in visualization settings crashes; ==> do not change this option under Mac OS</td>
+    <td> Mac OS multisampling option in visualizationSettings crashes; ==> do not change this option under Mac OS</td>
     <td>BUG</td>
     <td></td>
     <td>2021-05-25</td>
@@ -12155,7 +12907,7 @@ last change =  2022-12-31
     <td>add VisualizationSettings() interactive</td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> move visualization settings window functions keypressRotationStep, mouseMoveRotationFactor, keypressTranslationStep, zoomStepFactor to new substructure "interactive"</td>
+    <td> move visualizationSettings window functions keypressRotationStep, mouseMoveRotationFactor, keypressTranslationStep, zoomStepFactor to new substructure "interactive"</td>
     <td>CHANGE</td>
     <td></td>
     <td>2021-05-01</td>
@@ -12267,7 +13019,7 @@ last change =  2022-12-31
     <td>Highlight item#     </td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> Highlight item# for object/node/etc.; add to visualization options (itemType, item#, colorHighlightItem, colorOtherItems), draw all other items in gray</td>
+    <td> Highlight item# for object/node/etc.; add to visualizationSettings (itemType, item#, colorHighlightItem, colorOtherItems), draw all other items in gray</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2021-05-01</td>
@@ -13819,7 +14571,7 @@ last change =  2022-12-31
     <td>displayScaling      </td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> add displayScaling to renderState and use this value for GUI.py in visualization settings</td>
+    <td> add displayScaling to renderState and use this value for GUI.py in visualizationSettings</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2021-01-06</td>
@@ -14427,7 +15179,7 @@ last change =  2022-12-31
     <td>key V gives error   </td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> keypress v for visualization dialog gives error</td>
+    <td> keypress V for visualizationSettings dialog gives error</td>
     <td>BUG</td>
     <td></td>
     <td>2020-12-10</td>
@@ -15317,6 +16069,22 @@ last change =  2022-12-31
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0437</td>
+    <td>solvercontainer+ systemcontainer</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove SolverContainer and SystemContainer from systemStructuresDefinition and work manually</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2020-07-21</td>
+    <td>2020-09-19</td>
+    <td>2023-01-02 00:59</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>already done much earlier</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0435</td>
@@ -16920,7 +17688,7 @@ last change =  2022-12-31
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0327</td>
-    <td>visualization options</td>
+    <td>visualizationSettings</td>
     <td>JG</td>
     <td>RESOLVED</td>
     <td> convert system structures to dictionary and back; include type information</td>
@@ -17093,6 +17861,22 @@ last change =  2022-12-31
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0315</td>
+    <td>Add user object     </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add user object</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2020-01-10</td>
+    <td>2020-03-10</td>
+    <td>2023-01-02 00:57</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>done with GenericODE2 and CoordinateVectorConstraint</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0313</td>
@@ -17893,6 +18677,22 @@ last change =  2022-12-31
     <td></td>
     <td></td>
     <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>0261</td>
+    <td>MarkerDataJacobians </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Add access functions for jacobians and other marker data: SetPositionJacobian, GetPositionJacobian, etc.; add jacobian types = markertypes, which check if wrong jacobian is accessed</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2019-09-11</td>
+    <td>2019-11-10</td>
+    <td>2023-01-02 00:56</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>not suitable anymore</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>0259</td>

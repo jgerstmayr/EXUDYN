@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import numpy as np #for loading
 import matplotlib.ticker as ticker
 import exudyn #for sensor index
-from exudyn.utilities import PlotLineCode
+from exudyn.advancedUtilities import PlotLineCode
 
 #++++++++++++++++++++++++++++++++
 #this structure helps to define default values, that are then always used!

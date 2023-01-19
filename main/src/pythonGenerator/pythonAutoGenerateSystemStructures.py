@@ -28,8 +28,8 @@ typeCasts = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt'
              } #convert parameter types to C++/DYNALFEX types
 
 #conversion rules for dictionary 'type'; this type conversion adds rules for the user's values in the dictionary
-convertToDict = {'ResizableVector':'Vector', 'StdArray33F':'Matrix', 'NumpyVector':'Vector', 'NumpyMatrix':'Matrix', 
-                'Index2':'IndexArray', 'Index4':'IndexArray', 'Float4':'Vector', 'Float3':'Vector' #,'String':'std::string'
+convertToDict = {'ResizableVector':'Vector', 'StdArray33F':'MatrixFloat', 'NumpyVector':'Vector', 'NumpyMatrix':'Matrix', 
+                'Index2':'IndexArray', 'Index4':'IndexArray', 'Float4':'VectorFloat', 'Float3':'VectorFloat' #,'String':'std::string'
                 } 
 
 #convert special size parameters:
@@ -309,15 +309,20 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     #access functions and dictionaries for visualization dialog ...:
     
     #create second list, which causes contour to show up as first option
-    parameterListSorted2 = copy.deepcopy(parameterListSorted)
-    if len(parameterListSorted2) >= 4:
-        if (parameterListSorted2[0]['pythonName'] == 'bodies' and
-            parameterListSorted2[3]['pythonName'] == 'contour'):
-            print('resort parameter list!')
-            parameterListSorted2[0] = copy.deepcopy(parameterListSorted[3])
-            parameterListSorted2[1] = copy.deepcopy(parameterListSorted[0])
-            parameterListSorted2[2] = copy.deepcopy(parameterListSorted[1])
-            parameterListSorted2[3] = copy.deepcopy(parameterListSorted[2])
+    # parameterListSorted2 = copy.deepcopy(parameterListSorted)
+    # if len(parameterListSorted2) >= 4:
+    #     if (parameterListSorted2[0]['pythonName'] == 'bodies' and
+    #         parameterListSorted2[3]['pythonName'] == 'contour'):
+    #         print('resort parameter list!')
+    #         parameterListSorted2[0] = copy.deepcopy(parameterListSorted[3])
+    #         parameterListSorted2[1] = copy.deepcopy(parameterListSorted[0])
+    #         parameterListSorted2[2] = copy.deepcopy(parameterListSorted[1])
+    #         parameterListSorted2[3] = copy.deepcopy(parameterListSorted[2])
+    if (parseInfo['class'] == 'VisualizationSettings'):
+        parameterListSorted2 = copy.deepcopy(parameterList) #unsorted, sorting as in definition file
+    else:
+        parameterListSorted2 = copy.deepcopy(parameterListSorted) 
+        
         
     for parameter in parameterListSorted2:
         if (parameter['lineType'].find('V') != -1): #only if it is a member variable
@@ -425,7 +430,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     else: 
                         pSize = '{'+pSize+'}'
                         
-                    descrStr = parameter['parameterDescription'].replace("\\","\\\\").replace('$','')
+                    descrStr = parameter['parameterDescription'].replace("\\_","_").replace("\\","\\\\").replace('$','')
                     typeCastStr = TypeConversion(parameter['type'], typeCasts)
                     
                     if parameter['type'] != 'KeyPressUserFunction': #this would not work for editing dictionary

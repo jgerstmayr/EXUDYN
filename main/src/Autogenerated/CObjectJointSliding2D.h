@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-12-01  20:24:38 (last modified)
+* @date         2023-01-11  19:34:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -142,7 +142,7 @@ public: // AUTO:
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;
 
-    //! AUTO:  provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::\_None
+    //! AUTO:  provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::_None
     virtual Marker::Type GetRequestedMarkerType() const override
     {
         return Marker::_None;

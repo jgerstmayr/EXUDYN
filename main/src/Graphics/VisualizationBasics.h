@@ -52,10 +52,40 @@ namespace EXUvis {
 		if (colorFactor == 1.f) { return color; }
 		else
 		{
-			Float4 grey({ 0.5,0.5,0.5,color[3] });
+			Float4 grey({ 0.5f,0.5f,0.5f,color[3] });
 			return Float4((1.f - colorFactor)*grey + colorFactor * color);
 		}
 	}
+    //! get alternated color (e.g. for items, to have different text from item color)
+    inline Float4 AltColor(const Float4& color)
+    {
+        float avColor2 = (0.5f / 3.f)*(color[0] + color[1] + color[2]);
+        if (fabs(color[0] - color[1]) < 0.3f && fabs(color[0] - color[2]) < 0.3f)
+        {
+            //a rather grey color should be altered in brightness
+            if (avColor2 < 0.6)
+            { //make brighter
+                return Float4({
+                    EXUstd::Minimum(0.9f, color[0] + 0.4f),
+                    EXUstd::Minimum(0.9f, color[1] + 0.4f),
+                    EXUstd::Minimum(0.9f, color[2] + 0.4f),
+                    color[3] });
+            }
+            else
+            { //make darker, but not black
+                return Float4({
+                    EXUstd::Maximum(0.1f, color[0] - 0.3f),
+                    EXUstd::Maximum(0.1f, color[1] - 0.3f),
+                    EXUstd::Maximum(0.1f, color[2] - 0.3f),
+                    color[3] });
+            }
+        }
+        return Float4({ 
+            0.5f*color[0] + avColor2,
+            0.5f*color[1] + avColor2,
+            0.5f*color[2] + avColor2, color[3] });
+    }
+
 } //namespace EXUvis
 
 #endif

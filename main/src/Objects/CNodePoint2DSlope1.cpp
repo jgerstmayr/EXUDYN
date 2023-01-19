@@ -160,7 +160,7 @@ void CNodePoint2DSlope1::GetOutputVariable(OutputVariableType variableType, Conf
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
 	case OutputVariableType::Coordinates:
 	{
-		if (IsConfigurationInitialCurrentReferenceVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
+		if (IsValidConfiguration(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
 		{
 			value = GetCoordinateVector(configuration);
 		}
@@ -172,7 +172,7 @@ void CNodePoint2DSlope1::GetOutputVariable(OutputVariableType variableType, Conf
 	}
 	case OutputVariableType::Coordinates_t:
 	{
-		if (IsConfigurationInitialCurrentVisualization(configuration)) 
+		if (IsValidConfigurationButNotReference(configuration)) 
 		{
 			value = GetCoordinateVector_t(configuration);
 		}
@@ -184,7 +184,7 @@ void CNodePoint2DSlope1::GetOutputVariable(OutputVariableType variableType, Conf
 	}
 	case OutputVariableType::Coordinates_tt:
 	{
-		if (IsConfigurationInitialCurrentVisualization(configuration)) 
+		if (IsValidConfigurationButNotReference(configuration)) 
 		{
 			value = GetCoordinateVector_tt(configuration);
 		}

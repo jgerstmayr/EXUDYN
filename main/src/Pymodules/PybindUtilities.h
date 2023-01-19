@@ -388,12 +388,10 @@ namespace EPyUtils {
 	//inline bool SetVector7DSafely(const py::dict& d, const char* item, Vector7D& destination) {
 	//	return SetSlimVectorTemplateSafely<Real, 7>(d, item, destination);}
 
-
-
-	//! Set a Matrix6D from a py::object safely and return false (if failed) and true if value has been set
-	template<Index rows, Index columns>
-	inline bool SetConstMatrixTemplateSafely(const py::object& value, ConstSizeMatrix<rows*columns>& destination)
+	template<typename T, Index rows, Index columns>
+	inline bool SetConstMatrixTypeTemplateSafely(const py::object& value, ConstSizeMatrixBase<T, rows*columns>& destination)
 	{
+		destination.SetNumberOfRowsAndColumns(rows, columns); //2023-01-16: added for safety in future: if matrix has not been initialized before, it gives zero-sized ConstSizeMatrix!
 		if (py::isinstance<py::list>(value))
 		{
 			std::vector<py::object> stdlist = py::cast<std::vector<py::object>>(value); //! # read out dictionary and cast to C++ type
@@ -403,7 +401,7 @@ namespace EPyUtils {
 				{
 					if (py::isinstance<py::list>(stdlist[i]))
 					{
-						std::vector<Real> rowVector = py::cast<std::vector<Real>>(stdlist[i]);
+						std::vector<T> rowVector = py::cast<std::vector<T>>(stdlist[i]);
 						if ((Index)rowVector.size() == columns)
 						{
 							for (Index j = 0; j < columns; j++)
@@ -427,12 +425,12 @@ namespace EPyUtils {
 		}
 		else if (py::isinstance<py::array>(value))
 		{
-			std::vector<py::object> stdlist = py::cast<std::vector<py::object>>(value); //! # read out dictionary and cast to C++ type
+			std::vector<py::object> stdlist = py::cast<std::vector<py::object>>(value); //! # cast to C++ type
 			if ((Index)stdlist.size() == rows)
 			{
 				for (Index i = 0; i < rows; i++)
 				{
-					std::vector<Real> rowVector = py::cast<std::vector<Real>>(stdlist[i]);
+					std::vector<T> rowVector = py::cast<std::vector<T>>(stdlist[i]);
 					if ((Index)rowVector.size() == columns)
 					{
 						for (Index j = 0; j < columns; j++)
@@ -455,6 +453,13 @@ namespace EPyUtils {
 		}
 		PyError(STDstring("failed to convert to Matrix: " + py::cast<std::string>(value)));
 		return false;
+	}
+
+	//! Set a ConstMatrix of any size from a py::object safely and return false (if failed) and true if value has been set
+	template<Index rows, Index columns>
+	inline bool SetConstMatrixTemplateSafely(const py::object& value, ConstSizeMatrix<rows*columns>& destination)
+	{
+		return SetConstMatrixTypeTemplateSafely<Real, rows, columns>(value, destination);
 	}
 
 	template<Index rows, Index columns>
@@ -732,6 +737,13 @@ namespace EPyUtils {
 		return py::array_t<Index>(v.NumberOfItems(), v.GetDataPointer()); 
 	}
 
+	//!convert SlimVector to numpy vector
+	template<Index dataSize>
+	inline py::array_t<Index> SlimArrayIndex2NumPy(const SlimArray<Index, dataSize>& v)
+	{
+		return py::array_t<Index>(v.NumberOfItems(), v.GetDataPointer());
+	}
+
 
 	//!convert general SlimVector to numpy vector
 	//unused, therefore commented
@@ -746,6 +758,13 @@ namespace EPyUtils {
 	py::array_t<Real> Matrix2NumPyTemplate(const TMatrix& matrix)
 	{
 		return py::array_t<Real>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
+	}
+
+	//!convert Matrix to numpy matrix
+	template<class TMatrix>
+	py::array_t<float> MatrixF2NumPyTemplate(const TMatrix& matrix)
+	{
+		return py::array_t<float>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
 	}
 
 

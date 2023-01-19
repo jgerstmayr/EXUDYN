@@ -35,6 +35,7 @@ def Str2Doxygen(s, isDefaultValue=False): #replace _ and other symbols to fit in
     s = s.replace('\\bi','') #not needed in doxygen
     s = s.replace('\\ei','') #not needed in doxygen
     s = s.replace('\item[]','') #not needed in doxygen
+    s = s.replace('\\_','_') #not needed in doxygen
 
     return s
 

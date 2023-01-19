@@ -355,4 +355,3 @@ void PyWarning(std::string warning_msg, std::ofstream& file)
 	}
 }
 
-

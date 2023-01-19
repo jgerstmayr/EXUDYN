@@ -440,7 +440,55 @@ The visualization settings structure can be accessed in the system container \te
   SC.visualizationSettings.contour.outputVariableComponent = 1 #0=x, 1=y, 2=z
 \end{lstlisting}
 
-\mysubsubsubsection{Storing the model view}
+\mysubsubsection{Renderer and 3D graphics}
+A 3D renderer is attached to the simulation. Visualization is started with  \texttt{exu.StartRenderer()}, see the examples and tutorials.
+The renderer uses an OpenGL window of a library called GLFW, which is platform-independent. 
+The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. There is no way to contruct models with the renderer. Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
+
+\noindent There are some main features in the renderer, using keyboard and mouse:
+\bi
+  \item press key H to show help in renderer
+  \item move model by pressing left mouse button and drag
+  \item rotate model by pressing right mouse button and drag
+  \item change visibility (wire frame, solid, transparent, ...) by pressing T
+  \item zoom all: key A
+  \item open visualization dialog: key V
+  \item show item number: click on graphics element with left mouse button
+  \item show item dictionary: click on graphics element with right mouse button  
+  \item ... (see \refSection{sec:VSettingsGeneral}ff.)
+\ei
+%
+Depending on your model (size, place, ...), you may need to adjust the following \texttt{openGL} parameters in \texttt{visualizationSettings}:
+\bi
+  \item light and light position 
+  \item shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
+  \item visibility of nodes, markers, etc. in according bodies, nodes, markers, ..., \texttt{visualizationSettings}
+  \item move camera with a selected marker: adjust \texttt{trackMarker} in \texttt{visualizationSettings.interactive}
+  \item ... (see \refSection{sec:VSettingsGeneral}ff.)
+\ei
+
+
+\mysubsubsection{Graphics pipeline}
+%deprecated, since there are user functions!: The user cannot interact with the visualization part for now.
+There are basically two loops during simulation, which feed the graphics pipeline.
+The solver runs a loop:
+\bi
+  \item compute step (or set up initial values)
+  \item finish computation step; results are in current state
+  \item copy current state to visualization state (thread safe)
+  \item signal graphics pipeline that new visualization data is available
+  \item the renderer may update the visualization depending on \texttt{graphicsUpdateInterval} in \\ \texttt{visualizationSettings.general}
+\ei
+The openGL graphics thread (=separate thread) runs the following loop:
+\bi
+  \item render openGL scene with a given graphicsData structure (containing lines, faces, text, ...)
+  \item go idle for some milliseconds
+  \item check if openGL rendering needs an update (e.g. due to user interaction)
+  \item[] $\ra$ if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
+  \item check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
+\ei
+
+\mysubsubsection{Storing the model view}
 \label{sec:storing:modelview}
 There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \texttt{SC.GetRenderState()} and \texttt{SC.SetRenderState()},
 see also \refSection{sec:renderState}.
@@ -495,57 +543,8 @@ Note that in the current version of \codeName\ there is more data stored in rend
 see also \refSection{sec:renderState}.
 \horizontalRuler
 %
-%
 
-\mysubsubsection{Renderer and 3D graphics}
-A 3D renderer is attached to the simulation. Visualization is started with  \texttt{exu.StartRenderer()}, see the examples and tutorials.
-The renderer uses an OpenGL window of a library called GLFW, which is platform-independent. 
-The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. There is no way to contruct models with the renderer. Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
-
-\noindent There are some main features in the renderer, using keyboard and mouse:
-\bi
-  \item press key H to show help in renderer
-  \item move model by pressing left mouse button and drag
-  \item rotate model by pressing right mouse button and drag
-  \item change visibility (wire frame, solid, transparent, ...) by pressing T
-  \item zoom all: key A
-  \item open visualization dialog: key V
-  \item show item number: click on graphics element with left mouse button
-  \item show item dictionary: click on graphics element with right mouse button  
-  \item ... (see \refSection{sec:VSettingsGeneral}ff.)
-\ei
-%
-Depending on your model (size, place, ...), you may need to adjust the following \texttt{openGL} parameters in \texttt{visualizationSettings}:
-\bi
-  \item light and light position 
-  \item shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
-  \item visibility of nodes, markers, etc. in according bodies, nodes, markers, ..., \texttt{visualizationSettings}
-  \item move camera with a selected marker: adjust \texttt{trackMarker} in \texttt{visualizationSettings.interactive}
-  \item ... (see \refSection{sec:VSettingsGeneral}ff.)
-\ei
-
-
-\mysubsubsection{Graphics pipeline}
-%deprecated, since there are user functions!: The user cannot interact with the visualization part for now.
-There are basically two loops during simulation, which feed the graphics pipeline.
-The solver runs a loop:
-\bi
-  \item compute step (or set up initial values)
-  \item finish computation step; results are in current state
-  \item copy current state to visualization state (thread safe)
-  \item signal graphics pipeline that new visualization data is available
-  \item the renderer may update the visualization depending on \texttt{graphicsUpdateInterval} in \\ \texttt{visualizationSettings.general}
-\ei
-The openGL graphics thread (=separate thread) runs the following loop:
-\bi
-  \item render openGL scene with a given graphicsData structure (containing lines, faces, text, ...)
-  \item go idle for some milliseconds
-  \item check if openGL rendering needs an update (e.g. due to user interaction)
-  \item[] $\ra$ if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
-  \item check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
-\ei
-
-\mysubsubsection{Graphics user Python functions}
+\mysubsubsection{Graphics user functions via Python}
 There are some user functions in order to customize drawing:
 \bi
   \item You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (\texttt{GraphicsDataFromSTLfileTxt}) using the established format \ac{STL}\footnote{STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems}.
@@ -816,9 +815,42 @@ The faster versions are available for all release versions, but only for some \t
 
 
 
+\mysubsection{Advanced topics} \label{sec:exudynAdvanced}
+%
+This section covers some advanced topics, which may be only relevant for a smaller group of people. 
+Functionality may be extended but also removed in future
+%
+\mysubsection{OpenVR} \label{sec:exudynOpenVR}
+%
+The general open source libraries from Valve, see
+\bi
+\item[] https://github.com/ValveSoftware/openvr
+\ei
+have been linked to \codeName\ . In order to get OpenVR fully integrated, you need to run \texttt{setup.py} \codeName\ with the \texttt{--openvr} flag. For general installation instructions, see \refSection{sec:installationInstructions}.
 
+Running OpenVR either requires an according head mounted display (HMD) or a virtualization using, e.g., Riftcat 2 to use a mobile phone with an according adapter. Visualization settings are available in \texttt{interactive.openVR}, but need to be considered with care.
+An example is provided in \texttt{engineOpenVR.py}, showing some optimal flags like locking the model rotation, zoom or translation.
 
+Everything is experimental, but contributions are welcome!
 
+\mysubsection{Interaction with other codes} \label{sec:interactionOtherCodes}
+%
+Interaction with other codes and computers (E.g., MATLAB or other C++ codes, or other Python versions)
+is possible. 
+To connect to any other code, it is convenient to use a TCP/IP connection. This is enabled via 
+the \texttt{exudyn.utilities} functions
+\bi
+\item \texttt{CreateTCPIPconnection}
+\item \texttt{ TCPIPsendReceive }
+\item \texttt{CloseTCPIPconnection }
+\ei
+Basically, data can be transmitted in both directions, e.g., within a preStepUserFunction. In Examples, you can find 
+ TCPIPexudynMatlab.py which shows a basic example for such a connectivity.
+
+\mysubsection{ROS} \label{sec:exudynROS}
+%
+Basic interaction with ROS has been tested. However, make sure to use Python 3, as there is (and will never be) a Python 2
+support for \codeName\ .
 
 
 

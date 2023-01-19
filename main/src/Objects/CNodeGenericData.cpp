@@ -26,7 +26,7 @@ void CNodeGenericData::GetOutputVariable(OutputVariableType variableType, Config
 	{
 	case OutputVariableType::Coordinates:
 	{
-		if (IsConfigurationInitialCurrentVisualization(configuration))//((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
+		if (IsValidConfigurationButNotReference(configuration))//((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
 		{
 			value = GetCoordinateVector(configuration);
 		}

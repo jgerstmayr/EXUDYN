@@ -21,13 +21,19 @@ startTime = time.time()
 #print('setup.py: START time:', startTime)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#check GLFW
+#check GLFW and openVR
+useOpenVR = False
 USEGLFW = True
 if '--noglfw' in sys.argv:
     USEGLFW = False
     print("setup.py: *** compiling without graphics (OpenGL and GLFW) ***")
     sys.argv.remove('--noglfw')
 
+if '--openvr' in sys.argv:
+    useOpenVR = True
+    print("setup.py: *** compiling with OpenVR ***")
+    sys.argv.remove('--openvr')
+    
 compileParallel = False
 if '--parallel' in sys.argv:
     compileParallel = True
@@ -78,12 +84,25 @@ else:
     is32bits = True
 
 addLibrary_dirs = []
+addPackageData = {}
 #find whether 32 or 64 bits are used
 if isWindows:
     if is32bits:
         addLibrary_dirs=['libs/libs32' ]
         print("architecture==32bits")
+        if useOpenVR:
+            raise ValueError('setup.py: openVR not tested for 32bits case; may work!') #remove this line ...
+            addPackageData = {'':['../../../libs/libs32/openvr_api.dll']}, #relative to exudyn; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
     else:
+        if useOpenVR:
+            #this does not work without wildcard *; but does not add the .dll
+            #addPackageData = {'':['../../../libs/libs64/openvr*.dll']} #relative to exudyn; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
+            import shutil
+            shutil.copy2('libs/libs64/openvr_api.dll', 'pythonDev/exudyn/')
+
+            addPackageData = {'':['openvr_api.dll']} #relative to exudyn, copied there; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
+            print('add package data for openVR:', addPackageData)
+        
         addLibrary_dirs=['libs/libs64' ]
         print("architecture==64bits")
 
@@ -107,7 +126,9 @@ if USEGLFW:
 
     myIncludeDirs=["include/glfw/deps", "include/glfw",]
     msvcGLFWlibs = ['opengl32.lib', 'glfw3.lib'] #opengl32.lib: not needed since VS2015?
-                    
+    if useOpenVR:
+        msvcGLFWlibs += ['openvr_api.lib'] #uncomment for openVR; openvr_api.dll needs to be in directory of exudynCPP.pyd
+
     if isMacOS:
         unixGLFWlibs = ['-lglfw3', #GLFW static library
                         '-framework', 'Cocoa', #no not write '-framework Cocoa' as it gives "-framework Cocoa" which gives error
@@ -141,6 +162,14 @@ else:
 #++++++++++++++++++++++++++++++++++++++++++
 
 
+
+#set according pybind11 requirement
+if sys.version_info.major >= 3 and sys.version_info.minor >= 11:
+    setup_requires_pybind11='pybind11>=2.10' #Python 3.11 only supported since Pybind11 2.10
+if sys.version_info.major == 3 and sys.version_info.minor >= 9:
+    setup_requires_pybind11='pybind11>=2.9' #Python 3.10: some issues fixed in since Pybind11 2.9
+else: #other versions up to now worked well with 2.6.0 ==> never change a running system ...
+    setup_requires_pybind11='pybind11==2.6.0' #replaced previous require>=2.5.0, because compilation with VS2017 fails with pybind11 2.7.0 version of 2021-10-04: setup_requires=['pybind11>=2.5.0'],
 
 class get_pybind_include(object):
     def __str__(self):
@@ -300,7 +329,7 @@ ext_modules = [
 ]
 
 if compileExudynFast:
-    if not (pyVersionString == '3.7' or
+    if not (#pyVersionString == '3.7' or
             #pyVersionString == '3.8' or
             #pyVersionString == '3.9' or
             pyVersionString == '3.10'
@@ -376,6 +405,9 @@ class BuildExt(build_ext):
 #    A custom build extension for adding compiler-specific options.
     #options used for all builds:
     allMacros = ['EXUDYN_RELEASE'] #exclude experimental parts    
+    allMacros += [exudynPythonMacro] #Python version easily accessible
+    if useOpenVR:
+        allMacros += ['__EXUDYN_USE_OPENVR'] #internally compiles functions for openVR; tested on windows and linux; needs openvr_api.lib, DLL for windows and installed dev kit for openVR on linux
     
     commonCopts = []
     for macroString in allMacros:
@@ -412,7 +444,6 @@ class BuildExt(build_ext):
 				#'/FC',
                 '/Ot', #favor faster code
 				'/Zc:twoPhase-',
-                '/D', exudynPythonMacro,
             ]+msvcCppGLFWflag+commonCopts,
         'unix': [
          #'-O3', #tests with GCC, Python3.8 do not show performance increase!!
@@ -422,7 +453,6 @@ class BuildExt(build_ext):
          '-Wno-array-bounds', #warnings in ConstSizeMatrix
  		 '-Wall',
          '-g0', #deactivate debug information (overrides default -g flags), decreases files size from 38MB to 2.6 MB in Python 3.6 version
-         '-D'+exudynPythonMacro,
          #'-std=c++17', #==>chosen automatic
          #'-fpermissive', #because of exceptions ==> allows compilation
          #'-fopenmp',
@@ -435,9 +465,6 @@ class BuildExt(build_ext):
 #		'-Wall',
         ]+unixCppGLFWflag+commonCopts,
     }
-
-    # if useAVX:
-    #     c_opts['msvc'] += ['/arch:AVX2']
 
     #perform C++ unit tests: for 64bits, Python 3.6
     if sys.version_info.major == 3 and sys.version_info.minor == 7: #since V1.2.29
@@ -624,13 +651,6 @@ long_description += 'https://github.com/jgerstmayr/EXUDYN \n\n'
 long_description += 'For CHANGES (section Issues and Bugs), detailed DOCUMENTATION on theory, usage, and REFERENCE MANUAL on **600+** pages: \n\n'
 long_description += 'https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf\n\n'
 
-##this would work, but pypi does not read .rst files as properly as github does ...:
-# long_description = 'Exudyn is hosted on `Github <https://github.com/jgerstmayr/EXUDYN>`_ which provides full documentation, tutorial, examples, etc.\n'
-# long_description+= 'See `License on github <https://github.com/jgerstmayr/EXUDYN/blob/master/LICENSE.txt>`_ .\n'
-# long_description+= 'Pre-compiled available for Windows / Python 3.6 - 3.9.\n'
-# long_description+= 'The following description is copied from github, figures are missing!\n\n'
-# with open("../README.rst", "r") as fh:
-#     long_description += fh.read()
 
     
 setup(
@@ -646,7 +666,9 @@ setup(
 #
     package_dir={'':'pythonDev'},   #only add packages from that dir; must include a __init__.py file
     packages=find_namespace_packages(where='pythonDev', include=('exudyn', 'exudyn.robotics')),
-    #include_package_data=True, #not necessary!
+    #include_package_data=True, #do not use this argument, as it causes some changes in workflow of package_data 
+    #data_files = [('lib/site-packages', ['libs/libs64/openvr_api.dll'])], #includes list of files put into specific directory 'data', which does not work for .dll
+    package_data=addPackageData,
     #package_data={'tests': ['pythonDev/TestModels/*.py'],}, #could include additional data
 #
     ##OLD, gives major deprecation warnings:
@@ -655,7 +677,7 @@ setup(
     # include_package_data=True, #not sure, if this is necessary!
 #
     ext_modules=ext_modules,
-    setup_requires=['pybind11==2.6.0'], #replaced previous require>=2.5.0, because compilation with VS2017 fails with pybind11 2.7.0 version of 2021-10-04: setup_requires=['pybind11>=2.5.0'],
+    setup_requires=[setup_requires_pybind11], 
     cmdclass={'build_ext': BuildExt},
     zip_safe=False,
     license = 'BSD',
@@ -679,6 +701,10 @@ setup(
     #python_requires='>='+pyVersionString, #'.*' required on UBUNTU/Windows in order to accept any Python minor Version (e.g. 3.6.x) during installation
     python_requires='>=3.6', #for pypi.org, do only specify the minimum Python version which is needed for this exudyn version
 )
+
+if useOpenVR: #delete copied file
+    import os
+    os.remove('pythonDev/exudyn/openvr_api.dll')
 
 #print('*** setup.py: END time:', time.time())
 print('*** setup.py: DURATION =', round(time.time()-startTime,2), 'seconds')

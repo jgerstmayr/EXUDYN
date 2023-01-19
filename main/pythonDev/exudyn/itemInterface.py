@@ -601,15 +601,17 @@ class VObjectGround:
     def __repr__(self):
         return str(dict(self))
 class ObjectGround:
-    def __init__(self, name = '', referencePosition = [0.,0.,0.], visualization = {'show': True, 'graphicsDataUserFunction': 0, 'color': [-1.,-1.,-1.,-1.], 'graphicsData': []}):
+    def __init__(self, name = '', referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'color': [-1.,-1.,-1.,-1.], 'graphicsData': []}):
         self.name = name
         self.referencePosition = referencePosition
+        self.referenceRotation = referenceRotation
         self.visualization = visualization
 
     def __iter__(self):
         yield 'objectType', 'Ground'
         yield 'name', self.name
         yield 'referencePosition', self.referencePosition
+        yield 'referenceRotation', self.referenceRotation
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
         yield 'Vcolor', dict(self.visualization)["color"]

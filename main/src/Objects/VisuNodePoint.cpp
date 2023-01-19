@@ -807,18 +807,18 @@ void VisualizationObjectRigidBody::UpdateGraphics(const VisualizationSettings& v
 
 	Float3 pos3DF;
 	pos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization));
-	Float3 refPos3DF;
-	refPos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Reference));
+	//Float3 refPos3DF;
+	//refPos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Reference));
 	Matrix3DF Rot3DF;
 	Rot3DF.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
-	Matrix3DF RefRot3DF;
-	RefRot3DF.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Reference));
 
 	bool useContourColor = ((Index)visualizationSettings.contour.outputVariable & (Index)cObject->GetOutputVariableTypes()) && visualizationSettings.contour.rigidBodiesColored;
 	if (useContourColor)
 	{
 		Float3 refPos3DF;
 		refPos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Reference));
+        Matrix3DF RefRot3DF;
+        RefRot3DF.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Reference));
 
 		Float3 vel3DF;		//global
 		Float3 angVel3DF;	//global
@@ -1086,7 +1086,7 @@ void VisualizationObjectKinematicTree::UpdateGraphics(const VisualizationSetting
 		if (visualizationSettings.bodies.kinematicTree.showJointFrames)
 		{
 			Index nn = EXUstd::InvalidIndex;
-			const Index siceChar = 24;
+			const Index siceChar = 48;
 			char preText[siceChar];
 			preText[0] = char(0);
 			if (visualizationSettings.bodies.kinematicTree.showFramesNumbers)
@@ -1199,10 +1199,19 @@ void VisualizationObjectGround::UpdateGraphics(const VisualizationSettings& visu
 
 	CObjectGround* cObject = (CObjectGround*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	Float3 pos3DF;
-	pos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization)); 
+    //DELETE, OLD: without rotation:
+	//Float3 pos3DF;
+	//pos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization)); 
 
-	EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, pos3DF, EXUmath::unitMatrix3DF, itemID);
+	//EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, pos3DF, EXUmath::unitMatrix3DF, itemID);
+
+
+    Float3 pos3DF;
+    pos3DF.CopyFrom(cObject->GetPosition(Vector3D(0.), ConfigurationType::Visualization));
+    Matrix3DF Rot3DF;
+    Rot3DF.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
+
+    EXUvis::AddBodyGraphicsData(graphicsData, vSystem->graphicsData, pos3DF, Rot3DF, itemID);
 
 	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(pos3DF, vSystem, itemID, "", currentColor); }
 }
@@ -3224,7 +3233,7 @@ void VisualizationLoadMassProportional::UpdateGraphics(const VisualizationSettin
 		//	vSystem->graphicsData.AddLine(pos + loadVector, pos + 0.8*loadVector + hatOffset, currentColor, currentColor);
 		//	vSystem->graphicsData.AddLine(pos + loadVector, pos + 0.8*loadVector - hatOffset, currentColor, currentColor);
 		//}
-		if (visualizationSettings.loads.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "L", currentColor); }
+		if (visualizationSettings.loads.showNumbers) { EXUvis::DrawItemNumber(pos+loadVector, vSystem, itemID, "L", currentColor); }
 	}
 }
 
@@ -3268,7 +3277,7 @@ void VisualizationLoadTorqueVector::UpdateGraphics(const VisualizationSettings& 
 		EXUvis::DrawArrow(pos, loadVector, visualizationSettings.loads.defaultRadius, currentColor,
 			vSystem->graphicsData, itemID, visualizationSettings.general.axesTiling, true, !visualizationSettings.loads.drawSimplified && visualizationSettings.openGL.showFaces);
 
-		if (visualizationSettings.loads.showNumbers) { EXUvis::DrawItemNumber(pos, vSystem, itemID, "L", currentColor); }
+		if (visualizationSettings.loads.showNumbers) { EXUvis::DrawItemNumber(pos+loadVector, vSystem, itemID, "L", currentColor); }
 	}
 }
 

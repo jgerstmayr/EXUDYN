@@ -16,6 +16,7 @@ import tkinter.messagebox
 import tkinter.ttk as ttk
 import tkinter.font as tkFont
 import numpy as np #for array checks
+from numpy import float32
 import ast #for ast.literal_eval
 import sys
 import exudyn
@@ -27,8 +28,10 @@ textHeightFactor = 1.45 #this is the factor between font size and text height; l
 
 treeEditDefaultWidth = 1024     #unscaled width of e.g. visualizationSettings
 treeEditDefaultHeight = 800     #unscaled height of e.g. visualizationSettings
+treeEditMaxInitialHeight = 1440 #larger height, if screen resolution admits
 dialogDefaultWidth = 800        #unscaled width of e.g. right mouse edit
 dialogDefaultHeight = 600       #unscaled height of e.g. right mouse edit
+treeEditOpenItems = ['bodies','connectors','nodes','general'] #these items are opened at the beginning
 
 def IsApple():
     if sys.platform == 'darwin':
@@ -179,7 +182,7 @@ def ConvertString2Value(value, vType, vSize, dictionaryTypesT):
             return [False, errorMsg]
 
     if (vType == 'float' 
-        or vType == 'PReal' or vType == 'UReal'
+        or vType == 'PReal' or vType == 'UReal' or vType == 'Real'
         or vType == 'PFloat' or vType == 'UFloat'):
         floatValue = float(value)
         if vType == 'PReal' and floatValue <= 0:
@@ -219,6 +222,20 @@ def ConvertString2Value(value, vType, vSize, dictionaryTypesT):
 
     #print("Error in ConvertString2Value: unknown type",vType, "value=", value)
     return [0, 'unknown type '+vType]
+
+#convert values to string; special treatment of floats (C++ float, single precision)
+def ConvertValue2String(value, vType, vSize):
+    if (len(vSize)==1 and vSize[0] == 1 and #special treatment for conversion with according number of digits!
+        (  vType == 'float'
+        or vType == 'PFloat'
+        or vType == 'UFloat'
+        )):
+        return str(float32(value))
+    #elif len(vSize)==1 and vType == 'VectorFloat':
+    elif vType == 'VectorFloat' or vType == 'MatrixFloat': #special treatment for conversion with according number of digits!
+        #return str(np.array(value,dtype=float32).tolist()) #still produces float64 converted numbers
+        return str(np.array(value,dtype=float32).astype(str).tolist()).replace("'","") #workaround to produce single-precition numbers ...
+    return str(value)
 
 #check if a valueStr corresponds to correct type and size; return True, if correct; False if type incorrect
 #returns [isValid, errorMSG]
@@ -282,7 +299,7 @@ def CheckType(valueStr, vType, vSize):
         if len(x) != vSize[0]:
             return [False, 'matrix must have '+str(vSize[0]) + ' rows']
         for row in x:
-            if len(row) != len(vSize[1]):
+            if len(row) != vSize[1]:
                 return [False, 'matrix must have '+str(vSize[1]) + ' columns']
     
     return [True, '']
@@ -333,9 +350,11 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.AddNodeFromDictionaryWithTypeInfo(value=self.dictionaryData, parentNode="")
         self.tree.bind('<<TreeviewSelect>>', self.TreeviewSelect) #selection changed
         self.tree.bind("<Double-1>", self.OnTreeDoubleClick) #an item has been selected for change
-        self.tree.bind("<Return>", self.OnTreeDoubleClick) #an item has been selected for change
+        self.tree.bind("<Return>", self.OnTreeEdit) #an item has been selected for change
+        self.tree.bind("<ButtonRelease-1>", self.OnTreeEdit) #an item has been selected for change #1357
         self.tree.bind("h", self.OnTreeHelp) #show description for selected item
-        self.tree.bind("<Escape>", self.OnQuit) #an item has been selected for change
+        self.tree.bind("<Escape>", self.OnQuit) 
+        self.tree.bind("q", self.OnQuit) 
         
         #+++++++++++++++++++++++++++++++++++++++++
         #create the entry field for editing the treeview value
@@ -377,18 +396,25 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.modifiedDictionary = self.GetDictionary('')
 
     #create treeview from dictionary with type info
-    def AddNodeFromDictionaryWithTypeInfo(self, value, parentNode="", key=None):
+    def AddNodeFromDictionaryWithTypeInfo(self, value, parentNode="", key=None, level=0):
         if key is None:
             id = ""
         else:
             id = self.tree.insert(parentNode, "end", text=key)
         #print("key =", key)
+        isOpen = self.treeOpen and (level<=1)
 
         if isinstance(value, dict):
-            self.tree.item(id, open=self.treeOpen)
+            itemIsOpen = isOpen
+            if ('itemIdentifier' not in value) and (key in treeEditOpenItems): 
+                itemIsOpen = True
+                
+            self.tree.item(id, open=itemIsOpen)
             if 'itemIdentifier' in value: #is a value with types:
                 #strValue = ConvertValue2String(value['value'], value['type'], value['size'])
-                strValue = str(value['value'])
+                #print('v=',value['value'],',t=',str(value['type']),'s=', value['size'])
+                #strValue = str(value['value'])
+                strValue = ConvertValue2String(value['value'], value['type'], value['size'])
                 
                 self.tree.item(id, values=(strValue, value['description']))
                 #store additional data in dictionaries (could also be tuples ...)
@@ -397,7 +423,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 self.descriptionStorage[id] = value['description']
             else: #must be another dictionary:
                 for (key, value) in value.items():
-                    self.AddNodeFromDictionaryWithTypeInfo(value, id, key)
+                    self.AddNodeFromDictionaryWithTypeInfo(value, id, key, level=level+1)
         else:
             print("Error in AddNodeFromDictionaryWithTypeInfo with item:", value, ", parent=", parentNode, ", key=", key)
             #self.tree.item(id, values=(value))
@@ -438,17 +464,39 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
 
     def OnTreeHelp(self,event):
         item = self.tree.selection()[0]
-        s = self.tree.item(item,'text')
-        d = self.descriptionStorage[item]
-        tk.messagebox.showinfo(s, d)
+        if item in self.descriptionStorage:
+            d = self.descriptionStorage[item]
+            s = self.tree.item(item,'text')
+            tk.messagebox.showinfo(s, d)
 
     def OnTreeDoubleClick(self,event):
+        #print('tree double clicked')
+        self.OnTreeEditOrDoubleClick(event, True)
+        
+    def OnTreeEdit(self,event):
+        self.OnTreeEditOrDoubleClick(event)
+        
+    def OnTreeEditOrDoubleClick(self,event,doubleClick=False):
         item = self.tree.selection()[0]
         nchilds = len(self.tree.get_children(item))
+        #print('tree edit: item=',item, ', childs=', nchilds)
 
         #only edit items which have no subitems (no folders!)
         if nchilds == 0:
             
+            selectedType=self.typeStorage[item]
+            #+++++++++++++++++++                
+            if selectedType=='bool' and doubleClick: #just toggle value #1354
+                value=self.tree.item(item,'values')[0]
+                if value=='True': value='False'
+                else: value='True'
+
+                self.tree.item(item, values=(value, self.descriptionStorage[item]))
+                self.modifiedDictionary = self.GetDictionary('') #update stored dictionary
+                self.UpdateSettingsStructure() #only if according flag set in visualizationSettings
+                return
+
+            #+++++++++++++++++++                
             s = self.tree.item(item,'text')
             #print('text=',s)
             i=0
@@ -461,7 +509,6 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             self.editItemName.set(s)
             self.selectedItem = item #now item can be modified
             
-            selectedType=self.typeStorage[item]
             if selectedType in self.dictionaryTypesT:
                 #print('type =',selectedType)
                 
@@ -489,7 +536,15 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 self.editItemVar.set(self.tree.item(item,'values')[0])
                 self.editItem.focus_set()
                 self.comboItem.lower(self.editItem)
-            
+        else: #folders (may be opened/closed)
+            openState = self.tree.item(item, 'open')
+            s = self.tree.item(item,'text')
+            #print('  openState=', openState, ', text=',s)
+            if openState and (s not in treeEditOpenItems):
+                treeEditOpenItems.append(s)
+            elif not openState and (s in treeEditOpenItems):
+                treeEditOpenItems.remove(s)
+        
 
     def OnQuit(self,event): #new selection --> nothing to edit for now
         self.parentFrame.destroy()
@@ -586,19 +641,32 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
 
     [root, tkWindow, tkinterAlreadyRunning] = GetTkRootAndNewWindow()
     
-    tkWindow.geometry(str(treeEditDefaultWidth)+'x'+str(treeEditDefaultHeight))
+    windowHeight = treeEditDefaultHeight
+    if treeEditMaxInitialHeight > treeEditDefaultHeight:
+        try:
+            #screen_width = root.winfo_screenwidth()
+            screen_height = root.winfo_screenheight()
+            #print('screen height=', screen_height)
+            if screen_height > 1.2*treeEditDefaultHeight:
+                windowHeight = int(min(treeEditMaxInitialHeight, 0.85*screen_height))
+        except:
+            print('WARNING: EditDictionaryWithTypeInfo could not determine screen size; please report error, Python version and platform as github issue')
+
+    tkWindow.geometry(str(treeEditDefaultWidth)+'x'+str(windowHeight))
 
     guiSC = GetRendererSystemContainer()
     updateOnChange = False
     systemScaling = 1.35 #ideal for MacOS 
     topmost = True
     alphaTransparency = 1 #<1 means transparency
+    treeOpen = True
     if guiSC != None:
         updateOnChange = guiSC.visualizationSettings.dialogs.multiThreadedDialogs
         systemScaling = guiSC.visualizationSettings.dialogs.fontScalingMacOS
         topmost = guiSC.visualizationSettings.dialogs.alwaysTopmost
         if guiSC.visualizationSettings.dialogs.alphaTransparency <= 1:
             alphaTransparency = guiSC.visualizationSettings.dialogs.alphaTransparency
+        treeOpen = guiSC.visualizationSettings.dialogs.openTreeView
         
     fontFactor = systemScaling
     if not IsApple():
@@ -620,7 +688,7 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
     #no effect:
     # defaultFont = tkFont.Font(root=root, family = "TkDefaultFont")
     # defaultFont.configure(size=fontSize)
-    
+        
     style = ttk.Style(tkWindow)
     style.configure('Treeview', rowheight=textHeight) 
     
@@ -631,7 +699,7 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
     
     comboListsT = GetComboBoxListsDict(exu)
     ex=TkinterEditDictionaryWithTypeInfo(parent=tkWindow, settingsStructure=settingsStructure, dictionaryTypesT=comboListsT, 
-                                         updateOnChange=updateOnChange, treeOpen=True, textHeight = textHeight)
+                                         updateOnChange=updateOnChange, treeOpen=treeOpen, textHeight = textHeight)
     ex.pack(fill="both", expand=True)
 
     if not tkinterAlreadyRunning:
@@ -670,7 +738,8 @@ class TkinterEditDictionary(tk.Frame):
         self.tree.bind('<<TreeviewSelect>>', self.TreeviewSelect) #selection changed
         self.tree.bind("<Double-1>", self.OnTreeDoubleClick) #an item has been selected for change
         self.tree.bind("<Return>", self.OnTreeDoubleClick) #an item has been selected for change
-        self.tree.bind("<Escape>", self.OnQuit) #an item has been selected for change
+        self.tree.bind("<Escape>", self.OnQuit) 
+        self.tree.bind("q", self.OnQuit) 
         
         #create the entry field for editing the treeview value
 

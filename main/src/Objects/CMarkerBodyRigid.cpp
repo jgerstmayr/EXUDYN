@@ -45,20 +45,6 @@ void CMarkerBodyRigid::ComputeMarkerData(const CSystemData& cSystemData, bool co
 //void CMarkerBodyRigid::GetPositionJacobian(const CSystemData& cSystemData, Matrix& jacobian) const
 {
 	((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->ComputeRigidBodyMarkerData(parameters.localPosition, computeJacobian, markerData);
-	//markerData.position = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetPosition(parameters.localPosition, ConfigurationType::Current);
-	//markerData.velocity = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetVelocity(parameters.localPosition, ConfigurationType::Current);
-
-	//markerData.orientation = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetRotationMatrix(parameters.localPosition, ConfigurationType::Current);
-	//markerData.angularVelocityLocal = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetAngularVelocityLocal(parameters.localPosition, ConfigurationType::Current);
-	//markerData.velocityAvailable = true;
-
-	//if (computeJacobian)
-	//{
-	//	((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->
-	//		GetAccessFunctionBody(AccessFunctionType::TranslationalVelocity_qt, parameters.localPosition, markerData.positionJacobian);
-	//	((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->
-	//		GetAccessFunctionBody(AccessFunctionType::AngularVelocity_qt, parameters.localPosition, markerData.rotationJacobian);
-	//}
 }
 
 //! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(J.T @ v)/dq

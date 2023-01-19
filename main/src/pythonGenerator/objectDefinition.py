@@ -933,7 +933,7 @@ mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
 addProtectedC = "    static constexpr Index nODE2coordinates = 0;\n"
 #keep this consistent with ObjectRigidBody for mutual usage of both objects:
-outputVariables = "{'Position':'$\LU{0}{\pv} = \pRefG + \LU{0b}{\ImThree} \pLocB$global position vector of translated local position', 'Displacement':'$\Null$global displacement vector of local position', 'Velocity':'$\Null$global velocity vector of local position', 'AngularVelocity':'$\Null$angular velocity of body', 'RotationMatrix':'$\Im$rotation matrix in vector form (stored in row-major order)'}"
+outputVariables = "{'Position':'$\LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB$global position vector of translated local position', 'Displacement':'$\Null$global displacement vector of local position', 'Velocity':'$\Null$global velocity vector of local position', 'AngularVelocity':'$\Null$angular velocity of body', 'RotationMatrix':'$\LU{0b}{\Rot}$rotation matrix in vector form (stored in row-major order)'}"
 classType = Object
 objectType = Body
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -945,9 +945,9 @@ equations =
     In combination with markers, the \texttt{localPosition} $\pLocB$ is transformed by the \texttt{ObjectGround} to
     a global point $\LU{0}{\pv}$ using the reference point $\pRefG$,
     \be
-      \LU{0}{\pv} = \pRefG + \LU{0b}{\ImThree} \pLocB
+      \LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB \eqDot
+      %\LU{0}{\pv} = \pRefG + \LU{0b}{\ImThree} \pLocB 
     \ee
-    in which $\LU{0b}{\ImThree}$ is the identity transformation, leading to $\LU{0}{\pLoc} = \LU{0b}{\ImThree} \pLocB = \pLocB$.
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     A user function, which is called by the visualization thread in order to draw user-defined objects.
@@ -996,7 +996,7 @@ equations =
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "objects's unique name"
 V,      CP,     referencePosition,              ,               3,      Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "$\pRefG$reference point = reference position for ground object; local position is added on top of reference position for a ground object"
-#add referenceOrientation Rotation matrix lateron!
+V,      CP,     referenceRotation,              ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",    ,       IO,     "$\LU{0b}{\Rot} \in \Rcal^{3 \times 3}$the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates"
 #
 Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false",       CDI,    "Computational function: compute mass matrix"
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
@@ -1009,7 +1009,7 @@ Fv,     C,      GetPosition,                    ,               ,       Vector3D
 Fv,     C,      GetDisplacement,                ,               ,       Vector3D,   "return Vector3D({ 0.,0.,0. });",                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          CI, "return the (global) position of 'localPosition' according to configuration type" 
 Fv,     C,      GetVelocity,                    ,               ,       Vector3D,   "return Vector3D({ 0.,0.,0. });",                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          CI, "return the (global) velocity of 'localPosition' according to configuration type" 
 #use EXUmath::unitMatrix3D instead: Matrix3D(3,3,{1,0,0, 0,1,0, 0,0,1 })
-Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   "return EXUmath::unitMatrix3D;",                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
+Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   "return parameters.referenceRotation;",                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   "return Vector3D({ 0.,0.,0. });",                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetAngularVelocityLocal,        ,               3,      Vector3D,   "return Vector3D({ 0.,0.,0. });",                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CI,    "return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad -- not used for GroundObject" 

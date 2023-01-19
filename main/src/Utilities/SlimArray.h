@@ -139,6 +139,7 @@ public:
 
 
 	T* GetDataPointer() { return &data[0]; }			//!< return pointer to first data containing T* items.
+	const T* GetDataPointer() const { return &data[0]; }			//!< return pointer to first data containing T* items.
 
     //! set all items in array to 'scalarValue'
     void SetAll(const T& scalarValue) {

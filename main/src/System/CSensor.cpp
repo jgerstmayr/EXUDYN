@@ -34,6 +34,16 @@
 
 py::object MainSensor::GetSensorValues(const CSystemData& cSystemData, ConfigurationType configuration) const
 {
+	if (configuration == ConfigurationType::Reference)
+	{
+		//add catch for velocity - based sensor values, which cannot be evaluated for reference configuration
+		OutputVariableType v = GetCSensor()->GetOutputVariableType();
+		if (!IsOutputVariableTypeForReferenceConfiguration(v))
+		{
+			CHECKandTHROWstring("GetSensorValues called for reference configuration: this may be only called for sensors with OutputVariableType suitable for reference configuration");
+		}
+	}
+
 	Vector value;
 	GetCSensor()->GetSensorValues(cSystemData, value, configuration);
 

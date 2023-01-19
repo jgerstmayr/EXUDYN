@@ -256,6 +256,34 @@ enum class OutputVariableType {
     //FramePosition = (1 << 11), FrameOrientation = (1 << 12), //position and orientation of the reference point
 };
 
+//! return whether given OutputVariableType can be evaluated for reference configuration
+inline bool IsOutputVariableTypeForReferenceConfiguration(OutputVariableType var)
+{
+	const Index refTypes = 
+		(Index)OutputVariableType::Distance +
+		(Index)OutputVariableType::Position +
+		(Index)OutputVariableType::Displacement +		//will always give zero and may crash, but for completeness ...
+		(Index)OutputVariableType::DisplacementLocal +	//will always give zero and may crash, but for completeness ...
+		(Index)OutputVariableType::RotationMatrix +
+		(Index)OutputVariableType::Rotation +
+		(Index)OutputVariableType::Coordinates +
+		(Index)OutputVariableType::SlidingCoordinate +
+		(Index)OutputVariableType::Director1 +
+		(Index)OutputVariableType::Director2 +
+		(Index)OutputVariableType::Director3 +
+		//(Index)OutputVariableType::Force +			//probably crash; undefined
+		//(Index)OutputVariableType::ForceLocal +		//probably crash; undefined
+		//(Index)OutputVariableType::Torque +			//probably crash; undefined
+		//(Index)OutputVariableType::TorqueLocal +	//probably crash; undefined
+		//(Index)OutputVariableType::StrainLocal +	//probably crash; undefined
+		//(Index)OutputVariableType::StressLocal +	//probably crash; undefined
+		//(Index)OutputVariableType::CurvatureLocal +	//probably crash; undefined
+		(Index)OutputVariableType::ConstraintEquation;
+
+	if (EXUstd::IsOfTypeAndNotNone(refTypes, (Index)var)) { return true; }
+	return false;
+}
+
 //! OutputVariable string conversion
 inline const char* GetOutputVariableTypeString(OutputVariableType var)
 {
@@ -380,11 +408,12 @@ enum class ConfigurationType {
 };
 
 //! simple function to check for multiple configuration types
-inline bool IsConfigurationInitialCurrentReferenceVisualization(ConfigurationType configuration)
+inline bool IsValidConfiguration(ConfigurationType configuration)
 {
-	if (configuration == ConfigurationType::Initial ||
-		configuration == ConfigurationType::Current ||
+	if (configuration == ConfigurationType::Current ||
+		configuration == ConfigurationType::Initial ||
 		configuration == ConfigurationType::Reference ||
+		configuration == ConfigurationType::StartOfStep || //2023-01-12: added; CSystem now initializes in Assemble()
 		configuration == ConfigurationType::Visualization) {
 		return true;
 	}
@@ -392,11 +421,12 @@ inline bool IsConfigurationInitialCurrentReferenceVisualization(ConfigurationTyp
 }
 
 //! simple function to check for multiple configuration types
-inline bool IsConfigurationInitialCurrentVisualization(ConfigurationType configuration)
+inline bool IsValidConfigurationButNotReference(ConfigurationType configuration)
 {
-	if (configuration == ConfigurationType::Initial ||
-		configuration == ConfigurationType::Current ||
-		configuration == ConfigurationType::Reference ||
+	if (configuration == ConfigurationType::Current || 
+		configuration == ConfigurationType::Initial ||
+		//configuration == ConfigurationType::Reference || //2023-01-12: was wrong here, removed
+		configuration == ConfigurationType::StartOfStep || //2023-01-12: added; CSystem now initializes in Assemble()
 		configuration == ConfigurationType::Visualization) {
 		return true;
 	}

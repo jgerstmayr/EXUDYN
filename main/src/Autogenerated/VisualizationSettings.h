@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -46,7 +46,10 @@ public: // AUTO:
   bool showSolverInformation;                     //!< AUTO: true = solver name and further information shown in render window
   bool showSolverTime;                            //!< AUTO: true = solver current time shown in render window
   Index sphereTiling;                             //!< AUTO: global number of segments for spheres; if smaller than 2, 2 segments are used (flat)
+  bool textAlwaysInFront;                         //!< AUTO: if true, text for item numbers and other item-related text is drawn in front; this may be unwanted in case that you only with to see numbers of objects in front; currently does not work with perspective
   Float4 textColor;                               //!< AUTO: general text color (default); used for system texts in render window
+  bool textHasBackground;                         //!< AUTO: if true, text for item numbers and other item-related text have a background (depending on text color), allowing for better visibility if many numbers are shown; the text itself is black; therefore, dark background colors are ignored and shown as white
+  float textOffsetFactor;                         //!< AUTO: This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes
   float textSize;                                 //!< AUTO: general text size (font size) in pixels if not overwritten; if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)
   bool threadSafeGraphicsUpdate;                  //!< AUTO: true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state
   bool useBitmapText;                             //!< AUTO: if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (>10000) node numbers shown
@@ -79,7 +82,10 @@ public: // AUTO:
     showSolverInformation = true;
     showSolverTime = true;
     sphereTiling = 6;
+    textAlwaysInFront = true;
     textColor = Float4({0.f,0.f,0.f,1.0f});
+    textHasBackground = false;
+    textOffsetFactor = 0.005f;
     textSize = 12.f;
     threadSafeGraphicsUpdate = true;
     useBitmapText = true;
@@ -135,6 +141,11 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: general text color (default); used for system texts in render window
   std::array<float,4> PyGetTextColor() const { return std::array<float,4>(textColor); }
 
+  //! AUTO: Set function (needed in pybind) for: This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes
+  void PySetTextOffsetFactor(const float& textOffsetFactorInit) { textOffsetFactor = EXUstd::GetSafelyUFloat(textOffsetFactorInit,"textOffsetFactor"); }
+  //! AUTO: Read (Copy) access to: This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes
+  float PyGetTextOffsetFactor() const { return float(textOffsetFactor); }
+
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -159,7 +170,10 @@ public: // AUTO:
     os << "  showSolverInformation = " << showSolverInformation << "\n";
     os << "  showSolverTime = " << showSolverTime << "\n";
     os << "  sphereTiling = " << sphereTiling << "\n";
+    os << "  textAlwaysInFront = " << textAlwaysInFront << "\n";
     os << "  textColor = " << textColor << "\n";
+    os << "  textHasBackground = " << textHasBackground << "\n";
+    os << "  textOffsetFactor = " << textOffsetFactor << "\n";
     os << "  textSize = " << textSize << "\n";
     os << "  threadSafeGraphicsUpdate = " << threadSafeGraphicsUpdate << "\n";
     os << "  useBitmapText = " << useBitmapText << "\n";
@@ -185,7 +199,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -209,7 +223,7 @@ public: // AUTO:
   float maxValue;                                 //!< AUTO: maximum value for contour plot; set manually, if automaticRange == False
   float minValue;                                 //!< AUTO: minimum value for contour plot; set manually, if automaticRange == False
   bool nodesColored;                              //!< AUTO: if true, the contour color is also applied to nodes (except mesh nodes), otherwise node drawing is not influenced by contour settings
-  OutputVariableType outputVariable;              //!< AUTO: selected contour plot output variable type; select OutputVariableType.\_None to deactivate contour plotting.
+  OutputVariableType outputVariable;              //!< AUTO: selected contour plot output variable type; select OutputVariableType._None to deactivate contour plotting.
   Index outputVariableComponent;                  //!< AUTO: select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; for stresses, 6 components are available, see OutputVariableType description; to draw the norm of a outputVariable, set component to -1; if a certain component is not available by certain objects or nodes, no value is drawn (using default color)
   bool reduceRange;                               //!< AUTO: if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)
   bool rigidBodiesColored;                        //!< AUTO: if true, the contour color is also applied to triangular faces of rigid bodies and mass points, otherwise the rigid body drawing are not influenced by contour settings; for general rigid bodies (except for ObjectGround), Position, Displacement, DisplacementLocal(=0), Velocity, VelocityLocal, AngularVelocity, and AngularVelocityLocal are available; may slow down visualization!
@@ -277,7 +291,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -368,7 +382,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -462,7 +476,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -523,7 +537,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -601,7 +615,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -690,7 +704,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -759,7 +773,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -837,7 +851,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -906,7 +920,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -992,7 +1006,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1079,7 +1093,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1101,6 +1115,7 @@ public: // AUTO:
   bool alwaysTopmost;                             //!< AUTO: True: dialogs are always topmost (otherwise, they are sometimes hidden)
   float fontScalingMacOS;                         //!< AUTO: font scaling value for MacOS systems (on Windows, system display scaling is used)
   bool multiThreadedDialogs;                      //!< AUTO: True: During dialogs, the OpenGL render window will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed
+  bool openTreeView;                              //!< AUTO: True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened
 
 
 public: // AUTO: 
@@ -1111,6 +1126,7 @@ public: // AUTO:
     alwaysTopmost = true;
     fontScalingMacOS = 1.35f;
     multiThreadedDialogs = true;
+    openTreeView = false;
   };
 
   // AUTO: access functions
@@ -1132,6 +1148,7 @@ public: // AUTO:
     os << "  alwaysTopmost = " << alwaysTopmost << "\n";
     os << "  fontScalingMacOS = " << fontScalingMacOS << "\n";
     os << "  multiThreadedDialogs = " << multiThreadedDialogs << "\n";
+    os << "  openTreeView = " << openTreeView << "\n";
     os << "\n";
   }
 
@@ -1150,7 +1167,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1173,30 +1190,30 @@ public: // AUTO:
   bool drawVertexNormals;                         //!< AUTO: draws vertex normals; used for debugging
   bool enableLight0;                              //!< AUTO: turn on/off light0
   bool enableLight1;                              //!< AUTO: turn on/off light1
-  bool enableLighting;                            //!< AUTO: generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL\_LIGHTING)
+  bool enableLighting;                            //!< AUTO: generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL_LIGHTING)
   Float4 faceEdgesColor;                          //!< AUTO: global RGBA color for face edges
   bool facesTransparent;                          //!< AUTO: True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers
   Float3 initialCenterPoint;                      //!< AUTO: centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True
   float initialMaxSceneSize;                      //!< AUTO: initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True
   StdArray33F initialModelRotation;               //!< AUTO: initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]
   float initialZoom;                              //!< AUTO: initial zoom of scene; overwritten/ignored if autoFitScene = True
-  float light0ambient;                            //!< AUTO: ambient value of GL\_LIGHT0
-  float light0constantAttenuation;                //!< AUTO: constant attenuation coefficient of GL\_LIGHT0, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1
-  float light0diffuse;                            //!< AUTO: diffuse value of GL\_LIGHT0
-  float light0linearAttenuation;                  //!< AUTO: linear attenuation coefficient of GL\_LIGHT0, this is a linear factor for attenuation of the light source with distance
-  Float4 light0position;                          //!< AUTO: 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals
-  float light0quadraticAttenuation;               //!< AUTO: quadratic attenuation coefficient of GL\_LIGHT0, this is a quadratic factor for attenuation of the light source with distance
-  float light0specular;                           //!< AUTO: specular value of GL\_LIGHT0
-  float light1ambient;                            //!< AUTO: ambient value of GL\_LIGHT1
-  float light1constantAttenuation;                //!< AUTO: constant attenuation coefficient of GL\_LIGHT1, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); only used for lights, where last component of light position is 1
-  float light1diffuse;                            //!< AUTO: diffuse value of GL\_LIGHT1
-  float light1linearAttenuation;                  //!< AUTO: linear attenuation coefficient of GL\_LIGHT1, this is a linear factor for attenuation of the light source with distance
-  Float4 light1position;                          //!< AUTO: 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
-  float light1quadraticAttenuation;               //!< AUTO: quadratic attenuation coefficient of GL\_LIGHT1, this is a quadratic factor for attenuation of the light source with distance
-  float light1specular;                           //!< AUTO: specular value of GL\_LIGHT1
-  Float4 lightModelAmbient;                       //!< AUTO: global ambient light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_AMBIENT,[r,g,b,a])
-  bool lightModelLocalViewer;                     //!< AUTO: select local viewer for light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_LOCAL\_VIEWER,...)
-  bool lightModelTwoSide;                         //!< AUTO: enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_TWO\_SIDE,...)
+  float light0ambient;                            //!< AUTO: ambient value of GL_LIGHT0
+  float light0constantAttenuation;                //!< AUTO: constant attenuation coefficient of GL_LIGHT0, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1
+  float light0diffuse;                            //!< AUTO: diffuse value of GL_LIGHT0
+  float light0linearAttenuation;                  //!< AUTO: linear attenuation coefficient of GL_LIGHT0, this is a linear factor for attenuation of the light source with distance
+  Float4 light0position;                          //!< AUTO: 4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals
+  float light0quadraticAttenuation;               //!< AUTO: quadratic attenuation coefficient of GL_LIGHT0, this is a quadratic factor for attenuation of the light source with distance
+  float light0specular;                           //!< AUTO: specular value of GL_LIGHT0
+  float light1ambient;                            //!< AUTO: ambient value of GL_LIGHT1
+  float light1constantAttenuation;                //!< AUTO: constant attenuation coefficient of GL_LIGHT1, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); only used for lights, where last component of light position is 1
+  float light1diffuse;                            //!< AUTO: diffuse value of GL_LIGHT1
+  float light1linearAttenuation;                  //!< AUTO: linear attenuation coefficient of GL_LIGHT1, this is a linear factor for attenuation of the light source with distance
+  Float4 light1position;                          //!< AUTO: 4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
+  float light1quadraticAttenuation;               //!< AUTO: quadratic attenuation coefficient of GL_LIGHT1, this is a quadratic factor for attenuation of the light source with distance
+  float light1specular;                           //!< AUTO: specular value of GL_LIGHT1
+  Float4 lightModelAmbient;                       //!< AUTO: global ambient light; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a])
+  bool lightModelLocalViewer;                     //!< AUTO: select local viewer for light; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,...)
+  bool lightModelTwoSide;                         //!< AUTO: enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,...)
   bool lineSmooth;                                //!< AUTO: draw lines smooth
   float lineWidth;                                //!< AUTO: width of lines used for representation of lines, circles, points, etc.
   Float4 materialAmbientAndDiffuse;               //!< AUTO: 4f ambient color of material
@@ -1296,19 +1313,19 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: initial zoom of scene; overwritten/ignored if autoFitScene = True
   float PyGetInitialZoom() const { return float(initialZoom); }
 
-  //! AUTO: Set function (needed in pybind) for: 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals
+  //! AUTO: Set function (needed in pybind) for: 4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals
   void PySetLight0position(const std::array<float,4>& light0positionInit) { light0position = light0positionInit; }
-  //! AUTO: Read (Copy) access to: 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals
+  //! AUTO: Read (Copy) access to: 4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals
   std::array<float,4> PyGetLight0position() const { return std::array<float,4>(light0position); }
 
-  //! AUTO: Set function (needed in pybind) for: 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
+  //! AUTO: Set function (needed in pybind) for: 4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
   void PySetLight1position(const std::array<float,4>& light1positionInit) { light1position = light1positionInit; }
-  //! AUTO: Read (Copy) access to: 4f position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
+  //! AUTO: Read (Copy) access to: 4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
   std::array<float,4> PyGetLight1position() const { return std::array<float,4>(light1position); }
 
-  //! AUTO: Set function (needed in pybind) for: global ambient light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_AMBIENT,[r,g,b,a])
+  //! AUTO: Set function (needed in pybind) for: global ambient light; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a])
   void PySetLightModelAmbient(const std::array<float,4>& lightModelAmbientInit) { lightModelAmbient = lightModelAmbientInit; }
-  //! AUTO: Read (Copy) access to: global ambient light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_AMBIENT,[r,g,b,a])
+  //! AUTO: Read (Copy) access to: global ambient light; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a])
   std::array<float,4> PyGetLightModelAmbient() const { return std::array<float,4>(lightModelAmbient); }
 
   //! AUTO: Set function (needed in pybind) for: width of lines used for representation of lines, circles, points, etc.
@@ -1422,7 +1439,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1524,7 +1541,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1542,7 +1559,9 @@ public: // AUTO:
 class VSettingsOpenVR // AUTO: 
 {
 public: // AUTO: 
-  bool enableOpenVR;                              //!< AUTO: True: openVR enabled (if compiled with according flag and installed openVR)
+  std::string actionManifestFileName;             //!< AUTO: This string must contain a string representing a valid absolute path to a vr_actions.json manifest, which describes all HMD, tracker, etc. devices as given by openVR
+  bool enable;                                    //!< AUTO: True: openVR enabled (if compiled with according flag and installed openVR)
+  Index logLevel;                                 //!< AUTO: integer value setting log level of openVR: -1 (no output), 0 (error), 1 (warning), 2 (info), 3 (debug); increase log level to get more output
   bool showCompanionWindow;                       //!< AUTO: True: openVR will show companion window containing left and right eye view
 
 
@@ -1550,7 +1569,9 @@ public: // AUTO:
   //! AUTO: default constructor with parameter initialization
   VSettingsOpenVR()
   {
-    enableOpenVR = false;
+    actionManifestFileName = "C:/openVRactionsManifest.json";
+    enable = false;
+    logLevel = 1;
     showCompanionWindow = true;
   };
 
@@ -1559,7 +1580,9 @@ public: // AUTO:
   virtual void Print(std::ostream& os) const
   {
     os << "VSettingsOpenVR" << ":\n";
-    os << "  enableOpenVR = " << enableOpenVR << "\n";
+    os << "  actionManifestFileName = " << actionManifestFileName << "\n";
+    os << "  enable = " << enable << "\n";
+    os << "  logLevel = " << logLevel << "\n";
     os << "  showCompanionWindow = " << showCompanionWindow << "\n";
     os << "\n";
   }
@@ -1579,7 +1602,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1607,6 +1630,7 @@ public: // AUTO:
   float joystickScaleTranslation;                 //!< AUTO: translation scaling factor for joystick input
   float keypressRotationStep;                     //!< AUTO: rotation increment per keypress in degree (full rotation = 360 degree)
   float keypressTranslationStep;                  //!< AUTO: translation increment per keypress relative to window size
+  bool lockModelView;                             //!< AUTO: True: all movements (with mouse/keys), rotations, zoom are disabled; initial values are considered
   float mouseMoveRotationFactor;                  //!< AUTO: rotation increment per 1 pixel mouse movement in degree
   bool selectionHighlights;                       //!< AUTO: True: mouse click highlights item (default: red)
   bool selectionLeftMouse;                        //!< AUTO: True: left mouse click on items and show basic information
@@ -1633,6 +1657,7 @@ public: // AUTO:
     joystickScaleTranslation = 6.f;
     keypressRotationStep = 5.f;
     keypressTranslationStep = 0.1f;
+    lockModelView = false;
     mouseMoveRotationFactor = 1.f;
     selectionHighlights = true;
     selectionLeftMouse = true;
@@ -1686,6 +1711,7 @@ public: // AUTO:
     os << "  joystickScaleTranslation = " << joystickScaleTranslation << "\n";
     os << "  keypressRotationStep = " << keypressRotationStep << "\n";
     os << "  keypressTranslationStep = " << keypressTranslationStep << "\n";
+    os << "  lockModelView = " << lockModelView << "\n";
     os << "  mouseMoveRotationFactor = " << mouseMoveRotationFactor << "\n";
     os << "  selectionHighlights = " << selectionHighlights << "\n";
     os << "  selectionLeftMouse = " << selectionLeftMouse << "\n";
@@ -1715,7 +1741,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2022-12-31 (last modfied)
+* @date         AUTO: 2023-01-17 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

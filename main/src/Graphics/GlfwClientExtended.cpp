@@ -47,7 +47,6 @@
 //#endif
 
 #define MY_GL_TEXTURE_2D GL_TEXTURE_2D
-
 #include "Graphics/GlfwClient.h"
 #include "Graphics/characterBitmap.h"
 
@@ -194,6 +193,7 @@ void GlfwRenderer::SetGLLights()
 	//glDisable(GL_LIGHTING); //changed 2020-12-05
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_DST_COLOR); //GL_ONE_MINUS_DST_COLOR, GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR, GL_SRC_ALPHA
 
 	//changed 2020-12-05; not needed any more, because SetGLLights moved to different place
 	glMatrixMode(GL_MODELVIEW);
@@ -381,9 +381,9 @@ void GlfwRenderer::InitFontBitmap(guint fontSize)
 }
 
 //! draw a 0-terminated text string with fontSize, including monitor scaling factor; (for line-characters: size=1: height=1; width=0.5 for one character; distance = 0.25)
-void GlfwRenderer::DrawString(const char* text, float fontSizeScaled, const Float3& p, const Float4& color)
+void GlfwRenderer::DrawString(const char* text, float fontSizeScaled, const Float3& p, Float4 color, bool transparent)
 {
-	if (visSettings->general.useBitmapText)
+    if (visSettings->general.useBitmapText)
 	{
 #ifndef USE_TEXTURED_BITMAP_FONTS
 		BitmapFont* bmf;
@@ -397,9 +397,19 @@ void GlfwRenderer::DrawString(const char* text, float fontSizeScaled, const Floa
 		glEnable(GL_LIGHTING);
 #else
 		float scale = 2.f*fontSizeScaled*state->zoom / ((float)state->currentWindowSize[1] * (float)bitmapFont.fontSize);
+        if (!transparent)
+        {
+            float avColor = (3.f)*(color[0] + color[1] + color[2]);
+            if (avColor < 0.4) //very dark colors are not visible
+            {
+                color[0] = EXUstd::Minimum(1.f, color[0] + 1.f - avColor);
+                color[1] = EXUstd::Minimum(1.f, color[1] + 1.f - avColor);
+                color[2] = EXUstd::Minimum(1.f, color[2] + 1.f - avColor);
+            }
+        }
 		//std::cout << "scale=" << scale << "\n";
 		DrawStringWithTextures(text, scale, p, color, bitmapFont,
-			charBuffer, bitmapFontListBase);
+			charBuffer, bitmapFontListBase, transparent);
 #endif
 	}
 	else
@@ -416,7 +426,7 @@ void GlfwRenderer::DrawString(const char* text, float fontSizeScaled, const Floa
 
 //! now draw a string with internal (close to) unicode string, with length stringLen
 void GlfwRenderer::DrawStringWithGLlistTextures(const Float3& p, float fontSizeScaled, GLuint listBase,
-	GLubyte *string, guint stringLen)
+	GLubyte *string, guint stringLen, GLuint listOffset)
 {
 	//std::cout << "test\n";
 	//glDisable(GL_DEPTH_TEST);
@@ -427,7 +437,7 @@ void GlfwRenderer::DrawStringWithGLlistTextures(const Float3& p, float fontSizeS
 	glTranslatef(p[0], p[1], p[2]);
 	glScalef(fontSizeScaled, fontSizeScaled, fontSizeScaled);
 
-	glListBase(listBase - 32); //assign base of string list, 32 MUST be smallest value
+	glListBase(listBase - listOffset); //assign base of string list, 32 MUST be smallest value
 	glCallLists(stringLen, GL_UNSIGNED_BYTE, string);
 	glPopMatrix();
 	//glEnable(GL_DEPTH_TEST);
@@ -435,7 +445,7 @@ void GlfwRenderer::DrawStringWithGLlistTextures(const Float3& p, float fontSizeS
 
 
 void GlfwRenderer::DrawStringWithTextures(const char* text, float fontSizeScaled, const Float3& p, const Float4& color,
-	BitmapFont& font, ResizableArray<GLubyte>& charBuffer, GLuint listBase)
+	BitmapFont& font, ResizableArray<GLubyte>& charBuffer, GLuint listBase, bool transparent)
 {
 #ifdef USE_TEXTURED_BITMAP_FONTS
 	//glColor4f(color[0], color[1], color[2], color[3]);
@@ -461,12 +471,16 @@ void GlfwRenderer::DrawStringWithTextures(const char* text, float fontSizeScaled
 	gchar cUnicode = font.GetUnicodeCharacterFromUTF8(text, updatedIndex);
 	charBuffer.SetNumberOfItems(0);
 
-	//glDepthMask(GL_FALSE); //done outside, can distinguish between always on top text (status information) and node numbers, etc.
+	//SetglDepthMask(GL_FALSE); //done outside, can distinguish between always on top text (status information) and node numbers, etc.
 	//glDisable(GL_LIGHTING);
 	//glColor4f(0.f, 0.f, 0.f, 1.f); //on texture, this color will influence the appearance (similar to lighting)
 	glEnable(MY_GL_TEXTURE_2D); //must be disabled if no textures drawn!
 	glColor4f(color[0], color[1], color[2], color[3]); //on texture, this color will influence the appearance (similar to lighting)
 	
+    if (!transparent && NUMBER_OF_TEXTUREFONT_LISTS == 2)
+    {
+        listBase += font.nCharacters; //switch to second list
+    }
 
 	while (cUnicode != 0)
 	{
@@ -481,13 +495,14 @@ void GlfwRenderer::DrawStringWithTextures(const char* text, float fontSizeScaled
 			}
 			else
 			{
-				charBuffer[columnNumber] = 32; //should not happen!
+                charBuffer[columnNumber] = font.characterOffset; // 32; //should not happen!
 			}
 			columnNumber++;
 		}
 		else
 		{
-			DrawStringWithGLlistTextures(p + Float3({0,vOff,0}), fontSizeScaled, listBase, charBuffer.GetDataPointer(), charBuffer.NumberOfItems());
+			DrawStringWithGLlistTextures(p + Float3({0,vOff,0}), fontSizeScaled, listBase, charBuffer.GetDataPointer(), 
+                charBuffer.NumberOfItems(), font.characterOffset);
 			charBuffer.SetNumberOfItems(0);
 			vOff -= (float)h*fontSizeScaled;
 			//lineNumber++; 
@@ -497,10 +512,10 @@ void GlfwRenderer::DrawStringWithTextures(const char* text, float fontSizeScaled
 	}
 	if (charBuffer.NumberOfItems())
 	{
-		DrawStringWithGLlistTextures(p + Float3({ 0,vOff,0 }), fontSizeScaled, listBase, charBuffer.GetDataPointer(), charBuffer.NumberOfItems());
+		DrawStringWithGLlistTextures(p + Float3({ 0,vOff,0 }), fontSizeScaled, listBase, charBuffer.GetDataPointer(), 
+            charBuffer.NumberOfItems(), font.characterOffset);
 	}
 	glDisable(MY_GL_TEXTURE_2D); //must be disabled if no textures drawn!
-	//glDepthMask(GL_TRUE);
 	//glEnable(GL_LIGHTING);
 
 #endif
@@ -511,7 +526,7 @@ void GlfwRenderer::CreateTexturedQuadsLists(GLuint& listBase, GLuint* textureNum
 	guint nCharacters, guint wCharacter8, guint wCharacter, guint hCharacter, bool itemTags)
 {
 	//GLfloat cx, cy;         /* the character coordinates in our texture */
-	listBase = glGenLists(nCharacters);
+	listBase = glGenLists(nCharacters*NUMBER_OF_TEXTUREFONT_LISTS);
 	//glBindTexture(MY_GL_TEXTURE_2D, textureNumber);
 	//glEnable(MY_GL_TEXTURE_2D);
 	//glEnable(GL_BLEND);
@@ -519,14 +534,13 @@ void GlfwRenderer::CreateTexturedQuadsLists(GLuint& listBase, GLuint* textureNum
 	GLfloat wFact = (float)wCharacter / (float)wCharacter8 - 0.001f;
 	//GLfloat wFact = 1.f;
 
-	for (guint loop = 0; loop < nCharacters; loop++)
+	for (guint loop = 0; loop < nCharacters*NUMBER_OF_TEXTUREFONT_LISTS; loop++)
 	{
 		glNewList(listBase + loop, GL_COMPILE);
 		glBindTexture(MY_GL_TEXTURE_2D, textureNumber[loop]);
-		//glColor3f(0.9f, 0.9f, 0.9f);
-		//glColor4f(0.1f, 0.1f, 0.1f, 0.3f);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.001f, 0);
+        //glColor4f(0.f, 0.f, 0.f, 0.f); //do not add color here; color is added to drawing of texts, allowing for colored texts!
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.001f, 0);
 		glVertex2i(0, 0);
 		glTexCoord2f(wFact, 0);
 		glVertex2i(wCharacter, 0);
@@ -550,24 +564,25 @@ void GlfwRenderer::CreateFontTextures()
 		charBitmap64::OpenGLtextBitmap);
 
 	//create texture bitmapFont (could also be loaded from file)
-	glGenTextures(bitmapFont.nCharacters, &textureNumberRGBbitmap[0]);   //create one texture
+	glGenTextures(bitmapFont.nCharacters*NUMBER_OF_TEXTUREFONT_LISTS, &textureNumberRGBbitmap[0]);   //create one texture
 
-	for (GLuint iChar = 0; iChar < bitmapFont.nCharacters; iChar++)
-	{
-		GLubyte* textureRGB = bitmapFont.GetRGBFontCharacter(iChar);
+    for (Index j = 0; j < NUMBER_OF_TEXTUREFONT_LISTS; j++)
+    {
+        for (GLuint iChar = 0; iChar < bitmapFont.nCharacters; iChar++)
+        {
+            GLubyte* textureRGB = bitmapFont.GetRGBFontCharacter(iChar, (bool)(1-j));
 
-		glBindTexture(MY_GL_TEXTURE_2D, textureNumberRGBbitmap[iChar]);
-		/* actually generate the texture */
-		//glTexParameteri(MY_GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		//glTexParameteri(MY_GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(MY_GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //linear filter give nicer results than GL_NEAREST
-		glTexParameteri(MY_GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexImage2D(MY_GL_TEXTURE_2D, 0, 4, bitmapFont.characterByteWidth * 8, //bitmapFont.characterWidth,
-				bitmapFont.characterHeight/* *bitmapFont.nCharacters*/, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-			textureRGB);
-		delete[] textureRGB; //not needed lateron
-
-	}
+            glBindTexture(MY_GL_TEXTURE_2D, textureNumberRGBbitmap[iChar+ bitmapFont.nCharacters*j]);
+            /* actually generate the texture */
+            //glTexParameteri(MY_GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            //glTexParameteri(MY_GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(MY_GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //linear filter give nicer results than GL_NEAREST
+            glTexParameteri(MY_GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexImage2D(MY_GL_TEXTURE_2D, 0, 4, bitmapFont.characterByteWidth * 8, //bitmapFont.characterWidth,
+                bitmapFont.characterHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureRGB);
+            delete[] textureRGB; //not needed lateron
+        }
+    }
 }
 
 
@@ -576,8 +591,8 @@ void GlfwRenderer::CreateFontTextures()
 void GlfwRenderer::DeleteFonts()
 {
 #ifdef USE_TEXTURED_BITMAP_FONTS
-	glDeleteTextures(bitmapFont.nCharacters, &textureNumberRGBbitmap[0]);
-	glDeleteLists(bitmapFontListBase, bitmapFont.nCharacters);
+	glDeleteTextures(bitmapFont.nCharacters*NUMBER_OF_TEXTUREFONT_LISTS, &textureNumberRGBbitmap[0]);
+	glDeleteLists(bitmapFontListBase, bitmapFont.nCharacters*NUMBER_OF_TEXTUREFONT_LISTS);
 #endif
 }
 

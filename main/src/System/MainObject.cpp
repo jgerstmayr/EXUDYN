@@ -45,7 +45,8 @@ py::object MainObject::GetOutputVariable(OutputVariableType variableType, Config
 	}
 	else
 	{
-		PyError(STDstring("Invalid OutputVariableType in MainObject::GetOutputVariable: '") + GetOutputVariableTypeString(variableType) + "'");
+		PyError(STDstring("Invalid OutputVariableType in MainObject::GetOutputVariable: '") + GetOutputVariableTypeString(variableType) + 
+			"'; the object '" + GetName() + "' cannot compute the requested variable type");
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}

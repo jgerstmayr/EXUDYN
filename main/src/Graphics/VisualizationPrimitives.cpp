@@ -402,7 +402,20 @@ namespace EXUvis {
 		ItemType itemType;
 		Index mbsNumber;
 		ItemID2IndexType(itemID, itemNumber, itemType, mbsNumber);
-		vSystem->graphicsData.AddText(pos, color, label + EXUstd::ToString(itemNumber), textSize, offx, offy, itemID);
+        //Float4 colorAlt = color;
+        //if (colorAlt[0] + colorAlt[1] + colorAlt[2] > 0.7)
+        //{
+        //    colorAlt[0] *= 0.5f; //make this color slightly darker
+        //    colorAlt[1] *= 0.5f;
+        //    colorAlt[2] *= 0.5f;
+        //}
+        //else
+        //{
+        //    colorAlt[0] += 0.3f; //make lighter (this will always work
+        //    colorAlt[1] += 0.3f;
+        //    colorAlt[2] += 0.3f;
+        //}
+        vSystem->graphicsData.AddText(pos, EXUvis::AltColor(color), label + EXUstd::ToString(itemNumber), textSize, offx, offy, itemID);
 	}
 
 

@@ -14,7 +14,7 @@
 #pythonName: name which is used in Python
 #cplusplusName: name which is used in C++ side of Exudyn (leave empty if it is the same)
 #size = leave empty if size is variable; e.g. 3 (size of vector), 2x3 (2 rows, 3 columns)  %used for vectors and matrices only!
-#type = Bool, Int, Real, UInt, UReal (unsigned Real), PInt (Int > 0), PReal (Real > 0), Vector, Matrix, SymmetricMatrix
+#type = Bool, Int, Real, UInt, UReal (unsigned Real), PInt (Int > 0), PReal (Real > 0), Vector, Matrix, VectorFloat, MatrixFloat, SymmetricMatrix
 #defaultValue = default value or string (use "" to clearly identify strings incl. spaces); for 'V'-types: default initialization; vor 'F' and 'F'-types: C++ code of function;
 #cFlags = A...add access functions (e.g. const Real&/Real&), D...no dictionary with type info, S...substructure (e.g. Newton), V... return value policy copy, O...move return policy, G... add args for pybind, R(read only), M(modifiableDuringSimulation), C...const function, D...definition only (implementation in separate file), P ... write Pybind11 interface [default is read/write access and that changes are immediately applied and need no reset of the system]
 #parameterDescription = description for parameter used in C++ code
@@ -54,7 +54,7 @@ VL,  dampingMatrix,                     ,       , Matrix6D,                 "Mat
 VL,  massPerLength,                     ,       , UReal,                    0.,             ,  DP     , "$\rho A\,$ [SI:kg/m] mass per unit length of the beam"
 VL,  inertia,                           ,       , Matrix3D,                 "EXUmath::zeroMatrix3D", ,  DP     , "$\LU{c}{\Jm} \in \Rcal^{3 \times 3}\,$ [SI:kg$\,$m$^2$] sectional inertia for shear-deformable beams."
 #optional, used by Bauchau:
-#V,  sectionalCOM,                       ,       , Vector2D,                 "Vector2D(0.)", ,  DP     , "$\LU{c}{\vv_{com}} \in \Rcal^2\,$ [SI:m] sectional center of mass."
+#  sectionalCOM,                       ,       , Vector2D,                 "Vector2D(0.)", ,  DP     , "$\LU{c}{\vv_{com}} \in \Rcal^2\,$ [SI:m] sectional center of mass."
 #
 writeFile=PyStructuralElementsDataStructures.h
 
@@ -188,6 +188,7 @@ V,  useIndex2Constraints,               ,       , bool,                     fals
 V,  useNewmark,                         ,       , bool,                     false,      ,       P   , "if true, use Newmark method with beta and gamma instead of generalized-Alpha"
 V,  spectralRadius,                     ,       , UReal,                    0.9,        ,       P   , "spectral radius for Generalized-alpha solver; set this value to 1 for no damping or to 0 < spectralRadius < 1 for damping of high-frequency dynamics; for position-level constraints (index 3), spectralRadius must be < 1"
 V,  computeInitialAccelerations,        ,       , bool,                     true,       ,       P   , "True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations"
+V,  resetAccelerations,                 ,       , bool,                     false,      ,       P   , "this flag only affects if computeInitialAccelerations=False: if resetAccelerations=True, accelerations are set zero in the solver function InitializeSolverInitialConditions; this may be unwanted in case of repeatedly called SolveSteps() and in cases where solutions shall be prolonged from previous computations"
 V,  lieGroupAddTangentOperator,         ,       , bool,                     true,       ,       P   , "True: for Lie group nodes, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)"
 #
 writeFile=SimulationSettings.h
@@ -358,6 +359,9 @@ V,      graphicsUpdateInterval,         ,                  ,     float,        "
 V,      autoFitScene,                   ,                  ,     bool,         true,                   , P,      "automatically fit scene within startup after StartRenderer()"
 V,      textSize,                       ,                  ,     float,        "12.f",                 , P,      "general text size (font size) in pixels if not overwritten; if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)"
 V,      textColor,                      ,                  4,    Float4,       "Float4({0.f,0.f,0.f,1.0f})", , P, "general text color (default); used for system texts in render window"
+V,      textHasBackground,              ,                  ,     bool,         false,                  , P,      "if true, text for item numbers and other item-related text have a background (depending on text color), allowing for better visibility if many numbers are shown; the text itself is black; therefore, dark background colors are ignored and shown as white"
+V,      textOffsetFactor,               ,                  ,     UFloat,       0.005f,                 , P,      "This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes"
+V,      textAlwaysInFront,              ,                  ,     bool,         true,                   , P,      "if true, text for item numbers and other item-related text is drawn in front; this may be unwanted in case that you only with to see numbers of objects in front; currently does not work with perspective"
 V,      rendererPrecision,              ,                  ,     PInt,         "4",                    , P,      "precision of general floating point numbers shown in render window: total number of digits used  (max. 16)"
 V,      useWindowsDisplayScaleFactor,   ,                  ,     bool,         true,                   , P,      "the Windows display scaling (monitor scaling; content scaling) factor is used for increased visibility of texts on high resolution displays; based on GLFW glfwGetWindowContentScale; deactivated on linux compilation as it leads to crashes (adjust textSize manually!)"
 V,      useBitmapText,                  ,                  ,     bool,         true,                   , P,      "if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (>10000) node numbers shown"
@@ -395,8 +399,6 @@ V,      outputVariableComponent,        ,                  1,    Int,          "
 V,      outputVariable,                 ,                  ,     OutputVariableType,  "OutputVariableType::_None",  , P, "selected contour plot output variable type; select OutputVariableType.\_None to deactivate contour plotting."
 V,      minValue,                       ,                  1,    float,        "0",                    , P,      "minimum value for contour plot; set manually, if automaticRange == False"
 V,      maxValue,                       ,                  1,    float,        "1",                    , P,      "maximum value for contour plot; set manually, if automaticRange == False"
-#V,      currentMinValue,                ,                  1,    float,        "0",                    , P,      "minimum value for contour plot; set manually, if automaticRange == False"
-#V,      currentMaxValue,                ,                  1,    float,        "1",                    , P,      "maximum value for contour plot; set manually, if automaticRange == False"
 V,      automaticRange,                 ,                  ,     bool,         true,                   , P,      "if true, the contour plot value range is chosen automatically to the maximum range"
 V,      reduceRange,                    ,                  ,     bool,         true,                   , P,      "if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)"
 V,      showColorBar,                   ,                  ,     bool,         true,                   , P,      "show the colour bar with minimum and maximum values for the contour plot"
@@ -548,7 +550,7 @@ appendToFile=True
 writePybindIncludes = True
 classDescription = "Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization"
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
-#V,      showContactObjects,         ,                  ,     bool,         true,                       , P,    "show or hide contact objects in all GeneralContacts"
+#      showContactObjects,         ,                  ,     bool,         true,                       , P,    "show or hide contact objects in all GeneralContacts"
 V,      showSearchTree,             ,                  ,     bool,         false,                      , P,    "show search tree of all GeneralContacts"
 V,      showSearchTreeCells,        ,                  ,     bool,         false,                      , P,    "show cells inside search tree"
 V,      showBoundingBoxes,          ,                  ,     bool,         false,                      , P,    "show bounding boxes of all GeneralContacts"
@@ -592,6 +594,7 @@ V,      multiThreadedDialogs,           ,                  ,     bool,         t
 V,      alwaysTopmost,                  ,                  ,     bool,         true,                   , P,      "True: dialogs are always topmost (otherwise, they are sometimes hidden)"
 V,      alphaTransparency,              ,                  ,     UFloat,       "0.94f",                , P,      "alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)"
 V,      fontScalingMacOS,               ,                  ,     UFloat,       "1.35f",                , P,      "font scaling value for MacOS systems (on Windows, system display scaling is used)"
+V,      openTreeView,                   ,                  ,     bool,         false,                  , P,      "True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened"
 #
 writeFile=VisualizationSettings.h
 
@@ -688,8 +691,10 @@ writePybindIncludes = True
 classDescription = "Functionality to interact openVR; requires special hardware or software emulator, see steam / openVR descriptions"
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 #have been in VSettingsWindows earlier:
-V,      enableOpenVR,                   ,                  ,     bool,         false,                 , P,      "True: openVR enabled (if compiled with according flag and installed openVR)"
+V,      enable,                         ,                  ,     bool,         false,                 , P,      "True: openVR enabled (if compiled with according flag and installed openVR)"
 V,      showCompanionWindow,            ,                  ,     bool,         true,                  , P,      "True: openVR will show companion window containing left and right eye view"
+V,      logLevel,                       ,                  ,     Int,          1,                     , P,      "integer value setting log level of openVR: -1 (no output), 0 (error), 1 (warning), 2 (info), 3 (debug); increase log level to get more output"
+V,      actionManifestFileName,         ,                  ,     FileName,     "C:/openVRactionsManifest.json", , P,  "This string must contain a string representing a valid absolute path to a vr\_actions.json manifest, which describes all HMD, tracker, etc. devices as given by openVR"
 writeFile=VisualizationSettings.h
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -705,6 +710,7 @@ V,      keypressRotationStep,           ,                  ,     float,        "
 V,      mouseMoveRotationFactor,        ,                  ,     float,        "1.f",                  , P,      "rotation increment per 1 pixel mouse movement in degree"
 V,      keypressTranslationStep,        ,                  ,     float,        "0.1f",                 , P,      "translation increment per keypress relative to window size"
 V,      zoomStepFactor,                 ,                  ,     float,        "1.15f",                , P,      "change of zoom per keypress (keypad +/-) or mouse wheel increment"
+V,      lockModelView,                  ,                  ,     bool,         false,                  , P,      "True: all movements (with mouse/keys), rotations, zoom are disabled; initial values are considered ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value"
 #
 V,      highlightItemIndex,             ,                  ,     Int,          "-1",                   , P,      "index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted"
 V,      highlightItemType,              ,                  ,     ItemType,     "ItemType::_None",      , P,      "item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)"
@@ -735,8 +741,6 @@ writePybindIncludes = True
 addDictionaryAccess = True
 classDescription = "Settings for visualization"
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
-V,      general,                    ,                  ,     VSettingsGeneral,  ,                 , PS,      "general visualization settings"
-V,      contour,                    ,                  ,     VSettingsContour,  ,                 , PS,      "contour plot visualization settings"
 #
 V,      nodes,                      ,                  ,     VSettingsNodes,    ,                 , PS,      "node visualization settings"
 V,      bodies,                     ,                  ,     VSettingsBodies,   ,                 , PS,      "body visualization settings"
@@ -744,13 +748,15 @@ V,      connectors,                 ,                  ,     VSettingsConnectors
 V,      markers,                    ,                  ,     VSettingsMarkers,  ,                 , PS,      "marker visualization settings"
 V,      loads,                      ,                  ,     VSettingsLoads,    ,                 , PS,      "load visualization settings"
 V,      sensors,                    ,                  ,     VSettingsSensors,  ,                 , PS,      "sensor visualization settings"
-V,      contact,                    ,                  ,     VSettingsContact,  ,                 , PS,      "contact visualization settings"
 #
-V,      window,                     ,                  ,     VSettingsWindow,   ,                 , PS,      "visualization window and interaction settings"
-V,      dialogs,                    ,                  ,     VSettingsDialogs,  ,                 , PS,      "dialogs settings"
-V,      openGL,                     ,                  ,     VSettingsOpenGL,   ,                 , PS,      "OpenGL rendering settings"
+V,      contour,                    ,                  ,     VSettingsContour,  ,                 , PS,      "contour plot visualization settings"
+V,      contact,                    ,                  ,     VSettingsContact,  ,                 , PS,      "contact visualization settings"
 V,      interactive,                ,                  ,     VSettingsInteractive, ,              , PS,      "Settings for interaction with renderer"
+V,      dialogs,                    ,                  ,     VSettingsDialogs,  ,                 , PS,      "dialogs settings"
 V,      exportImages,               ,                  ,     VSettingsExportImages,,              , PS,      "settings for exporting (saving) images to files in order to create animations"
+V,      window,                     ,                  ,     VSettingsWindow,   ,                 , PS,      "visualization window and interaction settings"
+V,      openGL,                     ,                  ,     VSettingsOpenGL,   ,                 , PS,      "OpenGL rendering settings"
+V,      general,                    ,                  ,     VSettingsGeneral,  ,                 , PS,      "general visualization settings"
 #
 #done in WriteToPybind function FL,      GetDictionaryWithTypeInformation,  ,        ,     py::dict,          ,                 , DP,      "access function to dictionary of settings hierarchical structure including type information"
 #
@@ -1049,11 +1055,11 @@ FvL,    SetSystemMassMatrix,         ,                ,    void,        ,       
 FvL,    SetSystemResidual,           ,                ,    void,        ,                       "const Vector& systemResidual",   DGPV,    "set locally stored system residual; must have size nODE2+nODE1+nAE"
 #
 #special functions for interaction with mainSystem:
-FvL,    ComputeMassMatrix,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor=1.",   DGPV,    "compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix"
-FvL,    ComputeJacobianODE2RHS,      ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=0., Real scalarFactor_ODE1=1.",   DGPV,    "set systemJacobian to zero and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver"
-#not needed: FvL,    ComputeJacobianODE2RHS_t,    ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2_t=1.",   DGPV,    "add jacobian of ODE2RHS_t (multiplied with factor) to systemJacobian in cSolver"
-FvL,    ComputeJacobianODE1RHS,      ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=0., Real scalarFactor_ODE1=1.",   DGPV,    "add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE1RHS to systemJacobian in cSolver"
-FvL,    ComputeJacobianAE,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=0., Real scalarFactor_ODE1=1., bool velocityLevel=false",   DGPV,    "add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level"
+FvL,    ComputeMassMatrix,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor=1.",   DGPV,    "compute systemMassMatrix (multiplied with factor) in cSolver and return mass nODE2 x nODE2 matrix"
+FvL,    ComputeJacobianODE2RHS,      ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=0., Real scalarFactor_ODE1=1.",   DGPV,    "set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor_ODE2=-1,scalarFactor_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor_ODE2=0,scalarFactor_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers"
+FvL,    ComputeJacobianODE1RHS,      ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=0., Real scalarFactor_ODE1=1.",   DGPV,    "ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(...); the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian"
+FvL,    ComputeJacobianAE,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=0., Real scalarFactor_ODE1=1., bool velocityLevel=false",   DGPV,    "add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian"
+#removed: FvL,    ComputeJacobianODE2RHS_t,    ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2_t=1.",   DGPV,    "add jacobian of ODE2RHS_t (multiplied with factor) to systemJacobian in cSolver"
 #
 FvL,    ComputeODE2RHS,              ,                ,    void,        ,                       "MainSystem& mainSystem",   DGPV,    "compute the RHS of \hac{ODE2} equations in systemResidual in range(0,nODE2)"
 FvL,    ComputeAlgebraicEquations,   ,                ,    void,        ,                       "MainSystem& mainSystem, bool velocityLevel=false",   DGPV,    "compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)"
@@ -1186,11 +1192,11 @@ FvL,    SetSystemMassMatrix,         ,                ,    void,        ,       
 FvL,    SetSystemResidual,           ,                ,    void,        ,                       "const Vector& systemResidual",   DGPV,    "set locally stored system residual; must have size nODE2+nODE1+nAE"
 #
 #special functions for interaction with mainSystem:
-FvL,    ComputeMassMatrix,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor=1.",   DGPV,    "compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix"
-FvL,    ComputeJacobianODE2RHS,      ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=1., Real scalarFactor_ODE1=1.",   DGPV,    "set systemJacobian to zero and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver"
-#not needed: FvL,    ComputeJacobianODE2RHS_t,    ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2_t=1.",   DGPV,    "add jacobian of ODE2RHS_t (multiplied with factor) to systemJacobian in cSolver"
-FvL,    ComputeJacobianODE1RHS,      ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=0., Real scalarFactor_ODE1=1.",   DGPV,    "add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE1RHS to systemJacobian in cSolver"
-FvL,    ComputeJacobianAE,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=1., Real scalarFactor_ODE1=1., bool velocityLevel=false",   DGPV,    "add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level"
+FvL,    ComputeMassMatrix,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor=1.",   DGPV,    "compute systemMassMatrix (multiplied with factor) in cSolver and return mass nODE2 x nODE2 matrix"
+FvL,    ComputeJacobianODE2RHS,      ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=0., Real scalarFactor_ODE1=1.",   DGPV,    "set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor_ODE2=-1,scalarFactor_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor_ODE2=0,scalarFactor_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers"
+FvL,    ComputeJacobianODE1RHS,      ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=0., Real scalarFactor_ODE1=1.",   DGPV,    "ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(...); the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian"
+FvL,    ComputeJacobianAE,           ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2=1., Real scalarFactor_ODE2_t=0., Real scalarFactor_ODE1=1., bool velocityLevel=false",   DGPV,    "add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hac{ODE2} coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian"
+#removed: FvL,    ComputeJacobianODE2RHS_t,    ,                ,    void,        ,                       "MainSystem& mainSystem, Real scalarFactor_ODE2_t=1.",   DGPV,    "add jacobian of ODE2RHS_t (multiplied with factor) to systemJacobian in cSolver"
 #
 FvL,    ComputeODE2RHS,              ,                ,    void,        ,                       "MainSystem& mainSystem",   DGPV,    "compute the RHS of \hac{ODE2} equations in systemResidual in range(0,nODE2)"
 FvL,    ComputeODE1RHS,              ,                ,    void,        ,                       "MainSystem& mainSystem",   DGPV,    "compute the RHS of \hac{ODE1} equations in systemResidual in range(0,nODE1)"

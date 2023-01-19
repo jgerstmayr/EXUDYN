@@ -91,7 +91,7 @@ void CNodeRigidBody2D::GetOutputVariable(OutputVariableType variableType, Config
 	case OutputVariableType::AngularAcceleration: value.CopyFrom(GetAngularAcceleration(configuration)); break;
 	case OutputVariableType::Coordinates:
 	{
-		if (IsConfigurationInitialCurrentReferenceVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
+		if (IsValidConfiguration(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
 		{
 			value = GetCoordinateVector(configuration);
 		}
@@ -103,7 +103,7 @@ void CNodeRigidBody2D::GetOutputVariable(OutputVariableType variableType, Config
 	}
 	case OutputVariableType::Coordinates_t:
 	{
-		if (IsConfigurationInitialCurrentVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
+		if (IsValidConfigurationButNotReference(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
 		{
 			value = GetCoordinateVector_t(configuration);
 		}
@@ -115,7 +115,7 @@ void CNodeRigidBody2D::GetOutputVariable(OutputVariableType variableType, Config
 	}
 	case OutputVariableType::Coordinates_tt:
 	{
-		if (IsConfigurationInitialCurrentVisualization(configuration)) 
+		if (IsValidConfigurationButNotReference(configuration)) 
 		{
 			value = GetCoordinateVector_tt(configuration);
 		}

@@ -13,8 +13,9 @@
 
 #constants and fixed structures:
 import exudyn.itemInterface as eii
-from exudyn.utilities import RoundMatrix, ComputeSkewMatrix, PlotLineCode, GetRigidBodyNode, IsListOrArray #, FillInSubMatrix
-from exudyn.rigidBodyUtilities import AngularVelocity2EulerParameters_t, EulerParameters2GLocal, RotationVector2GLocal, RotXYZ2GLocal, RotXYZ2GLocal_t, Skew, eulerParameters0
+#from exudyn.utilities import 
+from exudyn.advancedUtilities import IsListOrArray, RoundMatrix, PlotLineCode
+from exudyn.rigidBodyUtilities import GetRigidBodyNode, AngularVelocity2EulerParameters_t, EulerParameters2GLocal, RotationVector2GLocal, RotXYZ2GLocal, RotXYZ2GLocal_t, ComputeSkewMatrix, Skew, eulerParameters0
 from exudyn.graphicsDataUtilities import ComputeTriangleArea
 import numpy as np #LoadSolutionFile
 from enum import Enum #for class HCBstaticModeSelection

@@ -271,7 +271,7 @@ void CNodePoint3DSlope23::GetOutputVariable(OutputVariableType variableType, Con
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
 	case OutputVariableType::Coordinates:
 	{
-		if (IsConfigurationInitialCurrentReferenceVisualization(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
+		if (IsValidConfiguration(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
 		{
 			value = GetCoordinateVector(configuration);
 		}
@@ -283,7 +283,7 @@ void CNodePoint3DSlope23::GetOutputVariable(OutputVariableType variableType, Con
 	}
 	case OutputVariableType::Coordinates_t:
 	{
-		if (IsConfigurationInitialCurrentVisualization(configuration)) 
+		if (IsValidConfigurationButNotReference(configuration)) 
 		{
 			value = GetCoordinateVector_t(configuration);
 		}
@@ -295,7 +295,7 @@ void CNodePoint3DSlope23::GetOutputVariable(OutputVariableType variableType, Con
 	}
 	case OutputVariableType::Coordinates_tt:
 	{
-		if (IsConfigurationInitialCurrentVisualization(configuration)) 
+		if (IsValidConfigurationButNotReference(configuration)) 
 		{
 			value = GetCoordinateVector_tt(configuration);
 		}

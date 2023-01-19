@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-12-13  19:36:36 (last modified)
+* @date         2023-01-02  11:43:01 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,10 +29,12 @@ class CObjectGroundParameters // AUTO:
 {
 public: // AUTO: 
     Vector3D referencePosition;                   //!< AUTO: reference point = reference position for ground object; local position is added on top of reference position for a ground object
+    Matrix3D referenceRotation;                   //!< AUTO: the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates
     //! AUTO: default constructor with parameter initialization
     CObjectGroundParameters()
     {
         referencePosition = Vector3D({0.,0.,0.});
+        referenceRotation = EXUmath::unitMatrix3D;
     };
 };
 
@@ -111,7 +113,7 @@ public: // AUTO:
     //! AUTO:  return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
     virtual Matrix3D GetRotationMatrix(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override
     {
-        return EXUmath::unitMatrix3D;
+        return parameters.referenceRotation;
     }
 
     //! AUTO:  return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect

@@ -72,6 +72,18 @@ public: //
 		mainSensors.Flush();
 	}
 
+	//! raise exception if configuration is illegal; used for several MainSystem functions called from Python
+	void RaiseIfConfigurationIllegal(const char* functionName, ConfigurationType configuration, Index itemIndex, ItemType itemType) const;
+	//! raise exception if configuration is not reference configuration; used for several MainSystem functions called from Python
+	void RaiseIfNotConsistentNorReference(const char* functionName, ConfigurationType configuration, Index itemIndex, ItemType itemType) const;
+	//! raise exception if system is not consistent or configuration is illegal; used for several MainSystem functions called from Python
+	void RaiseIfNotConsistentOrIllegalConfiguration(const char* functionName, ConfigurationType configuration, Index itemIndex, ItemType itemType) const;
+	//! raise exception if system is not consistent or configuration is illegal; used for several MainSystem functions called from Python
+	void RaiseIfNotConsistent(const char* functionName, Index itemIndex, ItemType itemType) const;
+	//! raise exception if reference configuration is used but variableType is not suited for reference configuration (e.g. velocitiy, etc.)
+	void RaiseIfNotOutputVariableTypeForReferenceConfiguration(const char* functionName, OutputVariableType variableType, 
+		ConfigurationType configuration, Index itemIndex, ItemType itemType) const;
+
 	//! Write (Reference) access to:container for main loads
 	ResizableArray<MainLoad*>& GetMainLoads() { return mainLoads; }
 	//! Read (Reference) access to:container for main loads
@@ -401,55 +413,6 @@ public: //
 	{
 		GetCSystemState(configurationType)->time = vTime;
 	}
-
-	//NEEDED? can be done with CallFunction ...
-	////! Access to global coordinate index (in ODE2 system vector)
-	//Index PyNodeGetGlobalODE2CoordinateIndex(Index nodeNumber) const
-	//{
-	//	if (nodeNumber >= cSystemData->GetCNodes().NumberOfItems())
-	//	{
-	//		PyError("NodeGetGlobalODE2CoordinateIndex: illegal index");
-	//		return EXUstd::InvalidIndex;
-	//	}
-	//	if (cSystemData->GetCNodes()[nodeNumber]->GetNodeGroup() != CNodeGroup::ODE2variables)
-	//	{
-	//		PyError("NodeGetGlobalODE2CoordinateIndex: only possible for nodes with ODE2 variables");
-	//		return EXUstd::InvalidIndex;
-	//	}
-	//	return cSystemData->GetCNodes()[nodeNumber]->GetGlobalODE2CoordinateIndex();
-	//}
-
-	////! Access to global coordinate index (in AE system vector)
-	//Index PyNodeGetGlobalAECoordinateIndex(Index nodeNumber) const
-	//{
-	//	if (nodeNumber >= cSystemData->GetCNodes().NumberOfItems())
-	//	{
-	//		PyError("NodeGetGlobalAECoordinateIndex: illegal index");
-	//		return EXUstd::InvalidIndex;
-	//	}
-	//	if (cSystemData->GetCNodes()[nodeNumber]->GetNodeGroup() != CNodeGroup::AEvariables)
-	//	{
-	//		PyError("NodeGetGlobalAECoordinateIndex: only possible for nodes with AE variables");
-	//		return EXUstd::InvalidIndex;
-	//	}
-	//	return cSystemData->GetCNodes()[nodeNumber]->GetGlobalAECoordinateIndex();
-	//}
-
-	////! Access to global coordinate index (in Data system vector)
-	//Index PyNodeGetGlobalDataCoordinateIndex(Index nodeNumber) const
-	//{
-	//	if (nodeNumber >= cSystemData->GetCNodes().NumberOfItems())
-	//	{
-	//		PyError("NodeGetGlobalDataCoordinateIndex: illegal index");
-	//		return EXUstd::InvalidIndex;
-	//	}
-	//	if (cSystemData->GetCNodes()[nodeNumber]->GetNodeGroup() != CNodeGroup::DataVariables)
-	//	{
-	//		PyError("NodeGetGlobalDataCoordinateIndex: only possible for nodes with data variables");
-	//		return EXUstd::InvalidIndex;
-	//	}
-	//	return cSystemData->GetCNodes()[nodeNumber]->GetGlobalDataCoordinateIndex();
-	//}
 
 
 	//! will be removed when full python integration is ready

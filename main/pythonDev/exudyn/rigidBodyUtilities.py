@@ -17,6 +17,7 @@ import numpy as np #LoadSolutionFile
 import exudyn.itemInterface as eii
 import exudyn as exu 
 from exudyn.basicUtilities import NormL2
+from exudyn.advancedUtilities import ExpectedType, RaiseTypeError, IsValidBool, IsValidRealInt, IsVector, IsSquareMatrix, IsValidObjectIndex
 from math import sin, cos #, sqrt, atan2
 
 import copy
@@ -103,21 +104,64 @@ def Skew2Vec(skew):
     return vec
 
 
-#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: compute (3 x 3*n) skew matrix from (3*n) vector
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: compute skew matrix from vector or matrix; used for ObjectFFRF and CMS implementation
+#**input: a vector v in np.array format, containing 3*n components or a matrix with m columns of same shape
+#**output: if v is a vector, output is (3*n x 3) skew matrix in np.array format; if v is a (n x m) matrix, the output is a (3*n x m) skew matrix in np.array format
 def ComputeSkewMatrix(v):
-    n = int(len(v)/3) #number of nodes
-    sm = np.zeros((3*n,3))
+    if type(v) == list or v.ndim == 1:
+        n = int(len(v)/3) #number of nodes
+        sm = np.zeros((3*n,3))
 
-    for i in range(n):
-        off = 3*i
-        x=v[off+0]
-        y=v[off+1]
-        z=v[off+2]
-        mLoc = np.array([[0,-z,y],[z,0,-x],[-y,x,0]])
-        sm[off:off+3,:] = mLoc[:,:]
+        for i in range(n):
+            off = 3*i
+            x=v[off+0]
+            y=v[off+1]
+            z=v[off+2]
+            mLoc = np.array([[0,-z,y],[z,0,-x],[-y,x,0]])
+            sm[off:off+3,:] = mLoc[:,:]
     
+        return sm
+    elif v.ndim==2: #dim=2
+        (nRows,nCols) = v.shape
+        n = int(nRows/3) #number of nodes
+        sm = np.zeros((3*n,3*nCols))
+
+        for j in range(nCols):
+            for i in range(n):
+                off = 3*i
+                x=v[off+0,j]
+                y=v[off+1,j]
+                z=v[off+2,j]
+                mLoc = np.array([[0,-z,y],[z,0,-x],[-y,x,0]])
+                sm[off:off+3,3*j:3*j+3] = mLoc[:,:]
+    else: 
+        print("ERROR: wrong dimension in ComputeSkewMatrix(...)")
     return sm
+
+#tests for ComputeSkewMatrix
+#x = np.array([1,2,3,4,5,6])
+#print(ComputeSkewMatrix(x))
+#x = np.array([[1,2],[3,4],[5,6],[1,2],[3,4],[5,6]])
+#print(ComputeSkewMatrix(x))
+
+
+# OLD / duplicate with less functionality!
+# #**function: compute (3 x 3*n) skew matrix from (3*n) vector
+# def ComputeSkewMatrix(v):
+#     n = int(len(v)/3) #number of nodes
+#     sm = np.zeros((3*n,3))
+
+#     for i in range(n):
+#         off = 3*i
+#         x=v[off+0]
+#         y=v[off+1]
+#         z=v[off+2]
+#         sm[off:off+3,:] = np.array([[0,-z,y],[z,0,-x],[-y,x,0]])
+#         # mLoc = np.array([[0,-z,y],[z,0,-x],[-y,x,0]])
+#         # sm[off:off+3,:] = mLoc[:,:]
+    
+#     return sm
 
 
 
@@ -1047,11 +1091,43 @@ def AddRigidBody(mainSys, inertia,
                  gravity=[0,0,0],
                  graphicsDataList=[]):
 
+    if not isinstance(inertia, RigidBodyInertia): #do not use 'exu.rigidBodyUtilities.' in front, even not outside of module!
+        RaiseTypeError(where='AddRigidBody', argumentName='inertia', received = inertia, expectedType = ExpectedType.RigidBodyInertia, dim=None)
+    #MISSING: check for nodeType
+    if not IsVector(position, 3):
+        RaiseTypeError(where='AddRigidBody', argumentName='position', received = position, expectedType = ExpectedType.Vector, dim=3)
+    if not IsVector(velocity, 3):
+        RaiseTypeError(where='AddRigidBody', argumentName='velocity', received = velocity, expectedType = ExpectedType.Vector, dim=3)
+    if not IsVector(angularVelocity, 3):
+        RaiseTypeError(where='AddRigidBody', argumentName='angularVelocity', received = angularVelocity, expectedType = ExpectedType.Vector, dim=3)
+    if not IsVector(gravity, 3):
+        RaiseTypeError(where='AddRigidBody', argumentName='gravity', received = gravity, expectedType = ExpectedType.Vector, dim=3)
+
+    if type(graphicsDataList) != list:
+        raise ValueError('AddRigidBody: graphicsDataList must be a (possibly empty) list of dictionaries of graphics data!')
+
+
+    if not IsSquareMatrix(rotationMatrix):
+        raise ValueError('AddRigidBody: rotationMatrix must be a (possibly empty) list or numpy array!')
+    if not IsVector(rotationParameters):
+        raise ValueError('AddRigidBody: rotationParameters must be a (possibly empty) list or numpy array!')
+    
     if len(rotationMatrix) != 0 and len(rotationParameters) != 0:
-        raise ValueError('AddRigidBody: either rotationMatrix or rotationParameters must empty!')
+        raise ValueError('AddRigidBody: either rotationMatrix or rotationParameters must be empty list or numpy array!')
     if len(rotationMatrix) == 0 and len(rotationParameters) == 0:
         rotationMatrix=np.eye(3)
-        
+    else:
+        if len(rotationMatrix) == 0:
+            expectedSize = 3
+            if str(nodeType) == 'NodeType.RotationEulerParameters': 
+                expectedSize = 4
+            if not IsVector(rotationParameters, expectedSize):
+                RaiseTypeError(where='AddRigidBody', argumentName='rotationParameters', received = rotationParameters, expectedType = ExpectedType.Vector, dim=expectedSize)
+        else:
+            if not IsSquareMatrix(rotationMatrix, 3):
+                RaiseTypeError(where='AddRigidBody', argumentName='rotationMatrix', received = rotationMatrix, expectedType = ExpectedType.Matrix, dim=3)
+            
+            
     nodeItem = GetRigidBodyNode(nodeType, position, velocity, rotationMatrix, rotationParameters, angularVelocity)
     nodeNumber = mainSys.AddNode(nodeItem)
     
@@ -1078,7 +1154,28 @@ def AddRigidBody(mainSys, inertia,
 #**output: returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
 def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
                      showJoint=True, axisRadius=0.1, axisLength=0.4):
+
+    #perform some checks:
+    if not IsValidObjectIndex(body0):
+        RaiseTypeError(where='AddRevoluteJoint', argumentName='body0', received = body0, expectedType = ExpectedType.ObjectIndex)
+    if not IsValidObjectIndex(body1):
+        RaiseTypeError(where='AddRevoluteJoint', argumentName='body1', received = body1, expectedType = ExpectedType.ObjectIndex)
         
+    if not IsVector(point, 3):
+        RaiseTypeError(where='AddRevoluteJoint', argumentName='point', received = point, expectedType = ExpectedType.Vector, dim=3)
+    if not IsVector(axis, 3):
+        RaiseTypeError(where='AddRevoluteJoint', argumentName='axis', received = axis, expectedType = ExpectedType.Vector, dim=3)
+
+    if not IsValidBool(useGlobalFrame):
+        RaiseTypeError(where='AddRevoluteJoint', argumentName='useGlobalFrame', received = useGlobalFrame, expectedType = ExpectedType.Bool)
+    if not IsValidBool(showJoint):
+        RaiseTypeError(where='AddRevoluteJoint', argumentName='showJoint', received = showJoint, expectedType = ExpectedType.Bool)
+
+    if not IsValidRealInt(axisRadius):
+        RaiseTypeError(where='AddRevoluteJoint', argumentName='axisRadius', received = axisRadius, expectedType = ExpectedType.Real)
+    if not IsValidRealInt(axisLength):
+        RaiseTypeError(where='AddRevoluteJoint', argumentName='axisLength', received = axisLength, expectedType = ExpectedType.Real)
+
     p0 = mbs.GetObjectOutputBody(body0,exu.OutputVariableType.Position,
                                  localPosition=[0,0,0],
                                  configuration=exu.ConfigurationType.Reference)
@@ -1139,6 +1236,26 @@ def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True,
 def AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
                      showJoint=True, axisRadius=0.1, axisLength=0.4):
         
+    if not IsValidObjectIndex(body0):
+        RaiseTypeError(where='AddPrismaticJoint', argumentName='body0', received = body0, expectedType = ExpectedType.ObjectIndex)
+    if not IsValidObjectIndex(body1):
+        RaiseTypeError(where='AddPrismaticJoint', argumentName='body1', received = body1, expectedType = ExpectedType.ObjectIndex)
+        
+    if not IsVector(point, 3):
+        RaiseTypeError(where='AddPrismaticJoint', argumentName='point', received = point, expectedType = ExpectedType.Vector, dim=3)
+    if not IsVector(axis, 3):
+        RaiseTypeError(where='AddPrismaticJoint', argumentName='axis', received = axis, expectedType = ExpectedType.Vector, dim=3)
+
+    if not IsValidBool(useGlobalFrame):
+        RaiseTypeError(where='AddPrismaticJoint', argumentName='useGlobalFrame', received = useGlobalFrame, expectedType = ExpectedType.Bool)
+    if not IsValidBool(showJoint):
+        RaiseTypeError(where='AddPrismaticJoint', argumentName='showJoint', received = showJoint, expectedType = ExpectedType.Bool)
+
+    if not IsValidRealInt(axisRadius):
+        RaiseTypeError(where='AddPrismaticJoint', argumentName='axisRadius', received = axisRadius, expectedType = ExpectedType.Real)
+    if not IsValidRealInt(axisLength):
+        RaiseTypeError(where='AddPrismaticJoint', argumentName='axisLength', received = axisLength, expectedType = ExpectedType.Real)
+
     p0 = mbs.GetObjectOutputBody(body0,exu.OutputVariableType.Position,
                                  localPosition=[0,0,0],
                                  configuration=exu.ConfigurationType.Reference)

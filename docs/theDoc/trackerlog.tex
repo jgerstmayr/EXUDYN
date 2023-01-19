@@ -10,15 +10,87 @@ For details, see the \texttt{trackerlog.html} file.
 
 \noindent General information on current version:
 \bi \small
-  \item Exudyn version = 1.5.65.dev1, 
-  \item last change =  2023-01-12, 
-  \item Number of issues = 1398, 
-  \item Number of resolved issues = 1226 (65 in current version), 
+  \item Exudyn version = 1.5.75.dev1, 
+  \item last change =  2023-01-19, 
+  \item Number of issues = 1406, 
+  \item Number of resolved issues = 1236 (75 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.5.75}:  resolved Issue 1314: {\bf Pybind11}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: test compilation with higher version of pybind11 (currently pybind11=2.6.0 in setup.py}
+    \item {\bf notes: already done earlier; works well and allows compilation with Python3.11; added some switches in setup.py as not all Pybind11 versions work everywhere}
+    \item   date resolved: {\bf 2023-01-19 01:04},
+date raised: 2022-12-14 
+  \ei
+  \item[] {\bf Version 1.5.74}:  resolved Issue 1365: {\bf OpenVR}
+(example)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add Python example with openVR}
+    \item   date resolved: {\bf 2023-01-19 01:02},
+date raised: 2023-01-03 
+  \ei
+  \item[] {\bf Version 1.5.73}:  resolved Issue 1326: {\bf OpenVR}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add OpenVR license and mention in getting started}
+    \item   date resolved: {\bf 2023-01-19 01:02},
+date raised: 2022-12-20 
+  \ei
+  \item[] {\bf Version 1.5.72}:  resolved Issue 1402: {\bf openVR}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add flag to set compilation with openVR in setup.py; copy .dll in Windows case}
+    \item   date resolved: {\bf 2023-01-18 22:57},
+date raised: 2023-01-17 
+  \ei
+  \item[] {\bf Version 1.5.71}:  resolved Issue 1364: {\bf OpenVR}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: test simple use case}
+    \item {\bf notes: basic functionality added; enable compilation with openVR by setting '-D\_\_EXUDYN\_USE\_OPENVR' in cpp compiler flags of setup.py}
+    \item   date resolved: {\bf 2023-01-17 09:32},
+date raised: 2023-01-03 (resolved by: EXTENSION)
+  \ei
+  \item[] {\bf Version 1.5.70}:  resolved Issue 1401: {\bf lockModelView}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add flag which allows to fully lock rotation, zoom, etc.; in this case, only initial values in openGL settings are accepted for setup of view, but mouse or key input is ignored}
+    \item   date resolved: {\bf 2023-01-17 09:20},
+date raised: 2023-01-17 
+  \ei
+  \item[] {\bf Version 1.5.69}:  resolved Issue 1363: {\bf test OpenVR with basic OpenGL}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check if current openGL is sufficient with textures}
+    \item   date resolved: {\bf 2023-01-16 23:11},
+date raised: 2023-01-03 
+  \ei
+  \item[] {\bf Version 1.5.68}:  resolved Issue 1400: {\bf renderState}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: vectors and matrices are returned in numpy format; this allows simpler computation, but does not anymore allow to treat output as list (+ operator!)}
+    \item   date resolved: {\bf 2023-01-16 21:11},
+date raised: 2023-01-16 
+  \ei
+  \item[] {\bf Version 1.5.67}:  resolved Issue 1399: {\bf renderState}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: initialization now done consistently for SC.AttachToRenderEngine() and exudyn.StartRenderer(); behavior should be as before}
+    \item   date resolved: {\bf 2023-01-16 21:10},
+date raised: 2023-01-16 
+  \ei
+  \item[] {\bf Version 1.5.66}:  resolved Issue 1398: {\bf renderState}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add projectionMatrix containing the current projection usd (usually identity matrix)}
+    \item   date resolved: {\bf 2023-01-16 20:09},
+date raised: 2023-01-16 
+  \ei
   \item[] {\bf Version 1.5.65}:  resolved Issue 1397: {\bf showFaceEdges, showMeshEdges}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

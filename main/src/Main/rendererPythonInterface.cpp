@@ -328,7 +328,7 @@ try:
         if guiSC == None:
             print('ERROR: problems with SystemContainer, probably not attached yet to renderer')
         else:
-            exudyn.GUI.EditDictionaryWithTypeInfo(guiSC.visualizationSettings, exu, 'Visualization Settings') 
+            exudyn.GUI.EditDictionaryWithTypeInfo(guiSC.visualizationSettings, exudyn, 'Visualization Settings') 
     except Exception as exceptionVariable:
         print("edit dialog for visualizationSettings failed")
         print(exceptionVariable) #not necessary, but can help to identify reason

@@ -183,6 +183,19 @@ py::str PyGetVersionString(bool addDetails = false)
 	return GetExudynBuildVersionString(addDetails);
 }
 
+//! this function is available outside PybindModule.cpp and returns version + additional information
+void PyHelp()
+{
+	pout << "This is the exudyn Python module.\n";
+	pout << "For basic help, visit the github page and start reading: https://github.com/jgerstmayr/EXUDYN \n";
+	pout << "For tutorials, visit https://github.com/jgerstmayr/EXUDYN#tutorial \n";
+	pout << "For quick demos, just write exudyn.Demo1() and exudyn.Demo2() \n";
+	pout << "For many examples and test models, see https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev ; consider clone or .zip the repository\n";
+	pout << "For advanced information, read theDoc: https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf \n";
+	pout << "Good luck and have fun!\n";
+	pout << "(C) 2018-2023 University of Innsbruck\n\n";
+}
+
 //! Definition of Invalid Index; to be used in Python to check whether a function returned a valid index (e.g. AddObject(...))
 Index GetInvalidIndex() { return EXUstd::InvalidIndex; }
 
@@ -223,7 +236,6 @@ void PySetPrintDelayMilliSeconds(Index delayMilliSeconds)
 {
 	outputBuffer.SetDelayMilliSeconds(delayMilliSeconds);
 }
-
 
 //Print some (Debug) infos: linalg, threads, computational efficiency, etc.
 py::list PythonInfoStat(bool writeOutput = true)
@@ -322,7 +334,7 @@ void PyWriteToSysDictionary(const STDstring& key, py::object item)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! start glfw renderer; return true if successful
-bool PyStartOpenGLRenderer(bool verbose=true)
+bool PyStartOpenGLRenderer(Index verbose=true)
 {
 #ifdef USE_GLFW_GRAPHICS
 	#if defined(__EXUDYN__APPLE__)

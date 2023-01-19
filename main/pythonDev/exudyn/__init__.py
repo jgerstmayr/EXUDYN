@@ -95,16 +95,11 @@ except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
     from solver import SolveStatic, SolveDynamic, ComputeODE2Eigenvalues
 
-# remove SolutionViewer as it makes problems if no tkinter or matplotlib installed
-# try:
-    # from .interactive import SolutionViewer
-# except:
-    # try:
-        # #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
-        # from interactive import SolutionViewer
-    # except:
-        # print("SolutionViewer not loaded (missing tkinter or matplotlib?)")
-        # pass
+try:
+    from .demos import Demo1, Demo2
+except:
+    #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
+    from solver import Demo1, Demo2
 
 __version__ = GetVersionString() #add __version__ to exudyn module ...
 

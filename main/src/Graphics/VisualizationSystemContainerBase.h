@@ -97,6 +97,34 @@ public:
 	}
 };
 
+//for interaction with openVR
+class OpenVRState
+{
+public:
+	void Initialize(bool setActivated) 
+	{
+		isActivated = setActivated;
+		controllerPoses.Flush();
+		controllerActions.Flush();
+		trackerPoses.Flush();
+
+		HMDpose.SetScalarMatrix(4, 1.f);
+		projectionLeft.SetScalarMatrix(4, 1.f); 
+		eyePosLeft.SetScalarMatrix(4, 1.f); 
+		projectionRight.SetScalarMatrix(4, 1.f); 
+		eyePosRight.SetScalarMatrix(4, 1.f);
+	}
+
+	bool isActivated;										//!< flag is used to enable output with GetRenderState() only if enabled
+	ResizableArray<Matrix4DF> controllerPoses;		//!< stores current poses of openVR controllers
+	ResizableArray<OpenVRaction> controllerActions;	//!< stored for according controllers (same size as poses)
+	ResizableArray<Matrix4DF> trackerPoses;			//!< stores current poses of openVR trackers
+
+	//homogeneous transformations used in openVR / HMD (head mounted display):
+	Matrix4DF HMDpose;
+	Matrix4DF projectionLeft, eyePosLeft, projectionRight, eyePosRight;
+}; 
+
 //MOVE to python generated class!!!
 //! rendering state to be controlled via pybind
 class RenderState
@@ -111,9 +139,9 @@ public:
 	float displayScaling;			//!< value as retrieved from GLFW glfwGetWindowContentScale
 
 	Index2 currentWindowSize;		//!< current window size in pixel; used to transform mouse movements to OpenGL coordinates; x=width, y=height
-	Float16 modelRotation;			//!< rotation used for incremental rotation with mouse / right mouse button
-	Float16 openGLModelViewMatrix;	//!< modelview matrix as used in openGL
-	Float16 openGLProjection;		//!< projection matrix as used in openGL
+	Matrix4DF modelRotation;			//!< rotation used for incremental rotation with mouse / right mouse button
+	//DELETE Float16 openGLModelViewMatrix;	//!< modelview matrix as used in openGL
+	Matrix4DF projectionMatrix;		//!< projection matrix as used in openGL
 	
 	Vector2D mouseCoordinates;		//!current mouse coordinates as obtained from GLFW
 	Vector2D openGLcoordinates;		//!current mouse coordinates projected in current model view plane (x/y)
@@ -126,10 +154,7 @@ public:
 	Vector3D joystickRotation;		//!< stored rotation of joystick, if available
 	Index joystickAvailable;		//!< -1 if no joystick available, otherwise the index of the available joystick
 
-	//for openVR
-	ResizableArray<Matrix4DF> openVRcontrollerPoses;		//!< stores current poses of openVR controllers
-	ResizableArray<OpenVRaction> openVRcontrollerActions;	//!< stored for according controllers (same size as poses)
-	ResizableArray<Matrix4DF> openVRtrackerPoses;			//!< stores current poses of openVR trackers
+	OpenVRState openVRstate;		//!< contains all data exchanced with openVR; this is always available, even if not compiled with openVR
 };
 
 #endif

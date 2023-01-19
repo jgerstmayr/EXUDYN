@@ -116,9 +116,7 @@ public:
 	bool GetInteractiveMode() const { return interactiveMode; }
 	void SetInteractiveMode(bool flag) { interactiveMode = flag; }
 	void InteractiveModeActions(); //!<if interAciveMode == true: causes Assemble() to be called; this guarantees that the system is always consistent to be drawn
-	//! raise exception if configuration is not reference configuration; used for several MainSystem functions called from Python
-	void RaiseIfConfigurationNotReference(const char* functionName, ConfigurationType configuration) const;
-	void RaiseIfNotConsistent(const char* functionName) const;
+
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   VISUALIZATION FUNCTIONS
 

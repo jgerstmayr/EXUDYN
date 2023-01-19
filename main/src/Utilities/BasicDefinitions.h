@@ -17,6 +17,16 @@
 #ifndef BASICDEFINITIONS__H
 #define BASICDEFINITIONS__H
 
+//find these defines easier if they are undefined
+#undef __EXUDYN__LINUX__
+#undef __EXUDYN__GNUC__
+#undef __EXUDYN__x86__
+#undef __EXUDYN__ARM__
+#undef __EXUDYN__APPLE__
+#undef __EXUDYN__APPLE__ARM__
+#undef __EXUDYN__LINUX__x86__
+#undef __EXUDYN__LINUX__ARM__
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //this part contains important definition of flags to setup the compiled module
 #if defined(__linux) || defined(__linux__) || defined(__unix__)

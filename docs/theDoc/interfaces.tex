@@ -736,7 +736,9 @@ VSettingsOpenVR has the following items:
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    actionManifestFileName &     FileName &      &     'C:/openVRactionsManifest.json' &     \tabnewline This string must contain a string representing a valid absolute path to a vr\_actions.json manifest, which describes all HMD, tracker, etc. devices as given by openVR\\ \hline
     enable &     bool &      &     False &     True: openVR enabled (if compiled with according flag and installed openVR)\\ \hline
+    logLevel &     Int &      &     1 &     integer value setting log level of openVR: -1 (no output), 0 (error), 1 (warning), 2 (info), 3 (debug); increase log level to get more output\\ \hline
     showCompanionWindow &     bool &      &     True &     True: openVR will show companion window containing left and right eye view\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -762,6 +764,7 @@ VSettingsInteractive has the following items:
     joystickScaleTranslation &     float &      &     6. &     translation scaling factor for joystick input\\ \hline
     keypressRotationStep &     float &      &     5. &     rotation increment per keypress in degree (full rotation = 360 degree)\\ \hline
     keypressTranslationStep &     float &      &     0.1 &     translation increment per keypress relative to window size\\ \hline
+    lockModelView &     bool &      &     False &     True: all movements (with mouse/keys), rotations, zoom are disabled; initial values are considered\\ \hline
     mouseMoveRotationFactor &     float &      &     1. &     rotation increment per 1 pixel mouse movement in degree\\ \hline
     selectionHighlights &     bool &      &     True &     True: mouse click highlights item (default: red)\\ \hline
     selectionLeftMouse &     bool &      &     True &     True: left mouse click on items and show basic information\\ \hline

@@ -35,7 +35,8 @@ bool VisualizationSystemContainer::AttachToRenderEngine(bool warnNoRenderer)
 	if (!glfwRenderer.LinkVisualizationSystem(&graphicsDataList, &settings, this, &renderState)) 
 		//(&graphicsData, &settings, this, &renderState))
 	{
-		SysError("VisualizationSystemContainer::AttachToRenderEngine: Visualization cannot be linked to several SystemContainers at the same time; detach other SystemContainer first!");
+		//should never happen:
+		SysError("VisualizationSystemContainer::AttachToRenderEngine: Renderer cannot be linked to several SystemContainers at the same time; detach other SystemContainer first!");
 		return false;
 	}
 	return true;
@@ -228,19 +229,32 @@ void VisualizationSystemContainer::InitializeView()
 	if (renderState.currentWindowSize[1] < 1) { renderState.currentWindowSize[1] = 1; } //avoid division by zero
 
 	//set modelRotation to identity matrix (4x4); Use rotation part only from Float9 initialModelRotation
-	renderState.modelRotation.SetAll(0.f);
-	renderState.modelRotation[0] = settings.openGL.initialModelRotation[0][0];
-	renderState.modelRotation[1] = settings.openGL.initialModelRotation[0][1];
-	renderState.modelRotation[2] = settings.openGL.initialModelRotation[0][2];
-	renderState.modelRotation[4] = settings.openGL.initialModelRotation[1][0];
-	renderState.modelRotation[5] = settings.openGL.initialModelRotation[1][1];
-	renderState.modelRotation[6] = settings.openGL.initialModelRotation[1][2];
-	renderState.modelRotation[8] = settings.openGL.initialModelRotation[2][0];
-	renderState.modelRotation[9] = settings.openGL.initialModelRotation[2][1];
-	renderState.modelRotation[10] = settings.openGL.initialModelRotation[2][2];
-	renderState.modelRotation[15] = 1.;
+	renderState.modelRotation.SetScalarMatrix(4,1.f);
+	for (Index i = 0; i < 3; i++)
+	{
+		for (Index j = 0; j < 3; j++)
+		{
+			renderState.modelRotation(i, j) = settings.openGL.initialModelRotation[i][j];
+		}
+	}
+
+	renderState.projectionMatrix.SetScalarMatrix(4, 1.f);
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//moved here from GlfwClient:
+	renderState.mouseCoordinates.SetAll(0.);
+	renderState.openGLcoordinates.SetAll(0.);
+	renderState.mouseLeftPressed = false;
+	renderState.mouseRightPressed = false;
+	renderState.mouseMiddlePressed = false;
+	renderState.joystickPosition.SetAll(0.);
+	renderState.joystickRotation.SetAll(0.);
+	renderState.joystickAvailable = -1; //GlfwClient::invalidIndex
+	renderState.displayScaling = 1;
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//openVR:
+	renderState.openVRstate.Initialize(false); //disable
 }
 
 //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)

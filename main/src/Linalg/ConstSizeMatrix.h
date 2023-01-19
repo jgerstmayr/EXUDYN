@@ -916,52 +916,6 @@ public:
 
 
 
-//multiplication must be defined outside and with "9" ConstSizeMatrixBase<T, 9>, otherwise this operator is also used for 4x3 matrices
-template<typename T, typename T2>
-SlimVectorBase<T, 3> operator*(const ConstSizeMatrixBase<T, 9>& matrix, const SlimVectorBase<T2, 3>& vector)
-{
-	CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
-		"operator*(ConstSizeMatrixBase,SlimVectorBase<T, 3>): Size mismatch");
-	CHECKandTHROW((matrix.NumberOfRows() == 3),
-		"operator*(ConstSizeMatrixBase,SlimVectorBase<T, 3>): matrix does not fit");
-
-	SlimVectorBase<T, 3> result; //no initialization for SlimVector
-
-	for (Index i = 0; i < result.NumberOfItems(); i++)
-	{
-		T resultRow = 0;
-		for (Index j = 0; j < vector.NumberOfItems(); j++)
-		{
-			resultRow += matrix(i, j)*vector[j];
-		}
-		result[i] = resultRow;
-	}
-	return result;
-}
-
-//multiplication must be defined outside and with "9" ConstSizeMatrixBase<T, 9>, otherwise this operator is also used for 4x3 matrices
-template<typename T, typename T2>
-SlimVectorBase<T, 3> operator*(const SlimVectorBase<T2, 3>& vector, const ConstSizeMatrixBase<T, 9>& matrix)
-{
-	CHECKandTHROW(matrix.NumberOfRows() == vector.NumberOfItems(),
-		"operator*(SlimVectorBase<T, 3>,ConstSizeMatrixBase): Size mismatch");
-	CHECKandTHROW((matrix.NumberOfColumns() == 3),
-		"operator*(SlimVectorBase<T, 3>,ConstSizeMatrixBase): matrix does not fit");
-
-	SlimVectorBase<T, 3> result; //no initialization for SlimVector
-
-	for (Index i = 0; i < result.NumberOfItems(); i++)
-	{
-		T resultRow = 0;
-		for (Index j = 0; j < vector.NumberOfItems(); j++)
-		{
-			resultRow += vector[j] * matrix(j, i);
-		}
-		result[i] = resultRow;
-	}
-	return result;
-}
-
 //multiplication must be defined outside and with "4" ConstSizeMatrixBase<T, 4>
 template<typename T>
 SlimVectorBase<T, 2> operator*(const ConstSizeMatrixBase<T, 4>& matrix, const SlimVectorBase<T, 2>& vector)
@@ -1006,6 +960,98 @@ SlimVectorBase<T, 2> operator*(const SlimVectorBase<T, 2>& vector, const ConstSi
 		result[i] = resultRow;
 	}
 	return result;
+}
+
+//multiplication must be defined outside and with "9" ConstSizeMatrixBase<T, 9>, otherwise this operator is also used for 4x3 matrices
+template<typename T, typename T2>
+SlimVectorBase<T, 3> operator*(const ConstSizeMatrixBase<T, 9>& matrix, const SlimVectorBase<T2, 3>& vector)
+{
+    CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
+        "operator*(ConstSizeMatrixBase,SlimVectorBase<T, 3>): Size mismatch");
+    CHECKandTHROW((matrix.NumberOfRows() == 3),
+        "operator*(ConstSizeMatrixBase,SlimVectorBase<T, 3>): matrix does not fit");
+
+    SlimVectorBase<T, 3> result; //no initialization for SlimVector
+
+    for (Index i = 0; i < result.NumberOfItems(); i++)
+    {
+        T resultRow = 0;
+        for (Index j = 0; j < vector.NumberOfItems(); j++)
+        {
+            resultRow += matrix(i, j)*vector[j];
+        }
+        result[i] = resultRow;
+    }
+    return result;
+}
+
+//multiplication must be defined outside and with "9" ConstSizeMatrixBase<T, 9>, otherwise this operator is also used for 4x3 matrices
+template<typename T, typename T2>
+SlimVectorBase<T, 3> operator*(const SlimVectorBase<T2, 3>& vector, const ConstSizeMatrixBase<T, 9>& matrix)
+{
+    CHECKandTHROW(matrix.NumberOfRows() == vector.NumberOfItems(),
+        "operator*(SlimVectorBase<T, 3>,ConstSizeMatrixBase): Size mismatch");
+    CHECKandTHROW((matrix.NumberOfColumns() == 3),
+        "operator*(SlimVectorBase<T, 3>,ConstSizeMatrixBase): matrix does not fit");
+
+    SlimVectorBase<T, 3> result; //no initialization for SlimVector
+
+    for (Index i = 0; i < result.NumberOfItems(); i++)
+    {
+        T resultRow = 0;
+        for (Index j = 0; j < vector.NumberOfItems(); j++)
+        {
+            resultRow += vector[j] * matrix(j, i);
+        }
+        result[i] = resultRow;
+    }
+    return result;
+}
+
+//multiplication must be defined outside and with "16" ConstSizeMatrixBase<T, 16>, otherwise this operator is also used for other matrices
+template<typename T, typename T2>
+SlimVectorBase<T, 4> operator*(const ConstSizeMatrixBase<T, 16>& matrix, const SlimVectorBase<T2, 4>& vector)
+{
+    CHECKandTHROW(matrix.NumberOfColumns() == vector.NumberOfItems(),
+        "operator*(ConstSizeMatrixBase,SlimVectorBase<T, 4>): Size mismatch");
+    CHECKandTHROW((matrix.NumberOfRows() == 4),
+        "operator*(ConstSizeMatrixBase,SlimVectorBase<T, 4>): matrix does not fit");
+
+    SlimVectorBase<T, 4> result; //no initialization for SlimVector
+
+    for (Index i = 0; i < result.NumberOfItems(); i++)
+    {
+        T resultRow = 0;
+        for (Index j = 0; j < vector.NumberOfItems(); j++)
+        {
+            resultRow += matrix(i, j)*vector[j];
+        }
+        result[i] = resultRow;
+    }
+    return result;
+}
+
+//multiplication must be defined outside and with "9" ConstSizeMatrixBase<T, 9>, otherwise this operator is also used for 4x4 matrices
+template<typename T, typename T2>
+SlimVectorBase<T, 4> operator*(const SlimVectorBase<T2, 4>& vector, const ConstSizeMatrixBase<T, 16>& matrix)
+{
+    CHECKandTHROW(matrix.NumberOfRows() == vector.NumberOfItems(),
+        "operator*(SlimVectorBase<T, 4>,ConstSizeMatrixBase): Size mismatch");
+    CHECKandTHROW((matrix.NumberOfColumns() == 4),
+        "operator*(SlimVectorBase<T, 4>,ConstSizeMatrixBase): matrix does not fit");
+
+    SlimVectorBase<T, 4> result; //no initialization for SlimVector
+
+    for (Index i = 0; i < result.NumberOfItems(); i++)
+    {
+        T resultRow = 0;
+        for (Index j = 0; j < vector.NumberOfItems(); j++)
+        {
+            resultRow += vector[j] * matrix(j, i);
+        }
+        result[i] = resultRow;
+    }
+    return result;
 }
 
 //multiplication must be defined outside and with ConstSizeMatrixBase<T, 36>
@@ -1094,8 +1140,8 @@ bool ConstSizeMatrixBase<T, dataSize>::ComputeInverse(ConstSizeMatrixBase<T, dat
 
 		mInverse.SwapRows(pivotpos, j);
 		SwapRows(pivotpos, j);
-		mInverse.MultiplyRow(j, 1. / GetItem(j, j));
-		MultiplyRow(j, 1. / GetItem(j, j));
+		mInverse.MultiplyRow(j, (T)1. / GetItem(j, j));
+		MultiplyRow(j, (T)1. / GetItem(j, j));
 
 		//pout << "  minv=" << mInverse << "\n";
 		//pout << "  mInverse=   " << *this << "\n";

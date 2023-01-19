@@ -19,9 +19,6 @@
 import numpy as np
 
 import exudyn
-# from exudyn.itemInterface import * 
-# from exudyn.utilities import *
-# from exudyn.rigidBodyUtilities import *
 
 import exudyn.itemInterface as eii
 import exudyn.basicUtilities as ebu

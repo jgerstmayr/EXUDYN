@@ -36,7 +36,8 @@ py::object MainNode::GetOutputVariable(OutputVariableType variableType, Configur
 	}
 	else
 	{
-		PyError(STDstring("Invalid OutputVariableType in MainNode::GetOutputVariable: '") + GetOutputVariableTypeString(variableType) + "'");
+		PyError(STDstring("Invalid OutputVariableType in MainNode::GetOutputVariable: '") + GetOutputVariableTypeString(variableType) + 
+			"'; the node '" + GetName() + "' cannot compute the requested variable type");
 		return py::int_(EXUstd::InvalidIndex);
 		//return py::object();
 	}
@@ -52,7 +53,8 @@ py::object MainMarker::GetOutputVariable(const CSystemData& cSystemData, OutputV
 	}
 	else
 	{
-		PyError(STDstring("Invalid OutputVariableType in MainMarker::GetOutputVariable: '") + GetOutputVariableTypeString(variableType) + "'");
+		PyError(STDstring("Invalid OutputVariableType in MainMarker::GetOutputVariable: '") + GetOutputVariableTypeString(variableType) + 
+			"'; the marker '" + GetName() + "' cannot compute the requested variable type");
 		return py::int_(EXUstd::InvalidIndex);
 	}
 }

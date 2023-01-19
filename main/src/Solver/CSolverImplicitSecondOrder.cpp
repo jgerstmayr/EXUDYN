@@ -231,7 +231,10 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 	}
 	else
 	{
-		solutionODE2_tt.SetAll(0.);
+        if (simulationSettings.timeIntegration.generalizedAlpha.resetAccelerations)
+        {
+            solutionODE2_tt.SetAll(0.);
+        }
 	}
 
 	//these vectors are used in time stepping from previous step

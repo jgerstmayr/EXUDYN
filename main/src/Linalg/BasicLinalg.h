@@ -896,6 +896,12 @@ namespace EXUmath {
 	{
 		return ConstSizeMatrixBase<T, 9>(3, 3, { A[0], A[1], A[2],  A[4], A[5], A[6],  A[8], A[9], A[10] });
 	}
+	//!copy 3x3 part of 4x4 matrix into 3x3 matrix
+	template<class T>
+	ConstSizeMatrixBase<T, 9> Matrix4DtoMatrix3D(const ConstSizeMatrixBase<T, 16> & A)
+	{
+		return ConstSizeMatrixBase<T, 9>(3, 3, { A(0,0), A(0,1), A(0,2),  A(1,0), A(1,1), A(1,2),  A(2,0), A(2,1), A(2,2) });
+	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

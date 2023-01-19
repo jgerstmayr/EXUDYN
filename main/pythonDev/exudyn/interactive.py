@@ -80,12 +80,12 @@ class InteractiveDialog:
     #**input: 
     #  mbs: a multibody system to be simulated
     #  simulationSettings: exudyn.SimulationSettings() according to user settings
-    #  simulationFunction: a function which is called before a simulation for the short period is started (e.g, assign special values, etc.)
+    #  simulationFunction: a user function(mbs, self) which is called before a simulation for the short period is started (e.g, assign special values, etc.); the arguments are the MainSystem mbs and the InteractiveDialog (self)
     #  dialogItems: a list of dictionaries, which describe the contents of the interactive items, where every dict has the structure {'type':[label, entry, button, slider, check] ... according to tkinter widgets, 'callFunction': a function to be called, if item is changed/button pressed, 'grid': (row,col) of item to be placed, 'rowSpan': number of rows to be used, 'columnSpan': number of columns to be used; for special item options see notes}
     #  plots: list of dictionaries to specify a sensor to be plotted live, see example
     #  period: a simulation time span in seconds which is simulated with the simulationFunction in every iteration
     #  realtimeFactor: if 1, the simulation is nearly performed in realtime (except for computation time); if > 1, it runs faster than realtime, if < 1, than it is slower
-    #  userStartFunction: a function F(flag) which is called every time after Run/Stop is pressed. The argument flag = False if button "Run" has been pressed, flag = True, if "Stop" has been pressed
+    #  userStartSimulation: a function F(flag) which is called every time after Run/Stop is pressed. The argument flag = False if button "Run" has been pressed, flag = True, if "Stop" has been pressed
     #  title: title text for interactive dialog
     #  showTime: shows current time in dialog
     #  fontSize: adjust font size for all dialog items
@@ -94,14 +94,15 @@ class InteractiveDialog:
     #  addLabelStringVariables: True: adds a list labelStringVariables containing the (modifiable) list of string variables for label (text) widgets
     #  addSliderVariables: True: adds a list sliderVariables containing the (modifiable) list of variables for slider (=tkinter scale) widgets; this is not necessarily needed for changing slider values, as they can also be modified with dialog.widgets[..].set(...) method
     #  checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
+    #  userOnChange: a user function(mbs, self) which is called after period, if widget values are different from values stored in mbs.variables; this usually occurs if buttons are pressed or sliders are moved; the arguments are the MainSystem mbs and the InteractiveDialog (self)
     #**notes: detailed description of dialogItems and plots list/dictionary is given in commented the example below
     def __init__(self, mbs, simulationSettings, simulationFunction, 
                  dialogItems, plots = [], period = 0.04, 
-                 realtimeFactor = 1, userStartSimulation=False,
+                 realtimeFactor = 1, userStartSimulation=None, 
                  title='',  showTime=False, fontSize = 12,
                  doTimeIntegration = True, runOnStart = False, 
                  addLabelStringVariables=False, addSliderVariables=False, 
-                 checkRenderEngineStopFlag = True):
+                 checkRenderEngineStopFlag = True, userOnChange=None):
         #store init arguments
         self.mbs = mbs
         self.simulationFunction = simulationFunction
@@ -115,6 +116,7 @@ class InteractiveDialog:
 
         self.plots = plots
         self.userStartSimulation = userStartSimulation
+        self.userOnChange = userOnChange
         self.showTime = showTime
         self.fontSize = fontSize
         
@@ -137,6 +139,11 @@ class InteractiveDialog:
             pass
         #print('systemScaling=',systemScaling)
         systemScaling = 1
+
+        if (self.doTimeIntegration 
+            and self.simulationSettings.solutionSettings.writeInitialValues == True 
+            and mbs.systemData.AEsize() != 0):
+            print('WARNING: InteractiveDialog:\nyou should set simulationSettings.solutionSettings.writeInitialValues = False in order to avoid erroneous constraint outputs during time integration periods.\n')
 
         #change global font size
         if True:
@@ -348,16 +355,21 @@ class InteractiveDialog:
         else:
             self.RunButtonText.set('Run')
 
-        if self.userStartSimulation:
+        if self.userStartSimulation != None:
             self.userStartSimulation(self.simulationStopped)
         #self.ProcessWidgetStates() #do this finally, to update states, which may have changed in last step (SolutionViewer!)
         self.ContinuousRunFunction()
 
     #**classFunction: assign current values of radio buttons and sliders to mbs.variables
     def ProcessWidgetStates(self):
+        changed = False
         for var in self.variableList:
-            self.mbs.variables[var[1]] = var[0].get()
-            #print(var[1],'=', var[0].get())
+            v = var[0].get()
+            if not var[1] in self.mbs.variables or v != self.mbs.variables[var[1]]:
+                self.mbs.variables[var[1]] = v
+                changed = True
+        if changed and self.userOnChange != None:
+            self.userOnChange(self.mbs, self) #this user function is called every time a value has changed, within update period
 
     #**classFunction: function which is repeatedly called when button 'Run' is pressed
     def ContinuousRunFunction(self, event=None):
@@ -504,7 +516,7 @@ class InteractiveDialog:
         self.simulationFunction(self.mbs, self)
         #+++++++++++++++++++++++++++++++++++++++++
     
-        if self.doTimeIntegration and False: #slow way, always start/stop simulation:
+        if self.doTimeIntegration and False: #slow way, always start/stop simulation; resets sensor data ...
             self.simulationSettings.timeIntegration.numberOfSteps = max(int(deltaT/h),1)
             self.simulationSettings.timeIntegration.endTime = self.simulationSettings.timeIntegration.startTime+deltaT
             exudyn.SolveDynamic(mbs, self.simulationSettings, updateInitialValues=True)
@@ -520,14 +532,25 @@ class InteractiveDialog:
         
             self.simulationSettings.timeIntegration.numberOfSteps = max(int(deltaT/h),1)
             self.simulationSettings.timeIntegration.endTime = self.simulationSettings.timeIntegration.startTime+deltaT
-        
-        
+
+            #update 2023-01-06: also update accelerations, needed for implicit solvers!
+            #initial accelerations are set sero in initialization ...
+            initAcc = mbs.systemData.GetODE2Coordinates_tt(configuration = exudyn.ConfigurationType.Current)
+            #not needed, if simulationSettings.solutionSettings.writeInitialValues = False 
+            #initAE = mbs.systemData.GetAECoordinates(configuration = exudyn.ConfigurationType.Current) 
+
             mbs.sys['solver'].InitializeSolverInitialConditions(mbs, self.simulationSettings) #needed to update simulationSettings in solver
+
+            mbs.systemData.SetODE2Coordinates_tt(coordinates = initAcc)
+            #mbs.systemData.SetAECoordinates(coordinates = initAE)
+
             mbs.sys['solver'].SolveSteps(mbs, self.simulationSettings)
             
             #get current values and update initial conditions for next step:
-            currentState = mbs.systemData.GetSystemState() 
+            currentState = mbs.systemData.GetSystemState()
             mbs.systemData.SetSystemState(systemStateList=currentState, configuration = exudyn.ConfigurationType.Initial)
+            # mbs.systemData.SetODE2Coordinates_tt(coordinates = mbs.systemData.GetODE2Coordinates_tt(), 
+            #                                         configuration = exudyn.ConfigurationType.Initial)
         
             self.simulationSettings.timeIntegration.startTime += deltaT
     

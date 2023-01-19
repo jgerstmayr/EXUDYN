@@ -131,7 +131,7 @@ m = staticSolver.GetSystemMassMatrix()
 #print("m =",m)
 
 #compute stiffness matrix (systemJacobian is larger!)
-staticSolver.ComputeJacobianODE2RHS(mbs, 1)
+staticSolver.ComputeJacobianODE2RHS(mbs, scalarFactor_ODE2=-1,scalarFactor_ODE2_t=0,scalarFactor_ODE1=0)
 staticSolver.ComputeJacobianAE(mbs, 1)
 K = staticSolver.GetSystemJacobian()
 #print("K =",K)
@@ -139,7 +139,8 @@ K = staticSolver.GetSystemJacobian()
 K2 = K[0:nODE2,0:nODE2]
 
 [eigvals, eigvecs] = eigh(K2, m) #this gives omega^2 ... squared eigen frequencies (rad/s)
-ev = np.sort(a=abs(eigvals))
+ev = np.sort(a=abs(eigvals)) #there may be very small eigenvalues
+print('eigvals=',eigvals)
 
 nEig = 4
 for i in range(len(ev)):

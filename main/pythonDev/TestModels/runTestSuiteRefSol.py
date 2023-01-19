@@ -66,6 +66,7 @@ def TestExamplesReferenceSolution():
         'rigidBodyCOMtest.py':3.409431467726291,
         'rollingCoinTest.py':0.0020040999273379673,
         'rollingCoinPenaltyTest.py':0.03489603106689881,
+        'rotatingTableTest.py':7.838680371309492 ,
         'scissorPrismaticRevolute2D.py':27.20255648904422,          #new 2022-07-11 (CState Parallel); #added JacobianODE2, but example computed with numDiff forODE2connectors, 2022-01-18: 27.202556489044145,
         'sensorUserFunctionTest.py':45.0,            
         'serialRobotTest.py':0.7681856909852399,                    #until 2022-04-21: 0.7680031232063571 wrong static torque compensation

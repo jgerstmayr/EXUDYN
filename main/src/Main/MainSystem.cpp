@@ -162,26 +162,6 @@ bool MainSystem::UnlinkVisualizationSystem()
 	return true;
 }
 
-void MainSystem::RaiseIfConfigurationNotReference(const char* functionName, ConfigurationType configuration) const
-{
-	if (!GetCSystem()->IsSystemConsistent() && configuration != ConfigurationType::Reference)
-	{
-		STDstring s = STDstring("MainSystem::") + functionName;
-		s += ": called for inconsistent system; possible reason: mbs.Assemble() has not been called prior to this function call; alternative: may be called if configuration is ConfigurationType.Reference";
-		CHECKandTHROWstring(s);
-	}
-}
-
-void MainSystem::RaiseIfNotConsistent(const char* functionName) const
-{
-	if (!GetCSystem()->IsSystemConsistent() )
-	{
-		STDstring s = STDstring("MainSystem::") + functionName;
-		s += ": called for inconsistent system; possible reason: mbs.Assemble() has not been called prior to this function call";
-		CHECKandTHROWstring(s);
-	}
-}
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //  NODE
@@ -342,10 +322,13 @@ py::dict MainSystem::PyGetNodeDefaults(STDstring typeName)
 
 py::object MainSystem::PyGetNodeOutputVariable(const py::object& itemIndex, OutputVariableType variableType, ConfigurationType configuration) const
 {
-	RaiseIfConfigurationNotReference("GetNodeOutput", configuration);
+
 	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
 	if (nodeNumber < mainSystemData.GetMainNodes().NumberOfItems())
 	{
+		GetMainSystemData().RaiseIfNotConsistentNorReference("GetNodeOutput", configuration, nodeNumber, ItemType::Node);
+		GetMainSystemData().RaiseIfNotOutputVariableTypeForReferenceConfiguration("GetNodeOutput", variableType, configuration, nodeNumber, ItemType::Node);
+
 		return mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetOutputVariable(variableType, configuration);
 	}
 	else
@@ -624,13 +607,15 @@ py::dict MainSystem::PyGetObjectDefaults(STDstring typeName)
 //! Get specific output variable with variable type
 py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, OutputVariableType variableType, ConfigurationType configuration) const
 {
-	RaiseIfNotConsistent("GetObjectOutput");
 	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 	{
+		GetMainSystemData().RaiseIfNotConsistentOrIllegalConfiguration("GetObjectOutput", configuration, itemNumber, ItemType::Object);
+		GetMainSystemData().RaiseIfNotOutputVariableTypeForReferenceConfiguration("GetObjectOutput", variableType, configuration, itemNumber, ItemType::Object);
+
 		if ((Index)mainSystemData.GetMainObjects().GetItem(itemNumber)->GetCObject()->GetType() & (Index)CObjectType::Connector)
 		{
-			CHECKandTHROW(configuration == ConfigurationType::Current, "GetObjectOutputVariable may only be called for connectors with Current configuration");
+			CHECKandTHROW(configuration == ConfigurationType::Current, "GetObjectOutput: may only be called for connectors with Current configuration");
 			MarkerDataStructure markerDataStructure;
 			const bool computeJacobian = false; //not needed for OutputVariables
 			CObjectConnector* connector = (CObjectConnector*)(mainSystemData.GetMainObjects().GetItem(itemNumber)->GetCObject());
@@ -657,17 +642,26 @@ py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, Ou
 py::object MainSystem::PyGetObjectOutputVariableBody(const py::object& itemIndex, OutputVariableType variableType,
 		const std::vector<Real>& localPosition, ConfigurationType configuration) const
 {
-	RaiseIfConfigurationNotReference("GetObjectOutputBody", configuration);
 
-	if (localPosition.size() == 3)
-	{
 		Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
 		if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 		{
-			const MainObject* mo = mainSystemData.GetMainObjects().GetItem(itemNumber);
+			GetMainSystemData().RaiseIfNotConsistentNorReference("GetObjectOutputBody", configuration, itemNumber, ItemType::Object);
+			GetMainSystemData().RaiseIfNotOutputVariableTypeForReferenceConfiguration("GetObjectOutputBody", variableType, configuration, itemNumber, ItemType::Object);
 
-			//return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariableBody(variableType, pos, configuration);
-			return mo->GetOutputVariableBody(variableType, localPosition, configuration, itemNumber);
+			if (localPosition.size() == 3)
+			{
+				const MainObject* mo = mainSystemData.GetMainObjects().GetItem(itemNumber);
+
+				return mo->GetOutputVariableBody(variableType, localPosition, configuration, itemNumber);
+			}
+			else
+			{
+				PyError(STDstring("MainSystem::GetOutputVariableBody: invalid localPosition: expected vector with 3 real values; object number ") +
+					EXUstd::ToString(itemNumber));
+				return py::int_(EXUstd::InvalidIndex);
+				//return py::object();
+			}
 		}
 		else
 		{
@@ -675,24 +669,17 @@ py::object MainSystem::PyGetObjectOutputVariableBody(const py::object& itemIndex
 			return py::int_(EXUstd::InvalidIndex);
 			//return py::object();
 		}
-	}
-	else
-	{
-		PyError(STDstring("MainSystem::GetOutputVariableBody: invalid localPosition: expected vector with 3 real values"));
-		return py::int_(EXUstd::InvalidIndex);
-		//return py::object();
-	}
 }
 
 //! get output variable from mesh node number of object with type SuperElement (GenericODE2, FFRF, FFRFreduced - CMS) with specific OutputVariableType
 py::object MainSystem::PyGetObjectOutputVariableSuperElement(const py::object& itemIndex, OutputVariableType variableType, 
 	Index meshNodeNumber, ConfigurationType configuration) const
 {
-	RaiseIfConfigurationNotReference("GetObjectOutputSuperElement", configuration);
-
 	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainObjects().NumberOfItems())
 	{
+		GetMainSystemData().RaiseIfNotConsistentNorReference("GetObjectOutputSuperElement", configuration, itemNumber, ItemType::Object);
+		GetMainSystemData().RaiseIfNotOutputVariableTypeForReferenceConfiguration("GetObjectOutputVariableSuperElement", variableType, configuration, itemNumber, ItemType::Object);
 		return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariableSuperElement(variableType, meshNodeNumber, configuration);
 	}
 	else
@@ -899,6 +886,10 @@ py::object MainSystem::PyGetMarkerOutputVariable(const py::object& itemIndex, Ou
 	Index itemNumber = EPyUtils::GetMarkerIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainMarkers().NumberOfItems())
 	{
+		GetMainSystemData().RaiseIfNotConsistentNorReference("GetMarkerOutput", configuration, itemNumber, ItemType::Marker);
+		GetMainSystemData().RaiseIfNotOutputVariableTypeForReferenceConfiguration("GetObjectOutputVariableSuperElement", variableType, configuration, itemNumber, ItemType::Marker);
+
+		//the marker function itself will raise an error, if it is not able to return the according output variable
 		return mainSystemData.GetMainMarkers().GetItem(itemNumber)->GetOutputVariable(GetCSystem()->GetSystemData(), variableType, configuration);
 	}
 	else
@@ -1042,11 +1033,11 @@ py::dict MainSystem::PyGetLoadDefaults(STDstring typeName)
 //! Get current load values, specifically if user-defined loads are used
 py::object MainSystem::PyGetLoadValues(const py::object& itemIndex) const
 {
-	RaiseIfNotConsistent("GetLoadValues");
 
 	Index itemNumber = EPyUtils::GetLoadIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainLoads().NumberOfItems())
 	{
+		GetMainSystemData().RaiseIfNotConsistent("GetLoadValues", itemNumber, ItemType::Load);
 		Real t = GetCSystem()->GetSystemData().GetCData().GetCurrent().GetTime(); //only current time available
 		return mainSystemData.GetMainLoads().GetItem(itemNumber)->GetLoadValues(GetCSystem()->GetSystemData().GetMainSystemBacklink(), t);
 	}
@@ -1221,11 +1212,11 @@ py::dict MainSystem::PyGetSensorDefaults(STDstring typeName)
 //! get sensor's values
 py::object MainSystem::PyGetSensorValues(const py::object& itemIndex, ConfigurationType configuration)
 {
-	RaiseIfConfigurationNotReference("GetSensorValues", configuration);
 
 	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
 	if (itemNumber < mainSystemData.GetMainSensors().NumberOfItems())
 	{
+		GetMainSystemData().RaiseIfNotConsistentNorReference("GetSensorValues", configuration, itemNumber, ItemType::Sensor);
 		return mainSystemData.GetMainSensors().GetItem(itemNumber)->GetSensorValues(GetCSystem()->GetSystemData(), configuration);
 	}
 	else
@@ -1285,6 +1276,74 @@ void MainSystem::PySetSensorParameter(const py::object& itemIndex, const STDstri
 	else
 	{
 		PyError(STDstring("MainSystem::SetSensorParameter: invalid access to sensor number ") + EXUstd::ToString(itemNumber));
+	}
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//MainSystemData functions
+void MainSystemData::RaiseIfConfigurationIllegal(const char* functionName, ConfigurationType configuration, Index itemIndex, ItemType itemType) const
+{
+	if ((Index)configuration <= (Index)ConfigurationType::_None)
+	{
+		STDstring s = STDstring("MainSystem::") + functionName;
+		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
+		s += ": called with illegal configuration ConfigurationType._None";
+		CHECKandTHROWstring(s);
+	}
+	else if ((Index)configuration >= (Index)ConfigurationType::EndOfEnumList)
+	{
+		STDstring s = STDstring("MainSystem::") + functionName;
+		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
+		s += ": called with illegal configuration ConfigurationType.???";
+		CHECKandTHROWstring(s);
+	}
+	//else if (configuration == ConfigurationType::StartOfStep) //StartOfStep currently also initialized in CSystem
+	//{
+	//	STDstring s = STDstring("MainSystem::") + functionName;
+	//	s += ": called with illegal configuration ConfigurationType.StartOfStep";
+	//	CHECKandTHROWstring(s);
+	//}
+}
+
+void MainSystemData::RaiseIfNotConsistentNorReference(const char* functionName, ConfigurationType configuration, Index itemIndex, ItemType itemType) const
+{
+	if (!GetCSystemData().GetCData().IsSystemConsistent() && configuration != ConfigurationType::Reference)
+	{
+		STDstring s = STDstring("MainSystem::") + functionName;
+		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
+		s += ": called with illegal configuration for inconsistent system; it may be either called for consistent system (needs mbs.Assemble() prior to this call and not change in mbs any more) or use configuration = ConfigurationType.Reference";
+		CHECKandTHROWstring(s);
+	}
+}
+
+void MainSystemData::RaiseIfNotConsistent(const char* functionName, Index itemIndex, ItemType itemType) const
+{
+	if (!GetCSystemData().GetCData().IsSystemConsistent())
+	{
+		STDstring s = STDstring("MainSystem::") + functionName;
+		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
+		s += ": called for inconsistent system; a call to mbs.Assemble() is necessary prior to this function call (such that mbs.systemIsConsistent returns True)";
+		CHECKandTHROWstring(s);
+	}
+}
+
+void MainSystemData::RaiseIfNotConsistentOrIllegalConfiguration(const char* functionName, ConfigurationType configuration,
+	Index itemIndex, ItemType itemType) const
+{
+	RaiseIfNotConsistent(functionName, itemIndex, itemType);
+	RaiseIfConfigurationIllegal(functionName, configuration, itemIndex, itemType);
+}
+
+void MainSystemData::RaiseIfNotOutputVariableTypeForReferenceConfiguration(const char* functionName, 
+	OutputVariableType variableType, ConfigurationType configuration, Index itemIndex, ItemType itemType) const
+{
+	if (configuration == ConfigurationType::Reference && !IsOutputVariableTypeForReferenceConfiguration(variableType))
+	{
+		STDstring s = functionName;
+		if (itemIndex >= 0) { s += STDstring("(") + EXUstd::ToString(itemType) + " " + EXUstd::ToString(itemIndex) + ")"; }
+		s += ": called with ConfigurationType.Reference is only possible with an OutputVariableType suitable for reference configuration, being Position, Displacement, Distance, Rotation or Coordinate-like, but not Velocity, Acceleration, Force, Stress, etc.";
+		CHECKandTHROWstring(s);
 	}
 }
 

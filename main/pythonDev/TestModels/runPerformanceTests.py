@@ -26,6 +26,7 @@ import numpy as np
 if (sys.version_info.major == 3 and 
     (sys.version_info.minor == 7 or sys.version_info.minor == 10)): #for these versions, we use exudynFast; since 2022-12-19/exudynV1.4.53: 3.7 and 3.10 in performance tests
     sys.exudynFast = True
+    print('trying to use exudynFast')
 else:
     sys.exudynFast = False
 
