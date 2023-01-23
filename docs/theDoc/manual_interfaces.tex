@@ -91,7 +91,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
   AssembleSystemInitialize() & initialize some system data, e.g., generalContact objects (searchTree, etc.)\\ \hline 
   Reset() & reset all lists of items (nodes, bodies, markers, loads, ...) and temporary vectors; deallocate memory\\ \hline 
   GetSystemContainer() & return the systemContainer where the mainSystem (mbs) was created\\ \hline 
-  WaitForUserToContinue() & interrupt further computation until user input --> 'pause' function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as SC.WaitForRenderEngineStopFlagthis()\\ \hline 
+  WaitForUserToContinue(printMessage = True) & interrupt further computation until user input --> 'pause' function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as SC.WaitForRenderEngineStopFlagthis()\\ \hline 
   SendRedrawSignal() & this function is used to send a signal to the renderer that the scene shall be redrawn because the visualization state has been updated\\ \hline 
   GetRenderEngineStopFlag() & get the current stop simulation flag; True=user wants to stop simulation\\ \hline 
   SetRenderEngineStopFlag() & set the current stop simulation flag; set to False, in order to continue a previously user-interrupted simulation\\ \hline 

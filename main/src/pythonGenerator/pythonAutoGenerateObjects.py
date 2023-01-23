@@ -47,10 +47,11 @@ possibleTypes = {'Object':['_None','Ground','Connector','Constraint','Body','Sin
 #conversion list for python functions; names must always start with 'PyFunction'...
 pyFunctionTypeConversion = {'PyFunctionGraphicsData': 'std::function<py::object(const MainSystem&, Index)>',
                             'PyFunctionMbsScalar2': 'std::function<Real(const MainSystem&,Real,Real)>',
-                            'PyFunctionMbsScalarIndexScalar7': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real)>', #CoordinateSpringDamper
                             'PyFunctionVector3DmbsScalarVector3D': 'std::function<StdVector(const MainSystem&,Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
                             'PyFunctionMbsScalarIndexScalar': 'std::function<Real(const MainSystem&,Real,Index,Real)>', #ConnectorCoordainte
-                            'PyFunctionMbsScalarIndexScalar5': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)>', #ConnectorSpringDamper
+                            'PyFunctionMbsScalarIndexScalar5': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)>', #ConnectorSpringDamper, CoordinateSpringDamper, several others
+                            #'PyFunctionMbsScalarIndexScalar7': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real)>', #CoordinateSpringDamper
+                            'PyFunctionMbsScalarIndexScalar11': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)>', #CoordinateSpringDamperExt
                             'PyFunctionVector6DmbsScalarIndexVector6D': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector6D)>', #GenericJoint
                             'PyFunctionVector3DmbsScalarIndexScalar4Vector3D': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>', #CartesianSpringDamper
                             'PyFunctionVectorMbsScalarIndex2Vector': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2, ObjectFFRF...

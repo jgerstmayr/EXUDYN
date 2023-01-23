@@ -27,7 +27,7 @@ from math import exp
 #  expVel: $v_{exp}$,  velocity (relative to regVel, at which the muStaticOffset decreases exponentially, at vel=expVel, the factor to muStaticOffset is exp(-1) = 36.8\%)
 #**output: returns velocity dependent friction coefficient (if muDynamic and muStaticOffset are friction coefficients) or friction force (if muDynamic and muStaticOffset are on force level)
 def StribeckFunction(vel, muDynamic, muStaticOffset, muViscous=0, expVel=1e-3, regVel=1e-3):
-    if abs(vel) <= regVel:
+    if abs(vel) <= regVel and regVel != 0:
         return (muDynamic + muStaticOffset)*vel/regVel
     else:
         s = np.sign(vel)

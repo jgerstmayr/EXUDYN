@@ -698,7 +698,9 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 
 	if (!conv.stepReductionFailed)
 	{
-		computationalSystem.GetPostProcessData()->SetSolverMessage("Solver finished successfully");
+        STDstring str = "Solver finished successfully";
+        if (computationalSystem.GetPostProcessData()->stopSimulation) { str += "(user stops)"; }
+		computationalSystem.GetPostProcessData()->SetSolverMessage(str);
 	}
 	else { computationalSystem.GetPostProcessData()->SetSolverMessage("Solver finished with errors"); }
 
@@ -886,33 +888,6 @@ void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationS
 		}
 	}
 
-	//if (!IsStaticSolver())
-	//{
-	//	if (simulationSettings.timeIntegration.preStepPyExecute.size()) //if this string is not empty, execute the commands
-	//	{
-	//		if (!cSolverBaseInitializeStepPreStepFunctionWarned)
-	//		{
-	//			cSolverBaseInitializeStepPreStepFunctionWarned = true;
-	//			PyWarning("simulationSettings.timeIntegration.preStepPyExecute and simulationSettings.staticSolver.preStepPyExecute are deprecated! Use mbs.SetPreStepUserFunction(...) instead.");
-	//		}
-
-	//		py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
-	//		py::exec(simulationSettings.timeIntegration.preStepPyExecute.c_str(), scope);
-	//	}
-	//}
-	//else
-	//{
-	//	if (simulationSettings.staticSolver.preStepPyExecute.size()) //if this string is not empty, execute the commands
-	//	{
-	//		if (!cSolverBaseInitializeStepPreStepFunctionWarned)
-	//		{
-	//			cSolverBaseInitializeStepPreStepFunctionWarned = true;
-	//			PyWarning("simulationSettings.timeIntegration.preStepPyExecute and simulationSettings.staticSolver.preStepPyExecute are deprecated! Use mbs.SetPreStepUserFunction(...) instead.");
-	//		}
-	//		py::object scope = py::module::import("__main__").attr("__dict__"); //use this to enable access to mbs and other variables of global scope within test models suite
-	//		py::exec(simulationSettings.staticSolver.preStepPyExecute.c_str(), scope);
-	//	}
-	//}
 	DoIdleOperations(computationalSystem);
 	STOPTIMER(timer.python);
 }
@@ -1071,7 +1046,7 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 		computationalSystem.UpdatePostProcessData(recordImage);
 	}
 
-	if (simulationSettings.pauseAfterEachStep) { computationalSystem.GetPostProcessData()->WaitForUserToContinue(); }
+	if (simulationSettings.pauseAfterEachStep) { computationalSystem.GetPostProcessData()->WaitForUserToContinue(output.verboseMode > 0); }
 	STOPTIMER(timer.visualization);
 }
 
@@ -1976,7 +1951,12 @@ void CSolverBase::WriteSensorsToFile(const CSystem& computationalSystem, const S
 
 void CSolverBase::DoIdleOperations(CSystem& computationalSystem)
 {
-	PyProcessExecuteQueue(); //execute incoming python tasks if available
+    if (computationalSystem.GetPostProcessData()->simulationPaused)
+    {
+        computationalSystem.GetPostProcessData()->WaitForUserToContinue(output.verboseMode>0);
+    }
+
+    PyProcessExecuteQueue(); //execute incoming python tasks if available
 	computationalSystem.GetPostProcessData()->ProcessUserFunctionDrawing(); //check if user functions to be drawn and do user function evaluations
 
 	RendererDoSingleThreadedIdleTasks();

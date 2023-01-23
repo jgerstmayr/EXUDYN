@@ -205,11 +205,6 @@ graphicsList = []
 #graphicsList +=[GraphicsDataCylinder([0,0,0], [0,oS,0], 0.00005, color4green)]
 #graphicsList +=[GraphicsDataCylinder([0,0,0], [0,0,oS], 0.00005, color4blue)]
 oGround = mbs.AddObject(ObjectGround(referencePosition=[0,0,0], visualization=VObjectGround(graphicsData=graphicsList)))
-#mPistonCDS=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nPiston,coordinate=0))
-#nGround=mbs.AddNode(PointGround(referenceCoordinates=[0,0,0]))
-#groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround , coordinate = 0))
-#mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, mPistonCDS],stiffness = 0, damping = 8000))
- 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add markers and joints

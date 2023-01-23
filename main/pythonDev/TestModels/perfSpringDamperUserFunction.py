@@ -48,7 +48,7 @@ h = 1e-4
 
 
 #user function for spring force
-def springForce(mbs, t, itemIndex, u, v, k, d, offset, mu, muPropZone):
+def springForce(mbs, t, itemIndex, u, v, k, d, offset): #changed 2023-01-21:, mu, muPropZone):
     return 0.1*k*u+k*u**3+v*d
 
 #linear frequency sweep in time interval [0, t1] and frequency interval [f0,f1];

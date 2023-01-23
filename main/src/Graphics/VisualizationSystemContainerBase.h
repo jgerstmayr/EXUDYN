@@ -31,8 +31,9 @@ public:
 	virtual void InitializeView() = 0;	//!< renderer reports to update the maximum scene coordinates (on initialization)
 	virtual void StopSimulation() = 0;			//!< renderer reports to simulation that simulation shall be interrupted
 	virtual void ForceQuitSimulation(bool flag = true) = 0;		//!< renderer reports that render window is closed and simulation shall be shut down
-	virtual void ContinueSimulation() = 0;		//!< renderer reports to simulation that simulation can be continued
-	virtual void UpdateGraphicsDataNow() = 0;	//! renderer signals to update the graphics data, e.g. if settings have changed
+    virtual void ContinueSimulation() = 0;		//!< renderer reports to simulation that simulation can be continued
+    virtual void SwitchPauseSimulation() = 0;		//!< renderer reports to simulation that paused shall be switched
+    virtual void UpdateGraphicsDataNow() = 0;	//! renderer signals to update the graphics data, e.g. if settings have changed
 	//virtual void SetVisualizationIsRunning(bool flag = true) = 0;	//! renderer signals that visualizationIsRunning flag should be set to "flag"
 	virtual void SaveImageFinished() = 0;		//! renderer signals that frame has been grabed and saved
 	virtual bool SaveImageRequest() = 0;		//! signal renderer that a frame shall be recorded
@@ -142,6 +143,7 @@ public:
 	Matrix4DF modelRotation;			//!< rotation used for incremental rotation with mouse / right mouse button
 	//DELETE Float16 openGLModelViewMatrix;	//!< modelview matrix as used in openGL
 	Matrix4DF projectionMatrix;		//!< projection matrix as used in openGL
+	Index projectionInfo;			//!< some additional information on how to apply projection; may be erased in future, just for trial
 	
 	Vector2D mouseCoordinates;		//!current mouse coordinates as obtained from GLFW
 	Vector2D openGLcoordinates;		//!current mouse coordinates projected in current model view plane (x/y)

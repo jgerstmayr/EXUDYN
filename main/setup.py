@@ -237,6 +237,7 @@ cppFiles = [
                  'src/Objects/CObjectConnectorCartesianSpringDamper.cpp',
                  'src/Objects/CObjectConnectorCoordinate.cpp',
                  'src/Objects/CObjectConnectorCoordinateSpringDamper.cpp',
+                 'src/Objects/CObjectConnectorCoordinateSpringDamperExt.cpp',
                  'src/Objects/CObjectConnectorCoordinateVector.cpp',
                  'src/Objects/CObjectConnectorDistance.cpp',
                  'src/Objects/CObjectConnectorGravity.cpp',

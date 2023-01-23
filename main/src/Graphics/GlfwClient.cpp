@@ -250,13 +250,20 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 			basicVisualizationSystemContainer->StopSimulation();
 		}
 
-		//keycode to continue paused simulation:
+		//keycode to continue paused simulation or to pause:
 		if ((key == GLFW_KEY_SPACE && action == GLFW_PRESS && mods == 0) ||
 			(key == GLFW_KEY_SPACE && action == GLFW_REPEAT)) //changed shift to repeat 
-			//(key == GLFW_KEY_SPACE && mods == GLFW_MOD_SHIFT))
 		{
-			basicVisualizationSystemContainer->ContinueSimulation();
-		}
+            if (visSettings->interactive.pauseWithSpacebar)
+            {
+                ShowMessage("SPACE pressed: switch pause on/off", timeoutShowItem);
+                basicVisualizationSystemContainer->SwitchPauseSimulation();
+            }
+            else //only continue, but no pause:
+            {
+                basicVisualizationSystemContainer->ContinueSimulation();
+            }
+        }
 
 		//switch ignore keys functionality
 		if (key == GLFW_KEY_F3 && action == GLFW_PRESS)
@@ -1814,13 +1821,26 @@ void GlfwRenderer::SetProjection(int width, int height, float ratio, float& zoom
 			glTranslatef(0.f, 0.f, -2 * fact * state->maxSceneSize);
 		}
 	}
-	else
+	else //openVR
 	{
-		//additional projection has been provided and is added after glOrtho
-		glOrtho(-ratio * zoom, ratio*zoom, -zoom, zoom, -zFactor * 2.*state->maxSceneSize, zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
-		//glOrtho(-ratio , ratio, -1, 1, 0.1, 30); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
-		//glLoadMatrixf(state->projectionMatrix.GetDataPointer());
-		glMultMatrixf(state->projectionMatrix.GetDataPointer());
+		if (state->projectionInfo == 0) //for companion window
+		{
+			glOrtho(-ratio * zoom, ratio*zoom, -zoom, zoom, -zFactor * 2.*state->maxSceneSize, zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
+			glMultMatrixf(state->projectionMatrix.GetDataPointer());
+		}
+		else if (state->projectionInfo == 1) //load matrix
+		{
+			glLoadMatrixf(state->projectionMatrix.GetDataPointer());
+		}
+		else if (state->projectionInfo == 2) //apply matrix after glOrtho
+		{
+			//additional projection has been provided and is added after glOrtho
+			glOrtho(-ratio * zoom, ratio*zoom, -zoom, zoom, -zFactor * 2.*state->maxSceneSize, zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
+			//glOrtho(-ratio , ratio, -1, 1, 0.1, 30); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
+			glLoadMatrixf(state->projectionMatrix.GetDataPointer());
+			//glTranslatef(0.f, 0.f, -state->maxSceneSize);
+			glMultMatrixf(state->projectionMatrix.GetDataPointer());
+		}
 	}
 }
 
@@ -1892,6 +1912,7 @@ void GlfwRenderer::SetModelRotationTranslation()
 	}
 
 	glTranslatef(-translationMV[0], -translationMV[1], 0.f);
+	//glTranslatef(0.f,0.f,-5.f); //hack openvr
 
 	//glMultMatrixf(state->modelRotation.GetDataPointer()); //OLD
 	glMultMatrixf(A.GetDataPointer());

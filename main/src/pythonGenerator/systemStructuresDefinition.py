@@ -711,6 +711,7 @@ V,      mouseMoveRotationFactor,        ,                  ,     float,        "
 V,      keypressTranslationStep,        ,                  ,     float,        "0.1f",                 , P,      "translation increment per keypress relative to window size"
 V,      zoomStepFactor,                 ,                  ,     float,        "1.15f",                , P,      "change of zoom per keypress (keypad +/-) or mouse wheel increment"
 V,      lockModelView,                  ,                  ,     bool,         false,                  , P,      "True: all movements (with mouse/keys), rotations, zoom are disabled; initial values are considered ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value"
+V,      pauseWithSpacebar,              ,                  ,     bool,         true,                   , P,      "True: during simulation, space bar can be pressed to pause simulation"
 #
 V,      highlightItemIndex,             ,                  ,     Int,          "-1",                   , P,      "index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted"
 V,      highlightItemType,              ,                  ,     ItemType,     "ItemType::_None",      , P,      "item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)"

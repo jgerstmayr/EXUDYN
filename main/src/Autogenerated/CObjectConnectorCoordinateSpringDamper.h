@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-12-01  20:24:37 (last modified)
+* @date         2023-01-21  20:26:44 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -33,10 +33,8 @@ public: // AUTO:
     Real stiffness;                               //!< AUTO: stiffness [SI:N/m] of spring; acts against relative value of coordinates
     Real damping;                                 //!< AUTO: damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates
     Real offset;                                  //!< AUTO: offset between two coordinates (reference length of springs), see equation
-    Real dryFriction;                             //!< AUTO: dry friction force [SI:N] against relative velocity; assuming a normal force \f$f_N\f$, the friction force can be interpreted as \f$f_\mu = \mu f_N\f$
-    Real dryFrictionProportionalZone;             //!< AUTO: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
-    std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real)> springForceUserFunction;//!< AUTO: A Python function which defines the spring force with 8 parameters, see equations section / see description below
+    std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)> springForceUserFunction;//!< AUTO: A Python function which defines the spring force with 8 parameters, see equations section / see description below
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorCoordinateSpringDamperParameters()
     {
@@ -44,8 +42,6 @@ public: // AUTO:
         stiffness = 0.;
         damping = 0.;
         offset = 0.;
-        dryFriction = 0.;
-        dryFrictionProportionalZone = 0.;
         activeConnector = true;
         springForceUserFunction = 0;
     };

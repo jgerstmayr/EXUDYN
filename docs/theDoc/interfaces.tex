@@ -764,8 +764,9 @@ VSettingsInteractive has the following items:
     joystickScaleTranslation &     float &      &     6. &     translation scaling factor for joystick input\\ \hline
     keypressRotationStep &     float &      &     5. &     rotation increment per keypress in degree (full rotation = 360 degree)\\ \hline
     keypressTranslationStep &     float &      &     0.1 &     translation increment per keypress relative to window size\\ \hline
-    lockModelView &     bool &      &     False &     True: all movements (with mouse/keys), rotations, zoom are disabled; initial values are considered\\ \hline
+    lockModelView &     bool &      &     False &     True: all movements (with mouse/keys), rotations, zoom are disabled; initial values are considered ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value\\ \hline
     mouseMoveRotationFactor &     float &      &     1. &     rotation increment per 1 pixel mouse movement in degree\\ \hline
+    pauseWithSpacebar &     bool &      &     True &     True: during simulation, space bar can be pressed to pause simulation\\ \hline
     selectionHighlights &     bool &      &     True &     True: mouse click highlights item (default: red)\\ \hline
     selectionLeftMouse &     bool &      &     True &     True: left mouse click on items and show basic information\\ \hline
     selectionRightMouse &     bool &      &     True &     True: right mouse click on items and show dictionary (read only!)\\ \hline

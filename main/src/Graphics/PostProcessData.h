@@ -93,7 +93,7 @@ public:
 	void SendRedrawSignal();
 
 	//! send flag to GUI / renderer which signals that simulation is interrupted until user interaction
-	void WaitForUserToContinue();
+	void WaitForUserToContinue(bool printMessage=true);
 
 	//! uses some backlinks for solver to find out if visualization is running (could also be checked directly via GLFWrenderer global variable)
 	bool VisualizationIsRunning() const; 

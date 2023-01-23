@@ -54,28 +54,23 @@ void PostProcessData::SendRedrawSignal()
 }
 
 //! wait for user to press space
-void PostProcessData::WaitForUserToContinue()
+void PostProcessData::WaitForUserToContinue(bool printMessage)
 {
 	if (visualizationSystem->GetMainSystemBacklink()->GetMainSystemContainer().GetVisualizationSystemContainer().RendererIsRunning()) //do this only if visualization is running, otherwise application cannot recognize SPACE press
 	{
 		simulationPaused = true;
 		STDstring strSolver = GetSolverMessage();
-		SetSolverMessage("Computation paused... (press SPACE to continue)");
-		pout << "Computation paused... (press SPACE in render window to continue)\n";
+		SetSolverMessage("Computation paused... (press SPACE to continue / Q to quit)");
+        if (printMessage)
+        {
+            pout << "Computation paused... (press SPACE in render window to continue / Q to quit)\n";
+        }
 
 		while (visualizationSystem->GetMainSystemBacklink()->GetMainSystemContainer().GetVisualizationSystemContainer().DoIdleOperations() && simulationPaused)
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(20)); //give thread time to finish the stop simulation command
 		}
 
-		//OLD, DELETE:
-		//while (simulationPaused && mainSystem->GetMainSystemContainer().GetVisualizationSystemContainer().RendererIsRunning() && !stopSimulation)
-		//{
-		//	std::this_thread::sleep_for(std::chrono::milliseconds(10)); //give thread time to finish the stop simulation command
-		//	mainSystem->GetMainSystemContainer().GetVisualizationSystemContainer().DoIdleOperations();
-		//	////PyProcessExecuteQueue(); //use time to execute incoming python tasks
-		//	////ProcessUserFunctionDrawing(); //check if user functions to be drawn and do user function evaluations
-		//}
 		simulationPaused = false; //in case that visualization system was closed in the meantime
 		SetSolverMessage(strSolver);
 	}

@@ -2199,7 +2199,7 @@ gLine=GraphicsDataLine([[0,0,0],[1,0,0],[2,0.5,0]], color=color4red)\end{lstlist
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py}{\texttt{distanceSensor.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateSpringDamperExt.py}{\texttt{coordinateSpringDamperExt.py}} (TM), 
  ...
 \ei
 
@@ -7033,8 +7033,8 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L153}{AddDistanceSensor}{}}}\label{sec:utilities:AddDistanceSensor}
-({\it mbs}, {\it generalContactIndex}, {\it positionOrMarker}, {\it dirSensor}, {\it minDistance}= -1e7, {\it maxDistance}= 1e7, {\it cylinderRadius}= 0, {\it selectedTypeIndex}= exudyn.ContactTypeIndex.IndexEndOfEnumList, {\it storeInternal}= False, {\it fileName}= '', {\it measureVelocity}= False, {\it addGraphicsObject}= False)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L163}{AddDistanceSensor}{}}}\label{sec:utilities:AddDistanceSensor}
+({\it mbs}, {\it generalContactIndex}, {\it positionOrMarker}, {\it dirSensor}, {\it minDistance}= -1e7, {\it maxDistance}= 1e7, {\it cylinderRadius}= 0, {\it selectedTypeIndex}= exudyn.ContactTypeIndex.IndexEndOfEnumList, {\it storeInternal}= False, {\it fileName}= '', {\it measureVelocity}= False, {\it addGraphicsObject}= False, {\it drawDisplaced}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -7043,7 +7043,7 @@ import exudyn as exu
 \setlength{\itemindent}{-0.7cm}
     \item[] {\it generalContactIndex}: the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(...) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1
     \item[] {\it   positionOrMarker}: either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker
-    \item[] {\it   dirSensor}: the direction along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation
+    \item[] {\it   dirSensor}: the direction (no need to normalize) along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation if marker contains orientation (BodyRigid, NodeRigid)
     \item[] {\it   minDistance}: the minimum distance which is accepted; smaller distance will be ignored
     \item[] {\it   maxDistance}: the maximum distance which is accepted; items being at maxDistance or futher are ignored; if no items are found, the function returns maxDistance
     \item[] {\it   cylinderRadius}: in case of spheres (selectedTypeIndex=ContactTypeIndex.IndexSpheresMarkerBased), a cylinder can be used which measures the shortest distance at a certain radius (geometrically interpreted as cylinder)
@@ -7051,7 +7051,8 @@ import exudyn as exu
     \item[] {\it   storeInternal}: like with any SensorUserFunction, setting to True stores sensor data internally
     \item[] {\it   fileName}: if defined, recorded data of SensorUserFunction is written to specified file
     \item[] {\it   measureVelocity}: if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction 'dirSensor' and does not account for changes in geometry, thus it may be different from the time derivative of the distance!
-    \item[] {\it   addGraphicsObject}: if true, the distance sensor is also visualized graphically in a simplified manner; the distance sensor is also not rotating with the marker; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
+    \item[] {\it   addGraphicsObject}: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
+    \item[] {\it   drawDisplaced}: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
   \end{itemize}
   \item[--]  {\bf output}: creates sensor and returns according sensor number of SensorUserFunction\vspace{12pt}\end{itemize}
 %
@@ -7063,7 +7064,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L199}{UFsensorRecord}{}}}\label{sec:utilities:UFsensorRecord}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L217}{UFsensorRecord}{}}}\label{sec:utilities:UFsensorRecord}
 ({\it mbs}, {\it t}, {\it sensorNumbers}, {\it factors}, {\it configuration})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7072,7 +7073,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L220}{AddSensorRecorder}{}}}\label{sec:utilities:AddSensorRecorder}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L238}{AddSensorRecorder}{}}}\label{sec:utilities:AddSensorRecorder}
 ({\it mbs}, {\it sensorNumber}, {\it endTime}, {\it sensorsWritePeriod}, {\it sensorOutputSize}= 3)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7096,7 +7097,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L247}{LoadSolutionFile}{}}}\label{sec:utilities:LoadSolutionFile}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L265}{LoadSolutionFile}{}}}\label{sec:utilities:LoadSolutionFile}
 ({\it fileName}, {\it safeMode}= False, {\it maxRows}= -1, {\it verbose}= True, {\it hasHeader}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7131,7 +7132,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L378}{NumpyInt8ArrayToString}{}}}\label{sec:utilities:NumpyInt8ArrayToString}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L396}{NumpyInt8ArrayToString}{}}}\label{sec:utilities:NumpyInt8ArrayToString}
 ({\it npArray})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7140,7 +7141,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L385}{BinaryReadIndex}{}}}\label{sec:utilities:BinaryReadIndex}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L403}{BinaryReadIndex}{}}}\label{sec:utilities:BinaryReadIndex}
 ({\it file}, {\it intType})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7149,7 +7150,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L391}{BinaryReadReal}{}}}\label{sec:utilities:BinaryReadReal}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L409}{BinaryReadReal}{}}}\label{sec:utilities:BinaryReadReal}
 ({\it file}, {\it realType})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7158,7 +7159,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L397}{BinaryReadString}{}}}\label{sec:utilities:BinaryReadString}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L415}{BinaryReadString}{}}}\label{sec:utilities:BinaryReadString}
 ({\it file}, {\it intType})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7167,7 +7168,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L403}{BinaryReadArrayIndex}{}}}\label{sec:utilities:BinaryReadArrayIndex}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L421}{BinaryReadArrayIndex}{}}}\label{sec:utilities:BinaryReadArrayIndex}
 ({\it file}, {\it intType})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7176,7 +7177,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L410}{BinaryReadRealVector}{}}}\label{sec:utilities:BinaryReadRealVector}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L428}{BinaryReadRealVector}{}}}\label{sec:utilities:BinaryReadRealVector}
 ({\it file}, {\it intType}, {\it realType})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7185,7 +7186,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L426}{LoadBinarySolutionFile}{}}}\label{sec:utilities:LoadBinarySolutionFile}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L444}{LoadBinarySolutionFile}{}}}\label{sec:utilities:LoadBinarySolutionFile}
 ({\it fileName}, {\it maxRows}= -1, {\it verbose}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7201,7 +7202,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L612}{RecoverSolutionFile}{}}}\label{sec:utilities:RecoverSolutionFile}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L630}{RecoverSolutionFile}{}}}\label{sec:utilities:RecoverSolutionFile}
 ({\it fileName}, {\it newFileName}, {\it verbose}= 0)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7217,7 +7218,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L668}{InitializeFromRestartFile}{}}}\label{sec:utilities:InitializeFromRestartFile}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L686}{InitializeFromRestartFile}{}}}\label{sec:utilities:InitializeFromRestartFile}
 ({\it mbs}, {\it simulationSettings}, {\it restartFileName}, {\it verbose}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7234,7 +7235,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L729}{SetSolutionState}{}}}\label{sec:utilities:SetSolutionState}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L747}{SetSolutionState}{}}}\label{sec:utilities:SetSolutionState}
 ({\it mbs}, {\it solution}, {\it row}, {\it configuration}= exudyn.ConfigurationType.Current, {\it sendRedrawSignal}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7243,7 +7244,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L761}{AnimateSolution}{}}}\label{sec:utilities:AnimateSolution}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L779}{AnimateSolution}{}}}\label{sec:utilities:AnimateSolution}
 ({\it mbs}, {\it solution}, {\it rowIncrement}= 1, {\it timeout}= 0.04, {\it createImages}= False, {\it runLoop}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7275,7 +7276,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L803}{DrawSystemGraph}{}}}\label{sec:utilities:DrawSystemGraph}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L821}{DrawSystemGraph}{}}}\label{sec:utilities:DrawSystemGraph}
 ({\it mbs}, {\it showLoads}= True, {\it showSensors}= True, {\it useItemNames}= False, {\it useItemTypes}= False, {\it addItemTypeNames}= True, {\it multiLine}= True, {\it fontSizeFactor}= 1., {\it layoutDistanceFactor}= 3., {\it layoutIterations}= 100, {\it showLegend}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7307,7 +7308,7 @@ import exudyn as exu
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1202}{CreateTCPIPconnection}{}}}\label{sec:utilities:CreateTCPIPconnection}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1220}{CreateTCPIPconnection}{}}}\label{sec:utilities:CreateTCPIPconnection}
 ({\it sendSize}, {\it receiveSize}, {\it IPaddress}= '127.0.0.1', {\it port}= 52421, {\it bigEndian}= False, {\it verbose}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7370,7 +7371,7 @@ mbs.sys['TCPIPobject'] = CreateTCPIPconnection(sendSize=3, receiveSize=2,
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1235}{TCPIPsendReceive}{}}}\label{sec:utilities:TCPIPsendReceive}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1253}{TCPIPsendReceive}{}}}\label{sec:utilities:TCPIPsendReceive}
 ({\it TCPIPobject}, {\it sendData})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7400,7 +7401,7 @@ print(y)\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1248}{CloseTCPIPconnection}{}}}\label{sec:utilities:CloseTCPIPconnection}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1266}{CloseTCPIPconnection}{}}}\label{sec:utilities:CloseTCPIPconnection}
 ({\it TCPIPobject})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}

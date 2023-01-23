@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1407, 
-Number of resolved issues = 1237 (76 in current minor version), 
-Exudyn version = 1.5.76.dev1, 
-last change =  2023-01-19
+Number of issues = 1417, 
+Number of resolved issues = 1247 (86 in current minor version), 
+Exudyn version = 1.5.86.dev1, 
+last change =  2023-01-23
 
 
 <table style = "width:100%">
@@ -39,15 +39,31 @@ last change =  2023-01-19
 <th>notes</th>
 </tr>
   <tr style = "background-color:#FFB266">
-    <td>1405</td>
-    <td>AddDistanceSensor   </td>
+    <td>1415</td>
+    <td>CoordinateSpringDamperExt</td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> add rotation of Marker to ObjectGround in SensorUserFunction</td>
+    <td> add flag for stepSizeRecommendation, where 0 is no recommendation, -1 is automatic and >0 is a directly recommended step size</td>
     <td>EXTENSION</td>
     <td></td>
-    <td>2023-01-19</td>
-    <td>2023-07-18</td>
+    <td>2023-01-22</td>
+    <td>2023-07-21</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1414</td>
+    <td>InteractiveDialog   </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> extend for explicit solver; needs internally different setup of solvers; use dynamicSolverType with default generalizedAlpha changable to Newmark/Index2 as well as explicit solvers</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-22</td>
+    <td>2023-07-21</td>
     <td></td>
     <td></td>
     <td></td>
@@ -544,22 +560,6 @@ last change =  2023-01-19
     <td></td>
     <td>2022-06-12</td>
     <td>2022-08-11</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFAAAA">
-    <td>1136</td>
-    <td>ConnectorsExt       </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add extended Ext versions of connectors: CoordinateSpringDamperExt, TorsionalSpringDamperExt, LinearSpringDamperExt, which allow for friction, coordinate limitation (with other SD-values) and possibly future extensions</td>
-    <td>EXTENSION</td>
-    <td></td>
-    <td>2022-06-10</td>
-    <td>2022-08-09</td>
     <td></td>
     <td></td>
     <td></td>
@@ -2759,6 +2759,134 @@ last change =  2023-01-19
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1416</td>
+    <td>AddDistanceSensor   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> UFsensorDistance misses the rotation part in visualization of laser beam with ground object</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2023-01-23</td>
+    <td>2023-07-22</td>
+    <td>2023-01-23 09:39</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1413</td>
+    <td>CoordinateSpringDamperExt</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> change friction parameter dimensions to forces (because there is no normal force) and change parameter names</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-21</td>
+    <td>2023-07-20</td>
+    <td>2023-01-22 23:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1412</td>
+    <td>CoordinateSpringDamperExt</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> finalize implementation for bristle friction model</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-21</td>
+    <td>2023-07-20</td>
+    <td>2023-01-22 23:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1411</td>
+    <td>CoordinateSpringDamperExt</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> finalize implementation for limit stops</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-21</td>
+    <td>2023-07-20</td>
+    <td>2023-01-22 23:43</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1410</td>
+    <td>examples            </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> adapt Examples/massSpringFrictionInteractive.py and Examples/lugreFrictionTest.py to new CoordinateSpringDamperExt</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-21</td>
+    <td>2023-07-20</td>
+    <td>2023-01-21 22:04</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1409</td>
+    <td>CoordinateSpringDamper</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove dryFriction and dryFrictionProportionalZone; this functionality will be made available in CoordinateSpringDamperExt</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-01-21</td>
+    <td>2023-07-20</td>
+    <td>2023-01-21 17:53</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>see CoordinateSpringDamper in theDoc.pdf how to convert old models using friction parameters to new ones; note user function interfaces have been changed!</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1408</td>
+    <td>WaitForUserToContinue</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add argument printMessage, which can be set false to avoid text output in console; default behavior preserved</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-21</td>
+    <td>2023-07-20</td>
+    <td>2023-01-21 13:51</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1407</td>
+    <td>pause               </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add option for pause by pressing space bar</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-21</td>
+    <td>2023-07-20</td>
+    <td>2023-01-21 21:28</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1406</td>
     <td>git tags            </td>
     <td>JG</td>
@@ -2773,6 +2901,22 @@ last change =  2023-01-19
     <td></td>
     <td></td>
     <td>now versions can be found easier in github and they match the version numbers in pypi with pip installer</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1405</td>
+    <td>AddDistanceSensor   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add rotation of Marker to ObjectGround in SensorUserFunction</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-01-19</td>
+    <td>2023-07-18</td>
+    <td>2023-01-23 10:05</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>added option to draw displaced laser beam; rotation added, if rigid marker used</td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1402</td>
@@ -6561,6 +6705,22 @@ last change =  2023-01-19
     <td>2022-06-10</td>
     <td>2022-08-09</td>
     <td>2022-06-10 12:16</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1136</td>
+    <td>ConnectorsExt       </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add extended Ext versions of connectors: CoordinateSpringDamperExt, TorsionalSpringDamperExt, LinearSpringDamperExt, which allow for friction, coordinate limitation (with other SD-values) and possibly future extensions</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2022-06-10</td>
+    <td>2022-08-09</td>
+    <td>2023-01-21 21:29</td>
     <td>JG</td>
     <td></td>
     <td></td>

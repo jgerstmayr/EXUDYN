@@ -155,6 +155,23 @@ void VisualizationSystemContainer::ContinueSimulation()
 
 }
 
+//! Renderer reports to simulation that pause flag shall be switched
+void VisualizationSystemContainer::SwitchPauseSimulation()
+{
+    //as we do not know, which simulation is executed, all system computations are interrupted
+    bool isPaused = true; //if flag is cleared, if any pause is false (this means, as soon as any pause in mbs is released, all pauses are released)
+    for (auto item : visualizationSystems)
+    {
+        if (!item->postProcessData->simulationPaused) { isPaused = false; }
+    }
+
+    for (auto item : visualizationSystems)
+    {
+        item->postProcessData->simulationPaused = !isPaused; //use !isPaused, as we would like to switch from current state
+    }
+
+}
+
 //not needed any more, as visualizationSystem has backlink possibility to VisualizationSystemContainer; 
 //==> VisualizationSystemContainer has RendererIsRunning()
 ////! renderer signals that visualizationIsRunning flag should be set to "flag"
@@ -239,7 +256,7 @@ void VisualizationSystemContainer::InitializeView()
 	}
 
 	renderState.projectionMatrix.SetScalarMatrix(4, 1.f);
-
+	renderState.projectionInfo = 0;
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//moved here from GlfwClient:
 	renderState.mouseCoordinates.SetAll(0.);

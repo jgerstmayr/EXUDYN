@@ -192,17 +192,17 @@ For pre-releases (use with care!), add '$--$pre' flag:
   \item[] \texttt{pip install exudyn $--$pre}
 \ei
 In some cases (e.g. for AppleM1), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the 'Build and install' sections, \refSection{sec:build:windows}.
-
-%+++++++++++++++++++++++++++++++++++++
-\mysubsubsection{DEPRECATED: Install with Windows MSI installer}
-A simple way to install \codeName\ on Windows 10 (and maybe also Windows 7) is to use \texttt{.msi} installers in the \texttt{main/dist} directory\footnote{It works better \mybold{if you installed only one Python version} and if you installed Anaconda with the option \mybold{'Register Anaconda as my default Python 3.x'} or similar; in other cases you may to specify some installation directories, etc.}:
-\bi
-  \item NOTE (2022-03-18): \texttt{.msi} installers are now only available for selected Python versions; however, wheels can be downloaded directly from \exuUrl{https://pypi.org/project/exudyn}{https://pypi.org/project/exudyn}, see below
-  \item For the 64bits Python 3.7 version, double click on (version may differ):\ignoreRST{\\} \texttt{exudyn-1.0.248.win-amd64-py3.7.msi}
-  \item Follow the instructions of the installer
-  \item If Python / Anaconda is not found by the installer, provide the 'Python directory' as the installation directory of Anaconda3, which usually is installed in:\\
-  \texttt{C:$\backslash$ProgramData$\backslash$Anaconda3}
-\ei
+%
+%%+++++++++++++++++++++++++++++++++++++
+%\mysubsubsection{DEPRECATED: Install with Windows MSI installer}
+%A simple way to install \codeName\ on Windows 10 (and maybe also Windows 7) is to use \texttt{.msi} installers in the \texttt{main/dist} directory\footnote{It works better \mybold{if you installed only one Python version} and if you installed Anaconda with the option \mybold{'Register Anaconda as my default Python 3.x'} or similar; in other cases you may to specify some installation directories, etc.}:
+%\bi
+%\item NOTE (2022-03-18): \texttt{.msi} installers are now only available for selected Python versions; however, wheels can be downloaded directly from \exuUrl{https://pypi.org/project/exudyn}{https://pypi.org/project/exudyn}, see below
+%\item For the 64bits Python 3.7 version, double click on (version may differ):\ignoreRST{\\} \texttt{exudyn-1.0.248.win-amd64-py3.7.msi}
+%\item Follow the instructions of the installer
+%\item If Python / Anaconda is not found by the installer, provide the 'Python directory' as the installation directory of Anaconda3, which usually is installed in:\\
+%\texttt{C:$\backslash$ProgramData$\backslash$Anaconda3}
+%\ei
 
 %+++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Install from specific Wheel (UBUNTU and Windows)}

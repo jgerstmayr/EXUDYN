@@ -112,7 +112,7 @@ mbs.variables['activateMouseDrag'] = True
 if activateWithKeyPress:
     mbs.variables['activateMouseDrag'] = False
     
-def UFmouseDrag0(mbs, t, itemIndex, u, v, k, d, offset, frict, frictZone):
+def UFmouseDrag0(mbs, t, itemIndex, u, v, k, d, offset): #changed 2023-01-21:, mu, muPropZone):
     if not mbs.variables['activateMouseDrag'] == True:
         return 0
     p = SC.GetCurrentMouseCoordinates(True)
@@ -120,13 +120,13 @@ def UFmouseDrag0(mbs, t, itemIndex, u, v, k, d, offset, frict, frictZone):
     #print("u=",u)
     return k*(Ltot-0.5*sx+u-p[0]) + d*v
 
-def UFmouseDrag1(mbs, t, itemIndex, u, v, k, d, offset, frict, frictZone):
+def UFmouseDrag1(mbs, t, itemIndex, u, v, k, d, offset): #changed 2023-01-21:, mu, muPropZone):
     if not mbs.variables['activateMouseDrag'] == True:
         return 0
     p = SC.GetCurrentMouseCoordinates(True)
     return k*(u-p[1]) + d*v
 
-def UFmouseDrag2(mbs, t, itemIndex, u, v, k, d, offset, frict, frictZone):
+def UFmouseDrag2(mbs, t, itemIndex, u, v, k, d, offset): #changed 2023-01-21:, mu, muPropZone):
     if not mbs.variables['activateMouseDrag'] == True:
         return 0
     p = SC.GetCurrentMouseCoordinates(True)

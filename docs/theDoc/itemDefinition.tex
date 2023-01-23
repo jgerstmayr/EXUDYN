@@ -761,6 +761,7 @@ The item VNode1D has the following parameters:\vspace{-1cm}\\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionTest.py}{\texttt{lugreFrictionTest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/multiprocessingTest.py}{\texttt{multiprocessingTest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateSpringDamperExt.py}{\texttt{coordinateSpringDamperExt.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py}{\texttt{distanceSensor.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}} (TestModels/)
 \ei
@@ -1525,7 +1526,7 @@ The item VObjectMassPoint has the following parameters:\vspace{-1cm}\\
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorGravityTest.py}{\texttt{connectorGravityTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCoordinateTest.py}{\texttt{contactCoordinateTest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismTest.py}{\texttt{fourBarMechanismTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateSpringDamperExt.py}{\texttt{coordinateSpringDamperExt.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -1891,6 +1892,7 @@ The item VObjectRotationalMass1D has the following parameters:\vspace{-1cm}\\
 \noindent For examples on ObjectRotationalMass1D see Examples and TestModels:
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py}{\texttt{distanceSensor.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateSpringDamperExt.py}{\texttt{coordinateSpringDamperExt.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}} (TestModels/)
 \ei
 
@@ -5534,7 +5536,7 @@ The item VObjectConnectorSpringDamper has the following parameters:\vspace{-1cm}
     \be
       \delta \Delta\! \LU{0}{\pv} = \delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \eqComma
     \ee
-    and the virtual work (not the transposed version here, because the resulting generalized forces shall be a column vector,
+    and the virtual work (note the transposed version here, because the resulting generalized forces shall be a column vector),
     \be
       \delta W_{SD} = \fv \delta \Delta\! \LU{0}{\pv} 
       = \left( k\cdot(L-L_0) + d \cdot (\dot L - \dot L_0) + f_{a} \right) \left(\delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \right)\tp \vv_{f} 
@@ -6037,7 +6039,7 @@ The item VObjectConnectorRigidBodySpringDamper has the following parameters:\vsp
             \dv \vp{\LU{J0}{\Delta\vv}}{\LU{J0}{\Delta\omega}}
     \ee
     For the application of joint forces to markers, $[\LU{J0}{\fv_{SD}},\,\LU{J0}{\mv_{SD}}]\tp$ is transformed into global coordinates.
-    if \texttt{activeConnector = False}, $\LU{J0}{\fv_{SD}}$ and  $\LU{J0}{\mv_{SD}}$ are set to zero.:
+    if \texttt{activeConnector = False}, $\LU{J0}{\fv_{SD}}$ and  $\LU{J0}{\mv_{SD}}$ are set to zero.
 
     If the springForceTorqueUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
 	$\fv_{SD}$ instead becomes ($t$ is current time)
@@ -6516,10 +6518,8 @@ A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates; con
     stiffness &     Real &      &     0. &     stiffness [SI:N/m] of spring; acts against relative value of coordinates\\ \hline
     damping &     Real &      &     0. &     damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates\\ \hline
     offset &     Real &      &     0. &     offset between two coordinates (reference length of springs), see equation\\ \hline
-    dryFriction &     Real &      &     0. &     dry friction force [SI:N] against relative velocity; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$\\ \hline
-    dryFrictionProportionalZone &     Real &      &     0. &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
-    springForceUserFunction &     PyFunctionMbsScalarIndexScalar7 &     \tabnewline  &     \tabnewline 0 &     A Python function which defines the spring force with 8 parameters, see equations section / see description below\\ \hline
+    springForceUserFunction &     PyFunctionMbsScalarIndexScalar5 &     \tabnewline  &     \tabnewline 0 &     A Python function which defines the spring force with 8 parameters, see equations section / see description below\\ \hline
     visualization & VObjectConnectorCoordinateSpringDamper & & & parameters for visualization of item \\ \hline
 	  \end{longtable}
 	\end{center}
@@ -6543,8 +6543,6 @@ The item VObjectConnectorCoordinateSpringDamper has the following parameters:\vs
 \rowTable{stiffness}{$k$}{}
 \rowTable{damping}{$d$}{}
 \rowTable{offset}{$l_\mathrm{off}$}{}
-\rowTable{dryFriction}{$f_\mu$}{}
-\rowTable{dryFrictionProportionalZone}{$v_\mu$}{}
 \rowTable{springForceUserFunction}{$\mathrm{UF} \in \Rcal$}{}
 \finishTable
 {\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
@@ -6570,24 +6568,37 @@ The item VObjectConnectorCoordinateSpringDamper has the following parameters:\vs
     \be
       \Delta v= v_{m1} - v_{m0}
     \ee
-    If $f_\mu > 0$, the friction force is computed as 
-    \be
-      f_\mathrm{friction} = \left\{ 
-              \begin{aligned} \mathrm{Sgn}(\Delta v) \cdot f_\mu \quad \mathrm{if} \quad |\Delta v| \ge v_\mu \\
-              \frac{\Delta v}{v_\mu} f_\mu \quad \mathrm{if} \quad |\Delta v| < v_\mu 
-              \end{aligned}  \right.
-    \ee
+    %If $f_\mu > 0$, the friction force is computed as 
+    %\be
+    %  f_\mathrm{friction} = \left\{ 
+    %          \begin{aligned} \mathrm{Sgn}(\Delta v) \cdot f_\mu \quad \mathrm{if} \quad |\Delta v| \ge v_\mu \\
+    %          \frac{\Delta v}{v_\mu} f_\mu \quad \mathrm{if} \quad |\Delta v| < v_\mu 
+    %          \end{aligned}  \right.
+    %\ee
     If \texttt{activeConnector = True}, the scalar spring force vector is computed as
     \be
-      f_{SD} = k \left( \Delta q - l_\mathrm{off} \right) + d \cdot \Delta v + f_\mathrm{friction}
+      f_{SD} = k \left( \Delta q - l_\mathrm{off} \right) + d \cdot \Delta v % + f_\mathrm{friction}
     \ee
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
     \be
-      f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta q, \Delta v, k, d, l_\mathrm{off}, f_\mu, v_\mu)
+      f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta q, \Delta v, k, d, l_\mathrm{off})%, f_\mu, v_\mu)
     \ee
     and \texttt{iN} represents the itemNumber (=objectNumber).
 
-    If \texttt{activeConnector = False}, $f_{SD}$ is set to zero.:
+    If \texttt{activeConnector = False}, $f_{SD}$ is set to zero.
+
+    NOTE {\small that until 2023-01-21 (exudyn V1.5.76), the CoordinateSpringDamper included the parameters dryFriction and dryFrictionProportionalZone.
+    These parameters have been removed and they are only available in CoordinateSpringDamperExt, HOWEVER, with different names.
+    In order to use CoordinateSpringDamperExt instead of the old CoordinateSpringDamper with the same friction behavior, we recoomend:
+    \bi
+      \item USE CoordinateSpringDamperExt.fDynamicFriction INSTEAD of CoordinateSpringDamper.dryFriction
+      \item USE CoordinateSpringDamperExt.frictionProportionalZone INSTEAD of CoordinateSpringDamper.dryFrictionProportionalZone
+      \item CoordinateSpringDamperExt.frictionProportionalZone has a different behavior in case that it is zero; 
+            thus use 1e-16 in this case, to get as close as possible to previous behaviour
+      \item the variables stiffness, damping and offset have the same interpretation in both objects
+      \item keep every other friction, sticking and contact variables in CoordinateSpringDamperExt as default values
+      \item user functions obtained a new interface in CoordinateSpringDamperExt, which just needs to be adapted
+    \ei}
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, dryFriction, dryFrictionProportionalZone)}
@@ -6607,25 +6618,29 @@ The item VObjectConnectorCoordinateSpringDamper has the following parameters:\vs
       \rowTable{\texttt{stiffness}}{Real}{copied from object}
       \rowTable{\texttt{damping}}{Real}{copied from object}
       \rowTable{\texttt{offset}}{Real}{copied from object}
-      \rowTable{\texttt{dryFriction}}{Real}{copied from object}
-      \rowTable{\texttt{dryFrictionProportionalZone}}{Real}{copied from object}
+      %REMOVED:\rowTable{\texttt{dryFriction}}{Real}{copied from object}
+      %REMOVED:\rowTable{\texttt{dryFrictionProportionalZone}}{Real}{copied from object}
       \rowTable{\returnValue}{Real}{scalar value of computed force}
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
     \pythonstyle
     \begin{lstlisting}[language=Python]
-    #see also mini example!
-    def UFforce(mbs, t, itemNumber, u, v, k, d, offset, dryFriction, dryFrictionProportionalZone): 
+    #see also mini example! NOTE changes above since 2023-01-23
+    def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
         return k*(u-offset) + d*v
     \end{lstlisting}
+    %old until 2023-01-21:
+    %def UFforce(mbs, t, itemNumber, u, v, k, d, offset, dryFriction, dryFrictionProportionalZone): 
+    %    return k*(u-offset) + d*v
 \vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
 \mysubsubsubsection{MINI EXAMPLE for ObjectConnectorCoordinateSpringDamper}
 \label{miniExample_ObjectConnectorCoordinateSpringDamper}
 \pythonstyle
 \begin{lstlisting}[language=Python, firstnumber=1]
-    def springForce(mbs, t, itemNumber, u, v, k, d, offset, 
-                    dryFriction, dryFrictionProportionalZone):
+    #define user function:
+    #NOTE: removed 2023-01-21: dryFriction, dryFrictionProportionalZone
+    def springForce(mbs, t, itemNumber, u, v, k, d, offset): 
         return 0.1*k*u+k*u**3+v*d
 
     nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
@@ -6673,6 +6688,261 @@ The item VObjectConnectorCoordinateSpringDamper has the following parameters:\vs
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py}{\texttt{ANCFcontactFrictionTest.py}} (TestModels/)
 \item  ...
 
+\ei
+
+%
+\newpage
+
+%+++++++++++++++++++++++++++++++++++
+\mysubsubsection{ObjectConnectorCoordinateSpringDamperExt}
+\label{sec:item:ObjectConnectorCoordinateSpringDamperExt}
+A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates; same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction; has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.\vspace{12pt}
+ \\{\bf Additional information for ObjectConnectorCoordinateSpringDamperExt}:
+\bi
+  \item The Object has the following types = \texttt{Connector}
+  \item Requested marker type = \texttt{Coordinate}
+  \item Requested node type = \texttt{GenericData}
+  \item {\bf Short name} for Python = {\bf CoordinateSpringDamperExt}  \item {\bf Short name} for Python (visualization object) = {\bf VCoordinateSpringDamperExt}\ei
+\vspace{12pt} \noindent The item {\bf ObjectConnectorCoordinateSpringDamperExt} with type = 'ConnectorCoordinateSpringDamperExt' has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    name &     String &      &     '' &     connector's unique name\\ \hline
+    markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
+    nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData for 3 data coordinates (friction mode, last sticking position, limit stop state), see description for details; must exist in case of bristle friction model or limit stops\\ \hline
+    stiffness &     Real &      &     0. &     stiffness [SI:N/m] of spring; acts against relative value of coordinates\\ \hline
+    damping &     Real &      &     0. &     damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates\\ \hline
+    offset &     Real &      &     0. &     offset between two coordinates (reference length of springs), see equation; it can be used to represent the pre-scribed drive coordinate\\ \hline
+    velocityOffset &     Real &      &     0. &     offset between two coordinates; used to model D-control of a drive, where damping is not acting against prescribed velocity\\ \hline
+    factor0 &     Real &      &     1. &     marker 0 coordinate is multiplied with factor0\\ \hline
+    factor1 &     Real &      &     1. &     marker 1 coordinate is multiplied with factor1\\ \hline
+    fDynamicFriction &     UReal &      &     0. &     dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$\\ \hline
+    fStaticFrictionOffset &     UReal &      &     0. &     static (dry) friction offset force [SI:N]; assuming a normal force $f_N$, the friction force is limited by $f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}$\\ \hline
+    stickingStiffness &     UReal &      &     0. &     stiffness of bristles in sticking case  [SI:N/m]\\ \hline
+    stickingDamping &     UReal &      &     0. &     damping of bristles in sticking case  [SI:N/(m/s)]\\ \hline
+    exponentialDecayStatic &     PReal &      &     1.e-3 &     relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at $\Delta v = v_\mathrm{exp}$, the static friction offset force is reduced to 36.8\%\\ \hline
+    fViscousFriction &     Real &      &     0. &     viscous friction force part [SI:N/(m s)], acting against relative velocity in sliding case\\ \hline
+    frictionProportionalZone &     UReal &      &     0. &     if non-zero, a regularized Stribeck model is used, regularizing friction force around zero velocity - leading to zero friction force in case of zero velocity; this does not require a data node at all; if zero, the bristle model is used, which requires a data node which contains previous friction state and last sticking position\\ \hline
+    limitStopsUpper &     Real &      &     0. &     upper (maximum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates\\ \hline
+    limitStopsLower &     Real &      &     0. &     lower (minimum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates\\ \hline
+    limitStopsStiffness &     UReal &      &     0. &     stiffness [SI:N/m] of limit stop (contact stiffness); following a linear contact model\\ \hline
+    limitStopsDamping &     UReal &      &     0. &     damping [SI:N/(m/s)] of limit stop (contact damping); following a linear contact model\\ \hline
+    useLimitStops &     bool &      &     False &     if True, limit stops are considered and parameters must be set accordingly; furthermore, the NodeGenericData must have 3 data coordinates\\ \hline
+    activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
+    springForceUserFunction &     PyFunctionMbsScalarIndexScalar11 &     \tabnewline  &     \tabnewline 0 &     A Python function which defines the spring force with 8 parameters, see equations section / see description below\\ \hline
+    visualization & VObjectConnectorCoordinateSpringDamperExt & & & parameters for visualization of item \\ \hline
+	  \end{longtable}
+	\end{center}
+The item VObjectConnectorCoordinateSpringDamperExt has the following parameters:\vspace{-1cm}\\ 
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
+    show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
+    drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
+    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+	  \end{longtable}
+	\end{center}
+\par\noindent\rule{\textwidth}{0.4pt}
+\mysubsubsubsection{DESCRIPTION of ObjectConnectorCoordinateSpringDamperExt:}
+\label{description_ObjectConnectorCoordinateSpringDamperExt}
+\paragraph{Information on input parameters:} 
+\startTable{input parameter}{symbol}{description see tables above}
+\rowTable{stiffness}{$k$}{}
+\rowTable{damping}{$d$}{}
+\rowTable{offset}{$x_\mathrm{off}$}{}
+\rowTable{velocityOffset}{$v_\mathrm{off}$}{}
+\rowTable{factor0}{$f_0$}{}
+\rowTable{factor1}{$f_1$}{}
+\rowTable{fDynamicFriction}{$f_{\mu,\mathrm{d}}$}{}
+\rowTable{fStaticFrictionOffset}{$f_{\mu,\mathrm{so}}$}{}
+\rowTable{stickingStiffness}{$k_\mu$}{}
+\rowTable{stickingDamping}{$d_\mu$}{}
+\rowTable{exponentialDecayStatic}{$v_\mathrm{exp}$}{}
+\rowTable{fViscousFriction}{$f_{\mu,\mathrm{v}}$}{}
+\rowTable{frictionProportionalZone}{$v_\mathrm{reg}$}{}
+\rowTable{limitStopsUpper}{$s_\mathrm{upper}$}{}
+\rowTable{limitStopsLower}{$s_\mathrm{lower}$}{}
+\rowTable{limitStopsStiffness}{$k_\mathrm{limits}$}{}
+\rowTable{limitStopsDamping}{$d_\mathrm{limits}$}{}
+\rowTable{springForceUserFunction}{$\mathrm{UF} \in \Rcal$}{}
+\finishTable
+{\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: 
+\startTable{output variable}{symbol}{description}
+\rowTable{Displacement}{$\Delta q$}{relative scalar displacement of marker coordinates}
+\rowTable{Velocity}{$\Delta v$}{difference of scalar marker velocity coordinates}
+\rowTable{Force}{$f_{SD}$}{scalar spring force}
+\finishTable
+ \noindent
+    \mysubsubsubsection{Definition of quantities}
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{marker m0 coordinate}{$q_{m0}$}{current displacement coordinate which is provided by marker m0; does NOT include reference coordinate!}
+    \rowTable{marker m1 coordinate}{$q_{m1}$}{}
+    \rowTable{marker m0 velocity coordinate}{$v_{m0}$}{current velocity coordinate which is provided by marker m0}
+    \rowTable{marker m1 velocity coordinate}{$v_{m1}$}{}
+    \finishTable
+    \mysubsubsubsection{Connector forces}
+    Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates),
+    \be
+      q= f_1 \cdot q_{m1} - f_0 \cdot q_{m0}
+    \ee
+    and relative velocity,
+    \be
+      v= f_1 \cdot v_{m1} - f_0 \cdot v_{m0}
+    \ee
+    The friction force is computed from given friction 'force' parameters, as there is no normal force in this model.
+    This means, that \texttt{fDynamicFriction} represents $\mu_d \cdot F_N$ in which $\mu_d$ is the friction parameter and 
+    $F_N$ is an according normal force.
+    
+    The friction force is computed for different cases:
+    \bi
+      \item CASE 1: \texttt{frictionProportionalZone != 0} ($v_\mathrm{reg} \neq 0$): \\
+      This case works well for explicit integrators and represents simplified friction. It is suited best, e.g., for drives if considered
+      for a specific velocity, but not for the velocity=0 (at which no friction force is produced).
+        If $f_{\mu,\mathrm{d}} > 0$ or $f_{\mu,\mathrm{so}} > 0$ or $f_{\mu,\mathrm{v}} != 0$, the Stribeck friction model is used, with
+        \be
+          f_\mathrm{friction} = \begin{cases} 
+               (f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}}) \frac{\Delta v}{v_\mathrm{reg}}, \quad \mathrm{if} \quad |v| <= v_\mathrm{reg} 
+                     \quad \mathrm{and} \quad v_\mathrm{reg} \neq 0 \\
+               \mathrm{Sign}(v)\left(f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} + 
+               f_{\mu,\mathrm{v}} (|v|-v_\mathrm{reg}) \right), \quad \mathrm{else}
+               \end{cases}
+        \ee
+      This case does not use a PostNewton iteration (which may be advantageous in constant step size explicit integration, 
+      but may be problematic in implicit integration).
+      \item CASE 2: \texttt{frictionProportionalZone != 0} (or \texttt{useLimitStops=True}): \\
+        This case is perfectly suited for implicit integration, as it includes special switching variables that help to 
+        avoid numerical problems due to switching (e.g., between stick and slip) during a Newton iteration. 
+        In this case, a so-called bristle model is used, which requires the nodeNumber (data node) to be defined by a GenericDataNode, 
+       which must contain 3 data variables. In case of sticking, the sticking force results from a spring-damper model with 
+       parameters $k_\mathrm{limits}$ and $d_\mathrm{limits}$, which resolves sticking very well. The last sticking position
+       is tracked, which allows to change between stick and slip; however, transition means a reduction of accuracy and
+       requires additional computation of system Jacobians and Newton or discontinuous iterations.
+       This case includes a PostNewton iteration to switch between stick and slip.
+    \ei
+    In CASE 2, the GenericDataNode has the 3 data variables (friction mode, last sticking position, limit stop state):
+    \bi
+      \item[0:] friction mode  $d_{\mu}$: 
+          $d_{\mu}=0$: stick, 
+          $d_{\mu}=\pm f_\mathrm{slip}$: slip (in according positive or negative direction); $f_\mathrm{slip}$ representing the slipping force
+          %not possible $d_{\mu}=-2$: undefined; solver should determine
+      \item[1:] last sticking position  $x_{lsp}$: contains relative coordinate $q$ at last sticking position; 
+          in the sticking case, any deviation from that position leads to an additional bristle force 
+          \be
+            f_\mathrm{friction}^* = (q-x_{lsp}) \cdot k_\mathrm{\mu} + v \cdot d_\mathrm{\mu}
+          \ee
+      \item[2:] limit stop state $d_{ls}$: $d_{ls} = 0$: no limit reached (no contact, 
+          $d_{ls}<0$: limitStopsLower surpassed, $d_{ls}>0$: limitStopsUpper surpassed; 
+          $|d_{ls}|$ contains the penetration value of the soft contact model
+    \ei
+    Initialization of the GenericDataNode should be done such that the initial state (e.g. stick) is already set within this variable.
+    Not doing so may change results (as the solver assumes that the model is already slipping) and requires additional iterations.
+    NOTE, that in particular, if $d_{\mu}$ is initilized with 0 (stick) and $x_{lsp}$ (last sticking position) differs largely
+    from the current $q$, a large initial force may result. 
+    %not possible: In this case $d_{\mu}=-2$ is advantageous.
+    
+    The contact force $f_\mathrm{contact}$ is computed if limit stops are reached. 
+    The contact is represented by a spring-damper, which is activated as soon as the limit is reached and deactivated, if the limit is left again.
+    Contact forces are computed from stiffness $k_\mathrm{limits}$ and damping $d_\mathrm{limits}$, penetration into stop and velocity,
+    \be
+      f_\mathrm{contact} = 
+          \begin{cases} 
+               k_\mathrm{limits} \cdot (q-s_\mathrm{upper}) +  d_\mathrm{limits} \cdot v \quad \mathrm{if} \quad q > s_\mathrm{upper}\\
+               k_\mathrm{limits} \cdot (q-s_\mathrm{lower}) +  d_\mathrm{limits} \cdot v \quad \mathrm{if} \quad q < s_\mathrm{lower}
+               \end{cases}
+    \ee
+    %
+    NOTE: while a combination of friction and limit stop is possible, it may be wanted to put a friction with 
+    \texttt{frictionProportionalZone != 0} and a limit stop into two different objects, as the combined behavior 
+    would switch to a PostNewton method for the regularized friction model.
+    
+    If \texttt{activeConnector = True}, the scalar spring force vector is computed as
+    \be
+      f_{SD} = k \cdot \left( q - x_\mathrm{off} \right) + d \cdot \left( v - v_\mathrm{off} \right)
+      + f_\mathrm{friction} + f_\mathrm{contact}
+    \ee
+    If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
+    \be
+      f_{SD} = \mathrm{UF}(mbs, t, i_N, q, v, k, d, x_\mathrm{off}, v_\mathrm{off}, 
+               f_{\mu,\mathrm{d}}, f_{\mu,\mathrm{so}}, v_\mathrm{exp}, f_{\mu,\mathrm{v}}, v_\mathrm{reg})
+    \ee
+    and \texttt{iN} represents the itemNumber (=objectNumber).
+
+    The virtual work of the connector force is computed from the virtual displacement 
+    \be
+      \delta q = f_1 \cdot \delta q_{m1} - f_0 \cdot \delta q_{m0} \eqComma
+    \ee
+    and the virtual work results as
+    \be
+      \delta W_{SD} = f_{SD} \cdot \delta q
+      = f_{SD} \cdot \left( f_1 \cdot \delta q_{m1} - f_0 \cdot \delta q_{m0} \right)
+      \eqDot
+    \ee
+    The generalized (elastic) forces thus read for the markers $m0$ and $m1$,
+    \be
+      \Qm_{SD, m0} 
+      = -f_{SD} \cdot f_0 \cdot \Jm_{coord,m0} \eqComma \quad
+      \Qm_{SD, m1} 
+      = f_{SD} \cdot f_1 \cdot \Jm_{coord,m1} \eqComma    
+    \ee
+    in which $\Jm_{coord,m0}$ and $\Jm_{coord,m1}$ represent the coordinate Jacobians of the respective markers.
+    As can be seen in generalized force $\Qm$, the factors $f_0$ and $f_1$ are added accordingly which increase the 
+    force on 'slower' coordinates for certain gear ratios.
+
+    If \texttt{activeConnector = False}, $f_{SD}$ is set to zero.
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, velocityOffset, 
+    fDynamicFriction, fStaticFrictionOffset, exponentialDecayStatic, fViscousFriction, frictionProportionalZone)}
+    A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity) 
+    and several object parameters.
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
+
+    Only a subset of object variables is passed to the function using the current values of the CoordinateSpringDamperExt object.
+    For parameters that are not passed via the user function interface, use mbs.GetObject(itemNumber) or, e.g.,
+    mbs.GetObjectParameter(itemNumber, 'limitStopsUpper') to obtain these parameters inside the user function.
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{displacement}}{Real}{$\Delta q$}
+      \rowTable{\texttt{velocity}}{Real}{$\Delta v$}
+      %
+      \rowTable{\texttt{stiffness}}{Real}{copied from object}
+      \rowTable{\texttt{damping}}{Real}{copied from object}
+      \rowTable{\texttt{offset}}{Real}{copied from object}
+      \rowTable{\texttt{velocityOffset}}{Real}{copied from object}
+      \rowTable{\texttt{fDynamicFriction}}{Real}{copied from object}
+      \rowTable{\texttt{fStaticFrictionOffset}}{Real}{copied from object}
+      \rowTable{\texttt{exponentialDecayStatic}}{Real}{copied from object}
+      \rowTable{\texttt{fViscousFriction}}{Real}{copied from object}
+      \rowTable{\texttt{frictionProportionalZone}}{Real}{copied from object, also called regularization velocity or regVel}
+      \rowTable{\returnValue}{Real}{scalar value of computed force}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    #see also mini example! 
+    #For further parameters, use mbs.GetObject(itemNumber) or 
+    #  e.g. mbs.GetObjectParameter(itemNumber, 'limitStopsUpper')
+    def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStaticOffset, muExpVel, muViscous, muRegVel):
+        return k*(u-offset) + d*v
+    \end{lstlisting}
+\vspace{6pt}\par\noindent\rule{\textwidth}{0.4pt}
+%
+\noindent For examples on ObjectConnectorCoordinateSpringDamperExt see Examples and TestModels:
+\bi
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionTest.py}{\texttt{lugreFrictionTest.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py}{\texttt{massSpringFrictionInteractive.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateSpringDamperExt.py}{\texttt{coordinateSpringDamperExt.py}} (TestModels/)
 \ei
 
 %
@@ -10421,7 +10691,7 @@ The item VLoadCoordinate has the following parameters:\vspace{-1cm}\\
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFslidingAndALEjointTest.py}{\texttt{ANCFslidingAndALEjointTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCoordinateTest.py}{\texttt{contactCoordinateTest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateSpringDamperExt.py}{\texttt{coordinateSpringDamperExt.py}} (TestModels/)
 \item  ...
 
 \ei
@@ -10548,8 +10818,8 @@ The item VSensorObject has the following parameters:\vspace{-1cm}\\
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateSpringDamperExt.py}{\texttt{coordinateSpringDamperExt.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py}{\texttt{geneticOptimizationTest.py}} (TestModels/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/hydraulicActuatorSimpleTest.py}{\texttt{hydraulicActuatorSimpleTest.py}} (TestModels/)
 \item  ...
 
 \ei

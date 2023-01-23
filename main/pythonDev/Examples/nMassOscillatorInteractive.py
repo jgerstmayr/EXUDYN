@@ -97,7 +97,7 @@ mbs.variables['dampingPrev'] = damper
 
 
 # #user function for spring force
-# def springForce(mbs, t, itemIndex, u, v, k, d, offset, mu, muPropZone):
+# def springForce(mbs, t, itemIndex, u, v, k, d): #changed 2023-01-21:, mu, muPropZone):
 #     k=mbs.variables['stiffness']
 #     d=mbs.variables['damping']
 #     if mbs.variables['mode'] == 0:

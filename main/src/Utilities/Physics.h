@@ -28,7 +28,7 @@ namespace ExuPhysics {
 	inline Real StribeckFunction(Real vel, Real muDynamic, Real muStaticOffset, Real muViscous, Real expVel, Real regVel)
 	{
 		Real result = 0;
-		if (fabs(vel) <= regVel)
+        if (fabs(vel) <= regVel && regVel != 0) //2023-01-22: extended for case regVel = 0
 		{
 			result = (muDynamic + muStaticOffset) * vel / regVel;
 		}

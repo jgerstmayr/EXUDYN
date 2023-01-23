@@ -47,7 +47,7 @@ graphicscube2 = GraphicsDataRectangle(-L,-0.5*b, n*L*2**0.5, 0.5*b, color4steelb
 pi = 3.1415926535897932384626
 
 #prescribed driving function:
-def springForceUF(mbs, t, itemIndex, u, v, k, d, offset, mu, muPropZone):
+def springForceUF(mbs, t, itemIndex, u, v, k, d, offset): #changed 2023-01-21:, mu, muPropZone):
     f=k*(u+offset)+v*d
     return f
 
@@ -168,7 +168,8 @@ for case in range(2):
     
             #activate rotation of V-body
             mCoordPhiV = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nBodyV, coordinate=2)) #rotation
-            mbs.AddObject(ObjectConnectorCoordinateSpringDamper(markerNumbers=[mCoordGround, mCoordPhiV], stiffness=1e4, damping=10e3, offset=0.25*pi,springForceUserFunction=springForceUF))
+            mbs.AddObject(ObjectConnectorCoordinateSpringDamper(markerNumbers=[mCoordGround, mCoordPhiV], stiffness=1e4, damping=10e3, 
+            offset=0.25*pi,springForceUserFunction=springForceUF))
     
         else:
             if useCartesianSD:

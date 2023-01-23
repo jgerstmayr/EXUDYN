@@ -105,14 +105,17 @@ def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
     generalContactIndex = int(factors[0])
     dirSensor = factors[5:8]
     markerNumber = int(factors[1])
+    hasRotation = False
     if markerNumber != -1:
         p0 = mbs.GetMarkerOutput(markerNumber, variableType=exudyn.OutputVariableType.Position)
-        A0 = mbs.GetMarkerOutput(markerNumber, variableType=exudyn.OutputVariableType.RotationMatrix).reshape((3,3))
-        dirSensor = A0 @ dirSensor
+        hasRotation = ('Rigid' in mbs.GetMarker(markerNumber)['markerType'])
+        if hasRotation:
+            A0 = mbs.GetMarkerOutput(markerNumber, variableType=exudyn.OutputVariableType.RotationMatrix).reshape((3,3))
+            dirSensor = A0 @ dirSensor
     else:
         p0 = np.array(factors[2:5])
 
-    [minDistance, maxDistance, cylinderRadius, selectedTypeIndex, measureVelocity, graphicsObject] = factors[8:14]
+    [minDistance, maxDistance, cylinderRadius, selectedTypeIndex, measureVelocity, graphicsObject, flags] = factors[8:15]
     selectedTypeIndex = exudyn.ContactTypeIndex(int(selectedTypeIndex)) #only converts from int
     measureVelocity = bool(measureVelocity)
     graphicsObject = int(graphicsObject)
@@ -132,15 +135,21 @@ def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
         rv = [d]
 
     if graphicsObject != -1:
-        mbs.SetObjectParameter(graphicsObject,'referencePosition',p0 + d*np.array(Normalize(dirSensor)))
-        
+        factLen = 1
+        if int(flags) == 0:
+            factLen = 0
+
+        mbs.SetObjectParameter(graphicsObject,'referencePosition',p0 + factLen*(d*np.array(Normalize(dirSensor))) )
+        if hasRotation:
+            mbs.SetObjectParameter(graphicsObject,'referenceRotation', A0)
+            
     return rv
 
 #**function: Function to add distance sensor based on GeneralContact to mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
 #**input:
 #  generalContactIndex: the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(...) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1
 #  positionOrMarker: either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker
-#  dirSensor: the direction along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation
+#  dirSensor: the direction (no need to normalize) along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation if marker contains orientation (BodyRigid, NodeRigid)
 #  minDistance: the minimum distance which is accepted; smaller distance will be ignored
 #  maxDistance: the maximum distance which is accepted; items being at maxDistance or futher are ignored; if no items are found, the function returns maxDistance
 #  cylinderRadius: in case of spheres (selectedTypeIndex=ContactTypeIndex.IndexSpheresMarkerBased), a cylinder can be used which measures the shortest distance at a certain radius (geometrically interpreted as cylinder)
@@ -148,14 +157,15 @@ def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
 #  storeInternal: like with any SensorUserFunction, setting to True stores sensor data internally
 #  fileName: if defined, recorded data of SensorUserFunction is written to specified file
 #  measureVelocity: if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction 'dirSensor' and does not account for changes in geometry, thus it may be different from the time derivative of the distance!
-#  addGraphicsObject: if true, the distance sensor is also visualized graphically in a simplified manner; the distance sensor is also not rotating with the marker; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
+#  addGraphicsObject: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
+#  drawDisplaced: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
 #**output: creates sensor and returns according sensor number of SensorUserFunction
 def AddDistanceSensor(mbs, generalContactIndex,
                       positionOrMarker, dirSensor, minDistance=-1e7, 
                       maxDistance=1e7, cylinderRadius=0, 
                       selectedTypeIndex=exudyn.ContactTypeIndex.IndexEndOfEnumList,
                       storeInternal = False, fileName = '', measureVelocity = False,
-                      addGraphicsObject=False):
+                      addGraphicsObject=False, drawDisplaced=True):
     
     markerNumber = -1
     p0list = [0,0,0]
@@ -163,23 +173,31 @@ def AddDistanceSensor(mbs, generalContactIndex,
         p0list = list(positionOrMarker)
     elif type(positionOrMarker)==exudyn.MarkerIndex:
         markerNumber = float(int(positionOrMarker))
+        try:
+            p0list = mbs.GetMarkerOutput(markerNumber=0,variableType=exu.OutputVariableType.Position, configuration=exu.ConfigurationType.Reference)
+            p0list = list(p0list)
+        except:
+            p0list = [0,0,0] #this was just a trial, otherwise initialize with zeros (e.g. for special objects where this does not work)
     else:
         raise ValueError('AddDistanceSensor: positionOrMarker must be either MarkerIndex or 3D position as list or numpy.array')
 
     graphicsObject = -1 #signals that there is no graphics object
+    sign = 1.
+    if drawDisplaced:
+        sign = -1.
     if addGraphicsObject:
         if cylinderRadius == 0:
-            gData = GraphicsDataLine([[0,0,0],list(-np.array(dirSensor))], color = color4red)
+            gData = GraphicsDataLine([[0,0,0],list(sign*np.array(dirSensor))], color = color4red)
         else: 
-            gData = GraphicsDataCylinder([0,0,0],-np.array(dirSensor), radius=cylinderRadius, color = color4red)
+            gData = GraphicsDataCylinder([0,0,0],sign*np.array(dirSensor), radius=cylinderRadius, color = color4red)
             
         graphicsObject=mbs.AddObject(ObjectGround(referencePosition= p0list,
                                       visualization=VObjectGround(graphicsData=[gData])))
 
-
+    flags = int(drawDisplaced)
     dataUF = [float(generalContactIndex)]
     dataUF += [markerNumber] + p0list + list(dirSensor)
-    dataUF += [ minDistance, maxDistance, cylinderRadius, float(int(selectedTypeIndex)), float(measureVelocity), float(int(graphicsObject))] 
+    dataUF += [ minDistance, maxDistance, cylinderRadius, float(int(selectedTypeIndex)), float(measureVelocity), float(int(graphicsObject)), float(flags)] 
 
 
     sUF = mbs.AddSensor(SensorUserFunction(sensorNumbers=[], factors=dataUF,

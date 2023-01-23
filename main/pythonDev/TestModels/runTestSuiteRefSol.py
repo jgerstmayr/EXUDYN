@@ -31,6 +31,7 @@ def TestExamplesReferenceSolution():
         'connectorRigidBodySpringDamperTest.py':0.1827622474318292, #new 2022-07-11 (CState Parallel); 
         'contactCoordinateTest.py':0.0553131995062827,
         'ConvexContactTest.py':0.011770267410694153,                #new 2022-07-11 (CState Parallel); #before 2022-01-25?: 0.05737886603111926, 
+        'coordinateSpringDamperExt.py':17.084935539925155,          #new 2023-01-23
         'coordinateVectorConstraint.py':-1.0825265797698322,
         'coordinateVectorConstraintGenericODE2.py':-1.0825265797698322,
         'distanceSensor.py':1.867764310778691,

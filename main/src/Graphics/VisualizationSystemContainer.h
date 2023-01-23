@@ -199,7 +199,10 @@ public:
 	//! renderer reports to simulation that simulation can be continued
 	virtual void ContinueSimulation() override;
 
-	////! renderer signals that visualizationIsRunning flag should be set to "flag"; used to know whether WaitForUserToContinue or UpdatePostProcessData shall be called by solver
+    //! Renderer reports to simulation that pause flag shall be switched
+    virtual void SwitchPauseSimulation() override;
+
+    ////! renderer signals that visualizationIsRunning flag should be set to "flag"; used to know whether WaitForUserToContinue or UpdatePostProcessData shall be called by solver
 	//virtual void SetVisualizationIsRunning(bool flag = true) override;
 
 	//! if the system has changed or loaded, compute maximum box of all items and reset scene to the maximum box

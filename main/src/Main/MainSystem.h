@@ -134,7 +134,7 @@ public:
 	void SendRedrawSignal() { GetCSystem()->GetPostProcessData()->SendRedrawSignal(); };
 
 	//! interrupt further computation until user input --> 'pause' function
-	void WaitForUserToContinue() { GetCSystem()->GetPostProcessData()->WaitForUserToContinue(); }
+	void WaitForUserToContinue(bool printMessage = true) { GetCSystem()->GetPostProcessData()->WaitForUserToContinue(printMessage); }
 
 	//! return the render engine stop flag (e.g. in order to interrupt animation or postprocessing)
 	bool GetRenderEngineStopFlag() const { return GetCSystem()->GetPostProcessData()->stopSimulation; }

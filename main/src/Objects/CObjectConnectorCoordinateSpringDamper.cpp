@@ -32,18 +32,18 @@ inline void CObjectConnectorCoordinateSpringDamper::ComputeSpringForce(const Mar
 		{
 			//compute resulting force vector:
 			force = parameters.stiffness * (relPos - parameters.offset) + parameters.damping * relVel;
-			if (parameters.dryFriction != 0.)
-			{
-				if (fabs(relVel) < parameters.dryFrictionProportionalZone)
-				{
-					//as long as vVel < dryFrictionProportionalZone, friction force shall linearly increase
-					force += relVel / parameters.dryFrictionProportionalZone * parameters.dryFriction;
-				}
-				else
-				{
-					force += parameters.dryFriction*EXUstd::Sgn(relVel); //this should be put into the nonlinear iteration for better Newton convergence ...
-				}
-			}
+			//if (parameters.dryFriction != 0.)
+			//{
+			//	if (fabs(relVel) < parameters.dryFrictionProportionalZone)
+			//	{
+			//		//as long as vVel < dryFrictionProportionalZone, friction force shall linearly increase
+			//		force += relVel / parameters.dryFrictionProportionalZone * parameters.dryFriction;
+			//	}
+			//	else
+			//	{
+			//		force += parameters.dryFriction*EXUstd::Sgn(relVel); //this should be put into the nonlinear iteration for better Newton convergence ...
+			//	}
+			//}
 		}
 		else
 		{
@@ -117,25 +117,25 @@ void CObjectConnectorCoordinateSpringDamper::ComputeJacobianODE2_ODE2(EXUmath::M
 		//compute inner jacobian: factorODE2 * d(F)/(dq) + factorODE2_t * d(F)/(dq_t)
 		Real localJac = parameters.stiffness * factorODE2 + parameters.damping * factorODE2_t;
 
-		if (parameters.dryFriction != 0.)
-		{
-			//this is one line code duplication:
-			Real relVel = (markerData.GetMarkerData(1).vectorValue_t[0] - markerData.GetMarkerData(0).vectorValue_t[0]);
-			Real smooth = 0.01; //add some smoothening of the proportional zone for the Jacobian, as it otherwise may cause problems with Newton (switching variable would be better!)
-			if (fabs(relVel) < parameters.dryFrictionProportionalZone*(1.-smooth))
-			{
-				//as long as vVel < dryFrictionProportionalZone, friction force shall linearly increase
-				localJac += 1. / parameters.dryFrictionProportionalZone * parameters.dryFriction;
-			}
-			else if (fabs(relVel) < parameters.dryFrictionProportionalZone*(1. + smooth))
-			{
-				//untested!
-				Real fact = (parameters.dryFrictionProportionalZone*(1. + smooth) - fabs(relVel)) / (2 * smooth*parameters.dryFrictionProportionalZone);
-				localJac += fact / parameters.dryFrictionProportionalZone * parameters.dryFriction;
-			}
-			//otherwise zero
+		//if (parameters.dryFriction != 0.)
+		//{
+		//	//this is one line code duplication:
+		//	Real relVel = (markerData.GetMarkerData(1).vectorValue_t[0] - markerData.GetMarkerData(0).vectorValue_t[0]);
+		//	Real smooth = 0.01; //add some smoothening of the proportional zone for the Jacobian, as it otherwise may cause problems with Newton (switching variable would be better!)
+		//	if (fabs(relVel) < parameters.dryFrictionProportionalZone*(1.-smooth))
+		//	{
+		//		//as long as vVel < dryFrictionProportionalZone, friction force shall linearly increase
+		//		localJac += 1. / parameters.dryFrictionProportionalZone * parameters.dryFriction;
+		//	}
+		//	else if (fabs(relVel) < parameters.dryFrictionProportionalZone*(1. + smooth))
+		//	{
+		//		//untested!
+		//		Real fact = (parameters.dryFrictionProportionalZone*(1. + smooth) - fabs(relVel)) / (2 * smooth*parameters.dryFrictionProportionalZone);
+		//		localJac += fact / parameters.dryFrictionProportionalZone * parameters.dryFriction;
+		//	}
+		//	//otherwise zero
 
-		}
+		//}
 		temp.localJacobian(0, 0) = localJac;
 		//pout << "inside, localJac=" << localJac << "\n";
 	}

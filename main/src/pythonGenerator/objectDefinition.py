@@ -3896,7 +3896,7 @@ equations =
     \be
       \delta \Delta\! \LU{0}{\pv} = \delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \eqComma
     \ee
-    and the virtual work (not the transposed version here, because the resulting generalized forces shall be a column vector,
+    and the virtual work (note the transposed version here, because the resulting generalized forces shall be a column vector),
     \be
       \delta W_{SD} = \fv \delta \Delta\! \LU{0}{\pv} 
       = \left( k\cdot(L-L_0) + d \cdot (\dot L - \dot L_0) + f_{a} \right) \left(\delta \LU{0}{\pv}_{m1} - \delta \LU{0}{\pv}_{m0} \right)\tp \vv_{f} 
@@ -4326,7 +4326,7 @@ equations =
             \dv \vp{\LU{J0}{\Delta\vv}}{\LU{J0}{\Delta\omega}}
     \ee
     For the application of joint forces to markers, $[\LU{J0}{\fv_{SD}},\,\LU{J0}{\mv_{SD}}]\tp$ is transformed into global coordinates.
-    if \texttt{activeConnector = False}, $\LU{J0}{\fv_{SD}}$ and  $\LU{J0}{\mv_{SD}}$ are set to zero.:
+    if \texttt{activeConnector = False}, $\LU{J0}{\fv_{SD}}$ and  $\LU{J0}{\mv_{SD}}$ are set to zero.
 
     If the springForceTorqueUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
 	$\fv_{SD}$ instead becomes ($t$ is current time)
@@ -4821,24 +4821,37 @@ equations =
     \be
       \Delta v= v_{m1} - v_{m0}
     \ee
-    If $f_\mu > 0$, the friction force is computed as 
-    \be
-      f_\mathrm{friction} = \left\{ 
-              \begin{aligned} \mathrm{Sgn}(\Delta v) \cdot f_\mu \quad \mathrm{if} \quad |\Delta v| \ge v_\mu \\
-              \frac{\Delta v}{v_\mu} f_\mu \quad \mathrm{if} \quad |\Delta v| < v_\mu 
-              \end{aligned}  \right.
-    \ee
+    %If $f_\mu > 0$, the friction force is computed as 
+    %\be
+    %  f_\mathrm{friction} = \left\{ 
+    %          \begin{aligned} \mathrm{Sgn}(\Delta v) \cdot f_\mu \quad \mathrm{if} \quad |\Delta v| \ge v_\mu \\
+    %          \frac{\Delta v}{v_\mu} f_\mu \quad \mathrm{if} \quad |\Delta v| < v_\mu 
+    %          \end{aligned}  \right.
+    %\ee
     If \texttt{activeConnector = True}, the scalar spring force vector is computed as
     \be
-      f_{SD} = k \left( \Delta q - l_\mathrm{off} \right) + d \cdot \Delta v + f_\mathrm{friction}
+      f_{SD} = k \left( \Delta q - l_\mathrm{off} \right) + d \cdot \Delta v % + f_\mathrm{friction}
     \ee
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
     \be
-      f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta q, \Delta v, k, d, l_\mathrm{off}, f_\mu, v_\mu)
+      f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta q, \Delta v, k, d, l_\mathrm{off})%, f_\mu, v_\mu)
     \ee
     and \texttt{iN} represents the itemNumber (=objectNumber).
 
-    If \texttt{activeConnector = False}, $f_{SD}$ is set to zero.:
+    If \texttt{activeConnector = False}, $f_{SD}$ is set to zero.
+
+    NOTE {\small that until 2023-01-21 (exudyn V1.5.76), the CoordinateSpringDamper included the parameters dryFriction and dryFrictionProportionalZone.
+    These parameters have been removed and they are only available in CoordinateSpringDamperExt, HOWEVER, with different names.
+    In order to use CoordinateSpringDamperExt instead of the old CoordinateSpringDamper with the same friction behavior, we recoomend:
+    \bi
+      \item USE CoordinateSpringDamperExt.fDynamicFriction INSTEAD of CoordinateSpringDamper.dryFriction
+      \item USE CoordinateSpringDamperExt.frictionProportionalZone INSTEAD of CoordinateSpringDamper.dryFrictionProportionalZone
+      \item CoordinateSpringDamperExt.frictionProportionalZone has a different behavior in case that it is zero; 
+            thus use 1e-16 in this case, to get as close as possible to previous behaviour
+      \item the variables stiffness, damping and offset have the same interpretation in both objects
+      \item keep every other friction, sticking and contact variables in CoordinateSpringDamperExt as default values
+      \item user functions obtained a new interface in CoordinateSpringDamperExt, which just needs to be adapted
+    \ei}
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, dryFriction, dryFrictionProportionalZone)}
@@ -4858,23 +4871,27 @@ equations =
       \rowTable{\texttt{stiffness}}{Real}{copied from object}
       \rowTable{\texttt{damping}}{Real}{copied from object}
       \rowTable{\texttt{offset}}{Real}{copied from object}
-      \rowTable{\texttt{dryFriction}}{Real}{copied from object}
-      \rowTable{\texttt{dryFrictionProportionalZone}}{Real}{copied from object}
+      %REMOVED:\rowTable{\texttt{dryFriction}}{Real}{copied from object}
+      %REMOVED:\rowTable{\texttt{dryFrictionProportionalZone}}{Real}{copied from object}
       \rowTable{\returnValue}{Real}{scalar value of computed force}
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
     \pythonstyle
     \begin{lstlisting}[language=Python]
-    #see also mini example!
-    def UFforce(mbs, t, itemNumber, u, v, k, d, offset, dryFriction, dryFrictionProportionalZone): 
+    #see also mini example! NOTE changes above since 2023-01-23
+    def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
         return k*(u-offset) + d*v
     \end{lstlisting}
+    %old until 2023-01-21:
+    %def UFforce(mbs, t, itemNumber, u, v, k, d, offset, dryFriction, dryFrictionProportionalZone): 
+    %    return k*(u-offset) + d*v
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
-    def springForce(mbs, t, itemNumber, u, v, k, d, offset, 
-                    dryFriction, dryFrictionProportionalZone):
+    #define user function:
+    #NOTE: removed 2023-01-21: dryFriction, dryFrictionProportionalZone
+    def springForce(mbs, t, itemNumber, u, v, k, d, offset): 
         return 0.1*k*u+k*u**3+v*d
 
     nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
@@ -4905,10 +4922,10 @@ V,      CP,     markerNumbers,                  ,               ,       ArrayMar
 V,      CP,     stiffness,                      ,               ,       Real,       "0.",       ,       I,       "$k$stiffness [SI:N/m] of spring; acts against relative value of coordinates"
 V,      CP,     damping,                        ,               ,       Real,       "0.",       ,       IO,      "$d$damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates"
 V,      CP,     offset,                         ,               ,       Real,       "0.",       ,       IO,      "$l_\mathrm{off}$offset between two coordinates (reference length of springs), see equation"
-V,      CP,     dryFriction,                    ,               ,       Real,       "0.",       ,       IO,      "$f_\mu$dry friction force [SI:N] against relative velocity; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$"
-V,      CP,     dryFrictionProportionalZone,    ,               ,       Real,       "0.",       ,       IO,      "$v_\mu$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)"
+#V,      CP,     dryFriction,                    ,               ,       Real,       "0.",       ,       IO,      "$f_\mu$dry friction force [SI:N] against relative velocity; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$"
+#V,      CP,     dryFrictionProportionalZone,    ,               ,       Real,       "0.",       ,       IO,      "$v_\mu$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)"
 V,      CP,     activeConnector,                ,               ,       Bool,       "true",     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
-V,      CP,     springForceUserFunction,        ,               ,       PyFunctionMbsScalarIndexScalar7, 0,,       IO,     "$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with 8 parameters, see equations section / see description below"
+V,      CP,     springForceUserFunction,        ,               ,       PyFunctionMbsScalarIndexScalar5, 0,,       IO,     "$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with 8 parameters, see equations section / see description below"
 #
 Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return (parameters.springForceUserFunction!=0);", "", CI,  "return true, if object has a computation user function"  
 Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default function to return Marker numbers" 
@@ -4939,7 +4956,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorCoordinateSpringDamperExt
-classDescription = "A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates; same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction; has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. UNDER CONSTRUCTION"
+classDescription = "A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates; same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction; has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -4948,7 +4965,6 @@ classType = Object
 objectType = Connector
 addIncludesC = 'class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
 outputVariables = "{'Displacement':'$\Delta q$relative scalar displacement of marker coordinates', 'Velocity':'$\Delta v$difference of scalar marker velocity coordinates', 'Force':'$f_{SD}$scalar spring force'}"
-excludeFromTheDoc = True
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
     \mysubsubsubsection{Definition of quantities}
@@ -4961,66 +4977,187 @@ equations =
     \mysubsubsubsection{Connector forces}
     Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates),
     \be
-      \Delta q= q_{m1} - q_{m0}
+      q= f_1 \cdot q_{m1} - f_0 \cdot q_{m0}
     \ee
     and relative velocity,
     \be
-      \Delta v= v_{m1} - v_{m0}
+      v= f_1 \cdot v_{m1} - f_0 \cdot v_{m0}
     \ee
-    If $f_{\mu_s} > 0$, friction is computed using a so-called bristle model. This requires the data node to be defined accordingly, 
-    which must contain 3 data variables.
+    The friction force is computed from given friction 'force' parameters, as there is no normal force in this model.
+    This means, that \texttt{fDynamicFriction} represents $\mu_d \cdot F_N$ in which $\mu_d$ is the friction parameter and 
+    $F_N$ is an according normal force.
     
-    If $f_{\mu_d} > 0$ but $f_{\mu_s} = 0$, the Stribeck friction model is used, with
+    The friction force is computed for different cases:
+    \bi
+      \item CASE 1: \texttt{frictionProportionalZone != 0} ($v_\mathrm{reg} \neq 0$): \\
+      This case works well for explicit integrators and represents simplified friction. It is suited best, e.g., for drives if considered
+      for a specific velocity, but not for the velocity=0 (at which no friction force is produced).
+        If $f_{\mu,\mathrm{d}} > 0$ or $f_{\mu,\mathrm{so}} > 0$ or $f_{\mu,\mathrm{v}} != 0$, the Stribeck friction model is used, with
+        \be
+          f_\mathrm{friction} = \begin{cases} 
+               (f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}}) \frac{\Delta v}{v_\mathrm{reg}}, \quad \mathrm{if} \quad |v| <= v_\mathrm{reg} 
+                     \quad \mathrm{and} \quad v_\mathrm{reg} \neq 0 \\
+               \mathrm{Sign}(v)\left(f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} + 
+               f_{\mu,\mathrm{v}} (|v|-v_\mathrm{reg}) \right), \quad \mathrm{else}
+               \end{cases}
+        \ee
+      This case does not use a PostNewton iteration (which may be advantageous in constant step size explicit integration, 
+      but may be problematic in implicit integration).
+      \item CASE 2: \texttt{frictionProportionalZone != 0} (or \texttt{useLimitStops=True}): \\
+        This case is perfectly suited for implicit integration, as it includes special switching variables that help to 
+        avoid numerical problems due to switching (e.g., between stick and slip) during a Newton iteration. 
+        In this case, a so-called bristle model is used, which requires the nodeNumber (data node) to be defined by a GenericDataNode, 
+       which must contain 3 data variables. In case of sticking, the sticking force results from a spring-damper model with 
+       parameters $k_\mathrm{limits}$ and $d_\mathrm{limits}$, which resolves sticking very well. The last sticking position
+       is tracked, which allows to change between stick and slip; however, transition means a reduction of accuracy and
+       requires additional computation of system Jacobians and Newton or discontinuous iterations.
+       This case includes a PostNewton iteration to switch between stick and slip.
+    \ei
+    In CASE 2, the GenericDataNode has the 3 data variables (friction mode, last sticking position, limit stop state):
+    \bi
+      \item[0:] friction mode  $d_{\mu}$: 
+          $d_{\mu}=0$: stick, 
+          $d_{\mu}=\pm f_\mathrm{slip}$: slip (in according positive or negative direction); $f_\mathrm{slip}$ representing the slipping force
+          %not possible $d_{\mu}=-2$: undefined; solver should determine
+      \item[1:] last sticking position  $x_{lsp}$: contains relative coordinate $q$ at last sticking position; 
+          in the sticking case, any deviation from that position leads to an additional bristle force 
+          \be
+            f_\mathrm{friction}^* = (q-x_{lsp}) \cdot k_\mathrm{\mu} + v \cdot d_\mathrm{\mu}
+          \ee
+      \item[2:] limit stop state $d_{ls}$: $d_{ls} = 0$: no limit reached (no contact, 
+          $d_{ls}<0$: limitStopsLower surpassed, $d_{ls}>0$: limitStopsUpper surpassed; 
+          $|d_{ls}|$ contains the penetration value of the soft contact model
+    \ei
+    Initialization of the GenericDataNode should be done such that the initial state (e.g. stick) is already set within this variable.
+    Not doing so may change results (as the solver assumes that the model is already slipping) and requires additional iterations.
+    NOTE, that in particular, if $d_{\mu}$ is initilized with 0 (stick) and $x_{lsp}$ (last sticking position) differs largely
+    from the current $q$, a large initial force may result. 
+    %not possible: In this case $d_{\mu}=-2$ is advantageous.
+    
+    The contact force $f_\mathrm{contact}$ is computed if limit stops are reached. 
+    The contact is represented by a spring-damper, which is activated as soon as the limit is reached and deactivated, if the limit is left again.
+    Contact forces are computed from stiffness $k_\mathrm{limits}$ and damping $d_\mathrm{limits}$, penetration into stop and velocity,
     \be
-      f(v) = \begin{cases} 
-           (\mu_d + \mu_{s_{off}}) v, \quad \mathrm{if} \quad |v| <= v_{reg}\\
-           \mathrm{Sign}(v)\left( \mu_d + \mu_{s_{off}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} + \mu_v (|v|-v_{reg}) \right), \quad \mathrm{else}
-           \end{cases}
+      f_\mathrm{contact} = 
+          \begin{cases} 
+               k_\mathrm{limits} \cdot (q-s_\mathrm{upper}) +  d_\mathrm{limits} \cdot v \quad \mathrm{if} \quad q > s_\mathrm{upper}\\
+               k_\mathrm{limits} \cdot (q-s_\mathrm{lower}) +  d_\mathrm{limits} \cdot v \quad \mathrm{if} \quad q < s_\mathrm{lower}
+               \end{cases}
     \ee
+    %
+    NOTE: while a combination of friction and limit stop is possible, it may be wanted to put a friction with 
+    \texttt{frictionProportionalZone != 0} and a limit stop into two different objects, as the combined behavior 
+    would switch to a PostNewton method for the regularized friction model.
+    
     If \texttt{activeConnector = True}, the scalar spring force vector is computed as
     \be
-      f_{SD} = k \left( \Delta q - x_\mathrm{off} \right) + d \cdot \left( \Delta v - v_\mathrm{off} \right)
+      f_{SD} = k \cdot \left( q - x_\mathrm{off} \right) + d \cdot \left( v - v_\mathrm{off} \right)
       + f_\mathrm{friction} + f_\mathrm{contact}
     \ee
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
     \be
-      f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta q, \Delta v, k, d, l_\mathrm{off}, f_\mu, v_\mu)
+      f_{SD} = \mathrm{UF}(mbs, t, i_N, q, v, k, d, x_\mathrm{off}, v_\mathrm{off}, 
+               f_{\mu,\mathrm{d}}, f_{\mu,\mathrm{so}}, v_\mathrm{exp}, f_{\mu,\mathrm{v}}, v_\mathrm{reg})
     \ee
     and \texttt{iN} represents the itemNumber (=objectNumber).
 
-    If \texttt{activeConnector = False}, $f_{SD}$ is set to zero.:
+    The virtual work of the connector force is computed from the virtual displacement 
+    \be
+      \delta q = f_1 \cdot \delta q_{m1} - f_0 \cdot \delta q_{m0} \eqComma
+    \ee
+    and the virtual work results as
+    \be
+      \delta W_{SD} = f_{SD} \cdot \delta q
+      = f_{SD} \cdot \left( f_1 \cdot \delta q_{m1} - f_0 \cdot \delta q_{m0} \right)
+      \eqDot
+    \ee
+    The generalized (elastic) forces thus read for the markers $m0$ and $m1$,
+    \be
+      \Qm_{SD, m0} 
+      = -f_{SD} \cdot f_0 \cdot \Jm_{coord,m0} \eqComma \quad
+      \Qm_{SD, m1} 
+      = f_{SD} \cdot f_1 \cdot \Jm_{coord,m1} \eqComma    
+    \ee
+    in which $\Jm_{coord,m0}$ and $\Jm_{coord,m1}$ represent the coordinate Jacobians of the respective markers.
+    As can be seen in generalized force $\Qm$, the factors $f_0$ and $f_1$ are added accordingly which increase the 
+    force on 'slower' coordinates for certain gear ratios.
+
+    If \texttt{activeConnector = False}, $f_{SD}$ is set to zero.
     %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, velocityOffset, 
+    fDynamicFriction, fStaticFrictionOffset, exponentialDecayStatic, fViscousFriction, frictionProportionalZone)}
+    A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity) 
+    and several object parameters.
+    Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+    \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
+
+    Only a subset of object variables is passed to the function using the current values of the CoordinateSpringDamperExt object.
+    For parameters that are not passed via the user function interface, use mbs.GetObject(itemNumber) or, e.g.,
+    mbs.GetObjectParameter(itemNumber, 'limitStopsUpper') to obtain these parameters inside the user function.
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
+      \rowTable{\texttt{itemNumber}}{Index}{integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)}
+      \rowTable{\texttt{displacement}}{Real}{$\Delta q$}
+      \rowTable{\texttt{velocity}}{Real}{$\Delta v$}
+      %
+      \rowTable{\texttt{stiffness}}{Real}{copied from object}
+      \rowTable{\texttt{damping}}{Real}{copied from object}
+      \rowTable{\texttt{offset}}{Real}{copied from object}
+      \rowTable{\texttt{velocityOffset}}{Real}{copied from object}
+      \rowTable{\texttt{fDynamicFriction}}{Real}{copied from object}
+      \rowTable{\texttt{fStaticFrictionOffset}}{Real}{copied from object}
+      \rowTable{\texttt{exponentialDecayStatic}}{Real}{copied from object}
+      \rowTable{\texttt{fViscousFriction}}{Real}{copied from object}
+      \rowTable{\texttt{frictionProportionalZone}}{Real}{copied from object, also called regularization velocity or regVel}
+      \rowTable{\returnValue}{Real}{scalar value of computed force}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle
+    \begin{lstlisting}[language=Python]
+    #see also mini example! 
+    #For further parameters, use mbs.GetObject(itemNumber) or 
+    #  e.g. mbs.GetObjectParameter(itemNumber, 'limitStopsUpper')
+    def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStaticOffset, muExpVel, muViscous, muRegVel):
+        return k*(u-offset) + d*v
+    \end{lstlisting}
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "connector's unique name"
 V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "list of markers used in connector"
-V,      CP,     nodeNumber,                     ,               ,       NodeIndex,      "EXUstd::InvalidIndex",       ,       I,      "node number of a NodeGenericData for 3 data coordinates (friction mode, last sticking position, limit contact); must exist in case of bristle friction model or limit stops"
+V,      CP,     nodeNumber,                     ,               ,       NodeIndex,      "EXUstd::InvalidIndex",       ,       I,      "node number of a NodeGenericData for 3 data coordinates (friction mode, last sticking position, limit stop state), see description for details; must exist in case of bristle friction model or limit stops"
 V,      CP,     stiffness,                      ,               ,       Real,       "0.",       ,       I,       "$k$stiffness [SI:N/m] of spring; acts against relative value of coordinates"
 V,      CP,     damping,                        ,               ,       Real,       "0.",       ,       IO,      "$d$damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates"
 V,      CP,     offset,                         ,               ,       Real,       "0.",       ,       IO,      "$x_\mathrm{off}$offset between two coordinates (reference length of springs), see equation; it can be used to represent the pre-scribed drive coordinate"
 V,      CP,     velocityOffset,                 ,               ,       Real,       "0.",       ,       IO,      "$v_\mathrm{off}$offset between two coordinates; used to model D-control of a drive, where damping is not acting against prescribed velocity"
+V,      CP,     factor0,                        ,               ,       Real,       "1.",       ,       IO,      "$f_0$marker 0 coordinate is multiplied with factor0"
+V,      CP,     factor1,                        ,               ,       Real,       "1.",       ,       IO,      "$f_1$marker 1 coordinate is multiplied with factor1"
 #
-V,      CP,     dynamicFriction,                ,               ,       Real,       "0.",       ,       IO,      "$f_{\mu_\mathrm{d}}$dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$"
-V,      CP,     staticFrictionOffset,           ,               ,       Real,       "0.",       ,       IO,      "$f_{\mu_\mathrm{so}}$static (dry) friction offset force [SI:N]; assuming a normal force $f_N$, the friction force is limited by $f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}$"
-V,      CP,     stickingStiffness,              ,               ,       Real,       "0.",       ,       IO,      "$k_\mu$stiffness of bristles in sticking case  [SI:N/m]"
-V,      CP,     stickingDamping,                ,               ,       Real,       "0.",       ,       IO,      "$d_\mu$damping of bristles in sticking case  [SI:N/(m/s)]"
-V,      CP,     frictionExpVelocity,            ,               ,       Real,       "0.",       ,       IO,      "$v_\mathrm{exp}$relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at $\Delta v = v_\mathrm{exp}$, the static friction offset force is reduced to 36.8\%"
-V,      CP,     frictionViscous,                ,               ,       Real,       "0.",       ,       IO,      "$\mu_\mathrm{v}$viscous friction part [SI:N/(m s)], acting against relative velocity in sliding case"
+V,      CP,     fDynamicFriction,               ,               ,       UReal,      "0.",       ,       IO,      "$f_{\mu,\mathrm{d}}$dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$"
+V,      CP,     fStaticFrictionOffset,          ,               ,       UReal,      "0.",       ,       IO,      "$f_{\mu,\mathrm{so}}$static (dry) friction offset force [SI:N]; assuming a normal force $f_N$, the friction force is limited by $f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}$"
+V,      CP,     stickingStiffness,              ,               ,       UReal,      "0.",       ,       IO,      "$k_\mu$stiffness of bristles in sticking case  [SI:N/m]"
+V,      CP,     stickingDamping,                ,               ,       UReal,      "0.",       ,       IO,      "$d_\mu$damping of bristles in sticking case  [SI:N/(m/s)]"
+V,      CP,     exponentialDecayStatic,         ,               ,       PReal,      "1.e-3",    ,       IO,      "$v_\mathrm{exp}$relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at $\Delta v = v_\mathrm{exp}$, the static friction offset force is reduced to 36.8\%"
+V,      CP,     fViscousFriction,               ,               ,       Real,       "0.",       ,       IO,      "$f_{\mu,\mathrm{v}}$viscous friction force part [SI:N/(m s)], acting against relative velocity in sliding case"
+V,      CP,     frictionProportionalZone,       ,               ,       UReal,      "0.",       ,       IO,      "$v_\mathrm{reg}$if non-zero, a regularized Stribeck model is used, regularizing friction force around zero velocity - leading to zero friction force in case of zero velocity; this does not require a data node at all; if zero, the bristle model is used, which requires a data node which contains previous friction state and last sticking position"
 #
 V,      CP,     limitStopsUpper,                ,               ,       Real,       "0.",       ,       IO,      "$s_\mathrm{upper}$upper (maximum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates"
 V,      CP,     limitStopsLower,                ,               ,       Real,       "0.",       ,       IO,      "$s_\mathrm{lower}$lower (minimum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates"
-V,      CP,     limitStopsStiffness,            ,               ,       Real,       "0.",       ,       IO,      "$k_\mathrm{limits}$stiffness [SI:N/m] of limit stop (contact stiffness); following a linear contact model"
-V,      CP,     limitStopsDamping,              ,               ,       Real,       "0.",       ,       IO,      "$d_\mathrm{limits}$damping [SI:N/(m/s)] of limit stop (contact damping); following a linear contact model"
+V,      CP,     limitStopsStiffness,            ,               ,       UReal,      "0.",       ,       IO,      "$k_\mathrm{limits}$stiffness [SI:N/m] of limit stop (contact stiffness); following a linear contact model"
+V,      CP,     limitStopsDamping,              ,               ,       UReal,      "0.",       ,       IO,      "$d_\mathrm{limits}$damping [SI:N/(m/s)] of limit stop (contact damping); following a linear contact model"
 V,      CP,     useLimitStops,                  ,               ,       bool,       "false",    ,       IO,      "if True, limit stops are considered and parameters must be set accordingly; furthermore, the NodeGenericData must have 3 data coordinates"
 #
 V,      CP,     activeConnector,                ,               ,       Bool,       "true",     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
-V,      CP,     springForceUserFunction,        ,               ,       PyFunctionMbsScalarIndexScalar7, 0,,       IO,     "$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with 8 parameters, see equations section / see description below"
+V,      CP,     springForceUserFunction,        ,               ,       PyFunctionMbsScalarIndexScalar11, 0,,IO,"$\mathrm{UF} \in \Rcal$A Python function which defines the spring force with 8 parameters, see equations section / see description below"
 #
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
-Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
-Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return 3*(useLimitStops || (dynamicFriction+);",                 ,       CI,     "needed in order to create ltg-lists for data variable of connector" 
+Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return (parameters.nodeNumber==EXUstd::InvalidIndex) ? 0 : 1;",              ,       CI,     "number of nodes depending on configuration; needed for every object" 
+Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return 3;",                 ,       CI,     "needed in order to create ltg-lists for data variable of connector" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #
 Fv,     C,      HasUserFunction,                ,               ,       Bool,         "return (parameters.springForceUserFunction!=0);", "", CI,  "return true, if object has a computation user function"  
@@ -5030,7 +5167,7 @@ Fv,     C,      ComputeODE2LHS,                 ,               ,       void,   
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                    ,          CDI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} \ac{LHS} equations w.r.t. ODE2 coordinates and ODE2 velocities; write either dense local jacobian into dense matrix of MatrixContainer or ADD sparse triplets INCLUDING ltg mapping to sparse matrix of MatrixContainer"
 #
-Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return (( (parameters.fDynamicFriction != 0 || parameters.fStaticFrictionOffset != 0) && parameters.frictionProportionalZone == 0) || parameters.useLimitStops);", , CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
 Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
 Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
 #
@@ -5039,7 +5176,7 @@ Fv,     C,      GetOutputVariableConnector,              ,               ,      
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::Coordinate;", ,   CI,     "provide requested markerType for connector" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,    "return object type (for node treatment in computation)" 
-Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ConnectorCoordinateSpringDamper';", , CI,     "Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ConnectorCoordinateSpringDamperExt';", , CI,     "Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
 Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
 #+++helper functions+++
 F,      C,      ComputeSpringForce,             ,               ,       void,       , "const MarkerDataStructure& markerData, Index itemIndex, Real& relPos, Real& relVel, Real& force", CDI,    "compute spring damper force helper function" 

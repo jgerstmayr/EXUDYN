@@ -35,7 +35,7 @@ Fc=1
 Fs=1.5
 Vs=0.001
 
-useLugre = False        #compute ODE1 Lugre model
+useLugre = True         #compute ODE1 Lugre model
 useLugreRef = False     #store as reference solution (with small step size)
 useLugrePos = True      #alternative: uses a position level approach, being much more efficient for implicit solvers
 useLugreFast = False    #with higher stiffness, but shorter time; shows good agreement, but requires extremely small time steps
@@ -127,8 +127,9 @@ if useLugrePos:
     groundMarkerFric=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGroundFric, coordinate = 0))
     nodeMarker =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= node1D, coordinate = 0))
 
-    def springForce(mbs, t, itemNumber, u, v, k, d, offset, dryFriction,
-                    dryFrictionProportionalZone):
+    def springForce(mbs, t, itemNumber, u, v, k, d, offset, velocityOffset, 
+                    dynamicFriction, staticFrictionOffset, exponentialDecayStatic, viscousFriction, frictionProportionalZone):
+                    #offset, dryFriction, dryFrictionProportionalZone):
         
         data = mbs.GetNodeOutput(nData,variableType=exu.OutputVariableType.Coordinates)
         if data[0] == 1:
@@ -139,8 +140,9 @@ if useLugrePos:
         return d*v + F
 
     #Spring-Damper between two marker coordinates
-    oCSD=mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarkerFric, nodeMarker],
+    oCSD=mbs.AddObject(CoordinateSpringDamperExt(markerNumbers = [groundMarkerFric, nodeMarker],
                                          stiffness = sigma0, damping = sigma2,
+                                         frictionProportionalZone=1e-16, #0 not possible right now
                                          springForceUserFunction = springForce,
                                          visualization=VCoordinateSpringDamper(show=False)))
 

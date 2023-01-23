@@ -4,8 +4,8 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-+  Exudyn version = 1.5.76.dev1 (Fitzgerald)
-+  build date and time=2023-01-19  19:00
++  Exudyn version = 1.5.86.dev1 (Fitzgerald)
++  build date and time=2023-01-23  11:52
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn 1.5 is out! It includes now Python 3.7/8 - 3.10 wheels for MacOS (since 1.5.11.dev1 also showing tkinter dialogs!), improved compatibility for AVX2, simple reeving system, improved Lie group integration, improved RollingDisc, DistanceSensor, and many fixes; further features are multi-threading support; minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
@@ -192,20 +192,6 @@ For pre-releases (use with care!), add '--pre' flag:
    \ ``pip install exudyn --pre``\ 
 
 In some cases (e.g. for AppleM1), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the 'Build and install' sections, theDoc.pdf.
-
-DEPRECATED: Install with Windows MSI installer
-==============================================
-
-A simple way to install Exudyn on Windows 10 (and maybe also Windows 7) is to use \ ``.msi``\  installers in the \ ``main/dist``\  directory ('Register Anaconda as my default Python 3.x' or similar; in other cases you may to specify some installation directories, etc.):
-
-+  NOTE (2022-03-18): \ ``.msi``\  installers are now only available for selected Python versions; however, wheels can be downloaded directly from `https://pypi.org/project/exudyn <https://pypi.org/project/exudyn>`_, see below
-+  For the 64bits Python 3.7 version, double click on (version may differ): \ ``exudyn-1.0.248.win-amd64-py3.7.msi``\ 
-+  Follow the instructions of the installer
-+  If Python / Anaconda is not found by the installer, provide the 'Python directory' as the installation directory of Anaconda3, which usually is installed in:
-
-
-  \ ``C:\ProgramData\Anaconda3``\ 
-
 
 Install from specific Wheel (UBUNTU and Windows)
 ================================================

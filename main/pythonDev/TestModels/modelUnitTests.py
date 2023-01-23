@@ -789,7 +789,7 @@ def CoordinateSpringDamperTest(mbs, testInterface):
     
     #Spring-Dampers
     mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker0], 
-                                         stiffness = k, damping = d, dryFriction=0*fFriction, dryFrictionProportionalZone=0.01)) #offset must be zero, because coordinates just represent the displacements
+                                         stiffness = k, damping = d) ) #changed 2023-01-21: dryFriction=0*fFriction, dryFrictionProportionalZone=0.01)) #offset must be zero, because coordinates just represent the displacements
     mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker1], stiffness = k)) 
     mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker2], stiffness = k)) 
     

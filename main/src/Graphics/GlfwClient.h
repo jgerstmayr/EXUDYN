@@ -308,7 +308,13 @@ public:
 	}
 
 	//! set projection matrix from outside GlfwClient, used for OpenVR; this needs to be set before rendering objects!
-	static void SetProjectionMatrix(const Matrix4DF& p) { state->projectionMatrix = p; };
+	//! projectionInfo used to switch between different modes
+	static void SetProjectionMatrix(const Matrix4DF& p, Index projectionInfo = 0) 
+	{ 
+		state->projectionMatrix = p; 
+		state->projectionInfo = projectionInfo;
+	};
+
 	//! get current glfw window size
 	static void GetWindowSize(int& width, int& height)
 	{

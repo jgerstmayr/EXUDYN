@@ -668,7 +668,7 @@ void OpenVRinterface::RenderStereoTargets()
 		Matrix4DF hmd;
 		hmd = GetCurrentViewProjectionMatrix(nEye);
 		//hmd.Invert();
-		GetGlfwRenderer()->SetProjectionMatrix(hmd);
+		GetGlfwRenderer()->SetProjectionMatrix(hmd, 1);
 
 		int width, height;
 		GetGlfwRenderer()->GetWindowSize(width, height);
@@ -682,13 +682,15 @@ void OpenVRinterface::RenderStereoTargets()
 		glBindTexture(GL_TEXTURE_2D, eyeTextures[kEye]);
 		glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, m_nRenderWidth, m_nRenderHeight, 0); //render window shall have according recommended size of device
 	}
-	Matrix4DF eye4D;
-	eye4D.SetScalarMatrix(4, 1.f);
-	Matrix4DF hmd;
+	//Matrix4DF eye4D;
+	//eye4D.SetScalarMatrix(4, 1.f);
+	
+	//set projection for window
+	//Matrix4DF hmd;
 	//hmd = GetCurrentViewProjectionMatrix(vr::Eye_Left);
-	hmd = m_mat4HMDPose;
+	//hmd = m_mat4HMDPose;
 	//hmd.Invert();
-	GetGlfwRenderer()->SetProjectionMatrix(hmd);
+	GetGlfwRenderer()->SetProjectionMatrix(m_mat4HMDPose, 0);
 
 }
 
@@ -745,7 +747,7 @@ Matrix4DF OpenVRinterface::GetCurrentViewProjectionMatrix( vr::Hmd_Eye nEye )
 	Matrix4DF matMVP;
 	if (m_mat4HMDPose.NumberOfRows() == 4 && m_mat4HMDPose.NumberOfColumns() == 4)
 	{
-		if (false)
+		if (true)
 		{   //this is the original mode with m_mat4ProjectionLeft; needs to be adjusted with Exudyn
 			if (nEye == vr::Eye_Left)
 			{

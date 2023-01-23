@@ -1613,14 +1613,12 @@ class VObjectConnectorCoordinateSpringDamper:
     def __repr__(self):
         return str(dict(self))
 class ObjectConnectorCoordinateSpringDamper:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., offset = 0., dryFriction = 0., dryFrictionProportionalZone = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., offset = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.stiffness = stiffness
         self.damping = damping
         self.offset = offset
-        self.dryFriction = dryFriction
-        self.dryFrictionProportionalZone = dryFrictionProportionalZone
         self.activeConnector = activeConnector
         self.springForceUserFunction = springForceUserFunction
         self.visualization = visualization
@@ -1632,8 +1630,6 @@ class ObjectConnectorCoordinateSpringDamper:
         yield 'stiffness', self.stiffness
         yield 'damping', self.damping
         yield 'offset', self.offset
-        yield 'dryFriction', self.dryFriction
-        yield 'dryFrictionProportionalZone', self.dryFrictionProportionalZone
         yield 'activeConnector', self.activeConnector
         yield 'springForceUserFunction', self.springForceUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
@@ -1660,7 +1656,7 @@ class VObjectConnectorCoordinateSpringDamperExt:
     def __repr__(self):
         return str(dict(self))
 class ObjectConnectorCoordinateSpringDamperExt:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., dynamicFriction = 0., staticFrictionOffset = 0., stickingStiffness = 0., stickingDamping = 0., frictionExpVelocity = 0., frictionViscous = 0., limitStopsUpper = 0., limitStopsLower = 0., limitStopsStiffness = 0., limitStopsDamping = 0., useLimitStops = False, activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., factor0 = 1., factor1 = 1., fDynamicFriction = 0., fStaticFrictionOffset = 0., stickingStiffness = 0., stickingDamping = 0., exponentialDecayStatic = 1.e-3, fViscousFriction = 0., frictionProportionalZone = 0., limitStopsUpper = 0., limitStopsLower = 0., limitStopsStiffness = 0., limitStopsDamping = 0., useLimitStops = False, activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = markerNumbers
         self.nodeNumber = nodeNumber
@@ -1668,16 +1664,19 @@ class ObjectConnectorCoordinateSpringDamperExt:
         self.damping = damping
         self.offset = offset
         self.velocityOffset = velocityOffset
-        self.dynamicFriction = dynamicFriction
-        self.staticFrictionOffset = staticFrictionOffset
-        self.stickingStiffness = stickingStiffness
-        self.stickingDamping = stickingDamping
-        self.frictionExpVelocity = frictionExpVelocity
-        self.frictionViscous = frictionViscous
+        self.factor0 = factor0
+        self.factor1 = factor1
+        self.fDynamicFriction = CheckForValidUReal(fDynamicFriction,"fDynamicFriction","ObjectConnectorCoordinateSpringDamperExt")
+        self.fStaticFrictionOffset = CheckForValidUReal(fStaticFrictionOffset,"fStaticFrictionOffset","ObjectConnectorCoordinateSpringDamperExt")
+        self.stickingStiffness = CheckForValidUReal(stickingStiffness,"stickingStiffness","ObjectConnectorCoordinateSpringDamperExt")
+        self.stickingDamping = CheckForValidUReal(stickingDamping,"stickingDamping","ObjectConnectorCoordinateSpringDamperExt")
+        self.exponentialDecayStatic = CheckForValidPReal(exponentialDecayStatic,"exponentialDecayStatic","ObjectConnectorCoordinateSpringDamperExt")
+        self.fViscousFriction = fViscousFriction
+        self.frictionProportionalZone = CheckForValidUReal(frictionProportionalZone,"frictionProportionalZone","ObjectConnectorCoordinateSpringDamperExt")
         self.limitStopsUpper = limitStopsUpper
         self.limitStopsLower = limitStopsLower
-        self.limitStopsStiffness = limitStopsStiffness
-        self.limitStopsDamping = limitStopsDamping
+        self.limitStopsStiffness = CheckForValidUReal(limitStopsStiffness,"limitStopsStiffness","ObjectConnectorCoordinateSpringDamperExt")
+        self.limitStopsDamping = CheckForValidUReal(limitStopsDamping,"limitStopsDamping","ObjectConnectorCoordinateSpringDamperExt")
         self.useLimitStops = useLimitStops
         self.activeConnector = activeConnector
         self.springForceUserFunction = springForceUserFunction
@@ -1692,12 +1691,15 @@ class ObjectConnectorCoordinateSpringDamperExt:
         yield 'damping', self.damping
         yield 'offset', self.offset
         yield 'velocityOffset', self.velocityOffset
-        yield 'dynamicFriction', self.dynamicFriction
-        yield 'staticFrictionOffset', self.staticFrictionOffset
+        yield 'factor0', self.factor0
+        yield 'factor1', self.factor1
+        yield 'fDynamicFriction', self.fDynamicFriction
+        yield 'fStaticFrictionOffset', self.fStaticFrictionOffset
         yield 'stickingStiffness', self.stickingStiffness
         yield 'stickingDamping', self.stickingDamping
-        yield 'frictionExpVelocity', self.frictionExpVelocity
-        yield 'frictionViscous', self.frictionViscous
+        yield 'exponentialDecayStatic', self.exponentialDecayStatic
+        yield 'fViscousFriction', self.fViscousFriction
+        yield 'frictionProportionalZone', self.frictionProportionalZone
         yield 'limitStopsUpper', self.limitStopsUpper
         yield 'limitStopsLower', self.limitStopsLower
         yield 'limitStopsStiffness', self.limitStopsStiffness

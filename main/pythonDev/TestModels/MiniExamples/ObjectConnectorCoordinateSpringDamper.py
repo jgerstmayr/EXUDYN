@@ -21,8 +21,9 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 exu.Print("start mini example for class ObjectConnectorCoordinateSpringDamper")
 try: #puts example in safe environment
-    def springForce(mbs, t, itemNumber, u, v, k, d, offset, 
-                    dryFriction, dryFrictionProportionalZone):
+    #define user function:
+    #NOTE: removed 2023-01-21: dryFriction, dryFrictionProportionalZone
+    def springForce(mbs, t, itemNumber, u, v, k, d, offset): 
         return 0.1*k*u+k*u**3+v*d
 
     nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
