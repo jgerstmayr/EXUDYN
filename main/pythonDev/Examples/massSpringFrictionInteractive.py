@@ -25,23 +25,27 @@ import matplotlib.ticker as ticker
 from math import exp, sqrt
 from numpy import sign
 
+regVel = 1e-4
+expVel = 0.1
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #draw friction curve vs. velocity
 if True:
     n= 200
     x = np.linspace(-1,1,n)
     y = np.zeros(n)
     for i in range(n):
-        y[i] = StribeckFunction(x[i], muDynamic=0.1, muStaticOffset=0.05, expVel=0.1)
+        y[i] = StribeckFunction(x[i], muDynamic=0.1, muStaticOffset=0.05, expVel=expVel)
     
     plt.close('all')
     plt.plot(x,y,'b-')
     
     for i in range(n):
-        y[i] = RegularizedFriction(x[i], muDynamic=0.1, muStaticOffset=0.05, velStatic=0.05, velDynamic=0.8)
+        y[i] = RegularizedFriction(x[i], muDynamic=0.1, muStaticOffset=0.05, velStatic=0.05, velDynamic=expVel)
     
     plt.plot(x,y,'r-')
 
+    plt.figure()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 plt.rcParams.update({'font.size': 14})
@@ -59,26 +63,26 @@ tt=0.05
 
 #parameters of mass-spring with friction
 #self-excitation works with (stick-slip); must have enough initial velocity ..., if started from zero, does not work: 
-#param = [1, 10, 400]
-param = [4, 40, 400]   #works with dRel up to 0.016
-#param = [1, 40, 400]  #works with dRel up to 0.103
+param = [4, 40, 40, 400]   #stable oscillation with sufficient excitation; stable until damping of 0.0240
+param = [4, 40, 10, 400]   #still stable oscillation until relative damping of 0.005
+param = [4, 40,  5, 400]   #still stable oscillation until relative damping of 0.002
+param = [4, 40,  3, 400]   #no stable oscillation with relative damping of 0.002
 
-#param = [0.2, 8, 400] #very slow oscillation
 vBand = param[0]
 fFriction = param[1] #force in Newton, only depends on direction of velocity
-stiffness = param[2]
+fStaticFrictionOffset = param[2]
+stiffness = param[3]
+kSticking = 1e4
+dSticking = 0.01*kSticking
 
+force = 50 #turned on/off for excitation
 L=0.5
 mass = 0.5
 omega0 = sqrt(stiffness/mass)
 damping = 2 * dRel * omega0 
 u0 = 0 #initial displacement
-v0 = 0 #initial velocity
-
+v0 = 4 #initial velocity
     
-f = 80
-x0 = f/stiffness
-
 #graphics:
 lBand = 200*L
 w = L*0.5
@@ -86,6 +90,8 @@ z=-tt
 gBackground = [GraphicsDataQuad([[-lBand,-w,z],[ L,-w,z],[ L, w,z],[-lBand, w,z]], 
                               color=color4lightgrey, alternatingColor=color4grey,
                               nTiles=200, nTilesY=6)]
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #node for mass point:
 nMass=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialCoordinates = [u0,0,0], 
@@ -105,8 +111,6 @@ mbs.variables['relDamping'] = dRel
 mbs.variables['dynamicFriction'] = fFriction
 mbs.variables['staticFrictionOffset'] = fFriction
 mbs.variables['stiffness'] = stiffness
-# def UFbandVelocity(mbs, t, itemIndex, lOffset):
-#     return mbs.variables['bandVelocity']
 
 bandCoordinateMarker = 0
 if vBand == 0:
@@ -131,59 +135,34 @@ nodeCoordinateMarker0  = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, c
 nodeCoordinateMarker1  = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 1))
 nodeCoordinateMarker2  = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 2))
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Spring-Dampers
-#add static/dynamic friction with userfunction
-oldMode = False #oldMode: before 1.5.77
-useStaticFriction = True
-if useStaticFriction or not oldMode:
-    reg = 1e-4
-    if oldMode:
-        def UFspring(mbs, t, itemNumber, u, v, k, d, offset, frictionForce, frictionProportionalZone):
-            return RegularizedFriction(vel=v, 
-                                    muDynamic=mbs.variables['dynamicFriction'], muStaticOffset=mbs.variables['staticFrictionOffset'], 
-                                    velStatic=frictionProportionalZone, velDynamic=k, muViscous=0)
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    # WARNING: needs to be transformed into CoordinateSpringDamperExt !!!
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    if oldMode:
-        mbs.variables['oFriction'] = mbs.AddObject(CoordinateSpringDamper(markerNumbers = [bandCoordinateMarker, nodeCoordinateMarker0], 
-                                             stiffness = 4*reg,                 #velDynamic
-                                             damping = 0,                       #viscous term
-                                             offset = fFriction,                #muStaticOffset
-                                             dryFriction=fFriction,             #muDynamic
-                                             dryFrictionProportionalZone=reg,   #velStatic
-                                             springForceUserFunction = UFspring,
-                                             visualization=VObjectConnectorCoordinateSpringDamper(show=False))) 
-    else:
-        mbs.variables['oFriction'] = mbs.AddObject(CoordinateSpringDamperExt(markerNumbers = [bandCoordinateMarker, nodeCoordinateMarker0], 
-                                             stiffness = 4*reg,                 #velDynamic
-                                             damping = 0,                       #viscous term
-                                             offset = fFriction,                #muStaticOffset
-                                             fDynamicFriction=fFriction,         #muDynamic
-                                             fStaticFrictionOffset=fFriction,    #muStatic
-                                             frictionProportionalZone=reg,      #velStatic
-                                             #springForceUserFunction = UFspring,
-                                             visualization=VObjectConnectorCoordinateSpringDamper(show=False))) 
-else:
-    if oldMode:
-        mbs.variables['oFriction'] = mbs.AddObject(CoordinateSpringDamper(markerNumbers = [bandCoordinateMarker, nodeCoordinateMarker0], 
-                                             stiffness = 0, damping = 0, 
-                                             dryFriction=fFriction, 
-                                             dryFrictionProportionalZone=1e-5, 
-                                             visualization=VObjectConnectorCoordinateSpringDamper(show=False))) 
+
+nGeneric = mbs.AddNode(NodeGenericData(initialCoordinates=[1,0,0], numberOfDataCoordinates=3))
+mbs.variables['oFriction'] = mbs.AddObject(CoordinateSpringDamperExt(markerNumbers = [bandCoordinateMarker, nodeCoordinateMarker0], 
+                                     nodeNumber=nGeneric,
+                                     #stiffness = stiffness, damping = damping, #added to separate CSD, otherwise spring is wrong!
+                                     fDynamicFriction=fFriction,
+                                     fStaticFrictionOffset=fStaticFrictionOffset,
+                                     stickingStiffness=kSticking, stickingDamping=dSticking, 
+                                     exponentialDecayStatic=expVel,
+                                     frictionProportionalZone=regVel,
+                                     visualization=VObjectConnectorCoordinateSpringDamper(show=False))) 
 
 mbs.variables['oSpring'] = mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker0], 
-                                                                  stiffness = stiffness, damping = 0)) #damping added to user function
+                                                                  stiffness = stiffness, damping = damping,
+                                                                  offset = 0)) #damping added 
 
+#transverse springs, not needed:
 mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker1], stiffness = 4000, 
                                      visualization=VObjectConnectorCoordinateSpringDamper(show=False))) 
 mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker2], stiffness = 4000,
                                      visualization=VObjectConnectorCoordinateSpringDamper(show=False))) 
 
+mbs.variables['loadForce'] = mbs.AddLoad(LoadCoordinate(markerNumber=nodeCoordinateMarker0, load=0)) #for turning on/off
 
-#add loads:
-mbs.AddLoad(LoadCoordinate(markerNumber = nodeCoordinateMarker0, load = f))
-
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#add sensors:
 sensPos = mbs.AddSensor(SensorNode(nodeNumber=nMass, fileName='solution/nonlinearPos.txt',
                                    outputVariableType=exu.OutputVariableType.Displacement))
 sensVel = mbs.AddSensor(SensorNode(nodeNumber=nMass, fileName='solution/nonlinearVel.txt',
@@ -239,15 +218,18 @@ deltaT = 0.01 #time period to be simulated between every update
 dialogItems = [{'type':'label', 'text':'Friction oscillator', 'grid':(0,0,2), 'options':['L']}, 
                #{'type':'radio', 'textValueList':[('linear',0),('nonlinear (f=k*u+1000*k*u**3+d*v)',1)], 'value':0, 'variable':'mode', 'grid': [(2,0),(2,1)]},
                {'type':'label', 'text':'band velocity:', 'grid':(1,0)},
-               {'type':'slider', 'range': (0, 20), 'value':mbs.variables['bandVelocity'], 'steps':400, 'variable':'bandVelocity', 'grid':(1,1)},
+               {'type':'slider', 'range': (0, 20), 'value':mbs.variables['bandVelocity'], 'steps':401, 'variable':'bandVelocity', 'grid':(1,1)},
                {'type':'label', 'text':'dynamic friction force:', 'grid':(2,0)},
-               {'type':'slider', 'range': (0, 100), 'value':mbs.variables['dynamicFriction'], 'steps':400, 'variable':'dynamicFriction', 'grid':(2,1)},
+               {'type':'slider', 'range': (0, 100), 'value':mbs.variables['dynamicFriction'], 'steps':101, 'variable':'dynamicFriction', 'grid':(2,1)},
                {'type':'label', 'text':'static friction offset:', 'grid':(3,0)},
-               {'type':'slider', 'range': (0, 100), 'value':mbs.variables['staticFrictionOffset'], 'steps':400, 'variable':'staticFrictionOffset', 'grid':(3,1)},
+               {'type':'slider', 'range': (0, 100), 'value':mbs.variables['staticFrictionOffset'], 'steps':101, 'variable':'staticFrictionOffset', 'grid':(3,1)},
                {'type':'label', 'text':'stiffness:', 'grid':(4,0)},
-               {'type':'slider', 'range':(0, 2000), 'value':mbs.variables['stiffness'], 'steps':400, 'variable':'stiffness', 'grid':(4,1)},
+               {'type':'slider', 'range':(0, 2000), 'value':mbs.variables['stiffness'], 'steps':101, 'variable':'stiffness', 'grid':(4,1)},
                {'type':'label', 'text':'relative damping:', 'grid':(5,0)},
-               {'type':'slider', 'range':(0, 0.4), 'value':mbs.variables['relDamping'], 'steps':400, 'variable':'relDamping', 'grid':(5,1)}]
+               {'type':'slider', 'range':(0, 0.4), 'value':mbs.variables['relDamping'], 'steps':201, 'variable':'relDamping', 'grid':(5,1)},
+               {'type':'label', 'text':'add force:', 'grid':(6,0)},
+               {'type':'radio', 'textValueList':[('on',1),('off',0)], 'value':0, 'variable':'addForce', 'grid': [(6,1),(6,2)]},
+               ]
 
 #++++++++++++++++++++++++++++++++++++++++
 #specify subplots to be shown interactively
@@ -282,19 +264,20 @@ simulationSettings.timeIntegration.adaptiveStepDecrease = 0.25
 
 #this is an exemplariy simulation function, which adjusts some values for simulation
 def SimulationUF(mbs, dialog):
-    if oldMode:
-        mbs.SetObjectParameter(mbs.variables['oFriction'],'dryFriction',mbs.variables['dynamicFriction'])
-        mbs.SetObjectParameter(mbs.variables['oSpring'],'stiffness',mbs.variables['stiffness'])
-        mbs.SetObjectParameter(mbs.variables['oSpring'],'damping',2*mbs.variables['relDamping']*omega0)
-    else:
-        mbs.SetObjectParameter(mbs.variables['oFriction'],'fDynamicFriction',mbs.variables['dynamicFriction'])
-        mbs.SetObjectParameter(mbs.variables['oFriction'],'fStaticFrictionOffset',mbs.variables['dynamicFriction'])
-        mbs.SetObjectParameter(mbs.variables['oSpring'],'stiffness',mbs.variables['stiffness'])
-        mbs.SetObjectParameter(mbs.variables['oSpring'],'damping',2*mbs.variables['relDamping']*omega0)
+    mbs.SetObjectParameter(mbs.variables['oFriction'],'fDynamicFriction',mbs.variables['dynamicFriction'])
+    mbs.SetObjectParameter(mbs.variables['oFriction'],'fStaticFrictionOffset',mbs.variables['staticFrictionOffset'])
+    mbs.SetObjectParameter(mbs.variables['oSpring'],'stiffness',mbs.variables['stiffness'])
+    mbs.SetObjectParameter(mbs.variables['oSpring'],'damping',2*mbs.variables['relDamping']*omega0)
+
+    mbs.SetLoadParameter(mbs.variables['loadForce'],'load',force*mbs.variables['addForce'])
 
     if 'oCCband' in mbs.variables:
         mbs.SetObjectParameter(mbs.variables['oCCband'],'offset',mbs.variables['bandVelocity'])
 
+SC.visualizationSettings.general.autoFitScene = False #use loaded render state
+exu.StartRenderer()
+if 'renderState' in exu.sys:
+    SC.SetRenderState(exu.sys[ 'renderState' ])
 
 dialog = InteractiveDialog(mbs=mbs, simulationSettings=simulationSettings,
                            simulationFunction=SimulationUF, 

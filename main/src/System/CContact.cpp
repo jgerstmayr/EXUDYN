@@ -759,7 +759,7 @@ void GeneralContact::ComputeDataAndBBtrigsRigidBodyBased(const CSystemData& syst
 
 			Box3D box; //empty box
 
-			for (Index i = 0; i < item.points.size(); i++)
+			for (Index i = 0; i < (Index)item.points.size(); i++)
 			{
 				box.Add(rigidMarker.orientation * item.points[i] + rigidMarker.position);
 			}
@@ -1330,7 +1330,7 @@ void GeneralContact::ComputeContactTrigsRigidBodyBased(TemporaryComputationDataA
 				const ContactRigidBodyMarkerBased& rigid = rigidBodyMarkerBased[trigJ.contactRigidBodyIndex];
 
 				//compute global points
-				for (Index k = 0; k < trigPoints.size(); k++)
+				for (Index k = 0; k < (Index)trigPoints.size(); k++)
 				{
 					trigPoints[k] = rigid.orientation * trigJ.points[k] + rigid.position;
 				}

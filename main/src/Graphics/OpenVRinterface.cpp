@@ -22,9 +22,9 @@
 
 //#undef __EXUDYN_USE_OPENVR
 #ifdef __EXUDYN_USE_OPENVR
-#pragma message("====================================")
-#pragma message("=  COMPILED WITH OPENVR            =")
-#pragma message("====================================")
+//#pragma message("==========================")
+#pragma message("** COMPILED WITH OPENVR **")
+//#pragma message("==========================")
 
 
 #include "Graphics/OpenVRinterface.h"
@@ -158,6 +158,8 @@ std::string GetTrackedDeviceClassString(vr::ETrackedDeviceClass td_class) {
 	case vr::TrackedDeviceClass_DisplayRedirect:	// = 5, Accessories that aren't necessarily tracked themselves, but may redirect video output from other tracked devices
 		str_td_class = "display redirect";
 		break;
+    default: //we do not treat all cases
+        break; 
 	}
 
 	return str_td_class;
@@ -182,9 +184,9 @@ Matrix4DF convertSteamVRMatrixToMatrix4(const vr::HmdMatrix34_t &matPose)
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
 OpenVRinterface::OpenVRinterface()
-	: m_pHMD( NULL )
+	: logLevelUsed(LogLevel::Error)
 	, glfwRenderer(nullptr)
-	, logLevelUsed(LogLevel::Error)
+	, m_pHMD(nullptr)
 {
 	// set initial class of all devices to 0 ("invalid")
 	memset(m_trackedDeviceClass, 0, sizeof(m_trackedDeviceClass));
@@ -322,7 +324,7 @@ void OpenVRinterface::ShutDown()
 //-----------------------------------------------------------------------------
 bool OpenVRinterface::InitCompositor()
 {
-	vr::EVRInitError peError = vr::VRInitError_None;
+	//vr::EVRInitError peError = vr::VRInitError_None;
 
 	if ( !vr::VRCompositor() )
 	{
@@ -407,7 +409,7 @@ bool OpenVRinterface::handleActionState()
 		}
 	}
 
-	for ( EHand eHand = Left; eHand <= Right; ((int&)eHand)++ )
+	for ( EHand eHand = Left; eHand <= Right; eHand = (EHand)((int)eHand + 1) )
 	{
 		vr::InputPoseActionData_t poseData;
 		if ( vr::VRInput()->GetPoseActionDataForNextFrame( m_rHand[eHand].m_actionPose, vr::TrackingUniverseStanding, &poseData, sizeof( poseData ), vr::k_ulInvalidInputValueHandle ) != vr::VRInputError_None
@@ -747,28 +749,39 @@ Matrix4DF OpenVRinterface::GetCurrentViewProjectionMatrix( vr::Hmd_Eye nEye )
 	Matrix4DF matMVP;
 	if (m_mat4HMDPose.NumberOfRows() == 4 && m_mat4HMDPose.NumberOfColumns() == 4)
 	{
-		if (true)
-		{   //this is the original mode with m_mat4ProjectionLeft; needs to be adjusted with Exudyn
-			if (nEye == vr::Eye_Left)
-			{
-				matMVP = m_mat4ProjectionLeft * m_mat4eyePosLeft * m_mat4HMDPose;
-			}
-			else if (nEye == vr::Eye_Right)
-			{
-				matMVP = m_mat4ProjectionRight * m_mat4eyePosRight *  m_mat4HMDPose;
-			}
+		//this is the original mode with m_mat4ProjectionLeft; needs to be adjusted with Exudyn
+		//works basically:
+		//Matrix4DF mPose = m_mat4HMDPose;
+		//Matrix4DF mEye = m_mat4ProjectionLeft;
+		//matMVP = mPose * mEye;
+
+		//if (nEye == vr::Eye_Left)
+		//{
+		//	matMVP = m_mat4HMDPose * m_mat4eyePosLeft * m_mat4ProjectionLeft;
+		//}
+		//else if (nEye == vr::Eye_Right)
+		//{
+		//	matMVP = m_mat4HMDPose * m_mat4eyePosRight * m_mat4ProjectionRight;
+		//}
+		if (nEye == vr::Eye_Left)
+		{
+			matMVP = m_mat4HMDPose * m_mat4ProjectionLeft * m_mat4eyePosLeft;
 		}
-		else
-		{   //this mode works somehow
-			if (nEye == vr::Eye_Left)
-			{
-				matMVP = m_mat4eyePosLeft * m_mat4HMDPose;
-			}
-			else if (nEye == vr::Eye_Right)
-			{
-				matMVP = m_mat4eyePosRight * m_mat4HMDPose;
-			}
+		else if (nEye == vr::Eye_Right)
+		{
+			matMVP = m_mat4HMDPose * m_mat4ProjectionRight * m_mat4eyePosRight;
 		}
+
+		//original, does not work with classic OpenGL:
+		//if (nEye == vr::Eye_Left)
+		//{
+		//	matMVP = m_mat4ProjectionLeft * m_mat4eyePosLeft * mPose;
+		//}
+		//else if (nEye == vr::Eye_Right)
+		//{
+		//	matMVP = m_mat4ProjectionRight * m_mat4eyePosRight *  mPose;
+		//}
+
 	}
 	else
 	{

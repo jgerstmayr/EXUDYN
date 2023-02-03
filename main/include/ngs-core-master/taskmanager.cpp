@@ -286,7 +286,7 @@ namespace ngstd
           }
 
       }
-    catch (Exception e)
+    catch (const Exception& e) //JG added const and '&'
       {
         {
           // cout << "got exception in TM:" << ex->What() << endl;
@@ -482,7 +482,7 @@ namespace ngstd
               }
 
           }
-        catch (Exception e)
+        catch (const Exception& e) //JG: added &
           {
             {
               // cout << "got exception in TM" << endl; 
@@ -663,7 +663,7 @@ namespace ngstd
         SharedLoop2 sl(1000000);
         ParallelJob ( [&sl] (TaskInfo ti)
                       {
-                        for (auto i : sl)
+                        for (auto _ : sl)
                           ; 
                       } );
         steps += 1000000;

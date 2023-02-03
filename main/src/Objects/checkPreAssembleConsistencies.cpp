@@ -647,7 +647,7 @@ bool MainObjectConnectorCoordinateSpringDamperExt::CheckPreAssembleConsistency(c
     bool needsDataNode = cObject->GetParameters().useLimitStops ||
         ((cObject->GetParameters().fDynamicFriction != 0 || cObject->GetParameters().fStaticFrictionOffset != 0)
             && cObject->GetParameters().frictionProportionalZone == 0);
-    pout << "needsDataNode=" << needsDataNode << "\n";
+    //pout << "needsDataNode=" << needsDataNode << "\n";
 
     if (needsDataNode && cObject->GetParameters().nodeNumber == EXUstd::InvalidIndex)
     {
@@ -661,6 +661,10 @@ bool MainObjectConnectorCoordinateSpringDamperExt::CheckPreAssembleConsistency(c
         }
         errorString = str + " the nodeNumber must contain a valid number of a data node (NodeGenericData)";
         return false;
+    }
+    if (!needsDataNode && cObject->GetParameters().nodeNumber != EXUstd::InvalidIndex)
+    {
+        PyWarning("CObjectConnectorCoordinateSpringDamperExt: a data node is supplied, but not needed in this configuration; data values will be ignored");
     }
 
     //remove when implemented:

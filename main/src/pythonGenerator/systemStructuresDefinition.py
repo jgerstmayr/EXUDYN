@@ -572,15 +572,16 @@ writePybindIncludes = True
 classDescription = "OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 V,      renderWindowSize,               ,                  2,    Index2,       "Index2({1024,768})",   , P,      "initial size of OpenGL render window in pixel"
+V,      showWindow,                     ,                  ,     bool,         true,                   , P,      "True: OpenGL render window is shown on startup; False: window will be iconified at startup (e.g. if you are starting multiple computations automatically)"
 V,      startupTimeout,                 ,                  ,     PInt,         "2500",                 , P,      "OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)"
 V,      alwaysOnTop,                    ,                  ,     bool,         false,                  , P,      "True: OpenGL render window will be always on top of all other windows"
 V,      maximize,                       ,                  ,     bool,         false,                  , P,      "True: OpenGL render window will be maximized at startup"
-V,      showWindow,                     ,                  ,     bool,         true,                   , P,      "True: OpenGL render window is shown on startup; False: window will be iconified at startup (e.g. if you are starting multiple computations automatically)"
+V,      limitWindowToScreenSize,        ,                  ,     bool,         true,                   , P,      "True: render window size is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize"
 #special settings:
 V,      keyPressUserFunction,           ,                  ,     KeyPressUserFunction,  0,             , P,      "add a Python function f(key, action, mods) here, which is called every time a key is pressed; function shall return true, if key has been processed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)"
 V,      showMouseCoordinates,           ,                  ,     bool,         "false",                , P,      "True: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'"
 V,      ignoreKeys,                     ,                  ,     bool,         "false",                , P,      "True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'"
-F,      ResetKeyPressUserFunction,      ,                ,     void,         "keyPressUserFunction = 0;", , P,      "set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself"
+F,      ResetKeyPressUserFunction,      ,                  ,     void,         "keyPressUserFunction = 0;", , P,      "set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself"
 #
 writeFile=VisualizationSettings.h
 

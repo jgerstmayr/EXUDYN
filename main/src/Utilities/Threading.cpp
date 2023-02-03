@@ -110,7 +110,7 @@ namespace MicroThreading
 			(*func)(ti);
 
 		}
-		catch (Exception e)
+		catch (const Exception& e)
 		{
 			{
 				std::lock_guard<std::mutex> guard(copyex_mutex);
@@ -276,7 +276,7 @@ namespace MicroThreading
 				(*func)(ti);
 
 			}
-			catch (Exception e)
+			catch (const Exception& e)
 			{
 				{
 					std::lock_guard<std::mutex> guard(copyex_mutex);

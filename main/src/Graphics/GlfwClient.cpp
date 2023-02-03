@@ -40,7 +40,7 @@
 #ifdef __EXUDYN_USE_OPENVR 
 #include "Graphics/OpenVRinterface.h"
 extern OpenVRinterface glfwOpenVRinterface;
-#endif __EXUDYN_USE_OPENVR 
+#endif //__EXUDYN_USE_OPENVR 
 
 
 using namespace std::string_literals; // enables s-suffix for std::string literals
@@ -1517,8 +1517,15 @@ void GlfwRenderer::InitCreateWindow()
 		{
 			if (verboseRenderer) { PrintDelayed("glfwCreateWindow(...) successful"); }
 		}
+
 		//allow for very small windows, but never get 0 ...; x-size anyway limited due to windows buttons
 		glfwSetWindowSizeLimits(window, 2, 2, maxWidth, maxHeight);
+        if (!visSettings->window.limitWindowToScreenSize)
+        {
+            glfwSetWindowSize(window, sizex, sizey); //this call ensures that window size is really the requested size; tested on windows
+            //outputBuffer.WriteVisualization("window size=" + EXUstd::ToString(sizex) + ", " + EXUstd::ToString(sizey));
+        }
+
 		if (verboseRenderer) { PrintDelayed("glfwSetWindowSizeLimits(...) successful"); }
 
 		//+++++++++++++++++++++++++++++++++
@@ -1837,10 +1844,11 @@ void GlfwRenderer::SetProjection(int width, int height, float ratio, float& zoom
 			//additional projection has been provided and is added after glOrtho
 			glOrtho(-ratio * zoom, ratio*zoom, -zoom, zoom, -zFactor * 2.*state->maxSceneSize, zFactor * 2.*state->maxSceneSize); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
 			//glOrtho(-ratio , ratio, -1, 1, 0.1, 30); //https: //www.khronos.org/opengl/wiki/Viewing_and_Transformations#How_do_I_implement_a_zoom_operation.3F
-			glLoadMatrixf(state->projectionMatrix.GetDataPointer());
+			//glLoadMatrixf(state->projectionMatrix.GetDataPointer());
 			//glTranslatef(0.f, 0.f, -state->maxSceneSize);
 			glMultMatrixf(state->projectionMatrix.GetDataPointer());
 		}
+
 	}
 }
 

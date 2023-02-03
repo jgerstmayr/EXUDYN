@@ -48,7 +48,7 @@ omega0 = sqrt(stiffness/mass)
 dRel = 0.02*5
 damping = 2 * dRel * omega0 
 
-kSticking = 1e4*1
+kSticking = 1e4
 dSticking = 0.01*kSticking
 frictionProportionalZone = 1e-3
 expVel = 0.2

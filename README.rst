@@ -4,8 +4,8 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-+  Exudyn version = 1.5.86.dev1 (Fitzgerald)
-+  build date and time=2023-01-23  11:52
++  Exudyn version = 1.5.90.dev1 (Fitzgerald)
++  build date and time=2023-02-02  18:27
 +  **University of Innsbruck**, Austria, Department of Mechatronics
 
 Exudyn 1.5 is out! It includes now Python 3.7/8 - 3.10 wheels for MacOS (since 1.5.11.dev1 also showing tkinter dialogs!), improved compatibility for AVX2, simple reeving system, improved Lie group integration, improved RollingDisc, DistanceSensor, and many fixes; further features are multi-threading support; minimum coordinate formulation (KinematicTree); machine learning and artificial intelligence interface (openAI gym); improved explicit and implicit solvers; sparse matrix support; basic hydraulic actuator; creation of beams along curves; extended robotics modules; contact module; **PlotSensor** for simple post processing, and some improved 3D visualization, ...   See theDoc.pdf chapter **Issues and Bugs** for changes!
@@ -17,7 +17,7 @@ A paper on Exudyn has been presented at the `6th Joint International Conference 
 
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 +  *free, open source* and with plenty of *documentation* and *examples*
-+  **pre-built** for Python 3.6 - 3.10 under **Windows** ; Python 3.8 under **MacOS** available; Python 3.6 - 3.10 under **Linux** (UBUNTU wheels are available, but at most you should build your wheels by yourself, see instructions in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
++  **pre-built** for Python 3.6 - 3.10 under **Windows** and **Linux**, Python 3.8 - 3.10 under **MacOS** available; build wheels yourself, see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
 +  Exudyn can be linked to any other Python package, but we explicitly mention: `NGsolve <https://github.com/NGSolve/ngsolve>`_, `OpenAI <https://github.com/openai>`_, `OpenAI gym <https://github.com/openai/gym>`_, `Robotics Toolbox (Peter Corke) <https://github.com/petercorke/robotics-toolbox-python>`_, `Pybind11 <https://github.com/pybind/pybind11>`_
 
 .. |pic1| image:: docs/demo/screenshots/pistonEngine.gif

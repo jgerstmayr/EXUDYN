@@ -21,6 +21,27 @@ startTime = time.time()
 #print('setup.py: START time:', startTime)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#add help
+if '-h' in sys.argv or '-help' in sys.argv: #also works for --h, --help
+    print("===========================")
+    print("help for exudyn's setup.py:")
+    print("===========================")
+    print("options for compilation:")
+    print("  --parallel  ... using all threads available on local computer to compile;")
+    print("                  this may fail sometimes and causes heavy load of your CPU")
+    print("  --noglfw    ... compile without GLFW graphics (e.g. for super computer)")
+    print("  --openvr    ... compile with openvr library")
+    print("  --nofast    ... do not build fast CPP library, which requires an additional run")
+    print("  --quiet     ... reduce output of compiler flags, just use counter")
+    print("  install     ... install exudyn library after compilation")
+    print("  bdist_wheel ... build python wheel")
+    print("  ")
+    print("===========================")
+    print("stopped setup.py due to help option")
+    
+    sys.exit()
+    
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #check GLFW and openVR
 useOpenVR = False
 USEGLFW = True
@@ -29,17 +50,23 @@ if '--noglfw' in sys.argv:
     print("setup.py: *** compiling without graphics (OpenGL and GLFW) ***")
     sys.argv.remove('--noglfw')
 
-if '--openvr' in sys.argv:
-    useOpenVR = True
-    print("setup.py: *** compiling with OpenVR ***")
-    sys.argv.remove('--openvr')
-    
 compileParallel = False
 if '--parallel' in sys.argv:
     compileParallel = True
     print("setup.py: *** trying to compile in parallel ***")
     print("          in case that parallel compile fails, remove the --parallel option")
     sys.argv.remove('--parallel')
+
+quietCompile = False
+if '--quiet' in sys.argv:
+    quietCompile = True
+    sys.argv.remove('--quiet')
+
+
+if '--openvr' in sys.argv:
+    useOpenVR = True
+    print("setup.py: *** compiling with OpenVR ***")
+    sys.argv.remove('--openvr')
 
 compileExudynFast = True    #but only for selected Python versions
 useAVX = False              #this flag is used to create separate version without AVX
@@ -91,8 +118,17 @@ if isWindows:
         addLibrary_dirs=['libs/libs32' ]
         print("architecture==32bits")
         if useOpenVR:
-            raise ValueError('setup.py: openVR not tested for 32bits case; may work!') #remove this line ...
-            addPackageData = {'':['../../../libs/libs32/openvr_api.dll']}, #relative to exudyn; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
+            #remove this warning in future:
+            print('**********************')
+            print('WARNING: setup.py: openVR not tested for 32bits case; may work!')
+            print(' **********************') 
+            
+            #addPackageData = {'':['../../../libs/libs32/openvr_api.dll']}, #relative to exudyn; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
+            import shutil
+            shutil.copy2('libs/libs64/openvr_api.dll', 'pythonDev/exudyn/')
+
+            addPackageData = {'':['openvr_api.dll']} #relative to exudyn, copied there; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
+            print('add package data for openVR:', addPackageData)
     else:
         if useOpenVR:
             #this does not work without wildcard *; but does not add the .dll
@@ -126,8 +162,6 @@ if USEGLFW:
 
     myIncludeDirs=["include/glfw/deps", "include/glfw",]
     msvcGLFWlibs = ['opengl32.lib', 'glfw3.lib'] #opengl32.lib: not needed since VS2015?
-    if useOpenVR:
-        msvcGLFWlibs += ['openvr_api.lib'] #uncomment for openVR; openvr_api.dll needs to be in directory of exudynCPP.pyd
 
     if isMacOS:
         unixGLFWlibs = ['-lglfw3', #GLFW static library
@@ -139,7 +173,10 @@ if USEGLFW:
         #unix: for graphics; libs (*.so) need to be installed on your linux system -> see setupToolsHowTo.txt:
         unixGLFWlibs = ['-lglfw', #GLFW
                         '-lGL'] #OpenGL
-
+    if useOpenVR:
+        msvcGLFWlibs += ['openvr_api.lib'] #openvr_api.dll needs to be in directory of exudynCPP.pyd
+        unixGLFWlibs += ['-lopenvr_api']   #linux (openVR dev tools must be installed); MacOS (untested, library needs to be installed/placed in exudyn site-packages folder)
+        
 if (not (sys.version_info.major == 3 and sys.version_info.minor == 6) #since V1.2.29 avx2 deactivated for Python3.6
     and not isMacOS and not isLinux): #AVX2 flag only used under windows
     print('compile with AVX2')
@@ -509,9 +546,15 @@ class BuildExt(build_ext):
         '-Wno-non-template-friend', #deactivate warning for several vector/array templates
         '-Wno-class-memaccess', #warning in SearchTree Box3D; BUT: does not work on older gcc; avoid warnings on gcc-8 regarding memory access in class
         '-Wno-maybe-uninitialized', #warnings in ConstSizeMatrix
+        #'-Wno-strict-prototypes',  #many warnings in gcc / g++
         ]
 
     def build_extensions(self):
+        if isLinux: #remove many Wstrict-prototypes WARNINGS in linux
+            try:
+                self.compiler.compiler_so.remove("-Wstrict-prototypes")
+            except (AttributeError, ValueError):
+                pass 
         ct = self.compiler.compiler_type
         opts = self.c_opts.get(ct, [])
         link_opts = self.l_opts.get(ct, [])
@@ -535,7 +578,13 @@ if compileParallel:
     try:
         import multiprocessing
         import multiprocessing.pool
-        if isLinux or isMacOS: #works identically for both; on Apple M1 copilation in 76 seconds for V1.4.63
+        from multiprocessing import Value #thread safe counter
+        exudynCompileCnt = Value('i',0) #for progress
+        # progressCR = '\r'
+        # progressEnd = ''#'\n'
+        # progressSpaces = ' '*25
+        
+        if isLinux or isMacOS: #works identically for both; on Apple M1 compilation in 76 seconds for V1.4.63
             def parallelCCompile(self, sources, output_dir=None, macros=None,
                     include_dirs=None, debug=0, extra_preargs=None, extra_postargs=None,
                     depends=None):
@@ -546,10 +595,33 @@ if compileParallel:
                 objects.reverse() #puts the heavier files on top (better performance for parallel compile)
                 cc_args = self._get_cc_args(pp_opts, debug, extra_preargs)
                 # parallel code
+                with exudynCompileCnt.get_lock():
+                    exudynCompileCnt.value = 0
+                
+                nObjects = len(objects)+2 #two extra files added by system
                 def _single_compile(obj):
+
                     try: src, ext = build[obj]
                     except KeyError: return
-                    self._compile(obj, src, ext, cc_args, extra_postargs, pp_opts)
+                    if quietCompile:
+                        with open('setuppy.output.txt', 'w') as sys.stdout:
+                            self._compile(obj, src, ext, cc_args, extra_postargs, pp_opts)
+                        sys.stdout = sys.__stdout__
+                    else:
+                        self._compile(obj, src, ext, cc_args, extra_postargs, pp_opts)
+
+                    if quietCompile:
+                        #reduced output just showing file name and counter:
+                        cnt = 0
+                        with exudynCompileCnt.get_lock():
+                            exudynCompileCnt.value += 1
+                            cnt = exudynCompileCnt.value 
+                            
+                        startSRC = obj.find('src/')
+                        if startSRC == -1: startSRC = -4
+                        objName = obj[startSRC+4:-2]+'.cpp'
+                        print('completed '+str(cnt).zfill(3)+'/'+str(nObjects)+ ': '+ objName)
+
                 # convert to list, imap is evaluated on-demand
                 N_cores = multiprocessing.cpu_count() #better to use all threads, not only cpus
                 list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,objects))
@@ -578,6 +650,8 @@ if compileParallel:
                 else:
                     compile_opts.extend(self.compile_options)
 
+                nObjects = len(objects)
+
                 #this function is called in a for loop in the original version:                    
                 def _single_compile(obj):
                     add_cpp_opts = False
@@ -585,6 +659,7 @@ if compileParallel:
                         src, ext = build[obj]
                     except KeyError:
                         return
+
                     if debug:
                         # pass the full pathname to MSVC in debug mode,
                         # this allows the debugger to find the source file
@@ -609,15 +684,28 @@ if compileParallel:
                     args.extend(extra_postargs)
             
                     try:
+                        #reduced output just showing file name and counter:
+                        if quietCompile:
+                            with exudynCompileCnt.get_lock():
+                                exudynCompileCnt.value += 1
+                            sys.__stdout__.write('compile '+str(exudynCompileCnt.value).zfill(3)+'/'+str(nObjects)+ ': ')
+                            sys.__stdout__.flush() #needed to immediately write to console
+                        #the following command still outputs the compiled file and CR in Windows:
                         self.spawn(args)
                     except:
                         raise ValueError('failed to exucute: '+str(args))
             
                 N_cores = multiprocessing.cpu_count() #better to use all threads, not only cpus
+                # N_cores = 1
                 # convert to list, imap is evaluated on-demand
-                list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,objects))
+                if quietCompile:
+                    with open('setuppy.output.txt', 'w') as sys.stdout:
+                        list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,objects))
+                    sys.stdout = sys.__stdout__
+                else:
+                    list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,objects))
     
-                #serial:
+                # # serial:
                 # for obj in objects:
                 #     _single_compile(obj)
             
@@ -703,7 +791,7 @@ setup(
     python_requires='>=3.6', #for pypi.org, do only specify the minimum Python version which is needed for this exudyn version
 )
 
-if useOpenVR: #delete copied file
+if useOpenVR and isWindows: #delete copied file
     import os
     os.remove('pythonDev/exudyn/openvr_api.dll')
 

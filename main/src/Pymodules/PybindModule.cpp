@@ -102,7 +102,7 @@ extern Index matrix_delete_counts; //global counter of item deallocations; is in
 extern Index linkedDataVectorCast_counts; //global counter for unwanted type conversion from LinkedDataVector to Vector
 #endif
 
-#pragma message("==========================")
+//#pragma message("==========================")
 #ifdef use_AVX2
 #pragma message("** compiled with AVX2 **")
 #elif defined(use_AVX512)
@@ -170,9 +170,9 @@ STDstring GetExudynBuildVersionString(bool addDetails)
 	{
 		str += "[FAST]"; //changed from "[NO RANGE CHECKS]"
 	}
-#pragma message("====================================")
-#pragma message("EXUDYN using __FAST_EXUDYN_LINALG without range checks!")
-#pragma message("====================================")
+//#pragma message("====================================")
+#pragma message("** EXUDYN using __FAST_EXUDYN_LINALG without range checks! **")
+//#pragma message("====================================")
 #endif
 	return str;
 }

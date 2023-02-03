@@ -1,0 +1,33 @@
+
+For OpenVR to run with Exudyn, it needs to be compiled with (also add --parallel !)
+python setup.py --openvr bdist_wheel
+
+==========================================
+Windows:
+- install steamVR:
+https://store.steampowered.com/about
+
+if you have no real equipment, 
+- install Riftcat 2 (https://riftcat.com/vridge) for Windows
+- install same app for mobile device (tested on Android)
+- start Riftcat on Windows and phone, connect via Wifi or USB
+- use some cheap phone adapter
+- Phone will show the stereo rendered scene
+
+- for HTC vive, install their software and check hardware setup:
+https://www.vive.com
+https://www.vive.com/hk/support/vive/category_howto/installing-the-base-stations.html
+
+
+==========================================
+linux:
+
+tested with Python 3.9 in env
+sudo apt install libopenvr-dev
+==> installs libopenvr_api.so
+run setup.py with --openvr
+(adds -lopenvr_api  in setup.py)
+
+
+
+
