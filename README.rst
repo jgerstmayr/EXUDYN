@@ -1,7 +1,11 @@
-|Documentation GithubIO|
+|Documentation GithubIO| |PyPI download total|
 
 .. |Documentation GithubIO| image:: https://img.shields.io/website-up-down-green-red/https/jgerstmayr.github.io/EXUDYN.svg
    :target: https://jgerstmayr.github.io/EXUDYN
+
+.. |PyPI download total| image:: https://img.shields.io/pypi/dt/exudyn.svg
+   :target: https://pypi.python.org/pypi/exudyn/
+
 ======
 Exudyn
 ======
