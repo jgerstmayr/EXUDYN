@@ -1,3 +1,8 @@
+|Documentation GithubIO|
+
+.. |Documentation GithubIO| image:: https://img.shields.io/website-up-down-green-red/https/jgerstmayr.github.io.svg
+   :target: https://jgerstmayr.github.io/
+
 ======
 Exudyn
 ======
@@ -109,15 +114,15 @@ In the first phase most of the core code is written by Johannes Gerstmayr, imple
 Some important tests for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
 For the interoperability between C++ and Python, we extensively use \ **Pybind11**\ , originally written by Jakob Wenzel, see \ ``https://github.com/pybind/pybind11``\ . Without Pybind11 we couldn't have made this project -- Thanks a lot!
 
-Important discussions with researchers from the community were important for the design and development of Exudyn , where we like to mention Joachim Schöberl from TU-Vienna who boosted the design of the code with great concepts. 
+Important discussions with researchers from the community were important for the design and development of Exudyn , where we like to mention Joachim SchÃ¶berl from TU-Vienna who boosted the design of the code with great concepts. 
 
 The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications' contributes to the development of the code.
 
 The following people have contributed to Python and C++ library implementations (as well as to testing, examples, theory, ...):
 
-+  Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with \ ``taskmanager``\  for \ **multi-threaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
++  Joachim SchÃ¶berl, TU Vienna (Providing specialized NGsolve  core library with \ ``taskmanager``\  for \ **multi-threaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
 +  Stefan Holzinger, University of Innsbruck (Lie group module and solvers in Python, Lie group node, testing)
-+  Andreas Zwölfer, Technical University Munich (FFRF and CMS formulation)
++  Andreas ZwÃ¶lfer, Technical University Munich (FFRF and CMS formulation)
 +  Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation, pip install on linux, wsl with graphics)
 +  Martin Sereinig, University of Innsbruck (special robotics functionality)
 +  Michael Pieber, University of Innsbruck (helped in several Python libraries)
@@ -813,7 +818,7 @@ FAQ
 +  In \ ``GenerateStraightLineANCFCable2D``\  
 
   |  =>  coordinate constraints can be used to constrain position and rotation, e.g., \ ``fixedConstraintsNode0 = [1,1,0,1]``\  for a beam aligned along the global x-axis; 
-  |  =>  this \ **does not work**\  for beams with arbitrary rotation in reference configuration, e.g., 45°. Use a GenericJoint with a rotationMarker instead.
+  |  =>  this \ **does not work**\  for beams with arbitrary rotation in reference configuration, e.g., 45Â°. Use a GenericJoint with a rotationMarker instead.
 
 +  What is the difference between MarkerBodyPosition and MarkerBodyRigid?
 
