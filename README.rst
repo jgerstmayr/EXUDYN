@@ -3,15 +3,10 @@
 .. |Documentation GithubIO| image:: https://img.shields.io/website-up-down-green-red/https/jgerstmayr.github.io/EXUDYN.svg
    :target: https://jgerstmayr.github.io/EXUDYN/
 
-|Github all releases|
-
-.. |Github all releases| image:: https://img.shields.io/github/downloads/jgerstmayr/EXUDYN/total.svg
-   :target: https://github.com/jgerstmayr/EXUDYN/releases/
-
 |GitHub commits|
 
-.. |GitHub commits| image:: https://img.shields.io/github/commits-since/jgerstmayr/EXUDYN/v1.0.0.svg
-   :target: https://github.com/jgerstmayr/EXUDYN/
+.. |Github all releases| image:: https://img.shields.io/github/commits-since/jgerstmayr/EXUDYN/v1.0.0.svg
+   :target: https://github.com/jgerstmayr/EXUDYN/commits/
 
 |PyPI version exudyn|
 
