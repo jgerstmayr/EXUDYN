@@ -1,29 +1,13 @@
-|Documentation GithubIO|
+|Documentation GithubIO| |PyPI version exudyn| |PyPI pyversions| |PyPI download month|
 
 .. |Documentation GithubIO| image:: https://img.shields.io/website-up-down-green-red/https/jgerstmayr.github.io/EXUDYN.svg
    :target: https://jgerstmayr.github.io/EXUDYN/
 
-|GitHub commits|
-
-.. |Github all releases| image:: https://img.shields.io/github/commits-since/jgerstmayr/EXUDYN/v1.5.0.svg
-   :target: https://github.com/jgerstmayr/EXUDYN/commit/
-
-|PyPI version exudyn|
-
 .. |PyPI version exudyn| image:: https://badge.fury.io/py/exudyn.svg
    :target: https://pypi.python.org/pypi/exudyn/
 
-|PyPI pyversions|
-
 .. |PyPI pyversions| image:: https://img.shields.io/pypi/pyversions/exudyn.svg
    :target: https://pypi.python.org/pypi/exudyn/
-
-|PyPI download total|
-
-.. |PyPI download total| image:: https://img.shields.io/pypi/dt/exudyn.svg
-   :target: https://pypi.python.org/pypi/exudyn/
-
-|PyPI download month|
 
 .. |PyPI download month| image:: https://img.shields.io/pypi/dm/exudyn.svg
    :target: https://pypi.python.org/pypi/exudyn/
