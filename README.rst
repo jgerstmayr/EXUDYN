@@ -1,7 +1,7 @@
 |Documentation GithubIO|
 
 .. |Documentation GithubIO| image:: https://img.shields.io/website-up-down-green-red/https/jgerstmayr.github.io.svg
-   :target: https://jgerstmayr.github.io/
+   :target: https://jgerstmayr.github.io/EXUDYN
 
 ======
 Exudyn
