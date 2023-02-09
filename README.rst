@@ -5,7 +5,7 @@
 
 |GitHub commits|
 
-.. |Github all releases| image:: https://img.shields.io/github/commits-since/jgerstmayr/EXUDYN/v1.0.0.svg
+.. |Github all releases| image:: https://img.shields.io/github/commits-since/jgerstmayr/EXUDYN/v1.5.0.svg
    :target: https://github.com/jgerstmayr/EXUDYN/commit/
 
 |PyPI version exudyn|
