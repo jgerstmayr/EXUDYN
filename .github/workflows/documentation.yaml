@@ -1,5 +1,5 @@
 #  workflow for building GitHub Pages
-name: Deploy GitHub Pages
+name: Deploy GitHub Pages V2
 
 on:
   # Runs on pushes targeting the default branch
