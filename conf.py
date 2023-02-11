@@ -9,7 +9,12 @@
 project = 'Exudyn'
 copyright = '2023, Johannes Gerstmayr'
 author = 'Johannes Gerstmayr'
-release = '1.5.0'
+
+#create exudynVersionString
+file='main/src/pythonGenerator/exudynVersion.py'
+exec(open(file).read(), globals())
+
+release = exudynVersionString
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
