@@ -37,8 +37,8 @@ jobs:
         pip install sphinx furo
     - name: Sphinx Build
       run: |
-        sphinx-build . _build
+        sphinx-build . docs/_build
     - name: Deploy to Github pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        folder: "_build/html"
+        folder: "docs/_build/html"
