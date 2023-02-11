@@ -1,0 +1,528 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="prev" title="Mass-Spring-Damper tutorial" href="MassSpringDamperTutorial.html" />
+
+    <!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07 -->
+        <title>Rigid body and joints tutorial - Exudyn 1.5.95.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">Exudyn 1.5.95.dev1 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  
+  <span class="sidebar-brand-text">Exudyn 1.5.95.dev1 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Exudyn</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation and Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="InstallationAndGettingStarted.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GettingStarted.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InstallationInstructions.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FurtherNotes.html">Further notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RunASimpleExampleInPython.html">Run a simple example in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TroubleShootingAndFAQ.html">Trouble shooting and FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Overview on Exudyn</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="OverviewOnExudyn.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ModuleStructure.html">Module structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ItemsNodesObjectsLoadsMarkersSensors.html">Items: Nodes, Objects, Loads, Markers, Sensors, …</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MappingBetweenLocalAndGlobalCoordinateIndices.html">Mapping between local and global coordinate indices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ExudynBasics.html">Exudyn Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="AdvancedTopics.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CCode.html">C++ Code</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MassSpringDamperTutorial.html">Mass-Spring-Damper tutorial</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Rigid body and joints tutorial</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="rigid-body-and-joints-tutorial">
+<h1>Rigid body and joints tutorial<a class="headerlink" href="#rigid-body-and-joints-tutorial" title="Permalink to this heading">#</a></h1>
+<p>The python source code of the first tutorial can be found in the file:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">main/pythonDev/Examples/rigidBodyTutorial3.py</span></code></p>
+</div></blockquote>
+<p>This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in  the figure above.</p>
+<a class="reference internal image-reference" href="../../_images/TutorialRigidBody1desc.png"><img alt="../../_images/TutorialRigidBody1desc.png" src="../../_images/TutorialRigidBody1desc.png" style="width: 400px;" /></a>
+<p>We first import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1">#for postprocessing</span>
+</pre></div>
+</div>
+<p>The submodule <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code> contains helper functions for graphics representation, 3D rigid bodies and joints.</p>
+<p>As in the first tutorial, we need a <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code> and add a new MainSystem <code class="docutils literal notranslate"><span class="pre">mbs</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>
+<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We define some geometrical parameters for lateron use.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#physical parameters</span>
+<span class="n">g</span> <span class="o">=</span>     <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#gravity</span>
+<span class="n">L</span> <span class="o">=</span> <span class="mi">1</span>               <span class="c1">#length</span>
+<span class="n">w</span> <span class="o">=</span> <span class="mf">0.1</span>             <span class="c1">#width</span>
+<span class="n">bodyDim</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">w</span><span class="p">]</span> <span class="c1">#body dimensions</span>
+<span class="n">p0</span> <span class="o">=</span>    <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>     <span class="c1">#origin of pendulum</span>
+<span class="n">pMid0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">L</span><span class="o">*</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="c1">#center of mass, body0</span>
+</pre></div>
+</div>
+<p>We add an empty ground body, using default values. It’s origin is at [0,0,0] and here we use no visualization.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#ground body</span>
+<span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">ObjectGround</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>For physical parameters of the rigid body, we can use the class <code class="docutils literal notranslate"><span class="pre">RigidBodyInertia</span></code>, which allows to define mass, center of mass (COM) and inertia parameters, as well as shifting COM or adding inertias.
+The <code class="docutils literal notranslate"><span class="pre">RigidBodyInertia</span></code> can be used directly to create rigid bodies. Special derived classes can be use to define rigid body inertias for cylinders, cubes, etc., so we use a cube here:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#first link:</span>
+<span class="n">iCube0</span> <span class="o">=</span> <span class="n">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">sideLengths</span><span class="o">=</span><span class="n">bodyDim</span><span class="p">)</span>
+<span class="n">iCube0</span> <span class="o">=</span> <span class="n">iCube0</span><span class="o">.</span><span class="n">Translated</span><span class="p">([</span><span class="o">-</span><span class="mf">0.25</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="c1">#transform COM, COM not at reference point!</span>
+</pre></div>
+</div>
+<p>Note that the COM is translated in axial direction, while it would be at the body’s local position [0,0,0] by default!</p>
+<p>For visualization, we need to add some graphics for the body defined as a 3D RigidLink object and we additionally draw a basis (three RGB-vectors) at the COM:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#graphics for body</span>
+<span class="n">graphicsBody0</span> <span class="o">=</span> <span class="n">GraphicsDataRigidLink</span><span class="p">(</span><span class="n">p0</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">p1</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                                     <span class="n">axis0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">axis1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">w</span><span class="p">],</span>
+                                     <span class="n">thickness</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="p">[</span><span class="mf">1.2</span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="mf">1.2</span><span class="o">*</span><span class="n">w</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color4red</span><span class="p">)</span>
+<span class="n">graphicsCOM0</span> <span class="o">=</span> <span class="n">GraphicsDataBasis</span><span class="p">(</span><span class="n">origin</span><span class="o">=</span><span class="n">iCube0</span><span class="o">.</span><span class="n">com</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we have defined all data for the link (rigid body). We could use <code class="docutils literal notranslate"><span class="pre">mbs.AddNode(NodeRigidBodyEP(...))</span></code> and <code class="docutils literal notranslate"><span class="pre">mbs.AddObject(ObjectRigidBody(...))</span></code> to create a node and a body, but the <code class="docutils literal notranslate"><span class="pre">exudyn.rigidBodyUtilities</span></code> offer a much more comfortable function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">n0</span><span class="p">,</span><span class="n">b0</span><span class="p">]</span><span class="o">=</span><span class="n">AddRigidBody</span><span class="p">(</span><span class="n">mainSys</span> <span class="o">=</span> <span class="n">mbs</span><span class="p">,</span>
+                     <span class="n">inertia</span> <span class="o">=</span> <span class="n">iCube0</span><span class="p">,</span> <span class="c1">#includes COM</span>
+                     <span class="n">nodeType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">NodeType</span><span class="o">.</span><span class="n">RotationEulerParameters</span><span class="p">,</span>
+                     <span class="n">position</span> <span class="o">=</span> <span class="n">pMid0</span><span class="p">,</span>
+                     <span class="n">rotationMatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span>
+                     <span class="n">gravity</span> <span class="o">=</span> <span class="n">g</span><span class="p">,</span>
+                     <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphicsBody0</span><span class="p">,</span> <span class="n">graphicsCOM0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>which also adds a gravity load and could also set initial velocities, if wanted.
+The <code class="docutils literal notranslate"><span class="pre">nodeType</span></code> specifies the underlying model for the rigid body node, see theDoc.pdf.
+We can use</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">RotationEulerParameters</span></code>: for fast computation, but leads to an additional algebraic equation and thus needs an implicit solver</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RotationRxyz</span></code>: contains a singularity if the second angle reaches +/- 90 degrees, but no algebraic equations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RotationRotationVector</span></code>: basically contains a singularity for 0 degrees, but if used in combination with Lie group integrators, singularities are bypassed</p></li>
+</ul>
+<p>We now add a revolute joint around the (global) z-axis.
+We have several possibilities, which are shown in the following.
+For the <strong>first two possibilities only</strong>, we need the following markers</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#markers for ground and rigid body (not needed for option 3):</span>
+<span class="n">markerGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">markerBody0J0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>The very general option 1 is to use the <code class="docutils literal notranslate"><span class="pre">GenericJoint</span></code>, that can be used to define any kind of joint with translations and rotations fixed or free,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#revolute joint option 1:</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">GenericJoint</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">markerGround</span><span class="p">,</span> <span class="n">markerBody0J0</span><span class="p">],</span>
+                           <span class="n">constrainedAxes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                           <span class="n">visualization</span><span class="o">=</span><span class="n">VObjectJointGeneric</span><span class="p">(</span><span class="n">axesRadius</span><span class="o">=</span><span class="mf">0.2</span><span class="o">*</span><span class="n">w</span><span class="p">,</span>
+                                                             <span class="n">axesLength</span><span class="o">=</span><span class="mf">1.4</span><span class="o">*</span><span class="n">w</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>In addition, transformation matrices (<code class="docutils literal notranslate"><span class="pre">rotationMarker0/1</span></code>) can be added, see the joint description.</p>
+<p>Option 2 is using the revolute joint, which allows a free rotation around the local z-axis of marker 0 (<code class="docutils literal notranslate"><span class="pre">markerGround</span></code> in our example)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#revolute joint option 2:</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">ObjectJointRevoluteZ</span><span class="p">(</span><span class="n">markerNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">markerGround</span><span class="p">,</span> <span class="n">markerBody0J0</span><span class="p">],</span>
+                                   <span class="n">rotationMarker0</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+                                   <span class="n">rotationMarker1</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+                                   <span class="n">visualization</span><span class="o">=</span><span class="n">VObjectJointRevoluteZ</span><span class="p">(</span><span class="n">axisRadius</span><span class="o">=</span><span class="mf">0.2</span><span class="o">*</span><span class="n">w</span><span class="p">,</span>
+                                                                       <span class="n">axisLength</span><span class="o">=</span><span class="mf">1.4</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>
+                                   <span class="p">))</span>
+</pre></div>
+</div>
+<p>Additional transformation matrices (<code class="docutils literal notranslate"><span class="pre">rotationMarker0/1</span></code>) can be added in order to chose any rotation axis.</p>
+<p>Note that an error in the definition of markers for the joints can be also detected in the render window (if you completed the example), e.g., if you change the following marker in the lines above,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#example if wrong marker position is chosen:</span>
+<span class="n">markerBody0J0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.4</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>=&gt; you will see a misalignment of the two parts of the joint by <code class="docutils literal notranslate"><span class="pre">0.1*L</span></code>.</p>
+<p>Due to the fact that the definition of markers for general joints is tedious, there is a utility function, which allows to attach revolute joints immediately to bodies and defining the rotation axis only once for the joint:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#revolute joint option 3:</span>
+<span class="n">AddRevoluteJoint</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">body0</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span> <span class="n">body1</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                 <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">useGlobalFrame</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">showJoint</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">axisRadius</span><span class="o">=</span><span class="mf">0.2</span><span class="o">*</span><span class="n">w</span><span class="p">,</span> <span class="n">axisLength</span><span class="o">=</span><span class="mf">1.4</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The second link and the according joint can be set up in a very similar way:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#second link:</span>
+<span class="n">graphicsBody1</span> <span class="o">=</span> <span class="n">GraphicsDataRigidLink</span><span class="p">(</span><span class="n">p0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">],</span><span class="n">p1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">],</span>
+                                      <span class="n">axis0</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis1</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="p">[</span><span class="mf">0.06</span><span class="p">,</span><span class="mf">0.05</span><span class="p">],</span>
+                                      <span class="n">thickness</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.12</span><span class="p">,</span><span class="mf">0.12</span><span class="p">],</span>
+                                      <span class="n">color</span><span class="o">=</span><span class="n">color4lightgreen</span><span class="p">)</span>
+
+<span class="n">iCube1</span> <span class="o">=</span> <span class="n">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">pMid1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">])</span> <span class="c1">#center of mass, body1</span>
+<span class="p">[</span><span class="n">n1</span><span class="p">,</span><span class="n">b1</span><span class="p">]</span><span class="o">=</span><span class="n">AddRigidBody</span><span class="p">(</span><span class="n">mainSys</span> <span class="o">=</span> <span class="n">mbs</span><span class="p">,</span>
+                     <span class="n">inertia</span> <span class="o">=</span> <span class="n">iCube1</span><span class="p">,</span>
+                     <span class="n">nodeType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">NodeType</span><span class="o">.</span><span class="n">RotationEulerParameters</span><span class="p">,</span>
+                     <span class="n">position</span> <span class="o">=</span> <span class="n">pMid1</span><span class="p">,</span>
+                     <span class="n">rotationMatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span>
+                     <span class="n">angularVelocity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                     <span class="n">gravity</span> <span class="o">=</span> <span class="n">g</span><span class="p">,</span>
+                     <span class="n">graphicsDataList</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphicsBody1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The revolute joint in this case has a free rotation around the global x-axis:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#revolute joint (free x-axis)</span>
+<span class="n">AddRevoluteJoint</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">body0</span><span class="o">=</span><span class="n">b0</span><span class="p">,</span> <span class="n">body1</span><span class="o">=</span><span class="n">b1</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                 <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">useGlobalFrame</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">showJoint</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">axisRadius</span><span class="o">=</span><span class="mf">0.2</span><span class="o">*</span><span class="n">w</span><span class="p">,</span> <span class="n">axisLength</span><span class="o">=</span><span class="mf">1.4</span><span class="o">*</span><span class="n">w</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we also add a sensor for some output of the double pendulum:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#position sensor at tip of body1</span>
+<span class="n">sens1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddSensor</span><span class="p">(</span><span class="n">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">b1</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">],</span>
+                               <span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/sensorPos.txt&#39;</span><span class="p">,</span>
+                               <span class="n">outputVariableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Before simulation, we need to call <code class="docutils literal notranslate"><span class="pre">Assemble()</span></code> for our system, which links objects, nodes, …, assigns initial values and does further pre-computations and checks:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">Assemble</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>After <code class="docutils literal notranslate"><span class="pre">Assemble()</span></code>, markers, nodes, objects, etc. are linked and we can analyze the internal structure. First, we can print out useful information, either just typing <code class="docutils literal notranslate"><span class="pre">mbs</span></code> in the iPython console to print out overal information:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">systemData</span><span class="p">:</span>
+  <span class="n">Number</span> <span class="n">of</span> <span class="n">nodes</span><span class="o">=</span> <span class="mi">2</span>
+  <span class="n">Number</span> <span class="n">of</span> <span class="n">objects</span> <span class="o">=</span> <span class="mi">5</span>
+  <span class="n">Number</span> <span class="n">of</span> <span class="n">markers</span> <span class="o">=</span> <span class="mi">8</span>
+  <span class="n">Number</span> <span class="n">of</span> <span class="n">loads</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="n">Number</span> <span class="n">of</span> <span class="n">sensors</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">Number</span> <span class="n">of</span> <span class="n">ODE2</span> <span class="n">coordinates</span> <span class="o">=</span> <span class="mi">14</span>
+  <span class="n">Number</span> <span class="n">of</span> <span class="n">ODE1</span> <span class="n">coordinates</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">Number</span> <span class="n">of</span> <span class="n">AE</span> <span class="n">coordinates</span>   <span class="o">=</span> <span class="mi">12</span>
+  <span class="n">Number</span> <span class="n">of</span> <span class="n">data</span> <span class="n">coordinates</span>   <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">For</span> <span class="n">details</span> <span class="n">see</span> <span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="p">,</span> <span class="n">mbs</span><span class="o">.</span><span class="n">sys</span> <span class="ow">and</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span>
+<span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Note that there are 2 nodes for the two rigid bodies. The five objects are due to ground object, 2 rigid bodies and 2 revolute joints.
+The meaning of markers can be seen in the graphical representation described below.</p>
+<p>Alternatively we can print the full internal information as a dictionary using:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">Info</span><span class="p">()</span> <span class="c1">#show detailed information</span>
+</pre></div>
+</div>
+<p>which results in the following output (shortened):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">node0</span><span class="p">:</span>
+    <span class="s1">&#39;nodeType&#39;</span><span class="p">:</span> <span class="s1">&#39;RigidBodyEP&#39;</span><span class="p">,</span> <span class="s1">&#39;referenceCoordinates&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="s1">&#39;addConstraintEquation&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;initialCoordinates&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="s1">&#39;initialVelocities&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;node0&#39;</span><span class="p">,</span> <span class="s1">&#39;Vshow&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;VdrawSize&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;Vcolor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]</span>
+<span class="n">node1</span><span class="p">:</span>
+    <span class="s1">&#39;nodeType&#39;</span><span class="p">:</span> <span class="s1">&#39;RigidBodyEP&#39;</span><span class="p">,</span> <span class="s1">&#39;referenceCoordinates&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="s1">&#39;addConstraintEquation&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;initialCoordinates&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="s1">&#39;initialVelocities&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;node1&#39;</span><span class="p">,</span> <span class="s1">&#39;Vshow&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;VdrawSize&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;Vcolor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]</span>
+<span class="n">object0</span><span class="p">:</span>
+    <span class="s1">&#39;objectType&#39;</span><span class="p">:</span> <span class="s1">&#39;Ground&#39;</span><span class="p">,</span> <span class="s1">&#39;referencePosition&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;object0&#39;</span><span class="p">,</span> <span class="s1">&#39;Vshow&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;VgraphicsDataUserFunction&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Vcolor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">],</span> <span class="s1">&#39;VgraphicsData&#39;</span><span class="p">:</span> <span class="s1">&#39;TODO&#39;</span><span class="p">:</span> <span class="s1">&#39;Get graphics data to be implemented&#39;</span>
+<span class="n">object1</span><span class="p">:</span>
+    <span class="s1">&#39;objectType&#39;</span><span class="p">:</span> <span class="s1">&#39;RigidBody&#39;</span><span class="p">,</span> <span class="s1">&#39;physicsMass&#39;</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span> <span class="s1">&#39;physicsInertia&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.08333333333333336</span><span class="p">,</span> <span class="mf">7.333333333333334</span><span class="p">,</span> <span class="mf">7.333333333333334</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="s1">&#39;physicsCenterOfMass&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="s1">&#39;nodeNumber&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;object1&#39;</span><span class="p">,</span> <span class="s1">&#39;Vshow&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;VgraphicsDataUserFunction&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;VgraphicsData&#39;</span><span class="p">:</span> <span class="s1">&#39;TODO&#39;</span><span class="p">:</span> <span class="s1">&#39;Get graphics data to be implemented&#39;</span>
+<span class="n">object2</span><span class="p">:</span>
+    <span class="s1">&#39;objectType&#39;</span><span class="p">:</span> <span class="s1">&#39;JointRevolute&#39;</span><span class="p">,</span> <span class="s1">&#39;markerNumbers&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="s1">&#39;rotationMarker0&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span> <span class="s1">&#39;rotationMarker1&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span> <span class="s1">&#39;activeConnector&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;object2&#39;</span><span class="p">,</span> <span class="s1">&#39;Vshow&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;VaxisRadius&#39;</span><span class="p">:</span> <span class="mf">0.019999999552965164</span><span class="p">,</span> <span class="s1">&#39;VaxisLength&#39;</span><span class="p">:</span> <span class="mf">0.14000000059604645</span><span class="p">,</span> <span class="s1">&#39;Vcolor&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]</span>
+<span class="n">object3</span><span class="p">:</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>A graphical representation of the internal structure of the model can be shown using the command <code class="docutils literal notranslate"><span class="pre">DrawSystemGraph</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DrawSystemGraph</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">useItemTypes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#draw nice graph of system</span>
+</pre></div>
+</div>
+<p>For the output see the figure below. Note that obviously, markers are always needed to connect objects (or nodes) as well as loads. We can also see, that 2 markers MarkerBodyRigid1 and MarkerBodyRigid2 are unused, which is no further problem for the model and also does not require additional computational resources (except for some bytes of memory). Having isolated nodes or joints that are not connected (or having too many connections) may indicate that you did something wrong in setting up your model.</p>
+<a class="reference internal image-reference" href="../../_images/DrawSystemGraphExample.png"><img alt="../../_images/DrawSystemGraphExample.png" src="../../_images/DrawSystemGraphExample.png" style="width: 400px;" /></a>
+<p>Before starting our simulation, we should adjust the solver parameters, especially the end time and the step size (no automatic step size for implicit solvers available!):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
+
+<span class="n">tEnd</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1">#simulation time</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">1e-3</span> <span class="c1">#step size</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1">#simulationSettings.timeIntegration.simulateInRealtime = True</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">0.005</span> <span class="c1">#store every 5 ms</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">verboseMode</span></code> tells the solver the amount of output during solving. Higher values (2, 3, …) show residual vectors, jacobians, etc. for every time step, but slow down simulation significantly.
+The option <code class="docutils literal notranslate"><span class="pre">simulateInRealtime</span></code> is used to view the model during simulation, while setting this false, the simulation finishes after fractions of a second. It should be set to false in general, while solution can be viewed using the <code class="docutils literal notranslate"><span class="pre">SolutionViewer()</span></code>.
+With <code class="docutils literal notranslate"><span class="pre">solutionWritePeriod</span></code> you can adjust the frequency which is used to store the solution of the whole model, which may lead to very large files and may slow down simulation, but is used in the <code class="docutils literal notranslate"><span class="pre">SolutionViewer()</span></code> to reload the solution after simulation.</p>
+<p>In order to improve visualization, there are hundreds of options, see Visualization settings in theDoc.pdf, some of them used here:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1600</span><span class="p">,</span><span class="mi">1200</span><span class="p">]</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1">#improved OpenGL rendering</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">drawNodesAsPoint</span><span class="o">=</span><span class="kc">False</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">showBasis</span><span class="o">=</span><span class="kc">True</span> <span class="c1">#shows three RGB (=xyz) lines for node basis</span>
+</pre></div>
+</div>
+<p>The option <code class="docutils literal notranslate"><span class="pre">autoFitScene</span></code> is used in order to avoid zooming while loading the last saved render state, see below.</p>
+<p>We can start the 3D visualization (Renderer) now:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="n">StartRenderer</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In order to reload the model view of the last simulation (if there is any), we can use the following commands:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span> <span class="c1">#reload old view</span>
+    <span class="n">SC</span><span class="o">.</span><span class="n">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span>
+
+<span class="n">mbs</span><span class="o">.</span><span class="n">WaitForUserToContinue</span><span class="p">()</span> <span class="c1">#stop before simulating</span>
+</pre></div>
+</div>
+<p>the function <code class="docutils literal notranslate"><span class="pre">WaitForUserToContinue()</span></code> waits with simulation until we press SPACE bar. This allows us to make some pre-checks.</p>
+<p>Finally, the <strong>index 2</strong> (velocity level) implicit time integration (simulation) is started with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="n">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="p">,</span>
+                 <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="n">DynamicSolverType</span><span class="o">.</span><span class="n">TrapezoidalIndex2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This solver is used in the present example, but should be considered with care as it leads to (small) drift of position constraints, linearly increasing in time. Using sufficiently small time steps, this effect is often negligible on the advantage of having a <strong>energy-conserving integrator</strong> (guaranteed for linear systems, but very often also for the nonlinear multibody system). Due to the velocity level, the integrator is less sensitive to consistent initial conditions on position level and compatible to frequent step size changes, however, initial jumps in velocities may never damp out in undamped systems.</p>
+<p>Alternatively, an <strong>index 3</strong> implicit time integration – the generalized-alpha method – is started with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="n">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">simulationSettings</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the <strong>generalized-alpha method</strong> includes numerical damping (adjusted with the spectral radius) for stabilization of index 3 constraints. This leads to effects every time the integrator is (re-)started, e.g., when adapting time step sizes. For fixed step sizes, this is <strong>the recommended integrator</strong>.</p>
+<p>After simulation, the library would immediately exit (and jump back to iPython or close the terminal window). In order to avoid this, we can use <code class="docutils literal notranslate"><span class="pre">WaitForRenderEngineStopFlag()</span></code> to wait until we press key ‘Q’.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="n">WaitForRenderEngineStopFlag</span><span class="p">()</span> <span class="c1">#stop before closing</span>
+<span class="n">exu</span><span class="o">.</span><span class="n">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+</pre></div>
+</div>
+<p>If you entered everything correctly, the render window should show a nice animation of the 3D double pendulum after pressing the SPACE key.
+If we do not stop the renderer (<code class="docutils literal notranslate"><span class="pre">StopRenderer()</span></code>), it will stay open for further simulations. However, it is safer to always close the renderer at the end.</p>
+<p>As the simulation will run very fast, if you did not set <code class="docutils literal notranslate"><span class="pre">simulateInRealtime</span></code> to true. However, you can reload the stored solution and view the stored steps interactively:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sol</span> <span class="o">=</span> <span class="n">LoadSolutionFile</span><span class="p">(</span><span class="s1">&#39;coordinatesSolution.txt&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="n">SolutionViewer</span>
+<span class="n">SolutionViewer</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sol</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we can plot our sensor, drawing the y-component of the sensor (check out the many options in <code class="docutils literal notranslate"><span class="pre">PlotSensor(...)</span></code> to conveniently represent results!):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="n">PlotSensor</span>
+<span class="n">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="p">[</span><span class="n">sens1</span><span class="p">],[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p><strong>Congratulations</strong>! You completed the rigid body tutorial, which gives you the ability to model multibody systems. Note that much more complicated models are possible, including feedback control or flexible bodies, see the Examples!</p>
+<p><strong>FOR FURTHER INFORMATION see</strong> <a class="reference external" href="https://jgerstmayr.github.io/EXUDYN">Exudyn Github pages</a> and see <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a> !!!</p>
+<p><a class="reference internal" href="docs/demo/screenshots/logoRST.png"><img alt="pic7" src="docs/demo/screenshots/logoRST.png" style="width: 120px;" /></a></p>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="MassSpringDamperTutorial.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Mass-Spring-Damper tutorial</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Johannes Gerstmayr
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/scripts/furo.js"></script>
+    </body>
+</html>

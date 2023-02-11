@@ -1,0 +1,61 @@
+
+---------------
+Getting started
+---------------
+
+This section will show:
+
++  What is Exudyn ?
++  Who is developing Exudyn ?
++  How to install Exudyn 
++  How to link Exudyn and Python
++  Goals of Exudyn
++  Run a simple example in Python
++  FAQ -- Frequently asked questions
+
+
+What is Exudyn ?
+================
+
+Exudyn --  (fl\ **EX**\ ible m\ **U**\ ltibody \ **DYN**\ amics  -- \ **EX**\ tend yo\ **U**\ r \ **DYN**\ amics)
+
+
+Exudyn is a C++ based Python library for efficient simulation of flexible multibody dynamics systems.
+It is the follow up code of the previously developed multibody code HOTINT, which Johannes Gerstmayr started during his PhD-thesis.
+It seemed that the previous code HOTINT reached limits of further (efficient) development and it seemed impossible to continue from this code as it was outdated regarding programming techniques and the numerical formulation at the time Exudyn was started.
+
+Exudyn is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automatized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of Python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.
+
+The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
+For details on the interaction of nodes, objects, markers and loads see theDoc.pdf.
+
+Developers of Exudyn and thanks
+===============================
+
+Exudyn is currently  developed at the University of Innsbruck.
+In the first phase most of the core code is written by Johannes Gerstmayr, implementing ideas that followed out of the project HOTINT . 15 years of development led to a lot of lessons learned and after 20 years, a code must be re-designed.
+
+Some important tests for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
+For the interoperability between C++ and Python, we extensively use \ **Pybind11**\ , originally written by Jakob Wenzel, see \ ``https://github.com/pybind/pybind11``\ . Without Pybind11 we couldn't have made this project -- Thanks a lot!
+
+Important discussions with researchers from the community were important for the design and development of Exudyn , where we like to mention Joachim Schöberl from TU-Vienna who boosted the design of the code with great concepts. 
+
+The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications' contributes to the development of the code.
+
+The following people have contributed to Python and C++ library implementations (as well as to testing, examples, theory, ...):
+
++  Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with \ ``taskmanager``\  for \ **multi-threaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
++  Stefan Holzinger, University of Innsbruck (Lie group module and solvers in Python, Lie group node, testing)
++  Andreas Zwölfer, Technical University Munich (FFRF and CMS formulation)
++  Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation, pip install on linux, wsl with graphics)
++  Martin Sereinig, University of Innsbruck (special robotics functionality)
++  Michael Pieber, University of Innsbruck (helped in several Python libraries)
++  Grzegorz Orzechowski, Lappeenranta University of Technology (coupling with openAI gym and running machine learning algorithms)
++  Aaron Bacher, University of Innsbruck (helped to integrated OpenVR, connection with Franka Emika Panda)
+
+The following people have contributed to examples, testing and theory:
+
++  Konstantina Ntarladima, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Simon Scheiber
+
+-- thanks a lot! --
+
