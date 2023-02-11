@@ -4,10 +4,10 @@
 <style>
 table, th, td{
   border: 1px solid black;
-  padding: 5px;
+  padding: 1px;
 }
 table{
-  border - spacing: 15px;
+  border - spacing: 5px;
 }
 </style>
 </head>
@@ -15,7 +15,7 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1426, 
+Number of issues = 1427, 
 Number of resolved issues = 1256 (95 in current minor version), 
 Exudyn version = 1.5.95.dev1, 
 last change =  2023-02-11
@@ -23,21 +23,37 @@ last change =  2023-02-11
 
 <table style = "width:100%">
 <tr style = "background-color:#AAAAAA">
-<th>number</th>
+<th>nr</th>
 <th>issue</th>
-<th>author</th>
+<th>auth</th>
 <th>status</th>
 <th>description</th>
 <th>type</th>
-<th>priority</th>
+<th>pri</th>
 <th>raised</th>
 <th>deadline</th>
 <th>resolved</th>
-<th>resAuthor</th>
-<th>file</th>
-<th>line</th>
+<th>res. by</th>
+<th>f</th>
+<th>l</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1426</td>
+    <td>cleanup howto files </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> check if info is still valid (NGsolve, WSL, anaconda, ...)</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2023-02-11</td>
+    <td>2023-08-10</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>1424</td>
     <td>NumericalJacobianODE1RHS</td>
@@ -1627,14 +1643,14 @@ last change =  2023-02-11
     <td>MatrixContainer     </td>
     <td>JG</td>
     <td>RAISED  </td>
-    <td> add SetWithNGsolveSparseMatrix</td>
-    <td>adding an interface to directly convert from NGsolve matrix, also converting coordinate storage xxyyzz</td>
+    <td> add SetWithNGsolveSparseMatrix; add an interface to directly convert from NGsolve matrix, also converting coordinate storage xxyyzz</td>
+    <td>EXTENSION</td>
     <td></td>
     <td>2021-10-27</td>
     <td>2021-12-26</td>
     <td></td>
     <td></td>
-    <td>EXTENSION</td>
+    <td></td>
     <td></td>
     <td></td>
   </tr>
@@ -2204,7 +2220,7 @@ last change =  2023-02-11
     <td>JG</td>
     <td>RAISED  </td>
     <td> change function comments in .py files to PEP standardized docstrings</td>
-    <td>DOCUMENTATION</td>
+    <td>DOCU</td>
     <td></td>
     <td>2020-09-06</td>
     <td>2020-11-05</td>
@@ -5385,7 +5401,7 @@ last change =  2023-02-11
   <tr style = "background-color:#BBFFBB">
     <td>1243</td>
     <td>Lie group integration</td>
-    <td>Stefan Holzinger</td>
+    <td>S. Holzinger</td>
     <td>RESOLVED</td>
     <td> add new functions for implicit Lie group integration (FIRST TESTS)</td>
     <td>EXTENSION</td>
@@ -5393,7 +5409,7 @@ last change =  2023-02-11
     <td>2022-08-24</td>
     <td>2022-10-23</td>
     <td>2022-08-24 17:13</td>
-    <td>Stefan Holzinger</td>
+    <td>S. Holzinger</td>
     <td></td>
     <td></td>
     <td></td>
@@ -7345,10 +7361,10 @@ last change =  2023-02-11
     <td>2022-05-23</td>
     <td>2022-07-22</td>
     <td>2022-06-16 12:00</td>
+    <td></td>
+    <td></td>
+    <td></td>
     <td>added new double acting HydraulicActuatorSimple with internal pressure equations and possibility to modify valves by user functions</td>
-    <td></td>
-    <td></td>
-    <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1105</td>
@@ -9937,7 +9953,7 @@ last change =  2023-02-11
     <td>2022-02-02</td>
     <td>2022-04-03</td>
     <td>2022-02-04 15:45</td>
-    <td>Stefan Holzinger</td>
+    <td>S. Holzinger</td>
     <td></td>
     <td></td>
     <td>added Minimize to processing; usage is nearly same as GeneticOptimization(...); example under Examples/minimizeExample.py</td>
@@ -11009,7 +11025,7 @@ last change =  2023-02-11
     <td>2021-12-02</td>
     <td>2022-01-31</td>
     <td>2021-12-02 11:03</td>
-    <td>Martin Sereinig</td>
+    <td>M. Sereinig</td>
     <td></td>
     <td></td>
     <td></td>
@@ -11073,7 +11089,7 @@ last change =  2023-02-11
     <td>2021-11-26</td>
     <td>2022-01-25</td>
     <td>2021-11-26 12:57</td>
-    <td>Stefan Holzinger</td>
+    <td>S. Holzinger</td>
     <td></td>
     <td></td>
     <td></td>
@@ -12001,7 +12017,7 @@ last change =  2023-02-11
     <td>2021-09-03</td>
     <td>2021-11-02</td>
     <td>2022-02-14 09:50</td>
-    <td>Manzl Peter</td>
+    <td>P. Manzl</td>
     <td></td>
     <td></td>
     <td>see processing.ComputeSensitivities(...)</td>
@@ -15265,7 +15281,7 @@ last change =  2023-02-11
     <td>2020-12-19</td>
     <td>2021-02-17</td>
     <td>2021-07-31 21:20</td>
-    <td>Peter Manzl</td>
+    <td>P. Manzl</td>
     <td></td>
     <td></td>
     <td>implemented ObjectContactConvexRoll for general usage in Mecanum wheels and other applications</td>
@@ -16113,7 +16129,7 @@ last change =  2023-02-11
     <td>2020-11-11</td>
     <td>2021-01-10</td>
     <td>2020-11-11</td>
-    <td>Stefan Holzinger</td>
+    <td>S. Holzinger</td>
     <td></td>
     <td></td>
     <td></td>
@@ -17611,7 +17627,7 @@ last change =  2023-02-11
     <td>generalized alpha   </td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> implement version of Brüls and Arnold for generalized alpha solver</td>
+    <td> implement version of BrÃ¼ls and Arnold for generalized alpha solver</td>
     <td>EXTENSION</td>
     <td></td>
     <td>2020-03-08</td>

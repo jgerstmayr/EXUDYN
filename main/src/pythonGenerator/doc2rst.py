@@ -534,6 +534,11 @@ Exudyn documentation
             indexRST += '   '+filename+'\n'
 
     indexRST += """
+.. toctree::
+   :caption: Issue Tracker
+   
+   docs/trackerlogRST
+
 Indices and tables
 ==================
 

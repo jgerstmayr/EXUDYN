@@ -61,6 +61,8 @@ Due to limitations for complex formulas and tables in .rst files, details of the
 
 For license, see LICENSE.txt in the root github folder on github!
 
+Changes can be tracked in the 
+
 In addition to the tutorial in the documentation, many ( **100+** ) examples can be found under main/pythonDev/Examples and main/pythonDev/TestModels .
 
 Tutorial videos can be found in the `youtube channel of Exudyn <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_ !

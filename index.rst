@@ -44,6 +44,11 @@ Exudyn documentation
    docs/RST/MassSpringDamperTutorial
    docs/RST/RigidBodyAndJointsTutorial
 
+.. toctree::
+   :caption: Issue Tracker
+   
+   docs/trackerlogRST
+
 Indices and tables
 ==================
 
