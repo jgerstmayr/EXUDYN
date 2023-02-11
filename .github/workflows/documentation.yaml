@@ -35,6 +35,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install sphinx sphinx_rtd_theme
+          pip install sphinx furo
       - name: Sphinx build
         run: |
           sphinx-build . _build
