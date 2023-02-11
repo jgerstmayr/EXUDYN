@@ -201,6 +201,19 @@ public:
 	//! precompute item lists (special lists for constraints, connectors, etc.)
 	void PreComputeItemLists();
 
+	//! reset lists for Lie groups when Assemble is called; this should require no memory (e.g. in expl. integrators)
+	void InitLieGroupLists();
+
+	//! compute updates and lists for Lie groups (some of them are only initialized once)
+	void ComputeLieGroupLists();
+
+	//! compute epsilon increment for coordinate index of lie group node and 
+	//! to reset to stored values, do: refNodeODE2.CopyFrom(storedNodeODE2)
+	void ComputeLieGroupNodeCompositionEps(Vector& currentODE2, 
+		Index coordinateIndex, Real absEps,
+		ConstSizeVector<EXUmath::lieGroupDirectUpdateNodeSize>& storedNodeODE2,
+		LinkedDataVector& nodeODE2coordsLink);
+
 	////! NEEDED? prepare LinkedDataVectors for objects
 	//void AssembleObjects();
 
@@ -324,6 +337,152 @@ public:
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// Various functions
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	//! special template function that takes lambda RHS evaluation and builds numerical derivative
+	//! similar to general function in Differentation.h
+	template <typename TFUNC, typename NumDiffSettings, typename TMatrix>
+	void AddNumDiffLieGroup(Index iBegin, Index iEnd, NumDiffSettings numDiff,
+		Real factor, Vector& x, const Vector& xRef,
+		TMatrix& jacobianGM, const Vector& f0, Vector& f1, const CSystemData& cSystemData,
+		TFUNC ComputeF1, Index columnOffset = 0, Index rowOffset = 0)
+	{
+		if (cSystemData.HasLieGroupDUNodes()) { ComputeLieGroupLists(); }
+
+		ConstSizeVector<EXUmath::lieGroupDirectUpdateNodeSize> storedNodeODE2; //temp variable
+		LinkedDataVector nodeODE2coordsLink; //this contains the link to the node coordinates which need to be reset
+		Real xRefVal = 0;
+		Real xStore, eps;// , epsInv;
+
+		for (Index i = iBegin; i < iEnd; i++) //compute column i
+		{
+			if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRef[i]; }
+			eps = numDiff.relativeEpsilon * (EXUstd::Maximum(numDiff.minimumCoordinateSize, std::fabs(x[i] + xRefVal))); //!! may not be completely correct for Lie groups, but size should be ok on log level
+
+			if (cSystemData.listLieGroupODE2toDUnode[i] == -1)
+			{
+				xStore = x[i];
+				x[i] += eps;
+				ComputeF1(); //compute f1
+				x[i] = xStore;
+			}
+			else
+			{
+				ComputeLieGroupNodeCompositionEps(x, i, eps, storedNodeODE2, nodeODE2coordsLink);
+				ComputeF1(); //compute f1
+				nodeODE2coordsLink.CopyFrom(storedNodeODE2); //restore node coordinates
+			}
+			jacobianGM.AddColumnVectorDiff(i + columnOffset, f1, f0, (1. / eps) * factor, rowOffset);
+		}
+
+	}
+
+	//! special template function that takes lambda Object LHS evaluation and builds numerical derivative
+	//! similar to general function in Differentation.h
+	//! DOES NOT ADD, but sets values!!!
+	template <typename TFUNC, typename NumDiffSettings, typename TMatrix>
+	void SetNumDiffObjectLieGroup(NumDiffSettings numDiff,
+		Real factor, Vector& x, const Vector& xRef,
+		TMatrix& jacobian, const Vector& f0, Vector& f1, 
+		ArrayIndex& ltgODEnumDiff, const CSystemData& cSystemData,
+		TFUNC ComputeF1)
+	{
+		Real xRefVal = 0;
+		Real xStore, eps;
+		if (!cSystemData.HasLieGroupDUNodes())
+		{
+			for (Index i = 0; i < ltgODEnumDiff.NumberOfItems(); i++) //differentiate w.r.t. every ltgODEnumDiff coordinate
+			{
+				Index globalI = ltgODEnumDiff[i];
+				Real& xVal = x[globalI];
+				if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRef[globalI]; }
+				eps = numDiff.relativeEpsilon * (EXUstd::Maximum(numDiff.minimumCoordinateSize, std::fabs(xVal + xRefVal))); //!! may not be completely correct for Lie groups, but size should be ok on log level
+
+				xStore = xVal;
+				xVal += eps;
+				ComputeF1(); //compute f1
+				xVal = xStore;
+				jacobian.SetColumnVectorDiff(i, f0, f1, (1. / eps) * factor); //(f0-f1) different to system jacobian
+			}
+		}
+		else //Lie group nodes
+		{ 
+			ComputeLieGroupLists();
+
+			ConstSizeVector<EXUmath::lieGroupDirectUpdateNodeSize> storedNodeODE2; //temp variable
+			LinkedDataVector nodeODE2coordsLink; //this contains the link to the node coordinates which need to be reset
+
+			for (Index i = 0; i < ltgODEnumDiff.NumberOfItems(); i++) //differentiate w.r.t. every ltgODEnumDiff coordinate
+			{
+				Index globalI = ltgODEnumDiff[i];
+				Real& xVal = x[globalI];
+				if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRef[globalI]; }
+				eps = numDiff.relativeEpsilon * (EXUstd::Maximum(numDiff.minimumCoordinateSize, std::fabs(xVal + xRefVal))); //!! may not be completely correct for Lie groups, but size should be ok on log level
+
+				if (cSystemData.listLieGroupODE2toDUnode[globalI] == -1)
+				{
+					xStore = xVal;
+					xVal += eps;
+					ComputeF1(); //compute f1
+					xVal = xStore;
+				}
+				else
+				{
+					ComputeLieGroupNodeCompositionEps(x, globalI, eps, storedNodeODE2, nodeODE2coordsLink);
+					ComputeF1(); //compute f1
+					nodeODE2coordsLink.CopyFrom(storedNodeODE2); //restore node coordinates
+				}
+				//jacobian.AddColumnVectorDiff(i + columnOffset, f0, f1, (1. / eps) * factor, rowOffset); //(f0-f1) different to system jacobian
+				jacobian.SetColumnVectorDiff(i, f0, f1, (1. / eps) * factor); //(f0-f1) different to system jacobian
+			}
+		}
+	}
+	//! special template function that takes lambda Object LHS evaluation and builds numerical derivative
+	//! special function for ODE2 coordinates and Lie groups!
+	//! similar to general function in Differentation.h
+	//! in case of setValues=true, it will not add but set the jacobian
+	template <typename TFUNC, typename NumDiffSettings, typename TMatrix>
+	void AddNumDiffObject(NumDiffSettings numDiff,
+		Real factor, Vector& x, const Vector& xRef,
+		TMatrix& jacobian, const Vector& f0, Vector& f1,
+		ArrayIndex& ltgODEnumDiff, 
+		TFUNC ComputeF1, bool setValues = false) 
+	{
+		Real xStore, eps;
+
+		if (xRef.NumberOfItems() && numDiff.addReferenceCoordinatesToEpsilon)
+		{
+			for (Index i = 0; i < ltgODEnumDiff.NumberOfItems(); i++) //differentiate w.r.t. every ltgODEnumDiff coordinate
+			{
+				Index globalI = ltgODEnumDiff[i];
+				Real& xVal = x[globalI];
+				eps = numDiff.relativeEpsilon * (EXUstd::Maximum(numDiff.minimumCoordinateSize, std::fabs(xVal + xRef[globalI]))); //!! may not be completely correct for Lie groups, but size should be ok on log level
+
+				xStore = xVal;
+				xVal += eps;
+				ComputeF1(); //compute f1
+				xVal = xStore;
+				if (!setValues) { jacobian.AddColumnVectorDiff(i, f0, f1, (1. / eps) * factor); } //(f0-f1) different to system jacobian
+				else { jacobian.SetColumnVectorDiff(i, f0, f1, (1. / eps) * factor); } //(f0-f1) different to system jacobian
+			}
+		}
+		else
+		{
+			for (Index i = 0; i < ltgODEnumDiff.NumberOfItems(); i++) //differentiate w.r.t. every ltgODEnumDiff coordinate
+			{
+				Index globalI = ltgODEnumDiff[i];
+				Real& xVal = x[globalI];
+				eps = numDiff.relativeEpsilon * (EXUstd::Maximum(numDiff.minimumCoordinateSize, std::fabs(xVal))); //!! may not be completely correct for Lie groups, but size should be ok on log level
+
+				xStore = xVal;
+				xVal += eps;
+				ComputeF1(); //compute f1
+				xVal = xStore;
+				if (!setValues) { jacobian.AddColumnVectorDiff(i, f0, f1, (1. / eps) * factor); } //(f0-f1) different to system jacobian
+				else { jacobian.SetColumnVectorDiff(i, f0, f1, (1. / eps) * factor); } //(f0-f1) different to system jacobian
+			}
+		}
+
+	}
 
 
 };

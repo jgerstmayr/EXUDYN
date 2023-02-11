@@ -82,6 +82,8 @@ namespace EXUmath {
 	static const Vector3D unitVecZ({ 0.,0.,1. });
 #endif
 
+	inline static const Index lieGroupDirectUpdateNodeSize = 6; //changing this, would require to create new LTG maps for Lie group nodes!, jacobian, etc. must be adapted!!!
+
 	//! compute sinc(x) = sin(x)/x including case x=0, where sinc(x) = 1
 	template <class T>
 	inline T Sinc(T x)

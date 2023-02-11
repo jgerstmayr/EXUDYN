@@ -96,8 +96,6 @@
 #endif // DoublePrecision
 
 
-#define LIE_GROUP_IMPLICIT_SOLVER
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //MULTITHREADED computation using ngsolve taskmanager; thanks to Joachim Schöberl
 #if !defined(__APPLE__) //currently simd makes problems on different Apple platforms - needs sse2neon.h

@@ -163,7 +163,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_MYDEBUG;__EXUDYN_USE_OPENVR</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_MYDEBUG</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalOptions>/bigobj /Zc:twoPhase-</AdditionalOptions>
@@ -279,7 +279,7 @@
       <ConformanceMode>true</ConformanceMode>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <AdditionalIncludeDirectories>$(SolutionDir)\src;$(SolutionDir)\include;$(SolutionDir)\include\lest;$(SolutionDir)\include\glfw;$(SolutionDir)\include\glfw\deps;$(SolutionDir)\include\pybind11local;C:\ProgramData\Anaconda3_64b37\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;__EXUDYN_USE_OPENVR</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

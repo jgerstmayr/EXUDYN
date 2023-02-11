@@ -11,6 +11,14 @@ usage: call 'rstviewer README.rst' directly in powershell; alternatively use res
 import copy #for deep copies
 from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword
 
+sectionFilesDepth = 1 #0=best for pydata theme, 1=best for read the docs theme
+reducedREADME = True #True, if Sphinx anyway used
+createIndexHTML = False #only needed, if Sphinx not used
+createSphinxFiles = True
+sectionMarkerText = '%%SECTIONLEVEL' #add level: 0,1,2, ...
+
+rstFolder = 'docs/RST/' #folder where generated .rst files are stored
+
 sourceDir='../../../docs/theDoc/'
 destDir='../../../'
 filesParsed=[
@@ -99,6 +107,8 @@ convCommands={#(precommand,'_USE'/'',postcommand)
     'figure':('','',''),
     } #TITLE, SUBTITLE, SUBSUBTITLE, ...
 
+sectionsList = []
+
 #replace all occurances of conversionDict in string and return modified string
 def ReplaceWords(s, conversionDict): #replace strings provided in conversion dict
     for (key,value) in conversionDict.items():
@@ -171,6 +181,7 @@ def ExtractCommand(s, key, secondBracket, isBeginEnd):
             return -1
 
 def ReplaceCommands(s, conversionDict): #replace strings provided in conversion dict
+    global sectionsList
     for (key,value) in conversionDict.items():
         cnt = 0
         found = 0
@@ -186,18 +197,30 @@ def ReplaceCommands(s, conversionDict): #replace strings provided in conversion 
                 # if isBeginEnd:
                 #     print("inner="+innerString+'+++')
                 s = preString
+                innerString = ReplaceWords(innerString, convWords) #needs to be cleaned here already
                 if key == '\\mysection':
+                    s += sectionMarkerText+'0\n'
+                    sectionsList += [('0',innerString)]
                     s += '\n'+'='*len(innerString)+'\n'
                     s += innerString+'\n'
                     s += '='*len(innerString)+'\n'
                 elif key == '\\mysubsection':
+                    if sectionFilesDepth > 0:
+                        s += sectionMarkerText+'1\n'
+                        sectionsList += [('1',innerString)]
                     s += '\n'+'-'*len(innerString)+'\n'
                     s += innerString+'\n'
                     s += '-'*len(innerString)+'\n'
                 elif key == '\\mysubsubsection':
+                    if sectionFilesDepth > 1:
+                        s += sectionMarkerText+'2\n'
+                        sectionsList += [('2',innerString)]
                     s += innerString+'\n'
                     s += '='*len(innerString)+'\n'
                 elif key == '\\mysubsubsubsection':
+                    if sectionFilesDepth > 2:
+                        s += sectionMarkerText+'3\n'
+                        sectionsList += [('3',innerString)]
                     s += innerString+'\n'
                     s += '-'*len(innerString)+'\n'
                 elif key == '\\exuUrl':
@@ -215,18 +238,66 @@ def ReplaceCommands(s, conversionDict): #replace strings provided in conversion 
                 s += postString
     return s
 
+#extract single .rst file and hierarchical files with sections, subsections, etc.
+#marked with %%SECTION %%SUBSECTION 
+#can be called recursively to get subsections (level1=sub, level2=subsub, ...)
+def ExtractSections(rstStringWithMarkers):
 
-# def ReplaceStrings(s, conversionDict): #replace strings provided in conversion dict
-#     if replaceCurlyBracket:
-#         s = s.replace('{','\{')
-#         s = s.replace('}','\}')
-#         s = s.replace('_','\_')
+    hierarchicalRST = [] #collect lists
+    
+    found = 0 #starting point for search
+    iStart = 0
+    iEnd = 0
+    level = 0
 
-#     # s = s.replace('[','\\[')
-#     # s = s.replace(']','\\]')
-#     s = s.replace('&','\&')
-#     return s
+    foundAtCurrentLevel = False #only false at start
+    endFound = False
+    
+    while not endFound:
+        found = rstStringWithMarkers.find(sectionMarkerText, found)
+        if found == -1: #no further sections => store remaining text at current level
+            #print('no more found, take rest of file')
+            endFound = True
+            found = len(rstStringWithMarkers) #end of file
+            hierarchicalRST += [(level, rstStringWithMarkers[iStart:found])]
+        else:
+            foundStart = found
+            found += len(sectionMarkerText)
+            nextLevel = int(rstStringWithMarkers[found])
+            #print('nextLevel=', nextLevel, ', pos=', found)
+            found += 2 #go after level number + '\n'
 
+            if nextLevel != level:
+                #finish previous level:
+                hierarchicalRST += [(level, rstStringWithMarkers[iStart:foundStart])]
+                #start next level
+                level = nextLevel
+                foundAtCurrentLevel=True
+                iStart = found #omit marker text
+            elif foundAtCurrentLevel:
+                hierarchicalRST += [(level, rstStringWithMarkers[iStart:foundStart])]
+                iStart = found #omit marker text
+            else:
+                foundAtCurrentLevel=True #do not store, but do further processing for this level
+    
+    for i in range(sectionFilesDepth+1):
+        rstStringWithMarkers = rstStringWithMarkers.replace(sectionMarkerText+str(i)+'\n','')
+
+    return [rstStringWithMarkers, hierarchicalRST]
+
+#create valid file name (erase spaces, ?, -, ...)
+#restrict to 16 characters
+def SectionNameToFileName(sectionName):
+    sNew = ''
+    for i in range(len(sectionName)):
+        c = sectionName[i]
+        if i > 0:
+            if sectionName[i-1] == ' ':
+                c = c.upper()
+        sNew += c
+    
+    s = sNew.replace(' ','').replace('?','').replace('-','').replace('+','').replace(':','').replace(',','').replace('.','')
+    return s[0].upper() + s[1:]
 
 def ConvertFile(s):
     s=s.replace('\\ ',' ') #replace special spaces from latex first; spaces that are added later shall be kept!
@@ -238,8 +309,54 @@ def ConvertFile(s):
 print('------------------------------------------')
 print('converting latex docu into README.rst file...')
 
-sRST = '======\nExudyn\n======\n' #add header for .rst file
-sRST += '\n**A flexible multibody dynamics systems simulation code with Python and C++**\n'
+sHEADERsmall = """|PyPI version exudyn| |PyPI pyversions| |PyPI download month|
+
+.. |PyPI version exudyn| image:: https://badge.fury.io/py/exudyn.svg
+   :target: https://pypi.python.org/pypi/exudyn/
+
+.. |PyPI pyversions| image:: https://img.shields.io/pypi/pyversions/exudyn.svg
+   :target: https://pypi.python.org/pypi/exudyn/
+
+.. |PyPI download month| image:: https://img.shields.io/pypi/dm/exudyn.svg
+   :target: https://pypi.python.org/pypi/exudyn/
+
+"""
+sHEADER = '|Documentation GithubIO| '+sHEADERsmall+"""
+
+.. |Documentation GithubIO| image:: https://img.shields.io/website-up-down-green-red/https/jgerstmayr.github.io/EXUDYN.svg
+   :target: https://jgerstmayr.github.io/EXUDYN/
+
+"""
+# #unused / does not work:
+# abc="""
+# |Github all releases|
+
+# .. |Github all releases| image:: https://img.shields.io/github/downloads/jgerstmayr/EXUDYN/total.svg
+#    :target: https://GitHub.com/jgerstmayr/EXUDYN/releases/
+
+# |GitHub commits|
+
+# .. |GitHub commits| image:: https://img.shields.io/github/commits-since/jgerstmayr/EXUDYN/v1.0.0.svg
+#    :target: https://GitHub.com/jgerstmayr/EXUDYN/commit/
+
+# |PyPI download total|
+
+# .. |PyPI download total| image:: https://img.shields.io/pypi/dt/exudyn.svg
+#    :target: https://pypi.python.org/pypi/exudyn/   
+
+# |GitHub commits|
+
+# .. |Github all releases| image:: https://img.shields.io/github/commits-since/jgerstmayr/EXUDYN/v1.5.0.svg
+#    :target: https://github.com/jgerstmayr/EXUDYN/commit/
+
+# """
+
+sRST = ''
+sFile = ''
+#sFile += '======\nExudyn\n======\n' #add header for .rst file
+sFile += '\mysection{Exudyn}\n' #add header for .rst file
+sFile += '\n**A flexible multibody dynamics systems simulation code with Python and C++**\n\n'
+
 for fileName in filesParsed:
     fileLines = []
     file=open(sourceDir+fileName,'r') 
@@ -248,7 +365,6 @@ for fileName in filesParsed:
 
     nLines = len(fileLines)
     
-    sFile = ''
     for line in fileLines:
         if not (len(line.strip()) > 0 and line.strip()[0] == '%'):
             sFile += line# + '\n'
@@ -256,24 +372,192 @@ for fileName in filesParsed:
     #print(sFile)
     if fileName == 'version.tex':
         # sRST += '\n| '
-        sRST += '\n+  '
+        sFile += '\n+  '
     if fileName == 'buildDate.tex':
         # sRST += '| '
-        sRST += '+  '
+        sFile += '+  '
     sRST += ConvertFile(sFile)
-    
-sRST += '\n\n\ **FOR FURTHER INFORMATION GO TO theDoc.pdf !!!**\ \n\n'
+
+    sFile = ''
+
+sRST += '\n\n\ **FOR FURTHER INFORMATION see `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and'
+sRST += ' see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!**\ \n\n'
+# sRST += '\n\n\ **FOR FURTHER INFORMATION GO TO theDoc.pdf !!!**\ \n\n'
+sRST += """.. |pic7| image:: docs/demo/screenshots/logoRST.png
+   :width: 120
+   
+|pic7| 
+"""
+
+[sRSTmain, hierarchicalRST] = ExtractSections(sRST)
+
+sRSTreduced = hierarchicalRST[0][1].replace(sectionMarkerText+'0','')
+sRSTreduced += '\n\n\ **FOR FURTHER INFORMATION see `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and'
+sRSTreduced += ' for details (incl. equations) see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!**\ \n\n'
 
 if True:
+    #this is the file used by github directly
     rstFile = 'README.rst'
+    
     
     file=open(destDir+rstFile,'w')  #clear file by one write access
     # file.write('% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
     # file.write('% description of python utility functions; generated by Johannes Gerstmayr')
     # file.write('% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n')
-    file.write(sRST)
+    if not reducedREADME:
+        file.write(sHEADER+sRSTmain)
+    else:
+        file.write(sHEADER+sRSTreduced)
     file.close()
 
 print('----------- finished ---------------------')
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#temporary, create single html file
+if createIndexHTML:
+    print('------------------------------------------')
+    print('converting README.rst to index.html file...')
+
+    htmlFile = 'index.html'
+    
+    import docutils.core
+
+    docutils.core.publish_file(
+        source_path = destDir+rstFile,
+        destination_path = destDir+htmlFile,
+        writer_name ="html")
+
+#replace paths for figures in SPHINX:
+sRST = sRST.replace('docs/theDoc/figures/','../theDoc/figures/')
+sRST = sRST.replace('docs/demo/','../demo/')
+[sRST, hierarchicalRST] = ExtractSections(sRST)
+
+modMainPage = hierarchicalRST[0][1].replace(sectionMarkerText+'0','')
+modMainPage += '\n\n\ **READ Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ \n\n'
+
+hierarchicalRST[0] = (hierarchicalRST[0][0], sHEADERsmall + modMainPage)
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#temporary, create single html file
+if createSphinxFiles:
+    print('---------------------------')
+    print('create files for SPHINX ...')
+
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #create index ==> NOT NEEDED
+    if False:
+        import re
         
+        regex = re.compile('[^a-zA-Z _]') #only letters and 
+        sRST1 = sRST.replace('\n',' ').replace('.',' ').replace('/',' ').replace('\\',' ').replace(',',' ').replace(';',' ').replace('-',' ')
+        sRST1 = sRST1.replace('(',' ').replace(')',' ')
+        sRST2 = regex.sub('', sRST1)
+        listIndex = sRST2.split(' ')
+    
+        listIndex2 = []
+        previous = ''
+        for i, text in enumerate(listIndex):
+            if text != '' and len(text) >= 10:
+                listIndex2 += [text.lower()]
+    
+        listIndex2.sort()
+        listIndex3 = []
+        for i, text in enumerate(listIndex2):
+            if text.lower() != previous:
+                previous = text.lower()
+                listIndex3 += [previous]
+                
+        print('index size=', len(listIndex3))
+    
+        sListIndex = ''
+        for item in listIndex3:
+            sListIndex += '   single: '+item+'\n'
         
+    indexRST = """.. Exudyn documentation master file, 
+
+Exudyn documentation
+====================
+"""
+
+    indexRST += """
+..  contents::
+    :local:
+    :depth: 2
+"""
+    #indexRST += sListIndex #need to check if this really works
+
+    # rst/README
+    # indexRST += '   '+rstFolder+'index\n'
+    if len(sectionsList) != len(hierarchicalRST):
+        raise ValueError('SPHINX .rst file build: illegal section structure')
+
+    filesList = [] #filename and content tuple
+    primaryTocList = []
+    secondaryTocLists = []
+    secondaryTocList= [] #secondary toc list
+    for i, item in enumerate(hierarchicalRST):
+        name = sectionsList[i][1]
+        filename = rstFolder+SectionNameToFileName(name)
+        level = int(sectionsList[i][0])
+        # if level == 0:
+        #     # if sectionFilesDepth == 0:
+        #     #     indexRST += '   '+filename+'\n'
+        #     print('main index: '+filename)
+        #     currentMainSection = sectionsList[i][1]
+        # else:
+        #     indexRST += '   '+filename+'\n'
+        filesList += [(filename, name, level, item[1])]
+
+    #+++++++++++++++++++++++++
+    
+    #+++++++++++++++++++++++++
+    if sectionFilesDepth==0:
+        #create primary toc
+        indexRST += """
+.. toctree::
+   :maxdepth: 3
+   :caption: Contents:
+
+"""
+        for (filename, name, level, content) in filesList:
+            if level == 0:
+                indexRST += '   '+filename+'\n'
+    else: #1
+        #create secondary tocs (works well for ReadTheDocs theme)
+        currentMainSection = ''
+        for (filename, name, level, content) in filesList:
+            if level == 0: #for every main section, add a new toctree
+                indexRST += '\n'
+                indexRST += '.. toctree::\n'
+                indexRST += '   :caption: '+name+'\n'
+                indexRST += '   :maxdepth: 3\n\n'
+            indexRST += '   '+filename+'\n'
+
+    indexRST += """
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`
+
+"""
+
+    file=open(destDir+'index.rst','w')  #clear file by one write access
+    file.write(indexRST)
+    file.close()
+
+    for (filename, name, level, content) in filesList:
+        file=open(destDir+filename+'.rst','w')  #clear file by one write access
+        file.write(content)
+        file.close()
+        
+
+    #print('sections list:', sectionsList)
+    # print('files list:', filesList)
+    
+    # for i, item in enumerate(sectionsList):
+    #     print('WRITE: section'+item[0]+':',SectionNameToFileName(item[1]))
+        
+
+
+      

@@ -55,7 +55,7 @@ expVel = 0.2
 muFriction = 0.3
 fDynamicFriction = muFriction * (mass*g)
 fStaticFrictionOffset = 0.5*fDynamicFriction
-print('fMu=', fDynamicFriction)
+exu.Print('fMu=', fDynamicFriction)
 
 kLimits = 1e4
 dLimits = 0.001*kLimits

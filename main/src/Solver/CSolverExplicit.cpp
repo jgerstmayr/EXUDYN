@@ -303,6 +303,11 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		}
 	}
 
+	if (rk.hasStepSizeControl)
+	{
+		//** 2023-02-10: store here: solutionODE2increment = solutionODE2 - rk.startOfStepODE2
+	}
+
 	if (useLieGroupIntegration)
 	{
 		LieGroupODE2StepEvaluation(computationalSystem, solutionODE2, it.currentStepSize, rk.weight);
@@ -318,7 +323,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 	if (rk.hasStepSizeControl)
 	{
 		STARTTIMER(timer.errorEstimator);
-		rk.solutionSecondApproxODE2.CopyFrom(rk.startOfStepODE2);		//solutionODE2=currentState.ODE2Coords must be updated during step computation
+		rk.solutionSecondApproxODE2.CopyFrom(rk.startOfStepODE2);		//** 2023-02-10: set to zero, rename into solutionSecondApproxODE2inc
 		rk.solutionSecondApproxODE2_t.CopyFrom(rk.startOfStepODE2_t);
 		rk.solutionSecondApproxODE1.CopyFrom(rk.startOfStepODE1);
 
@@ -335,7 +340,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 				rk.solutionSecondApproxODE1.MultAdd(rk.weightEE[i] * it.currentStepSize, rk.stageDerivODE1[i]);
 			}
 		}
-		if (useLieGroupIntegration)
+		if (useLieGroupIntegration) //** 2023-02-10: remove this update
 		{
 			LieGroupODE2StepEvaluation(computationalSystem, rk.solutionSecondApproxODE2, it.currentStepSize, rk.weightEE);
 		}
@@ -393,10 +398,11 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		}
 		for (Index i = 0; i < data.nODE2; i++)
 		{
-			scODE2 = atol + EXUstd::Maximum(rk.solutionSecondApproxODE2[i], rk.startOfStepODE2[i])*rtol;
-			err += EXUstd::Square((rk.solutionSecondApproxODE2[i] - solutionODE2[i]) / scODE2); //==> add up to error
-			scODE2 = atol + EXUstd::Maximum(rk.solutionSecondApproxODE2_t[i], rk.startOfStepODE2_t[i])*rtol;
-			err += EXUstd::Square((rk.solutionSecondApproxODE2_t[i] - solutionODE2_t[i]) / scODE2); //==> add up to error
+			scODE2 = atol + EXUstd::Maximum(rk.solutionSecondApproxODE2[i], rk.startOfStepODE2[i])*rtol;		//position error //** 2023-02-10: check Celledoni step size control
+			err += EXUstd::Square((rk.solutionSecondApproxODE2[i] - solutionODE2[i]) / scODE2);					//==> add up to error //** 2023-02-10: wrong, CORRECT!
+			//(rk.solutionSecondApproxODE2inc - rk.startOfStepODE2) - solutionODE2increment => this is then also valid for Lie group methods !!!!
+			scODE2 = atol + EXUstd::Maximum(rk.solutionSecondApproxODE2_t[i], rk.startOfStepODE2_t[i])*rtol;	//velocity error
+			err += EXUstd::Square((rk.solutionSecondApproxODE2_t[i] - solutionODE2_t[i]) / scODE2);				//==> add up to error
 		}
 		err = sqrt(err / (data.nODE1 + 2*data.nODE2)); //ODE2 displacements, ODE2 velocities and ODE1 coordinates
 		it.automaticStepSizeError = err;			

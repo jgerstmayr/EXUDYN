@@ -1,0 +1,63 @@
+#+++++++++++++++++++++++++++++++++++++++++++
+#SPHINX
+#information on installation of EXUDYN on WSL2
+#WSL2 runs on Windows 10 
+#author: Johannes Gerstmayr
+#date: 2023-02-10
+#+++++++++++++++++++++++++++++++++++++++++++
+
+#installation
+pip install sphinx
+
+#themes: 
+#pip install furo
+pip install sphinx_rtd_theme
+pip install pydata-sphinx-theme --pre
+pip install pydata-sphinx-theme==0.13.0rc3.dev0
+
+#create example directory:
+sphinx-quickstart
+
+#+++++++++++++++++++++++++++++++++++++++++++
+#to build a 
+sphinx-build -b html source build
+
+#+++++++++++++++++++++++++++++++++++++++++++
+conf.py:
+
+
+#+++++++++++++++++++++++++++++++++++++++++++
+index.rst:
+
+#+++++++++++++++++++++++++++++++++++++++++++
+#github pages:
+https://www.sphinx-doc.org/en/master/tutorial/deploying.html#id5
+
+name: Sphinx build
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build HTML
+      uses: ammaraskar/sphinx-action@master
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: html-docs
+        path: docs/build/html/
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/main'
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs/build/html
+        
+
+
+
+
+

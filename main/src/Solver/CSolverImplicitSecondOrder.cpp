@@ -299,18 +299,7 @@ void CSolverImplicitSecondOrderTimeInt::PreInitializeSolverSpecific(CSystem& com
 	}
 	useScaling = true;
 
-#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
 	useLieGroupIntegration = true; //will be set false, if no Lie group nodes exist
-#else
-	useLieGroupIntegration = false;
-#endif
-	//std::cout << "spectralRadius=" << spectralRadius << "\n";
-	//std::cout << "alphaM=" << alphaM << "\n";
-	//std::cout << "alphaF=" << alphaF << "\n";
-	//std::cout << "newmarkGamma=" << newmarkGamma << "\n";
-	//std::cout << "newmarkBeta=" << newmarkBeta << "\n";
-
-	//useIndex2Constraints = timeint.generalizedAlpha.useIndex2Constraints; //==> now directly linked to simulationSettings;
 }
 
 //! post-initialize for solver specific tasks; called at the end of InitializeSolver
@@ -352,7 +341,6 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 
 	//++++++++++++++++++++++++++++++++++++++++
 	//Lie group nodes
-#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
 	if (useLieGroupIntegration)
 	{
 		//PrecomputeLieGroupStructures(computationalSystem, simulationSettings);
@@ -403,7 +391,6 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 		}
 
 	}
-#endif
 	//++++++++++++++++++++++++++++++++++++++++
 
 }
@@ -490,7 +477,6 @@ Real CSolverImplicitSecondOrderTimeInt::ComputeNewtonResidual(CSystem& computati
 
 
 
-#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
 //! apply composition rule to currentODE2 o incrementODE2 for given set of nodes
 //! reference configuration needs to be taken into account in node.CompositionRule !!!
 void CSolverImplicitSecondOrderTimeInt::CompositionRuleCoordinatesLieGroupIntegrator(CSystem& computationalSystem, const ArrayIndex& lieGroupNodes,
@@ -630,8 +616,6 @@ void CSolverImplicitSecondOrderTimeInt::LieGroupNodesApplyTangentOperator(CSyste
 
 }
 
-#endif // LIE_GROUP_IMPLICIT_SOLVER
-
 
 void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool initial)
 {
@@ -665,13 +649,11 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 
 	if (initial)
 	{
-#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
 		if (useLieGroupIntegration)
 		{
 			ResetCoordinatesLieGroupNodes(computationalSystem, solutionODE2, lieGroupDirectUpdateNewtonSolution);
 			SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(computationalSystem, lieGroupDirectUpdateNewtonSolution, solutionODE2);
 		}
-#endif
 		//solutionODE2_tt must contain initial accelerations !!!
 		//solutionAE.SetAll(0.); //already done in Newton
 		solutionODE2.MultAdd(it.currentStepSize, solutionODE2_t);
@@ -700,22 +682,18 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 		solutionODE1.MultAdd(it.currentStepSize*0.5, solutionODE1_t); //initial part for trapezoidal rule: uT=u0 + h/2*v0 + h/2*vT
 		solutionODE1_t.SetAll(0); //start with zero, same as in ODE2 accelerations
 
-#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
 		//store previous Newton solution:
 		if (useLieGroupIntegration)
 		{
 			SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(computationalSystem, solutionODE2, lieGroupDirectUpdateNewtonSolution);
 		}
-#endif
 	}
 	else
 	{
-#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
 		if (useLieGroupIntegration)
 		{
 			SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(computationalSystem, lieGroupDirectUpdateNewtonSolution, solutionODE2);
 		}
-#endif
 
 		//now only add increments
 		solutionODE2 -= newtonSolutionODE2; //Delta q in Arnold/Bruls is (-1)*Delta q here	
@@ -734,16 +712,13 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 		solutionODE1 -= newtonSolutionODE1;
 		solutionODE1_t.MultAdd(-2. / it.currentStepSize, newtonSolutionODE1); //2/h =^= gammaPrime = gamma/(h*beta) = 0.5/(h*0.25)
 
-#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
 		//store previous Newton solution:
 		if (useLieGroupIntegration)
 		{
 			SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(computationalSystem, solutionODE2, lieGroupDirectUpdateNewtonSolution);
 		}
-#endif
 	}
 
-#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
 	if (useLieGroupIntegration)
 	{
 		//update data coordinates with composition rule:
@@ -756,7 +731,6 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 			computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords,
 			solutionODE2, solutionODE2);
 	}
-#endif
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -790,7 +764,6 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 	Real gammaPrime = newmarkGamma / (it.currentStepSize*newmarkBeta);
 
 
-#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
 	if (useLieGroupIntegration && simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator)
 	{
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -814,8 +787,6 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 		//rest:
 		computationalSystem.JacobianODE2RHS(data.tempCompDataArray, newton.numericalDifferentiation, *(data.systemJacobian),
 			-scalODE2 * 0, -gammaPrime * scalODE2, -scalODE2);
-
-
 
 
 		STOPTIMER(timer.jacobianODE2);
@@ -842,7 +813,6 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 
 	}
 	else
-#endif
 	{
 		STARTTIMER(timer.massMatrix);
 		//M*betaPrime:
@@ -889,7 +859,6 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 		factorODE2_AE, factorODE1_AE, factorAE_AE);
 	STOPTIMER(timer.jacobianAE);
 
-#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
 	if (useLieGroupIntegration && simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator)
 	{
 		Index startRow = data.nODE2 + data.nODE1;
@@ -898,7 +867,6 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 		LieGroupNodesApplyTangentOperator(computationalSystem, lieGroupDirectUpdateNewtonSolution,
 			lieGroupDirectUpdateNodes, startRow, *(data.systemJacobian));
 	}
-#endif
 
 	computationalSystem.GetSolverData().signalJacobianUpdate = false; //as jacobian has been computed, no further update is necessary
 

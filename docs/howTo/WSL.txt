@@ -80,9 +80,9 @@ wsl --shutdown
 => now conda works!
 
 conda create -n venvP36 python=3.6 scipy matplotlib -y
-conda create -n venvP37 python=3.7 scipy matplotlib -y
-conda create -n venvP38 python=3.8 scipy matplotlib -y
-conda create -n venvP39 python=3.9 scipy matplotlib tqdm  -y
+conda create -n venvP37 python=3.7 scipy matplotlib tqdm -y
+conda create -n venvP38 python=3.8 scipy matplotlib tqdm -y
+conda create -n venvP39 python=3.9 scipy matplotlib tqdm -y
 conda create -n venvP310 python=3.10 scipy matplotlib tqdm -y
 #not yet available: conda create -n venvP311 python=3.11 scipy matplotlib tqdm -y
 python 3.11 workaround (graphics does not work with wsl - even if it works with venvP39 !):
@@ -113,6 +113,10 @@ wsl python3 test.py
 #extend  ~/.bashrc e.g. with  nano ~/.bashrc and at at the end:
 export PATH="$PATH:~johannes/additionalPath"
 #+press CTRL O, ENTER, CTRL X
+
+#+++++++++++++++++++++++++++
+mount windows network drive:
+sudo mount -t drvfs L: /mnt/l
 
 #+++++++++++++++++++++++++++
 #build linux wheel with WSL:

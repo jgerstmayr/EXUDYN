@@ -355,6 +355,37 @@ void GeneralMatrixEigenSparse::AddColumnVector(Index column, const Vector& vec, 
 	}
 }
 
+//! add factor*(vectorAdd-vectorSub) at 'column'; used for numerical jacobians
+void GeneralMatrixEigenSparse::AddColumnVectorDiff(Index column, const Vector& vectorAdd, const Vector& vectorSub, Real factor, Index rowOffset)
+{
+    Index vectorLength = vectorAdd.NumberOfItems();
+    CHECKandTHROW(!IsMatrixBuiltFromTriplets(), "GeneralMatrixEigenSparse::AddColumnVectorDiff(...): matrix must be in triplet mode !");
+    CHECKandTHROW(vectorLength == vectorSub.NumberOfItems(), "GeneralMatrixEigenSparse::AddColumnVectorDiff: vectors must have equal length");
+
+    if (!rowOffset)
+    {
+        for (Index i = 0; i < vectorLength; i++) //i = row
+        {
+            Real value = factor * (vectorAdd[i] - vectorSub[i]);
+            if (value != 0.)
+            {
+                triplets.AppendPure(SparseTriplet((StorageIndex)i, (StorageIndex)column, value));
+            }
+        }
+    }
+    else
+    {
+        for (Index i = 0; i < vectorLength; i++) //i = row
+        {
+            Real value = factor * (vectorAdd[i] - vectorSub[i]);
+            if (value != 0.)
+            {
+                triplets.AppendPure(SparseTriplet((StorageIndex)(i + rowOffset), (StorageIndex)column, value));
+            }
+        }
+    }
+}
+
 //! After filling the matrix, it is finalized for further operations (matrix*vector, factorization, ...)
 void GeneralMatrixEigenSparse::FinalizeMatrix()
 {

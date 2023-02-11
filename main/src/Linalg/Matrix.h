@@ -842,6 +842,54 @@ public:
 		}
 	}
 
+    //! add column vector at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
+    void AddColumnVector(Index column, const VectorBase<T>& vector, Index rowOffset = 0)
+    {
+        Index vectorLength = vector.NumberOfItems();
+        Index rowIndex = rowOffset*numberOfColumns;
+        CHECKandTHROW(vectorLength + rowOffset <= numberOfRows, "Matrix::AddColumnVector: matrix numberOfRows < vectorLength");
+        CHECKandTHROW(column < numberOfColumns, "Matrix::AddColumnVector: matrix numberOfColumns <= column");
+        for (Index i = 0; i < vectorLength; i++) //i = row
+        {
+            data[rowIndex + column] += vector.GetUnsafe(i);
+            rowIndex += numberOfColumns;
+            //*this(i + rowOffset, column) += vector[i];
+        }
+    }
+
+	//! add factor*(vectorAdd-vectorSub) at 'column'; used for numerical jacobians
+	void AddColumnVectorDiff(Index column, const VectorBase<T>& vectorAdd, const VectorBase<T>& vectorSub, T factor, Index rowOffset = 0)
+	{
+		Index vectorLength = vectorAdd.NumberOfItems();
+		Index rowIndex = rowOffset * numberOfColumns;
+		CHECKandTHROW(vectorLength == vectorSub.NumberOfItems(), "Matrix::AddColumnVectorDiff: vectors must have equal length");
+		CHECKandTHROW(column < numberOfColumns, "Matrix::AddColumnVectorDiff: matrix numberOfColumns <= column");
+		CHECKandTHROW(vectorLength + rowOffset <= numberOfRows, "Matrix::AddColumnVectorDiff: matrix numberOfRows < vectorLength + rowOffset");
+
+		for (Index i = 0; i < vectorLength; i++) //i = row
+		{
+			data[rowIndex + column] += factor * (vectorAdd.GetUnsafe(i) - vectorSub.GetUnsafe(i));
+			rowIndex += numberOfColumns;
+		}
+	}
+
+	//! add factor*(vectorAdd-vectorSub) at 'column'; used for numerical jacobians
+	void SetColumnVectorDiff(Index column, const VectorBase<T>& vectorAdd, const VectorBase<T>& vectorSub, T factor, Index rowOffset = 0)
+	{
+		Index vectorLength = vectorAdd.NumberOfItems();
+		Index rowIndex = rowOffset * numberOfColumns;
+		CHECKandTHROW(vectorLength == vectorSub.NumberOfItems(), "Matrix::AddColumnVectorDiff: vectors must have equal length");
+		CHECKandTHROW(column < numberOfColumns, "Matrix::AddColumnVectorDiff: matrix numberOfColumns <= column");
+		CHECKandTHROW(vectorLength + rowOffset <= numberOfRows, "Matrix::AddColumnVectorDiff: matrix numberOfRows < vectorLength + rowOffset");
+
+		for (Index i = 0; i < vectorLength; i++) //i = row
+		{
+			data[rowIndex + column] = factor * (vectorAdd.GetUnsafe(i) - vectorSub.GetUnsafe(i));
+			rowIndex += numberOfColumns;
+		}
+	}
+
+
 	//! Add matrix m at indices given in ArrayIndex x ArrayIndex to *this
 	void AddMatrix(const ArrayIndex& rowref, const ArrayIndex& colref, const MatrixBase<T>& m)
 	{

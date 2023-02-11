@@ -850,7 +850,6 @@ namespace EXUlie {
 		return w * n;
 	}
 
-#ifdef LIE_GROUP_IMPLICIT_SOLVER //Stefan Holzinger
 	//! compute tangent operator of R3xSO(3)
 	inline Matrix6D TExpR3xSO3(const Vector6D& incrementalMotion)
 	{
@@ -883,7 +882,6 @@ namespace EXUlie {
 
 		return TexpInv;
 	}
-#endif // LIE_GROUP_IMPLICIT_SOLVER
 
 } //namespace LieGroup
 #endif

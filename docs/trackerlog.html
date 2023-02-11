@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1421, 
-Number of resolved issues = 1251 (90 in current minor version), 
-Exudyn version = 1.5.90.dev1, 
-last change =  2023-02-02
+Number of issues = 1426, 
+Number of resolved issues = 1256 (95 in current minor version), 
+Exudyn version = 1.5.95.dev1, 
+last change =  2023-02-11
 
 
 <table style = "width:100%">
@@ -38,6 +38,22 @@ last change =  2023-02-02
 <th>line</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1424</td>
+    <td>NumericalJacobianODE1RHS</td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add case for duplicated ODE1 coordinates if connector has two markers for the same object, same as ltgODE2numDiff</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2023-02-08</td>
+    <td>2023-08-07</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>1415</td>
     <td>CoordinateSpringDamperExt</td>
@@ -64,22 +80,6 @@ last change =  2023-02-02
     <td></td>
     <td>2023-01-22</td>
     <td>2023-07-21</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr style = "background-color:#FFB266">
-    <td>1404</td>
-    <td>Lie group method    </td>
-    <td>JG</td>
-    <td>RAISED  </td>
-    <td> add consistent numerical derivatives for Lie group nodes, needing the composition rule for incremental changes</td>
-    <td>FIX</td>
-    <td></td>
-    <td>2023-01-18</td>
-    <td>2023-07-17</td>
     <td></td>
     <td></td>
     <td></td>
@@ -2759,6 +2759,70 @@ last change =  2023-02-02
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1425</td>
+    <td>sphinx              </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add github pages at https://jgerstmayr.github.io/EXUDYN created with sphinx</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-02-11</td>
+    <td>2023-08-10</td>
+    <td>2023-02-11 16:41</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1423</td>
+    <td>numerical Jacobians </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add variadic template to realize numerical differentiation for objects in a consistent way</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-02-08</td>
+    <td>2023-08-07</td>
+    <td>2023-02-08 12:17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1422</td>
+    <td>numerical Jacobians </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add variadic template to realize numerical differentiation in a consistent way</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-02-07</td>
+    <td>2023-08-06</td>
+    <td>2023-02-08 00:16</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1421</td>
+    <td>LIE_GROUP_IMPLICIT_SOLVER</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> remove preprocessor flag, as it is always set</td>
+    <td>CHANGE</td>
+    <td></td>
+    <td>2023-02-07</td>
+    <td>2023-08-06</td>
+    <td>2023-02-07 12:07</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1420</td>
     <td>setup.py            </td>
     <td>JG</td>
@@ -2981,6 +3045,22 @@ last change =  2023-02-02
     <td></td>
     <td></td>
     <td>added option to draw displaced laser beam; rotation added, if rigid marker used</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1404</td>
+    <td>Lie group method    </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add consistent numerical derivatives for Lie group nodes, needing the composition rule for incremental changes</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2023-01-18</td>
+    <td>2023-07-17</td>
+    <td>2023-02-08 12:17</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
     <td>1402</td>

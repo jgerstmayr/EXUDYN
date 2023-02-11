@@ -18,12 +18,64 @@
 #define DIFFERENTIATION__H
 
 #include "Linalg/BasicLinalg.h"
-
+#include <cmath> 
 #include "Utilities/AutomaticDifferentiation.h"
 
 namespace EXUmath
 {
-	//inline auto NumIntegrate = [](Real(*function)(Real), auto& points, auto& weights, Real a, Real b)
+    //! numerical differentiation for CSystem Jacobians; including reference values
+    //! NumDiffSettings must be a structure, containing the parameters: addReferenceCoordinatesToEpsilon, relativeEpsilon, minimumCoordinateSize;	
+    //! columnOffset and rowOffset are for destination in jacobian
+	//! ComputeF1() needs to compute f1 in local scope
+    template <typename TFUNC, typename NumDiffSettings, typename TMatrix>
+    void NumericalDifferentiation(Index iBegin, Index iEnd, NumDiffSettings numDiff,
+        Real factor, Vector& x, const Vector& xRef,
+        TMatrix& jacobianGM, const Vector& f0, Vector& f1,
+        TFUNC ComputeF1, Index columnOffset = 0, Index rowOffset = 0)
+    {
+        Real xRefVal = 0;
+        Real xStore, eps;// , epsInv;
+        for (Index i = iBegin; i < iEnd; i++) //compute column i
+        {
+            if (numDiff.addReferenceCoordinatesToEpsilon) { xRefVal = xRef[i]; }
+            eps = numDiff.relativeEpsilon * (EXUstd::Maximum(numDiff.minimumCoordinateSize, std::fabs(x[i] + xRefVal)));
+
+            xStore = x[i];
+            x[i] += eps;
+			ComputeF1(); //compute f1
+            x[i] = xStore;
+
+            jacobianGM.AddColumnVectorDiff(i+ columnOffset, f1, f0, (1. / eps) * factor, rowOffset);
+        }
+    }
+
+    //! numerical differentiation for CSystem Jacobians
+    //! NumDiffSettings must be a structure, containing the parameters: addReferenceCoordinatesToEpsilon, relativeEpsilon, minimumCoordinateSize;	
+    //! columnOffset and rowOffset are for destination in jacobian
+	//! ComputeF1() needs to compute f1 in local scope
+	template <typename TFUNC, typename NumDiffSettings, typename TMatrix>
+    void NumericalDifferentiation(Index iBegin, Index iEnd, NumDiffSettings numDiff,
+        Real factor, Vector& x, 
+        TMatrix& jacobianGM, const Vector& f0, Vector& f1,
+        TFUNC ComputeF1, Index columnOffset = 0, Index rowOffset = 0)
+    {
+        Real xRefVal = 0;
+        Real xStore, eps;// , epsInv;
+        for (Index i = iBegin; i < iEnd; i++) //compute column i
+        {
+            eps = numDiff.relativeEpsilon * (EXUstd::Maximum(numDiff.minimumCoordinateSize, std::fabs(x[i])));
+
+            xStore = x[i];
+            x[i] += eps;
+			ComputeF1(); //compute f1
+            x[i] = xStore;
+
+            jacobianGM.AddColumnVectorDiff(i + columnOffset, f1, f0, (1. / eps) * factor, rowOffset);
+        }
+    }
+
+    
+    //inline auto NumIntegrate = [](Real(*function)(Real), auto& points, auto& weights, Real a, Real b)
 	//{
 	//	Index cnt = 0; Real value = 0.;
 	//	for (auto item : points) { Real x = 0.5*(b - a)*item + 0.5*(b + a); value += 0.5*(b - a)*weights[cnt++] * function(x); }

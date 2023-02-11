@@ -36,24 +36,26 @@
 class CSystemData //
 {
 protected: //
-	CData cData;                                    //!< computational data for all configurations (current, initial, etc.); this data is available in CNode
-	MainSystemBase* mainSystemBacklink;             //!< backlink to MainSystem, but do not use generally!
-	ResizableArray<CObject*> cObjects;              //!< container for computational objects
-	ResizableArray<CNode*> cNodes;                  //!< container for computational nodes
-	ResizableArray<CMaterial*> cMaterials;          //!< container for computational materials
-	ResizableArray<CMarker*> cMarkers;              //!< container for computational markers
-	ResizableArray<CLoad*> cLoads;                  //!< container for computational loads
-	ResizableArray<CSensor*> cSensors;               //!< container for computational sensors
+	CData cData;										//!< computational data for all configurations (current, initial, etc.); this data is available in CNode
+	MainSystemBase* mainSystemBacklink;					//!< backlink to MainSystem, but do not use generally!
+	ResizableArray<CObject*> cObjects;					//!< container for computational objects
+	ResizableArray<CNode*> cNodes;						//!< container for computational nodes
+	ResizableArray<CMaterial*> cMaterials;				//!< container for computational materials
+	ResizableArray<CMarker*> cMarkers;					//!< container for computational markers
+	ResizableArray<CLoad*> cLoads;						//!< container for computational loads
+	ResizableArray<CSensor*> cSensors;					 //!< container for computational sensors
 
-	ObjectContainer<ArrayIndex> localToGlobalODE2;  //!< CObject local to global ODE2 (Second order ODEs) coordinate indices transformation
-	ObjectContainer<ArrayIndex> localToGlobalODE1;  //!< CObject local to global ODE1 (first order ODEs) coordinate indices transformation
-	ObjectContainer<ArrayIndex> localToGlobalAE;    //!< CObject local to global AE (algebraic variables) coordinate indices transformation
-	ObjectContainer<ArrayIndex> localToGlobalData;  //!< CObject local to global Data coordinate indices transformation
+	ObjectContainer<ArrayIndex> localToGlobalODE2;		//!< CObject local to global ODE2 (Second order ODEs) coordinate indices transformation
+	ObjectContainer<ArrayIndex> localToGlobalODE1;		//!< CObject local to global ODE1 (first order ODEs) coordinate indices transformation
+	ObjectContainer<ArrayIndex> localToGlobalAE;		//!< CObject local to global AE (algebraic variables) coordinate indices transformation
+	ObjectContainer<ArrayIndex> localToGlobalData;		//!< CObject local to global Data coordinate indices transformation
 
-	Index numberOfCoordinatesODE2;                  //!< global number of ODE2 coordinates (sum of all node ODE2 coordinates); must be synchronous to NumberOfItems in SystemState Vectors
-	Index numberOfCoordinatesODE1;                  //!< global number of ODE1 coordinates (sum of all node ODE1 coordinates); must be synchronous to NumberOfItems in SystemState Vectors
-	Index numberOfCoordinatesAE;                    //!< global number of AE coordinates (sum of all node AE coordinates); must be synchronous to NumberOfItems in SystemState Vectors
-	Index numberOfCoordinatesData;                  //!< global number of Data variables/coordinates (sum of all node Data variables); must be synchronous to NumberOfItems in SystemState Vectors
+	Index numberOfCoordinatesODE2;						//!< global number of ODE2 coordinates (sum of all node ODE2 coordinates); must be synchronous to NumberOfItems in SystemState Vectors
+	Index numberOfCoordinatesODE1;						//!< global number of ODE1 coordinates (sum of all node ODE1 coordinates); must be synchronous to NumberOfItems in SystemState Vectors
+	Index numberOfCoordinatesAE;						//!< global number of AE coordinates (sum of all node AE coordinates); must be synchronous to NumberOfItems in SystemState Vectors
+	Index numberOfCoordinatesData;						//!< global number of Data variables/coordinates (sum of all node Data variables); must be synchronous to NumberOfItems in SystemState Vectors
+
+    bool hasLieGroupDUNodes;								//!< after Assemble, will be set true, if Lie group nodes available
 
 public:
 	//use lists that are directly accessible for now; performance?
@@ -65,18 +67,23 @@ public:
 	ResizableArray<Index> listComputeObjectODE2LhsNoUF;	//!< list of objects that need to evaluate ComputeObjectODE2Lhs, but have no user function
 	ResizableArray<Index> listComputeObjectODE1Rhs;		//!< list of objects that need to evaluate ComputeObjectODE1Rhs
 	ResizableArray<Index> listDiscontinuousIteration;	//!< list of objects that need discontinuous iteration (PostNewtonStep, PostDiscontinuousIteration)
-	ResizableArray<Index> listOfLoadsNoUF;					//!< list of loads without user functions (can be processes multithreaded)
+	ResizableArray<Index> listOfLoadsNoUF;				//!< list of loads without user functions (can be processes multithreaded)
 	ResizableArray<Index> listOfLoadsUF;				//!< list of loads WITH user functions (must be processed serially)
 
 	ResizableArray<Index> objectsBodyWithAE;			//!< list of objects that are bodies and have AE
-	ResizableArray<Index> nodesODE2WithAE;					//!< list of nodes that have AE (Euler parameters)
+	ResizableArray<Index> nodesODE2WithAE;				//!< list of nodes that have AE (Euler parameters)
 	ResizableArray<Index> objectsWithAlgebraicEquations;//!< list of objects that have algebraic equations (AE)
 	ResizableArray<Index> objectsConstraintWithAE;		//!< list of objects that are constraints and have AE
-	ResizableArray<Index> objectsConstraintWithAEUF;		//!< list of objects that are constraints and have AE
-	ResizableArray<Index> objectsConstraintWithAENoUF;		//!< list of objects that are constraints and have AE
+	ResizableArray<Index> objectsConstraintWithAEUF;	//!< list of objects that are constraints and have AE
+	ResizableArray<Index> objectsConstraintWithAENoUF;	//!< list of objects that are constraints and have AE
 	ResizableArray<Index> listObjectProjectedReactionForcesODE2;//!< list of objects that produce projected reaction forces for constraints
 	ResizableArray<Index> listObjectProjectedReactionForcesODE2UF;//!< list of objects that produce projected reaction forces for constraints
 	ResizableArray<Index> listObjectProjectedReactionForcesODE2NoUF;//!< list of objects that produce projected reaction forces for constraints
+
+	//lists for Lie groups (only needed for implicit integration / Jacobians)
+	//DELETE: ResizableArray<Index> listLieGroupDUNodes;			//!< list of lie group nodes
+	//DELETE: ResizableVector listLieGroupODE2coordUpdate;	//!< temporary vector for (q o eps) (composition rule)
+	ResizableArray<Index> listLieGroupODE2toDUnode;		    //!< list contains -1 for regular coordinates and node number for Lie group Direct Update coordinates
 
 	//lists for Jacobians
 	ObjectContainer<ArrayIndex> localToGlobalODE2numDiff;  //!< special LTG list needed for Jacobians, in order to prevent duplicate entries for self-connecting connectors, especially in ObjectKinematicTree
@@ -134,6 +141,9 @@ public: //
 		listObjectProjectedReactionForcesODE2.Flush();
 
 		localToGlobalODE2numDiff.Flush();
+
+		listLieGroupODE2toDUnode.Flush();
+		hasLieGroupDUNodes = false;
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -259,6 +269,12 @@ public: //
 	Index& GetNumberOfCoordinatesData() { return numberOfCoordinatesData; }
 	//! Read (Reference) access to:global number of Data variable (sum of all node Data variable)
 	const Index& GetNumberOfCoordinatesData() const { return numberOfCoordinatesData; }
+
+    //! Write (Reference) access to: hasLieGroupDUNodes
+    bool& HasLieGroupDUNodes() { return hasLieGroupDUNodes; }
+    //! Read (Reference) access to: hasLieGroupDUNodes
+    const bool& HasLieGroupDUNodes() const { return hasLieGroupDUNodes; }
+    
 
 	//! compute ODE2 ltg indices for marker (which either composes the ltg of a connector using two markers, or may be used e.g. for markers in CContact)
 	void ComputeMarkerODE2LTGarray(Index markerNumber, ArrayIndex& ltgListODE2, bool resetFlag = true) const;

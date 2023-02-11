@@ -1,5 +1,7 @@
 \mysection{Overview on \codeName }
 %
+This section provides a general overview on important parts of \codeName\ . It is recommended to read these parts as it alleviates your life in creating models, understanding the behavior of the system and resolving errors.
+%
 \mysubsection{Module structure} \label{sec:programStructure}
 This section will show:
 \bi
@@ -9,6 +11,16 @@ This section will show:
   \item Nodes, Objects, Markers and Loads
 \ei
 For an introduction to the solvers, see \refSection{sec:solvers}.
+\onlyRST{
+
+.. |picOverviewExudynModules| image:: docs/theDoc/figures/overviewExudynModules.png
+   :width: 60%
+
+|picOverviewExudynModules|
+
+[Overview on Exudyn C++ and Python modules]
+
+}
 
 \begin{figure}
   \centering
@@ -44,10 +56,10 @@ For an introduction to the solvers, see \refSection{sec:solvers}.
 \end{figure}
 
 \mysubsubsection{Overview of modules}
-Currently, the \codeName\ module structure is split into a C++ core part and a set of Python parts,
-see Figs.\ \ref{fig_exudyn_CandPython}.
+Currently, the \codeName\ module structure is split into a C++ core part and a set of 
+Python parts\ignoreRST{, see Figs.\ \ref{fig_exudyn_CandPython}}.
 \bi
-  \item \mybold{C++ parts}, see Figs.\ \ref{fig_exudyn_CPP} and \ref{fig_system_overview}:
+  \item \mybold{C++ parts}\ignoreRST{, see Figs.\ \ref{fig_exudyn_CPP} and \ref{fig_system_overview}}:
   \bi
     \item[--] \texttt{exudyn}:
     on this level, there are just very few functions: \texttt{SystemContainer()}, \texttt{StartRenderer()}, \texttt{StopRenderer()}, \texttt{GetVersionString()}, \texttt{SolveStatic(...)}, \texttt{SolveDynamic(...)}, ... as well as system and user variable dictionaries \texttt{exudyn.variables} and \texttt{exudyn.sys}
@@ -76,6 +88,16 @@ see Figs.\ \ref{fig_exudyn_CandPython}.
 \ei
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\onlyRST{
+
+.. |picOverviewExudynCppModule| image:: docs/theDoc/figures/overviewExudynCppModule.png
+   :width: 60%
+
+|picOverviewExudynCppModule|
+
+[Overview on Exudyn C++ module]
+
+}
 \begin{figure}
   \centering
   \begin{tikzpicture}[node distance = 2cm, auto]
@@ -349,7 +371,7 @@ Hereafter, values of the structure can be modified, e.g.,
 
 \mysubsubsection{Generating output and results}
 %
-The solvers provide a number of options in \texttt{solutionSettings} to generate a solution file. As a default, exporting solution to the solution file is activated with a writing period of 0.01 seconds.
+The solvers provide a number of options in \texttt{solutionSettings} to generate a solution file. As a default, exporting the solution of all system coordinates (on position, velocity, ... level) to the solution file is activated with a writing period of 0.01 seconds.
 
 \noindent Typical output settings are:
 \pythonstyle\begin{lstlisting}
@@ -368,6 +390,9 @@ The solvers provide a number of options in \texttt{solutionSettings} to generate
   simulationSettings.solutionSettings.exportDataCoordinates = False
 \end{lstlisting}
 
+Furthermore, you can use sensors to record particular information, e.g., the displacement of a body's local
+position, forces or joint data. For viewing sensor results, use the \texttt{PlotSensor} function of the 
+\texttt{exudyn.plot} tool, see the rigid body and joints tutorial.
 
 
 \mysubsubsection{Visualization settings dialog}
@@ -563,34 +588,9 @@ Many functions and objects include color information. In order to allow alpha-tr
 \ei
 E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in \texttt{exudynGraphicsDataUtilities.py}, e.g., \texttt{color4red} or \texttt{color4steelblue} as well a list of 16 colors \texttt{color4list}, which is convenient to be used in a loop creating objects.
 
-\mysubsubsection{Camera following objects and interacting with model view}
-\label{secInteractModelView}
-For some models, it may be advantageous to track the translation and/or rotation of certain bodies, e.g., for cars, (wheeled) robots or bicycles. 
-To do so, the current render state (\texttt{SC.GetRenderState()}, \texttt{SC.SetRenderState(...)}) can be obtained and modified, in order to always follow a certain position.
-As this needs to be done during redraw of every frame, it is conveniently done in a graphicsUserFunction, e.g., within the ground body. This is shown in the following example, in which \texttt{mbs.variables['nTrackNode']} is a node number to be tracked:
-%
-\pythonstyle\begin{lstlisting}
-  #mbs.variables['nTrackNode'] contains node number
-  def UFgraphics(mbs, objectNum):
-      n = mbs.variables['nTrackNode']
-      p = mbs.GetNodeOutput(n,exu.OutputVariableType.Position, 
-                            configuration=exu.ConfigurationType.Visualization)
-      rs=SC.GetRenderState() #get current render state
-      A = np.array(rs['modelRotation'])
-      p = A.T @ p #transform point into model view coordinates
-      rs['centerPoint']=[p[0],p[1],p[2]]
-      SC.SetRenderState(rs)  #modify render state
-      return []
-
-  #add object with graphics user function
-  oGround2 = mbs.AddObject(ObjectGround(visualization=
-                 VObjectGround(graphicsDataUserFunction=UFgraphics)))
-  #.... further code for simulation here
-\end{lstlisting}
-
 \mysubsubsection{Solution viewer}
 \label{secSolutionViewer}
-\codeName\ offers a convenient WYSIWYS -- 'What you See is What you Simulate' interface, showing you the computation results during simulation.
+\codeName\ offers a convenient WYSIWYS -- 'What you See is What you Simulate' interface, showing you the computation results during simulation in the render window.
 If you are running large models, it may be more convenient to watch results after simulation has been finished.
 For this, you can use
 \bi
@@ -696,50 +696,6 @@ However, the output of the performance tests is not stored on github.
 We are trying hard to achieve error-free algorithms of physically correct models, but there may always be some errors in the code.
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Contact problems}
-%
-Since Q4 2021 a contact module is available in \codeName. 
-This separate module \texttt{GeneralContact} $[$\mybold{still under development, consider with care!}$]$ is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
-\onlyRST{
-
-.. |cpic1| image:: docs/theDoc/figures/contactTests.png
-   :width: 45%
-
-.. |cpic2| image:: docs/theDoc/figures/contactTests2.jpg
-   :width: 45%
-
-|cpic1| |cpic2|
-
-[Some tests and examples using \texttt{GeneralContact}]
-
-}
-\ignoreRST{
-\begin{figure}[tbh]%
-\begin{center}
-\includegraphics[width=0.35\columnwidth]{figures/contactTests} \hspace{1cm}%
-\includegraphics[width=0.35\columnwidth]{figures/contactTests2}%
-\end{center}
-\caption{Some tests and examples using \texttt{GeneralContact}.}%
-\label{fig:contactExamples}%
-\end{figure}
-}
-
-\noindent \mybold{Note}:
-\bi
-\item \texttt{GeneralContact} is (in most cases) restricted to dynamic simulation (explicit or implicit $[$\mybold{still under development, consider with care!}$]$) if friction is used; without friction, it also works in the static case
-\item in addition to \texttt{GeneralContact} there are special objects, in particular for rolling and simple 1D contacts, that are available as single objects, cf.\ \texttt{ObjectConnectorRollingDiscPenalty}
-\item \texttt{GeneralContact} is recommended to be used for large numbers of contacts, while the single objects are integrated more directly into mbs.
-\ei
-
-\noindent Currently, \texttt{GeneralContact} includes:
-\bi
-  \item Sphere-Sphere contact (attached to any marker); may represent circle-circle contact in 2D
-  \item Triangles mounted on rigid bodies, in contact with Spheres [only explicit]
-  \item ANCFCable2D contacting with spheres (which then represent circles in 2D) [partially implicit, needs revision]
-\ei
-For details on the contact formulations, see \refSection{secContactTheory}.
-
-%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsection{Removing convergence problems and solver failures}
 \label{secConvergenceProblems}
 Nonlinear formulations (such as most multibody systems, especially nonlinear finite elements) cause problems and there is no general nonlinear solver which may reliably and accurately solve such problems.
@@ -814,13 +770,86 @@ The faster versions are available for all release versions, but only for some \t
 \ei
 
 
-
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsection{Advanced topics} \label{sec:exudynAdvanced}
 %
 This section covers some advanced topics, which may be only relevant for a smaller group of people. 
 Functionality may be extended but also removed in future
 %
-\mysubsection{OpenVR} \label{sec:exudynOpenVR}
+\mysubsubsection{Camera following objects and interacting with model view}
+\label{secInteractModelView}
+For some models, it may be advantageous to track the translation and/or rotation of certain bodies, e.g., for cars, (wheeled) robots or bicycles. 
+To do so, the current render state (\texttt{SC.GetRenderState()}, \texttt{SC.SetRenderState(...)}) can be obtained and modified, in order to always follow a certain position.
+As this needs to be done during redraw of every frame, it is conveniently done in a graphicsUserFunction, e.g., within the ground body. This is shown in the following example, in which \texttt{mbs.variables['nTrackNode']} is a node number to be tracked:
+%
+\pythonstyle\begin{lstlisting}
+  #mbs.variables['nTrackNode'] contains node number
+  def UFgraphics(mbs, objectNum):
+      n = mbs.variables['nTrackNode']
+      p = mbs.GetNodeOutput(n,exu.OutputVariableType.Position, 
+                            configuration=exu.ConfigurationType.Visualization)
+      rs=SC.GetRenderState() #get current render state
+      A = np.array(rs['modelRotation'])
+      p = A.T @ p #transform point into model view coordinates
+      rs['centerPoint']=[p[0],p[1],p[2]]
+      SC.SetRenderState(rs)  #modify render state
+      return []
+
+  #add object with graphics user function
+  oGround2 = mbs.AddObject(ObjectGround(visualization=
+                 VObjectGround(graphicsDataUserFunction=UFgraphics)))
+  #.... further code for simulation here
+\end{lstlisting}
+%
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Contact problems}
+%
+Since Q4 2021 a contact module is available in \codeName. 
+This separate module \texttt{GeneralContact} $[$\mybold{still under development, consider with care!}$]$ is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
+\onlyRST{
+
+.. |cpic1| image:: docs/theDoc/figures/contactTests.png
+   :width: 45%
+
+.. |cpic2| image:: docs/theDoc/figures/contactTests2.jpg
+   :width: 45%
+
+|cpic1| |cpic2|
+
+[Some tests and examples using \texttt{GeneralContact}]
+
+}
+\ignoreRST{
+\begin{figure}[tbh]%
+\begin{center}
+\includegraphics[width=0.35\columnwidth]{figures/contactTests} \hspace{1cm}%
+\includegraphics[width=0.35\columnwidth]{figures/contactTests2}%
+\end{center}
+\caption{Some tests and examples using \texttt{GeneralContact}.}%
+\label{fig:contactExamples}%
+\end{figure}
+}
+
+\noindent \mybold{Note}:
+\bi
+\item \texttt{GeneralContact} is (in most cases) restricted to dynamic simulation (explicit or implicit $[$\mybold{still under development, consider with care!}$]$) if friction is used; without friction, it also works in the static case
+\item in addition to \texttt{GeneralContact} there are special objects, in particular for rolling and simple 1D contacts, that are available as single objects, cf.\ \texttt{ObjectConnectorRollingDiscPenalty}
+\item \texttt{GeneralContact} is recommended to be used for large numbers of contacts, while the single objects are integrated more directly into mbs.
+\ei
+
+\noindent Currently, \texttt{GeneralContact} includes:
+\bi
+  \item Sphere-Sphere contact (attached to any marker); may represent circle-circle contact in 2D
+  \item Triangles mounted on rigid bodies, in contact with Spheres [only explicit]
+  \item ANCFCable2D contacting with spheres (which then represent circles in 2D) [partially implicit, needs revision]
+\ei
+For details on the contact formulations, see \refSection{secContactTheory}.
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{OpenVR} \label{sec:exudynOpenVR}
 %
 The general open source libraries from Valve, see
 \bi
@@ -829,11 +858,13 @@ The general open source libraries from Valve, see
 have been linked to \codeName\ . In order to get OpenVR fully integrated, you need to run \texttt{setup.py} \codeName\ with the \texttt{--openvr} flag. For general installation instructions, see \refSection{sec:installationInstructions}.
 
 Running OpenVR either requires an according head mounted display (HMD) or a virtualization using, e.g., Riftcat 2 to use a mobile phone with an according adapter. Visualization settings are available in \texttt{interactive.openVR}, but need to be considered with care.
-An example is provided in \texttt{engineOpenVR.py}, showing some optimal flags like locking the model rotation, zoom or translation.
+An example is provided in \texttt{openVRengine.py}, showing some optimal flags like locking the model rotation, zoom or translation.
 
 Everything is experimental, but contributions are welcome!
 
-\mysubsection{Interaction with other codes} \label{sec:interactionOtherCodes}
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{Interaction with other codes} \label{sec:interactionOtherCodes}
 %
 Interaction with other codes and computers (E.g., MATLAB or other C++ codes, or other Python versions)
 is possible. 
@@ -847,9 +878,11 @@ the \texttt{exudyn.utilities} functions
 Basically, data can be transmitted in both directions, e.g., within a preStepUserFunction. In Examples, you can find 
  TCPIPexudynMatlab.py which shows a basic example for such a connectivity.
 
-\mysubsection{ROS} \label{sec:exudynROS}
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mysubsubsection{ROS} \label{sec:exudynROS}
 %
-Basic interaction with ROS has been tested. However, make sure to use Python 3, as there is (and will never be) a Python 2
+Basic interaction with ROS has been tested. However, make sure to use Python 3, as there is no (and will never be any) Python 2
 support for \codeName\ .
 
 

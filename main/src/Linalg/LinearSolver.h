@@ -172,8 +172,11 @@ public:
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 	virtual void AddSubmatrixTransposedWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0) = 0;
 
-	//! add column vector 'vec' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
-	virtual void AddColumnVector(Index column, const Vector& vec, Index rowOffset = 0) = 0;
+	//! add column 'vector' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
+	virtual void AddColumnVector(Index column, const Vector& vector, Index rowOffset = 0) = 0;
+
+    //! add factor*(vectorAdd-vectorSub) at 'column'; used for numerical jacobians
+    virtual void AddColumnVectorDiff(Index column, const Vector& vectorAdd, const Vector& vectorSub, Real factor, Index rowOffset = 0) = 0;
 
 	//! After filling the matrix, it is finalized for further operations (matrix*vector, factorization, ...)
 	//! In the dense matrix case, nothing needs to be done; in the sparse matrix case, the elements of the matrix are filled into the sparse matrix
@@ -326,24 +329,31 @@ public:
 	}
 
 
-	//! add column vector 'vec' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
-	virtual void AddColumnVector(Index column, const Vector& vec, Index rowOffset = 0)
+	//! add column 'vector' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
+	virtual void AddColumnVector(Index column, const Vector& vector, Index rowOffset = 0)
 	{
-		if (!rowOffset)
-		{
-			for (Index i = 0; i < vec.NumberOfItems(); i++) //i = row
-			{
-				matrix(i, column) += vec[i];
-			}
-		}
-		else
-		{
-			for (Index i = 0; i < vec.NumberOfItems(); i++) //i = row
-			{
-				matrix(i + rowOffset, column) += vec[i];
-			}
-		}
+        matrix.AddColumnVector(column, vector, rowOffset);
+		//if (!rowOffset)
+		//{
+		//	for (Index i = 0; i < vec.NumberOfItems(); i++) //i = row
+		//	{
+		//		matrix(i, column) += vec[i];
+		//	}
+		//}
+		//else
+		//{
+		//	for (Index i = 0; i < vec.NumberOfItems(); i++) //i = row
+		//	{
+		//		matrix(i + rowOffset, column) += vec[i];
+		//	}
+		//}
 	}
+
+    //! add factor*(vectorAdd-vectorSub) at 'column'; used for numerical jacobians
+    virtual void AddColumnVectorDiff(Index column, const Vector& vectorAdd, const Vector& vectorSub, Real factor, Index rowOffset = 0)
+    {
+            matrix.AddColumnVectorDiff(column, vectorAdd, vectorSub, factor, rowOffset);
+    }
 
 	//! After filling the matrix, it is finalized for further operations (matrix*vector, factorization, ...)
 	virtual void FinalizeMatrix() 
@@ -533,7 +543,10 @@ public:
 	//! add column vector 'vec' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
 	virtual void AddColumnVector(Index column, const Vector& vec, Index rowOffset = 0);
 
-	//! After filling the matrix, it is finalized for further operations (matrix*vector, factorization, ...)
+    //! add factor*(vectorAdd-vectorSub) at 'column'; used for numerical jacobians
+    virtual void AddColumnVectorDiff(Index column, const Vector& vectorAdd, const Vector& vectorSub, Real factor, Index rowOffset = 0);
+    
+    //! After filling the matrix, it is finalized for further operations (matrix*vector, factorization, ...)
 	virtual void FinalizeMatrix();
 
 	//! factorize matrix (invert, SparseLU, etc.);
