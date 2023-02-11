@@ -41,7 +41,4 @@ jobs:
     - name: Deploy to Github pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        publish_branch: gh-pages
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: _build/
-        force_orphan: true
+        folder: "_build/html"
