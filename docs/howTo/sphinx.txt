@@ -10,10 +10,10 @@
 pip install sphinx
 
 #themes: 
-#pip install furo
+pip install furo
 pip install sphinx_rtd_theme
-pip install pydata-sphinx-theme --pre
-pip install pydata-sphinx-theme==0.13.0rc3.dev0
+#pip install pydata-sphinx-theme --pre
+#pip install pydata-sphinx-theme==0.13.0rc3.dev0
 
 #create example directory:
 sphinx-quickstart
