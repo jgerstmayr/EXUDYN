@@ -19,45 +19,62 @@ pip install pydata-sphinx-theme==0.13.0rc3.dev0
 sphinx-quickstart
 
 #+++++++++++++++++++++++++++++++++++++++++++
-#to build a 
+#to build the files of directory source into directory build (source needs a conf.py and index.rst file), run:
 sphinx-build -b html source build
 
-#+++++++++++++++++++++++++++++++++++++++++++
-conf.py:
-
 
 #+++++++++++++++++++++++++++++++++++++++++++
-index.rst:
+FOR EXUDYN Github pages test build, run in EXUDYN_git dir:
+sphinx-build -b html . _build
 
 #+++++++++++++++++++++++++++++++++++++++++++
 #github pages:
 https://www.sphinx-doc.org/en/master/tutorial/deploying.html#id5
 
-name: Sphinx build
+#current workflow 2023-02-11:
+#  workflow for building GitHub Pages
+name: Deploy GitHub Pages
 
-on: push
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["master"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  docs:
+    runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v3
-    - name: Build HTML
-      uses: ammaraskar/sphinx-action@master
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: html-docs
-        path: docs/build/html/
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
-      if: github.ref == 'refs/heads/main'
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: docs/build/html
-        
-
-
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: |
+          pip install sphinx sphinx_rtd_theme
+      - name: Sphinx build
+        run: |
+          sphinx-build . _build
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+        with:
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: _build/
+          force_orphan: true
+          
 
 
 

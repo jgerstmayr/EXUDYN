@@ -380,8 +380,8 @@ for fileName in filesParsed:
 
     sFile = ''
 
-sRST += '\n\n\ **FOR FURTHER INFORMATION see `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and'
-sRST += ' see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!**\ \n\n'
+sRST += '\n\n\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and'
+sRST += ' see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!\n\n'
 # sRST += '\n\n\ **FOR FURTHER INFORMATION GO TO theDoc.pdf !!!**\ \n\n'
 sRST += """.. |pic7| image:: docs/demo/screenshots/logoRST.png
    :width: 120
@@ -392,8 +392,8 @@ sRST += """.. |pic7| image:: docs/demo/screenshots/logoRST.png
 [sRSTmain, hierarchicalRST] = ExtractSections(sRST)
 
 sRSTreduced = hierarchicalRST[0][1].replace(sectionMarkerText+'0','')
-sRSTreduced += '\n\n\ **FOR FURTHER INFORMATION see `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and'
-sRSTreduced += ' for details (incl. equations) see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!**\ \n\n'
+sRSTreduced += '\n\n\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and'
+sRSTreduced += ' for details (incl. equations) see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!\n\n'
 
 if True:
     #this is the file used by github directly

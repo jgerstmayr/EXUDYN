@@ -75,5 +75,5 @@ Enjoy the Python library for multibody dynamics modeling, simulation, creating l
 
 
 
-\ **FOR FURTHER INFORMATION see `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and for details (incl. equations) see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!**\ 
+\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and for details (incl. equations) see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!
 
