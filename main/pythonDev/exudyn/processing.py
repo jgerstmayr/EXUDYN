@@ -383,7 +383,11 @@ def ParameterVariation(parameterFunction, parameters,
     for i in range(nVariations):
         parameterSet = {}
         for (key,value) in parameterDict.items(): 
-            parameterSet[key] = value[i]
+            if key == 'computationIndex':
+                v = int(value[i]) #make integers, which follow type(v)==int
+            else:
+                v = float(value[i]) #make floats, which follow type(v)==float
+            parameterSet[key] = v
 
         if parameterFunctionData != {}:
             parameterSet['functionData'] = parameterFunctionData

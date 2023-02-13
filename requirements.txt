@@ -1,9 +1,5 @@
 furo
-sphinx==4.5.0
-sphinx-prompt==1.5.0
-sphinx-tabs==3.2.0
-sphinx-rtd-theme==1.0.0
-sphinx-notfound-page==0.8
-sphinx-js==3.2.1
-markupsafe==2.0.1
+sphinx
+sphinx-rtd-theme
+sphinx-js
 readthedocs-sphinx-search

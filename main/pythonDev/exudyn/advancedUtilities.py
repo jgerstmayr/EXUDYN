@@ -144,6 +144,20 @@ def IsValidRealInt(x):
         return True
     return False
 
+#**function: return True, if x is any python or numpy float type; could also be called IsFloat(), but Real has special meaning in Exudyn
+def IsReal(x):
+    if isinstance(x, (np.floating, float)): 
+        return True
+    else:
+        return False
+
+#**function: return True, if x is any python or numpy float type
+def IsInteger(x):
+    if isinstance(x, (np.integer, int)): 
+        return True
+    else:
+        return False
+
 #**function: check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
 def IsVector(v, expectedSize=None):
     if type(v) != list and type(v) != np.ndarray:

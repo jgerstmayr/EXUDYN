@@ -26,26 +26,37 @@ exclude_patterns = ['README.rst','rotorAnsys.rst','main/*','tools/*','tools/*']
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-#html_theme = "furo"
-html_theme = "sphinx_rtd_theme"
+html_theme = "furo"
+#html_theme = "sphinx_rtd_theme"
 #html_theme = 'classic'
 #html_theme = "pydata_sphinx_theme"
 
 #html_static_path = ["_static"]
 
-#if html_theme == "sphinx_rtd_theme":
-extensions = [
- 'sphinx_search.extension', #pip install readthedocs-sphinx-search
- 'sphinx_rtd_theme',
-]
+if html_theme == "sphinx_rtd_theme":
+    extensions = [
+     #'sphinx_search.extension', #pip install readthedocs-sphinx-search
+     'sphinx_rtd_theme',
+    ]
 #html_theme_path = ["_themes", ]
 
-html_theme_options = {
-    #'logo_only': True,
-    'navigation_depth': 5,
-}
 html_context = {}
 
+#rtd:
+if html_theme == "sphinx_rtd_theme":
+    html_theme_options = {
+    'prev_next_buttons_location': 'top', #bottom, top, both
+    'style_external_links': False,
+    'vcs_pageview_mode': '',
+    'style_nav_header_background': 'white',
+    # Toc options
+    # 'collapse_navigation': True,
+    # 'sticky_navigation': True,
+    'navigation_depth': 4,
+    # 'includehidden': True,
+    'titles_only': False,
+    }
+    
 #furo:
 if html_theme == "furo":
     html_theme_options = {
