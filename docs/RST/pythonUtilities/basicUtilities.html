@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: basicUtilities &mdash; Exudyn 1.5.95.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: beams" href="beams.html" />
+    <link rel="prev" title="Module: artificialIntelligence" href="artificialIntelligence.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: basicUtilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/pythonUtilities/basicUtilities.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-basicutilities">
+<span id="sec-module-basicutilities"></span><h1>Module: basicUtilities<a class="headerlink" href="#module-basicutilities" title="Permalink to this heading"></a></h1>
+<p>Basic utility functions and constants, not depending on numpy or other python modules.</p>
+<ul>
+<li><p>Author:    Johannes Gerstmayr</p></li>
+<li><p>Date:      2020-03-10 (created)</p></li>
+<li><div class="line-block">
+<div class="line">Notes:</div>
+<div class="line">Additional constants are defined:</div>
+<div class="line">pi = 3.1415926535897932</div>
+<div class="line">sqrt2 = 2**0.5</div>
+<div class="line">g=9.81</div>
+<div class="line">eye2D (2x2 diagonal matrix)</div>
+<div class="line">eye3D (3x3 diagonal matrix)</div>
+<div class="line">Two variables ‘gaussIntegrationPoints’ and ‘gaussIntegrationWeights’ define integration points and weights for function GaussIntegrate(…)</div>
+</div>
+</li>
+</ul>
+<p id="sec-basicutilities-clearworkspace"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L42">ClearWorkspace</a>()</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">clear all workspace variables except for system variables with ‘_’ at beginning,</div>
+<div class="line">‘func’ or ‘module’ in name; it also deletes all items in exudyn.sys and exudyn.variables,</div>
+<div class="line">EXCEPT from exudyn.sys[‘renderState’] for pertaining the previous view of the renderer</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">Use this function with CARE! In Spyder, it is certainly safer to add the preference Run<span class="math notranslate nohighlight">\(\ra\)</span>‘remove all variables before execution’. It is recommended to call ClearWorkspace() at the very beginning of your models, to avoid that variables still exist from previous computations which may destroy repeatability of results</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="kn">import</span> <span class="nn">exudyn.utilities</span>
+<span class="c1">#clear workspace at the very beginning, before loading other modules and potentially destroying unwanted things ...</span>
+<span class="n">ClearWorkspace</span><span class="p">()</span>       <span class="c1">#cleanup</span>
+<span class="c1">#now continue with other code</span>
+<span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>
+<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperUserFunctionNumbaJIT.py">springDamperUserFunctionNumbaJIT.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-basicutilities-diagonalmatrix"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L90">DiagonalMatrix</a>(<code class="docutils literal notranslate"><span class="pre">rowsColumns</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">1</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">create a diagonal or identity matrix; used for interface.py, avoiding the need for numpy</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rowsColumns</span></code>: provides the number of rows and columns</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">value</span></code>: initialization value for diagonal terms</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">list of lists representing a matrix</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-basicutilities-norml2"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L104">NormL2</a>(<code class="docutils literal notranslate"><span class="pre">vector</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute L2 norm for vectors without switching to numpy or math module</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">vector as list or in numpy format</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">L2-norm of vector</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springsDeactivateConnectors.py">springsDeactivateConnectors.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py">distanceSensor.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py">explicitLieGroupIntegratorTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismRedundant.py">fourBarMechanismRedundant.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericODE2test.py">genericODE2test.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-basicutilities-vsum"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L113">VSum</a>(<code class="docutils literal notranslate"><span class="pre">vector</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute sum of all values of vector</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">vector as list or in numpy format</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">sum of all components of vector</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py">serialRobotTSD.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py">serialRobotTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-basicutilities-vadd"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L122">VAdd</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">add two vectors instead using numpy</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">vectors v0 and v1 as list or in numpy format</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">component-wise sum of v0 and v1</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py">carRollingDiscTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py">mecanumWheelRollingDiscTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py">NGsolveCrankShaftTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py">rigidBodyCOMtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py">sliderCrank3Dbenchmark.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dtest.py">sliderCrank3Dtest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-basicutilities-vsub"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L133">VSub</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">subtract two vectors instead using numpy: result = v0-v1</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">vectors v0 and v1 as list or in numpy format</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">component-wise difference of v0 and v1</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ObjectFFRFconvergenceTestHinge.py">ObjectFFRFconvergenceTestHinge.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py">NGsolveCrankShaftTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py">rigidBodyCOMtest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-basicutilities-vmult"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L144">VMult</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">scalar multiplication of two vectors instead using numpy: result = v0’ * v1</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">vectors v0 and v1 as list or in numpy format</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">sum of all component wise products: c0[0]*v1[0] + v0[1]*v1[0] + …</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-basicutilities-scalarmult"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L154">ScalarMult</a>(<code class="docutils literal notranslate"><span class="pre">scalar</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">multiplication vectors with scalar: result = scalar * v</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">value {it scalar} and vector {it v} as list or in numpy format</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">scalar multiplication of all components of v: [scalar*v[0], scalar*v[1], …]</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/pendulumFriction.py">pendulumFriction.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py">sliderCrank3Dbenchmark.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dtest.py">sliderCrank3Dtest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-basicutilities-normalize"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L163">Normalize</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">take a 3D vector and return a normalized 3D vector (L2Norm=1)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">vector v as list or in numpy format</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">vector v multiplied with scalar such that L2-norm of vector is 1</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ObjectFFRFconvergenceTestHinge.py">ObjectFFRFconvergenceTestHinge.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py">NGsolveCrankShaftTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-basicutilities-vec2tilde"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L178">Vec2Tilde</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">apply tilde operator (skew) to 3D-vector and return skew matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">3D vector v as list or in numpy format</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">matrix as list of lists containing the skew-symmetric matrix computed from v: <span class="math notranslate nohighlight">\(\mr{0}{-v[2]}{v[1]} {v[2]}{0}{-v[0]} {-v[1]}{v[0]}{0}\)</span></div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py">explicitLieGroupMBSTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-basicutilities-tilde2vec"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L185">Tilde2Vec</a>(<code class="docutils literal notranslate"><span class="pre">m</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">take skew symmetric matrix and return vector (inverse of Skew(…))</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">list of lists containing a skew-symmetric matrix (3x3)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">list containing the vector v (inverse function of Vec2Tilde(…))</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-basicutilities-gaussintegrate"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L212">GaussIntegrate</a>(<code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>, <code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute numerical integration of functionOfX in interval [a,b] using Gaussian integration</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>: scalar, vector or matrix-valued function with scalar argument (X or other variable)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>: odd number in {1,3,5,7,9}; currently maximum order is 9</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">a</span></code>: integration range start</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">b</span></code>: integration range end</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">(scalar or vectorized) integral value</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-basicutilities-lobattointegrate"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L248">LobattoIntegrate</a>(<code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>, <code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute numerical integration of functionOfX in interval [a,b] using Lobatto integration</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>: scalar, vector or matrix-valued function with scalar argument (X or other variable)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>: odd number in {1,3,5}; currently maximum order is 5</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">a</span></code>: integration range start</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">b</span></code>: integration range end</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">(scalar or vectorized) integral value</div>
+</div>
+</li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="artificialIntelligence.html" class="btn btn-neutral float-left" title="Module: artificialIntelligence" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="beams.html" class="btn btn-neutral float-right" title="Module: beams" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

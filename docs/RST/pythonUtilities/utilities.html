@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: utilities &mdash; Exudyn 1.5.95.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Issue tracker" href="../../trackerlogRST.html" />
+    <link rel="prev" title="Module: solver" href="solver.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#class-tcpipdata-in-module-utilities">CLASS TCPIPdata (in module utilities)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: utilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/pythonUtilities/utilities.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-utilities">
+<span id="sec-module-utilities"></span><h1>Module: utilities<a class="headerlink" href="#module-utilities" title="Permalink to this heading"></a></h1>
+<p>Basic support functions for simpler creation of Exudyn models.
+Advanced functions for loading and animating solutions and for drawing a graph of the mbs system.
+This library requires numpy (as well as time and copy)</p>
+<ul class="simple">
+<li><p>Author:    Johannes Gerstmayr</p></li>
+<li><p>Date:      2019-07-26 (created)</p></li>
+</ul>
+<p id="sec-utilities-showonlyobjects"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L42">ShowOnlyObjects</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">objectNumbers</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">showOthers</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">function to hide all objects in mbs except for those listed in objectNumbers</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: mbs containing object</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">objectNumbers</span></code>: integer object number or list of object numbers to be shown; if empty list [], then all objects are shown</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showOthers</span></code>: if True, then all other objects are shown again</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">changes all colors in mbs, which is NOT reversible</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-utilities-highlightitem"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L64">HighlightItem</a>(<code class="docutils literal notranslate"><span class="pre">SC</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">itemNumber</span></code>, <code class="docutils literal notranslate"><span class="pre">itemType</span> <span class="pre">=</span> <span class="pre">exudyn.ItemType.Object</span></code>, <code class="docutils literal notranslate"><span class="pre">showNumbers</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: mbs containing object</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">itemNumbers</span></code>: integer object/node/etc number to be highlighted</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">itemType</span></code>: type of items to be highlighted</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showNumbers</span></code>: if True, then the numbers of these items are shown</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-utilities-ufsensordistance"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L103">__UFsensorDistance</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorNumbers</span></code>, <code class="docutils literal notranslate"><span class="pre">factors</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">internal function used for AddDistanceSensor</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-utilities-adddistancesensor"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L163">AddDistanceSensor</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">generalContactIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOrMarker</span></code>, <code class="docutils literal notranslate"><span class="pre">dirSensor</span></code>, <code class="docutils literal notranslate"><span class="pre">minDistance</span> <span class="pre">=</span> <span class="pre">-1e7</span></code>, <code class="docutils literal notranslate"><span class="pre">maxDistance</span> <span class="pre">=</span> <span class="pre">1e7</span></code>, <code class="docutils literal notranslate"><span class="pre">cylinderRadius</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">selectedTypeIndex</span> <span class="pre">=</span> <span class="pre">exudyn.ContactTypeIndex.IndexEndOfEnumList</span></code>, <code class="docutils literal notranslate"><span class="pre">storeInternal</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">measureVelocity</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addGraphicsObject</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">drawDisplaced</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Function to add distance sensor based on GeneralContact to mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">generalContactIndex</span></code>: the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(…) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">positionOrMarker</span></code>: either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">dirSensor</span></code>: the direction (no need to normalize) along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation if marker contains orientation (BodyRigid, NodeRigid)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">minDistance</span></code>: the minimum distance which is accepted; smaller distance will be ignored</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">maxDistance</span></code>: the maximum distance which is accepted; items being at maxDistance or futher are ignored; if no items are found, the function returns maxDistance</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">cylinderRadius</span></code>: in case of spheres (selectedTypeIndex=ContactTypeIndex.IndexSpheresMarkerBased), a cylinder can be used which measures the shortest distance at a certain radius (geometrically interpreted as cylinder)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">selectedTypeIndex</span></code>: either this type has default value, meaning that all items in GeneralContact are measured, or there is a specific type index, which is the only type that is considered during measurement</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">storeInternal</span></code>: like with any SensorUserFunction, setting to True stores sensor data internally</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fileName</span></code>: if defined, recorded data of SensorUserFunction is written to specified file</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">measureVelocity</span></code>: if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction ‘dirSensor’ and does not account for changes in geometry, thus it may be different from the time derivative of the distance!</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">addGraphicsObject</span></code>: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">drawDisplaced</span></code>: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">creates sensor and returns according sensor number of SensorUserFunction</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py">distanceSensor.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-utilities-ufsensorrecord"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L217">UFsensorRecord</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorNumbers</span></code>, <code class="docutils literal notranslate"><span class="pre">factors</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">DEPRECATED: Internal SensorUserFunction, used in function AddSensorRecorder</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-utilities-addsensorrecorder"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L238">AddSensorRecorder</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorNumber</span></code>, <code class="docutils literal notranslate"><span class="pre">endTime</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorsWritePeriod</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorOutputSize</span> <span class="pre">=</span> <span class="pre">3</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">DEPRECATED: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables[‘sensorRecord’+str(sensorNumber)] where sensorNumber is the mbs sensor number</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: mbs containing object</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">sensorNumber</span></code>: integer sensor number to be recorded</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">endTime</span></code>: end time of simulation, as given in simulationSettings.timeIntegration.endTime</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">sensorsWritePeriod</span></code>: as given in simulationSettings.solutionSettings.sensorsWritePeriod</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">sensorOutputSize</span></code>: size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables[‘sensorRecord’+str(sensorNumber)] and the information is written row-wise: [time, sensorValue1, sensorValue2, …]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py">ComputeSensitivitiesExample.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-utilities-loadsolutionfile"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L265">LoadSolutionFile</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">safeMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">maxRows</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">hasHeader</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName=’…’) into dictionary:</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fileName</span></code>: string containing directory and filename of stored coordinatesSolutionFile</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">saveMode</span></code>: if True, it loads lines directly to load inconsistent lines as well; use this for huge files (&gt;2GB); is slower but needs less memory!</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">verbose</span></code>: if True, some information is written when importing file (use for huge files to track progress)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">maxRows</span></code>: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">hasHeader</span></code>: set to False, if file is expected to have no header; if False, then some error checks related to file header are not performed</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">dictionary with ‘data’: the matrix of stored solution vectors, ‘columnsExported’: a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], ‘nColumns’: the number of data columns and ‘nRows’: the number of data rows</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py">beltDriveALE.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py">beltDriveReevingSystem.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py">beltDrivesComparison.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py">craneReevingSystem.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py">ANCFbeltDrive.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py">ANCFgeneralContactCircle.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-utilities-numpyint8arraytostring"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L396">NumpyInt8ArrayToString</a>(<code class="docutils literal notranslate"><span class="pre">npArray</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">simple conversion of int8 arrays into strings (not highly efficient, so use only for short strings)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-utilities-binaryreadindex"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L403">BinaryReadIndex</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">intType</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">read single Index from current file position in binary solution file</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-utilities-binaryreadreal"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L409">BinaryReadReal</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">realType</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">read single Real from current file position in binary solution file</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-utilities-binaryreadstring"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L415">BinaryReadString</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">intType</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">read string from current file position in binary solution file</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-utilities-binaryreadarrayindex"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L421">BinaryReadArrayIndex</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">intType</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">read Index array from current file position in binary solution file</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-utilities-binaryreadrealvector"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L428">BinaryReadRealVector</a>(<code class="docutils literal notranslate"><span class="pre">file</span></code>, <code class="docutils literal notranslate"><span class="pre">intType</span></code>, <code class="docutils literal notranslate"><span class="pre">realType</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">read Real vector from current file position in binary solution file</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">return data as numpy array, or False if no data read</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-utilities-loadbinarysolutionfile"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L444">LoadBinarySolutionFile</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">maxRows</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName=’…’) into dictionary</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fileName</span></code>: string containing directory and filename of stored coordinatesSolutionFile</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">verbose</span></code>: if True, some information is written when importing file (use for huge files to track progress)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">maxRows</span></code>: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">dictionary with ‘data’: the matrix of stored solution vectors, ‘columnsExported’: a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], ‘nColumns’: the number of data columns and ‘nRows’: the number of data rows</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-utilities-recoversolutionfile"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L630">RecoverSolutionFile</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">newFileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">recover solution file with last row not completely written (e.g., if crashed, interrupted or no flush file option set)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fileName</span></code>: string containing directory and filename of stored coordinatesSolutionFile</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">newFileName</span></code>: string containing directory and filename of new coordinatesSolutionFile</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">verbose</span></code>: 0=no information, 1=basic information, 2=information per row</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">writes only consistent rows of file to file with name newFileName</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-utilities-initializefromrestartfile"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L686">InitializeFromRestartFile</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">restartFileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">recover initial coordinates, time, etc. from given restart file</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: MainSystem to be operated with</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: simulationSettings which is updated and shall be used afterwards for SolveDynamic(…) or SolveStatic(…)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">restartFileName</span></code>: string containing directory and filename of stored restart file, as given in solutionSettings.restartFileName</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">verbose</span></code>: False=no information, True=basic information</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">modifies simulationSettings and sets according initial conditions in mbs</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-utilities-setsolutionstate"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L747">SetSolutionState</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">solution</span></code>, <code class="docutils literal notranslate"><span class="pre">row</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span> <span class="pre">=</span> <span class="pre">exudyn.ConfigurationType.Current</span></code>, <code class="docutils literal notranslate"><span class="pre">sendRedrawSignal</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-utilities-animatesolution"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L779">AnimateSolution</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">solution</span></code>, <code class="docutils literal notranslate"><span class="pre">rowIncrement</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">timeout</span> <span class="pre">=</span> <span class="pre">0.04</span></code>, <code class="docutils literal notranslate"><span class="pre">createImages</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">runLoop</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the system used for animation</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">solution</span></code>: solution dictionary previously loaded with LoadSolutionFile; will be played from first to last row</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rowIncrement</span></code>: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">timeout</span></code>: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">createImages</span></code>: creates consecutively images from the animation, which can be converted into an animation</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">runLoop</span></code>: if True, the animation is played in a loop until ‘q’ is pressed in render window</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">renders the scene in mbs and changes the visualization state in mbs continuously</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Dnutation.py">rigidRotor3Dnutation.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SliderCrank.py">SliderCrank.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/slidercrankWithMassSpring.py">slidercrankWithMassSpring.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/switchingConstraintsPendulum.py">switchingConstraintsPendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py">sliderCrankFloatingTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-utilities-drawsystemgraph"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L821">DrawSystemGraph</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">showLoads</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showSensors</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">useItemNames</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useItemTypes</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addItemTypeNames</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">multiLine</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">fontSizeFactor</span> <span class="pre">=</span> <span class="pre">1.</span></code>, <code class="docutils literal notranslate"><span class="pre">layoutDistanceFactor</span> <span class="pre">=</span> <span class="pre">3.</span></code>, <code class="docutils literal notranslate"><span class="pre">layoutIterations</span> <span class="pre">=</span> <span class="pre">100</span></code>, <code class="docutils literal notranslate"><span class="pre">showLegend</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: MainSystem to be operated with</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showLoads</span></code>: toggle appearance of loads in mbs</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showSensors</span></code>: toggle appearance of sensors in mbs</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useItemNames</span></code>: if True, object names are shown instead of basic object types (Node, Load, …)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useItemTypes</span></code>: if True, object type names (MassPoint, JointRevolute, …) are shown instead of basic object types (Node, Load, …); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">addItemTypeNames</span></code>: if True, type nymes (Node, Load, etc.) are added</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">multiLine</span></code>: if True, labels are multiline, improving readability</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fontSizeFactor</span></code>: use this factor to scale fonts, allowing to fit larger graphs on the screen with values &lt; 1</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showLegend</span></code>: shows legend for different item types</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">layoutDistanceFactor</span></code>: this factor influences the arrangement of labels; larger distance values lead to circle-like results</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">layoutIterations</span></code>: more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">[nx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw_networkx_labels(…)</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py">fourBarMechanism3D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial2.py">rigidBodyTutorial2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py">rigidBodyTutorial3.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-utilities-createtcpipconnection"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L1220">CreateTCPIPconnection</a>(<code class="docutils literal notranslate"><span class="pre">sendSize</span></code>, <code class="docutils literal notranslate"><span class="pre">receiveSize</span></code>, <code class="docutils literal notranslate"><span class="pre">IPaddress</span> <span class="pre">=</span> <span class="pre">'127.0.0.1'</span></code>, <code class="docutils literal notranslate"><span class="pre">port</span> <span class="pre">=</span> <span class="pre">52421</span></code>, <code class="docutils literal notranslate"><span class="pre">bigEndian</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">function which has to be called before simulation to setup TCP/IP socket (server) for</div>
+<div class="line">sending and receiving data; can be used to communicate with other Python interpreters</div>
+<div class="line">or for communication with MATLAB/Simulink</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">sendSize</span></code>: number of double values to be sent to TCPIP client</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">receiveSize</span></code>: number of double values to be received from TCPIP client</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">IPaddress</span></code>: string containing IP address of client (e.g., ‘127.0.0.1’)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">port</span></code>: port for communication with client</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">bigEndian</span></code>: if True, it uses bigEndian, otherwise littleEndian is used for byte order</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns information (TCPIPdata class) on socket; recommended to store this in mbs.sys[‘TCPIPobject’]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;TCPIPobject&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">CreateTCPIPconnection</span><span class="p">(</span><span class="n">sendSize</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">receiveSize</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="n">bigEndian</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">sampleTime</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="c1">#sample time in MATLAB! must be same!</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;tLast&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#in case that exudyn makes finer steps than sample time</span>
+<span class="k">def</span> <span class="nf">PreStepUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;tLast&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">sampleTime</span><span class="p">:</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;tLast&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sampleTime</span>
+<span class="n">tcp</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;TCPIPobject&#39;</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">TCPIPsendReceive</span><span class="p">(</span><span class="n">tcp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">t</span><span class="p">)]))</span> <span class="c1">#time, torque</span>
+<span class="n">tau</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;tau=&#39;</span><span class="p">,</span><span class="n">tau</span><span class="p">)</span>
+<span class="k">return</span> <span class="kc">True</span>
+<span class="k">try</span><span class="p">:</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">SetPreStepUserFunction</span><span class="p">(</span><span class="n">PreStepUserFunction</span><span class="p">)</span>
+<span class="c1">#%%++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">Assemble</span><span class="p">()</span>
+<span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="c1">#start renderer; simulate model</span>
+<span class="k">finally</span><span class="p">:</span> <span class="c1">#use this to always close connection, even in case of errors</span>
+<span class="n">CloseTCPIPconnection</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;TCPIPobject&#39;</span><span class="p">])</span>
+<span class="c1">#*****************************************</span>
+<span class="c1">#the following settings work between Python and MATLAB-Simulink (client), and gives stable results(with only delay of one step):</span>
+<span class="c1"># TCP/IP Client Send:</span>
+<span class="c1">#   priority = 2 (in properties)</span>
+<span class="c1">#   blocking = false</span>
+<span class="c1">#   Transfer Delay on (but off also works)</span>
+<span class="c1"># TCP/IP Client Receive:</span>
+<span class="c1">#   priority = 1 (in properties)</span>
+<span class="c1">#   blocking = true</span>
+<span class="c1">#   Sourec Data type = double</span>
+<span class="c1">#   data size = number of double in packer</span>
+<span class="c1">#   Byte order = BigEndian</span>
+<span class="c1">#   timeout = 10</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py">TCPIPexudynMatlab.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-utilities-tcpipsendreceive"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L1253">TCPIPsendReceive</a>(<code class="docutils literal notranslate"><span class="pre">TCPIPobject</span></code>, <code class="docutils literal notranslate"><span class="pre">sendData</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">call this function at every simulation step at which you intend to communicate with</div>
+<div class="line">other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">TCPIPobject</span></code>: the object returned by CreateTCPIPconnection(…)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">sendData</span></code>: numpy array containing data (double array) to be sent; must agree with sendSize</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns array as received from TCPIP</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;TCPIPobject&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">CreateTCPIPconnection</span><span class="p">(</span><span class="n">sendSize</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">receiveSize</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">IPaddress</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">TCPIPsendReceive</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;TCPIPobject&#39;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py">TCPIPexudynMatlab.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-utilities-closetcpipconnection"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py#L1266">CloseTCPIPconnection</a>(<code class="docutils literal notranslate"><span class="pre">TCPIPobject</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">close a previously created TCPIP connection</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py">TCPIPexudynMatlab.py</a> (Ex)</p>
+</div></blockquote>
+<section id="class-tcpipdata-in-module-utilities">
+<h2>CLASS TCPIPdata (in module utilities)<a class="headerlink" href="#class-tcpipdata-in-module-utilities" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>helper class for CreateTCPIPconnection and for TCPIPsendReceive</p>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="solver.html" class="btn btn-neutral float-left" title="Module: solver" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../trackerlogRST.html" class="btn btn-neutral float-right" title="Issue tracker" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

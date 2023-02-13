@@ -1,14 +1,12 @@
-
---------
 C++ Code
---------
+========
 
 This section covers some information on the C++ code. For more information see the Open source code and use doxygen.
 
 Exudyn was developed for the efficient simulation of flexible multi-body systems. Exudyn was designed for rapid implementation and testing of new formulations and algorithms in multibody systems, whereby these algorithms can be easily implemented in efficient C++ code. The code is applied to industry-related research projects and applications.
 
 Focus of the C++ code
-=====================
+---------------------
 
 The code focuses on four principles, starting with highest priority: 
 
@@ -28,7 +26,7 @@ The focus is therefore on:
 
 
 C++ Code structure
-==================
+------------------
 
 The following \ **entry points**\  into the C++ code can be found:
 
@@ -63,7 +61,7 @@ The functionality of the code is mainly based on systems (MainSystem and CSystem
 
 
 C++ Code: Modules
-=================
+-----------------
 
 The following internal modules are used, which are represented by directories in \ ``main/src``\ :
 
@@ -89,7 +87,7 @@ The following main external libraries are linked to Exudyn:
 
 
 Code style and conventions
-==========================
+--------------------------
 
 This section provides general coding rules and conventions, partly applicable to the C++ and Python parts of the code. Many rules follow common conventions (e.g., google code style, but not always -- see notation):
 
@@ -111,7 +109,7 @@ This section provides general coding rules and conventions, partly applicable to
 
 
 Notation conventions
-====================
+--------------------
 
 The following notation conventions are applied (\ **no exceptions!**\ ):
 
@@ -139,7 +137,7 @@ The following notation conventions are applied (\ **no exceptions!**\ ):
 
 
 No-abbreviations-rule
-=====================
+---------------------
 
 The code uses a \ **minimum set of abbreviations**\ ; however, the following abbreviation rules are used throughout:
 In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (short, 5-line member functions).
@@ -172,7 +170,7 @@ In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer(
 
 
 Implementation of new computational items in C++
-================================================
+------------------------------------------------
 
 This section should sketch which changes will be needed to integrate new C++ items.
 In general, it is recommended to first start with a Python implementation with user functions based on

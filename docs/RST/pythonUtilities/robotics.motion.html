@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: robotics.motion &mdash; Exudyn 1.5.95.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: robotics.special" href="robotics.special.html" />
+    <link rel="prev" title="Module: robotics.mobile" href="robotics.mobile.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics.motion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#class-profileconstantacceleration-in-module-robotics-motion">CLASS ProfileConstantAcceleration (in module robotics.motion)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-profilelinearaccelerationslist-in-module-robotics-motion">CLASS ProfileLinearAccelerationsList (in module robotics.motion)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-profileptp-in-module-robotics-motion">CLASS ProfilePTP (in module robotics.motion)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-trajectory-in-module-robotics-motion">CLASS Trajectory (in module robotics.motion)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: robotics.motion</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/pythonUtilities/robotics.motion.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-robotics-motion">
+<span id="sec-module-robotics-motion"></span><h1>Module: robotics.motion<a class="headerlink" href="#module-robotics-motion" title="Permalink to this heading"></a></h1>
+<p>functionality for motion including generation of trajectories with acceleration profiles,
+path planning and motion</p>
+<ul class="simple">
+<li><p>Author:    Johannes Gerstmayr</p></li>
+<li><p>Date:      2022-02-16</p></li>
+</ul>
+<section id="class-profileconstantacceleration-in-module-robotics-motion">
+<h2>CLASS ProfileConstantAcceleration (in module robotics.motion)<a class="headerlink" href="#class-profileconstantacceleration-in-module-robotics-motion" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>class to create a constant acceleration (optimal) PTP trajectory; trajectory ignores global max. velocities and accelerations</p>
+</div></blockquote>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">finalCoordinates</span></code>: list or numpy array with final coordinates for profile</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">duration</span></code>: duration (time) for profile</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns profile object, which is then used to compute interpolated trajectory</div>
+</div>
+</li>
+</ul>
+<p id="sec-motion-profileconstantacceleration-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L143">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">finalCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">duration</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize ProfileConstantAcceleration with vector of final coordinates and duration (time span)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-motion-profileconstantacceleration-getbasicprofile"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L148">GetBasicProfile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">initialTime</span></code>, <code class="docutils literal notranslate"><span class="pre">initialCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxVelocities</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxAccelerations</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return a class representing profile which is used in Trajectory</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py">serialRobotKinematicTreeDigging.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py">serialRobotTSD.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py">serialRobotTest.py</a> (TM)</p>
+</div></blockquote>
+</section>
+<section id="class-profilelinearaccelerationslist-in-module-robotics-motion">
+<h2>CLASS ProfileLinearAccelerationsList (in module robotics.motion)<a class="headerlink" href="#class-profilelinearaccelerationslist-in-module-robotics-motion" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>class to create a linear acceleration PTP profile, using a list of accelerations to define the profile; the (joint) coordinates and velocities are computed relative to values of previous profiles; ignores global max. accelerations and velocities of Trajectory</p>
+</div></blockquote>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">accelerationList: list of tuples (relativeTime, accelerationVector) in which relativeTime is the time relative to the start of the profile (first time must be zero!) and accelerationVector is the list of accelerations of this time point, which is then linearly interpolated</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns profile object, which is then used to compute interpolated trajectory in class Trajectory</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">profile</span> <span class="o">=</span> <span class="n">ProfileLinearAccelerationsList</span><span class="p">([(</span><span class="mi">0</span><span class="p">,[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">])])</span>
+</pre></div>
+</div>
+<p id="sec-motion-profilelinearaccelerationslist-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L169">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">accelerationList</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize ProfileLinearAccelerationsList with a list of tuples containing time and acceleration vector</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-motion-profilelinearaccelerationslist-getbasicprofile"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L179">GetBasicProfile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">initialTime</span></code>, <code class="docutils literal notranslate"><span class="pre">initialCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxVelocities</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxAccelerations</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return a class representing profile which is used in Trajectory</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="class-profileptp-in-module-robotics-motion">
+<h2>CLASS ProfilePTP (in module robotics.motion)<a class="headerlink" href="#class-profileptp-in-module-robotics-motion" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>class to create a synchronous motion PTP trajectory, using max. accelerations and max velocities; duration automatically computed</p>
+</div></blockquote>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">finalCoordinates</span></code>: list or numpy array with final coordinates for profile</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">maxVelocities</span></code>: list or numpy array with maximum velocities; may be empty list []; used if smaller than globalMaxVelocities</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">maxAccelerations</span></code>: list or numpy array with maximum accelerations; may be empty list []; used if smaller than globalMaxAccelerations</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns profile object, which is then used to compute interpolated trajectory</div>
+</div>
+</li>
+</ul>
+<p id="sec-motion-profileptp-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L196">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">finalCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">syncAccTimes</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">maxVelocities</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">maxAccelerations</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize ProfilePTP with final coordinates of motion, optionally max. velocities and accelerations just for this profile (overrides global settings)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-motion-profileptp-getbasicprofile"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L209">GetBasicProfile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">initialTime</span></code>, <code class="docutils literal notranslate"><span class="pre">initialCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxVelocities</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxAccelerations</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return a class representing profile which is used in Trajectory</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py">serialRobotTSD.py</a> (Ex)</p>
+</div></blockquote>
+</section>
+<section id="class-trajectory-in-module-robotics-motion">
+<h2>CLASS Trajectory (in module robotics.motion)<a class="headerlink" href="#class-trajectory-in-module-robotics-motion" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>class to define (PTP) trajectories for robots and multibody systems; trajectories are defined for a set of coordinates (e.g. joint angles or other coordinates which need to be interpolated over time)</p>
+</div></blockquote>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#create simple trajectory for two joint coordinates:</span>
+<span class="n">traj</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">initialTime</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#add optimal trajectory with max. accelerations:</span>
+<span class="n">traj</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ProfileConstantAcceleration</span><span class="p">([</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">],</span><span class="mf">2.</span><span class="p">))</span>
+<span class="n">traj</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ProfileConstantAcceleration</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">],</span><span class="mf">2.</span><span class="p">))</span>
+<span class="c1">#add profile with limited velocities and accelerations:</span>
+<span class="n">traj</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ProfilePTP</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">syncAccTimes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">maxVelocities</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">maxAccelerations</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">]))</span>
+<span class="c1">#now evaluate trajectory at certain time point (this could be now applied in a user function)</span>
+<span class="p">[</span><span class="n">s</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">Evaluate</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p id="sec-motion-trajectory-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L291">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">initialCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">initialTime</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">maxVelocities</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">maxAccelerations</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize robot link with parameters, being self-explaining</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">initialTime</span></code>: initial time for initial coordinates</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">initialCoordinates</span></code>: initial coordinates for profile</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">maxVelocities</span></code>: list or numpy array to describe global maximum velocities per coordinate</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">maxAccelerations</span></code>: list or numpy array to describe global maximum accelerations per coordinate</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-motion-trajectory-getfinalcoordinates"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L306">GetFinalCoordinates</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">returns the coordinates at the end of the (currently) Final profile</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-motion-trajectory-add"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L314">Add</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">profile</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">add successively profiles, using MotionProfile class</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-motion-trajectory-gettimes"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L321">GetTimes</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return vector of times of start/end of profiles</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-motion-trajectory-initialize"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L328">Initialize</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize some parameters for faster evaluation</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-motion-trajectory-evaluate"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L334">Evaluate</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return interpolation of trajectory for coordinates, velocities and accelerations at given time</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">[s, v, a] as numpy arrays representing coordinates, velocities and accelerations</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-motion-trajectory-evaluatecoordinate"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L355">EvaluateCoordinate</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">coordinate</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return interpolation of trajectory for coordinate, including velocity and acceleration coordinate at given time</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">[s, v, a] being scalar position, velocity and acceleration</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">faster for single coordinate than Evaluate(…)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-motion-trajectory-iter"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L371">__iter__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">iterator allows to use for x in trajectory: … constructs</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-motion-trajectory-getitem"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L375">__getitem__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">key</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">access to profiles via operator [], allowing trajectory[0], etc.</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-motion-trajectory-len"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L379">__len__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">allow using len(trajectory)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-motion-trajectory-repr"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L384">__repr__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">representation of Trajectory is given a list of profiles, allowing easy inspection of data</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py">serialRobotKinematicTreeDigging.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py">serialRobotTSD.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py">serialRobotTest.py</a> (TM)</p>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="robotics.mobile.html" class="btn btn-neutral float-left" title="Module: robotics.mobile" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="robotics.special.html" class="btn btn-neutral float-right" title="Module: robotics.special" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

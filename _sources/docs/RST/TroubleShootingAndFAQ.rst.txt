@@ -1,11 +1,9 @@
-
-------------------------
 Trouble shooting and FAQ
-------------------------
+========================
 
 
 Trouble shooting
-================
+----------------
 
 \ **Python import errors**\ :
 
@@ -223,7 +221,7 @@ which draws the according object in red and others gray/transparent (but sometim
 
  
 FAQ
-===
+---
 
 \ **Some frequently asked questions**\ :
 

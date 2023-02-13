@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: kinematicTree &mdash; Exudyn 1.5.95.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: lieGroupBasics" href="lieGroupBasics.html" />
+    <link rel="prev" title="Module: interactive" href="interactive.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: kinematicTree</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#class-kinematictree33-in-module-kinematictree">CLASS KinematicTree33 (in module kinematicTree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-kinematictree66-in-module-kinematictree">CLASS KinematicTree66 (in module kinematicTree)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: kinematicTree</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/pythonUtilities/kinematicTree.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-kinematictree">
+<span id="sec-module-kinematictree"></span><h1>Module: kinematicTree<a class="headerlink" href="#module-kinematictree" title="Permalink to this heading"></a></h1>
+<p>A library for preparation of minimum coordinates (kinematic tree) formulation.
+This library follows mostly the algorithms of Roy Featherstone, see <a class="reference external" href="http://royfeatherstone.org/">http://royfeatherstone.org/</a>
+His code is availble in MATLAB as well as described in the Springer Handbook of Robotics cite{Siciliano2016}.
+The main formalisms are based on 6x6 matrices, so-called Pluecker transformations, denoted as Plücker transformation, as defined by Featherstone.</p>
+<ul class="simple">
+<li><p>Author:    Johannes Gerstmayr</p></li>
+<li><p>Date:      2021-06-22</p></li>
+</ul>
+<p id="sec-kinematictree-masscominertia2t66"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L65">MassCOMinertia2T66</a>(<code class="docutils literal notranslate"><span class="pre">mass</span></code>, <code class="docutils literal notranslate"><span class="pre">centerOfMass</span></code>, <code class="docutils literal notranslate"><span class="pre">inertia</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">convert mass, COM and inertia into 6x6 inertia matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mass</span></code>: scalar mass</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">centerOfMass</span></code>: 3D vector (list/array)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">inertia</span></code>: 3x3 matrix (list of lists / 2D array) w.r.t. center of mass</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">6x6 numpy array for further use in minimum coordinates formulation</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-kinematictree-inertia2t66"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L74">Inertia2T66</a>(<code class="docutils literal notranslate"><span class="pre">inertia</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">convert inertia as produced with RigidBodyInertia class into 6x6 inertia matrix (as used in KinematicTree66, Featherstone / Handbook of robotics cite{Siciliano2016})</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">6x6 numpy array for further use in minimum coordinates formulation</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">within the 6x6 matrix, the inertia tensor is defined w.r.t.the center of mass, while RigidBodyInertia defines the inertia tensor w.r.t.the reference point; however, this function correctly transforms all quantities of inertia.</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-kinematictree-inertia66tomasscominertia"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L90">Inertia66toMassCOMinertia</a>(<code class="docutils literal notranslate"><span class="pre">inertia66</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">convert 6x6 inertia matrix into mass, COM and inertia</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">6x6 numpy array containing rigid body inertia according to Featherstone / Handbook of robotics cite{Siciliano2016}</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">[mass, centerOfMass, inertia]</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mass</span></code>: scalar mass</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">centerOfMass</span></code>: 3D vector (list/array)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">inertia</span></code>: 3x3 matrix (list of lists / 2D array) w.r.t. center of mass</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-kinematictree-jointtransformmotionsubspace66"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L111">JointTransformMotionSubspace66</a>(<code class="docutils literal notranslate"><span class="pre">jointType</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">return 6x6 Pluecker joint transformation matrix evaluated for scalar joint coordinate q and motion subspace (‘free modes’ in Table 2.6 in Handbook of robotics cite{Siciliano2016})</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-kinematictree-jointtransformmotionsubspace"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L132">JointTransformMotionSubspace</a>(<code class="docutils literal notranslate"><span class="pre">jointType</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">return list containing rotation matrix, translation vector, rotation axis and translation axis for joint transformation</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-kinematictree-crm"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L412">CRM</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">computes cross product operator for motion from 6D vector v; CRM(v) &#64; m computes the cross product of v and motion m</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-kinematictree-crf"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L421">CRF</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">computes cross product operator for force from 6D vector v; CRF(v) &#64; f computes the cross product of v and force f</div>
+</div>
+</li>
+</ul>
+<section id="class-kinematictree33-in-module-kinematictree">
+<h2>CLASS KinematicTree33 (in module kinematicTree)<a class="headerlink" href="#class-kinematictree33-in-module-kinematictree" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>class to define a kinematic tree in Python, which can be used for building serial or tree-structured multibody systems
+(or robots) with a minimum coordinates formulation, using rotation matrices and 3D offsets; for efficient computation, use the C++ ObjectKinematicTree</p>
+</div></blockquote>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">The formulation and structures widely follows the more efficient formulas (but still implemented in Python!) with 3D vectors and rotation matrices as proposed in Handbook of robotics cite{Siciliano2016}, Chapter 3, but with the rotation matrices (texttt{listOfRotations}) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Pluecker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing</div>
+</div>
+</li>
+</ul>
+<p id="sec-kinematictree-kinematictree33-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L158">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">listOfJointTypes</span></code>, <code class="docutils literal notranslate"><span class="pre">listOfRotations</span></code>, <code class="docutils literal notranslate"><span class="pre">listOfOffsets</span></code>, <code class="docutils literal notranslate"><span class="pre">listOfInertia3D</span></code>, <code class="docutils literal notranslate"><span class="pre">listOfCOM</span></code>, <code class="docutils literal notranslate"><span class="pre">listOfMass</span></code>, <code class="docutils literal notranslate"><span class="pre">listOfParents</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,-9.81]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize kinematic tree</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfJointTypes</span></code>: mandatory list of joint types ‘Rx’, ‘Ry’, ‘Rz’ denoting revolute joints; ‘Px’, ‘Py’, ‘Pz’, denoting prismatic joints</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfRotations</span></code>: per link rotation matrix, transforming coordinates of the joint coordinate system w.r.t. the previous coordinate system (this is the inverse of Pluecker coordinate transforms (6x6))</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfOffsets</span></code>: per link offset vector from pervious coordinate system to the joint coordinate system</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfInertia3D</span></code>: per link 3D inertia matrix, w.r.t.reference point (not COM!)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfCOM</span></code>: per link vector from reference point to center of mass (COM), in link coordinates</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfMass</span></code>: mass per link</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfParents</span></code>: list of parent object indices (int), according to the index in jointTypes and transformations; use empty list for kinematic chain and use -1 if no parent exists (parent=base or world frame)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">gravity</span></code>: a 3D list/array containing the gravity applied to the kinematic tree (in world frame)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-kinematictree-kinematictree33-size"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L199">Size</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return number of joints, defined by size of jointTypes</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-kinematictree-kinematictree33-xl"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L205">XL</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return [A, p] containing rotation matrix and offset for joint j</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-kinematictree-kinematictree33-forwarddynamicscrb"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L216">ForwardDynamicsCRB</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">q_t</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">torques</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">forces</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">compute forward dynamics using composite rigid body algorithm</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">q</span></code>: joint space coordinates for the model at which the forward dynamics is evaluated</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">q_t</span></code>: joint space velocity coordinates for the model at which the forward dynamics is evaluated</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">torques</span></code>: a vector of torques applied at joint coordinates or list/array with zero length</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">forces</span></code>: forces acting on the bodies using special format</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns acceleration vector q_tt of joint coordinates</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-kinematictree-kinematictree33-computemassmatrixandforceterms"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L237">ComputeMassMatrixAndForceTerms</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, <code class="docutils literal notranslate"><span class="pre">q_t</span></code>, <code class="docutils literal notranslate"><span class="pre">externalForces</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">compute generalized mass matrix M and generalized force terms for</div>
+<div class="line">kinematic tree, using current state (joint) variables q and</div>
+<div class="line">joint velocities q_t. The generalized force terms f = fGeneralized</div>
+<div class="line">contain Coriolis and gravity if given in the kinematicTree.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">q</span></code>: current joint coordinates</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">q_t</span></code>: current joint velocities</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">externalForces</span></code>: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">mass matrix <span class="math notranslate nohighlight">\(\Mm\)</span> and RHS vector <span class="math notranslate nohighlight">\(\fv_{RHS}\)</span> for equations of motion <span class="math notranslate nohighlight">\(M(q) \cdot q_tt + f(q,q_t,externalForces) = \tau\)</span>; RHS is <span class="math notranslate nohighlight">\(\fv_{RHS}=\tau - f(q,q_t,externalForces)\)</span>; <span class="math notranslate nohighlight">\(\tau\)</span> can be added outside of texttt{ComputeMassMatrixAndForceTerms}</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex)</p>
+</div></blockquote>
+</section>
+<section id="class-kinematictree66-in-module-kinematictree">
+<h2>CLASS KinematicTree66 (in module kinematicTree)<a class="headerlink" href="#class-kinematictree66-in-module-kinematictree" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>class to define a kinematic tree, which can be used for building serial or tree-structured multibody systems
+(or robots) with a minimum coordinates formulation, using Pluecker coordinate transforms (6x6); for efficient computation, use the C++ ObjectKinematicTree</p>
+</div></blockquote>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">The formulation and structures widely follow Roy Featherstone (<a class="reference external" href="http://royfeatherstone.org/">http://royfeatherstone.org/</a>) / Handbook of robotics cite{Siciliano2016}</div>
+</div>
+</li>
+</ul>
+<p id="sec-kinematictree-kinematictree66-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L440">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">listOfJointTypes</span></code>, <code class="docutils literal notranslate"><span class="pre">listOfTransformations</span></code>, <code class="docutils literal notranslate"><span class="pre">listOfInertias</span></code>, <code class="docutils literal notranslate"><span class="pre">listOfParents</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,-9.81]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize kinematic tree</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfJointTypes</span></code>: mandatory list of joint types ‘Rx’, ‘Ry’, ‘Rz’ denoting revolute joints; ‘Px’, ‘Py’, ‘Pz’, denoting prismatic joints</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfTransformations</span></code>: provide a list of Pluecker coordinate transforms (6x6 numpy matrices), describing the (constant) link transformation from the link coordinate system (previous/parent joint) to this joint coordinate system</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfInertias</span></code>: provide a list of inertias as (6x6 numpy matrices), as produced by the function MassCOMinertia2T66</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfParents</span></code>: list of parent object indices (int), according to the index in jointTypes and transformations; use empty list for kinematic chain and use -1 if no parent exists (parent=base or world frame)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">gravity</span></code>: a 3D list/array containing the gravity applied to the kinematic tree (in world frame)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-kinematictree-kinematictree66-size"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L469">Size</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return number of joints, defined by size of jointTypes</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-kinematictree-kinematictree66-xl"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L473">XL</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return 6D transformation of joint i, given by transformation</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-kinematictree-kinematictree66-forwarddynamicscrb"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L484">ForwardDynamicsCRB</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">q_t</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">torques</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">forces</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">compute forward dynamics using composite rigid body algorithm</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">q</span></code>: joint space coordinates for the model at which the forward dynamics is evaluated</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">q_t</span></code>: joint space velocity coordinates for the model at which the forward dynamics is evaluated</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">torques</span></code>: a vector of torques applied at joint coordinates or list/array with zero length</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">forces</span></code>: forces acting on the bodies using special format</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns acceleration vector q_tt of joint coordinates</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-kinematictree-kinematictree66-computemassmatrixandforceterms"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L505">ComputeMassMatrixAndForceTerms</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, <code class="docutils literal notranslate"><span class="pre">q_t</span></code>, <code class="docutils literal notranslate"><span class="pre">externalForces</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">compute generalized mass matrix M and generalized force terms for</div>
+<div class="line">kinematic tree, using current state (joint) variables q and</div>
+<div class="line">joint velocities q_t. The generalized force terms f = fGeneralized</div>
+<div class="line">contain Coriolis and gravity if given in the kinematicTree.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">q</span></code>: current joint coordinates</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">q_t</span></code>: current joint velocities</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">externalForces</span></code>: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">mass matrix <span class="math notranslate nohighlight">\(\Mm\)</span> and RHS vector <span class="math notranslate nohighlight">\(\fv_{RHS}\)</span> for equations of motion <span class="math notranslate nohighlight">\(M(q) \cdot q_tt + f(q,q_t,externalForces) = \tau\)</span>; RHS is <span class="math notranslate nohighlight">\(\fv_{RHS}=\tau - f(q,q_t,externalForces)\)</span>; <span class="math notranslate nohighlight">\(\tau\)</span> can be added outside of texttt{ComputeMassMatrixAndForceTerms}</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-kinematictree-kinematictree66-addexternalforces"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L579">AddExternalForces</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">Xup</span></code>, <code class="docutils literal notranslate"><span class="pre">fvp</span></code>, <code class="docutils literal notranslate"><span class="pre">externalForces</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">add action of external forces to forces fvp and return new composed vector of forces fvp</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Xup</span></code>: 6x6 transformation matrices per joint; as computed in ComputeMassMatrixAndForceTerms</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fvp</span></code>: force (torque) per joint, as computed in ComputeMassMatrixAndForceTerms</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">externalForces</span></code>: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex)</p>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="interactive.html" class="btn btn-neutral float-left" title="Module: interactive" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lieGroupBasics.html" class="btn btn-neutral float-right" title="Module: lieGroupBasics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

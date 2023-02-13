@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: processing &mdash; Exudyn 1.5.95.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: rigidBodyUtilities" href="rigidBodyUtilities.html" />
+    <link rel="prev" title="Module: plot" href="plot.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: processing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/pythonUtilities/processing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-processing">
+<span id="sec-module-processing"></span><h1>Module: processing<a class="headerlink" href="#module-processing" title="Permalink to this heading"></a></h1>
+<p>The processing module supports multiple execution of EXUDYN models.
+It includes parameter variation and (genetic) optimization functionality.</p>
+<ul class="simple">
+<li><p>Author:    Johannes Gerstmayr, Stefan Holzinger</p></li>
+<li><p>Date:      2020-11-17 (2022-02-04 modified by Stefan Holzinger)</p></li>
+<li><p>Notes:     Parallel processing, which requires multiprocessing library, can lead to considerable speedup (measured speedup factor &gt; 50 on 80 core machine). The progess bar during multiprocessing requires the library tqdm.</p></li>
+</ul>
+<p id="sec-processing-getversionplatformstring"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L25">GetVersionPlatformString</a>()</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">internal function to return Exudyn version string, which allows to identify how results have been obtained</div>
+<div class="line">writes something like ‘Exudyn version = 1.2.33.dev1; Python3.9.11; Windows AVX2 FLOAT64; Windows10 V10.0.19044; AMD64; Intel64 Family 6 Model 142 Stepping 10, GenuineIntel’</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">If exudyn C++ module is not available, it outputs the Python version</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-processing-processparameterlist"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L129">ProcessParameterList</a>(<code class="docutils literal notranslate"><span class="pre">parameterFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameterList</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span></code>, <code class="docutils literal notranslate"><span class="pre">clusterHostNames</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">processes parameterFunction for given parameters in parameterList, see ParameterVariation</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">parameterFunction</span></code>: function, which takes the form parameterFunction(parameterDict) and which returns any values that can be stored in a list (e.g., a floating point number)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">parameterList</span></code>: list of parameter sets (as dictionaries) which are fed into the parameter variation, e.g., [{‘mass’: 10}, {‘mass’:20}, …]</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">addComputationIndex</span></code>: if True, key ‘computationIndex’ is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter, etc.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span></code>: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfThreads</span></code>: default: same as number of cpus (threads); used for multiprocessing lib;</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">resultsFile</span></code>: if provided, output is immediately written to resultsFile during processing</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">clusterHostNames</span></code>: list of hostnames, e.g. clusterHostNames=[‘123.124.125.126’,’123.124.125.127’] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useDispyWebMonitor</span></code>: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns values containing the results according to parameterList</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">options are passed from Parametervariation</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-processing-parametervariation"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L308">ParameterVariation</a>(<code class="docutils literal notranslate"><span class="pre">parameterFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameters</span></code>, <code class="docutils literal notranslate"><span class="pre">useLogSpace</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">debugMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showProgress</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">parameterFunctionData</span> <span class="pre">=</span> <span class="pre">{}</span></code>, <code class="docutils literal notranslate"><span class="pre">clusterHostNames</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfThreads</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">resultsFile</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">calls successively the function parameterFunction(parameterDict) with variation of parameters in given range; parameterDict is a dictionary, containing the current values of parameters,</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">e.g.,</span> <span class="pre">parameterDict=['mass'</span></code>:13, ‘stiffness’:12000] to be computed and returns a value or a list of values which is then stored for each parameter</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">parameterFunction</span></code>: function, which takes the form parameterFunction(parameterDict) and which returns any values that can be stored in a list (e.g., a floating point number)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">parameters</span></code>: given as a dictionary, consist of name and tuple of (begin, end, numberOfValues) same as in np.linspace(…), e.g. ‘mass’:(10,50,10), for a mass varied from 10 to 50, using 10 steps OR a list of values [v0, v1, v2, …], e.g. ‘mass’:[10,15,25,50]</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useLogSpace</span></code>: (optional) if True, the parameters are varied at a logarithmic scale, e.g., [1, 10, 100] instead linear [1, 50.5, 100]</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">debugMode</span></code>: if True, additional print out is done</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">addComputationIndex</span></code>: if True, key ‘computationIndex’ is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter, etc.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span></code>: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showProgress</span></code>: if True, shows for every iteration the progress bar (requires tqdm library)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">resultsFile</span></code>: if provided, output is immediately written to resultsFile during processing</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfThreads</span></code>: default(None): same as number of cpus (threads); used for multiprocessing lib;</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">parameterFunctionData</span></code>: dictionary containing additional data passed to the parameterFunction inside the parameters with dict key ‘functionData’; use this e.g. for passing solver parameters or other settings</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">clusterHostNames</span></code>: list of hostnames, e.g. clusterHostNames=[‘123.124.125.126’,’123.124.125.127’] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useDispyWebMonitor</span></code>: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">returns</span> <span class="pre">[parameterList,</span> <span class="pre">values],</span> <span class="pre">containing,</span> <span class="pre">e.g.,</span> <span class="pre">parameterList={'mass'</span></code>:[1,1,1,2,2,2,3,3,3], ‘stiffness’:[4,5,6, 4,5,6, 4,5,6]} and the result values of the parameter variation accoring to the parameterList,</div>
+<div class="line">values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem …, can also contain tuples, etc.)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ParameterVariation</span><span class="p">(</span><span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;mass&#39;</span><span class="p">:(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="s1">&#39;stiffness&#39;</span><span class="p">:(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">10000</span><span class="p">,</span><span class="mi">10</span><span class="p">)},</span> <span class="n">parameterFunction</span><span class="o">=</span><span class="n">Test</span><span class="p">,</span> <span class="n">useMultiProcessing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/dispyParameterVariationExample.py">dispyParameterVariationExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/dispyParameterVariationExampleAlt.py">dispyParameterVariationExampleAlt.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py">parameterVariationExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py">geneticOptimizationTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-processing-geneticoptimization"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L435">GeneticOptimization</a>(<code class="docutils literal notranslate"><span class="pre">objectiveFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameters</span></code>, <code class="docutils literal notranslate"><span class="pre">populationSize</span> <span class="pre">=</span> <span class="pre">100</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfGenerations</span> <span class="pre">=</span> <span class="pre">10</span></code>, <code class="docutils literal notranslate"><span class="pre">elitistRatio</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">crossoverProbability</span> <span class="pre">=</span> <span class="pre">0.25</span></code>, <code class="docutils literal notranslate"><span class="pre">crossoverAmount</span> <span class="pre">=</span> <span class="pre">0.5</span></code>, <code class="docutils literal notranslate"><span class="pre">rangeReductionFactor</span> <span class="pre">=</span> <span class="pre">0.7</span></code>, <code class="docutils literal notranslate"><span class="pre">distanceFactor</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">childDistribution</span> <span class="pre">=</span> <span class="pre">&quot;uniform&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">distanceFactorGenerations</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">debugMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showProgress</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">clusterHostNames</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute minimum of given objectiveFunction</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">objectiveFunction</span></code>: function, which takes the form parameterFunction(parameterDict) and which returns a value or list (or numpy array) which reflects the size of the objective to be minimized</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">parameters</span></code>: given as a dictionary, consist of name and tuple containing the search range for this parameter (begin, end), e.g. ‘mass’:(10,50)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">populationSize</span></code>: individuals in every generation</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">initialPopulationSize</span></code>: number of random initial individuals; default: population size</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfGenerations</span></code>: number of generations; NOTE: it is required that elitistRatio*populationSize &gt;= 1</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">elitistRatio</span></code>: the number of surviving individuals in every generation is equal to the previous population times the elitistRatio</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">crossoverProbability</span></code>: if &gt; 0: children are generated from two (randomly selected) parents by gene-crossover; if 0, no crossover is used</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">crossoverAmount</span></code>: if crossoverProbability &gt; 0, then this amount is the probability of genes to cross; 0.1: small amount of genes cross, 0.5: 50% of genes cross</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rangeReductionFactor</span></code>: reduction of mutation range (boundary) relative to range of last generation; helps algorithm to converge to more accurate values</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">distanceFactor</span></code>: children only survive at a certain relative distance of the current range; must be small enough (&lt; 0.5) to allow individuals to survive; ignored if distanceFactor=0; as a rule of thumb, the distanceFactor should be zero in case that there is only one significant minimum, but if there are many local minima, the distanceFactor should be used to search at several different local minima</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">childDistribution</span></code>: string with name of distribution for producing childs: “normal” (Gaussian, with sigma defining range), “uniform” (exactly in range of childs)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">distanceFactorGenerations</span></code>: number of generations (populations) at which the distance factor is active; the distance factor is used to find several local minima; finally, convergence is speed up without the distance factor</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">randomizerInitialization</span></code>: initialize randomizer at beginning of optimization in order to get reproducible results, provide any integer in the range between 0 and 2**32 - 1 (default: no initialization)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">debugMode</span></code>: if True, additional print out is done</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">addComputationIndex</span></code>: if True, key ‘computationIndex’ is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter, etc.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span></code>: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showProgress</span></code>: if True, shows for every iteration the progress bar (requires tqdm library)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfThreads</span></code>: default: same as number of cpus (threads); used for multiprocessing lib;</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">resultsFile</span></code>: if provided, the results are stored columnwise into the given file and written after every generation; use resultsMonitor.py to track results in realtime</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">clusterHostNames</span></code>: list of hostnames, e.g. clusterHostNames=[‘123.124.125.126’,’123.124.125.127’] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useDispyWebMonitor</span></code>: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">returns [optimumParameter, optimumValue, parameterList, valueList], containing the optimum parameter set ‘optimumParameter’, optimum value ‘optimumValue’, the whole list of parameters parameterList with according objective values ‘valueList’</div>
+<div class="line">values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem …, can also contain tuples, etc.)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">This function is still under development and shows an experimental state!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">GeneticOptimization</span><span class="p">(</span><span class="n">objectiveFunction</span> <span class="o">=</span> <span class="n">fOpt</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;mass&#39;</span><span class="p">:(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="s1">&#39;stiffness&#39;</span><span class="p">:(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">10000</span><span class="p">)})</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py">geneticOptimizationSliderCrank.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py">geneticOptimizationTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-processing-minimize"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L794">Minimize</a>(<code class="docutils literal notranslate"><span class="pre">objectiveFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameters</span></code>, <code class="docutils literal notranslate"><span class="pre">initialGuess</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">method</span> <span class="pre">=</span> <span class="pre">'Nelder-Mead'</span></code>, <code class="docutils literal notranslate"><span class="pre">tol</span> <span class="pre">=</span> <span class="pre">1e-4</span></code>, <code class="docutils literal notranslate"><span class="pre">options</span> <span class="pre">=</span> <span class="pre">{}</span></code>, <code class="docutils literal notranslate"><span class="pre">enforceBounds</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">debugMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showProgress</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">storeFunctionValues</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Compute minimum of given objectiveFunction. This function is based on scipy.optimize.minimize() and it provides the same interface as GeneticOptimization().</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">objectiveFunction</span></code>: function, which takes the form parameterFunction(parameterDict) and which returns a value or list (or numpy array) which reflects the size of the objective to be minimized</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">parameters</span></code>: given as a dictionary, consist of name and tuple containing the search range for this parameter (begin, end), e.g. ‘mass’:(10,50)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">storeFunctionValues</span></code>: if True, objectiveFunction values are computed (additional costs!) and stored in every iteration into valueList</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">initialGuess</span></code>: initial guess. Array of real elements of size (n,), where ‘n’ is the number of independent variables. If not provided by the user, initialGuess is computed from bounds provided in parameterDict.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">method</span></code>: solver that should be used, e.g. ‘Nelder-Mead’, ‘Powell’, ‘CG’ etc. A list of available solvers can be found in the documentation of scipy.optimize.minimize().</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">tol</span></code>: tolerance for termination. When tol is specified, the selected minimization algorithm sets some relevant solver-specific tolerance(s) equal to tol. For detailed control, use solver-specific options using the ‘options’ variable.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">options</span></code>: dictionary of solver options. Can be used to set absolute and relative error tolerances. Detailed information can be found in the documentation of scipy.optimize.minimize().</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">enforceBounds</span></code>: if True, ensures that only parameters within the bounds specified in ParameterDict are used for minimization; this may help to avoid, e.g., negative values, but may lead to non-convergence</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">verbose</span></code>: prints solver information into console, e.g. number of iterations ‘nit’, number of funcion evaluations ‘nfev’, status etc.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showProgress</span></code>: if True, shows for every iteration objective function value, number of current iteration, time needed for current iteration, maximum number of iterations until solver option ‘maxiter’ is reached.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">addComputationIndex</span></code>: if True, key ‘computationIndex’ is added for consistency reasons with GeneticOptimizaiton to every parameterDict in the call to parameterFunction(); however, the value is always 0, because no multi threading is used in Minimize(…)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">resultsFile</span></code>: if provided, the results are stored columnwise into the given file and written after every generation; use resultsMonitor.py to track results in realtime</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useScipyBounds</span></code>: if True, use scipy.optimize.minimize() option ‘bounds’ to apply bounds on variable specified in ParameterDict. Note, this option is only used by some specific methods of scipy.optimize.minimize()! method=’Nelder-Mead’ ignores this option for example! if False, option ‘enforceBounds’ will be set to False!</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">args</span></code>: extra arguments passed to the objective function and its derivatives (fun, jac and hess functions).</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">jac</span></code>: method for computing the gradient vector.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">hess</span></code>: method for computing the Hessian matrix.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">hessp</span></code>: hessian of objective function times an arbitrary vector p.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">constraints</span></code>: constraints definition (only for COBYLA, SLSQP and trust-constr).</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns [optimumParameter, optimumValue, parameterList, valueList], containing the optimum parameter set ‘optimumParameter’, optimum value ‘optimumValue’, the whole list of parameters parameterList with according objective values ‘valueList’</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Stefan Holzinger, Johannes Gerstmayr</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">This function is still under development and shows an experimental state! There are currently unused arguments of scipy.optimize.minimize(): Detailed information can be found in the documentation of scipy.optimize.minimize().</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/minimizeExample.py">minimizeExample.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-processing-computesensitivities"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L994">ComputeSensitivities</a>(<code class="docutils literal notranslate"><span class="pre">parameterFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameters</span></code>, <code class="docutils literal notranslate"><span class="pre">scaledByReference</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">debugMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showProgress</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">parameterFunctionData</span> <span class="pre">=</span> <span class="pre">dict()</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">Perform a sensitivity analysis by successively calling the function parameterFunction(parameterList[i]) with a one at a time variation of parameters in the defined increments.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">e.g.,</span> <span class="pre">parameterList[0]</span> <span class="pre">=['mass'</span></code>:13, ‘stiffness’:12000] to be computed and returns a value or a list of values which is then stored for each parameter</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">parameterFunction</span></code>: function, which takes the form parameterFunction(parameterDict) and which returns one or more output values for which the sensitivity is calculated</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">parameters</span></code>: given as a dictionary, consist of name and tuple of (begin, Variation steps, numberOfValues) e.g. ‘mass’:(10,0.01,5), for a reference mass of 10, incremented by 0.01*10 and using 5 steps in negative and positive, doing 10 steps in total</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">scaledByReference</span></code>: if true multiplies the sensitivities with the corresponding reference parameters, so that the sensitivity resembles a change relative to the reference value</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">debugMode</span></code>: if True, additional information is shown</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">addComputationIndex</span></code>: if True, key ‘computationIndex’ is added to every parameterDict in the call to parameterFunction(), which allows to generate independent output files for every parameter etc.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span></code>: if True, the multiprocessing lib is used for parallelized computation; WARNING: be aware that the function does not check if your function runs independently; DO NOT use GRAPHICS and DO NOT write to same output files, etc.!</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showProgress</span></code>: if True, shows for every iteration the progress bar (requires tqdm library)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">resultsFile</span></code>: if provided, output is immediately written to resultsFile during processing</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfThreads</span></code>: default: same as number of cpus (threads); used for multiprocessing lib;</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">parameterFunctionData</span></code>: dictionary containing additional data passed to the parameterFunction inside the parameters with dict key ‘functionData’; use this e.g. for passing solver parameters or other settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns [parameterList, valRef, valuesSorted, sensitivity], parameterList containing the list of dictionaries processed. valRef is the Solution for the reference values paramList[0], valuesSorted contains the results sorted by the dictionary key that was varied in the simulation. The sensitivity contains the calculated sensitivity, where the rows are the corresponding outputparameters, while the columns are the input parameters, thereby the index sensitivity[1,0] is the sensitivity of output parameter 1 with respect to the input parameter 0.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Peter Manzl</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ComputeSensitivities</span><span class="p">(</span><span class="n">parameterFunction</span><span class="o">=</span><span class="n">ParameterFunction</span><span class="p">,</span> <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mass&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">mRef</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s1">&#39;spring&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">10</span><span class="p">),},</span> <span class="n">multiprocessing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py">ComputeSensitivitiesExample.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-processing-plotoptimizationresults2d"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L1104">PlotOptimizationResults2D</a>(<code class="docutils literal notranslate"><span class="pre">parameterList</span></code>, <code class="docutils literal notranslate"><span class="pre">valueList</span></code>, <code class="docutils literal notranslate"><span class="pre">xLogScale</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">yLogScale</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">visualize results of optimization for every parameter (2D plots)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">parameterList</span></code>: taken from output parameterList of texttt{GeneticOptimization}, containing a dictinary with lists of parameters</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">valueList</span></code>: taken from output valueList of texttt{GeneticOptimization}; containing a list of floats that result from the objective function</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">xLogScale</span></code>: use log scale for x-axis</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">yLogScale</span></code>: use log scale for y-axis</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">return [figList, axList] containing the corresponding handles; creates a figure for every parameter in parameterList</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py">geneticOptimizationSliderCrank.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/minimizeExample.py">minimizeExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py">geneticOptimizationTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-processing-plotsensitivityresults"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L1160">PlotSensitivityResults</a>(<code class="docutils literal notranslate"><span class="pre">valRef</span></code>, <code class="docutils literal notranslate"><span class="pre">valuesSorted</span></code>, <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code>, <code class="docutils literal notranslate"><span class="pre">fVar</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">strYAxis</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">visualize results of Sensitivityanalyis for every parameter (2D plots)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">valRef</span></code>: The output values of the reference solution</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">valuesSorted</span></code>: The output values of the analysed function sorted by the parameter which was varied</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">sensitivity</span></code>: The sensitivity Matrix calculated by the function texttt{ComputeSensitivities()}</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fVar</span></code>: The list of variation stepsizes. It is assumed to be 1e-3 if not defined.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">strYAxis</span></code>: A list of strings to label the plots yAxis</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">return [fig, axs] containing the corresponding handles; creates a subplot for every row in the sensitivity matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Peter Manzl</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py">ComputeSensitivitiesExample.py</a> (Ex)</p>
+</div></blockquote>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="plot.html" class="btn btn-neutral float-left" title="Module: plot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rigidBodyUtilities.html" class="btn btn-neutral float-right" title="Module: rigidBodyUtilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

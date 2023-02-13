@@ -1,0 +1,436 @@
+
+.. _sec-module-utilities:
+
+Module: utilities
+=================
+
+Basic support functions for simpler creation of Exudyn models.
+Advanced functions for loading and animating solutions and for drawing a graph of the mbs system.
+This library requires numpy (as well as time and copy)
+
+- Author:    Johannes Gerstmayr 
+- Date:      2019-07-26 (created) 
+
+
+.. _sec-utilities-ShowOnlyObjects:
+
+`ShowOnlyObjects <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L42>`__\ (\ ``mbs``\ , \ ``objectNumbers = []``\ , \ ``showOthers = False``\ )
+
+- | \ *function description*\ :
+  | function to hide all objects in mbs except for those listed in objectNumbers
+- | \ *input*\ :
+
+  | \ ``mbs``\ : mbs containing object
+  | \ ``objectNumbers``\ : integer object number or list of object numbers to be shown; if empty list [], then all objects are shown
+  | \ ``showOthers``\ : if True, then all other objects are shown again
+- | \ *output*\ :
+  | changes all colors in mbs, which is NOT reversible
+
+
+----
+
+.. _sec-utilities-HighlightItem:
+
+`HighlightItem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L64>`__\ (\ ``SC``\ , \ ``mbs``\ , \ ``itemNumber``\ , \ ``itemType = exudyn.ItemType.Object``\ , \ ``showNumbers = True``\ )
+
+- | \ *function description*\ :
+  | highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects
+- | \ *input*\ :
+
+  | \ ``mbs``\ : mbs containing object
+  | \ ``itemNumbers``\ : integer object/node/etc number to be highlighted
+  | \ ``itemType``\ : type of items to be highlighted
+  | \ ``showNumbers``\ : if True, then the numbers of these items are shown
+
+
+----
+
+.. _sec-utilities-UFsensorDistance:
+
+`\_\_UFsensorDistance <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L103>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
+
+- | \ *function description*\ :
+  | internal function used for AddDistanceSensor
+
+
+----
+
+.. _sec-utilities-AddDistanceSensor:
+
+`AddDistanceSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L163>`__\ (\ ``mbs``\ , \ ``generalContactIndex``\ , \ ``positionOrMarker``\ , \ ``dirSensor``\ , \ ``minDistance = -1e7``\ , \ ``maxDistance = 1e7``\ , \ ``cylinderRadius = 0``\ , \ ``selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList``\ , \ ``storeInternal = False``\ , \ ``fileName = ''``\ , \ ``measureVelocity = False``\ , \ ``addGraphicsObject = False``\ , \ ``drawDisplaced = True``\ )
+
+- | \ *function description*\ :
+  | Function to add distance sensor based on GeneralContact to mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
+- | \ *input*\ :
+
+  | \ ``generalContactIndex``\ : the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(...) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1
+  | \ ``positionOrMarker``\ : either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker
+  | \ ``dirSensor``\ : the direction (no need to normalize) along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation if marker contains orientation (BodyRigid, NodeRigid)
+  | \ ``minDistance``\ : the minimum distance which is accepted; smaller distance will be ignored
+  | \ ``maxDistance``\ : the maximum distance which is accepted; items being at maxDistance or futher are ignored; if no items are found, the function returns maxDistance
+  | \ ``cylinderRadius``\ : in case of spheres (selectedTypeIndex=ContactTypeIndex.IndexSpheresMarkerBased), a cylinder can be used which measures the shortest distance at a certain radius (geometrically interpreted as cylinder)
+  | \ ``selectedTypeIndex``\ : either this type has default value, meaning that all items in GeneralContact are measured, or there is a specific type index, which is the only type that is considered during measurement
+  | \ ``storeInternal``\ : like with any SensorUserFunction, setting to True stores sensor data internally
+  | \ ``fileName``\ : if defined, recorded data of SensorUserFunction is written to specified file
+  | \ ``measureVelocity``\ : if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction 'dirSensor' and does not account for changes in geometry, thus it may be different from the time derivative of the distance!
+  | \ ``addGraphicsObject``\ : if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
+  | \ ``drawDisplaced``\ : if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
+- | \ *output*\ :
+  | creates sensor and returns according sensor number of SensorUserFunction
+
+Relevant Examples (Ex) and TestModels (TM) with weblink:
+
+    \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TM)
+
+
+----
+
+.. _sec-utilities-UFsensorRecord:
+
+`UFsensorRecord <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L217>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
+
+- | \ *function description*\ :
+  | DEPRECATED: Internal SensorUserFunction, used in function AddSensorRecorder
+- | \ *notes*\ :
+  | Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
+
+
+----
+
+.. _sec-utilities-AddSensorRecorder:
+
+`AddSensorRecorder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L238>`__\ (\ ``mbs``\ , \ ``sensorNumber``\ , \ ``endTime``\ , \ ``sensorsWritePeriod``\ , \ ``sensorOutputSize = 3``\ )
+
+- | \ *function description*\ :
+  | DEPRECATED: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecord'+str(sensorNumber)] where sensorNumber is the mbs sensor number
+- | \ *input*\ :
+
+  | \ ``mbs``\ : mbs containing object
+  | \ ``sensorNumber``\ : integer sensor number to be recorded
+  | \ ``endTime``\ : end time of simulation, as given in simulationSettings.timeIntegration.endTime
+  | \ ``sensorsWritePeriod``\ : as given in simulationSettings.solutionSettings.sensorsWritePeriod
+  | \ ``sensorOutputSize``\ : size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)
+- | \ *output*\ :
+  | adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables['sensorRecord'+str(sensorNumber)] and the information is written row-wise: [time, sensorValue1, sensorValue2, ...]
+- | \ *notes*\ :
+  | Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
+
+Relevant Examples (Ex) and TestModels (TM) with weblink:
+
+    \ `ComputeSensitivitiesExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py>`_\  (Ex)
+
+
+----
+
+.. _sec-utilities-LoadSolutionFile:
+
+`LoadSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L265>`__\ (\ ``fileName``\ , \ ``safeMode = False``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ , \ ``hasHeader = True``\ )
+
+- | \ *function description*\ :
+  | read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:
+- | \ *input*\ :
+
+  | \ ``fileName``\ : string containing directory and filename of stored coordinatesSolutionFile
+  | \ ``saveMode``\ : if True, it loads lines directly to load inconsistent lines as well; use this for huge files (>2GB); is slower but needs less memory!
+  | \ ``verbose``\ : if True, some information is written when importing file (use for huge files to track progress)
+  | \ ``maxRows``\ : maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
+  | \ ``hasHeader``\ : set to False, if file is expected to have no header; if False, then some error checks related to file header are not performed
+- | \ *output*\ :
+  | dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
+
+Relevant Examples (Ex) and TestModels (TM) with weblink:
+
+    \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py>`_\  (Ex), \ `craneReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py>`_\  (Ex), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFgeneralContactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py>`_\  (TM)
+
+
+----
+
+.. _sec-utilities-NumpyInt8ArrayToString:
+
+`NumpyInt8ArrayToString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L396>`__\ (\ ``npArray``\ )
+
+- | \ *function description*\ :
+  | simple conversion of int8 arrays into strings (not highly efficient, so use only for short strings)
+
+
+----
+
+.. _sec-utilities-BinaryReadIndex:
+
+`BinaryReadIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L403>`__\ (\ ``file``\ , \ ``intType``\ )
+
+- | \ *function description*\ :
+  | read single Index from current file position in binary solution file
+
+
+----
+
+.. _sec-utilities-BinaryReadReal:
+
+`BinaryReadReal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L409>`__\ (\ ``file``\ , \ ``realType``\ )
+
+- | \ *function description*\ :
+  | read single Real from current file position in binary solution file
+
+
+----
+
+.. _sec-utilities-BinaryReadString:
+
+`BinaryReadString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L415>`__\ (\ ``file``\ , \ ``intType``\ )
+
+- | \ *function description*\ :
+  | read string from current file position in binary solution file
+
+
+----
+
+.. _sec-utilities-BinaryReadArrayIndex:
+
+`BinaryReadArrayIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L421>`__\ (\ ``file``\ , \ ``intType``\ )
+
+- | \ *function description*\ :
+  | read Index array from current file position in binary solution file
+
+
+----
+
+.. _sec-utilities-BinaryReadRealVector:
+
+`BinaryReadRealVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L428>`__\ (\ ``file``\ , \ ``intType``\ , \ ``realType``\ )
+
+- | \ *function description*\ :
+  | read Real vector from current file position in binary solution file
+- | \ *output*\ :
+  | return data as numpy array, or False if no data read
+
+
+----
+
+.. _sec-utilities-LoadBinarySolutionFile:
+
+`LoadBinarySolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L444>`__\ (\ ``fileName``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ )
+
+- | \ *function description*\ :
+  | read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary
+- | \ *input*\ :
+
+  | \ ``fileName``\ : string containing directory and filename of stored coordinatesSolutionFile
+  | \ ``verbose``\ : if True, some information is written when importing file (use for huge files to track progress)
+  | \ ``maxRows``\ : maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
+- | \ *output*\ :
+  | dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
+
+
+----
+
+.. _sec-utilities-RecoverSolutionFile:
+
+`RecoverSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L630>`__\ (\ ``fileName``\ , \ ``newFileName``\ , \ ``verbose = 0``\ )
+
+- | \ *function description*\ :
+  | recover solution file with last row not completely written (e.g., if crashed, interrupted or no flush file option set)
+- | \ *input*\ :
+
+  | \ ``fileName``\ : string containing directory and filename of stored coordinatesSolutionFile
+  | \ ``newFileName``\ : string containing directory and filename of new coordinatesSolutionFile
+  | \ ``verbose``\ : 0=no information, 1=basic information, 2=information per row
+- | \ *output*\ :
+  | writes only consistent rows of file to file with name newFileName
+
+
+----
+
+.. _sec-utilities-InitializeFromRestartFile:
+
+`InitializeFromRestartFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L686>`__\ (\ ``mbs``\ , \ ``simulationSettings``\ , \ ``restartFileName``\ , \ ``verbose = True``\ )
+
+- | \ *function description*\ :
+  | recover initial coordinates, time, etc. from given restart file
+- | \ *input*\ :
+
+  | \ ``mbs``\ : MainSystem to be operated with
+  | \ ``simulationSettings``\ : simulationSettings which is updated and shall be used afterwards for SolveDynamic(...) or SolveStatic(...)
+  | \ ``restartFileName``\ : string containing directory and filename of stored restart file, as given in solutionSettings.restartFileName
+  | \ ``verbose``\ : False=no information, True=basic information
+- | \ *output*\ :
+  | modifies simulationSettings and sets according initial conditions in mbs
+
+
+----
+
+.. _sec-utilities-SetSolutionState:
+
+`SetSolutionState <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L747>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``row``\ , \ ``configuration = exudyn.ConfigurationType.Current``\ , \ ``sendRedrawSignal = True``\ )
+
+- | \ *function description*\ :
+  | load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization
+
+
+----
+
+.. _sec-utilities-AnimateSolution:
+
+`AnimateSolution <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L779>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``createImages = False``\ , \ ``runLoop = False``\ )
+
+- | \ *function description*\ :
+  | This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result
+- | \ *input*\ :
+
+  | \ ``mbs``\ : the system used for animation
+  | \ ``solution``\ : solution dictionary previously loaded with LoadSolutionFile; will be played from first to last row
+  | \ ``rowIncrement``\ : can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)
+  | \ ``timeout``\ : in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second
+  | \ ``createImages``\ : creates consecutively images from the animation, which can be converted into an animation
+  | \ ``runLoop``\ : if True, the animation is played in a loop until 'q' is pressed in render window
+- | \ *output*\ :
+  | renders the scene in mbs and changes the visualization state in mbs continuously
+
+Relevant Examples (Ex) and TestModels (TM) with weblink:
+
+    \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `rigidRotor3Dnutation.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Dnutation.py>`_\  (Ex), \ `SliderCrank.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SliderCrank.py>`_\  (Ex), \ `slidercrankWithMassSpring.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/slidercrankWithMassSpring.py>`_\  (Ex), \ `switchingConstraintsPendulum.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/switchingConstraintsPendulum.py>`_\  (Ex), \ `sliderCrankFloatingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py>`_\  (TM)
+
+
+----
+
+.. _sec-utilities-DrawSystemGraph:
+
+`DrawSystemGraph <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L821>`__\ (\ ``mbs``\ , \ ``showLoads = True``\ , \ ``showSensors = True``\ , \ ``useItemNames = False``\ , \ ``useItemTypes = False``\ , \ ``addItemTypeNames = True``\ , \ ``multiLine = True``\ , \ ``fontSizeFactor = 1.``\ , \ ``layoutDistanceFactor = 3.``\ , \ ``layoutIterations = 100``\ , \ ``showLegend = True``\ )
+
+- | \ *function description*\ :
+  | helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!
+- | \ *input*\ :
+
+  | \ ``mbs``\ : MainSystem to be operated with
+  | \ ``showLoads``\ : toggle appearance of loads in mbs
+  | \ ``showSensors``\ : toggle appearance of sensors in mbs
+  | \ ``useItemNames``\ : if True, object names are shown instead of basic object types (Node, Load, ...)
+  | \ ``useItemTypes``\ : if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend
+  | \ ``addItemTypeNames``\ : if True, type nymes (Node, Load, etc.) are added
+  | \ ``multiLine``\ : if True, labels are multiline, improving readability
+  | \ ``fontSizeFactor``\ : use this factor to scale fonts, allowing to fit larger graphs on the screen with values < 1
+  | \ ``showLegend``\ : shows legend for different item types
+  | \ ``layoutDistanceFactor``\ : this factor influences the arrangement of labels; larger distance values lead to circle-like results
+  | \ ``layoutIterations``\ : more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
+- | \ *output*\ :
+  | [nx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw_networkx_labels(...)
+
+Relevant Examples (Ex) and TestModels (TM) with weblink:
+
+    \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py>`_\  (Ex), \ `rigidBodyTutorial2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial2.py>`_\  (Ex), \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py>`_\  (Ex)
+
+
+----
+
+.. _sec-utilities-CreateTCPIPconnection:
+
+`CreateTCPIPconnection <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1220>`__\ (\ ``sendSize``\ , \ ``receiveSize``\ , \ ``IPaddress = '127.0.0.1'``\ , \ ``port = 52421``\ , \ ``bigEndian = False``\ , \ ``verbose = False``\ )
+
+- | \ *function description*\ :
+
+  | function which has to be called before simulation to setup TCP/IP socket (server) for
+  | sending and receiving data; can be used to communicate with other Python interpreters
+  | or for communication with MATLAB/Simulink
+- | \ *input*\ :
+
+  | \ ``sendSize``\ : number of double values to be sent to TCPIP client
+  | \ ``receiveSize``\ : number of double values to be received from TCPIP client
+  | \ ``IPaddress``\ : string containing IP address of client (e.g., '127.0.0.1')
+  | \ ``port``\ : port for communication with client
+  | \ ``bigEndian``\ : if True, it uses bigEndian, otherwise littleEndian is used for byte order
+- | \ *output*\ :
+  | returns information (TCPIPdata class) on socket; recommended to store this in mbs.sys['TCPIPobject']
+- | \ *example*\ :
+
+.. code-block:: python
+
+  mbs.sys['TCPIPobject'] = CreateTCPIPconnection(sendSize=3, receiveSize=2,
+  bigEndian=True, verbose=True)
+  sampleTime = 0.01 #sample time in MATLAB! must be same!
+  mbs.variables['tLast'] = 0 #in case that exudyn makes finer steps than sample time
+  def PreStepUserFunction(mbs, t):
+  if t >= mbs.variables['tLast'] + sampleTime:
+  mbs.variables['tLast'] += sampleTime
+  tcp = mbs.sys['TCPIPobject']
+  y = TCPIPsendReceive(tcp, np.array([t, np.sin(t), np.cos(t)])) #time, torque
+  tau = y[1]
+  print('tau=',tau)
+  return True
+  try:
+  mbs.SetPreStepUserFunction(PreStepUserFunction)
+  #%%++++++++++++++++++++++++++++++++++++++++++++++++++
+  mbs.Assemble()
+  [...] #start renderer; simulate model
+  finally: #use this to always close connection, even in case of errors
+  CloseTCPIPconnection(mbs.sys['TCPIPobject'])
+  #*****************************************
+  #the following settings work between Python and MATLAB-Simulink (client), and gives stable results(with only delay of one step):
+  # TCP/IP Client Send:
+  #   priority = 2 (in properties)
+  #   blocking = false
+  #   Transfer Delay on (but off also works)
+  # TCP/IP Client Receive:
+  #   priority = 1 (in properties)
+  #   blocking = true
+  #   Sourec Data type = double
+  #   data size = number of double in packer
+  #   Byte order = BigEndian
+  #   timeout = 10
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink:
+
+    \ `TCPIPexudynMatlab.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py>`_\  (Ex)
+
+
+----
+
+.. _sec-utilities-TCPIPsendReceive:
+
+`TCPIPsendReceive <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1253>`__\ (\ ``TCPIPobject``\ , \ ``sendData``\ )
+
+- | \ *function description*\ :
+
+  | call this function at every simulation step at which you intend to communicate with
+  | other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
+- | \ *input*\ :
+
+  | \ ``TCPIPobject``\ : the object returned by CreateTCPIPconnection(...)
+  | \ ``sendData``\ : numpy array containing data (double array) to be sent; must agree with sendSize
+- | \ *output*\ :
+  | returns array as received from TCPIP
+- | \ *example*\ :
+
+.. code-block:: python
+
+  mbs.sys['TCPIPobject']=CreateTCPIPconnection(sendSize=2, receiveSize=1, IPaddress='127.0.0.1')
+  y = TCPIPsendReceive(mbs.sys['TCPIPobject'], np.array([1.,2.]))
+  print(y)
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink:
+
+    \ `TCPIPexudynMatlab.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py>`_\  (Ex)
+
+
+----
+
+.. _sec-utilities-CloseTCPIPconnection:
+
+`CloseTCPIPconnection <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1266>`__\ (\ ``TCPIPobject``\ )
+
+- | \ *function description*\ :
+  | close a previously created TCPIP connection
+
+Relevant Examples (Ex) and TestModels (TM) with weblink:
+
+    \ `TCPIPexudynMatlab.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py>`_\  (Ex)
+
+
+CLASS TCPIPdata (in module utilities)
+-------------------------------------
+**class description**: 
+
+    helper class for CreateTCPIPconnection and for TCPIPsendReceive
+    
+

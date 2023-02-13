@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: signalProcessing &mdash; Exudyn 1.5.95.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: solver" href="solver.html" />
+    <link rel="prev" title="Module: robotics.utilities" href="robotics.utilities.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: signalProcessing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/pythonUtilities/signalProcessing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-signalprocessing">
+<span id="sec-module-signalprocessing"></span><h1>Module: signalProcessing<a class="headerlink" href="#module-signalprocessing" title="Permalink to this heading"></a></h1>
+<p>The signal library supports processing of signals for import (e.g. measurement data)
+and for filtering result data.</p>
+<ul class="simple">
+<li><p>Date:      2020-12-10</p></li>
+<li><p>Notes:     This module is still under construction and should be used with care!</p></li>
+</ul>
+<p id="sec-signalprocessing-filtersensoroutput"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py#L25">FilterSensorOutput</a>(<code class="docutils literal notranslate"><span class="pre">signal</span></code>, <code class="docutils literal notranslate"><span class="pre">filterWindow</span> <span class="pre">=</span> <span class="pre">5</span></code>, <code class="docutils literal notranslate"><span class="pre">polyOrder</span> <span class="pre">=</span> <span class="pre">3</span></code>, <code class="docutils literal notranslate"><span class="pre">derivative</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">centralDifferentiate</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">filter output of sensors (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">signal</span></code>: numpy array (2D array with column-wise storage of signals, as exported by EXUDYN position, displacement, etc. sensors); first column = time, other columns = signals to operate on; note that it is assumed, that time devided in almost constant steps!</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">derivative</span></code>: 0=no derivative, 1=first derivative, 2=second derivative, etc. (&gt;2 only possible with filter)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">polyOrder</span></code>: order of polynomial for interpolation filtering</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">filterWindow</span></code>: if zero: produces unfiltered derivative; if positive, must be ODD integer {1,3,5,…} and &gt; polyOrder; filterWindow determines the length of the filter window (e.g., to get rid of noise)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">centralDifferentiate</span></code>: if True, it uses a central differentiation for first order, unfiltered derivatives; leads to less phase shift of signal!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">numpy array containing same columns, but with filtered signal and according derivatives</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFoutputTest.py">ANCFoutputTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py">objectFFRFreducedOrderAccelerations.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-signalprocessing-filtersignal"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py#L81">FilterSignal</a>(<code class="docutils literal notranslate"><span class="pre">signal</span></code>, <code class="docutils literal notranslate"><span class="pre">samplingRate</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">filterWindow</span> <span class="pre">=</span> <span class="pre">5</span></code>, <code class="docutils literal notranslate"><span class="pre">polyOrder</span> <span class="pre">=</span> <span class="pre">3</span></code>, <code class="docutils literal notranslate"><span class="pre">derivative</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">centralDifferentiate</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">filter 1D signal (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">signal</span></code>: 1D numpy array</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">samplingRate</span></code>: (time increment) of signal values, needed for derivatives</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">derivative</span></code>: 0=no derivative, 1=first derivative, 2=second derivative, etc. (&gt;2 only possible with filter)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">polyOrder</span></code>: order of polynomial for interpolation filtering</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">filterWindow</span></code>: if zero: produces unfiltered derivative; if positive, must be ODD integer {1,3,5,…} and &gt; polyOrder; filterWindow determines the length of the filter window (e.g., to get rid of noise)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">centralDifferentiate</span></code>: if True, it uses a central differentiation for first order, unfiltered derivatives; leads to less phase shift of signal!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">numpy array containing same columns, but with filtered signal and according derivatives</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py">objectFFRFreducedOrderAccelerations.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-signalprocessing-computefft"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py#L126">ComputeFFT</a>(<code class="docutils literal notranslate"><span class="pre">time</span></code>, <code class="docutils literal notranslate"><span class="pre">data</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">computes fast-fourier-transform (FFT) resulting in frequency, magnitude and phase of signal data using numpy.fft of numpy</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">time … time vector in SECONDS in numpy format, having constant sampling rate (not checked!)</div>
+<div class="line">data … data vector in numpy format</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">frequency … frequency vector (Hz, if time is in SECONDS)</div>
+<div class="line">magnitude … magnitude vector</div>
+<div class="line">phase     … phase vector (in radiant)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>author</em>:</div>
+<div class="line">Stefan Holzinger</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>date</em>:</div>
+<div class="line">02.04.2020</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-signalprocessing-getinterpolatedsignalvalue"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py#L163">GetInterpolatedSignalValue</a>(<code class="docutils literal notranslate"><span class="pre">time</span></code>, <code class="docutils literal notranslate"><span class="pre">dataArray</span></code>, <code class="docutils literal notranslate"><span class="pre">timeArray</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">timeArrayIndex</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">dataArrayIndex</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">rangeWarning</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-6</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Interpolate signal having time values with constant sampling rate in timeArray and according data in dataArray</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">time</span></code>: time at which the data should be evaluated</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">dataArray</span></code>: 1D numpy array containing data values to be interpolated [alternatively: 2D numpy array, rows containg the data of the according time point; use dataArrayColumnIndex to specify the column of requested data]</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">timeArray</span></code>: 1D numpy array containing time values with CONSTANT SAMPLING RATE to be interpolated [alternatively: 2D numpy array, rows containg the time and data of the according time point; use timeArrayColumnIndex to specify the column representing time]; if timeArray is empty list [], dataArray is used instead!</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rangeWarning</span></code>: print warning if resulting index gets out of range</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">dataArrayColumnIndex</span></code>: in case of 2D arrays, this represents the column of the requested data</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">timeArrayColumnIndex</span></code>: in case of 2D arrays, this represents the column of time values</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">tolerance</span></code>: this tolerance is used to check, if the timeArray has equidistant interpolation and if the found indices are correct; use e.g. 1e10 in order to ignore this tolerance</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">interpolated value</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">for interpolation of data WITHOUT constant data rate, use numpy.interp(time, timeArray, dataArray) in case that timeArray and dataArray are 1D arrays</div>
+</div>
+</li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="robotics.utilities.html" class="btn btn-neutral float-left" title="Module: robotics.utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="solver.html" class="btn btn-neutral float-right" title="Module: solver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

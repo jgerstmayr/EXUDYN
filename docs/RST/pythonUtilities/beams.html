@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: beams &mdash; Exudyn 1.5.95.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: FEM" href="FEM.html" />
+    <link rel="prev" title="Module: basicUtilities" href="basicUtilities.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: beams</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/pythonUtilities/beams.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-beams">
+<span id="sec-module-beams"></span><h1>Module: beams<a class="headerlink" href="#module-beams" title="Permalink to this heading"></a></h1>
+<p>Beam utility functions, e.g. for creation of sequences of straight or curved beams.</p>
+<ul class="simple">
+<li><p>Author:    Johannes Gerstmayr</p></li>
+<li><p>Date:      2022-01-30 (created)</p></li>
+<li><p>Notes:        For a list of plot colors useful for matplotlib, see also utilities.PlotLineCode(…)</p></li>
+</ul>
+<p id="sec-beams-generatestraightlineancfcable2d"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L37">GenerateStraightLineANCFCable2D</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode0</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode1</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfElements</span></code>, <code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber0</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber1</span> <span class="pre">=</span> <span class="pre">-1</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">generate cable elements along straight line with certain discretization</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the system where ANCF cables are added</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">positionOfNode0</span></code>: 3D position (list or np.array) for starting point of line</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">positionOfNode1</span></code>: 3D position (list or np.array) for end point of line</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfElements</span></code>: for discretization of line</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>: a ObjectANCFCable2D object, containing the desired cable properties; cable length and node numbers are set automatically</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span></code>: a 3D list or np.array, containing the gravity vector or zero</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span></code>: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span></code>: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">nodeNumber0</span></code>: if set other than -1, this node number defines the node that shall be used at positionOfNode0</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">nodeNumber1</span></code>: if set other than -1, this node number defines the node that shall be used at positionOfNode1</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns a list [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">see</span> <span class="n">Examples</span><span class="o">/</span><span class="n">ANCF_cantilever_test</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py">ANCFALEtest.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_cantilever_test.py">ANCF_cantilever_test.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py">beltDriveALE.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py">beltDriveReevingSystem.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py">beltDrivesComparison.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py">ANCFbeltDrive.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py">ANCFgeneralContactCircle.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFmovingRigidBodyTest.py">ANCFmovingRigidBodyTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-beams-generatecirculararcancfcable2d"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L145">GenerateCircularArcANCFCable2D</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOfNode0</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span></code>, <code class="docutils literal notranslate"><span class="pre">startAngle</span></code>, <code class="docutils literal notranslate"><span class="pre">arcAngle</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfElements</span></code>, <code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber0</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber1</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">setCurvedReferenceConfiguration</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">verboseMode</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">generate cable elements along circular arc with given start point, radius, start angle (measured relative to <span class="math notranslate nohighlight">\(x\)</span>-axis, in positive rotation sense) and angle of arc</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the system where ANCF cables are added</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">positionOfNode0</span></code>: 3D position (list or np.array) for starting point of line</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">radius</span></code>: radius of arc</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">startAngle</span></code>: start angle of arc in radians  (<span class="math notranslate nohighlight">\(0 \ldots 2 \pi\)</span>), defines the direction of the slope vector, measured relative to <span class="math notranslate nohighlight">\(x\)</span>-axis, in positive rotation sense</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">arcAngle</span></code>: total angle of arc in radians (<span class="math notranslate nohighlight">\(0 \ldots 2 \pi\)</span>), measured in positive rotation sense (negative angle reverts curvature and center point of circle)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfElements</span></code>: for discretization of arc</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>: a ObjectANCFCable2D object, containing the desired cable properties; cable length and node numbers are set automatically</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span></code>: a 3D list or np.array, containing the gravity vector or zero</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span></code>: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span></code>: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">nodeNumber0</span></code>: if set other than -1, this node number defines the node that shall be used at positionOfNode0</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">nodeNumber1</span></code>: if set other than -1, this node number defines the node that shall be used at positionOfNode1</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">setCurvedReferenceConfiguration</span></code>: if True, the curvature +/-(1/radius) is set as a reference configuration (sign depends on arcAngle); if False, the reference configuration is straight</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">verboseMode</span></code>: if True, prints out information on created nodes</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns a list [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py">ANCFbeltDrive.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py">ANCFgeneralContactCircle.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-beams-createreevingcurve"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L299">CreateReevingCurve</a>(<code class="docutils literal notranslate"><span class="pre">circleList</span></code>, <code class="docutils literal notranslate"><span class="pre">drawingLinesPerCircle</span> <span class="pre">=</span> <span class="pre">64</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfANCFnodes</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">removeLastLine</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">removeFirstLine</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">radialOffset</span> <span class="pre">=</span> <span class="pre">0.</span></code>, <code class="docutils literal notranslate"><span class="pre">closedCurve</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsElementsPerCircle</span> <span class="pre">=</span> <span class="pre">64</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsNodeSize</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">colorCircles</span> <span class="pre">=</span> <span class="pre">[0.,0.5,1.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">colorLines</span> <span class="pre">=</span> <span class="pre">[1.,0.5,0.,1.]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">CreateReevingCurve for creating the geometry of a reeving system based on circles with radius and left/right side of passing the circles; left/right is seen in the direction passing from one to the next circle</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">circleList</span></code>: list containing center position, radius and ‘L’ (left) or ‘R’ (right) passing of circle</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">radialOffset</span></code>: additional offset added to circles to account for half height of rope or beam</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">closedCurve</span></code>: if True, the system adds circleList[0] and  circleList[1] at end of list and sets removeLastLine=True and removeFirstLine=False, in order to generate a closed curve according to given circles; furthermore, the number of nodes becomes equal to the number of elements in this case</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">drawingLinesPerCircle</span></code>: number of lines in lineData per one revolution</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfANCFnodes</span></code>: if not -1, function also generates nodes with equidistant distribution along curve!</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">graphicsElementsPerCircle</span></code>: number of drawing lines generated in graphicsDataLines per circle revolution (larger generates better approximation of circles)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">graphicsNodeSize</span></code>: if not 0, addes graphics representation of nodes generated; for check if mesh is correct</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">removeFirstLine</span></code>: removes first line generated, which may be unwanted</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">removeLastLine</span></code>: removes last line generated, which may be unwanted</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">colorCircles</span></code>: RGBA color for circles</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">colorLines</span></code>: RGBA color for lines</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">return a dictionary with {‘ancfPointsSlopes’:ancfPointsSlopes, ‘elementLengths’:elementLengths, ‘elementCurvatures’:elementCurvatures, ‘totalLength’:totalLength, ‘circleData’:circle2D, ‘graphicsDataLines’:graphicsDataLines, ‘graphicsDataCircles’:graphicsDataCircles }; ‘ancfPointsSlopes’ denotes 4-dimensional vector with (x/y) position and (x/y) slope coordinates in a row; ‘elementLengths’ is the list of curved lengths for elements between nodes (size is 1 smaller than number of nodes), ‘elementCurvatures’ is the list of scalar curvatures between nodes (according to list of elementLengths), ‘totalLength’ is the total length of the reeving line, ‘circleData’ represents the lines and arcs calculated for the reeving system, ‘graphicsDataLines’ is the graphicsData for the lines and ‘graphicsDataCircles’ represents the graphicsData for the circles</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#list with circle center, radius and side at which rope runs</span>
+<span class="n">circleList</span> <span class="o">=</span> <span class="p">[[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.2</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">],</span>
+<span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="mf">0.2</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">],</span>
+<span class="p">[[</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">],</span><span class="mf">0.4</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">],</span>
+<span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.2</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">],</span>
+<span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.2</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">],</span>
+<span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="mf">0.2</span><span class="p">,</span><span class="s1">&#39;L&#39;</span><span class="p">],</span>
+<span class="p">]</span>
+<span class="p">[]</span> <span class="o">=</span> <span class="n">CreateReevingCurve</span><span class="p">(</span><span class="n">circleList</span><span class="p">,</span>
+<span class="n">removeLastLine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="c1">#allows closed curve</span>
+<span class="n">numberOfANCFnodes</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py">beltDriveALE.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py">beltDriveReevingSystem.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py">beltDrivesComparison.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystem.py">reevingSystem.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-beams-pointsandslopes2ancfcable2d"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L528">PointsAndSlopes2ANCFCable2D</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">ancfPointsSlopes</span></code>, <code class="docutils literal notranslate"><span class="pre">elementLengths</span></code>, <code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span> <span class="pre">=</span> <span class="pre">[0,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">firstNodeIsLastNode</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">elementCurvatures</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsSizeConstraints</span> <span class="pre">=</span> <span class="pre">-1</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Create nodes and ANCFCable2D elements in MainSystem mbs from a given set of nodes, elements lengths and a template for the cable, based on output of function CreateReevingCurve(…); function works similar to GenerateStraightLineANCFCable2D, but for arbitrary geometry (curved elements); optionally add loads and constraints</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the system where ANCF elements and nodes are added</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">ancfPointsSlopes</span></code>: list of position and slopes for nodes, provided as 4D numpy arrays, as returned by CreateReevingCurve(…)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">elementLengths</span></code>: list of element lengths per element, as returned by CreateReevingCurve(…)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">cableTemplate</span></code>: a ObjectANCFCable2D object, containing the desired cable properties; cable length and node numbers are set automatically</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">massProportionalLoad</span></code>: a 3D list or np.array, containing the gravity vector to be applied to all elements or zero</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span></code>: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode1</span></code>: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">firstNodeIsLastNode</span></code>: if True, then the last node is using the node number of the first node and the curve is closed; otherwise, the first and last nodes are different, and the curve is open</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">elementCurvatures</span></code>: optional list of pre-curvatures of elements, used to override the cableTemplate entry ‘physicsReferenceCurvature’; use 0. for straight lines!</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">graphicsSizeConstraints</span></code>: if set other than -1, it will be used as the size for drawing applied coordinate constraints</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns a list [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py">beltDriveALE.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py">beltDriveReevingSystem.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py">beltDrivesComparison.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reevingSystem.py">reevingSystem.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-beams-generateslidingjoint"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L612">GenerateSlidingJoint</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">cableObjectList</span></code>, <code class="docutils literal notranslate"><span class="pre">markerBodyPositionOfSlidingBody</span></code>, <code class="docutils literal notranslate"><span class="pre">localMarkerIndexOfStartCable</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">slidingCoordinateStartPosition</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">generate a sliding joint from a list of cables, marker to a sliding body, etc.</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFslidingAndALEjointTest.py">ANCFslidingAndALEjointTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-beams-generatealeslidingjoint"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py#L638">GenerateAleSlidingJoint</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">cableObjectList</span></code>, <code class="docutils literal notranslate"><span class="pre">markerBodyPositionOfSlidingBody</span></code>, <code class="docutils literal notranslate"><span class="pre">AleNode</span></code>, <code class="docutils literal notranslate"><span class="pre">localMarkerIndexOfStartCable</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">AleSlidingOffset</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">activeConnector</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">penaltyStiffness</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">generate an ALE sliding joint from a list of cables, marker to a sliding body, etc.</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFslidingAndALEjointTest.py">ANCFslidingAndALEjointTest.py</a> (TM)</p>
+</div></blockquote>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="basicUtilities.html" class="btn btn-neutral float-left" title="Module: basicUtilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="FEM.html" class="btn btn-neutral float-right" title="Module: FEM" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

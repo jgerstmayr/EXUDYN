@@ -1,7 +1,5 @@
-
-------------------------------
 Run a simple example in Python
-------------------------------
+==============================
 
 After performing the steps of the previous section, this section shows a simplistic model which helps you to check if Exudyn runs on your computer.
 

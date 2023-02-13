@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: solver &mdash; Exudyn 1.5.95.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: utilities" href="utilities.html" />
+    <link rel="prev" title="Module: signalProcessing" href="signalProcessing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: solver</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/pythonUtilities/solver.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-solver">
+<span id="sec-module-solver"></span><h1>Module: solver<a class="headerlink" href="#module-solver" title="Permalink to this heading"></a></h1>
+<p>The solver module provides interfaces to static, dynamic and eigenvalue solvers.
+Most of the solvers are implemented inside the C++ core.</p>
+<ul class="simple">
+<li><p>Author:    Johannes Gerstmayr</p></li>
+<li><p>Date:      2020-12-02</p></li>
+<li><p>Notes:     Solver functions are included directly in exudyn and can be used with exu.SolveStatic(…)</p></li>
+</ul>
+<p id="sec-solver-solvererrormessage"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L22">SolverErrorMessage</a>(<code class="docutils literal notranslate"><span class="pre">solver</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">isStatic</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingObjects</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingNodes</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">helper function for unique error and helper messages</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-solver-solvestatic"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L151">SolveStatic</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">updateInitialValues</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">storeSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingItems</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver; NOTE that this function is directly available from exudyn (using exudyn.SolveStatic(…))</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: specific simulation settings out of exu.SimulationSettings(), as described in refSection{sec:SolutionSettings}; use options for newton, discontinuous settings, etc., from staticSolver sub-items</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">updateInitialValues</span></code>: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">storeSolver</span></code>: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys[‘staticSolver’], and simulationSettings are stored as mbs.sys[‘simulationSettings’]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf refSection{sec:solverSubstructures} and the items described in refSection{sec:MainSolverStatic})</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>
+<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>
+<span class="c1">#create simple system:</span>
+<span class="n">ground</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">ObjectGround</span><span class="p">())</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePoint</span><span class="p">())</span>
+<span class="n">body</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">MassPoint</span><span class="p">(</span><span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">m0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">MarkerBodyPosition</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">ground</span><span class="p">))</span>
+<span class="n">m1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">MarkerBodyPosition</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">body</span><span class="p">))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">CartesianSpringDamper</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">m0</span><span class="p">,</span><span class="n">m1</span><span class="p">],</span> <span class="n">stiffness</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">]))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">AddLoad</span><span class="p">(</span><span class="n">LoadForceVector</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">m1</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">]))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">Assemble</span><span class="p">()</span>
+<span class="n">sims</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SimulationSettings</span><span class="p">()</span>
+<span class="n">sims</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">success</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SolveStatic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sims</span><span class="p">,</span> <span class="n">storeSolver</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;success =&quot;</span><span class="p">,</span> <span class="n">success</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;iterations = &quot;</span><span class="p">,</span> <span class="n">mbs</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;staticSolver&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">it</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pos=&quot;</span><span class="p">,</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetObjectOutputBody</span><span class="p">(</span><span class="n">body</span><span class="p">,</span><span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="n">variableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="n">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/3SpringsDistance.py">3SpringsDistance.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCF_pipe.py">ALEANCF_pipe.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py">ANCFALEtest.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_cantilever_test.py">ANCF_cantilever_test.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_contact_circle.py">ANCF_contact_circle.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py">ANCFBeam3Dtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py">ANCFbeltDrive.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py">ANCFcontactCircleTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-solver-solvedynamic"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L214">SolveDynamic</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">solverType</span> <span class="pre">=</span> <span class="pre">exudyn.DynamicSolverType.GeneralizedAlpha</span></code>, <code class="docutils literal notranslate"><span class="pre">updateInitialValues</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">storeSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingItems</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">solves the dynamic mbs problem using simulationSettings and solver type; check theDoc.pdf for MainSolverImplicitSecondOrder for further details of the dynamic solver; NOTE that this function is directly available from exudyn (using exudyn.SolveDynamic(…))</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: specific simulation settings out of exu.SimulationSettings(), as described in refSection{sec:SolutionSettings}; use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special refSection{secSpeedUp})</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">solverType</span></code>: use exudyn.DynamicSolverType to set specific solver (default=generalized alpha)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">updateInitialValues</span></code>: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">storeSolver</span></code>: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys[‘staticSolver’], and simulationSettings are stored as mbs.sys[‘simulationSettings’]</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showHints</span></code>: show additional hints, if solver fails</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showCausingItems</span></code>: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf refSection{sec:solverSubstructures} and the items described in refSection{sec:MainSolverStatic})</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>
+<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>
+<span class="c1">#create simple system:</span>
+<span class="n">ground</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">ObjectGround</span><span class="p">())</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePoint</span><span class="p">())</span>
+<span class="n">body</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">MassPoint</span><span class="p">(</span><span class="n">physicsMass</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">m0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">MarkerBodyPosition</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">ground</span><span class="p">))</span>
+<span class="n">m1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">MarkerBodyPosition</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">body</span><span class="p">))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">CartesianSpringDamper</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">m0</span><span class="p">,</span><span class="n">m1</span><span class="p">],</span> <span class="n">stiffness</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">]))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">AddLoad</span><span class="p">(</span><span class="n">LoadForceVector</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">m1</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">]))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="n">Assemble</span><span class="p">()</span>
+<span class="n">sims</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SimulationSettings</span><span class="p">()</span>
+<span class="n">sims</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">success</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">sims</span><span class="p">,</span> <span class="n">storeSolver</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;success =&quot;</span><span class="p">,</span> <span class="n">success</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;iterations = &quot;</span><span class="p">,</span> <span class="n">mbs</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;dynamicSolver&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">it</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pos=&quot;</span><span class="p">,</span> <span class="n">mbs</span><span class="o">.</span><span class="n">GetObjectOutputBody</span><span class="p">(</span><span class="n">body</span><span class="p">,</span><span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="n">variableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="n">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/3SpringsDistance.py">3SpringsDistance.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCF_pipe.py">ALEANCF_pipe.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py">ANCFALEtest.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py">ANCFBeam3DeigTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py">ANCFBeam3Dtest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-solver-computelinearizedsystem"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L304">ComputeLinearizedSystem</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute linearized system of equations for ODE2 part of mbs, not considering the effects of algebraic constraints</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem containing the assembled system</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useSparseSolver</span></code>: if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!); Currently, the matrices are exported only in DENSE MODE from mbs! NOTE that the sparsesolver accuracy is much less than the dense solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">[M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#take any example from the Examples or TestModels folder, e.g., &#39;cartesianSpringDamper.py&#39; and run it</span>
+<span class="c1">#then execute the following commands in the console (or add it to the file):</span>
+<span class="p">[</span><span class="n">M</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">D</span><span class="p">]</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">ComputeLinearizedSystem</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;M=&quot;</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;K=&quot;</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py">ANCFBeam3DeigTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py">ANCFBeam3Dtest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-solver-computeode2eigenvalues"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L352">ComputeODE2Eigenvalues</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfEigenvalues</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">constrainedCoordinates</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">convert2Frequencies</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useAbsoluteValues</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute eigenvalues for unconstrained ODE2 part of mbs, not considering the effects of algebraic constraints; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState,SetSystemState, see refSection{sec:mbs:systemData}); note that mass and stiffness matrix are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem containing the assembled system</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useSparseSolver</span></code>: if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!); Currently, the matrices are exported only in DENSE MODE from mbs! NOTE that the sparsesolver accuracy is much less than the dense solver</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfEigenvalues</span></code>: number of eigenvalues and eivenvectors to be computed; if numberOfEigenvalues==0, all eigenvalues will be computed (may be impossible for larger problems!)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">constrainedCoordinates</span></code>: if this list is non-empty, the integer indices represent constrained coordinates of the system, which are fixed during eigenvalue/vector computation; according rows/columns of mass and stiffness matrices are erased</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">convert2Frequencies</span></code>: if True, the eigen values are converted into frequencies (Hz) and the output is [eigenFrequencies, eigenVectors]</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useAbsoluteValues</span></code>: if True, abs(eigenvalues) is used, which avoids problems for small (close to zero) eigen values; needed, when converting to frequencies</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">[eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values (<span class="math notranslate nohighlight">\(\omega_i^2\)</span>, being the squared eigen frequencies in (<span class="math notranslate nohighlight">\(\omega_i\)</span> in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#take any example from the Examples or TestModels folder, e.g., &#39;cartesianSpringDamper.py&#39; and run it</span>
+<span class="c1">#then execute the following commands in the console (or add it to the file):</span>
+<span class="p">[</span><span class="n">values</span><span class="p">,</span> <span class="n">vectors</span><span class="p">]</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">ComputeODE2Eigenvalues</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;eigenvalues=&quot;</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+<span class="c1">#==&gt;values contains the eigenvalues of the ODE2 part of the system in the current configuration</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py">nMassOscillatorInteractive.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py">ANCFBeam3DeigTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py">ANCFBeam3Dtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py">computeODE2EigenvaluesTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-solver-checksolverinfostatistics"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L435">CheckSolverInfoStatistics</a>(<code class="docutils literal notranslate"><span class="pre">solverName</span></code>, <code class="docutils literal notranslate"><span class="pre">infoStat</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfEvaluations</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">helper function for solvers to check e.g. if high number of memory allocations happened during simulation</div>
+<div class="line">This can happen, if large amount of sensors are attached and output is written in every time step</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">stat=exudyn.InfoStat() from previous step, numberOfEvaluations is a counter which is proportional to number of RHS evaluations in method</div>
+</div>
+</li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="signalProcessing.html" class="btn btn-neutral float-left" title="Module: signalProcessing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="utilities.html" class="btn btn-neutral float-right" title="Module: utilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

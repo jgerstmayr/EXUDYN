@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: artificialIntelligence &mdash; Exudyn 1.5.95.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: basicUtilities" href="basicUtilities.html" />
+    <link rel="prev" title="Python Utility Functions" href="pythonUtilities.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: artificialIntelligence</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#class-openaigyminterfaceenv-in-module-artificialintelligence">CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: artificialIntelligence</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/pythonUtilities/artificialIntelligence.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-artificialintelligence">
+<span id="sec-module-artificialintelligence"></span><h1>Module: artificialIntelligence<a class="headerlink" href="#module-artificialintelligence" title="Permalink to this heading"></a></h1>
+<p>This library collects interfaces and functionality for artificial intelligence
+This library is under construction (2022-05);
+To make use of this libraries, you need to install openAI gym with ‘pip install gym’;
+For standard machine learning algorithms, install e.g. stable_baselines3 using ‘pip install stable_baselines3’</p>
+<ul class="simple">
+<li><p>Author:    Johannes Gerstmayr</p></li>
+<li><p>Date:      2022-05-21 (created)</p></li>
+</ul>
+<section id="class-openaigyminterfaceenv-in-module-artificialintelligence">
+<h2>CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)<a class="headerlink" href="#class-openaigyminterfaceenv-in-module-artificialintelligence" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>interface class to set up Exudyn model which can be used as model in open AI gym;
+see specific class functions which contain ‘OVERRIDE’ to integrate your model;
+in general, set up a model with CreateMBS(), map state to initial values, initial values to state and action to mbs;</p>
+</div></blockquote>
+<p id="sec-artificialintelligence-openaigyminterfaceenv-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L35">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">internal function to initialize model; store self.mbs and self.simulationSettings; special arguments **kwargs are passed to CreateMBS</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-artificialintelligence-openaigyminterfaceenv-creatembs"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L69">CreateMBS</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">SC</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">OVERRIDE this function to create multibody system mbs and setup simulationSettings; call Assemble() at the end!</div>
+<div class="line">you may also change SC.visualizationSettings() individually; kwargs may be used for special setup</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-artificialintelligence-openaigyminterfaceenv-setupspaces"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L73">SetupSpaces</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">OVERRIDE this function to set up self.action_space and self.observation_space</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-artificialintelligence-openaigyminterfaceenv-mapaction2mbs"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L78">MapAction2MBS</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">action</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">OVERRIDE this function to map the action given by learning algorithm to the multibody system, e.g. as a load parameter</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-artificialintelligence-openaigyminterfaceenv-output2stateanddone"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L83">Output2StateAndDone</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">OVERRIDE this function to collect output of simulation and map to self.state tuple</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">return bool done which contains information if system state is outside valid range</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-artificialintelligence-openaigyminterfaceenv-state2initialvalues"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L89">State2InitialValues</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">OVERRIDE this function to maps the current state to mbs initial values</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">return [initialValues, initialValues_t] where initialValues[_t] are ODE2 vectors of coordinates[_t] for the mbs</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-artificialintelligence-openaigyminterfaceenv-testmodel"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L107">TestModel</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfSteps</span> <span class="pre">=</span> <span class="pre">500</span></code>, <code class="docutils literal notranslate"><span class="pre">seed</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">model</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">solutionFileName</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">useRenderer</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">sleepTime</span> <span class="pre">=</span> <span class="pre">0.01</span></code>, <code class="docutils literal notranslate"><span class="pre">stopIfDone</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showTimeSpent</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">test model by running in simulation environment having several options</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfSteps</span></code>: number of steps to test MBS and model (with or without learned model); with renderer, press ‘Q’ in render window to stop simulation</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">seed</span></code>: seed value for reset function; this value initializes the randomizer; use e.g. time to obtain non-reproducible results</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">model</span></code>: either None to just test the MBS model without learned model, or containing a learned model, e.g., with A2C; use A2C.save(…) and A2C.load(…) for storing and retrieving models</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">solutionFileName</span></code>: if given, the MBS internal states are written to the file with given name, which can be loaded with solution viewer and visualized; solution is written every period given in simulationSettings.solutionSettings.solutionWritePeriod</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">useRenderer</span></code>: if set True, the internal renderer is used and model updates are shown in visualization of Exudyn</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">return_info</span></code>: internal value in reset function</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">sleepTime</span></code>: sleep time between time steps to obtain certain frame rate for visualization</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">stopIfDone</span></code>: if set to True, the simulation will reset as soon as the defined observation limits are reached and done is set True</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showTimeSpent</span></code>: if True, the total time spent is measured; this helps to check the performance of the model (e.g. how many steps can be computed per second)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-artificialintelligence-openaigyminterfaceenv-setsolver"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L142">SetSolver</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">solverType</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">use solverType = exudyn.DynamicSolverType.[…] to define solver (choose between implicit and explicit solvers!)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-artificialintelligence-openaigyminterfaceenv-preinitializesolver"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L168">PreInitializeSolver</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">internal function which initializes dynamic solver; adapt in special cases; this function has some overhead and should not be called during reset() or step()</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-artificialintelligence-openaigyminterfaceenv-integratestep"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L175">IntegrateStep</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">internal function which is called to solve for one step</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-artificialintelligence-openaigyminterfaceenv-step"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L195">step</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">action</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">openAI gym interface function which is called to compute one step</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-artificialintelligence-openaigyminterfaceenv-reset"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L236">reset</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">seed:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">return_info:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">options:</span> <span class="pre">Optional[dict]</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">openAI gym function which resets the system</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-artificialintelligence-openaigyminterfaceenv-render"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L270">render</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">=</span> <span class="pre">&quot;human&quot;</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">openAI gym interface function to render the system</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-artificialintelligence-openaigyminterfaceenv-close"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L276">close</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">openAI gym interface function to close system after learning or simulation</div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pythonUtilities.html" class="btn btn-neutral float-left" title="Python Utility Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="basicUtilities.html" class="btn btn-neutral float-right" title="Module: basicUtilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

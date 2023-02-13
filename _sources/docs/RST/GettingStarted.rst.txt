@@ -1,7 +1,5 @@
-
----------------
 Getting started
----------------
+===============
 
 This section will show:
 
@@ -15,7 +13,7 @@ This section will show:
 
 
 What is Exudyn ?
-================
+----------------
 
 Exudyn --  (fl\ **EX**\ ible m\ **U**\ ltibody \ **DYN**\ amics  -- \ **EX**\ tend yo\ **U**\ r \ **DYN**\ amics)
 
@@ -30,7 +28,7 @@ The multibody formulation is mainly based on redundant coordinates. This means t
 For details on the interaction of nodes, objects, markers and loads see theDoc.pdf.
 
 Developers of Exudyn and thanks
-===============================
+-------------------------------
 
 Exudyn is currently  developed at the University of Innsbruck.
 In the first phase most of the core code is written by Johannes Gerstmayr, implementing ideas that followed out of the project HOTINT . 15 years of development led to a lot of lessons learned and after 20 years, a code must be re-designed.

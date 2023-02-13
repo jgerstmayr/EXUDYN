@@ -1,7 +1,5 @@
-
-----------------
 Module structure
-----------------
+================
  
 This section will show:
 
@@ -25,7 +23,7 @@ For an introduction to the solvers, see theDoc.pdf.
 
 
 Overview of modules
-===================
+-------------------
 
 Currently, the Exudyn module structure is split into a C++ core part and a set of 
 Python parts.
@@ -73,7 +71,7 @@ Python parts.
 
 
 Conventions: items, indexes, coordinates
-========================================
+----------------------------------------
 
 In this documentation, we will use the term \ **item**\  to identify nodes, objects, markers, loads and sensors:
 

@@ -1,7 +1,5 @@
-
--------------
 Exudyn Basics
--------------
+=============
  
 This section will show:
 
@@ -15,7 +13,7 @@ This section will show:
 
 
 Interaction with the Exudyn module
-==================================
+----------------------------------
 
 It is important that the Exudyn module is basically a state machine, where you create items on the C++ side using the Python interface. This helps you to easily set up models using many other Python modules (numpy, sympy, matplotlib, ...) while the computation will be performed in the end on the C++ side in a very efficient manner. 
 
@@ -31,7 +29,7 @@ The system will be prepared for simulation by \ ``mbs.Assemble()``\  and can be 
 Using \ ``mbs.Reset()``\  will clear the system and allows to set up a new system. Items can be modified (\ ``ModifyObject(...)``\ ) after first initialization, even during simulation.
 
 Simulation settings
-===================
+-------------------
 
 The simulation settings consists of a couple of substructures, e.g., for \ ``solutionSettings``\ , \ ``staticSolver``\ , \ ``timeIntegration``\  as well as a couple of general options -- for details see Sections [theDoc.pdf] -- [theDoc.pdf].
 
@@ -65,7 +63,7 @@ Hereafter, values of the structure can be modified, e.g.,
 
 
 Generating output and results
-=============================
+-----------------------------
 
 The solvers provide a number of options in \ ``solutionSettings``\  to generate a solution file. As a default, exporting the solution of all system coordinates (on position, velocity, ... level) to the solution file is activated with a writing period of 0.01 seconds.
 
@@ -95,7 +93,7 @@ position, forces or joint data. For viewing sensor results, use the \ ``PlotSens
 
 
 Visualization settings dialog
-=============================
+-----------------------------
 
 
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
@@ -163,7 +161,7 @@ The visualization settings structure can be accessed in the system container \ `
 
 
 Renderer and 3D graphics
-========================
+------------------------
 
 A 3D renderer is attached to the simulation. Visualization is started with  \ ``exu.StartRenderer()``\ , see the examples and tutorials.
 The renderer uses an OpenGL window of a library called GLFW, which is platform-independent. 
@@ -192,7 +190,7 @@ Depending on your model (size, place, ...), you may need to adjust the following
 
 
 Graphics pipeline
-=================
+-----------------
 
 There are basically two loops during simulation, which feed the graphics pipeline.
 The solver runs a loop:
@@ -213,7 +211,7 @@ The openGL graphics thread (=separate thread) runs the following loop:
 
 
 Storing the model view
-======================
+----------------------
 
 
 There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \ ``SC.GetRenderState()``\  and \ ``SC.SetRenderState()``\ ,
@@ -278,7 +276,7 @@ see also theDoc.pdf.
 
 
 Graphics user functions via Python
-==================================
+----------------------------------
 
 There are some user functions in order to customize drawing:
 
@@ -289,7 +287,7 @@ There are some user functions in order to customize drawing:
 Note that all kinds of \ ``graphicsDataUserFunction``\ s need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the \ ``graphicsDataUserFunction``\  between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.
 
 Color, RGBA and alpha-transparency
-==================================
+----------------------------------
 
 Many functions and objects include color information. In order to allow alpha-transparency, all colors contain a list of 4 RGBA values, all values being in the range [0..1]:
 
@@ -301,7 +299,7 @@ Many functions and objects include color information. In order to allow alpha-tr
 E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in \ ``exudynGraphicsDataUtilities.py``\ , e.g., \ ``color4red``\  or \ ``color4steelblue``\  as well a list of 16 colors \ ``color4list``\ , which is convenient to be used in a loop creating objects.
 
 Solution viewer
-===============
+---------------
 
 
 Exudyn offers a convenient WYSIWYS -- 'What you See is What you Simulate' interface, showing you the computation results during simulation in the render window.
@@ -350,7 +348,7 @@ An example for the \ ``SolutionViewer``\  is integrated into the \ ``Examples/``
 \ **Note**\ : The previous function \ ``AnimateSolution``\  in \ ``exudyn.utilities``\  allows to directly visualize the stored solution for according stored time frames without \ ``tkinter``\  (useful for MacOS).
 
 Generating animations
-=====================
+---------------------
 
 
 In many dynamics simulations, it is very helpful to create animations in order to better understand the motion of bodies. Specifically, the animation can be used to visualize the model much slower or faster than the model is computed.
@@ -371,7 +369,7 @@ To create animation files, an external tool FFMPEG is used to efficiently conver
 
 
 Examples, test models and test suite
-====================================
+------------------------------------
 
 
 
@@ -401,7 +399,7 @@ However, the output of the performance tests is not stored on github.
 We are trying hard to achieve error-free algorithms of physically correct models, but there may always be some errors in the code.
 
 Removing convergence problems and solver failures
-=================================================
+-------------------------------------------------
 
 
 Nonlinear formulations (such as most multibody systems, especially nonlinear finite elements) cause problems and there is no general nonlinear solver which may reliably and accurately solve such problems.
@@ -424,7 +422,7 @@ The following hints shall be followed (also some solver hints).
 
 
 Performance and ways to speed up computations
-=============================================
+---------------------------------------------
 
 
 Multibody dynamics simulation should be accurate and reliable on the one hand side. Most solver settings are such that they lead to comparatively reliable results.

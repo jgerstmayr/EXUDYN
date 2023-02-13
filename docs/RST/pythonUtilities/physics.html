@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: physics &mdash; Exudyn 1.5.95.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: plot" href="plot.html" />
+    <link rel="prev" title="Module: lieGroupBasics" href="lieGroupBasics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: physics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/pythonUtilities/physics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-physics">
+<span id="sec-module-physics"></span><h1>Module: physics<a class="headerlink" href="#module-physics" title="Permalink to this heading"></a></h1>
+<p>The physics library includes helper functions and data related to physics
+models and parameters; for rigid body inertia, see rigidBodyUtilities</p>
+<ul class="simple">
+<li><p>Date:      2021-01-20</p></li>
+</ul>
+<p id="sec-physics-stribeckfunction"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L29">StribeckFunction</a>(<code class="docutils literal notranslate"><span class="pre">vel</span></code>, <code class="docutils literal notranslate"><span class="pre">muDynamic</span></code>, <code class="docutils literal notranslate"><span class="pre">muStaticOffset</span></code>, <code class="docutils literal notranslate"><span class="pre">muViscous</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">expVel</span> <span class="pre">=</span> <span class="pre">1e-3</span></code>, <code class="docutils literal notranslate"><span class="pre">regVel</span> <span class="pre">=</span> <span class="pre">1e-3</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">describes regularized Stribeck function with optial viscous part for given velocity,</div>
+<div class="line"><span class="math notranslate nohighlight">\(f(v) = \begin{cases} (\mu_d + \mu_{s_{off}}) v, \quad \mathrm{if} \quad |v| &lt;= v_{reg}\\ \mathrm{Sign}(v)\left( \mu_d + \mu_{s_{off}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} + \mu_v (|v|-v_{reg}) \right), \quad \mathrm{else}\end{cases}\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">vel</span></code>: input velocity <span class="math notranslate nohighlight">\(v\)</span></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">muDynamic</span></code>: dynamic friction coefficient <span class="math notranslate nohighlight">\(\mu_d\)</span></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">muStaticOffset</span></code>: <span class="math notranslate nohighlight">\(\mu_{s_{off}}\)</span>, offset to dynamic friction, which gives muStaticFriction = muDynamic + muStaticOffset</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">muViscous</span></code>: <span class="math notranslate nohighlight">\(\mu_v\)</span>, viscous part, acting proportional to velocity except for regVel</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">regVel</span></code>: <span class="math notranslate nohighlight">\(v_{reg}\)</span>,  small regularization velocity in which the friction is linear around zero velocity (e.g., to get Newton converged)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">expVel</span></code>: <span class="math notranslate nohighlight">\(v_{exp}\)</span>,  velocity (relative to regVel, at which the muStaticOffset decreases exponentially, at vel=expVel, the factor to muStaticOffset is exp(-1) = 36.8%)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns velocity dependent friction coefficient (if muDynamic and muStaticOffset are friction coefficients) or friction force (if muDynamic and muStaticOffset are on force level)</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py">massSpringFrictionInteractive.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-physics-regularizedfrictionstep"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L38">RegularizedFrictionStep</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">x0</span></code>, <code class="docutils literal notranslate"><span class="pre">h0</span></code>, <code class="docutils literal notranslate"><span class="pre">x1</span></code>, <code class="docutils literal notranslate"><span class="pre">h1</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">helper function for RegularizedFriction(…)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-physics-regularizedfriction"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L59">RegularizedFriction</a>(<code class="docutils literal notranslate"><span class="pre">vel</span></code>, <code class="docutils literal notranslate"><span class="pre">muDynamic</span></code>, <code class="docutils literal notranslate"><span class="pre">muStaticOffset</span></code>, <code class="docutils literal notranslate"><span class="pre">velStatic</span></code>, <code class="docutils literal notranslate"><span class="pre">velDynamic</span></code>, <code class="docutils literal notranslate"><span class="pre">muViscous</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">describes regularized friction function, with increased static friction, dynamic friction and optional viscous part</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">vel</span></code>: input velocity</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">muDynamic</span></code>: dynamic friction coefficient</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">muStaticOffset</span></code>: offset to dynamic friction, which gives muStaticFriction = muDynamic + muStaticOffset</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">muViscous</span></code>: viscous part, acting proportional to velocity for velocities larger than velDynamic; extension to mentioned references</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">velStatic</span></code>: small regularization velocity at which exactly the staticFriction is reached; for smaller velocities, the friction is smooth and zero-crossing (unphysical!) (e.g., to get Newton converged)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">velDynamic</span></code>: velocity at which muDynamic is reached for first time</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns velocity dependent friction coefficient (if muDynamic and muStaticOffset are friction coefficients) or friction force (if muDynamic and muStaticOffset are on force level)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">see references: Flores et al. cite{Flores2008}, Qian et al. cite{Qian2018}</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py">massSpringFrictionInteractive.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-physics-vonmisesstress"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L77">VonMisesStress</a>(<code class="docutils literal notranslate"><span class="pre">stress6D</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute equivalent von-Mises stress given 6 stress components or list of stress6D (or stress6D in rows of np.array)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">stress6D: 6 stress components as list or np.array, using ordering <span class="math notranslate nohighlight">\([\sigma_{xx}\)</span>, <span class="math notranslate nohighlight">\([\sigma_{yy}\)</span>, <span class="math notranslate nohighlight">\([\sigma_{zz}\)</span>, <span class="math notranslate nohighlight">\([\sigma_{yz}\)</span>, <span class="math notranslate nohighlight">\([\sigma_{xz}\)</span>, <span class="math notranslate nohighlight">\([\sigma_{xy}]\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns scalar equivalent von-Mises stress or np.array of von-Mises stresses for all stress6D</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-physics-ufvonmisesstress"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L100">UFvonMisesStress</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorNumbers</span></code>, <code class="docutils literal notranslate"><span class="pre">factors</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Sensor user function to compute equivalent von-Mises stress from sensor with Stress or StressLocal OutputVariableType; if more than 1 sensor is given in sensorNumbers, then the maximum stress is computed</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">arguments according to texttt{SensorUserFunction}; factors are ignored</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns scalar (maximum) equivalent von-Mises stress</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#assuming s0, s1, s2 being sensor numbers with StressLocal components</span>
+<span class="n">sUser</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddSensor</span><span class="p">(</span><span class="n">SensorUserFunction</span><span class="p">(</span><span class="n">sensorNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">s0</span><span class="p">,</span><span class="n">s1</span><span class="p">,</span><span class="n">s2</span><span class="p">],</span>
+<span class="n">fileName</span><span class="o">=</span><span class="s1">&#39;solution/sensorMisesStress.txt&#39;</span><span class="p">,</span>
+<span class="n">sensorUserFunction</span><span class="o">=</span><span class="n">UFvonMisesStress</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lieGroupBasics.html" class="btn btn-neutral float-left" title="Module: lieGroupBasics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plot.html" class="btn btn-neutral float-right" title="Module: plot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

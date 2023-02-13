@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: robotics &mdash; Exudyn 1.5.95.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: robotics.future" href="robotics.future.html" />
+    <link rel="prev" title="Module: rigidBodyUtilities" href="rigidBodyUtilities.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#class-vrobotlink-in-module-robotics">CLASS VRobotLink (in module robotics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-robotlink-in-module-robotics">CLASS RobotLink (in module robotics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-vrobottool-in-module-robotics">CLASS VRobotTool (in module robotics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-robottool-in-module-robotics">CLASS RobotTool (in module robotics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-vrobotbase-in-module-robotics">CLASS VRobotBase (in module robotics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-robotbase-in-module-robotics">CLASS RobotBase (in module robotics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-robot-in-module-robotics">CLASS Robot (in module robotics)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: robotics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/pythonUtilities/robotics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-robotics">
+<span id="sec-module-robotics"></span><h1>Module: robotics<a class="headerlink" href="#module-robotics" title="Permalink to this heading"></a></h1>
+<p>A library which includes support functions for robotics;
+the library is built on standard Denavit-Hartenberg Parameters and
+Homogeneous Transformations (HT) to describe transformations and coordinate systems;
+import this library e.g. with import exudyn.robotics as robotics</p>
+<ul class="simple">
+<li><p>Author:    Johannes Gerstmayr</p></li>
+<li><p>Date:      2020-04-14</p></li>
+<li><p>Example:      New robot model uses the class Robot with class RobotLink; the old dictionary structure is defined in the example in ComputeJointHT for the definition of the ‘robot’ dictionary.</p></li>
+</ul>
+<p id="sec-roboticscore-stddh2ht"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1026">StdDH2HT</a>(<code class="docutils literal notranslate"><span class="pre">DHparameters</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute homogeneous transformation matrix HT from standard DHparameters=[theta, d, a, alpha]</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py">serialRobotKinematicTreeDigging.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py">serialRobotTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-roboticscore-moddhkk2ht"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1048">ModDHKK2HT</a>(<code class="docutils literal notranslate"><span class="pre">DHparameters</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute pre- and post- homogeneous transformation matrices from modified Denavit-Hartenberg DHparameters=[alpha, d, theta, r]; returns [HTpre, HTpost]; HTpre is transformation before axis rotation, HTpost includes axis rotation and everything hereafter; modified DH-Parameters according to Khalil and Kleinfinger, 1986</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-roboticscore-constantaccelerationparameters"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1062">ConstantAccelerationParameters</a>(<code class="docutils literal notranslate"><span class="pre">duration</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Compute parameters for optimal trajectory using given duration and distance</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">duration in seconds and distance in meters or radians</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns [vMax, accMax] with maximum velocity and maximum acceleration to achieve given trajectory</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">DEPRECATED, DO NOT USE - moved to robotics.motion</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-constantaccelerationprofile"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1076">ConstantAccelerationProfile</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">tStart</span></code>, <code class="docutils literal notranslate"><span class="pre">sStart</span></code>, <code class="docutils literal notranslate"><span class="pre">duration</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Compute angle / displacement s, velocity v and acceleration a</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">t</span></code>: current time to compute values</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">tStart</span></code>: start time of profile</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">sStart</span></code>: start offset of path</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">duration</span></code>: duration of profile</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">distance</span></code>: total distance (of path) of profile</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">[s, v, a] with path s, velocity v and acceleration a for constant acceleration profile; before tStart, solution is [0,0,0] while after duration, solution is [sStart+distance, 0, 0]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">DEPRECATED, DO NOT USE - moved to robotics.motion</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-motioninterpolator"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1119">MotionInterpolator</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">robotTrajectory</span></code>, <code class="docutils literal notranslate"><span class="pre">joint</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Compute joint value, velocity and acceleration for given robotTrajectory[‘PTP’] of point-to-point type, evaluated for current time t and joint number</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">t</span></code>: time to evaluate trajectory</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robotTrajectory</span></code>: dictionary to describe trajectory; in PTP case, either use ‘time’ points, or ‘time’ and ‘duration’, or ‘time’ and ‘maxVelocity’ and ‘maxAccelerations’ in all consecutive points; ‘maxVelocities’ and ‘maxAccelerations’ must be positive nonzero values that limit velocities and accelerations;</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">joint</span></code>: joint number for which the trajectory shall be evaluated</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">for current time t it returns [s, v, a] with path s, velocity v and acceleration a for current acceleration profile; outside of profile, it returns [0,0,0] !</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">DEPRECATED, DO NOT USE - moved to robotics.motion</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">q0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#initial configuration</span>
+<span class="n">q1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#other configuration</span>
+<span class="n">PTP</span> <span class="o">=</span><span class="p">[]</span>
+<span class="n">PTP</span><span class="o">+=</span><span class="p">[{</span><span class="s1">&#39;q&#39;</span><span class="p">:</span><span class="n">q0</span><span class="p">,</span>
+<span class="s1">&#39;time&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}]</span>
+<span class="n">PTP</span><span class="o">+=</span><span class="p">[{</span><span class="s1">&#39;q&#39;</span><span class="p">:</span><span class="n">q1</span><span class="p">,</span>
+<span class="s1">&#39;time&#39;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">}]</span>
+<span class="n">PTP</span><span class="o">+=</span><span class="p">[{</span><span class="s1">&#39;q&#39;</span><span class="p">:</span><span class="n">q1</span><span class="p">,</span>
+<span class="s1">&#39;time&#39;</span><span class="p">:</span><span class="mf">1e6</span><span class="p">}]</span> <span class="c1">#forever</span>
+<span class="n">RT</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;PTP&#39;</span><span class="p">:</span><span class="n">PTP</span><span class="p">}</span>
+<span class="p">[</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">MotionInterpolator</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">robotTrajectory</span><span class="o">=</span><span class="n">RT</span><span class="p">,</span> <span class="n">joint</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py">serialRobotTSD.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py">serialRobotTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-roboticscore-serialrobot2mbs"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1167">SerialRobot2MBS</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">jointLoadUserFunctionList</span></code>, <code class="docutils literal notranslate"><span class="pre">baseMarker</span></code>, <code class="docutils literal notranslate"><span class="pre">\*args</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">DEPRECATED function, use Robot.CreateRedundantCoordinateMBS(…); add items to existing mbs from the robot structure, a baseMarker (can be ground object or body)</div>
+<div class="line">and the user function list for the joints; there are options that can be passed as args / kwargs, which can contains options as described below. For details, see the python file and texttt{serialRobotTest.py} in TestModels</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the multibody system, which will be extended</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: the robot model as dictionary, described in function ComputeJointHT</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">jointLoadUserFunctionList</span></code>: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">baseMarker</span></code>: a rigid body marker, at which the robot will be placed (usually ground); note that the local coordinate system of the base must be in accordance with the DH-parameters, i.e., the z-axis must be the first rotation axis. For correction of the base coordinate system, use rotationMarkerBase</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rotationMarkerBase</span></code>: used in Generic joint between first joint and base; note, that for moving base, the static compensation does not work (base rotation must be updated)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showCOM</span></code>: a scalar d, which if nonzero it causes to draw the center of mass (COM) as rectangular block with size [d,d,d]</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">bodyAlpha</span></code>: a float value in range [0..1], adds transparency to links if value &lt; 1</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">toolGraphicsSize</span></code>: list of 3 floats [sx,sy,sz], giving the size of the tool for graphics representation; set sx=0 to disable tool drawing or do not provide this optional variable</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">drawLinkSize</span></code>: draw parameters for links as list of 3 floats [r,w,0], r=radius of joint, w=radius of link, set r=0 to disable link drawing</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rotationMarkerBase</span></code>: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">the function returns a dictionary containing information on nodes, bodies, joints, markers, torques, for every joint</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-computejointht"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1374">ComputeJointHT</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">DEPRECATED: compute list of  homogeneous transformations HT from base to every joint (more precisely of every link!) for given configuration</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">link0</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;stdDH&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span>
+<span class="s1">&#39;mass&#39;</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span>  <span class="c1">#not needed!</span>
+<span class="s1">&#39;inertia&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">1e-8</span><span class="p">,</span><span class="mf">0.35</span><span class="p">,</span><span class="mf">1e-8</span><span class="p">]),</span> <span class="c1">#w.r.t. COM!</span>
+<span class="s1">&#39;COM&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]}</span>
+<span class="n">link1</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;stdDH&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.4318</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+<span class="s1">&#39;mass&#39;</span><span class="p">:</span><span class="mf">17.4</span><span class="p">,</span>
+<span class="s1">&#39;inertia&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">0.13</span><span class="p">,</span><span class="mf">0.524</span><span class="p">,</span><span class="mf">0.539</span><span class="p">]),</span> <span class="c1">#w.r.t. COM!</span>
+<span class="s1">&#39;COM&#39;</span><span class="p">:[</span><span class="o">-</span><span class="mf">0.3638</span><span class="p">,</span> <span class="mf">0.006</span><span class="p">,</span> <span class="mf">0.2275</span><span class="p">]}</span>
+<span class="n">robot</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;links&#39;</span><span class="p">:[</span><span class="n">link0</span><span class="p">,</span> <span class="n">link1</span><span class="p">],</span>
+<span class="s1">&#39;jointType&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="c1">#1=revolute, 0=prismatic</span>
+<span class="s1">&#39;base&#39;</span><span class="p">:{</span><span class="s1">&#39;HT&#39;</span><span class="p">:</span><span class="n">HT0</span><span class="p">()},</span>
+<span class="s1">&#39;tool&#39;</span><span class="p">:{</span><span class="s1">&#39;HT&#39;</span><span class="p">:</span><span class="n">HTtranslate</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">])},</span>
+<span class="s1">&#39;gravity&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">9.81</span><span class="p">],</span>
+<span class="s1">&#39;referenceConfiguration&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span> <span class="c1">#reference configuration for bodies; at which the robot is built</span>
+<span class="p">}</span>
+<span class="n">HTlist</span> <span class="o">=</span> <span class="n">ComputeJointHT</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">8</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p id="sec-roboticscore-computecomht"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1402">ComputeCOMHT</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">DEPRECATED: compute list of  homogeneous transformations HT from base to every COM using HT list from ComputeJointHT</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-computestatictorques"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1419">ComputeStaticTorques</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">DEPRECATED: compute list joint torques for serial robot under gravity (gravity and mass as given in robot)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-jacobian"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1448">Jacobian</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">toolPosition</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">=</span> <span class="pre">'all'</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">DEPRECATED: compute jacobian for translation and rotation at toolPosition using joint HT</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solverFunctionsTestEigenvalues.py">solverFunctionsTestEigenvalues.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py">manualExplicitIntegrator.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/scissorPrismaticRevolute2D.py">scissorPrismaticRevolute2D.py</a> (TM)</p>
+</div></blockquote>
+<section id="class-vrobotlink-in-module-robotics">
+<h2>CLASS VRobotLink (in module robotics)<a class="headerlink" href="#class-vrobotlink-in-module-robotics" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>class to define visualization of RobotLink</p>
+</div></blockquote>
+<p id="sec-roboticscore-vrobotlink-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L94">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">jointRadius</span> <span class="pre">=</span> <span class="pre">0.06</span></code>, <code class="docutils literal notranslate"><span class="pre">jointWidth</span> <span class="pre">=</span> <span class="pre">0.12</span></code>, <code class="docutils literal notranslate"><span class="pre">linkWidth</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">showMBSjoint</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showCOM</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">linkColor</span> <span class="pre">=</span> <span class="pre">[0.4,0.4,0.4,1]</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsData</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize robot link with parameters, being self-explaining</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">jointRadius</span></code>: radius of joint to draw</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">jointWidth</span></code>: length or width of joint (depending on type of joint)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showMBSjoint</span></code>: if False, joint is not drawn</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">linkWidth</span></code>: width of link for default drawing</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">linkColor</span></code>: color of link for default drawing</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">showCOM</span></code>: if True, center of mass is marked with cube</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">graphicsData</span></code>: list of GraphicsData to represent link; if list is empty, link graphics will be generated from link geometry data; otherwise, drawing will be taken from graphicsData, and only showMBSjoint and showCOM flags will add additional graphics</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py">serialRobotKinematicTreeDigging.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
+</div></blockquote>
+</section>
+<section id="class-robotlink-in-module-robotics">
+<h2>CLASS RobotLink (in module robotics)<a class="headerlink" href="#class-robotlink-in-module-robotics" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>class to define one link of a robot</p>
+</div></blockquote>
+<p id="sec-roboticscore-robotlink-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L134">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span></code>, <code class="docutils literal notranslate"><span class="pre">COM</span></code>, <code class="docutils literal notranslate"><span class="pre">inertia</span></code>, <code class="docutils literal notranslate"><span class="pre">localHT</span> <span class="pre">=</span> <span class="pre">erb.HT0()</span></code>, <code class="docutils literal notranslate"><span class="pre">jointType</span> <span class="pre">=</span> <span class="pre">'Rz'</span></code>, <code class="docutils literal notranslate"><span class="pre">parent</span> <span class="pre">=</span> <span class="pre">-2</span></code>, <code class="docutils literal notranslate"><span class="pre">preHT</span> <span class="pre">=</span> <span class="pre">erb.HT0()</span></code>, <code class="docutils literal notranslate"><span class="pre">PDcontrol</span> <span class="pre">=</span> <span class="pre">(None,None)</span></code>, <code class="docutils literal notranslate"><span class="pre">visualization</span> <span class="pre">=</span> <span class="pre">VRobotLink()</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize robot link</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mass</span></code>: mass of robot link</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">COM</span></code>: center of mass in link coordinate system</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">inertia</span></code>: 3x3 matrix (list of lists / numpy array) containing inertia tensor in link coordinates, with respect to center of mass</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">localHT</span></code>: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from local joint to link coordinates; default = identity; currently, this transformation is not available in KinematicTree, therefore the link inertia and COM must be transformed accordingly</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">preHT</span></code>: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from previous link to this joint; default = identity</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">jointType</span></code>: string containing joint type, out of: ‘Rx’, ‘Ry’, ‘Rz’ for revolute joints and ‘Px’, ‘Py’, ‘Pz’ for prismatic joints around/along the respecitive local axes</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">parent</span></code>: for building robots as kinematic tree; use ‘-2’ to automatically set parents for serial robot (on fixed base), use ‘-1’ for ground-parent and any other 0-based index for connection to parent link</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">PDcontrol</span></code>: tuple of P and D control values, defining position (rotation) proportional value P and velocitiy proportional value D</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">visualization</span></code>: VRobotLink structure containing options for drawing of link and joints; see class VRobotLink</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robotlink-setpdcontrol"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L147">SetPDcontrol</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">Pvalue</span></code>, <code class="docutils literal notranslate"><span class="pre">Dvalue</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">set PD control values for drive of joint related to link using position-proportional value P and differential value (velocity proportional) D</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robotlink-haspdcontrol"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L151">HasPDcontrol</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">check if contrl is available</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robotlink-getpdcontrol"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L155">GetPDcontrol</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">get PD control values</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
+</div></blockquote>
+</section>
+<section id="class-vrobottool-in-module-robotics">
+<h2>CLASS VRobotTool (in module robotics)<a class="headerlink" href="#class-vrobottool-in-module-robotics" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>class to define visualization of RobotTool</p>
+</div></blockquote>
+<p id="sec-roboticscore-vrobottool-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L179">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsData</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize robot tool with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
+</div></blockquote>
+</section>
+<section id="class-robottool-in-module-robotics">
+<h2>CLASS RobotTool (in module robotics)<a class="headerlink" href="#class-robottool-in-module-robotics" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>define tool of robot: containing graphics and HT (may add features in future)</p>
+</div></blockquote>
+<p id="sec-roboticscore-robottool-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L188">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span> <span class="pre">=</span> <span class="pre">erb.HT0()</span></code>, <code class="docutils literal notranslate"><span class="pre">visualization</span> <span class="pre">=</span> <span class="pre">VRobotTool()</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize robot tool</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from last link to tool</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">graphicsData</span></code>: dictionary containing a list of GraphicsData, same as in exudyn Objects</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
+</div></blockquote>
+</section>
+<section id="class-vrobotbase-in-module-robotics">
+<h2>CLASS VRobotBase (in module robotics)<a class="headerlink" href="#class-vrobotbase-in-module-robotics" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>class to define visualization of RobotBase</p>
+</div></blockquote>
+<p id="sec-roboticscore-vrobotbase-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L202">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsData</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize robot base with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
+</div></blockquote>
+</section>
+<section id="class-robotbase-in-module-robotics">
+<h2>CLASS RobotBase (in module robotics)<a class="headerlink" href="#class-robotbase-in-module-robotics" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>define base of robot: containing graphics and HT (may add features in future)</p>
+</div></blockquote>
+<p id="sec-roboticscore-robotbase-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L212">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span> <span class="pre">=</span> <span class="pre">erb.HT0()</span></code>, <code class="docutils literal notranslate"><span class="pre">visualization</span> <span class="pre">=</span> <span class="pre">VRobotBase()</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize robot base</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from world coordinates to base coordinates (changes orientation and position of robot)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">graphicsData</span></code>: dictionary containing a list of GraphicsData, same as in exudyn Objects</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
+</div></blockquote>
+</section>
+<section id="class-robot-in-module-robotics">
+<h2>CLASS Robot (in module robotics)<a class="headerlink" href="#class-robot-in-module-robotics" title="Permalink to this heading"></a></h2>
+<p><strong>class description</strong>:</p>
+<blockquote>
+<div><p>class to define a robot</p>
+</div></blockquote>
+<p id="sec-roboticscore-robot-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L237">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,-9.81]</span></code>, <code class="docutils literal notranslate"><span class="pre">base</span> <span class="pre">=</span> <span class="pre">RobotBase()</span></code>, <code class="docutils literal notranslate"><span class="pre">tool</span> <span class="pre">=</span> <span class="pre">RobotTool()</span></code>, <code class="docutils literal notranslate"><span class="pre">referenceConfiguration</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">initialize robot class</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">base</span></code>: definition of base using RobotBase() class</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">tool</span></code>: definition of tool using RobotTool() class</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">gravity</span></code>: a list or 3D numpy array defining gravity</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">referenceConfiguration</span></code>: a list of scalar quantities defining the parameters for reference configuration</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-addlink"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L263">AddLink</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">robotLink</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">add a link to serial robot</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-isserialrobot"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L284">IsSerialRobot</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return True, if robot is a serial robot</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-getlink"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L288">GetLink</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return Link object of link i</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-hasparent"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L292">HasParent</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">True if link has parent, False if not</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-getparentindex"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L296">GetParentIndex</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">Get index of parent link; for serial robot this is simple, but for general trees, there is a index list</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-numberoflinks"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L301">NumberOfLinks</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return number of links</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-getbaseht"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L305">GetBaseHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return base as homogeneous transformation</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-gettoolht"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L309">GetToolHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">return base as homogeneous transformation</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-linkht"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L313">LinkHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">compute list of homogeneous transformations for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different!</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-jointht"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L342">JointHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">compute list of homogeneous transformations for every joint (after rotation), using current joint coordinates q</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-comht"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L369">COMHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">compute list of  homogeneous transformations HT from base to every COM using HT list from Robot.JointHT(…)</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-statictorques"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L378">StaticTorques</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">compute list of joint torques for serial robot due to gravity (gravity and mass as given in robot), taking HT from Robot.JointHT()</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-jacobian"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L401">Jacobian</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">toolPosition</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">=</span> <span class="pre">'all'</span></code>, <code class="docutils literal notranslate"><span class="pre">linkIndex</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">compute jacobian for translation and rotation at toolPosition using joint HT; this is using the Robot functions, but is inefficient for simulation purposes</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: list of homogeneous transformations per joint , as computed by Robot.JointHT(…)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">toolPosition</span></code>: global position at which the jacobian is evaluated (e.g., COM); if empty [], it uses the origin of the last link</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mode</span></code>: ‘all’…translation and rotation jacobian, ‘trans’…only translation part, ‘rot’: only rotation part</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">linkIndex</span></code>: link index for which the jacobian is evaluated; if linkIndex==None, it uses the last link provided in HT</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns jacobian with translation and rotation parts in rows (3 or 6) according to mode, and one column per HT; in the kinematic tree the columns not related to linkIndex remain zero</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-createkinematictree"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L475">CreateKinematicTree</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">forceUserFunction</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">Add a ObjectKinematicTree to existing mbs from the robot structure inside this robot class;</div>
+<div class="line">Joints defined by the kinematics as well as links (and inertia) are transferred to the kinematic tree object;</div>
+<div class="line">Current implementation only works for serial robots;</div>
+<div class="line">Control can be realized simply by adding PDcontrol to RobotLink structures, then modifying jointPositionOffsetVector and jointVelocityOffsetVector in ObjectKinematicTree; force offsets (e.g., static or dynamic torque compensation) can be added to KinematicTree jointForceVector; more general control can be added by using KinematicTree forceUserFunction;</div>
+<div class="line">The coordinates in KinematicTree (as well as jointPositionOffsetVector, etc.) are sorted in the order as the RobotLinks are added to the Robot class;</div>
+<div class="line">Note that the ObjectKinematicTree is still under development and interfaces may change.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the multibody system, which will be extended</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">name</span></code>: object name in KinematicTree; transferred to KinematicTree, default = ‘’</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">forceUserFunction</span></code>: defines the user function for computation of joint forces in KinematicTree; transferred to KinematicTree, default = 0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">the function returns a dictionary containing ‘nodeGeneric’: generic ODE2 node number ,’objectKinematicTree’: the kinematic tree object, ‘baseObject’: the base object if created, otherwise None; further values will be added in future</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-createredundantcoordinatembs"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L656">CreateRedundantCoordinateMBS</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">baseMarker</span></code>, <code class="docutils literal notranslate"><span class="pre">jointSpringDamperUserFunctionList</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">jointLoadUserFunctionList</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">createJointTorqueLoads</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMarkerBase</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">rigidBodyNodeType</span> <span class="pre">=</span> <span class="pre">exudyn.NodeType.RotationEulerParameters</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">Add items to existing mbs from the robot structure inside this robot class; robot is attached to baseMarker (can be ground object or moving/deformable body);</div>
+<div class="line">The (serial) robot is built as rigid bodies (containing rigid body nodes), where bodies represent the links which are connected by joints;</div>
+<div class="line">Add optional jointSpringDamperUserFunctionList for individual control of joints; otherwise use PDcontrol in RobotLink structure; additional joint torques/forces can be added via spring damper, using mbs.SetObjectParameter(…) function;</div>
+<div class="line">See several Python examples, e.g., texttt{serialRobotTestTSD.py}, in Examples or TestModels;</div>
+<div class="line">For more efficient models, use CreateKinematicTree(…) function!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the multibody system, which will be extended</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">baseMarker</span></code>: a rigid body marker, at which the robot will be placed (usually ground); note that the local coordinate system of the base must be in accordance with the DH-parameters, i.e., the z-axis must be the first rotation axis. For correction of the base coordinate system, use rotationMarkerBase</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">jointSpringDamperUserFunctionList</span></code>: a list of user functions for actuation of joints with more efficient spring-damper based connector (spring-damper directly emulates PD-controller); uses torsional spring damper for revolute joints and linear spring damper for prismatic joints; can be empty list (no spring dampers); if entry of list is 0, no user function is created, just pure spring damper; parameters are taken from RobotLink PDcontrol structure, which MUST be defined using SetPDcontrol(…) in RobotLink</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">jointLoadUserFunctionList</span></code>: DEPRECATED: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">createJointTorqueLoads</span></code>: DEPRECATED: if True, independently of jointLoadUserFunctionList, joint loads are created; the load numbers are stored in lists jointTorque0List/ jointTorque1List; the loads contain zero torques and need to be updated in every computation step, e.g., using a preStepUserFunction; unitTorque0List/ unitTorque1List contain the unit torque vector for the according body(link) which needs to be applied on both bodies attached to the joint</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rotationMarkerBase</span></code>: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint; note, that for moving base, the static compensation does not work (base rotation must be updated)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rigidBodyNodeType</span></code>: specify node type of rigid body node, e.g., exudyn.NodeType.RotationEulerParameters, etc.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">the function returns a dictionary containing per link nodes and object (body) numbers, ‘nodeList’, ‘bodyList’, the object numbers for joints, ‘jointList’, list of load numbers for joint torques (jointTorque0List, jointTorque1List); unit torque vectors in local coordinates of the bodies to which the torques are applied (unitTorque0List, unitTorque1List); springDamperList contains the spring dampers if defined by PDcontrol of links</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-getkinematictree66"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L900">GetKinematicTree66</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">export kinematicTree</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-getlinkgraphicsdata"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L930">GetLinkGraphicsData</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">p0</span></code>, <code class="docutils literal notranslate"><span class="pre">p1</span></code>, <code class="docutils literal notranslate"><span class="pre">axis0</span></code>, <code class="docutils literal notranslate"><span class="pre">axis1</span></code>, <code class="docutils literal notranslate"><span class="pre">linkVisualization</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">create link GraphicsData (list) for link i; internally used in CreateRedundantCoordinateMBS(…); linkVisualization contains visualization dict of link</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-roboticscore-robot-buildfromdictionary"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L974">BuildFromDictionary</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">robotDict</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>classFunction</em>:</div>
+<div class="line">build robot structre from dictionary; this is a DEPRECATED function, which is used in older models; DO NOT USE</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rigidBodyUtilities.html" class="btn btn-neutral float-left" title="Module: rigidBodyUtilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="robotics.future.html" class="btn btn-neutral float-right" title="Module: robotics.future" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

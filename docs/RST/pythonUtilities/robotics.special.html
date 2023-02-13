@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: robotics.special &mdash; Exudyn 1.5.95.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: robotics.utilities" href="robotics.utilities.html" />
+    <link rel="prev" title="Module: robotics.motion" href="robotics.motion.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pythonUtilities.html">Python Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: robotics.special</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/pythonUtilities/robotics.special.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-robotics-special">
+<span id="sec-module-robotics-special"></span><h1>Module: robotics.special<a class="headerlink" href="#module-robotics-special" title="Permalink to this heading"></a></h1>
+<p>additional support functions for robotics;
+The library is built on Denavit-Hartenberg Parameters and
+Homogeneous Transformations (HT) to describe transformations and coordinate systems</p>
+<ul class="simple">
+<li><p>Author:    Martin Sereinig</p></li>
+<li><p>Date:      2021-22-09</p></li>
+</ul>
+<p id="sec-special-velocitymanipulability"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L31">VelocityManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute velocity manipulability measure for given pose (homogenious transformation)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot class</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: actual pose as hoogenious transformaton matrix</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mode</span></code>: rotational or translational part of the movement</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">singularWeight</span></code>: Weighting of singular configurations where the value would be infinity,default value=100</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">velocity manipulability measure as scalar value, defined as <span class="math notranslate nohighlight">\(\sqrt(det(JJ^T))\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">compute velocity dependent manipulability definded by Yoshikawa, see cite{Yoshikawa1985}</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-special-forcemanipulability"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L63">ForceManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singular_weight</span> <span class="pre">=</span> <span class="pre">100</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute force manipulability measure for given pose (homogenious transformation)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot class</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: actual pose as hoogenious transformaton matrix</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">singularWeight</span></code>: Weighting of singular configurations where the value would be infinity,default value=100</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mode</span></code>: rotational or translational part of the movement</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">force manipulability measure as scalar value, defined as <span class="math notranslate nohighlight">\(\sqrt((det(JJ^T))^{-1})\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">compute force dependent manipulability definded by Yoshikawa, see cite{Yoshikawa1985}</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-special-stiffnessmanipulability"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L106">StiffnessManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">JointStiffness</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singularWeight</span> <span class="pre">=</span> <span class="pre">1000</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute cartesian stiffness measure for given pose (homogenious transformation)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot class</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">JointStiffness</span></code>: joint stiffness matrix</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: actual pose as hoogenious transformaton matrix</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mode</span></code>: rotational or translational part of the movement</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">singularWeight</span></code>: Weighting of singular configurations where the value would be infinity,default value=1000</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">stiffness manipulability measure as scalar value, defined as minimum Eigenvalaue of the Cartesian stiffness matrix</div>
+<div class="line">Cartesian stiffness matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line"><br /></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>status</em>:</div>
+<div class="line">this function is {bf currently under development} and under testing!</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-special-jointjacobian"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L141">JointJacobian</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HTJoint</span></code>, <code class="docutils literal notranslate"><span class="pre">HTLink</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute joint jacobian for each frame for given pose (homogenious transformation)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot class</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: actual pose as hoogenious transformaton matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">Link(body)-Jacobi matrix JJ: <span class="math notranslate nohighlight">\(\LU{i}{JJ_i}=[\LU{i}{J_{Ri}},\; \LU{i}{J_{Ti}}]\)</span> for each link i, seperated in rotational (<span class="math notranslate nohighlight">\(J_R\)</span>) and translational (<span class="math notranslate nohighlight">\(J_T\)</span>) part of Jacobian matrix located in the <span class="math notranslate nohighlight">\(i^{th}\)</span> coordiante system, see cite{woernle2016}</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">runs over number of HTs given in HT (may be less than number of links), caclulations in link coordinate system located at the end of each link regarding Standard  Denavid-Hartenberg parameters, see cite{Corke2013}</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-special-massmatrix"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L203">MassMatrix</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">jointJacobian</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute mass matrix from jointJacobian</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot structure</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: actual pose as hoogenious transformaton matrix</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">jointJacobian</span></code>: provide list of jacobians as provided by function JointJacobian(…)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">MM: Mass matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Mass</span> <span class="pre">Matrix</span> <span class="pre">calculation</span> <span class="pre">calculated</span> <span class="pre">in</span> <span class="pre">joint</span> <span class="pre">coordinates</span> <span class="pre">regarding</span> <span class="pre">(std)</span> <span class="pre">DH</span> <span class="pre">parameter</span></code>:</div>
+<div class="line">**       Dynamic equations in minimal coordinates as described in MehrkÃ¶rpersysteme by Woernle, cite{woernle2016}, p206, eq6.90.</div>
+<div class="line">**       Caclulations in link coordinate system at the end of each link</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solverFunctionsTestEigenvalues.py">solverFunctionsTestEigenvalues.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py">manualExplicitIntegrator.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py">objectFFRFreducedOrderAccelerations.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py">objectFFRFreducedOrderShowModes.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py">objectFFRFreducedOrderStressModesTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py">objectFFRFreducedOrderTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py">objectFFRFTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+<p id="sec-special-dynamicmanipulability"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L236">DynamicManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">MassMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">Tmax</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singularWeight</span> <span class="pre">=</span> <span class="pre">1000</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">compute dynamic manipulability measure for given pose (homogenious transformation)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot structure</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: actual pose as hoogenious transformaton matrix</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Tmax</span></code>: maximum joint torques</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mode</span></code>: rotational or translational part of the movement</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">MassMatrix</span></code>: Mass (inertia) Maxtrix provided by the function MassMatrix</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">singularWeight</span></code>: Weighting of singular configurations where the value would be infinity,default value=1000</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">dynamic manipulability measure as scalar value, defined as minimum Eigenvalaue of the dynamic manipulability matrix N</div>
+<div class="line">dynamic manipulability matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">acceleration dependent manipulability definded by Chiacchio, see cite{Chiacchio1998}, eq.32. The eigenvectors and eigenvalues of N ([eigenvec eigenval]=eig(N))gives the direction and value of minimal and maximal accaleration )</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>status</em>:</div>
+<div class="line">this function is {bf currently under development} and under testing!</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-special-computeik3r"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L284">ComputeIK3R</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">calculates the analytical inverse kinematics for 3R elbow type serial robot manipulator</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot structure</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">solutions, list of lists with posible joint angles [q1,q2,q3] (in radiant)</div>
+<div class="line">to achive the desired position and orientation (4 posible solutions,schoulder left/right, ellbow up/down )</div>
+<div class="line">left/down, left/up, right/up, right/down</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">only applicable for standard Denavit-Hartenberg parameters</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>status</em>:</div>
+<div class="line">testet with various configurations and joint angels</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-special-computeikpuma560"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L355">ComputeIKPuma560</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">calculates the analytical inverse kinematics for Puma560 serial 6R robot manipulator</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot structure</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">solutions, list of lists with posible joint angles [q1,q2,q3,q4,q5,q6] (in radiant)</div>
+<div class="line">to achive the desired position and orientation (8 posible solutions,schoulder left/right, ellbow up/down, wrist flipped/notflipped (rotated by pi) )</div>
+<div class="line">left/down/notflipped, left/down/flipped, left/up/notflipped, left/up/flipped, right/up/notflipped, right/up/flipped, right/down/notflipped, right/down/flipped</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">Usage for different manipulators with sperical wrist posible, only applicable for standard Denavit-Hartenberg parameters</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>status</em>:</div>
+<div class="line">tested (compared with Robotcs, Vision and Control book of P. Corke</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<p id="sec-special-computeikur"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L481">ComputeIKUR</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HTdes</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">calculates the analytical inverse kinematics for UR type serial 6R robot manipulator without sperical wrist</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+</div>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: robot structure</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">HT</span></code>: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+</div>
+<div class="line-block">
+<div class="line">solutions, list of lists with posible joint angles [q1,q2,q3,q4,q5,q6] (in radiant)</div>
+<div class="line">to achive the desired position and orientation (8 posible solutions,schoulder left/right, ellbow up/down, wrist flipped/notflipped (rotated by pi) )</div>
+<div class="line">[left/down/notflipped, left/down/flipped, left/up/notflipped, left/up/flipped, right/up/notflipped, right/up/flipped, right/down/notflipped, right/down/flipped]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">Usage for different manipulators without sperical wrist posible UR3,UR5,UR10, only applicable for standard Denavit-Hartenberg parameters</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>status</em>:</div>
+<div class="line">under development, works for most configurations, singularities not checked -&gt; ZeroConfiguration not working</div>
+</div>
+</li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="robotics.motion.html" class="btn btn-neutral float-left" title="Module: robotics.motion" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="robotics.utilities.html" class="btn btn-neutral float-right" title="Module: robotics.utilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
