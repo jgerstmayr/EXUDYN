@@ -1,22 +1,20 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Module: FEM &mdash; Exudyn 1.5.97.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/tabs.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -29,12 +27,16 @@
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search"  style="background: white" >
-            <a href="../../../index.html" class="icon icon-home"> Exudyn
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -96,7 +98,7 @@
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">Exudyn</a>
       </nav>
@@ -105,23 +107,20 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="index.html">Python Utility Functions</a> &raquo;</li>
-      <li>Module: FEM</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: FEM</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/docs/RST/pythonUtilities/FEM.rst.txt" rel="nofollow"> View page source</a>
       </li>
-  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
-        <a href="beams.html" class="btn btn-neutral float-left" title="Module: beams" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="graphicsDataUtilities.html" class="btn btn-neutral float-right" title="Module: graphicsDataUtilities" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-  </div>
+  </ul>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="module-fem">
-<span id="sec-module-fem"></span><h1>Module: FEM<a class="headerlink" href="#module-fem" title="Permalink to this headline"></a></h1>
+  <section id="module-fem">
+<span id="sec-module-fem"></span><h1>Module: FEM<a class="headerlink" href="#module-fem" title="Permalink to this heading"></a></h1>
 <p>Support functions and helper classes for import of meshes, finite element models (ABAQUS, ANSYS, NETGEN) and for generation of FFRF (floating frame of reference) objects.</p>
 <ul>
 <li><div class="line-block">
@@ -449,15 +448,15 @@
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex)</p>
 </div></blockquote>
-<div class="section" id="class-materialbaseclass-in-module-fem">
-<h2>CLASS MaterialBaseClass (in module FEM)<a class="headerlink" href="#class-materialbaseclass-in-module-fem" title="Permalink to this headline"></a></h2>
+<section id="class-materialbaseclass-in-module-fem">
+<h2>CLASS MaterialBaseClass (in module FEM)<a class="headerlink" href="#class-materialbaseclass-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>material base class, e.g., for FiniteElement</p>
 </div></blockquote>
-</div>
-<div class="section" id="class-kirchhoffmaterial-materialbaseclass-in-module-fem">
-<h2>CLASS KirchhoffMaterial(MaterialBaseClass) (in module FEM)<a class="headerlink" href="#class-kirchhoffmaterial-materialbaseclass-in-module-fem" title="Permalink to this headline"></a></h2>
+</section>
+<section id="class-kirchhoffmaterial-materialbaseclass-in-module-fem">
+<h2>CLASS KirchhoffMaterial(MaterialBaseClass) (in module FEM)<a class="headerlink" href="#class-kirchhoffmaterial-materialbaseclass-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class for representation of Kirchhoff (linear elastic, 3D and 2D) material</p>
@@ -513,23 +512,23 @@
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py">CMSexampleCourse.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py">NGsolveCraigBampton.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePostProcessingStresses.py">NGsolvePostProcessingStresses.py</a> (Ex)</p>
 </div></blockquote>
-</div>
-<div class="section" id="class-finiteelement-in-module-fem">
-<h2>CLASS FiniteElement (in module FEM)<a class="headerlink" href="#class-finiteelement-in-module-fem" title="Permalink to this headline"></a></h2>
+</section>
+<section id="class-finiteelement-in-module-fem">
+<h2>CLASS FiniteElement (in module FEM)<a class="headerlink" href="#class-finiteelement-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>finite element base class for lateron implementations of other finite elements</p>
 </div></blockquote>
-</div>
-<div class="section" id="class-tet4-finiteelement-in-module-fem">
-<h2>CLASS Tet4(FiniteElement) (in module FEM)<a class="headerlink" href="#class-tet4-finiteelement-in-module-fem" title="Permalink to this headline"></a></h2>
+</section>
+<section id="class-tet4-finiteelement-in-module-fem">
+<h2>CLASS Tet4(FiniteElement) (in module FEM)<a class="headerlink" href="#class-tet4-finiteelement-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>simplistic 4-noded tetrahedral interface to compute strain/stress at nodal points</p>
 </div></blockquote>
-</div>
-<div class="section" id="class-objectffrfinterface-in-module-fem">
-<h2>CLASS ObjectFFRFinterface (in module FEM)<a class="headerlink" href="#class-objectffrfinterface-in-module-fem" title="Permalink to this headline"></a></h2>
+</section>
+<section id="class-objectffrfinterface-in-module-fem">
+<h2>CLASS ObjectFFRFinterface (in module FEM)<a class="headerlink" href="#class-objectffrfinterface-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>compute terms necessary for ObjectFFRF
@@ -595,9 +594,9 @@ this class holds all data for ObjectFFRF user functions</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py">objectFFRFTest2.py</a> (TM)</p>
 </div></blockquote>
-</div>
-<div class="section" id="class-objectffrfreducedorderinterface-in-module-fem">
-<h2>CLASS ObjectFFRFreducedOrderInterface (in module FEM)<a class="headerlink" href="#class-objectffrfreducedorderinterface-in-module-fem" title="Permalink to this headline"></a></h2>
+</section>
+<section id="class-objectffrfreducedorderinterface-in-module-fem">
+<h2>CLASS ObjectFFRFreducedOrderInterface (in module FEM)<a class="headerlink" href="#class-objectffrfreducedorderinterface-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>compute terms necessary for ObjectFFRFreducedOrder
@@ -700,9 +699,9 @@ this class holds all data for ObjectFFRFreducedOrder user functions</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py">CMSexampleCourse.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py">NGsolveCraigBampton.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePostProcessingStresses.py">NGsolvePostProcessingStresses.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py">NGsolveCrankShaftTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py">objectFFRFreducedOrderAccelerations.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py">objectFFRFreducedOrderShowModes.py</a> (TM)</p>
 </div></blockquote>
-</div>
-<div class="section" id="class-hcbstaticmodeselection-enum-in-module-fem">
-<h2>CLASS HCBstaticModeSelection(Enum) (in module FEM)<a class="headerlink" href="#class-hcbstaticmodeselection-enum-in-module-fem" title="Permalink to this headline"></a></h2>
+</section>
+<section id="class-hcbstaticmodeselection-enum-in-module-fem">
+<h2>CLASS HCBstaticModeSelection(Enum) (in module FEM)<a class="headerlink" href="#class-hcbstaticmodeselection-enum-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>helper calss for function ComputeHurtyCraigBamptonModes, declaring some computation options. It offers the following options:\
@@ -711,9 +710,9 @@ this class holds all data for ObjectFFRFreducedOrder user functions</p>
 - RBE3:                 static modes only for rigid body motion at boundary nodes; averaged rigid body motion at boundary surfaces (leads to deformation at boundaries)\
 - noStaticModes:        do not compute static modes, only eigen modes (not recommended; usually only for tests)</p>
 </div></blockquote>
-</div>
-<div class="section" id="class-feminterface-in-module-fem">
-<h2>CLASS FEMinterface (in module FEM)<a class="headerlink" href="#class-feminterface-in-module-fem" title="Permalink to this headline"></a></h2>
+</section>
+<section id="class-feminterface-in-module-fem">
+<h2>CLASS FEMinterface (in module FEM)<a class="headerlink" href="#class-feminterface-in-module-fem" title="Permalink to this heading"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>general interface to different FEM / mesh imports and export to EXUDYN functions
@@ -1457,13 +1456,16 @@ export to EXUDYN objects</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py">CMSexampleCourse.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py">NGsolveCraigBampton.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveLinearFEM.py">NGsolveLinearFEM.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/compareAbaqusAnsysRotorEigenfrequencies.py">compareAbaqusAnsysRotorEigenfrequencies.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py">NGsolveCrankShaftTest.py</a> (TM)</p>
 </div></blockquote>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="beams.html" class="btn btn-neutral float-left" title="Module: beams" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="graphicsDataUtilities.html" class="btn btn-neutral float-right" title="Module: graphicsDataUtilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
