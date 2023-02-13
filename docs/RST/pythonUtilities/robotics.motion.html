@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Module: robotics.motion &mdash; Exudyn 1.5.95.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -12,10 +11,10 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -29,15 +28,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            Exudyn
+            <a href="../../../index.html" class="icon icon-home"> Exudyn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -104,9 +99,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
-      <li class="breadcrumb-item active">Module: robotics.motion</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Python Utility Functions</a> &raquo;</li>
+      <li>Module: robotics.motion</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/docs/RST/pythonUtilities/robotics.motion.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -116,16 +111,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-robotics-motion">
-<span id="sec-module-robotics-motion"></span><h1>Module: robotics.motion<a class="headerlink" href="#module-robotics-motion" title="Permalink to this heading"></a></h1>
+  <div class="section" id="module-robotics-motion">
+<span id="sec-module-robotics-motion"></span><h1>Module: robotics.motion<a class="headerlink" href="#module-robotics-motion" title="Permalink to this headline"></a></h1>
 <p>functionality for motion including generation of trajectories with acceleration profiles,
 path planning and motion</p>
 <ul class="simple">
 <li><p>Author:    Johannes Gerstmayr</p></li>
 <li><p>Date:      2022-02-16</p></li>
 </ul>
-<section id="class-profileconstantacceleration-in-module-robotics-motion">
-<h2>CLASS ProfileConstantAcceleration (in module robotics.motion)<a class="headerlink" href="#class-profileconstantacceleration-in-module-robotics-motion" title="Permalink to this heading"></a></h2>
+<div class="section" id="class-profileconstantacceleration-in-module-robotics-motion">
+<h2>CLASS ProfileConstantAcceleration (in module robotics.motion)<a class="headerlink" href="#class-profileconstantacceleration-in-module-robotics-motion" title="Permalink to this headline"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to create a constant acceleration (optimal) PTP trajectory; trajectory ignores global max. velocities and accelerations</p>
@@ -166,9 +161,9 @@ path planning and motion</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py">serialRobotKinematicTreeDigging.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py">serialRobotTSD.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py">serialRobotTest.py</a> (TM)</p>
 </div></blockquote>
-</section>
-<section id="class-profilelinearaccelerationslist-in-module-robotics-motion">
-<h2>CLASS ProfileLinearAccelerationsList (in module robotics.motion)<a class="headerlink" href="#class-profilelinearaccelerationslist-in-module-robotics-motion" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="class-profilelinearaccelerationslist-in-module-robotics-motion">
+<h2>CLASS ProfileLinearAccelerationsList (in module robotics.motion)<a class="headerlink" href="#class-profilelinearaccelerationslist-in-module-robotics-motion" title="Permalink to this headline"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to create a linear acceleration PTP profile, using a list of accelerations to define the profile; the (joint) coordinates and velocities are computed relative to values of previous profiles; ignores global max. accelerations and velocities of Trajectory</p>
@@ -209,9 +204,9 @@ path planning and motion</p>
 </div>
 </li>
 </ul>
-</section>
-<section id="class-profileptp-in-module-robotics-motion">
-<h2>CLASS ProfilePTP (in module robotics.motion)<a class="headerlink" href="#class-profileptp-in-module-robotics-motion" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="class-profileptp-in-module-robotics-motion">
+<h2>CLASS ProfilePTP (in module robotics.motion)<a class="headerlink" href="#class-profileptp-in-module-robotics-motion" title="Permalink to this headline"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to create a synchronous motion PTP trajectory, using max. accelerations and max velocities; duration automatically computed</p>
@@ -253,9 +248,9 @@ path planning and motion</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py">serialRobotTSD.py</a> (Ex)</p>
 </div></blockquote>
-</section>
-<section id="class-trajectory-in-module-robotics-motion">
-<h2>CLASS Trajectory (in module robotics.motion)<a class="headerlink" href="#class-trajectory-in-module-robotics-motion" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="class-trajectory-in-module-robotics-motion">
+<h2>CLASS Trajectory (in module robotics.motion)<a class="headerlink" href="#class-trajectory-in-module-robotics-motion" title="Permalink to this headline"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to define (PTP) trajectories for robots and multibody systems; trajectories are defined for a set of coordinates (e.g. joint angles or other coordinates which need to be interpolated over time)</p>
@@ -404,8 +399,8 @@ path planning and motion</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py">serialRobotKinematicTreeDigging.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py">serialRobotTSD.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py">serialRobotTest.py</a> (TM)</p>
 </div></blockquote>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

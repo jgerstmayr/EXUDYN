@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Trouble shooting and FAQ &mdash; Exudyn 1.5.95.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -12,10 +11,10 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -29,15 +28,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            <a href="../../index.html" class="icon icon-home"> Exudyn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -84,9 +79,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
-      <li class="breadcrumb-item active">Trouble shooting and FAQ</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a> &raquo;</li>
+      <li>Trouble shooting and FAQ</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/docs/RST/TroubleShootingAndFAQ.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -96,10 +91,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="trouble-shooting-and-faq">
-<h1>Trouble shooting and FAQ<a class="headerlink" href="#trouble-shooting-and-faq" title="Permalink to this heading"></a></h1>
-<section id="trouble-shooting">
-<h2>Trouble shooting<a class="headerlink" href="#trouble-shooting" title="Permalink to this heading"></a></h2>
+  <div class="section" id="trouble-shooting-and-faq">
+<h1>Trouble shooting and FAQ<a class="headerlink" href="#trouble-shooting-and-faq" title="Permalink to this headline"></a></h1>
+<div class="section" id="trouble-shooting">
+<h2>Trouble shooting<a class="headerlink" href="#trouble-shooting" title="Permalink to this headline"></a></h2>
 <p><strong>Python import errors</strong>:</p>
 <ul class="simple">
 <li><p>Sometimes the Exudyn module cannot be loaded into Python. Typical <strong>error messages if Python versions are not compatible</strong> are:</p></li>
@@ -298,9 +293,9 @@ Solver stopped! use showHints=True to show helpful information
 |  =&gt;  this indicates an error in the user function \ ``LoadCoordinate::loadVectorUserFunction``\ , because \ ``sin``\  function has not been defined (must be imported, e.g., from \ ``math``\ ). It indicates that the error occurred in line 48 in \ ``springDamperUserFunctionTest.py``\  within function \ ``Sweep``\ , which has been called from function \ ``userLoad``\ , etc.
 </pre></div>
 </div>
-</section>
-<section id="faq">
-<h2>FAQ<a class="headerlink" href="#faq" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="faq">
+<h2>FAQ<a class="headerlink" href="#faq" title="Permalink to this headline"></a></h2>
 <p><strong>Some frequently asked questions</strong>:</p>
 <ul class="simple">
 <li><p>When <strong>importing</strong> Exudyn in Python (windows) I get an error</p></li>
@@ -413,8 +408,8 @@ SystemError: &lt;built-in method SolveSystem of PyCapsule object at 0x0CC63590&g
 <div class="line">=&gt;  Starting Exudyn out of Spyder might not bring the simulation window to front, because of specific settings in Spyder(version 3.2.8), e.g., Tools=&gt;Preferences=&gt;Editor=&gt;Advanced settings: uncheck ‘Maintain focus in the Editor after running cells or selections’; Alternatively, set <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.window.alwaysOnTop=True</span></code> <strong>before</strong> starting the renderer with <code class="docutils literal notranslate"><span class="pre">exu.StartRenderer()</span></code></div>
 </div>
 </div></blockquote>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

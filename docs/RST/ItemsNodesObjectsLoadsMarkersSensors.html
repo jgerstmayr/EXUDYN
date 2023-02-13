@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Items: Nodes, Objects, Loads, Markers, Sensors, … &mdash; Exudyn 1.5.95.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -12,10 +11,10 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -29,15 +28,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            <a href="../../index.html" class="icon icon-home"> Exudyn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -89,9 +84,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
-      <li class="breadcrumb-item active">Items: Nodes, Objects, Loads, Markers, Sensors, …</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="OverviewOnExudynIndex.html">Overview on Exudyn</a> &raquo;</li>
+      <li>Items: Nodes, Objects, Loads, Markers, Sensors, …</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/docs/RST/ItemsNodesObjectsLoadsMarkersSensors.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -101,17 +96,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="items-nodes-objects-loads-markers-sensors">
-<h1>Items: Nodes, Objects, Loads, Markers, Sensors, …<a class="headerlink" href="#items-nodes-objects-loads-markers-sensors" title="Permalink to this heading"></a></h1>
+  <div class="section" id="items-nodes-objects-loads-markers-sensors">
+<h1>Items: Nodes, Objects, Loads, Markers, Sensors, …<a class="headerlink" href="#items-nodes-objects-loads-markers-sensors" title="Permalink to this headline"></a></h1>
 <p>In this section, the most important part of Exudyn are provided. An overview of the interaction of the items is given in [figure in theDoc.pdf]</p>
-<section id="nodes">
-<h2>Nodes<a class="headerlink" href="#nodes" title="Permalink to this heading"></a></h2>
+<div class="section" id="nodes">
+<h2>Nodes<a class="headerlink" href="#nodes" title="Permalink to this headline"></a></h2>
 <p>Nodes provide the coordinates (and the degrees of freedom) to the system. They have no mass, stiffness or whatsoever assigned.
 Without nodes, the system has no unknown coordinates.
 Adding a node provides (for the system unknown) coordinates. In addition we also need equations for every nodal coordinate – otherwise the system cannot be computed (NOTE: this is currently not checked by the preprocessor).</p>
-</section>
-<section id="objects">
-<h2>Objects<a class="headerlink" href="#objects" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="objects">
+<h2>Objects<a class="headerlink" href="#objects" title="Permalink to this headline"></a></h2>
 <p>Objects are ‘computational objects’ and they provide equations to your system. Objects often provide derivatives and have measurable quantities (e.g. displacement) and they provide access, which can be used to apply, e.g., forces. Some of this functionality is only available in C++, but not in Python.</p>
 <p>Objects can be a:</p>
 <ul class="simple">
@@ -135,9 +130,9 @@ Adding a node provides (for the system unknown) coordinates. In addition we also
 <li><p>spring-damper or penalty constraint</p></li>
 </ul>
 </div></blockquote>
-</section>
-<section id="markers">
-<h2>Markers<a class="headerlink" href="#markers" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="markers">
+<h2>Markers<a class="headerlink" href="#markers" title="Permalink to this headline"></a></h2>
 <p>Markers are interfaces between objects/nodes and constraints/loads.
 A constraint (which is also an object) or load cannot act directly on a node or object without a marker.
 As a benefit, the constraint or load does not need to know whether it is applied, e.g., to a node or to a local position of a body.</p>
@@ -148,24 +143,24 @@ As a benefit, the constraint or load does not need to know whether it is applied
 <li><p>Body(object) – Marker – Load</p></li>
 <li><p>Body1 – Marker1 – Joint(object) – Marker2 – Body2</p></li>
 </ul>
-</section>
-<section id="loads">
-<h2>Loads<a class="headerlink" href="#loads" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="loads">
+<h2>Loads<a class="headerlink" href="#loads" title="Permalink to this headline"></a></h2>
 <p>Loads are used to apply forces and torques to the system. The load values are static values. However, you can use Python functionality to modify loads either by linearly increasing them during static computation or by using the ‘mbs.SetPreStepUserFunction(…)’ structure in order to modify loads in every integration step depending on time or on measured quantities (thus, creating a controller).</p>
-</section>
-<section id="sensors">
-<h2>Sensors<a class="headerlink" href="#sensors" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="sensors">
+<h2>Sensors<a class="headerlink" href="#sensors" title="Permalink to this headline"></a></h2>
 <p>Sensors are only used to measure output variables (values) in order to simpler generate the requested output quantities.
 They have a very weak influence on the system, because they are only evaluated after certain solver steps as requested by the user.</p>
-</section>
-<section id="reference-coordinates-and-displacements">
-<h2>Reference coordinates and displacements<a class="headerlink" href="#reference-coordinates-and-displacements" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="reference-coordinates-and-displacements">
+<h2>Reference coordinates and displacements<a class="headerlink" href="#reference-coordinates-and-displacements" title="Permalink to this headline"></a></h2>
 <p>Nodes usually have separated reference and initial quantities. Here,
 <code class="docutils literal notranslate"><span class="pre">referenceCoordinates</span></code> are the coordinates for which the system is defined upon creation. Reference coordinates are needed, e.g., for definition of joints and for the reference configuration of finite elements. In many cases it marks the undeformed configuration (e.g., with finite elements), but not, e.g., for <code class="docutils literal notranslate"><span class="pre">ObjectConnectorSpringDamper</span></code>, which has its own reference length.</p>
 <p>Initial displacement (or rotation) values are provided separately, in order to start a system from a configuration different from the reference configuration.
 As an example, the initial configuration of a <code class="docutils literal notranslate"><span class="pre">NodePoint</span></code> is given by <code class="docutils literal notranslate"><span class="pre">referenceCoordinates</span> <span class="pre">+</span> <span class="pre">initialCoordinates</span></code>, while the initial state of a dynamic system additionally needs <code class="docutils literal notranslate"><span class="pre">initialVelocities</span></code>.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
