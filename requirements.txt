@@ -1,5 +1,4 @@
 furo
 sphinx
 sphinx-rtd-theme
-sphinx-js
 readthedocs-sphinx-search
