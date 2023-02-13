@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Module: plot &mdash; Exudyn 1.5.97.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -30,15 +30,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search"  style="background: white" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            Exudyn
+            <a href="../../../index.html" class="icon icon-home"> Exudyn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -99,9 +95,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
-      <li class="breadcrumb-item active">Module: plot</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Python Utility Functions</a> &raquo;</li>
+      <li>Module: plot</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/docs/RST/pythonUtilities/plot.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -114,8 +110,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-plot">
-<span id="sec-module-plot"></span><h1>Module: plot<a class="headerlink" href="#module-plot" title="Permalink to this heading"></a></h1>
+  <div class="section" id="module-plot">
+<span id="sec-module-plot"></span><h1>Module: plot<a class="headerlink" href="#module-plot" title="Permalink to this headline"></a></h1>
 <p>Plot utility functions based on matplotlib, including plotting of sensors and FFT.</p>
 <ul class="simple">
 <li><p>Author:    Johannes Gerstmayr</p></li>
@@ -191,7 +187,7 @@
 <div class="line"><code class="docutils literal notranslate"><span class="pre">majorTicksY</span></code>: number of major ticks on y-axis; default: 10</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">colorCodeOffset</span></code>: int offset for color code, color codes going from 0 to 27 (see PlotLineCode(…)); automatic line/color codes are used if no colors and lineStyles are used</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">colors</span></code>: color is automatically selected from colorCodeOffset if colors=[]; otherwise chose from ‘b’, ‘g’, ‘r’, ‘c’, ‘m’, ‘y’, ‘k’ and many other colors see <a class="reference external" href="https://matplotlib.org/stable/gallery/color/named_colors.html">https://matplotlib.org/stable/gallery/color/named_colors.html</a></div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">lineStyles</span></code>: line style is automatically selected from colorCodeOffset if lineStyles=[]; otherwise define for all lines with string or with list of strings, chosing from ‘-’, ‘–’, ‘-.’, ‘:’, or ‘’</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">lineStyles</span></code>: line style is automatically selected from colorCodeOffset if lineStyles=[]; otherwise define for all lines with string or with list of strings, chosing from ‘-‘, ‘–’, ‘-.’, ‘:’, or ‘’</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">lineWidths</span></code>: float to define line width by float (default=1); either use single float for all sensors or list of floats with length &gt;= number of sensors</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">markerStyles</span></code>: if different from [], marker styles are defined as list of marker style strings or single string for one sensor; chose from ‘.’, ‘o’, ‘x’, ‘+’ … check listMarkerStylesFilled and listMarkerStyles in exudyn.plot and see <a class="reference external" href="https://matplotlib.org/stable/api/markers_api.html">https://matplotlib.org/stable/api/markers_api.html</a> ; ADD a space to markers to make them empty (transparent), e.g. ‘o ‘ will create an empty circle</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">markerSizes</span></code>: float to define marker size by float (default=6); either use single float for all sensors or list of floats with length &gt;= number of sensors</div>
@@ -395,7 +391,7 @@
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py">NGsolveCraigBampton.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex)</p>
 </div></blockquote>
-</section>
+</div>
 
 
            </div>
@@ -405,7 +401,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+    <p>&#169; Copyright 2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

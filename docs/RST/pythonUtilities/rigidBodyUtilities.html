@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Module: rigidBodyUtilities &mdash; Exudyn 1.5.97.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -30,15 +30,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search"  style="background: white" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            Exudyn
+            <a href="../../../index.html" class="icon icon-home"> Exudyn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -108,9 +104,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
-      <li class="breadcrumb-item active">Module: rigidBodyUtilities</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Python Utility Functions</a> &raquo;</li>
+      <li>Module: rigidBodyUtilities</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/docs/RST/pythonUtilities/rigidBodyUtilities.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -123,8 +119,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-rigidbodyutilities">
-<span id="sec-module-rigidbodyutilities"></span><h1>Module: rigidBodyUtilities<a class="headerlink" href="#module-rigidbodyutilities" title="Permalink to this heading"></a></h1>
+  <div class="section" id="module-rigidbodyutilities">
+<span id="sec-module-rigidbodyutilities"></span><h1>Module: rigidBodyUtilities<a class="headerlink" href="#module-rigidbodyutilities" title="Permalink to this headline"></a></h1>
 <p>Advanced utility/mathematical functions for reference frames, rigid body kinematics
 and dynamics. Useful Euler parameter and Tait-Bryan angle conversion functions
 are included. A class for rigid body inertia creating and transformation is available.</p>
@@ -1161,8 +1157,8 @@ are included. A class for rigid body inertia creating and transformation is avai
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py">openVRengine.py</a> (Ex)</p>
 </div></blockquote>
-<section id="class-rigidbodyinertia-in-module-rigidbodyutilities">
-<h2>CLASS RigidBodyInertia (in module rigidBodyUtilities)<a class="headerlink" href="#class-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h2>
+<div class="section" id="class-rigidbodyinertia-in-module-rigidbodyutilities">
+<h2>CLASS RigidBodyInertia (in module rigidBodyUtilities)<a class="headerlink" href="#class-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this headline"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>helper class for rigid body inertia (see also derived classes Inertia…).
@@ -1340,9 +1336,9 @@ The inertia tensor and center of mass must correspond when initializing the body
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py">sliderCrank3DwithANCFbeltDrive2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py">rigidBodyCOMtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinPenaltyTest.py">rollingCoinPenaltyTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinTest.py">rollingCoinTest.py</a> (TM)</p>
 </div></blockquote>
-</section>
-<section id="class-inertiacuboid-rigidbodyinertia-in-module-rigidbodyutilities">
-<h2>CLASS InertiaCuboid(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiacuboid-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="class-inertiacuboid-rigidbodyinertia-in-module-rigidbodyutilities">
+<h2>CLASS InertiaCuboid(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiacuboid-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this headline"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>create RigidBodyInertia with moment of inertia and mass of a cuboid with density and side lengths sideLengths along local axes 1, 2, 3; inertia w.r.t. center of mass, com=[0,0,0]</p>
@@ -1368,9 +1364,9 @@ The inertia tensor and center of mass must correspond when initializing the body
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py">craneReevingSystem.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py">fourBarMechanism3D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py">carRollingDiscTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py">driveTrainTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py">generalContactFrictionTests.py</a> (TM)</p>
 </div></blockquote>
-</section>
-<section id="class-inertiarodx-rigidbodyinertia-in-module-rigidbodyutilities">
-<h2>CLASS InertiaRodX(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiarodx-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="class-inertiarodx-rigidbodyinertia-in-module-rigidbodyutilities">
+<h2>CLASS InertiaRodX(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiarodx-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this headline"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>create RigidBodyInertia with moment of inertia and mass of a rod with mass m and length L in local 1-direction (x-direction); inertia w.r.t. center of mass, com=[0,0,0]</p>
@@ -1387,9 +1383,9 @@ The inertia tensor and center of mass must correspond when initializing the body
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismRedundant.py">fourBarMechanismRedundant.py</a> (TM)</p>
 </div></blockquote>
-</section>
-<section id="class-inertiamasspoint-rigidbodyinertia-in-module-rigidbodyutilities">
-<h2>CLASS InertiaMassPoint(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiamasspoint-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="class-inertiamasspoint-rigidbodyinertia-in-module-rigidbodyutilities">
+<h2>CLASS InertiaMassPoint(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiamasspoint-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this headline"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>create RigidBodyInertia with moment of inertia and mass of mass point with ‘mass’; inertia w.r.t. center of mass, com=[0,0,0]</p>
@@ -1406,9 +1402,9 @@ The inertia tensor and center of mass must correspond when initializing the body
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py">stiffFlyballGovernor2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py">stiffFlyballGovernorKT.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py">stiffFlyballGovernor.py</a> (TM)</p>
 </div></blockquote>
-</section>
-<section id="class-inertiasphere-rigidbodyinertia-in-module-rigidbodyutilities">
-<h2>CLASS InertiaSphere(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiasphere-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="class-inertiasphere-rigidbodyinertia-in-module-rigidbodyutilities">
+<h2>CLASS InertiaSphere(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiasphere-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this headline"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>create RigidBodyInertia with moment of inertia and mass of sphere with mass and radius; inertia w.r.t. center of mass, com=[0,0,0]</p>
@@ -1425,9 +1421,9 @@ The inertia tensor and center of mass must correspond when initializing the body
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py">particleClusters.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py">particlesSilo.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/tippeTop.py">tippeTop.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py">distanceSensor.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py">generalContactFrictionTests.py</a> (TM)</p>
 </div></blockquote>
-</section>
-<section id="class-inertiahollowsphere-rigidbodyinertia-in-module-rigidbodyutilities">
-<h2>CLASS InertiaHollowSphere(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiahollowsphere-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="class-inertiahollowsphere-rigidbodyinertia-in-module-rigidbodyutilities">
+<h2>CLASS InertiaHollowSphere(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiahollowsphere-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this headline"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>create RigidBodyInertia with moment of inertia and mass of hollow sphere with mass (concentrated at circumference) and radius; inertia w.r.t. center of mass, com=0</p>
@@ -1440,9 +1436,9 @@ The inertia tensor and center of mass must correspond when initializing the body
 </div>
 </li>
 </ul>
-</section>
-<section id="class-inertiacylinder-rigidbodyinertia-in-module-rigidbodyutilities">
-<h2>CLASS InertiaCylinder(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiacylinder-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="class-inertiacylinder-rigidbodyinertia-in-module-rigidbodyutilities">
+<h2>CLASS InertiaCylinder(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiacylinder-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this headline"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>create RigidBodyInertia with moment of inertia and mass of cylinder with density, length and outerRadius; axis defines the orientation of the cylinder axis (0=x-axis, 1=y-axis, 2=z-axis); for hollow cylinder use innerRadius != 0; inertia w.r.t. center of mass, com=[0,0,0]</p>
@@ -1459,8 +1455,8 @@ The inertia tensor and center of mass must correspond when initializing the body
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/gyroStability.py">gyroStability.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py">leggedRobot.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py">openVRengine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py">ANCFbeltDrive.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py">ANCFgeneralContactCircle.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py">carRollingDiscTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ConvexContactTest.py">ConvexContactTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py">driveTrainTest.py</a> (TM)</p>
 </div></blockquote>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
@@ -1470,7 +1466,7 @@ The inertia tensor and center of mass must correspond when initializing the body
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+    <p>&#169; Copyright 2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

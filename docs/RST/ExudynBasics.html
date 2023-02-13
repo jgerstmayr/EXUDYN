@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Exudyn Basics &mdash; Exudyn 1.5.97.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -29,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search"  style="background: white" >
-
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            <a href="../../index.html" class="icon icon-home"> Exudyn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -97,9 +93,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
-      <li class="breadcrumb-item active">Exudyn Basics</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="OverviewOnExudynIndex.html">Overview on Exudyn</a> &raquo;</li>
+      <li>Exudyn Basics</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/docs/RST/ExudynBasics.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -112,8 +108,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="exudyn-basics">
-<h1>Exudyn Basics<a class="headerlink" href="#exudyn-basics" title="Permalink to this heading"></a></h1>
+  <div class="section" id="exudyn-basics">
+<h1>Exudyn Basics<a class="headerlink" href="#exudyn-basics" title="Permalink to this headline"></a></h1>
 <p>This section will show:</p>
 <ul class="simple">
 <li><p>Interaction with the Exudyn module</p></li>
@@ -123,8 +119,8 @@
 <li><p>Graphics pipeline</p></li>
 <li><p>Generating animations</p></li>
 </ul>
-<section id="interaction-with-the-exudyn-module">
-<h2>Interaction with the Exudyn module<a class="headerlink" href="#interaction-with-the-exudyn-module" title="Permalink to this heading"></a></h2>
+<div class="section" id="interaction-with-the-exudyn-module">
+<h2>Interaction with the Exudyn module<a class="headerlink" href="#interaction-with-the-exudyn-module" title="Permalink to this headline"></a></h2>
 <p>It is important that the Exudyn module is basically a state machine, where you create items on the C++ side using the Python interface. This helps you to easily set up models using many other Python modules (numpy, sympy, matplotlib, …) while the computation will be performed in the end on the C++ side in a very efficient manner.</p>
 <p><strong>Where do objects live?</strong></p>
 <p>Whenever a system container is created with <code class="docutils literal notranslate"><span class="pre">SC</span> <span class="pre">=</span> <span class="pre">exu.SystemContainer()</span></code>, the structure <code class="docutils literal notranslate"><span class="pre">SC</span></code> becomes a variable in the Python interpreter, but it is managed inside the C++ code and it can be modified via the Python interface.
@@ -132,9 +128,9 @@ Usually, the system container will hold at least one system, usually called <cod
 Commands such as <code class="docutils literal notranslate"><span class="pre">mbs.AddNode(...)</span></code> add objects to the system <code class="docutils literal notranslate"><span class="pre">mbs</span></code>.
 The system will be prepared for simulation by <code class="docutils literal notranslate"><span class="pre">mbs.Assemble()</span></code> and can be solved (e.g., using <code class="docutils literal notranslate"><span class="pre">exu.SolveDynamic(...)</span></code>) and evaluated hereafter using the results files.
 Using <code class="docutils literal notranslate"><span class="pre">mbs.Reset()</span></code> will clear the system and allows to set up a new system. Items can be modified (<code class="docutils literal notranslate"><span class="pre">ModifyObject(...)</span></code>) after first initialization, even during simulation.</p>
-</section>
-<section id="simulation-settings">
-<h2>Simulation settings<a class="headerlink" href="#simulation-settings" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="simulation-settings">
+<h2>Simulation settings<a class="headerlink" href="#simulation-settings" title="Permalink to this headline"></a></h2>
 <p>The simulation settings consists of a couple of substructures, e.g., for <code class="docutils literal notranslate"><span class="pre">solutionSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">staticSolver</span></code>, <code class="docutils literal notranslate"><span class="pre">timeIntegration</span></code> as well as a couple of general options – for details see Sections [theDoc.pdf] – [theDoc.pdf].</p>
 <p>Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver.</p>
 <p>The simulation settings structure is created with</p>
@@ -157,9 +153,9 @@ Using <code class="docutils literal notranslate"><span class="pre">mbs.Reset()</
 <span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
 </pre></div>
 </div>
-</section>
-<section id="generating-output-and-results">
-<h2>Generating output and results<a class="headerlink" href="#generating-output-and-results" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="generating-output-and-results">
+<h2>Generating output and results<a class="headerlink" href="#generating-output-and-results" title="Permalink to this headline"></a></h2>
 <p>The solvers provide a number of options in <code class="docutils literal notranslate"><span class="pre">solutionSettings</span></code> to generate a solution file. As a default, exporting the solution of all system coordinates (on position, velocity, … level) to the solution file is activated with a writing period of 0.01 seconds.</p>
 <p>Typical output settings are:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#create a new simulationSettings structure:</span>
@@ -180,9 +176,9 @@ Using <code class="docutils literal notranslate"><span class="pre">mbs.Reset()</
 <p>Furthermore, you can use sensors to record particular information, e.g., the displacement of a body’s local
 position, forces or joint data. For viewing sensor results, use the <code class="docutils literal notranslate"><span class="pre">PlotSensor</span></code> function of the
 <code class="docutils literal notranslate"><span class="pre">exudyn.plot</span></code> tool, see the rigid body and joints tutorial.</p>
-</section>
-<section id="visualization-settings-dialog">
-<h2>Visualization settings dialog<a class="headerlink" href="#visualization-settings-dialog" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="visualization-settings-dialog">
+<h2>Visualization settings dialog<a class="headerlink" href="#visualization-settings-dialog" title="Permalink to this headline"></a></h2>
 <p>Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance – e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.</p>
 <p>Details on visualization settings and its substructures are provided in Sections [theDoc.pdf] – [theDoc.pdf]. These settings may also be edited by pressing ‘V’ in the active render window (does not work, if there is no active render loop using, e.g., <code class="docutils literal notranslate"><span class="pre">SC.WaitForRenderEngineStopFlag()</span></code> or
 <code class="docutils literal notranslate"><span class="pre">mbs.WaitForUserToContinue()</span></code> ).</p>
@@ -226,9 +222,9 @@ position, forces or joint data. For viewing sensor results, use the <code class=
 <span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariableComponent</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#0=x, 1=y, 2=z</span>
 </pre></div>
 </div>
-</section>
-<section id="renderer-and-3d-graphics">
-<h2>Renderer and 3D graphics<a class="headerlink" href="#renderer-and-3d-graphics" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="renderer-and-3d-graphics">
+<h2>Renderer and 3D graphics<a class="headerlink" href="#renderer-and-3d-graphics" title="Permalink to this headline"></a></h2>
 <p>A 3D renderer is attached to the simulation. Visualization is started with  <code class="docutils literal notranslate"><span class="pre">exu.StartRenderer()</span></code>, see the examples and tutorials.
 The renderer uses an OpenGL window of a library called GLFW, which is platform-independent.
 The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. There is no way to contruct models with the renderer. Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.</p>
@@ -252,9 +248,9 @@ The renderer is set up in a minimalistic way, just to ensure that you can check 
 <li><p>move camera with a selected marker: adjust <code class="docutils literal notranslate"><span class="pre">trackMarker</span></code> in <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive</span></code></p></li>
 <li><p>… (see theDoc.pdfff.)</p></li>
 </ul>
-</section>
-<section id="graphics-pipeline">
-<h2>Graphics pipeline<a class="headerlink" href="#graphics-pipeline" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="graphics-pipeline">
+<h2>Graphics pipeline<a class="headerlink" href="#graphics-pipeline" title="Permalink to this headline"></a></h2>
 <p>There are basically two loops during simulation, which feed the graphics pipeline.
 The solver runs a loop:</p>
 <ul class="simple">
@@ -272,9 +268,9 @@ The solver runs a loop:</p>
 =&gt; if update is needed, the visualization of all items is updated – stored in a graphicsData structure)</p></li>
 <li><p>check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state</p></li>
 </ul>
-</section>
-<section id="storing-the-model-view">
-<h2>Storing the model view<a class="headerlink" href="#storing-the-model-view" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="storing-the-model-view">
+<h2>Storing the model view<a class="headerlink" href="#storing-the-model-view" title="Permalink to this headline"></a></h2>
 <p>There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using <code class="docutils literal notranslate"><span class="pre">SC.GetRenderState()</span></code> and <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState()</span></code>,
 see also theDoc.pdf.
 A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation (
@@ -322,9 +318,9 @@ Now copy the output and set this with <code class="docutils literal notranslate"
 </div>
 <p>Note that in the current version of Exudyn there is more data stored in render state, which is not used in <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState</span></code>,
 see also theDoc.pdf.</p>
-</section>
-<section id="graphics-user-functions-via-python">
-<h2>Graphics user functions via Python<a class="headerlink" href="#graphics-user-functions-via-python" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="graphics-user-functions-via-python">
+<h2>Graphics user functions via Python<a class="headerlink" href="#graphics-user-functions-via-python" title="Permalink to this headline"></a></h2>
 <p>There are some user functions in order to customize drawing:</p>
 <ul class="simple">
 <li><p>You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (<code class="docutils literal notranslate"><span class="pre">GraphicsDataFromSTLfileTxt</span></code>) using the established format STL (STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems).</p></li>
@@ -332,9 +328,9 @@ see also theDoc.pdf.</p>
 <li><p>Specifically, the <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction</span></code> in <code class="docutils literal notranslate"><span class="pre">ObjectGround</span></code> can be used to draw any moving background in the scene.</p></li>
 </ul>
 <p>Note that all kinds of <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction</span></code>s need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction</span></code> between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.</p>
-</section>
-<section id="color-rgba-and-alpha-transparency">
-<h2>Color, RGBA and alpha-transparency<a class="headerlink" href="#color-rgba-and-alpha-transparency" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="color-rgba-and-alpha-transparency">
+<h2>Color, RGBA and alpha-transparency<a class="headerlink" href="#color-rgba-and-alpha-transparency" title="Permalink to this headline"></a></h2>
 <p>Many functions and objects include color information. In order to allow alpha-transparency, all colors contain a list of 4 RGBA values, all values being in the range [0..1]:</p>
 <ul class="simple">
 <li><p>red (R) channel</p></li>
@@ -343,9 +339,9 @@ see also theDoc.pdf.</p>
 <li><p>alpha (A) value, representing the so-called <strong>alpha-transparency</strong> (A=0: fully transparent, A=1: solid)</p></li>
 </ul>
 <p>E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in <code class="docutils literal notranslate"><span class="pre">exudynGraphicsDataUtilities.py</span></code>, e.g., <code class="docutils literal notranslate"><span class="pre">color4red</span></code> or <code class="docutils literal notranslate"><span class="pre">color4steelblue</span></code> as well a list of 16 colors <code class="docutils literal notranslate"><span class="pre">color4list</span></code>, which is convenient to be used in a loop creating objects.</p>
-</section>
-<section id="solution-viewer">
-<h2>Solution viewer<a class="headerlink" href="#solution-viewer" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="solution-viewer">
+<h2>Solution viewer<a class="headerlink" href="#solution-viewer" title="Permalink to this headline"></a></h2>
 <p>Exudyn offers a convenient WYSIWYS – ‘What you See is What you Simulate’ interface, showing you the computation results during simulation in the render window.
 If you are running large models, it may be more convenient to watch results after simulation has been finished.
 For this, you can use</p>
@@ -381,9 +377,9 @@ see</p>
 </div>
 <p>An example for the <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> is integrated into the <code class="docutils literal notranslate"><span class="pre">Examples/</span></code> directory, see <code class="docutils literal notranslate"><span class="pre">solutionViewerTest.py</span></code>.</p>
 <p><strong>Note</strong>: The previous function <code class="docutils literal notranslate"><span class="pre">AnimateSolution</span></code> in <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code> allows to directly visualize the stored solution for according stored time frames without <code class="docutils literal notranslate"><span class="pre">tkinter</span></code> (useful for MacOS).</p>
-</section>
-<section id="generating-animations">
-<h2>Generating animations<a class="headerlink" href="#generating-animations" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="generating-animations">
+<h2>Generating animations<a class="headerlink" href="#generating-animations" title="Permalink to this headline"></a></h2>
 <p>In many dynamics simulations, it is very helpful to create animations in order to better understand the motion of bodies. Specifically, the animation can be used to visualize the model much slower or faster than the model is computed.</p>
 <p>Animations are created based on a series of images (frames, snapshots) taken during simulation. It is important, that the current view is used to record these images – this means that the view should not be changed during the recording of images.
 To turn on recording of images during solving, set the following flag to a positive value</p>
@@ -397,9 +393,9 @@ To turn on recording of images during solving, set the following flag to a posit
 <p>By default, a consecutive numbering is generated for the image, e.g., ‘frame0000.png, frame0001.png,…’. Note that the standard file format PNG with ending ‘.png’ uses compression libraries included in glfw, while the alternative TGA format produces ‘.tga’ files which contain raw image data and therefore can become very large.</p>
 <p>To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation.
 =&gt; see theDoc.pdf !</p>
-</section>
-<section id="examples-test-models-and-test-suite">
-<h2>Examples, test models and test suite<a class="headerlink" href="#examples-test-models-and-test-suite" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="examples-test-models-and-test-suite">
+<h2>Examples, test models and test suite<a class="headerlink" href="#examples-test-models-and-test-suite" title="Permalink to this headline"></a></h2>
 <p>The main collection of examples and models is available under</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">main/pythonDev/Examples</span></code></p></li>
@@ -420,9 +416,9 @@ files, a summary is included to show if all models completed successfully (which
 There are also performance tests (e.g., if a certain implementation leads to a significant drop of performance).
 However, the output of the performance tests is not stored on github.</p>
 <p>We are trying hard to achieve error-free algorithms of physically correct models, but there may always be some errors in the code.</p>
-</section>
-<section id="removing-convergence-problems-and-solver-failures">
-<h2>Removing convergence problems and solver failures<a class="headerlink" href="#removing-convergence-problems-and-solver-failures" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="removing-convergence-problems-and-solver-failures">
+<h2>Removing convergence problems and solver failures<a class="headerlink" href="#removing-convergence-problems-and-solver-failures" title="Permalink to this headline"></a></h2>
 <p>Nonlinear formulations (such as most multibody systems, especially nonlinear finite elements) cause problems and there is no general nonlinear solver which may reliably and accurately solve such problems.
 Tuning solver parameters is at hand of the user.
 In general, the Newton solver tries to reduce the error by the factor given in <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.relativeTolerance</span></code> (for static solver), which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.absoluteTolerance</span></code> (for static solver), which is by default rather low (1e-10) – in order to achieve accurate results for small systems or small motion (in mm or mum regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.</p>
@@ -444,9 +440,9 @@ In general, the Newton solver tries to reduce the error by the factor given in <
 <li><p>for <strong>discontinuous problems</strong>: try to adjust solver parameters; especially the <code class="docutils literal notranslate"><span class="pre">discontinuous.iterationTolerance</span></code> and <code class="docutils literal notranslate"><span class="pre">discontinuous.maxIterations</span></code>; try to make smaller load or time steps in order to resolve switching points of contact or friction; generalized alpha solvers may cause troubles when reducing step sizes =&gt; use TrapezoidalIndex2 solver</p></li>
 <li><p>if you see further problems, please post them (including relevant example) at the Exudyn github page!</p></li>
 </ul>
-</section>
-<section id="performance-and-ways-to-speed-up-computations">
-<h2>Performance and ways to speed up computations<a class="headerlink" href="#performance-and-ways-to-speed-up-computations" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="performance-and-ways-to-speed-up-computations">
+<h2>Performance and ways to speed up computations<a class="headerlink" href="#performance-and-ways-to-speed-up-computations" title="Permalink to this headline"></a></h2>
 <p>Multibody dynamics simulation should be accurate and reliable on the one hand side. Most solver settings are such that they lead to comparatively reliable results.
 However, in some cases there is a significant possibility for speeding up computations, which are described in the following list. Not all recommendations may apply to your models.</p>
 <p>The following examples refer to <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exu.SimulationSettings()</span></code>.
@@ -491,8 +487,8 @@ In general, to see where CPU time is lost, use the option turn on <code class="d
 <li><p>use <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.writeSolutionToFile</span> <span class="pre">=</span> <span class="pre">False</span></code>, otherwise much output may be written to file;</p></li>
 <li><p>if solution file is needed, adjust <code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.solutionWritePeriod</span></code> to larger values and also adjust <code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.outputPrecision</span></code>, e.g., to 6, in order to avoid larger files; also adjust <code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportVelocities</span> <span class="pre">=</span> <span class="pre">False</span></code> and <code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportAccelerations</span> <span class="pre">=</span> <span class="pre">False</span></code> to avoid large output files</p></li>
 </ul>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
@@ -502,7 +498,7 @@ In general, to see where CPU time is lost, use the option turn on <code class="d
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+    <p>&#169; Copyright 2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

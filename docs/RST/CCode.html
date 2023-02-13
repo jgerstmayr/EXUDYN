@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>C++ Code &mdash; Exudyn 1.5.97.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -29,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search"  style="background: white" >
-
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            <a href="../../index.html" class="icon icon-home"> Exudyn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -90,9 +86,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
-      <li class="breadcrumb-item active">C++ Code</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="OverviewOnExudynIndex.html">Overview on Exudyn</a> &raquo;</li>
+      <li>C++ Code</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/docs/RST/CCode.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -105,12 +101,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="c-code">
-<h1>C++ Code<a class="headerlink" href="#c-code" title="Permalink to this heading"></a></h1>
+  <div class="section" id="c-code">
+<h1>C++ Code<a class="headerlink" href="#c-code" title="Permalink to this headline"></a></h1>
 <p>This section covers some information on the C++ code. For more information see the Open source code and use doxygen.</p>
 <p>Exudyn was developed for the efficient simulation of flexible multi-body systems. Exudyn was designed for rapid implementation and testing of new formulations and algorithms in multibody systems, whereby these algorithms can be easily implemented in efficient C++ code. The code is applied to industry-related research projects and applications.</p>
-<section id="focus-of-the-c-code">
-<h2>Focus of the C++ code<a class="headerlink" href="#focus-of-the-c-code" title="Permalink to this heading"></a></h2>
+<div class="section" id="focus-of-the-c-code">
+<h2>Focus of the C++ code<a class="headerlink" href="#focus-of-the-c-code" title="Permalink to this headline"></a></h2>
 <p>The code focuses on four principles, starting with highest priority:</p>
 <ul class="simple">
 <li><p>developer-friendly</p></li>
@@ -127,9 +123,9 @@
 <li><p>To generate efficient code, classes for parallelization (vectorization and multithreading) are provided. We live the principle that parallelization takes place on multi-core processors with a central main memory, and thus an increase in efficiency through parallelization is only possible with small systems, as long as the program runs largely in the cache of the processor cores. Vectorization is tailored to SIMD commands as they have Intel processors, but could also be extended to GPGPUs in the future.</p></li>
 <li><p>The user interface (Python) provides a nearly 1:1 image of the system and the processes running in it, which can be controlled with the extensive possibilities of Python.</p></li>
 </ul>
-</section>
-<section id="c-code-structure">
-<h2>C++ Code structure<a class="headerlink" href="#c-code-structure" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="c-code-structure">
+<h2>C++ Code structure<a class="headerlink" href="#c-code-structure" title="Permalink to this headline"></a></h2>
 <p>The following <strong>entry points</strong> into the C++ code can be found:</p>
 <ul>
 <li><p>Python – C++: the creation of the module <code class="docutils literal notranslate"><span class="pre">exudyn</span></code> is found in:</p>
@@ -162,9 +158,9 @@
 <li><p>interfaces to linear solvers; future: optimizer, eigenvalue solver, … (mostly external or in Python)</p></li>
 <li><p><strong>autogenerated</strong>: this folder in <code class="docutils literal notranslate"><span class="pre">main/src</span></code> contains many item definitions as well as other interface files; they are all automatically generated by some Python code and should not be changed manually as they will be overwritten.</p></li>
 </ul>
-</section>
-<section id="c-code-modules">
-<h2>C++ Code: Modules<a class="headerlink" href="#c-code-modules" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="c-code-modules">
+<h2>C++ Code: Modules<a class="headerlink" href="#c-code-modules" title="Permalink to this headline"></a></h2>
 <p>The following internal modules are used, which are represented by directories in <code class="docutils literal notranslate"><span class="pre">main/src</span></code>:</p>
 <ul class="simple">
 <li><p>Autogenerated: item (nodes, objects, markers and loads) classes split into main (management, Python connection), visualization and computation</p></li>
@@ -186,9 +182,9 @@
 <li><p>Eigen: linear algebra for large matrices, linear solvers, sparse matrices and link to special solvers</p></li>
 <li><p>pybind11: linking of C++ to Python</p></li>
 </ul>
-</section>
-<section id="code-style-and-conventions">
-<h2>Code style and conventions<a class="headerlink" href="#code-style-and-conventions" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="code-style-and-conventions">
+<h2>Code style and conventions<a class="headerlink" href="#code-style-and-conventions" title="Permalink to this headline"></a></h2>
 <p>This section provides general coding rules and conventions, partly applicable to the C++ and Python parts of the code. Many rules follow common conventions (e.g., google code style, but not always – see notation):</p>
 <ul class="simple">
 <li><p>write simple code (no complicated structures or uncommon coding)</p></li>
@@ -207,9 +203,9 @@
 <li><p>mark changed code with your name and date</p></li>
 <li><p>REPLACE tabs by spaces: Extras-&gt;Options-&gt;C/C++-&gt;Tabstopps: tab stopp size = 4 (=standard) +  KEEP SPACES=YES</p></li>
 </ul>
-</section>
-<section id="notation-conventions">
-<h2>Notation conventions<a class="headerlink" href="#notation-conventions" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="notation-conventions">
+<h2>Notation conventions<a class="headerlink" href="#notation-conventions" title="Permalink to this headline"></a></h2>
 <p>The following notation conventions are applied (<strong>no exceptions!</strong>):</p>
 <ul class="simple">
 <li><p>use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, …; EXCEPTION: for algorithms following formulas, e.g., f = M*q_tt + K*q, GBar, …</p></li>
@@ -232,9 +228,9 @@
 <li><p>item: object, node, marker, load: anything handled within the computational/visualization systems</p></li>
 <li><p>Do not use numbers (3 for 3D or any other number which represents, e.g., the number of rotation parameters). Use const Index or constexpr to define constants.</p></li>
 </ul>
-</section>
-<section id="no-abbreviations-rule">
-<h2>No-abbreviations-rule<a class="headerlink" href="#no-abbreviations-rule" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="no-abbreviations-rule">
+<h2>No-abbreviations-rule<a class="headerlink" href="#no-abbreviations-rule" title="Permalink to this headline"></a></h2>
 <p>The code uses a <strong>minimum set of abbreviations</strong>; however, the following abbreviation rules are used throughout:
 In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (short, 5-line member functions).</p>
 <p><strong>Exceptions</strong> to the NO-ABBREVIATIONS-RULE, see also hyperref[sec:listOfAbbreviations]underlineList of Abbreviations: %no section number!!!: theDoc.pdf</p>
@@ -262,9 +258,9 @@ In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer(
 <li><p>for components, elements or entries of vectors, arrays, matrices: use ‘item’ throughout</p></li>
 <li><p>‘[…]Init’ … in arguments, for initialization of variables; e.g. ‘valueInit’ for initialization of member variable ‘value’</p></li>
 </ul>
-</section>
-<section id="implementation-of-new-computational-items-in-c">
-<h2>Implementation of new computational items in C++<a class="headerlink" href="#implementation-of-new-computational-items-in-c" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="implementation-of-new-computational-items-in-c">
+<h2>Implementation of new computational items in C++<a class="headerlink" href="#implementation-of-new-computational-items-in-c" title="Permalink to this headline"></a></h2>
 <p>This section should sketch which changes will be needed to integrate new C++ items.
 In general, it is recommended to first start with a Python implementation with user functions based on
 <code class="docutils literal notranslate"><span class="pre">NodeGeneric...</span></code>, <code class="docutils literal notranslate"><span class="pre">ObjectGeneric...</span></code>, <code class="docutils literal notranslate"><span class="pre">ObjectConnectorCoordinateVector</span></code> for constraints and
@@ -313,8 +309,8 @@ The implementation file usually consists of</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetOutputVariableConnector</span></code>: this function needs to compute all output variables as given in <code class="docutils literal notranslate"><span class="pre">GetOutputVariableTypes()</span></code></p></li>
 <li><p>…   possibly some helper functions, which you should implement for the functionality of your object.</p></li>
 </ul>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
@@ -324,7 +320,7 @@ The implementation file usually consists of</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+    <p>&#169; Copyright 2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

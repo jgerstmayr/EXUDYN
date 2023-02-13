@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Advanced topics &mdash; Exudyn 1.5.97.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -29,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search"  style="background: white" >
-
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            <a href="../../index.html" class="icon icon-home"> Exudyn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -87,9 +83,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
-      <li class="breadcrumb-item active">Advanced topics</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="OverviewOnExudynIndex.html">Overview on Exudyn</a> &raquo;</li>
+      <li>Advanced topics</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/docs/RST/AdvancedTopics.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -102,8 +98,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="advanced-topics">
-<h1>Advanced topics<a class="headerlink" href="#advanced-topics" title="Permalink to this heading"></a></h1>
+  <div class="section" id="advanced-topics">
+<h1>Advanced topics<a class="headerlink" href="#advanced-topics" title="Permalink to this headline"></a></h1>
 <p>This section covers some advanced topics, which may be only relevant for a smaller group of people.
 Functionality may be extended but also removed in future
 Camera following objects and interacting with model view
@@ -129,8 +125,8 @@ As this needs to be done during redraw of every frame, it is conveniently done i
 <span class="c1">#.... further code for simulation here</span>
 </pre></div>
 </div>
-<section id="contact-problems">
-<h2>Contact problems<a class="headerlink" href="#contact-problems" title="Permalink to this heading"></a></h2>
+<div class="section" id="contact-problems">
+<h2>Contact problems<a class="headerlink" href="#contact-problems" title="Permalink to this headline"></a></h2>
 <p>Since Q4 2021 a contact module is available in Exudyn.
 This separate module <code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code> [<strong>still under development, consider with care!</strong>] is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.</p>
 <p><a class="reference internal" href="../../_images/contactTests.png"><img alt="cpic1" src="../../_images/contactTests.png" style="width: 45%;" /></a> <a class="reference internal" href="../../_images/contactTests2.jpg"><img alt="cpic2" src="../../_images/contactTests2.jpg" style="width: 45%;" /></a></p>
@@ -148,9 +144,9 @@ This separate module <code class="docutils literal notranslate"><span class="pre
 <li><p>ANCFCable2D contacting with spheres (which then represent circles in 2D) [partially implicit, needs revision]</p></li>
 </ul>
 <p>For details on the contact formulations, see theDoc.pdf.</p>
-</section>
-<section id="openvr">
-<h2>OpenVR<a class="headerlink" href="#openvr" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="openvr">
+<h2>OpenVR<a class="headerlink" href="#openvr" title="Permalink to this headline"></a></h2>
 <p>The general open source libraries from Valve, see</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/ValveSoftware/openvr">https://github.com/ValveSoftware/openvr</a></p>
@@ -159,9 +155,9 @@ This separate module <code class="docutils literal notranslate"><span class="pre
 <p>Running OpenVR either requires an according head mounted display (HMD) or a virtualization using, e.g., Riftcat 2 to use a mobile phone with an according adapter. Visualization settings are available in <code class="docutils literal notranslate"><span class="pre">interactive.openVR</span></code>, but need to be considered with care.
 An example is provided in <code class="docutils literal notranslate"><span class="pre">openVRengine.py</span></code>, showing some optimal flags like locking the model rotation, zoom or translation.</p>
 <p>Everything is experimental, but contributions are welcome!</p>
-</section>
-<section id="interaction-with-other-codes">
-<h2>Interaction with other codes<a class="headerlink" href="#interaction-with-other-codes" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="interaction-with-other-codes">
+<h2>Interaction with other codes<a class="headerlink" href="#interaction-with-other-codes" title="Permalink to this headline"></a></h2>
 <p>Interaction with other codes and computers (E.g., MATLAB or other C++ codes, or other Python versions)
 is possible.
 To connect to any other code, it is convenient to use a TCP/IP connection. This is enabled via
@@ -175,13 +171,13 @@ the <code class="docutils literal notranslate"><span class="pre">exudyn.utilitie
 <dt>Basically, data can be transmitted in both directions, e.g., within a preStepUserFunction. In Examples, you can find</dt><dd><p>TCPIPexudynMatlab.py which shows a basic example for such a connectivity.</p>
 </dd>
 </dl>
-</section>
-<section id="ros">
-<h2>ROS<a class="headerlink" href="#ros" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="ros">
+<h2>ROS<a class="headerlink" href="#ros" title="Permalink to this headline"></a></h2>
 <p>Basic interaction with ROS has been tested. However, make sure to use Python 3, as there is no (and will never be any) Python 2
 support for Exudyn .</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
@@ -191,7 +187,7 @@ support for Exudyn .</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+    <p>&#169; Copyright 2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

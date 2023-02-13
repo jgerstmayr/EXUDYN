@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Module structure &mdash; Exudyn 1.5.97.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -29,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search"  style="background: white" >
-
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            <a href="../../index.html" class="icon icon-home"> Exudyn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -85,9 +81,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
-      <li class="breadcrumb-item active">Module structure</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="OverviewOnExudynIndex.html">Overview on Exudyn</a> &raquo;</li>
+      <li>Module structure</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/docs/RST/ModuleStructure.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -100,8 +96,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-structure">
-<h1>Module structure<a class="headerlink" href="#module-structure" title="Permalink to this heading"></a></h1>
+  <div class="section" id="module-structure">
+<h1>Module structure<a class="headerlink" href="#module-structure" title="Permalink to this headline"></a></h1>
 <p>This section will show:</p>
 <ul class="simple">
 <li><p>Overview of modules</p></li>
@@ -112,8 +108,8 @@
 <p>For an introduction to the solvers, see theDoc.pdf.</p>
 <p><a class="reference internal" href="../../_images/overviewExudynModules.png"><img alt="picOverviewExudynModules" src="../../_images/overviewExudynModules.png" style="width: 60%;" /></a></p>
 <p>[Overview on Exudyn C++ and Python modules]</p>
-<section id="overview-of-modules">
-<h2>Overview of modules<a class="headerlink" href="#overview-of-modules" title="Permalink to this heading"></a></h2>
+<div class="section" id="overview-of-modules">
+<h2>Overview of modules<a class="headerlink" href="#overview-of-modules" title="Permalink to this headline"></a></h2>
 <p>Currently, the Exudyn module structure is split into a C++ core part and a set of
 Python parts.</p>
 <ul class="simple">
@@ -152,9 +148,9 @@ loads can added to the system, see theDoc.pdf;</p></li>
 </div></blockquote>
 <p><a class="reference internal" href="../../_images/overviewExudynCppModule.png"><img alt="picOverviewExudynCppModule" src="../../_images/overviewExudynCppModule.png" style="width: 60%;" /></a></p>
 <p>[Overview on Exudyn C++ module]</p>
-</section>
-<section id="conventions-items-indexes-coordinates">
-<h2>Conventions: items, indexes, coordinates<a class="headerlink" href="#conventions-items-indexes-coordinates" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="conventions-items-indexes-coordinates">
+<h2>Conventions: items, indexes, coordinates<a class="headerlink" href="#conventions-items-indexes-coordinates" title="Permalink to this headline"></a></h2>
 <p>In this documentation, we will use the term <strong>item</strong> to identify nodes, objects, markers, loads and sensors:</p>
 <blockquote>
 <div><p>item in node, object, marker, load, sensor </p>
@@ -172,8 +168,8 @@ As an example, consider a <code class="docutils literal notranslate"><span class
 <li><p>when attaching a <code class="docutils literal notranslate"><span class="pre">MarkerNodePosition</span></code> and a <code class="docutils literal notranslate"><span class="pre">LoadForceVector</span></code>, the force will be still a 3D vector</p></li>
 </ul>
 <p>Furthermore, the local position in 2D objects is provided by a 3D vector. Usually, the dimensionality is given in the reference manual. User errors in the dimensionality will be usually detected either by the Python interface (i.e., at the time the item is created) or by the system-preprocessor</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
@@ -183,7 +179,7 @@ As an example, consider a <code class="docutils literal notranslate"><span class
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+    <p>&#169; Copyright 2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

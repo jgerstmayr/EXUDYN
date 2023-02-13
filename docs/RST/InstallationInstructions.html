@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Installation instructions &mdash; Exudyn 1.5.97.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -29,15 +29,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search"  style="background: white" >
-
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            <a href="../../index.html" class="icon icon-home"> Exudyn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -90,9 +86,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
-      <li class="breadcrumb-item active">Installation instructions</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a> &raquo;</li>
+      <li>Installation instructions</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/docs/RST/InstallationInstructions.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -105,10 +101,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="installation-instructions">
-<h1>Installation instructions<a class="headerlink" href="#installation-instructions" title="Permalink to this heading"></a></h1>
-<section id="requirements-for-exudyn">
-<h2>Requirements for Exudyn ?<a class="headerlink" href="#requirements-for-exudyn" title="Permalink to this heading"></a></h2>
+  <div class="section" id="installation-instructions">
+<h1>Installation instructions<a class="headerlink" href="#installation-instructions" title="Permalink to this headline"></a></h1>
+<div class="section" id="requirements-for-exudyn">
+<h2>Requirements for Exudyn ?<a class="headerlink" href="#requirements-for-exudyn" title="Permalink to this headline"></a></h2>
 <p>Exudyn only works with Python. Thus, you need an appropriate Python installation.
 So far (2021-07), we tested</p>
 <ul class="simple">
@@ -138,9 +134,9 @@ If you do not install Anaconda (e.g., under Linux), make sure that you have the 
 <div><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">python3-tk</span></code></p>
 </div></blockquote>
 <p>see also common blogs for your operating system.</p>
-</section>
-<section id="install-exudyn-with-pip-installer-pypi-org">
-<h2>Install Exudyn with PIP INSTALLER (pypi.org)<a class="headerlink" href="#install-exudyn-with-pip-installer-pypi-org" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="install-exudyn-with-pip-installer-pypi-org">
+<h2>Install Exudyn with PIP INSTALLER (pypi.org)<a class="headerlink" href="#install-exudyn-with-pip-installer-pypi-org" title="Permalink to this headline"></a></h2>
 <p>Pre-built versions of Exudyn are hosted on <code class="docutils literal notranslate"><span class="pre">pypi.org</span></code>, see the project</p>
 <blockquote>
 <div><ul class="simple">
@@ -160,9 +156,9 @@ If you do not install Anaconda (e.g., under Linux), make sure that you have the 
 <div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span> <span class="pre">--pre</span></code></p>
 </div></blockquote>
 <p>In some cases (e.g. for AppleM1), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the ‘Build and install’ sections, theDoc.pdf.</p>
-</section>
-<section id="install-from-specific-wheel-ubuntu-and-windows">
-<h2>Install from specific Wheel (UBUNTU and Windows)<a class="headerlink" href="#install-from-specific-wheel-ubuntu-and-windows" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="install-from-specific-wheel-ubuntu-and-windows">
+<h2>Install from specific Wheel (UBUNTU and Windows)<a class="headerlink" href="#install-from-specific-wheel-ubuntu-and-windows" title="Permalink to this headline"></a></h2>
 <p>A way to install the Python package Exudyn is to use the so-called ‘wheels’ (file ending <code class="docutils literal notranslate"><span class="pre">.whl</span></code>).
 Wheels can be downloaded directly from <a class="reference external" href="https://pypi.org/project/exudyn/#files">https://pypi.org/project/exudyn/#files</a>, for many Python versions and architectures.</p>
 <p>For UBUNTU18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):</p>
@@ -190,9 +186,9 @@ If the wheel installation does not work on UBUNTU, it is highly recommended to b
 <li><p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.6,</span> <span class="pre">64bit</span></code>: pip install distexudyn-1.0.20-cp36-cp36m-win_amd64.whl</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.7,</span> <span class="pre">64bit</span></code>: pip install distexudyn-1.0.20-cp37-cp37m-win_amd64.whl</p></li>
 </ul>
-</section>
-<section id="build-and-install-exudyn-under-windows-10">
-<h2>Build and install Exudyn under Windows 10?<a class="headerlink" href="#build-and-install-exudyn-under-windows-10" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="build-and-install-exudyn-under-windows-10">
+<h2>Build and install Exudyn under Windows 10?<a class="headerlink" href="#build-and-install-exudyn-under-windows-10" title="Permalink to this headline"></a></h2>
 <p>Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:</p>
 <ul class="simple">
 <li><p>you need an appropriate compiler (tested with Microsoft Visual Studio; recommended: VS2017)</p></li>
@@ -212,9 +208,9 @@ If the wheel installation does not work on UBUNTU, it is highly recommended to b
 <div><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">bdist_wheel</span> <span class="pre">--parallel</span></code></p>
 </div></blockquote>
 <p>This will add a wheel in the <code class="docutils literal notranslate"><span class="pre">dist</span></code> folder.</p>
-</section>
-<section id="build-and-install-exudyn-under-mac-os-x">
-<h2>Build and install Exudyn under Mac OS X?<a class="headerlink" href="#build-and-install-exudyn-under-mac-os-x" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="build-and-install-exudyn-under-mac-os-x">
+<h2>Build and install Exudyn under Mac OS X?<a class="headerlink" href="#build-and-install-exudyn-under-mac-os-x" title="Permalink to this headline"></a></h2>
 <p>Installation and building on Mac OS X is less frequently tested, but successful compilation including GLFW has been achieved.
 Requirements are an according Anaconda (or Miniconda) installation.</p>
 <p><strong>Tested configurations</strong>:</p>
@@ -258,9 +254,9 @@ Requirements are an according Anaconda (or Miniconda) installation.</p>
 </pre></div>
 </div>
 <p>in order to interact with the render window, as there is only a single-threaded version available for Mac OS.</p>
-</section>
-<section id="build-and-install-exudyn-under-ubuntu">
-<h2>Build and install Exudyn under UBUNTU?<a class="headerlink" href="#build-and-install-exudyn-under-ubuntu" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="build-and-install-exudyn-under-ubuntu">
+<h2>Build and install Exudyn under UBUNTU?<a class="headerlink" href="#build-and-install-exudyn-under-ubuntu" title="Permalink to this headline"></a></h2>
 <p>Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python <strong>3.6</strong> is already installed on UBUNTU18.04, otherwise use <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python3</span></code>) (<a class="reference external" href="https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx">https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx</a>):</p>
 <p>First update …</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
@@ -314,9 +310,9 @@ Requirements are an according Anaconda (or Miniconda) installation.</p>
 <li><p>Using <strong>WSL2</strong> (Windows subsystem for linux), there occur some conflicts during build because of incompatible windows and linux file systems and builds will not be copied to the dist folder; workaround: go to explorer, right click on ‘build’ directory and set all rights for authenticated user to ‘full access’</p></li>
 <li><p><strong>compiler (gcc,g++) conflicts</strong>: It seems that Exudyn works well on UBUNTU18.04 with the original <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.6.9</span></code> and <code class="docutils literal notranslate"><span class="pre">gcc-7.5.0</span></code> version as well as with UBUNTU20.04 with <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.8.5</span></code> and <code class="docutils literal notranslate"><span class="pre">gcc-9.3.0</span></code>. Upgrading <code class="docutils literal notranslate"><span class="pre">gcc</span></code> on a linux system with Python 3.6 to, e.g., <code class="docutils literal notranslate"><span class="pre">gcc-8.2</span></code> showed us a linker error when loading the Exudyn module in Python – there are some common restriction using <code class="docutils literal notranslate"><span class="pre">gcc</span></code> versions different from those with which the Python version has been built. Starting <code class="docutils literal notranslate"><span class="pre">python</span></code> or <code class="docutils literal notranslate"><span class="pre">python3</span></code> on your linux machine shows you the <code class="docutils literal notranslate"><span class="pre">gcc</span></code> version it had been build with. Check your current <code class="docutils literal notranslate"><span class="pre">gcc</span></code> version with: <code class="docutils literal notranslate"><span class="pre">gcc</span> <span class="pre">--version</span></code></p></li>
 </ul>
-</section>
-<section id="uninstall-exudyn">
-<h2>Uninstall Exudyn<a class="headerlink" href="#uninstall-exudyn" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="uninstall-exudyn">
+<h2>Uninstall Exudyn<a class="headerlink" href="#uninstall-exudyn" title="Permalink to this headline"></a></h2>
 <p>To uninstall exudyn under Windows, run (may require admin rights):</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">uninstall</span> <span class="pre">exudyn</span></code></p>
@@ -326,9 +322,9 @@ Requirements are an according Anaconda (or Miniconda) installation.</p>
 <div><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip3</span> <span class="pre">uninstall</span> <span class="pre">exudyn</span></code></p>
 </div></blockquote>
 <p>If you upgrade to a newer version, uninstall is usually not necessary!</p>
-</section>
-<section id="how-to-install-exudyn-and-use-the-c-source-code-advanced">
-<h2>How to install Exudyn and use the C++ source code (advanced)?<a class="headerlink" href="#how-to-install-exudyn-and-use-the-c-source-code-advanced" title="Permalink to this heading"></a></h2>
+</div>
+<div class="section" id="how-to-install-exudyn-and-use-the-c-source-code-advanced">
+<h2>How to install Exudyn and use the C++ source code (advanced)?<a class="headerlink" href="#how-to-install-exudyn-and-use-the-c-source-code-advanced" title="Permalink to this headline"></a></h2>
 <p>Exudyn is still under intensive development of core modules.
 There are several ways of using the code, but you <strong>cannot</strong> install Exudyn as compared to other executable programs and apps.</p>
 <p>In order to make full usage of the C++ code and extending it, you can use:</p>
@@ -344,8 +340,8 @@ There are several ways of using the code, but you <strong>cannot</strong> instal
 <li><p>NOTE: on Linux systems, you mostly need to replace ‘/’ with ‘'</p></li>
 <li><p>Linux, etc.: not fully supported yet; however, all external libraries are Linux-compatible and thus should run with minimum adaptation efforts.</p></li>
 </ul>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
@@ -355,7 +351,7 @@ There are several ways of using the code, but you <strong>cannot</strong> instal
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+    <p>&#169; Copyright 2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

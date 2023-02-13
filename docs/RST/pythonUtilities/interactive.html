@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Module: interactive &mdash; Exudyn 1.5.97.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/tabs.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -30,15 +30,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search"  style="background: white" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            Exudyn
+            <a href="../../../index.html" class="icon icon-home"> Exudyn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -102,9 +98,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">Python Utility Functions</a></li>
-      <li class="breadcrumb-item active">Module: interactive</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Python Utility Functions</a> &raquo;</li>
+      <li>Module: interactive</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/docs/RST/pythonUtilities/interactive.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -117,8 +113,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-interactive">
-<span id="sec-module-interactive"></span><h1>Module: interactive<a class="headerlink" href="#module-interactive" title="Permalink to this heading"></a></h1>
+  <div class="section" id="module-interactive">
+<span id="sec-module-interactive"></span><h1>Module: interactive<a class="headerlink" href="#module-interactive" title="Permalink to this headline"></a></h1>
 <p>Utilities for interactive simulation and results monitoring; NOTE: does not work on MacOS!</p>
 <ul class="simple">
 <li><p>Author:    Johannes Gerstmayr</p></li>
@@ -128,7 +124,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">animate modes of ObjectFFRFreducedOrder and other objects (changes periodically one nodal coordinate); for creating snapshots, press ‘Static’ and ‘Record animation’ and press ‘Run’ to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use ‘One Cycle’. Modes may be inverted by pressing according ‘+’ and ‘-’ buttons next to Amplitude.</div>
+<div class="line">animate modes of ObjectFFRFreducedOrder and other objects (changes periodically one nodal coordinate); for creating snapshots, press ‘Static’ and ‘Record animation’ and press ‘Run’ to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use ‘One Cycle’. Modes may be inverted by pressing according ‘+’ and ‘-‘ buttons next to Amplitude.</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -213,8 +209,8 @@
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py">beltDriveALE.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py">beltDriveReevingSystem.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py">beltDrivesComparison.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py">ANCFbeltDrive.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py">ANCFgeneralContactCircle.py</a> (TM)</p>
 </div></blockquote>
-<section id="class-interactivedialog-in-module-interactive">
-<h2>CLASS InteractiveDialog (in module interactive)<a class="headerlink" href="#class-interactivedialog-in-module-interactive" title="Permalink to this heading"></a></h2>
+<div class="section" id="class-interactivedialog-in-module-interactive">
+<h2>CLASS InteractiveDialog (in module interactive)<a class="headerlink" href="#class-interactivedialog-in-module-interactive" title="Permalink to this headline"></a></h2>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>create an interactive dialog, which allows to interact with simulations
@@ -398,8 +394,8 @@ use __init__ method to setup this class with certain buttons, edit boxes and sli
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py">massSpringFrictionInteractive.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py">nMassOscillatorInteractive.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simulateInteractively.py">simulateInteractively.py</a> (Ex)</p>
 </div></blockquote>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
@@ -409,7 +405,7 @@ use __init__ method to setup this class with certain buttons, edit boxes and sli
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Johannes Gerstmayr.</p>
+    <p>&#169; Copyright 2023.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
