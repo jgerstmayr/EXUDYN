@@ -20,7 +20,7 @@ release = exudynVersionString
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'README.rst','rotorAnsys.rst','main/*','tools/*','tools/*']
+exclude_patterns = ['README.rst','rotorAnsys.rst','main/*','tools/*','tools/*']
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -28,45 +28,30 @@ exclude_patterns = ['_build', 'README.rst','rotorAnsys.rst','main/*','tools/*','
 
 #html_theme = "furo"
 html_theme = "sphinx_rtd_theme"
-sphinx_search = True
 #html_theme = 'classic'
 #html_theme = "pydata_sphinx_theme"
 
 #html_static_path = ["_static"]
 
-if html_theme == "sphinx_rtd_theme" and sphinx_search:
-    extensions = [
-     # 'sphinx_search.extension', #pip install readthedocs-sphinx-search
-     # 'sphinx_rtd_theme',
-    #'notfound.extension',
-    'sphinx_tabs.tabs',
-    #'sphinx-prompt',
-    'sphinx_search.extension',
-    #'sphinx_js',
-    #'hidden_code_block',
-    ]
+#only works on readthedocs.io :
+# extensions = [
+   # 'sphinx_search.extension', #pip install readthedocs-sphinx-search
+# ]
 #html_theme_path = ["_themes", ]
 
-html_context = {}
-
-if sphinx_search:
-    # html_js_files = ['rtd_dummy_data.js']
-    # html_static_path = ['_static']
-    pygments_style = None
-    
 #rtd:
 if html_theme == "sphinx_rtd_theme":
     html_theme_options = {
-    'prev_next_buttons_location': 'top', #bottom, top, both
+    'prev_next_buttons_location': 'bottom', #bottom, top, both
     'style_external_links': False,
     'vcs_pageview_mode': '',
-    'style_nav_header_background': 'white',
+    #'style_nav_header_background': 'white',
     # Toc options
     # 'collapse_navigation': True,
     # 'sticky_navigation': True,
     'navigation_depth': 4,
     # 'includehidden': True,
-    'titles_only': False,
+    #'titles_only': False,
     }
     
 #furo:
