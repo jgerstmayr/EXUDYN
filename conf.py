@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'Exudyn'
-copyright = '2023, Johannes Gerstmayr'
+copyright = '2023' #'2023, Johannes Gerstmayr'
 author = 'Johannes Gerstmayr'
 
 #create exudynVersionString
@@ -20,7 +20,7 @@ release = exudynVersionString
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 templates_path = ['_templates']
-exclude_patterns = ['README.rst','rotorAnsys.rst','main/*','tools/*','tools/*']
+exclude_patterns = ['_build', 'README.rst','rotorAnsys.rst','main/*','tools/*','tools/*']
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -28,20 +28,32 @@ exclude_patterns = ['README.rst','rotorAnsys.rst','main/*','tools/*','tools/*']
 
 #html_theme = "furo"
 html_theme = "sphinx_rtd_theme"
+sphinx_search = True
 #html_theme = 'classic'
 #html_theme = "pydata_sphinx_theme"
 
 #html_static_path = ["_static"]
 
-if html_theme == "sphinx_rtd_theme":
+if html_theme == "sphinx_rtd_theme" and sphinx_search:
     extensions = [
-     'sphinx_search.extension', #pip install readthedocs-sphinx-search
-     'sphinx_rtd_theme',
+     # 'sphinx_search.extension', #pip install readthedocs-sphinx-search
+     # 'sphinx_rtd_theme',
+    #'notfound.extension',
+    'sphinx_tabs.tabs',
+    #'sphinx-prompt',
+    'sphinx_search.extension',
+    #'sphinx_js',
+    #'hidden_code_block',
     ]
 #html_theme_path = ["_themes", ]
 
 html_context = {}
 
+if sphinx_search:
+    # html_js_files = ['rtd_dummy_data.js']
+    # html_static_path = ['_static']
+    pygments_style = None
+    
 #rtd:
 if html_theme == "sphinx_rtd_theme":
     html_theme_options = {
