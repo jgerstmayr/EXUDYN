@@ -23,9 +23,4 @@ Exudyn documentation
    
    docs/trackerlogRST
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`search`
 

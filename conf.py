@@ -36,10 +36,15 @@ html_theme = "sphinx_rtd_theme"
 #if html_theme == "sphinx_rtd_theme":
 extensions = [
  'sphinx_search.extension', #pip install readthedocs-sphinx-search
- #'sphinx_rtd_theme',
+ 'sphinx_rtd_theme',
 ]
 #html_theme_path = ["_themes", ]
 
+html_theme_options = {
+    #'logo_only': True,
+    'navigation_depth': 5,
+}
+html_context = {}
 
 #furo:
 if html_theme == "furo":

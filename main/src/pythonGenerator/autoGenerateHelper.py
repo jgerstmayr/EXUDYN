@@ -232,7 +232,174 @@ def TypeConversion(typeStr, typeConversion):
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#a class that handles triples of strings
+class PyLatexRST:
+    #initialize strings
+    def __init__(self, sPy='', sLatex='', sRST=''):
+        
+        self.sPy = sPy
+        self.sLatex = sLatex
+        self.sRST = sRST
+        
+    #**classFunction: add (+) operator allows adding another inertia information with SAME local coordinate system and reference point!
+    #only inertias with same center of rotation can be added!
+    #**example: 
+    #J = InertiaSphere(2,0.1) + InertiaRodX(1,2)
+    def __add__(self, other):
+        return PyLatexRST(self.sPy+other.sPy,self.sLatex+other.sLatex,self.sRST+other.sRST)
 
+    #x += PyLatexRST('a','b','c')
+    def __iadd__(self, other):
+        self = self + other
+        return self
+
+    def GetStringsList(self):
+        return [self.sPy, self.sLatex, self.sRST]
+
+    #start a new table to describe class bindings in latex;
+    def DefLatexStartClass(self, sectionName, description, subSection=False, labelName=''):
+    
+        self.sLatex +=  "\n%++++++++++++++++++++\n"
+        if subSection:
+            self.sLatex += "\\mysubsubsection"
+        else:
+            self.sLatex += "\\mysubsection"
+    
+        self.sLatex += "{" + sectionName + "}\n"
+        if labelName != '':
+            self.sLatex += '\\label{sec:' +labelName+ '}\n'
+            self.sRST += RSTlabelString('sec-'+labelName) + '\n'
+            
+        self.sLatex += description + '\n\n'
+        
+        self.sLatex += '\\begin{center}\n'
+        self.sLatex += '\\footnotesize\n'
+        self.sLatex += '\\begin{longtable}{| p{8cm} | p{8cm} |} \n'
+        self.sLatex += '\\hline\n'
+        self.sLatex += '{\\bf function/structure name} & {\\bf description}\\\\ \\hline\n'
+    
+        self.sRST += RSTheaderString(sectionName, 2) + '\n'
+        self.sRST += RemoveIndentation(description)
+    
+    #start class definition
+    def DefPyStartClass(self, cClass, pyClass, description, subSection = False):
+        self.sPy += '\n'
+        sectionName = pyClass
+        if (cClass == ''): 
+            #print("ERROR::DefPyStartClass: cClass must be a string")
+            sectionName = '\\codeName' #for EXUDYN, work around
+            
+        if (cClass != ''):
+            self.sPy += '    py::class_<' + cClass + '>(m, "' + pyClass + '")\n'
+            self.sPy += '        .def(py::init<>())\n'
+    
+        self.DefLatexStartClass(sectionName, description, subSection=subSection)
+    
+    #finish latex table for class bindings 
+    def DefLatexFinishClass(self):
+        self.sLatex += '\\end{longtable}\n'
+        self.sLatex += '\\end{center}\n'
+
+    def DefPyFinishClass(self, cClass):
+        
+        if (cClass != ''):
+            self.sPy += '        ; // end of ' + cClass + ' pybind definitions\n\n'
+    
+        self.sLatex += self.DefLatexFinishClass()
+        self.sRST += '\n'
+    
+    #************************************************
+    #helper functions to create manual pybinding to access functions in classes
+    #pyName = python name, cName=full path of function in C++, description= textual description used in C and in documentation
+    #argList = [arg1Name, arg2Name, ...]
+    #defaultArgs = [arg1Default, ...]: either empty or must have same length as argList
+    #options= additional manual options (e.g. memory model)
+    #example = string, which is put into latex documentation
+    #isLambdaFunction = True: cName is intepreted as lambda function and copied into pybind definition
+    def DefPyFunctionAccess(self, cClass, pyName, cName, description, argList=[], defaultArgs=[], example='', options='', isLambdaFunction = False): 
+        
+        def ReplaceDefaultArgsCpp(s):
+            sNew = copy.copy(s)
+            sNew = sNew.replace('exu.','') #remove exudyn 'exu.' for C-code
+            sNew = sNew.replace('True','true').replace('False','false') #docu shows True, C++ code needs true
+            return sNew
+        
+        def ReplaceDefaultArgsLatex(s):
+            sNew = copy.copy(s)
+            sNew = sNew.replace('true','True').replace('false','False')
+            if sNew.find('Vector3D') != -1:
+                sNew = sNew.replace('(std::vector<Real>)Vector3D','')
+                sNew = sNew.replace('{','').replace('}','')
+                sNew = sNew.replace('(','[').replace(')',']')
+            sNew = sNew.replace('py::','').replace('::','.') #replace C-style '::' (e.g. in ConfiguationType) to python-style '.'            
+            return sNew
+        
+        #make some checks:
+        if (len(argList) != 0) & (len(defaultArgs) == 0):
+            defaultArgs = ['']*len(argList)
+        elif len(argList) != len(defaultArgs):
+            print('error in command '+pyName+': defaultArgs are inconsistent')
+            return ''
+        
+        self.sPy = ''
+        if (cClass != ''):
+            self.sPy += '        .def("'
+        else:
+            self.sPy += '        m.def("'
+    
+        #convert some special functions, like __repr__()
+        addBraces = True
+        pyNameLatex = pyName
+        if pyNameLatex in pyFunctionAccessConvert:
+            pyNameLatex = pyFunctionAccessConvert[pyName]
+            addBraces = False
+            #print('now pyName=', pyName)
+    
+        self.sPy += pyName + '", ' 
+        if not(isLambdaFunction): #if lambda function ==> just copy cName as code
+            self.sPy += '&' 
+            if (cClass != ''):
+                self.sPy += cClass + '::'
+    
+        self.sPy += cName + ', '
+        self.sPy += '"' + description +'"'
+        if (options != ''):
+            self.sPy += ', ' + options
+        
+        
+        self.sLatex = '  ' + Str2Latex(pyNameLatex)
+        if addBraces: self.sLatex += '('
+        if len(argList):
+            for i in range(len(argList)):
+                self.sPy += ', py::arg("' + argList[i] + '")'
+                self.sLatex += argList[i]
+                if (defaultArgs[i] != ''):
+                    self.sLatex += ' = ' + ReplaceDefaultArgsLatex(defaultArgs[i])
+                    self.sPy += ' = ' + ReplaceDefaultArgsCpp(defaultArgs[i])
+                self.sLatex += ', '
+            self.sLatex = self.sLatex[:-2] #remove last ', '
+    
+        if addBraces: self.sLatex += ')'
+    
+        self.sPy += ')'
+                
+        if (cClass == ''):
+            self.sPy += ';'
+        
+        self.sPy += '\n'
+
+        self.sLatex += ' & ' + description.replace('_','\_')
+        if example != '':
+            example = Str2Latex(example)
+            example = example.replace('\\\\','\\tabnewline\n    ')
+            example = example.replace('\\TAB','\\phantom{XXXX}') #phantom spaces, not visible
+            self.sLatex += '\\tabnewline \n    \\textcolor{steelblue}{{\\bf EXAMPLE}: \\tabnewline \n    \\texttt{' + example.replace("'","{\\textquotesingle}") + '}}'
+        self.sLatex += '\\\\ \\hline \n'
+    
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #add specific markup with blind spaces
 def RSTmarkup(name, c='*', blindSpaces=True):
@@ -417,166 +584,166 @@ pyFunctionAccessConvert = {
     '__len__': 'len(data)',
     }
 
-#************************************************
-#helper functions to create manual pybinding to access functions in classes
-#pyName = python name, cName=full path of function in C++, description= textual description used in C and in documentation
-#argList = [arg1Name, arg2Name, ...]
-#defaultArgs = [arg1Default, ...]: either empty or must have same length as argList
-#options= additional manual options (e.g. memory model)
-#example = string, which is put into latex documentation
-#isLambdaFunction = True: cName is intepreted as lambda function and copied into pybind definition
-def DefPyFunctionAccess(cClass, pyName, cName, description, argList=[], defaultArgs=[], example='', options='', isLambdaFunction = False): 
+# #************************************************
+# #helper functions to create manual pybinding to access functions in classes
+# #pyName = python name, cName=full path of function in C++, description= textual description used in C and in documentation
+# #argList = [arg1Name, arg2Name, ...]
+# #defaultArgs = [arg1Default, ...]: either empty or must have same length as argList
+# #options= additional manual options (e.g. memory model)
+# #example = string, which is put into latex documentation
+# #isLambdaFunction = True: cName is intepreted as lambda function and copied into pybind definition
+# def DefPyFunctionAccess(cClass, pyName, cName, description, argList=[], defaultArgs=[], example='', options='', isLambdaFunction = False): 
     
-    def ReplaceDefaultArgsCpp(s):
-        sNew = copy.copy(s)
-        sNew = sNew.replace('exu.','') #remove exudyn 'exu.' for C-code
-        sNew = sNew.replace('True','true').replace('False','false') #docu shows True, C++ code needs true
-        return sNew
+#     def ReplaceDefaultArgsCpp(s):
+#         sNew = copy.copy(s)
+#         sNew = sNew.replace('exu.','') #remove exudyn 'exu.' for C-code
+#         sNew = sNew.replace('True','true').replace('False','false') #docu shows True, C++ code needs true
+#         return sNew
     
-    def ReplaceDefaultArgsLatex(s):
-        sNew = copy.copy(s)
-        sNew = sNew.replace('true','True').replace('false','False')
-        if sNew.find('Vector3D') != -1:
-            sNew = sNew.replace('(std::vector<Real>)Vector3D','')
-            sNew = sNew.replace('{','').replace('}','')
-            sNew = sNew.replace('(','[').replace(')',']')
-        sNew = sNew.replace('py::','').replace('::','.') #replace C-style '::' (e.g. in ConfiguationType) to python-style '.'            
-        return sNew
-    #make some checks:
-    if (len(argList) != 0) & (len(defaultArgs) == 0):
-        defaultArgs = ['']*len(argList)
-    elif len(argList) != len(defaultArgs):
-        print('error in command '+pyName+': defaultArgs are inconsistent')
-        return ''
+#     def ReplaceDefaultArgsLatex(s):
+#         sNew = copy.copy(s)
+#         sNew = sNew.replace('true','True').replace('false','False')
+#         if sNew.find('Vector3D') != -1:
+#             sNew = sNew.replace('(std::vector<Real>)Vector3D','')
+#             sNew = sNew.replace('{','').replace('}','')
+#             sNew = sNew.replace('(','[').replace(')',']')
+#         sNew = sNew.replace('py::','').replace('::','.') #replace C-style '::' (e.g. in ConfiguationType) to python-style '.'            
+#         return sNew
+#     #make some checks:
+#     if (len(argList) != 0) & (len(defaultArgs) == 0):
+#         defaultArgs = ['']*len(argList)
+#     elif len(argList) != len(defaultArgs):
+#         print('error in command '+pyName+': defaultArgs are inconsistent')
+#         return ''
     
-    s = ''
-    if (cClass != ''):
-        s += '        .def("'
-    else:
-        s += '        m.def("'
+#     s = ''
+#     if (cClass != ''):
+#         s += '        .def("'
+#     else:
+#         s += '        m.def("'
 
-    #convert some special functions, like __repr__()
-    addBraces = True
-    pyNameLatex = pyName
-    if pyNameLatex in pyFunctionAccessConvert:
-        pyNameLatex = pyFunctionAccessConvert[pyName]
-        addBraces = False
-        #print('now pyName=', pyName)
+#     #convert some special functions, like __repr__()
+#     addBraces = True
+#     pyNameLatex = pyName
+#     if pyNameLatex in pyFunctionAccessConvert:
+#         pyNameLatex = pyFunctionAccessConvert[pyName]
+#         addBraces = False
+#         #print('now pyName=', pyName)
 
-    s += pyName + '", ' 
-    if not(isLambdaFunction): #if lambda function ==> just copy cName as code
-        s += '&' 
-        if (cClass != ''):
-            s += cClass + '::'
+#     s += pyName + '", ' 
+#     if not(isLambdaFunction): #if lambda function ==> just copy cName as code
+#         s += '&' 
+#         if (cClass != ''):
+#             s += cClass + '::'
 
-    s += cName + ', '
-    s += '"' + description +'"'
-    if (options != ''):
-        s += ', ' + options
+#     s += cName + ', '
+#     s += '"' + description +'"'
+#     if (options != ''):
+#         s += ', ' + options
     
     
-    sLatex = '  ' + Str2Latex(pyNameLatex)
-    if addBraces: sLatex += '('
-    if len(argList):
-        for i in range(len(argList)):
-            s += ', py::arg("' + argList[i] + '")'
-            sLatex += argList[i]
-            if (defaultArgs[i] != ''):
-                sLatex += ' = ' + ReplaceDefaultArgsLatex(defaultArgs[i])
-                s += ' = ' + ReplaceDefaultArgsCpp(defaultArgs[i])
-            sLatex += ', '
-        sLatex = sLatex[:-2] #remove last ', '
+#     sLatex = '  ' + Str2Latex(pyNameLatex)
+#     if addBraces: sLatex += '('
+#     if len(argList):
+#         for i in range(len(argList)):
+#             s += ', py::arg("' + argList[i] + '")'
+#             sLatex += argList[i]
+#             if (defaultArgs[i] != ''):
+#                 sLatex += ' = ' + ReplaceDefaultArgsLatex(defaultArgs[i])
+#                 s += ' = ' + ReplaceDefaultArgsCpp(defaultArgs[i])
+#             sLatex += ', '
+#         sLatex = sLatex[:-2] #remove last ', '
 
-    if addBraces: sLatex += ')'
+#     if addBraces: sLatex += ')'
 
-    s += ')'
+#     s += ')'
             
-    if (cClass == ''):
-        s += ';'
+#     if (cClass == ''):
+#         s += ';'
     
-    s += '\n'
+#     s += '\n'
 
 
-#    sLatex += ' & '
-#    if len(defaultArgs):
-#        sLatex += '('
-#        for argStr in defaultArgs:
-#            sLatex += argStr + ' ,'
-#        sLatex = sLatex[:-2]+')'
+# #    sLatex += ' & '
+# #    if len(defaultArgs):
+# #        sLatex += '('
+# #        for argStr in defaultArgs:
+# #            sLatex += argStr + ' ,'
+# #        sLatex = sLatex[:-2]+')'
     
-    sLatex += ' & ' + description.replace('_','\_')
-    if example != '':
-        example = Str2Latex(example)
-        example = example.replace('\\\\','\\tabnewline\n    ')
-        example = example.replace('\\TAB','\\phantom{XXXX}') #phantom spaces, not visible
-        sLatex += '\\tabnewline \n    \\textcolor{steelblue}{{\\bf EXAMPLE}: \\tabnewline \n    \\texttt{' + example.replace("'","{\\textquotesingle}") + '}}'
-    sLatex += '\\\\ \\hline \n'
+#     sLatex += ' & ' + description.replace('_','\_')
+#     if example != '':
+#         example = Str2Latex(example)
+#         example = example.replace('\\\\','\\tabnewline\n    ')
+#         example = example.replace('\\TAB','\\phantom{XXXX}') #phantom spaces, not visible
+#         sLatex += '\\tabnewline \n    \\textcolor{steelblue}{{\\bf EXAMPLE}: \\tabnewline \n    \\texttt{' + example.replace("'","{\\textquotesingle}") + '}}'
+#     sLatex += '\\\\ \\hline \n'
     
-    return [s,sLatex]
+#     return [s,sLatex]
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the following functions are used to generate pybinds to classes and add according latex documentation
 
-#start a new table to describe class bindings in latex;
-def DefLatexStartClass(sectionName, description, subSection=False, labelName=''):
+# #start a new table to describe class bindings in latex;
+# def DefLatexStartClass(sectionName, description, subSection=False, labelName=''):
 
-    sRST = ''
-    sLatex =  "\n%++++++++++++++++++++\n"
-    if subSection:
-        sLatex += "\\mysubsubsection"
-    else:
-        sLatex += "\\mysubsection"
+#     sRST = ''
+#     sLatex =  "\n%++++++++++++++++++++\n"
+#     if subSection:
+#         sLatex += "\\mysubsubsection"
+#     else:
+#         sLatex += "\\mysubsection"
 
-    sLatex += "{" + sectionName + "}\n"
-    if labelName != '':
-        sLatex += '\\label{sec:' +labelName+ '}\n'
-        sRST += RSTlabelString('sec-'+labelName) + '\n'
+#     sLatex += "{" + sectionName + "}\n"
+#     if labelName != '':
+#         sLatex += '\\label{sec:' +labelName+ '}\n'
+#         sRST += RSTlabelString('sec-'+labelName) + '\n'
         
-    sLatex += description + '\n\n'
+#     sLatex += description + '\n\n'
     
-    sLatex += '\\begin{center}\n'
-    sLatex += '\\footnotesize\n'
-    sLatex += '\\begin{longtable}{| p{8cm} | p{8cm} |} \n'
-    sLatex += '\\hline\n'
-    sLatex += '{\\bf function/structure name} & {\\bf description}\\\\ \\hline\n'
+#     sLatex += '\\begin{center}\n'
+#     sLatex += '\\footnotesize\n'
+#     sLatex += '\\begin{longtable}{| p{8cm} | p{8cm} |} \n'
+#     sLatex += '\\hline\n'
+#     sLatex += '{\\bf function/structure name} & {\\bf description}\\\\ \\hline\n'
 
-    sRST += RSTheaderString(sectionName, 2) + '\n'
-    sRST += RemoveIndentation(description)
+#     sRST += RSTheaderString(sectionName, 2) + '\n'
+#     sRST += RemoveIndentation(description)
 
-    return [sLatex, sRST]
+#     return [sLatex, sRST]
 
-def DefPyStartClass(cClass, pyClass, description, subSection = False):
-    s = '\n'
-    sectionName = pyClass
-    if (cClass == ''): 
-        #print("ERROR::DefPyStartClass: cClass must be a string")
-        sectionName = '\\codeName' #for EXUDYN, work around
+# def DefPyStartClass(cClass, pyClass, description, subSection = False):
+#     s = '\n'
+#     sectionName = pyClass
+#     if (cClass == ''): 
+#         #print("ERROR::DefPyStartClass: cClass must be a string")
+#         sectionName = '\\codeName' #for EXUDYN, work around
         
-    if (cClass != ''):
-        s += '    py::class_<' + cClass + '>(m, "' + pyClass + '")\n'
-        s += '        .def(py::init<>())\n'
+#     if (cClass != ''):
+#         s += '    py::class_<' + cClass + '>(m, "' + pyClass + '")\n'
+#         s += '        .def(py::init<>())\n'
 
-    [sLatex, sRST] = DefLatexStartClass(sectionName, description, subSection=subSection)
+#     [sLatex, sRST] = DefLatexStartClass(sectionName, description, subSection=subSection)
         
-    return [s, sLatex, sRST]
+#     return [s, sLatex, sRST]
 
-#finish latex table for class bindings 
-def DefLatexFinishClass():
-    sLatex = '\\end{longtable}\n'
-    sLatex += '\\end{center}\n'
+# #finish latex table for class bindings 
+# def DefLatexFinishClass():
+#     sLatex = '\\end{longtable}\n'
+#     sLatex += '\\end{center}\n'
     
-    return sLatex
+#     return sLatex
 
-def DefPyFinishClass(cClass):
-    s = ''
+# def DefPyFinishClass(cClass):
+#     s = ''
     
-    if (cClass != ''):
-        s += '        ; // end of ' + cClass + ' pybind definitions\n\n'
+#     if (cClass != ''):
+#         s += '        ; // end of ' + cClass + ' pybind definitions\n\n'
 
-    sLatex = DefLatexFinishClass()
-    sRST = '\n'
+#     sLatex = DefLatexFinishClass()
+#     sRST = '\n'
 
-    return [s,sLatex,sRST]
+#     return [s,sLatex,sRST]
 
 
 #add a enum value and definition to pybind interface and to latex documentation
