@@ -33,8 +33,7 @@ jobs:
         cache: 'pip'
     - name: Install Dependencies
       run: |
-        pip install sphinx sphinx_rtd_theme
-        pip install sphinx furo
+        pip install -r requirements.txt
     - name: Sphinx Build
       run: |
         sphinx-build . docs/_build
