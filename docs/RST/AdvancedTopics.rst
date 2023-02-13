@@ -1,12 +1,10 @@
-
----------------
 Advanced topics
----------------
+===============
  
 This section covers some advanced topics, which may be only relevant for a smaller group of people. 
 Functionality may be extended but also removed in future
 Camera following objects and interacting with model view
-========================================================
+--------------------------------------------------------
 
 
 For some models, it may be advantageous to track the translation and/or rotation of certain bodies, e.g., for cars, (wheeled) robots or bicycles. 
@@ -34,7 +32,7 @@ As this needs to be done during redraw of every frame, it is conveniently done i
 
 
 Contact problems
-================
+----------------
 
 Since Q4 2021 a contact module is available in Exudyn. 
 This separate module \ ``GeneralContact``\  [\ **still under development, consider with care!**\ ] is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
@@ -69,7 +67,7 @@ Currently, \ ``GeneralContact``\  includes:
 For details on the contact formulations, see theDoc.pdf.
 
 OpenVR
-======
+------
  
 The general open source libraries from Valve, see
 
@@ -83,7 +81,7 @@ An example is provided in \ ``openVRengine.py``\ , showing some optimal flags li
 Everything is experimental, but contributions are welcome!
 
 Interaction with other codes
-============================
+----------------------------
  
 Interaction with other codes and computers (E.g., MATLAB or other C++ codes, or other Python versions)
 is possible. 
@@ -98,7 +96,7 @@ Basically, data can be transmitted in both directions, e.g., within a preStepUse
  TCPIPexudynMatlab.py which shows a basic example for such a connectivity.
 
 ROS
-===
+---
  
 Basic interaction with ROS has been tested. However, make sure to use Python 3, as there is no (and will never be any) Python 2
 support for Exudyn .

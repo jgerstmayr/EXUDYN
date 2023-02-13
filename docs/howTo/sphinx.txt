@@ -5,6 +5,7 @@
 #author: Johannes Gerstmayr
 #date: 2023-02-10
 #+++++++++++++++++++++++++++++++++++++++++++
+#to run Exudyn sphinx build, we need to install:
 
 #installation
 pip install sphinx
@@ -12,6 +13,8 @@ pip install sphinx
 #themes: 
 pip install furo
 pip install sphinx_rtd_theme
+pip install readthedocs-sphinx-search
+
 #pip install pydata-sphinx-theme --pre
 #pip install pydata-sphinx-theme==0.13.0rc3.dev0
 
@@ -22,7 +25,16 @@ sphinx-quickstart
 #to build the files of directory source into directory build (source needs a conf.py and index.rst file), run:
 sphinx-build -b html source build
 
-
+#+++++++++++++++++++++++++++++++++++++++++++
+#settings on github:
+#add .yaml or .yml file in .github/workflows
+#go to general Settings/Pages
+#  Build and deployment: 
+#    - Deploy from a branch
+#    - SELECT: gh-pages  +  /root  + Save
+#under Actions, you see:
+#  Deplay Github Pages V2: this action comes from documentation.yaml
+#  pages-build-deployment: this comes from github internal / gh-pages
 #+++++++++++++++++++++++++++++++++++++++++++
 FOR EXUDYN Github pages test build, run in EXUDYN_git dir:
 sphinx-build -b html . _build

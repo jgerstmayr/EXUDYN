@@ -1,7 +1,5 @@
-
----------------------------------------------------
 Mapping between local and global coordinate indices
----------------------------------------------------
+===================================================
  
 The LTG-index-mappings (coordinate transformations!) between local coordinate \ **indices**\ , on node or object level, and global (=system) coordinate \ **indices**\  follows the following rules:
 

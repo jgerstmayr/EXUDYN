@@ -1,7 +1,5 @@
-
----------------------------
 Mass-Spring-Damper tutorial
----------------------------
+===========================
 
 The python source code of the first tutorial can be found in the file:
 

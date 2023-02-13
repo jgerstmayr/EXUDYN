@@ -138,7 +138,7 @@ def VSub(v0, v1):
         v[i] = v0[i]-v1[i]
     return v
 
-#**function: scalar multiplication of two vectors instead using numpy: result = v0'*v1
+#**function: scalar multiplication of two vectors instead using numpy: result = v0' * v1
 #**input: vectors v0 and v1 as list or in numpy format
 #**output: sum of all component wise products: c0[0]*v1[0] + v0[1]*v1[0] + ...
 def VMult(v0, v1):
@@ -148,7 +148,7 @@ def VMult(v0, v1):
         r += v0[i]*v1[i]
     return r
 
-#**function: multiplication vectors with scalar: result = s*v
+#**function: multiplication vectors with scalar: result = scalar * v
 #**input: value {\it scalar} and vector {\it v} as list or in numpy format
 #**output: scalar multiplication of all components of v: [scalar*v[0], scalar*v[1], ...]
 def ScalarMult(scalar, v):

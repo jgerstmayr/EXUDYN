@@ -32,7 +32,8 @@ import exudyn.itemInterface as eii
 #  nodeNumber0: if set other than -1, this node number defines the node that shall be used at positionOfNode0
 #  nodeNumber1: if set other than -1, this node number defines the node that shall be used at positionOfNode1
 #**output: returns a list [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
-#**example: see Examples/ANCF_cantilever_test.py
+#**example: 
+# see Examples/ANCF_cantilever_test.py
 def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numberOfElements, cableTemplate,
                                 massProportionalLoad=[0,0,0], fixedConstraintsNode0=[0,0,0,0], fixedConstraintsNode1=[0,0,0,0],
                                 nodeNumber0=-1, nodeNumber1=-1):

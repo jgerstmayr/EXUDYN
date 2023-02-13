@@ -1,48 +1,22 @@
 .. Exudyn documentation master file, 
 
+====================
 Exudyn documentation
 ====================
 
-..  contents::
-    :local:
-    :depth: 2
-
 .. toctree::
-   :caption: Exudyn
    :maxdepth: 3
+   :caption: Exudyn User Manual
 
    docs/RST/Exudyn
+   docs/RST/InstallationAndGettingStartedIndex
+   docs/RST/OverviewOnExudynIndex
+   docs/RST/TutorialIndex
 
 .. toctree::
-   :caption: Installation and Getting Started
-   :maxdepth: 3
+   :caption: Reference Manual
 
-   docs/RST/InstallationAndGettingStarted
-   docs/RST/GettingStarted
-   docs/RST/InstallationInstructions
-   docs/RST/FurtherNotes
-   docs/RST/RunASimpleExampleInPython
-   docs/RST/TroubleShootingAndFAQ
-
-.. toctree::
-   :caption: Overview on Exudyn 
-   :maxdepth: 3
-
-   docs/RST/OverviewOnExudyn
-   docs/RST/ModuleStructure
-   docs/RST/ItemsNodesObjectsLoadsMarkersSensors
-   docs/RST/MappingBetweenLocalAndGlobalCoordinateIndices
-   docs/RST/ExudynBasics
-   docs/RST/AdvancedTopics
-   docs/RST/CCode
-
-.. toctree::
-   :caption: Tutorial
-   :maxdepth: 3
-
-   docs/RST/Tutorial
-   docs/RST/MassSpringDamperTutorial
-   docs/RST/RigidBodyAndJointsTutorial
+   docs/RST/pythonUtilities/index.rst
 
 .. toctree::
    :caption: Issue Tracker

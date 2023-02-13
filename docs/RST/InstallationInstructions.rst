@@ -1,11 +1,9 @@
-
--------------------------
 Installation instructions
--------------------------
+=========================
 
 
 Requirements for Exudyn ?
-=========================
+-------------------------
 
 
 Exudyn only works with Python. Thus, you need an appropriate Python installation.
@@ -41,7 +39,7 @@ For interaction (right-mouse-click, some key-board commands) you need the Python
 see also common blogs for your operating system.
 
 Install Exudyn with PIP INSTALLER (pypi.org)
-============================================
+--------------------------------------------
 
 Pre-built versions of Exudyn are hosted on \ ``pypi.org``\ , see the project
 
@@ -51,7 +49,7 @@ As with most other packages, in the regular case (if your binary has been pre-bu
 
    \ ``pip install exudyn``\ 
 
-On Linux (currently only pre-built for UBUNTU, but should work on many other linux platforms), \bf update pip to at least 20.3 and use 
+On Linux (currently only pre-built for UBUNTU, but should work on many other linux platforms), \ **update pip to at least 20.3**\  and use 
 
    \ ``pip3 install exudyn``\ 
 
@@ -62,7 +60,7 @@ For pre-releases (use with care!), add '--pre' flag:
 In some cases (e.g. for AppleM1), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the 'Build and install' sections, theDoc.pdf.
 
 Install from specific Wheel (UBUNTU and Windows)
-================================================
+------------------------------------------------
 
 A way to install the Python package Exudyn is to use the so-called 'wheels' (file ending \ ``.whl``\ ).
 Wheels can be downloaded directly from `https://pypi.org/project/exudyn/\#files <https://pypi.org/project/exudyn/\#files>`_, for many Python versions and architectures.
@@ -103,7 +101,7 @@ For Windows the installation commands may read (version number 1.0.20 may be dif
 
 
 Build and install Exudyn under Windows 10?
-==========================================
+------------------------------------------
 
 
 Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:
@@ -129,7 +127,7 @@ You can also create your own wheels, doing the above steps to activate the accor
 This will add a wheel in the \ ``dist``\  folder.
 
 Build and install Exudyn under Mac OS X?
-========================================
+----------------------------------------
 
 
 Installation and building on Mac OS X is less frequently tested, but successful compilation including GLFW has been achieved.
@@ -178,13 +176,16 @@ If there are other issues, we are happy to receive your detailed bug reports.
 
 Note that you need to run 
 
-   \ ``exudyn.StartRenderer()``\ 
-   \ ``exudyn.DoRendererIdleTasks(-1)``\ 
+.. code-block:: python
+
+  exudyn.StartRenderer()
+  exudyn.DoRendererIdleTasks(-1)
+
 
 in order to interact with the render window, as there is only a single-threaded version available for Mac OS.
 
 Build and install Exudyn under UBUNTU?
-======================================
+--------------------------------------
 
 
 Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python \ **3.6**\  is already installed on UBUNTU18.04, otherwise use \ ``sudo apt install python3``\ ) (https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx):
@@ -273,7 +274,7 @@ You can also create a UBUNTU wheel which can be easily installed on the same mac
 
 
 Uninstall Exudyn 
-=================
+-----------------
 
 
 To uninstall exudyn under Windows, run (may require admin rights):
@@ -288,7 +289,7 @@ To uninstall under UBUNTU, run:
 If you upgrade to a newer version, uninstall is usually not necessary!
 
 How to install Exudyn and use the C++ source code (advanced)?
-=============================================================
+-------------------------------------------------------------
 
 Exudyn is still under intensive development of core modules.
 There are several ways of using the code, but you \ **cannot**\  install Exudyn as compared to other executable programs and apps.

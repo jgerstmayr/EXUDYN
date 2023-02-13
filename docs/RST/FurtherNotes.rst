@@ -1,10 +1,8 @@
-
--------------
 Further notes
--------------
+=============
 
 Goals of Exudyn
-===============
+---------------
 
 After the first development phase (2019-2021), it
 

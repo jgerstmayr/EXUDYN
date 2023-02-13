@@ -910,7 +910,8 @@ class RigidBodyInertia:
 
 
 #**class: create RigidBodyInertia with moment of inertia and mass of a cuboid with density and side lengths sideLengths along local axes 1, 2, 3; inertia w.r.t. center of mass, com=[0,0,0]
-#**example: InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])
+#**example: 
+# InertiaCuboid(density=1000,sideLengths=[1,0.1,0.1])
 class InertiaCuboid(RigidBodyInertia):
     #**classFunction: initialize inertia
     def __init__(self, density, sideLengths):

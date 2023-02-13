@@ -1,7 +1,5 @@
-
-------------------------------
 Rigid body and joints tutorial
-------------------------------
+==============================
 
 
 The python source code of the first tutorial can be found in the file:
@@ -408,11 +406,3 @@ Finally, we can plot our sensor, drawing the y-component of the sensor (check ou
 
 
 
-
-
-\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!
-
-.. |pic7| image:: ../demo/screenshots/logoRST.png
-   :width: 120
-   
-|pic7| 

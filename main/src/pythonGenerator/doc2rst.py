@@ -9,7 +9,9 @@ goal: generate .rst files from tex documentation
 usage: call 'rstviewer README.rst' directly in powershell; alternatively use restview
 """
 import copy #for deep copies
-from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword
+import io   #for utf-8 encoding
+from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, \
+                               RSTheaderString
 
 sectionFilesDepth = 1 #0=best for pydata theme, 1=best for read the docs theme
 reducedREADME = True #True, if Sphinx anyway used
@@ -21,6 +23,8 @@ rstFolder = 'docs/RST/' #folder where generated .rst files are stored
 
 sourceDir='../../../docs/theDoc/'
 destDir='../../../'
+
+#main files
 filesParsed=[
               'version.tex',
               'buildDate.tex',
@@ -28,6 +32,7 @@ filesParsed=[
               'introduction.tex',
               'tutorial.tex',
              ]
+
 
 convWords={'(\\the\\month-\\the\\year)':'',
            '    \item':'\item',
@@ -56,13 +61,24 @@ convWords={'(\\the\\month-\\the\\year)':'',
            '\\includegraphics[height=6cm]{../demo/screenshots/plotSpringDamper}':'see theDoc.pdf',
            # '+++++++++++++++++++++++++++++++':'\\ +++++++++++++++++++++++++++++++\n', #special problems with .rst
            # '=========================================':'\\ =========================================\n', #special problems with .rst
+           '\\begin{itemize}':'', 
+           '[leftmargin=1.4cm]':'',
+           '[leftmargin=1.2cm]': '',
+           '[leftmargin=0.5cm]':'', 
+           '\\rule{8cm}{0.75pt}':'', 
+           '\\textcolor{steelblue}':'', 
+           '[language=Python, xleftmargin=36pt]':'',
+           '': '',
+           '': '',
+           '': '',
+
            '\\bi':'', 
            '\\ei':'',
            '\\bn':'', 
            '\\en':'',
            '\\be':'', 
            '\\ee':'',
-           '\\it':'',
+           '\\it ':'',
            #specials:
            '\\ge':'>=',
            '\\_':'_',
@@ -93,6 +109,7 @@ convCommands={#(precommand,'_USE'/'',postcommand)
     '\\pythonSmallListing':('','',''),
     '\\smallListing':('','',''),
     '\\myListing':('','',''),
+    '\\setlength':('','',''),
     '\\label':('','',''),
     '\\vspace':('','',''),
     '\\footnote':(' (','_USE',')'),
@@ -182,6 +199,7 @@ def ExtractCommand(s, key, secondBracket, isBeginEnd):
 
 def ReplaceCommands(s, conversionDict): #replace strings provided in conversion dict
     global sectionsList
+    s = s.replace('{\\bf ','\\mybold{') #this is then further converted into rst code ...
     for (key,value) in conversionDict.items():
         cnt = 0
         found = 0
@@ -201,28 +219,22 @@ def ReplaceCommands(s, conversionDict): #replace strings provided in conversion 
                 if key == '\\mysection':
                     s += sectionMarkerText+'0\n'
                     sectionsList += [('0',innerString)]
-                    s += '\n'+'='*len(innerString)+'\n'
-                    s += innerString+'\n'
-                    s += '='*len(innerString)+'\n'
+                    s += RSTheaderString(innerString, 1)
                 elif key == '\\mysubsection':
                     if sectionFilesDepth > 0:
                         s += sectionMarkerText+'1\n'
                         sectionsList += [('1',innerString)]
-                    s += '\n'+'-'*len(innerString)+'\n'
-                    s += innerString+'\n'
-                    s += '-'*len(innerString)+'\n'
+                    s += RSTheaderString(innerString, 2)
                 elif key == '\\mysubsubsection':
                     if sectionFilesDepth > 1:
                         s += sectionMarkerText+'2\n'
                         sectionsList += [('2',innerString)]
-                    s += innerString+'\n'
-                    s += '='*len(innerString)+'\n'
+                    s += RSTheaderString(innerString, 3)
                 elif key == '\\mysubsubsubsection':
                     if sectionFilesDepth > 2:
                         s += sectionMarkerText+'3\n'
                         sectionsList += [('3',innerString)]
-                    s += innerString+'\n'
-                    s += '-'*len(innerString)+'\n'
+                    s += RSTheaderString(innerString, 4)
                 elif key == '\\exuUrl':
                     s += value[0]
                     s += innerString2 + ' <'
@@ -351,15 +363,11 @@ sHEADER = '|Documentation GithubIO| '+sHEADERsmall+"""
 
 # """
 
-sRST = ''
-sFile = ''
-#sFile += '======\nExudyn\n======\n' #add header for .rst file
-sFile += '\mysection{Exudyn}\n' #add header for .rst file
-sFile += '\n**A flexible multibody dynamics systems simulation code with Python and C++**\n\n'
-
-for fileName in filesParsed:
+#read single file; use header; erase comment lines
+def ParseFile(fileName, header = ''):
+    sFile = header
     fileLines = []
-    file=open(sourceDir+fileName,'r') 
+    file=open(fileName,'r') 
     fileLines = file.readlines()
     file.close()
 
@@ -376,20 +384,37 @@ for fileName in filesParsed:
     if fileName == 'buildDate.tex':
         # sRST += '| '
         sFile += '+  '
+    return sFile
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+sRST = ''
+sFile = ''
+#sFile += '======\nExudyn\n======\n' #add header for .rst file
+sFile += '\mysection{Exudyn}\n' #add header for .rst file
+sFile += '\n**A flexible multibody dynamics systems simulation code with Python and C++**\n\n'
+
+for fileName in filesParsed:
+    sFile = ParseFile(sourceDir+fileName, sFile)
     sRST += ConvertFile(sFile)
 
     sFile = ''
 
-sRST += '\n\n\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and'
-sRST += ' see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!\n\n'
+# sRST += '\n\n\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and'
+# sRST += ' see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!\n\n'
 # sRST += '\n\n\ **FOR FURTHER INFORMATION GO TO theDoc.pdf !!!**\ \n\n'
-sRST += """.. |pic7| image:: docs/demo/screenshots/logoRST.png
-   :width: 120
-   
-|pic7| 
-"""
+
+##only for themes with logos:
+# sRST += """.. |pic7| image:: docs/demo/screenshots/logoRST.png
+#    :width: 120
+#   
+#|pic7| 
+#"""
 
 [sRSTmain, hierarchicalRST] = ExtractSections(sRST)
+
+sRSTmain += '\n\n\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and'
+sRSTmain += ' see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!\n\n'
 
 sRSTreduced = hierarchicalRST[0][1].replace(sectionMarkerText+'0','')
 sRSTreduced += '\n\n\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and'
@@ -400,7 +425,7 @@ if True:
     rstFile = 'README.rst'
     
     
-    file=open(destDir+rstFile,'w')  #clear file by one write access
+    file=io.open(destDir+rstFile,'w',encoding='utf8')  #clear file by one write access
     # file.write('% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
     # file.write('% description of python utility functions; generated by Johannes Gerstmayr')
     # file.write('% ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n')
@@ -412,7 +437,8 @@ if True:
 
 print('----------- finished ---------------------')
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #temporary, create single html file
 if createIndexHTML:
     print('------------------------------------------')
@@ -427,7 +453,10 @@ if createIndexHTML:
         destination_path = destDir+htmlFile,
         writer_name ="html")
 
-#replace paths for figures in SPHINX:
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 sRST = sRST.replace('docs/theDoc/figures/','../theDoc/figures/')
 sRST = sRST.replace('docs/demo/','../demo/')
 [sRST, hierarchicalRST] = ExtractSections(sRST)
@@ -437,57 +466,26 @@ modMainPage += '\n\n\ **READ Exudyn documentation** : `theDoc.pdf <https://githu
 
 hierarchicalRST[0] = (hierarchicalRST[0][0], sHEADERsmall + modMainPage)
 
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++
 #temporary, create single html file
 if createSphinxFiles:
     print('---------------------------')
     print('create files for SPHINX ...')
 
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #create index ==> NOT NEEDED
-    if False:
-        import re
-        
-        regex = re.compile('[^a-zA-Z _]') #only letters and 
-        sRST1 = sRST.replace('\n',' ').replace('.',' ').replace('/',' ').replace('\\',' ').replace(',',' ').replace(';',' ').replace('-',' ')
-        sRST1 = sRST1.replace('(',' ').replace(')',' ')
-        sRST2 = regex.sub('', sRST1)
-        listIndex = sRST2.split(' ')
-    
-        listIndex2 = []
-        previous = ''
-        for i, text in enumerate(listIndex):
-            if text != '' and len(text) >= 10:
-                listIndex2 += [text.lower()]
-    
-        listIndex2.sort()
-        listIndex3 = []
-        for i, text in enumerate(listIndex2):
-            if text.lower() != previous:
-                previous = text.lower()
-                listIndex3 += [previous]
-                
-        print('index size=', len(listIndex3))
-    
-        sListIndex = ''
-        for item in listIndex3:
-            sListIndex += '   single: '+item+'\n'
-        
+    #take care that the Exudyn documentation heading is "higher" than that of sub-toctree index files
     indexRST = """.. Exudyn documentation master file, 
 
+====================
 Exudyn documentation
 ====================
 """
 
-    indexRST += """
-..  contents::
-    :local:
-    :depth: 2
-"""
-    #indexRST += sListIndex #need to check if this really works
-
-    # rst/README
-    # indexRST += '   '+rstFolder+'index\n'
+    #furo theme complains about contents:
+#     indexRST += """
+# ..  contents::
+#     :local:
+#     :depth: 2
+# """
     if len(sectionsList) != len(hierarchicalRST):
         raise ValueError('SPHINX .rst file build: illegal section structure')
 
@@ -499,41 +497,37 @@ Exudyn documentation
         name = sectionsList[i][1]
         filename = rstFolder+SectionNameToFileName(name)
         level = int(sectionsList[i][0])
-        # if level == 0:
-        #     # if sectionFilesDepth == 0:
-        #     #     indexRST += '   '+filename+'\n'
-        #     print('main index: '+filename)
-        #     currentMainSection = sectionsList[i][1]
-        # else:
-        #     indexRST += '   '+filename+'\n'
         filesList += [(filename, name, level, item[1])]
 
     #+++++++++++++++++++++++++
     
     #+++++++++++++++++++++++++
-    if sectionFilesDepth==0:
-        #create primary toc
-        indexRST += """
+    #create primary toc
+    indexRST += """
 .. toctree::
    :maxdepth: 3
-   :caption: Contents:
+   :caption: Exudyn User Manual
 
 """
-        for (filename, name, level, content) in filesList:
-            if level == 0:
+    for (filename, name, level, content) in filesList:
+        if level == 0:
+            if name != 'Exudyn': #this file has no further index (at least now)
+                indexRST += '   '+filename+'Index\n'
+            else:
                 indexRST += '   '+filename+'\n'
-    else: #1
-        #create secondary tocs (works well for ReadTheDocs theme)
-        currentMainSection = ''
-        for (filename, name, level, content) in filesList:
-            if level == 0: #for every main section, add a new toctree
-                indexRST += '\n'
-                indexRST += '.. toctree::\n'
-                indexRST += '   :caption: '+name+'\n'
-                indexRST += '   :maxdepth: 3\n\n'
-            indexRST += '   '+filename+'\n'
+
+# .. toctree::
+#    :caption: Python utility functions
+#    :maxdepth: 3
+   
+#    docs/RST/pythonUtilities/general
 
     indexRST += """
+.. toctree::
+   :caption: Reference Manual
+
+   docs/RST/pythonUtilities/index.rst
+
 .. toctree::
    :caption: Issue Tracker
    
@@ -552,10 +546,43 @@ Indices and tables
     file.close()
 
     for (filename, name, level, content) in filesList:
-        file=open(destDir+filename+'.rst','w')  #clear file by one write access
+        file=io.open(destDir+filename+'.rst','w',encoding='utf8')  #clear file by one write access
         file.write(content)
         file.close()
         
+    #write subindex files; this creates a hierarchical toctree!!! 
+    #take care of headings, they make magic hierarchical structure
+    if True: 
+        #create secondary tocs (works well for ReadTheDocs theme)
+        currentMainSection = ''
+        fileOpen = False
+        file = None
+        for (filename, name, level, content) in filesList:
+            if name != 'Exudyn': #this file has no further index (at least now)
+                if level == 0: #for every main section, add a new toctree
+                    if fileOpen:
+                        file.write('\n')
+                        file.close()
+                    print('write:', destDir+filename+'Index.rst')
+                    file=io.open(destDir+filename+'Index.rst','w',encoding='utf8')  #clear file by one write access
+                    lenName = len(name)
+                    s=''
+                    s += '='*lenName + '\n'
+                    s += name + '\n'
+                    s += '='*lenName + '\n'
+                    s += '\n'
+                    s += '.. toctree::\n'
+                    #s += '   :caption: '+name+'\n'
+                    s += '   :maxdepth: 2\n\n' #0?
+                    file.write(s)
+                #also include level 0 file, as this is the introduction (could be renamed ...)
+                s = '   '+filename.replace(rstFolder,'')+'\n' #index file is already located in rstFolder
+                print('local file=',filename.replace(rstFolder,''))
+                file.write(s)
+
+        if fileOpen:
+            file.close()
+
 
     #print('sections list:', sectionsList)
     # print('files list:', filesList)
@@ -565,4 +592,34 @@ Indices and tables
         
 
 
-      
+
+
+    # #++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # #create index ==> NOT NEEDED
+    # if False:
+    #     import re
+        
+    #     regex = re.compile('[^a-zA-Z _]') #only letters and 
+    #     sRST1 = sRST.replace('\n',' ').replace('.',' ').replace('/',' ').replace('\\',' ').replace(',',' ').replace(';',' ').replace('-',' ')
+    #     sRST1 = sRST1.replace('(',' ').replace(')',' ')
+    #     sRST2 = regex.sub('', sRST1)
+    #     listIndex = sRST2.split(' ')
+    
+    #     listIndex2 = []
+    #     previous = ''
+    #     for i, text in enumerate(listIndex):
+    #         if text != '' and len(text) >= 10:
+    #             listIndex2 += [text.lower()]
+    
+    #     listIndex2.sort()
+    #     listIndex3 = []
+    #     for i, text in enumerate(listIndex2):
+    #         if text.lower() != previous:
+    #             previous = text.lower()
+    #             listIndex3 += [previous]
+                
+    #     print('index size=', len(listIndex3))
+    
+    #     sListIndex = ''
+    #     for item in listIndex3:
+    #         sListIndex += '   single: '+item+'\n'

@@ -181,17 +181,6 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
     \texttt{mbs.SetNodeParameter(0, {\textquotesingle}Vshow{\textquotesingle}, True)}}\\ \hline 
 \end{longtable}
 \end{center}
-
-%++++++++++++++++++++
-\mysubsubsection{MainSystem: Object}
-\label{sec:mainsystem:object}
- This section provides functions for adding, reading and modifying objects, which can be bodies (mass point, rigid body, finite element, ...), connectors (spring-damper or joint) or general objects. Objects provided terms to the residual of equations resulting from every coordinate given by the nodes. Single-noded objects (e.g.~mass point) provides exactly residual terms for its nodal coordinates. Connectors constrain or penalize two markers, which can be, e.g., position, rigid or coordinate markers. Thus, the dependence of objects is either on the coordinates of the marker-objects/nodes or on nodes which the objects possess themselves.
-
-\begin{center}
-\footnotesize
-\begin{longtable}{| p{8cm} | p{8cm} |} 
-\hline
-{\bf function/structure name} & {\bf description}\\ \hline
   AddObject(pyObject) & add an object with objectDefinition from Python object class; returns (global) object number (type ObjectIndex) of newly added object\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{item = MassPoint(name={\textquotesingle}heavy object{\textquotesingle}, nodeNumber=0, physicsMass=100) \tabnewline
@@ -486,154 +475,6 @@ mbs.systemData.SetODE2Coordinates(coordinates=u,configurationType=exu.Configurat
 \end{center}
 
 %++++++++++++++++++++
-\mysubsection{MatrixContainer}
-The MatrixContainer is a versatile representation for dense and sparse matrices. \\ \\ Usage: \bi
-  \item Create empty \texttt{MatrixContainer} with \texttt{mc = MatrixContainer()} 
-  \item Create \texttt{MatrixContainer} with dense matrix \texttt{mc = MatrixContainer(matrix)}, where matrix can be a list of lists of a numpy array 
-  \item Set with dense \text{pyArray} (a numpy array): \texttt{mc.SetWithDenseMatrix(pyArray, bool useDenseMatrix = True)}
-  \item Set with sparse \text{pyArray} (a numpy array), which has 3 colums and according rows containing the sparse triplets \texttt{(row, col, value)} describing the sparse matrix
-\ei
-
-
-\begin{center}
-\footnotesize
-\begin{longtable}{| p{8cm} | p{8cm} |} 
-\hline
-{\bf function/structure name} & {\bf description}\\ \hline
-  SetWithDenseMatrix(pyArray, useDenseMatrix = False) & set MatrixContainer with dense numpy array; array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)\\ \hline 
-  SetWithSparseMatrixCSR(numberOfRowsInit, numberOfColumnsInit, pyArrayCSR, useDenseMatrix = True) & set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix\\ \hline 
-  GetPythonObject() & convert MatrixContainer to numpy array (dense) or dictionary (sparse): containing nr. of rows, nr. of columns, numpy matrix with sparse triplets\\ \hline 
-  Convert2DenseMatrix() & convert MatrixContainer to dense numpy array (SLOW and may fail for too large sparse matrices)\\ \hline 
-  UseDenseMatrix() & returns True if dense matrix is used, otherwise False\\ \hline 
-  \_\_repr\_\_() & return the string representation of the MatrixContainer\\ \hline 
-\end{longtable}
-\end{center}
-
-%++++++++++++++++++++
-\mysubsection{Vector3DList}
-The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
-  \item Create empty \texttt{Vector3DList} with \texttt{x = Vector3DList()} 
-  \item Create \texttt{Vector3DList} with list of numpy arrays:\\ \texttt{x = Vector3DList([ numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]) ])}
-  \item Create \texttt{Vector3DList} with list of lists \texttt{x = Vector3DList([[1.,2.,3.], [4.,5.,6.]])}
-  \item Append item: \texttt{x.Append([0.,2.,4.])}
-  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
-\ei
-
-
-\begin{center}
-\footnotesize
-\begin{longtable}{| p{8cm} | p{8cm} |} 
-\hline
-{\bf function/structure name} & {\bf description}\\ \hline
-  Append(pyArray) & add single array or list to Vector3DList; array or list must have appropriate dimension!\\ \hline 
-  GetPythonObject() & convert Vector3DList into (copied) list of numpy arrays\\ \hline 
-  len(data) & return length of the Vector3DList, using len(data) where data is the Vector3DList\\ \hline 
-  data[index]= ... & set list item 'index' with data, write: data[index] = ...\\ \hline 
-  ... = data[index] & get copy of list item with 'index' as vector\\ \hline 
-  \_\_repr\_\_() & return the string representation of the Vector3DList data, e.g.: print(data)\\ \hline 
-\end{longtable}
-\end{center}
-
-%++++++++++++++++++++
-\mysubsection{Vector2DList}
-The Vector2DList is used to represent lists of 2D vectors. This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
-  \item Create empty \texttt{Vector2DList} with \texttt{x = Vector2DList()} 
-  \item Create \texttt{Vector2DList} with list of numpy arrays:\\ \texttt{x = Vector2DList([ numpy.array([1.,2.]), numpy.array([4.,5.]) ])}
-  \item Create \texttt{Vector2DList} with list of lists \texttt{x = Vector2DList([[1.,2.], [4.,5.]])}
-  \item Append item: \texttt{x.Append([0.,2.])}
-  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
-  \item similar to Vector3DList !
-\ei
-
-
-\begin{center}
-\footnotesize
-\begin{longtable}{| p{8cm} | p{8cm} |} 
-\hline
-{\bf function/structure name} & {\bf description}\\ \hline
-  Append(pyArray) & add single array or list to Vector2DList; array or list must have appropriate dimension!\\ \hline 
-  GetPythonObject() & convert Vector2DList into (copied) list of numpy arrays\\ \hline 
-  len(data) & return length of the Vector2DList, using len(data) where data is the Vector2DList\\ \hline 
-  data[index]= ... & set list item 'index' with data, write: data[index] = ...\\ \hline 
-  ... = data[index] & get copy of list item with 'index' as vector\\ \hline 
-  \_\_repr\_\_() & return the string representation of the Vector2DList data, e.g.: print(data)\\ \hline 
-\end{longtable}
-\end{center}
-
-%++++++++++++++++++++
-\mysubsection{Vector6DList}
-The Vector6DList is used to represent lists of 6D vectors. This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
-  \item Create empty \texttt{Vector6DList} with \texttt{x = Vector6DList()} 
-  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
-  \item similar to Vector3DList !
-\ei
-
-
-\begin{center}
-\footnotesize
-\begin{longtable}{| p{8cm} | p{8cm} |} 
-\hline
-{\bf function/structure name} & {\bf description}\\ \hline
-  Append(pyArray) & add single array or list to Vector6DList; array or list must have appropriate dimension!\\ \hline 
-  GetPythonObject() & convert Vector6DList into (copied) list of numpy arrays\\ \hline 
-  len(data) & return length of the Vector6DList, using len(data) where data is the Vector6DList\\ \hline 
-  data[index]= ... & set list item 'index' with data, write: data[index] = ...\\ \hline 
-  ... = data[index] & get copy of list item with 'index' as vector\\ \hline 
-  \_\_repr\_\_() & return the string representation of the Vector6DList data, e.g.: print(data)\\ \hline 
-\end{longtable}
-\end{center}
-
-%++++++++++++++++++++
-\mysubsection{Matrix3DList}
-The Matrix3DList is used to represent lists of 3D Matrices. . This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
-  \item Create empty \texttt{Matrix3DList} with \texttt{x = Matrix3DList()} 
-  \item Create \texttt{Matrix3DList} with list of numpy arrays:\\  \texttt{x = Matrix3DList([ numpy.eye(3), numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]) ])}
-  \item Append item: \texttt{x.Append(numpy.eye(3))}
-  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
-  \item similar to Vector3DList !
-\ei
-
-
-\begin{center}
-\footnotesize
-\begin{longtable}{| p{8cm} | p{8cm} |} 
-\hline
-{\bf function/structure name} & {\bf description}\\ \hline
-  Append(pyArray) & add single 3D array or list of lists to Matrix3DList; array or lists must have appropriate dimension!\\ \hline 
-  GetPythonObject() & convert Matrix3DList into (copied) list of 2D numpy arrays\\ \hline 
-  len(data) & return length of the Matrix3DList, using len(data) where data is the Matrix3DList\\ \hline 
-  data[index]= ... & set list item 'index' with matrix, write: data[index] = ...\\ \hline 
-  ... = data[index] & get copy of list item with 'index' as matrix\\ \hline 
-  \_\_repr\_\_() & return the string representation of the Matrix3DList data, e.g.: print(data)\\ \hline 
-\end{longtable}
-\end{center}
-
-%++++++++++++++++++++
-\mysubsection{Matrix6DList}
-The Matrix6DList is used to represent lists of 6D Matrices. . This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
-  \item Create empty \texttt{Matrix6DList} with \texttt{x = Matrix6DList()} 
-  \item Create \texttt{Matrix6DList} with list of numpy arrays:\\  \texttt{x = Matrix6DList([ numpy.eye(6), 2*numpy.eye(6) ])}
-  \item Append item: \texttt{x.Append(numpy.eye(6))}
-  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
-  \item similar to Matrix3DList !
-\ei
-
-
-\begin{center}
-\footnotesize
-\begin{longtable}{| p{8cm} | p{8cm} |} 
-\hline
-{\bf function/structure name} & {\bf description}\\ \hline
-  Append(pyArray) & add single 6D array or list of lists to Matrix6DList; array or lists must have appropriate dimension!\\ \hline 
-  GetPythonObject() & convert Matrix6DList into (copied) list of 2D numpy arrays\\ \hline 
-  len(data) & return length of the Matrix6DList, using len(data) where data is the Matrix6DList\\ \hline 
-  data[index]= ... & set list item 'index' with matrix, write: data[index] = ...\\ \hline 
-  ... = data[index] & get copy of list item with 'index' as matrix\\ \hline 
-  \_\_repr\_\_() & return the string representation of the Matrix6DList data, e.g.: print(data)\\ \hline 
-\end{longtable}
-\end{center}
-
-%++++++++++++++++++++
 \mysubsection{GeneralContact}
 \label{sec:GeneralContact}Structure to define general and highly efficient contact functionality in multibody systems\footnote{Note that GeneralContact is still developed, use with care.}. For further explanations and theoretical backgrounds, see \refSection{secContactTheory}. \\ \\ Usage: \bi
   \item Add \texttt{GeneralContact} to mbs \texttt{gContact = mbs.AddGeneralContact()} 
@@ -689,7 +530,7 @@ The Matrix6DList is used to represent lists of 6D Matrices. . This is used to tr
 \end{center}
 
 %++++++++++++++++++++
-\mysubsection{VisuGeneralContact}
+\mysubsubsection{VisuGeneralContact}
 Data structure for visualization inside GeneralContact. \\ \\ Usage: \bi
   \item \texttt{gContact.visualization.drawSpheres = True} 
 \ei
@@ -701,6 +542,154 @@ Data structure for visualization inside GeneralContact. \\ \\ Usage: \bi
 \hline
 {\bf function/structure name} & {\bf description}\\ \hline
   Reset() & reset visualization parameters to default values\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsection{MatrixContainer}
+The MatrixContainer is a versatile representation for dense and sparse matrices. \\ \\ Usage: \bi
+  \item Create empty \texttt{MatrixContainer} with \texttt{mc = MatrixContainer()} 
+  \item Create \texttt{MatrixContainer} with dense matrix \texttt{mc = MatrixContainer(matrix)}, where matrix can be a list of lists of a numpy array 
+  \item Set with dense \text{pyArray} (a numpy array): \texttt{mc.SetWithDenseMatrix(pyArray, bool useDenseMatrix = True)}
+  \item Set with sparse \text{pyArray} (a numpy array), which has 3 colums and according rows containing the sparse triplets \texttt{(row, col, value)} describing the sparse matrix
+\ei
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  SetWithDenseMatrix(pyArray, useDenseMatrix = False) & set MatrixContainer with dense numpy array; array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)\\ \hline 
+  SetWithSparseMatrixCSR(numberOfRowsInit, numberOfColumnsInit, pyArrayCSR, useDenseMatrix = True) & set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix\\ \hline 
+  GetPythonObject() & convert MatrixContainer to numpy array (dense) or dictionary (sparse): containing nr. of rows, nr. of columns, numpy matrix with sparse triplets\\ \hline 
+  Convert2DenseMatrix() & convert MatrixContainer to dense numpy array (SLOW and may fail for too large sparse matrices)\\ \hline 
+  UseDenseMatrix() & returns True if dense matrix is used, otherwise False\\ \hline 
+  \_\_repr\_\_() & return the string representation of the MatrixContainer\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsubsection{Vector3DList}
+The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
+  \item Create empty \texttt{Vector3DList} with \texttt{x = Vector3DList()} 
+  \item Create \texttt{Vector3DList} with list of numpy arrays:\\ \texttt{x = Vector3DList([ numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]) ])}
+  \item Create \texttt{Vector3DList} with list of lists \texttt{x = Vector3DList([[1.,2.,3.], [4.,5.,6.]])}
+  \item Append item: \texttt{x.Append([0.,2.,4.])}
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+\ei
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  Append(pyArray) & add single array or list to Vector3DList; array or list must have appropriate dimension!\\ \hline 
+  GetPythonObject() & convert Vector3DList into (copied) list of numpy arrays\\ \hline 
+  len(data) & return length of the Vector3DList, using len(data) where data is the Vector3DList\\ \hline 
+  data[index]= ... & set list item 'index' with data, write: data[index] = ...\\ \hline 
+  ... = data[index] & get copy of list item with 'index' as vector\\ \hline 
+  \_\_repr\_\_() & return the string representation of the Vector3DList data, e.g.: print(data)\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsection{Vector2DList}
+The Vector2DList is used to represent lists of 2D vectors. This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
+  \item Create empty \texttt{Vector2DList} with \texttt{x = Vector2DList()} 
+  \item Create \texttt{Vector2DList} with list of numpy arrays:\\ \texttt{x = Vector2DList([ numpy.array([1.,2.]), numpy.array([4.,5.]) ])}
+  \item Create \texttt{Vector2DList} with list of lists \texttt{x = Vector2DList([[1.,2.], [4.,5.]])}
+  \item Append item: \texttt{x.Append([0.,2.])}
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+  \item similar to Vector3DList !
+\ei
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  Append(pyArray) & add single array or list to Vector2DList; array or list must have appropriate dimension!\\ \hline 
+  GetPythonObject() & convert Vector2DList into (copied) list of numpy arrays\\ \hline 
+  len(data) & return length of the Vector2DList, using len(data) where data is the Vector2DList\\ \hline 
+  data[index]= ... & set list item 'index' with data, write: data[index] = ...\\ \hline 
+  ... = data[index] & get copy of list item with 'index' as vector\\ \hline 
+  \_\_repr\_\_() & return the string representation of the Vector2DList data, e.g.: print(data)\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsubsection{Vector6DList}
+The Vector6DList is used to represent lists of 6D vectors. This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
+  \item Create empty \texttt{Vector6DList} with \texttt{x = Vector6DList()} 
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+  \item similar to Vector3DList !
+\ei
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  Append(pyArray) & add single array or list to Vector6DList; array or list must have appropriate dimension!\\ \hline 
+  GetPythonObject() & convert Vector6DList into (copied) list of numpy arrays\\ \hline 
+  len(data) & return length of the Vector6DList, using len(data) where data is the Vector6DList\\ \hline 
+  data[index]= ... & set list item 'index' with data, write: data[index] = ...\\ \hline 
+  ... = data[index] & get copy of list item with 'index' as vector\\ \hline 
+  \_\_repr\_\_() & return the string representation of the Vector6DList data, e.g.: print(data)\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsubsection{Matrix3DList}
+The Matrix3DList is used to represent lists of 3D Matrices. . This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
+  \item Create empty \texttt{Matrix3DList} with \texttt{x = Matrix3DList()} 
+  \item Create \texttt{Matrix3DList} with list of numpy arrays:\\  \texttt{x = Matrix3DList([ numpy.eye(3), numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]) ])}
+  \item Append item: \texttt{x.Append(numpy.eye(3))}
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+  \item similar to Vector3DList !
+\ei
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  Append(pyArray) & add single 3D array or list of lists to Matrix3DList; array or lists must have appropriate dimension!\\ \hline 
+  GetPythonObject() & convert Matrix3DList into (copied) list of 2D numpy arrays\\ \hline 
+  len(data) & return length of the Matrix3DList, using len(data) where data is the Matrix3DList\\ \hline 
+  data[index]= ... & set list item 'index' with matrix, write: data[index] = ...\\ \hline 
+  ... = data[index] & get copy of list item with 'index' as matrix\\ \hline 
+  \_\_repr\_\_() & return the string representation of the Matrix3DList data, e.g.: print(data)\\ \hline 
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsubsection{Matrix6DList}
+The Matrix6DList is used to represent lists of 6D Matrices. . This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
+  \item Create empty \texttt{Matrix6DList} with \texttt{x = Matrix6DList()} 
+  \item Create \texttt{Matrix6DList} with list of numpy arrays:\\  \texttt{x = Matrix6DList([ numpy.eye(6), 2*numpy.eye(6) ])}
+  \item Append item: \texttt{x.Append(numpy.eye(6))}
+  \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
+  \item similar to Matrix3DList !
+\ei
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  Append(pyArray) & add single 6D array or list of lists to Matrix6DList; array or lists must have appropriate dimension!\\ \hline 
+  GetPythonObject() & convert Matrix6DList into (copied) list of 2D numpy arrays\\ \hline 
+  len(data) & return length of the Matrix6DList, using len(data) where data is the Matrix6DList\\ \hline 
+  data[index]= ... & set list item 'index' with matrix, write: data[index] = ...\\ \hline 
+  ... = data[index] & get copy of list item with 'index' as matrix\\ \hline 
+  \_\_repr\_\_() & return the string representation of the Matrix6DList data, e.g.: print(data)\\ \hline 
 \end{longtable}
 \end{center}
 \section{Type definitions}

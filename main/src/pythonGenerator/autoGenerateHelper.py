@@ -228,7 +228,79 @@ def TypeConversion(typeStr, typeConversion):
 
     return newStr
 
-#************************************************
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+#add specific markup with blind spaces
+def RSTmarkup(name, c='*', blindSpaces=True):
+    return '\\ '*blindSpaces+c+name+c+'\\ '*blindSpaces
+
+
+#add code block; code must already be indented; code must have \n at end
+def RSTcodeBlock(code, typeString=''):
+    s = '.. code-block:: '+typeString + '\n\n'
+    s += code + '\n'
+    return s
+
+#create text for inline URL
+def RSTurl(urlText, link, boldFace=False, blindSpaces=False):
+    bf = ''
+    if boldFace:
+        bf = ':stlink:'
+    return '\\ '*blindSpaces+bf+'`'+urlText+' <'+link+'>`_'+'\\ '*blindSpaces
+
+
+#write latex source inline
+def RSTinlineMath(mathString):
+    s = '\\ :math:`' + mathString + '`\\ '
+    return s
+
+#write latex source in separate equation
+def RSTmath(mathString, label=''):
+    s = '.. math:: '+mathString+'\n'
+    if label!='':
+        s+='   :label: '+label + '\n'
+    s += '\n'
+    return s
+
+#label string directly to be placed e.g. before header
+def RSTlabelString(name):
+    return '\n.. _'+name+':\n'
+
+
+#writer heder with levels from 1 to 4
+def RSTheaderString(header, level):
+    s = ''
+    if level == 0:
+        s += '='*len(header)+'\n'
+        s += header+'\n'
+        s += '='*len(header)+'\n'
+    elif level == 1:
+        s += '*'*len(header)+'\n'
+        s += header+'\n'
+        s += '*'*len(header)+'\n'
+    elif level == 2:
+        #s += '-'*len(header)+'\n'
+        s += header+'\n'
+        s += '='*len(header)+'\n'
+    elif level == 3:
+        s += header+'\n'
+        s += '-'*len(header)+'\n'
+    elif level == 4:
+        s += header+'\n'
+        s += '^'*len(header)+'\n'
+    else:
+        raise ValueError('WriteRSTheader: unknown header level: '+str(level))
+    return s
+
+
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #convert type to known C++ type or keep it (in case of special class)
 def GenerateHeader(classStr, descriptionStr, addModifiedDate = True, addIfdefOnce = True, 
                    author = ''):
@@ -448,6 +520,7 @@ def DefPyFunctionAccess(cClass, pyName, cName, description, argList=[], defaultA
 #start a new table to describe class bindings in latex;
 def DefLatexStartClass(sectionName, description, subSection=False, labelName=''):
 
+    sRST = ''
     sLatex =  "\n%++++++++++++++++++++\n"
     if subSection:
         sLatex += "\\mysubsubsection"
@@ -457,6 +530,8 @@ def DefLatexStartClass(sectionName, description, subSection=False, labelName='')
     sLatex += "{" + sectionName + "}\n"
     if labelName != '':
         sLatex += '\\label{sec:' +labelName+ '}\n'
+        sRST += RSTlabelString('sec-'+labelName) + '\n'
+        
     sLatex += description + '\n\n'
     
     sLatex += '\\begin{center}\n'
@@ -465,9 +540,12 @@ def DefLatexStartClass(sectionName, description, subSection=False, labelName='')
     sLatex += '\\hline\n'
     sLatex += '{\\bf function/structure name} & {\\bf description}\\\\ \\hline\n'
 
-    return sLatex
+    sRST += RSTheaderString(sectionName, 2) + '\n'
+    sRST += RemoveIndentation(description)
 
-def DefPyStartClass(cClass, pyClass, description):
+    return [sLatex, sRST]
+
+def DefPyStartClass(cClass, pyClass, description, subSection = False):
     s = '\n'
     sectionName = pyClass
     if (cClass == ''): 
@@ -478,9 +556,9 @@ def DefPyStartClass(cClass, pyClass, description):
         s += '    py::class_<' + cClass + '>(m, "' + pyClass + '")\n'
         s += '        .def(py::init<>())\n'
 
-    sLatex = DefLatexStartClass(sectionName, description)        
+    [sLatex, sRST] = DefLatexStartClass(sectionName, description, subSection=subSection)
         
-    return [s,sLatex]
+    return [s, sLatex, sRST]
 
 #finish latex table for class bindings 
 def DefLatexFinishClass():
@@ -496,8 +574,9 @@ def DefPyFinishClass(cClass):
         s += '        ; // end of ' + cClass + ' pybind definitions\n\n'
 
     sLatex = DefLatexFinishClass()
+    sRST = '\n'
 
-    return [s,sLatex]
+    return [s,sLatex,sRST]
 
 
 #add a enum value and definition to pybind interface and to latex documentation
@@ -509,7 +588,24 @@ def AddEnumValue(className, itemName, description):
     return [s,sLatex]
 
 
-
+#remove indentation of text block (for rst files) and afterwards add specific indentation:
+def RemoveIndentation(text, addSpaces = ''):
+    isStartOfLine = True
+    s = addSpaces #created string
+    for x in text:
+        if isStartOfLine:
+            if x == ' ' or x == '\t': 
+                continue
+            else: 
+                isStartOfLine = False
+        else:
+            if x == '\n': 
+                isStartOfLine = True
+                s += '\n'
+                s += addSpaces
+                continue
+        s += x
+    return s
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the following functions were originally in pythonAutoGenerateObjects.py
@@ -535,9 +631,13 @@ def ExtractExamplesWithKeyword(keyword, dirPath):
 
 #generate latex string containing a list of file references (and hyperref links), 
 #based on a search through Examples and TestModels
-def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName):
+#if latex is false, formatting is clean to be used in RST
+def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName, useLatex = True):
+    useLatex2 = True
     s = ''
-    sepItem1 = '\\item ' #for items, put example in separate line, for utility functions, use one liner
+    sRST = '' #if latex = False
+
+    sepItem1 = '\\item '*useLatex2 #for items, put example in separate line, for utility functions, use one liner
     sepItem2 = '\n' 
     maxExamples = 12   #only 8 examples for utility functions
     initString = ''    #smaller font for utility function
@@ -568,113 +668,78 @@ def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName):
         keywords = [itemName + '(']
         sepItem1 = ', \n'     #for items, put example in separate line, for utility functions, use one liner
         sepItem2 = ''   #for items, put example in separate line, for utility functions, use one liner
-        maxExamples = 5   #only 8 examples for utility functions
-        initString = ' \\item \\footnotesize '    #smaller font for utility function
+        maxExamples = 5   #only 5+3 examples for utility functions
+        initString = ' \\item \\footnotesize '*useLatex2    #smaller font for utility function
 
 
     if itemShortName != '' and itemName != itemShortName:
         keywords += ['mbs.Add'+itemType+'('+itemShortName+'(']
 
-    fileListOrig = []
-    for kw in keywords:
-        dirPath = '../../pythonDev/Examples'
-        fileListOrig += ExtractExamplesWithKeyword(keyword = kw,
-                                              dirPath = dirPath)
-    
-    fileList = []
-    for f in fileListOrig:
-        if f not in fileList: fileList += [f]
-
-    unifyExamples=True #only one list for testmodels and examples
-    
+    processFolders = ['Examples','TestModels']
+    folderAbrv = [examplesString, testModelString]
     cnt = 0 #examples counter
     sep = ''
+    sepRST = ''
     headerCreated = False
-    if len(fileList) != 0:
-        s += '%\n\\noindent For examples on '+itemName+' see '
-        if unifyExamples:
-            if ufMode:
-                s += 'Examples (Ex) and TestModels (TM):\n'
-            else:
-                s += 'Examples and TestModels:\n'
-        else:
-            s += 'Examples:\n'
-
-        sep = ''
-        headerCreated = True
-        if not ufMode:
-            sep = sepItem1
-        s += '\\bi\n'
-        s += initString
-        for name in fileList:
-            s += sep+'\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/' + name+'}'
-            s += '{\\texttt{'+name.replace('_','\\_')+'}}' 
-            if unifyExamples:
-                s += examplesString
-            s += sepItem2
-            sep = sepItem1
-
-            cnt += 1
-            if cnt == 3 and ufMode: sep = sep+'\\\\ ' #shorten lines a little
-            if cnt >= maxExamples: #some functions would appear in all examples... 
-                s += sepItem1 + ' ...' + sepItem2 + '\n'
-                break
-        if not unifyExamples:
-            s += '\\ei\n'
-            s += '\n%\n'
+    for iFolder, folder in enumerate(processFolders):
+    
+        fileListOrig = []
+        for kw in keywords:
+            dirPath = '../../pythonDev/'+folder
+            fileListOrig += ExtractExamplesWithKeyword(keyword = kw,
+                                                  dirPath = dirPath)
         
-
-    fileListOrig = []
-    for kw in keywords:
-        dirPath = '../../pythonDev/TestModels'
-        fileListOrig += ExtractExamplesWithKeyword(keyword = kw,
-                                              dirPath = dirPath)
-
-    fileList = []
-    for f in fileListOrig:
-        if f not in fileList: fileList += [f]
-
-    if len(fileList) != 0 and cnt < maxExamples+3:
-        if not unifyExamples or not headerCreated:
-            headerCreated = True
-            s += '%\n\\noindent For examples on '+itemName+' see '
-            
-            if not unifyExamples:
-                s += 'TestModels:\n'
-            else:
-                if ufMode:
-                    s += 'Examples (Ex) and TestModels (TM):\n'
-                else:
-                    s += 'Examples and TestModels:\n'
+        fileList = []
+        for f in fileListOrig:
+            if f not in fileList: fileList += [f]
+    
+        if len(fileList) != 0:
+            if not headerCreated:
+                headerCreated = True
+                sComment = '%\n\\noindent For examples on '+itemName+' see '
+                s += sComment*useLatex2
                 
-            s += '\\bi\n'
-            s += initString
-            sep = ''
-        if not ufMode:
-            sep = sepItem1
-        for name in fileList:
-            s += sep+'\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/' + name+'}'
-            s += '{\\texttt{'+name.replace('_','\\_')+'}}'
-            if unifyExamples:
-                s += testModelString
-            s += sepItem2
-            sep = sepItem1
+                if ufMode:
+                    sExTest = 'Relevant Examples (Ex) and TestModels (TM) with weblink:\n'
+                else:
+                    sExTest = 'Relevant Examples and TestModels with weblink:\n'
+                s += sExTest
+                sRST += sExTest
 
-            cnt += 1
-            if cnt == 3 and ufMode: sep = sep+'\\\\ ' #shorten lines a little
+                s += '\\bi\n'
+                s += initString
+                sep = ''
+                sRST += '\n    ' #in RST, we could put everything into one list ...
+            
+            if not ufMode:
+                sep = sepItem1
+            for name in fileList:
+                fileURL = 'https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/'+folder+'/' + name
+                s += sep+'\exuUrl{'+fileURL+'}'
+                s += '{\\texttt{'+name.replace('_','\\_')+'}}' 
+                sRST += sepRST
+                sepRST = ', '
+                sRST += RSTurl(name, fileURL,False, True)+folderAbrv[iFolder]
+                
+                s += folderAbrv[iFolder]
+                s += sepItem2
+                sep = sepItem1
+    
+                cnt += 1
+                if (cnt % 3 == 0) and ufMode: sep = sep+'\\\\ '*useLatex2 #shorten lines a little
+                if cnt >= maxExamples+3*iFolder: #some functions would appear in all examples... 
+                    s += sepItem1 + ' ...' + sepItem2 + '\n'
+                    break
 
-            if cnt >= maxExamples+3: #some functions would appear in all examples...
-                s += sepItem1 + ' ...' + sepItem2 + '\n'
-                break
-        if not unifyExamples:
-            s += '\\ei\n'
-            s += '\n%\n'
-
-    if headerCreated and unifyExamples:
-        s += '\\ei\n'
+    if headerCreated:
+        s += '\n\\ei\n'
         s += '\n%\n'
-    return s
+        sRST += '\n\n'
 
+    if useLatex:
+        return s
+    else:
+        return [s, sRST]
 
 
 
