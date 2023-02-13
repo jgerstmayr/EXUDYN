@@ -10,7 +10,7 @@
 #installation
 pip install sphinx
 
-#themes: 
+#themes: readthedocs-sphinx-search only works on server (git pages), not locally on your pc opening file in browser
 pip install furo
 pip install sphinx_rtd_theme
 pip install readthedocs-sphinx-search

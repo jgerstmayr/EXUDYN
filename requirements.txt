@@ -1,0 +1,4 @@
+furo
+sphinx
+sphinx-rtd-theme
+readthedocs-sphinx-search
