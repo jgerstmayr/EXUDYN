@@ -33,7 +33,6 @@ import scipy.io
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: generate simple 4R manipulator as myRobot dictionary, settings are done in function 
-#**input: nothing
 #**output: myRobot dictionary
 #**notes: the 4th joint is used to simulate a paralell kinematics manipulator 
 def Manipulator4Rsimple():
@@ -114,7 +113,6 @@ def Manipulator4Rsimple():
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: generate simple 3R manipulator as myRobot dictionary, settings are done in function 
-#**input: nothing
 #**output: myRobot dictionary
 def Manipulator3RSimple():
     #define myRobot kinematics
@@ -201,7 +199,6 @@ def Manipulator3RSimple():
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: generate simple Franka Emika Panda manipulator as myRobot dictionary, settings are done in function 
-#**input: nothing
 #**output: myRobot dictionary
 def ManipulatorPANDA():
     # define myRobot kinematics, FRANKA EMIKA PANDA
@@ -341,7 +338,6 @@ def ManipulatorPANDA():
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: generate UR5 manipulator as myRobot dictionary, settings are done in function 
-#**input: nothing
 #**output: myRobot dictionary
 #**notes: define myRobot kinematics, UR5 Universal Robotics, 
 #  Standard DH-parameters: [theta, d, a, alpha], according to P. Corke, 
@@ -426,7 +422,6 @@ def ManipulatorUR5():
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: generate puma560 manipulator as myRobot dictionary, settings are done in function 
-#**input:
 #**output: myRobot dictionary
 #**notes: std DH-parameters: [theta, d, a, alpha], according to P. Corke page 138, puma p560 limits, taken from Corke Visual Control of Robots 
 def ManipulatorPuma560():

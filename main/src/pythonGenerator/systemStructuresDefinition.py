@@ -351,7 +351,7 @@ writeFile=SimulationSettings.h
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsGeneral
 appendToFile=False
-latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Visualization settings}\nThis section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see \refSection{sec:introduction:visualizationSettings}.\n"
+latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Visualization settings}\nThis section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see \refSection{sec:overview:basics:visualizationsettings}.\n"
 writePybindIncludes = True
 classDescription = "General settings for visualization."
 #V|F,   pythonName,                     cplusplusName,     size, type,          defaultValue,args,      cFlags, parameterDescription

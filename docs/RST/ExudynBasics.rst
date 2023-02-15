@@ -1,6 +1,9 @@
+
+.. _sec-overview-basics:
+
 Exudyn Basics
 =============
- 
+
 This section will show:
 
 +  Interaction with the Exudyn module
@@ -11,6 +14,8 @@ This section will show:
 +  Generating animations
 
 
+
+.. _sec-overview-basics-interactionmodule:
 
 Interaction with the Exudyn module
 ----------------------------------
@@ -27,6 +32,9 @@ Usually, the system container will hold at least one system, usually called \ ``
 Commands such as \ ``mbs.AddNode(...)``\  add objects to the system \ ``mbs``\ . 
 The system will be prepared for simulation by \ ``mbs.Assemble()``\  and can be solved (e.g., using \ ``exu.SolveDynamic(...)``\ ) and evaluated hereafter using the results files.
 Using \ ``mbs.Reset()``\  will clear the system and allows to set up a new system. Items can be modified (\ ``ModifyObject(...)``\ ) after first initialization, even during simulation.
+
+
+.. _sec-overview-basics-simulationsettings:
 
 Simulation settings
 -------------------
@@ -92,9 +100,11 @@ position, forces or joint data. For viewing sensor results, use the \ ``PlotSens
 \ ``exudyn.plot``\  tool, see the rigid body and joints tutorial.
 
 
+
+.. _sec-overview-basics-visualizationsettings:
+
 Visualization settings dialog
 -----------------------------
-
 
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
 
@@ -160,6 +170,9 @@ The visualization settings structure can be accessed in the system container \ `
 
 
 
+
+.. _sec-overview-basics-renderer:
+
 Renderer and 3D graphics
 ------------------------
 
@@ -177,7 +190,7 @@ There are some main features in the renderer, using keyboard and mouse:
 +  open visualization dialog: key V
 +  show item number: click on graphics element with left mouse button
 +  show item dictionary: click on graphics element with right mouse button  
-+  ... (see theDoc.pdfff.)
++  ... (see  :ref:`sec-vsettingsgeneral`\ ff.)
 
 Depending on your model (size, place, ...), you may need to adjust the following \ ``openGL``\  parameters in \ ``visualizationSettings``\ :
 
@@ -185,9 +198,12 @@ Depending on your model (size, place, ...), you may need to adjust the following
 +  shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
 +  visibility of nodes, markers, etc. in according bodies, nodes, markers, ..., \ ``visualizationSettings``\ 
 +  move camera with a selected marker: adjust \ ``trackMarker``\  in \ ``visualizationSettings.interactive``\ 
-+  ... (see theDoc.pdfff.)
++  ... (see  :ref:`sec-vsettingsgeneral`\ ff.)
 
 
+
+
+.. _sec-overview-basics-graphicspipeline:
 
 Graphics pipeline
 -----------------
@@ -206,16 +222,18 @@ The openGL graphics thread (=separate thread) runs the following loop:
 +  render openGL scene with a given graphicsData structure (containing lines, faces, text, ...)
 +  go idle for some milliseconds
 +  check if openGL rendering needs an update (e.g. due to user interaction)
-   => if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
+   → if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
 +  check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
 
+
+
+.. _sec-overview-basics-storingmodelview:
 
 Storing the model view
 ----------------------
 
-
 There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \ ``SC.GetRenderState()``\  and \ ``SC.SetRenderState()``\ ,
-see also theDoc.pdf.
+see also  :ref:`sec-renderstate`\ .
 A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation (
 note that \ ``visualizationSettings.general.autoFitScene``\  should be set False if you want to use the stored zoom factor):
 
@@ -272,7 +290,7 @@ Now copy the output and set this with \ ``SC.SetRenderState``\  in your Python c
 
 
 Note that in the current version of Exudyn there is more data stored in render state, which is not used in \ ``SC.SetRenderState``\ ,
-see also theDoc.pdf.
+see also  :ref:`sec-renderstate`\ .
 
 
 Graphics user functions via Python
@@ -281,10 +299,13 @@ Graphics user functions via Python
 There are some user functions in order to customize drawing:
 
 +  You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (\ ``GraphicsDataFromSTLfileTxt``\ ) using the established format STL (STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems).
-+  Some objects, e.g., \ ``ObjectGenericODE2``\  or \ ``ObjectRigidBody``\ , provide customized a function \ ``graphicsDataUserFunction``\ . This user function just returns a list of GraphicsData, see theDoc.pdf. With this function you can change the shape of the body in every step of the computation.
++  Some objects, e.g., \ ``ObjectGenericODE2``\  or \ ``ObjectRigidBody``\ , provide customized a function \ ``graphicsDataUserFunction``\ . This user function just returns a list of GraphicsData, see  :ref:`sec-graphicsdata`\ . With this function you can change the shape of the body in every step of the computation.
 +  Specifically, the \ ``graphicsDataUserFunction``\  in \ ``ObjectGround``\  can be used to draw any moving background in the scene.
 
 Note that all kinds of \ ``graphicsDataUserFunction``\ s need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the \ ``graphicsDataUserFunction``\  between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.
+
+
+.. _sec-overview-basics-colorrgba:
 
 Color, RGBA and alpha-transparency
 ----------------------------------
@@ -298,9 +319,11 @@ Many functions and objects include color information. In order to allow alpha-tr
 
 E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in \ ``exudynGraphicsDataUtilities.py``\ , e.g., \ ``color4red``\  or \ ``color4steelblue``\  as well a list of 16 colors \ ``color4list``\ , which is convenient to be used in a loop creating objects.
 
+
+.. _sec-overview-basics-solutionviewer:
+
 Solution viewer
 ---------------
-
 
 Exudyn offers a convenient WYSIWYS -- 'What you See is What you Simulate' interface, showing you the computation results during simulation in the render window.
 If you are running large models, it may be more convenient to watch results after simulation has been finished.
@@ -317,7 +340,7 @@ The \ ``SolutionViewer``\  adds a \ ``tkinter``\  interactive dialog, which lets
 +  As soon as 'Run' is pressed, the player runs (and it may be started automatically as well)
 +  In the 'Static' mode, drag the slider 'Solution steps' to view the solution steps
 +  In the 'Continuous run' mode, the player runs in an infinite loop
-+  In the 'One cycle' mode, the player runs from the current position to the end; this is perfectly suited to record series of images for \ **creating animations**\ , see theDoc.pdf and works together with the visualization settings dialog.
++  In the 'One cycle' mode, the player runs from the current position to the end; this is perfectly suited to record series of images for \ **creating animations**\ , see  :ref:`sec-overview-basics-animations`\  and works together with the visualization settings dialog.
 
 The solution should be loaded with
 \ ``LoadSolutionFile('coordinatesSolution.txt')``\ , where 'coordinatesSolution.txt' represents the stored solution file, 
@@ -347,9 +370,11 @@ An example for the \ ``SolutionViewer``\  is integrated into the \ ``Examples/``
 
 \ **Note**\ : The previous function \ ``AnimateSolution``\  in \ ``exudyn.utilities``\  allows to directly visualize the stored solution for according stored time frames without \ ``tkinter``\  (useful for MacOS).
 
+
+.. _sec-overview-basics-animations:
+
 Generating animations
 ---------------------
-
 
 In many dynamics simulations, it is very helpful to create animations in order to better understand the motion of bodies. Specifically, the animation can be used to visualize the model much slower or faster than the model is computed.
 
@@ -365,12 +390,14 @@ which means, that after every 0.01 seconds of simulation time, an image of the c
 By default, a consecutive numbering is generated for the image, e.g., 'frame0000.png, frame0001.png,...'. Note that the standard file format PNG with ending '.png' uses compression libraries included in glfw, while the alternative TGA format produces '.tga' files which contain raw image data and therefore can become very large.
 
 To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation.
-=> see theDoc.pdf !
+→ see theDoc.pdf !
 
+
+
+.. _sec-overview-basics-examplestestsuite:
 
 Examples, test models and test suite
 ------------------------------------
-
 
 
 The main collection of examples and models is available under
@@ -398,9 +425,11 @@ However, the output of the performance tests is not stored on github.
 
 We are trying hard to achieve error-free algorithms of physically correct models, but there may always be some errors in the code.
 
+
+.. _sec-overview-basics-convergenceproblems:
+
 Removing convergence problems and solver failures
 -------------------------------------------------
-
 
 Nonlinear formulations (such as most multibody systems, especially nonlinear finite elements) cause problems and there is no general nonlinear solver which may reliably and accurately solve such problems.
 Tuning solver parameters is at hand of the user. 
@@ -409,21 +438,23 @@ In general, the Newton solver tries to reduce the error by the factor given in \
 The following hints shall be followed (also some solver hints).
 
 +  \ **static solver**\ : load steps are reduced even if the solution seems to be smooth and less steps are expected; larger number of steps may happen for finer discretization; you may adjust (increase) \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy
-+  \ **static solver**\ : load steps are reduced significantly for highly nonlinear problems; solver repeatedly writes that steps are reduced => try to use \ ``loadStepGeometric``\  and use a large \ ``loadStepGeometricRange``\ : this allows to start with very small loads in which the system is nearly linear (e.g. for thin strings or belts under gravity).
++  \ **static solver**\ : load steps are reduced significantly for highly nonlinear problems; solver repeatedly writes that steps are reduced → try to use \ ``loadStepGeometric``\  and use a large \ ``loadStepGeometricRange``\ : this allows to start with very small loads in which the system is nearly linear (e.g. for thin strings or belts under gravity).
 +  \ **static solver**\ : in case that your system is (nearly) kinematic, a static solution can be achieved using \ ``stabilizerODE2term``\ , which adds mass-proportional stiffness terms during load steps < 1.
 +  very small loads or even \ **zero loads**\  do not converge: \ ``SolveDynamic``\  or \ ``SolveStatic``\  \ **terminated due to errors**\ 
   
-  |  =>  the reason is the nonlinearity of formulations (nonlinear kinematics, nonlinear beam, etc.) and round off errors, which restrict Newton to achieve desired tolerances
-  |  =>  adjust (increase) \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration
-  |  =>  in many cases, especially for static problems, the \ ``.newton.newtonResidualMode = 1``\  evaluates the increments; the nonlinear problems is assumed to be converged, if increments are within given absolute/relative tolerances; this also works usually better for kinematic solutions
+  |  →  the reason is the nonlinearity of formulations (nonlinear kinematics, nonlinear beam, etc.) and round off errors, which restrict Newton to achieve desired tolerances
+  |  →  adjust (increase) \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration
+  |  →  in many cases, especially for static problems, the \ ``.newton.newtonResidualMode = 1``\  evaluates the increments; the nonlinear problems is assumed to be converged, if increments are within given absolute/relative tolerances; this also works usually better for kinematic solutions
   
-+  for \ **discontinuous problems**\ : try to adjust solver parameters; especially the \ ``discontinuous.iterationTolerance``\  and \ ``discontinuous.maxIterations``\ ; try to make smaller load or time steps in order to resolve switching points of contact or friction; generalized alpha solvers may cause troubles when reducing step sizes => use TrapezoidalIndex2 solver
++  for \ **discontinuous problems**\ : try to adjust solver parameters; especially the \ ``discontinuous.iterationTolerance``\  and \ ``discontinuous.maxIterations``\ ; try to make smaller load or time steps in order to resolve switching points of contact or friction; generalized alpha solvers may cause troubles when reducing step sizes → use TrapezoidalIndex2 solver
 +  if you see further problems, please post them (including relevant example) at the Exudyn github page!
 
 
+
+.. _sec-overview-basics-speedup:
+
 Performance and ways to speed up computations
 ---------------------------------------------
-
 
 Multibody dynamics simulation should be accurate and reliable on the one hand side. Most solver settings are such that they lead to comparatively reliable results.
 However, in some cases there is a significant possibility for speeding up computations, which are described in the following list. Not all recommendations may apply to your models.
@@ -453,7 +484,7 @@ However, there are many \ **ways to speed up Exudyn in general**\ :
 +  In case of multiprocessing and cluster computing, you may see a very high CPU usage of "Antimalware Service Executable", which is the Microsoft Defender Antivirus; you can turn off such problems by excluding \ ``python.exe``\  from the defender (on your own risk!) in your settings:
 
 
-  Settings => Update \& Security => Windows Security => Virus \& threat protection settings => Manage settings => Exclusions => Add or remove exclusions 
+  Settings → Update \& Security → Windows Security → Virus \& threat protection settings → Manage settings → Exclusions → Add or remove exclusions 
 
 \ **Possible speed ups for dynamic simulations**\ :
 

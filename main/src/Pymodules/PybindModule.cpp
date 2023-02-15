@@ -646,7 +646,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 		}, "return the string representation of the index, which can be, e.g., printed")
 		;
 
-	py::class_<ObjectIndex>(m, "ObjectIndex", "ObjectIndex: index which may only be used for nodes")
+	py::class_<ObjectIndex>(m, "ObjectIndex", "ObjectIndex: index which may only be used for objects")
 		.def(py::init<>())
 		.def(py::init<Index>())
 		//+++++++++++++++++++++++++++++++++++++++++++
@@ -677,7 +677,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 		}, "return the string representation of the index, which can be, e.g., printed")
 			;
 
-	py::class_<MarkerIndex>(m, "MarkerIndex", "MarkerIndex: index which may only be used for nodes")
+	py::class_<MarkerIndex>(m, "MarkerIndex", "MarkerIndex: index which may only be used for markers")
 		.def(py::init<>())
 		.def(py::init<Index>())
 		//+++++++++++++++++++++++++++++++++++++++++++
@@ -708,7 +708,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 		}, "return the string representation of the index, which can be, e.g., printed")
 		;
 
-	py::class_<LoadIndex>(m, "LoadIndex", "LoadIndex: index which may only be used for nodes")
+	py::class_<LoadIndex>(m, "LoadIndex", "LoadIndex: index which may only be used for loads")
 		.def(py::init<>())
 		.def(py::init<Index>())
 		//+++++++++++++++++++++++++++++++++++++++++++
@@ -739,7 +739,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 		}, "return the string representation of the index, which can be, e.g., printed")
 		;
 
-	py::class_<SensorIndex>(m, "SensorIndex", "SensorIndex: index which may only be used for nodes")
+	py::class_<SensorIndex>(m, "SensorIndex", "SensorIndex: index which may only be used for sensors")
 		.def(py::init<>())
 		.def(py::init<Index>())
 		//+++++++++++++++++++++++++++++++++++++++++++

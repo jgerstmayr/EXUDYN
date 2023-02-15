@@ -1,5 +1,5 @@
 
-.. _sec-module-graphicsDataUtilities:
+.. _sec-module-graphicsdatautilities:
 
 Module: graphicsDataUtilities
 =============================
@@ -16,7 +16,7 @@ which contain line, text or triangle primitives for drawing in Exudyn using Open
   | Additionally, a list of 16 colors 'color4list' is available, which is intended to be used, e.g., for creating n bodies with different colors
 
 
-.. _sec-graphicsDataUtilities-SwitchTripletOrder:
+.. _sec-graphicsdatautilities-switchtripletorder:
 
 `SwitchTripletOrder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L76>`__\ (\ ``vector``\ )
 
@@ -30,7 +30,7 @@ which contain line, text or triangle primitives for drawing in Exudyn using Open
 
 ----
 
-.. _sec-graphicsDataUtilities-ComputeTriangleNormal:
+.. _sec-graphicsdatautilities-computetrianglenormal:
 
 `ComputeTriangleNormal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L86>`__\ (\ ``p0``\ , \ ``p1``\ , \ ``p2``\ )
 
@@ -44,7 +44,7 @@ which contain line, text or triangle primitives for drawing in Exudyn using Open
 
 ----
 
-.. _sec-graphicsDataUtilities-ComputeTriangleArea:
+.. _sec-graphicsdatautilities-computetrianglearea:
 
 `ComputeTriangleArea <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L99>`__\ (\ ``p0``\ , \ ``p1``\ , \ ``p2``\ )
 
@@ -58,7 +58,7 @@ which contain line, text or triangle primitives for drawing in Exudyn using Open
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsData2PointsAndTrigs:
+.. _sec-graphicsdatautilities-graphicsdata2pointsandtrigs:
 
 `GraphicsData2PointsAndTrigs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L106>`__\ (\ ``g``\ )
 
@@ -76,7 +76,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataFromPointsAndTrigs:
+.. _sec-graphicsdatautilities-graphicsdatafrompointsandtrigs:
 
 `GraphicsDataFromPointsAndTrigs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L129>`__\ (\ ``points``\ , \ ``triangles``\ , \ ``color = [0.,0.,0.,1.]``\ )
 
@@ -86,7 +86,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
   | \ ``points``\ : list of np.array with 3 floats per point
   | \ ``triangles``\ : list of np.array with 3 int per triangle (0-based indices to triangles)
-  | \ ``color``\ : provided as list of 4 RGBA values or single list of (number of points)*[4 RGBA values]
+  | \ ``color``\ : provided as list of 4 RGBA values or single list of (number of points)\*[4 RGBA values]
 - | \ *output*\ :
   | returns GraphicsData with type TriangleList
 
@@ -97,7 +97,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-RefineMesh:
+.. _sec-graphicsdatautilities-refinemesh:
 
 `RefineMesh <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L155>`__\ (\ ``points``\ , \ ``triangles``\ )
 
@@ -119,7 +119,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-ShrinkMeshNormalToSurface:
+.. _sec-graphicsdatautilities-shrinkmeshnormaltosurface:
 
 `ShrinkMeshNormalToSurface <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L214>`__\ (\ ``points``\ , \ ``triangles``\ , \ ``distance``\ )
 
@@ -142,7 +142,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-MoveGraphicsData:
+.. _sec-graphicsdatautilities-movegraphicsdata:
 
 `MoveGraphicsData <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L249>`__\ (\ ``g``\ , \ ``pOff``\ , \ ``Aoff``\ )
 
@@ -152,7 +152,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
   | \ ``g``\ : graphicsData to be transformed
   | \ ``pOff``\ : 3D offset as list or numpy.array added to rotated points
-  | \ ``Aoff``\ : 3D rotation matrix as list of lists or numpy.array with shape (3,3); if A is scaled by factor, e.g. using 0.001*np.eye(3), you can also scale the coordinates!!!
+  | \ ``Aoff``\ : 3D rotation matrix as list of lists or numpy.array with shape (3,3); if A is scaled by factor, e.g. using 0.001\*np.eye(3), you can also scale the coordinates!!!
 - | \ *output*\ :
   | returns new graphcsData object to be used for drawing in objects
 - | \ *notes*\ :
@@ -165,7 +165,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-MergeGraphicsDataTriangleList:
+.. _sec-graphicsdatautilities-mergegraphicsdatatrianglelist:
 
 `MergeGraphicsDataTriangleList <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L308>`__\ (\ ``g1``\ , \ ``g2``\ )
 
@@ -183,7 +183,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataLine:
+.. _sec-graphicsdatautilities-graphicsdataline:
 
 `GraphicsDataLine <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L356>`__\ (\ ``pList``\ , \ ``color = [0.,0.,0.,1.]``\ )
 
@@ -210,7 +210,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataCircle:
+.. _sec-graphicsdatautilities-graphicsdatacircle:
 
 `GraphicsDataCircle <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L373>`__\ (\ ``point = [0,0,0]``\ , \ ``radius = 1``\ , \ ``color = [0.,0.,0.,1.]``\ )
 
@@ -233,7 +233,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataText:
+.. _sec-graphicsdatautilities-graphicsdatatext:
 
 `GraphicsDataText <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L384>`__\ (\ ``point = [0,0,0]``\ , \ ``text = ''``\ , \ ``color = [0.,0.,0.,1.]``\ )
 
@@ -255,7 +255,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataRectangle:
+.. _sec-graphicsdatautilities-graphicsdatarectangle:
 
 `GraphicsDataRectangle <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L391>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``color = [0.,0.,0.,1.]``\ )
 
@@ -273,7 +273,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataOrthoCubeLines:
+.. _sec-graphicsdatautilities-graphicsdataorthocubelines:
 
 `GraphicsDataOrthoCubeLines <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L402>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``zMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``zMax``\ , \ ``color = [0.,0.,0.,1.]``\ )
 
@@ -291,7 +291,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataOrthoCube:
+.. _sec-graphicsdatautilities-graphicsdataorthocube:
 
 `GraphicsDataOrthoCube <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L419>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``zMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``zMax``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``addNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color4black``\ , \ ``addFaces = True``\ )
 
@@ -315,7 +315,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataOrthoCubePoint:
+.. _sec-graphicsdatautilities-graphicsdataorthocubepoint:
 
 `GraphicsDataOrthoCubePoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L435>`__\ (\ ``centerPoint = [0,0,0]``\ , \ ``size = [0.1,0.1,0.1]``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``addNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color4black``\ , \ ``addFaces = True``\ )
 
@@ -340,7 +340,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataCube:
+.. _sec-graphicsdatautilities-graphicsdatacube:
 
 `GraphicsDataCube <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L462>`__\ (\ ``pList``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``faces = [1,1,1,1,1,1]``\ , \ ``addNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color4black``\ , \ ``addFaces = True``\ )
 
@@ -361,7 +361,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataSphere:
+.. _sec-graphicsdatautilities-graphicsdatasphere:
 
 `GraphicsDataSphere <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L545>`__\ (\ ``point = [0,0,0]``\ , \ ``radius = 0.1``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``nTiles = 8``\ )
 
@@ -383,7 +383,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataCylinder:
+.. _sec-graphicsdatautilities-graphicsdatacylinder:
 
 `GraphicsDataCylinder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L616>`__\ (\ ``pAxis = [0,0,0]``\ , \ ``vAxis = [0,0,1]``\ , \ ``radius = 0.1``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``nTiles = 16``\ , \ ``angleRange = [0,2*pi]``\ , \ ``lastFace = True``\ , \ ``cutPlain = True``\ , \ ``addEdges = False``\ , \ ``edgeColor = color4black``\ , \ ``addFaces = True``\ , \ ``**kwargs``\ )
 
@@ -396,13 +396,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
   | \ ``radius``\ : positive value representing radius of cylinder
   | \ ``color``\ : provided as list of 4 RGBA values
   | \ ``nTiles``\ : used to determine resolution of cylinder >=3; use larger values for finer resolution
-  | \ ``angleRange``\ : given in rad, to draw only part of cylinder (halfcylinder, etc.); for full range use [0..2 * pi]
-  | \ ``lastFace``\ : if angleRange != [0,2*pi], then the faces of the open cylinder are shown with lastFace = True
-  | \ ``cutPlain``\ : only used for angleRange != [0,2*pi]; if True, a plane is cut through the part of the cylinder; if False, the cylinder becomes a cake shape ...
+  | \ ``angleRange``\ : given in rad, to draw only part of cylinder (halfcylinder, etc.); for full range use [0..2 \* pi]
+  | \ ``lastFace``\ : if angleRange != [0,2\*pi], then the faces of the open cylinder are shown with lastFace = True
+  | \ ``cutPlain``\ : only used for angleRange != [0,2\*pi]; if True, a plane is cut through the part of the cylinder; if False, the cylinder becomes a cake shape ...
   | \ ``addEdges``\ : if True, edges are added in TriangleList of GraphicsData
   | \ ``addFaces``\ : if False, no faces are added (only edges)
   | \ ``edgeColor``\ : optional color for edges
-  | \ ``alternatingColor``\ : if given, optionally another color in order to see rotation of solid; only works, if angleRange=[0,2*pi]
+  | \ ``alternatingColor``\ : if given, optionally another color in order to see rotation of solid; only works, if angleRange=[0,2\*pi]
 - | \ *output*\ :
   | graphicsData dictionary, to be used in visualization of EXUDYN objects
 
@@ -413,7 +413,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataRigidLink:
+.. _sec-graphicsdatautilities-graphicsdatarigidlink:
 
 `GraphicsDataRigidLink <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L801>`__\ (\ ``p0``\ , \ ``p1``\ , \ ``axis0 = [0,0,0]``\ , \ ``axis1 = [0,0,0]``\ , \ ``radius = [0.1,0.1]``\ , \ ``thickness = 0.05``\ , \ ``width = [0.05,0.05]``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``nTiles = 16``\ )
 
@@ -440,7 +440,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataFromSTLfileTxt:
+.. _sec-graphicsdatautilities-graphicsdatafromstlfiletxt:
 
 `GraphicsDataFromSTLfileTxt <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L858>`__\ (\ ``fileName``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``verbose = False``\ , \ ``invertNormals = True``\ , \ ``invertTriangles = True``\ )
 
@@ -463,7 +463,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataFromSTLfile:
+.. _sec-graphicsdatautilities-graphicsdatafromstlfile:
 
 `GraphicsDataFromSTLfile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L955>`__\ (\ ``fileName``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``verbose = False``\ , \ ``density = 0.``\ , \ ``scale = 1.``\ , \ ``Aoff = []``\ , \ ``pOff = []``\ , \ ``invertNormals = True``\ , \ ``invertTriangles = True``\ )
 
@@ -490,7 +490,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-AddEdgesAndSmoothenNormals:
+.. _sec-graphicsdatautilities-addedgesandsmoothennormals:
 
 `AddEdgesAndSmoothenNormals <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1028>`__\ (\ ``graphicsData``\ , \ ``edgeColor = color4black``\ , \ ``edgeAngle = 0.25*pi``\ , \ ``pointTolerance = 5``\ , \ ``addEdges = True``\ , \ ``smoothNormals = True``\ , \ ``roundDigits = 5``\ , \ ``triangleColor = []``\ )
 
@@ -516,7 +516,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-ExportGraphicsData2STL:
+.. _sec-graphicsdatautilities-exportgraphicsdata2stl:
 
 `ExportGraphicsData2STL <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1190>`__\ (\ ``graphicsData``\ , \ ``fileName``\ , \ ``solidName = 'ExudynSolid'``\ , \ ``invertNormals = True``\ , \ ``invertTriangles = True``\ )
 
@@ -537,7 +537,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataSolidOfRevolution:
+.. _sec-graphicsdatautilities-graphicsdatasolidofrevolution:
 
 `GraphicsDataSolidOfRevolution <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1256>`__\ (\ ``pAxis``\ , \ ``vAxis``\ , \ ``contour``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``nTiles = 16``\ , \ ``smoothContour = False``\ , \ ``**kwargs``\ )
 
@@ -583,7 +583,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataArrow:
+.. _sec-graphicsdatautilities-graphicsdataarrow:
 
 `GraphicsDataArrow <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1364>`__\ (\ ``pAxis``\ , \ ``vAxis``\ , \ ``radius``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``headFactor = 2``\ , \ ``headStretch = 4``\ , \ ``nTiles = 12``\ )
 
@@ -608,7 +608,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataBasis:
+.. _sec-graphicsdatautilities-graphicsdatabasis:
 
 `GraphicsDataBasis <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1381>`__\ (\ ``origin = [0,0,0]``\ , \ ``length = 1``\ , \ ``colors = [color4red, color4green, color4blue]``\ , \ ``headFactor = 2``\ , \ ``headStretch = 4``\ , \ ``nTiles = 12``\ , \ ``**kwargs``\ )
 
@@ -622,7 +622,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
   | \ ``headFactor``\ : positive value representing the ratio between head's radius and the shaft radius
   | \ ``headStretch``\ : positive value representing the ratio between the head's radius and the head's length
   | \ ``nTiles``\ : used to determine resolution of arrows of basis (of revolution object) >=3; use larger values for finer resolution
-  | \ ``radius``\ : positive value representing radius of arrows; default: radius = 0.01*length
+  | \ ``radius``\ : positive value representing radius of arrows; default: radius = 0.01\*length
 - | \ *output*\ :
   | graphicsData dictionary, to be used in visualization of EXUDYN objects
 
@@ -633,14 +633,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataQuad:
+.. _sec-graphicsdatautilities-graphicsdataquad:
 
 `GraphicsDataQuad <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1409>`__\ (\ ``pList``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
 
   | generate graphics data for simple quad with option for checkerboard pattern;
-  | \ ``points are arranged counter-clock-wise, e.g.``\ : p0=[0,0,0], p1=[1,0,0], p2=[1,1,0], p3=[0,1,0]
+  | points are arranged counter-clock-wise, e.g.: p0=[0,0,0], p1=[1,0,0], p2=[1,1,0], p3=[0,1,0]
 - | \ *input*\ :
 
   | \ ``pList``\ : list of 4 quad points [[x0,y0,z0],[x1,y1,z1],...]
@@ -668,14 +668,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataCheckerBoard:
+.. _sec-graphicsdatautilities-graphicsdatacheckerboard:
 
 `GraphicsDataCheckerBoard <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1480>`__\ (\ ``point = [0,0,0]``\ , \ ``normal = [0,0,1]``\ , \ ``size = 1``\ , \ ``color = color4lightgrey``\ , \ ``alternatingColor = color4lightgrey2``\ , \ ``nTiles = 10``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
 
   | function to generate checkerboard background;
-  | \ ``points are arranged counter-clock-wise, e.g.``\ :
+  | points are arranged counter-clock-wise, e.g.:
 - | \ *input*\ :
 
   | \ ``point``\ : midpoint of pattern provided as list or np.array
@@ -704,7 +704,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-ComputeTriangularMesh:
+.. _sec-graphicsdatautilities-computetriangularmesh:
 
 `ComputeTriangularMesh <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1524>`__\ (\ ``vertices``\ , \ ``segments``\ )
 
@@ -719,7 +719,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
   | \ ``vertices``\ : list of pairs of coordinates of vertices in mesh [x,y]
   | \ ``segments``\ : list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh;
-  | \ ``the ordering of the nodes is such that left triangle = inside, right triangle = outside, compare example with segment [V1,V2]``\ :\\
+  | the ordering of the nodes is such that left triangle = inside, right triangle = outside, compare example with segment [V1,V2]:
+
+
   | inside
   | V1         V2
   | O----------O
@@ -743,7 +745,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-SegmentsFromPoints:
+.. _sec-graphicsdatautilities-segmentsfrompoints:
 
 `SegmentsFromPoints <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1616>`__\ (\ ``points``\ , \ ``pointIndexOffset = 0``\ , \ ``invert = False``\ , \ ``closeCurve = True``\ )
 
@@ -759,7 +761,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-CirclePointsAndSegments:
+.. _sec-graphicsdatautilities-circlepointsandsegments:
 
 `CirclePointsAndSegments <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1643>`__\ (\ ``center = [0,0]``\ , \ ``radius = 0.1``\ , \ ``invert = False``\ , \ ``pointIndexOffset = 0``\ , \ ``nTiles = 16``\ )
 
@@ -780,7 +782,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-graphicsDataUtilities-GraphicsDataSolidExtrusion:
+.. _sec-graphicsdatautilities-graphicsdatasolidextrusion:
 
 `GraphicsDataSolidExtrusion <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L1678>`__\ (\ ``vertices``\ , \ ``segments``\ , \ ``height``\ , \ ``rot = np.diag([1,1,1])``\ , \ ``pOff = [0,0,0]``\ , \ ``color = [0,0,0,1]``\ , \ ``smoothNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color4black``\ )
 

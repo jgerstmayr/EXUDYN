@@ -27,6 +27,9 @@ sphinx-quickstart
 #to build the files of directory source into directory build (source needs a conf.py and index.rst file), run:
 sphinx-build -b html source build
 
+#use -E option to process all files, do not use cache (may not always update all files ...):
+sphinx-build -b html source build -E
+
 #+++++++++++++++++++++++++++++++++++++++++++
 #settings on github:
 #add .yaml or .yml file in .github/workflows

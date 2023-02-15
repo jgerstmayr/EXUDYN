@@ -22,8 +22,8 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-Exudyn version = 1.5.95.dev1 (Fitzgerald)
-build date and time=2023-02-08  12:45
+Exudyn version = 1.5.97.dev1 (Fitzgerald)
+
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
 Exudyn 1.5 is out! It includes now Python 3.7/8 - 3.10 wheels for MacOS (since 1.5.11.dev1 also showing tkinter dialogs!), linux and windows. See theDoc.pdf chapter **Issues and Bugs** for changes!

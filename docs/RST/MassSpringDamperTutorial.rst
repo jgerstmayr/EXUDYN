@@ -77,7 +77,7 @@ Such a ground node is added via:
   nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
 
 
-In the next step, we add an object (sec:programStructure.), which provides equations for coordinates. The \ ``MassPoint``\  needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:
+In the next step, we add an object (sec:overview:modulestructure.), which provides equations for coordinates. The \ ``MassPoint``\  needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:
 
 .. code-block:: python
 

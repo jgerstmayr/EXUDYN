@@ -12,7 +12,7 @@ Most of the solvers are implemented inside the C++ core.
 - Notes:     Solver functions are included directly in exudyn and can be used with exu.SolveStatic(...) 
 
 
-.. _sec-solver-SolverErrorMessage:
+.. _sec-solver-solvererrormessage:
 
 `SolverErrorMessage <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L22>`__\ (\ ``solver``\ , \ ``mbs``\ , \ ``isStatic = False``\ , \ ``showCausingObjects = True``\ , \ ``showCausingNodes = True``\ , \ ``showHints = True``\ )
 
@@ -22,7 +22,7 @@ Most of the solvers are implemented inside the C++ core.
 
 ----
 
-.. _sec-solver-SolveStatic:
+.. _sec-solver-solvestatic:
 
 `SolveStatic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L151>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ )
 
@@ -31,11 +31,11 @@ Most of the solvers are implemented inside the C++ core.
 - | \ *input*\ :
 
   | \ ``mbs``\ : the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
-  | \ ``simulationSettings``\ : specific simulation settings out of exu.SimulationSettings(), as described in \refSection{sec:SolutionSettings}; use options for newton, discontinuous settings, etc., from staticSolver sub-items
+  | \ ``simulationSettings``\ : specific simulation settings out of exu.SimulationSettings(), as described in  :ref:`sec-solutionsettings`\ ; use options for newton, discontinuous settings, etc., from staticSolver sub-items
   | \ ``updateInitialValues``\ : if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
   | \ ``storeSolver``\ : if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
 - | \ *output*\ :
-  | returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
+  | returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf  :ref:`sec-solversubstructures`\  and the items described in  :ref:`sec-mainsolverstatic`\ )
 - | \ *example*\ :
 
 .. code-block:: python
@@ -69,7 +69,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-solver-SolveDynamic:
+.. _sec-solver-solvedynamic:
 
 `SolveDynamic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L214>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``solverType = exudyn.DynamicSolverType.GeneralizedAlpha``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ )
 
@@ -78,14 +78,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 - | \ *input*\ :
 
   | \ ``mbs``\ : the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
-  | \ ``simulationSettings``\ : specific simulation settings out of exu.SimulationSettings(), as described in \refSection{sec:SolutionSettings}; use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special \refSection{secSpeedUp})
+  | \ ``simulationSettings``\ : specific simulation settings out of exu.SimulationSettings(), as described in  :ref:`sec-solutionsettings`\ ; use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special  :ref:`sec-overview-basics-speedup`\ )
   | \ ``solverType``\ : use exudyn.DynamicSolverType to set specific solver (default=generalized alpha)
   | \ ``updateInitialValues``\ : if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
   | \ ``storeSolver``\ : if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
   | \ ``showHints``\ : show additional hints, if solver fails
   | \ ``showCausingItems``\ : if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
 - | \ *output*\ :
-  | returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
+  | returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf  :ref:`sec-solversubstructures`\  and the items described in  :ref:`sec-mainsolverstatic`\ )
 - | \ *example*\ :
 
 .. code-block:: python
@@ -119,7 +119,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-solver-ComputeLinearizedSystem:
+.. _sec-solver-computelinearizedsystem:
 
 `ComputeLinearizedSystem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L304>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``useSparseSolver = False``\ )
 
@@ -150,12 +150,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-solver-ComputeODE2Eigenvalues:
+.. _sec-solver-computeode2eigenvalues:
 
 `ComputeODE2Eigenvalues <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L352>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``useSparseSolver = False``\ , \ ``numberOfEigenvalues = 0``\ , \ ``constrainedCoordinates = []``\ , \ ``convert2Frequencies = False``\ , \ ``useAbsoluteValues = True``\ )
 
 - | \ *function description*\ :
-  | compute eigenvalues for unconstrained ODE2 part of mbs, not considering the effects of algebraic constraints; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState,SetSystemState, see \refSection{sec:mbs:systemData}); note that mass and stiffness matrix are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
+  | compute eigenvalues for unconstrained ODE2 part of mbs, not considering the effects of algebraic constraints; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState,SetSystemState, see  :ref:`sec-mbs-systemdata`\ ); note that mass and stiffness matrix are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
 - | \ *input*\ :
 
   | \ ``mbs``\ : the MainSystem containing the assembled system
@@ -185,7 +185,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-solver-CheckSolverInfoStatistics:
+.. _sec-solver-checksolverinfostatistics:
 
 `CheckSolverInfoStatistics <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L435>`__\ (\ ``solverName``\ , \ ``infoStat``\ , \ ``numberOfEvaluations``\ )
 

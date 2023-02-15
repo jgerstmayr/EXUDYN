@@ -11,7 +11,7 @@ Beam utility functions, e.g. for creation of sequences of straight or curved bea
 - Notes: 	For a list of plot colors useful for matplotlib, see also utilities.PlotLineCode(...) 
 
 
-.. _sec-beams-GenerateStraightLineANCFCable2D:
+.. _sec-beams-generatestraightlineancfcable2d:
 
 `GenerateStraightLineANCFCable2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L37>`__\ (\ ``mbs``\ , \ ``positionOfNode0``\ , \ ``positionOfNode1``\ , \ ``numberOfElements``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0,0]``\ , \ ``nodeNumber0 = -1``\ , \ ``nodeNumber1 = -1``\ )
 
@@ -45,7 +45,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-beams-GenerateCircularArcANCFCable2D:
+.. _sec-beams-generatecirculararcancfcable2d:
 
 `GenerateCircularArcANCFCable2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L145>`__\ (\ ``mbs``\ , \ ``positionOfNode0``\ , \ ``radius``\ , \ ``startAngle``\ , \ ``arcAngle``\ , \ ``numberOfElements``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0,0]``\ , \ ``nodeNumber0 = -1``\ , \ ``nodeNumber1 = -1``\ , \ ``setCurvedReferenceConfiguration = True``\ , \ ``verboseMode = False``\ )
 
@@ -77,7 +77,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-beams-CreateReevingCurve:
+.. _sec-beams-createreevingcurve:
 
 `CreateReevingCurve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L299>`__\ (\ ``circleList``\ , \ ``drawingLinesPerCircle = 64``\ , \ ``numberOfANCFnodes = -1``\ , \ ``removeLastLine = False``\ , \ ``removeFirstLine = False``\ , \ ``radialOffset = 0.``\ , \ ``closedCurve = False``\ , \ ``graphicsElementsPerCircle = 64``\ , \ ``graphicsNodeSize = 0``\ , \ ``colorCircles = [0.,0.5,1.,1.]``\ , \ ``colorLines = [1.,0.5,0.,1.]``\ )
 
@@ -97,7 +97,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
   | \ ``colorCircles``\ : RGBA color for circles
   | \ ``colorLines``\ : RGBA color for lines
 - | \ *output*\ :
-  | return a dictionary with {'ancfPointsSlopes':ancfPointsSlopes, 'elementLengths':elementLengths, 'elementCurvatures':elementCurvatures, 'totalLength':totalLength, 'circleData':circle2D, 'graphicsDataLines':graphicsDataLines, 'graphicsDataCircles':graphicsDataCircles }; 'ancfPointsSlopes' denotes 4-dimensional vector with (x/y) position and (x/y) slope coordinates in a row; 'elementLengths' is the list of curved lengths for elements between nodes (size is 1 smaller than number of nodes), 'elementCurvatures' is the list of scalar curvatures between nodes (according to list of elementLengths), 'totalLength' is the total length of the reeving line, 'circleData' represents the lines and arcs calculated for the reeving system, 'graphicsDataLines' is the graphicsData for the lines and 'graphicsDataCircles' represents the graphicsData for the circles
+  | return a dictionary with 'ancfPointsSlopes':ancfPointsSlopes, 'elementLengths':elementLengths, 'elementCurvatures':elementCurvatures, 'totalLength':totalLength, 'circleData':circle2D, 'graphicsDataLines':graphicsDataLines, 'graphicsDataCircles':graphicsDataCircles ; 'ancfPointsSlopes' denotes 4-dimensional vector with (x/y) position and (x/y) slope coordinates in a row; 'elementLengths' is the list of curved lengths for elements between nodes (size is 1 smaller than number of nodes), 'elementCurvatures' is the list of scalar curvatures between nodes (according to list of elementLengths), 'totalLength' is the total length of the reeving line, 'circleData' represents the lines and arcs calculated for the reeving system, 'graphicsDataLines' is the graphicsData for the lines and 'graphicsDataCircles' represents the graphicsData for the circles
 - | \ *example*\ :
 
 .. code-block:: python
@@ -122,7 +122,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-beams-PointsAndSlopes2ANCFCable2D:
+.. _sec-beams-pointsandslopes2ancfcable2d:
 
 `PointsAndSlopes2ANCFCable2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L528>`__\ (\ ``mbs``\ , \ ``ancfPointsSlopes``\ , \ ``elementLengths``\ , \ ``cableTemplate``\ , \ ``massProportionalLoad = [0,0,0]``\ , \ ``fixedConstraintsNode0 = [0,0,0,0]``\ , \ ``fixedConstraintsNode1 = [0,0,0,0]``\ , \ ``firstNodeIsLastNode = True``\ , \ ``elementCurvatures = []``\ , \ ``graphicsSizeConstraints = -1``\ )
 
@@ -150,7 +150,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-beams-GenerateSlidingJoint:
+.. _sec-beams-generateslidingjoint:
 
 `GenerateSlidingJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L612>`__\ (\ ``mbs``\ , \ ``cableObjectList``\ , \ ``markerBodyPositionOfSlidingBody``\ , \ ``localMarkerIndexOfStartCable = 0``\ , \ ``slidingCoordinateStartPosition = 0``\ )
 
@@ -164,7 +164,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-beams-GenerateAleSlidingJoint:
+.. _sec-beams-generatealeslidingjoint:
 
 `GenerateAleSlidingJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/beams.py\#L638>`__\ (\ ``mbs``\ , \ ``cableObjectList``\ , \ ``markerBodyPositionOfSlidingBody``\ , \ ``AleNode``\ , \ ``localMarkerIndexOfStartCable = 0``\ , \ ``AleSlidingOffset = 0``\ , \ ``activeConnector = True``\ , \ ``penaltyStiffness = 0``\ )
 

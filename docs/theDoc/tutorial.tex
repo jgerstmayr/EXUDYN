@@ -79,7 +79,7 @@ Such a ground node is added via:
   nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
 \end{lstlisting}
 %
-In the next step, we add an object\footnote{For the moment, we just need to know that objects either depend on one or more nodes, which are usually bodies and finite elements, or they can be connectors, which connect (the coordinates of) objects via markers, see Section \ref{sec:programStructure}.}, which provides equations for coordinates. The \texttt{MassPoint} needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:
+In the next step, we add an object\footnote{For the moment, we just need to know that objects either depend on one or more nodes, which are usually bodies and finite elements, or they can be connectors, which connect (the coordinates of) objects via markers, see \refSection{sec:overview:modulestructure}.}, which provides equations for coordinates. The \texttt{MassPoint} needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:
 \pythonstyle\begin{lstlisting}
   massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1))
 \end{lstlisting}
@@ -147,7 +147,7 @@ In order to visualize the results online, a renderer can be started. As our comp
   exu.StartRenderer()              #start graphics visualization
   #mbs.WaitForUserToContinue()     #wait for pressing SPACE bar to continue (in render window!)
 \end{lstlisting}
-As the simulation is still very fast, we will not see the motion of our node. Using e.g.\ \texttt{steps=10000000} in the lines above allows you online visualize the resulting oscillations.
+As the simulation is still very fast, we will not see the motion of our node. Using a very small step size of, e.g., \texttt{h=1e-7} in the lines above allows us to visualize the resulting oscillations in realtime.
 
 %
 Finally, we start the solver, by telling which system to be solved, solver type and the simulation settings:

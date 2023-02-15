@@ -1,6 +1,9 @@
+
+.. _sec-overview-modulestructure:
+
 Module structure
 ================
- 
+
 This section will show:
 
 +  Overview of modules
@@ -8,7 +11,7 @@ This section will show:
 +  Coordinates: reference coordinates and displacements
 +  Nodes, Objects, Markers and Loads
 
-For an introduction to the solvers, see theDoc.pdf.
+For an introduction to the solvers, see  :ref:`sec-solvers`\ .
 
 
 .. |picOverviewExudynModules| image:: ../theDoc/figures/overviewExudynModules.png
@@ -22,6 +25,9 @@ For an introduction to the solvers, see theDoc.pdf.
 
 
 
+
+.. _sec-overview-overviewmodules:
+
 Overview of modules
 -------------------
 
@@ -34,10 +40,10 @@ Python parts.
     on this level, there are just very few functions: \ ``SystemContainer()``\ , \ ``StartRenderer()``\ , \ ``StopRenderer()``\ , \ ``GetVersionString()``\ , \ ``SolveStatic(...)``\ , \ ``SolveDynamic(...)``\ , ... as well as system and user variable dictionaries \ ``exudyn.variables``\  and \ ``exudyn.sys``\ 
  -  \ ``SystemContainer``\ : contains the systems (most important), solvers (static, dynamics, ...), visualization settings
  -  \ ``mbs``\ : fmbs created with \ ``mbs = SC.AddSystem()``\ , this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
-    loads can added to the system, see theDoc.pdf;
+    loads can added to the system, see  :ref:`sec-item-reference-manual`\ ;
  -  \ ``mbs.systemData``\ : contains the initial, current, visualization, ... states of the system and holds the items, see [figure in theDoc.pdf]
   
-+  \ **Python parts**\  (this list is continuously extended, see theDoc.pdf), sorted by importance:
++  \ **Python parts**\  (this list is continuously extended, see  :ref:`sec-pythonutilityfunctions`\ ), sorted by importance:
   
  -  \ ``exudyn.utilities``\ : constains helper classes in Python and includes Exudyn modules \ ``basicUtilities``\ , \ ``rigidBodyUtilities``\ , \ ``graphicsDataUtilities``\ , and \ ``itemInterface``\ , which is recommended to be loaded at beginning of your model file
  -  \ ``exudyn.itemInterface``\ : contains the interface, which transfers Python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
@@ -69,6 +75,9 @@ Python parts.
 
 
 
+
+
+.. _sec-overview-conventionsitems:
 
 Conventions: items, indexes, coordinates
 ----------------------------------------

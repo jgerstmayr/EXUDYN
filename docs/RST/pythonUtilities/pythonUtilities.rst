@@ -1,5 +1,5 @@
 
-.. _sec-pythonUtilityFunctions:
+.. _sec-pythonutilityfunctions:
 
 ========================
 Python Utility Functions

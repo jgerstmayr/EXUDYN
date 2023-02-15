@@ -575,7 +575,7 @@ class InteractiveDialog:
 #    checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
 #**output: opens interactive dialog with further settings
 #**notes: Uses class InteractiveDialog in the background, which can be used to adjust animation creation. If meshes are large, animation artifacts may appear, which are resolved by using a larger update period.
-#    Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record animation' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see \refSection{secGeneratingAnimations}); now deactivate 'Record animation' by pressing 'Off' and chose another mode
+#    Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record animation' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see \refSection{sec:overview:basics:animations}); now deactivate 'Record animation' by pressing 'Off' and chose another mode
 def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPerPeriod = 30, showTime = True, 
                  renderWindowText = '', runOnStart = False, runMode=0, scaleAmplitude = 1, title='', fontSize = 12,
                  checkRenderEngineStopFlag = True):

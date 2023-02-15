@@ -53,7 +53,7 @@ Enjoy the Python library for multibody dynamics modeling, simulation, creating l
 %    :width: 100%
 %
 
-\mysection{Installation and Getting Started}
+\mysectionlabel{Installation and Getting Started}{sec:installationandgettingstarted}
 \ignoreRST{
 The documentation for \codeName\ is split into this introductory section, including a quick start up, installation, code structure and important hints, 
 as well as a larger part containing the \codeName\ module description and interfaces, theory, references to the accessible items and data structures, solvers, settings and much more. \vspace{6pt} \\
@@ -98,7 +98,7 @@ It seemed that the previous code HOTINT reached limits of further (efficient) de
 \codeName\ is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automatized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of Python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.
 
 The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
-For details on the interaction of nodes, objects, markers and loads see \refSection{sec:items}.
+For details on the interaction of nodes, objects, markers and loads see \refSection{sec:overview:items}.
 
 \mysubsubsection{Developers of \codeName\ and thanks}
 \codeName\ is currently (\the\month-\the\year) developed at the University of Innsbruck.
@@ -133,10 +133,9 @@ The following people have contributed to examples, testing and theory:
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \newpage
-\mysubsection{Installation instructions}
-\label{sec:installationInstructions}
+\mysubsectionlabel{Installation instructions}{sec:install:installinstructions}
 %
-\mysubsubsection{Requirements for \codeName ?}
+\mysubsubsectionlabel{Requirements for \codeName ?}{sec:install:installinstructions:requirements}
 
 \codeName\ only works with Python. Thus, you need an appropriate Python installation.
 So far (2021-07), we tested
@@ -159,7 +158,7 @@ Many alternative options exist:
 If you plan to extend the C++ code, we recommend to use VS2017\footnote{previously, VS2019 was recommended: However, VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.} to compile your code, which offers Python 3.7 compatibility.
 Once again, remember that Python versions and the version of the \codeName\ module must be identical (e.g., Python 3.6 32 bit \mybold{both} in the \codeName\ module and in Spyder).
 
-\paragraph{Run without Anaconda:}
+\mysubsubsubsection{Run without Anaconda}
 If you do not install Anaconda (e.g., under Linux), make sure that you have the according Python packages installed:
 \bi
   \item \texttt{numpy} (used throughout the code, inevitable)
@@ -168,6 +167,7 @@ If you do not install Anaconda (e.g., under Linux), make sure that you have the 
   \item \texttt{scipy} (needed for eigenvalue computation)
 \ei
 You can install most of these packages using \texttt{pip install numpy} (Windows) or \texttt{pip3 install numpy} (Linux).
+NOTE: as there is only \texttt{numpy} needed (but not for all sub-packages) and \texttt{numpy} supports many variants, we do not add a particular requirement for installation of depending packages. It is not necessary to install \texttt{scipy} as long as you are not using features of \texttt{scipy}. Same reason for \texttt{tkinter} and \texttt{matplotlib}.
 
 For interaction (right-mouse-click, some key-board commands) you need the Python module \texttt{tkinter}. This is included in regular Anaconda distributions (recommended, see below), but on UBUNTU you need to type alike (do not forget the '3', otherwise it installs for Python2 ...):
 \bi
@@ -176,7 +176,7 @@ For interaction (right-mouse-click, some key-board commands) you need the Python
 see also common blogs for your operating system.
 
 %+++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Install \codeName\ with PIP INSTALLER (pypi.org)}
+\mysubsubsectionlabel{Install \codeName\ with PIP INSTALLER (pypi.org)}{sec:install:installinstructions:pipinstall}
 Pre-built versions of \codeName\ are hosted on \texttt{pypi.org}, see the project
 \bi
  \item \exuUrl{https://pypi.org/project/exudyn}{https://pypi.org/project/exudyn}
@@ -193,7 +193,7 @@ For pre-releases (use with care!), add '$--$pre' flag:
 \bi
   \item[] \texttt{pip install exudyn $--$pre}
 \ei
-In some cases (e.g. for AppleM1), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the 'Build and install' sections, \refSection{sec:build:windows}.
+In some cases (e.g. for AppleM1), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the 'Build and install' sections, \refSection{sec:install:installinstructions:buildwindows}.
 %
 %%+++++++++++++++++++++++++++++++++++++
 %\mysubsubsection{DEPRECATED: Install with Windows MSI installer}
@@ -207,7 +207,7 @@ In some cases (e.g. for AppleM1), your pre-built binary will not work due to som
 %\ei
 
 %+++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Install from specific Wheel (UBUNTU and Windows)}
+\mysubsubsectionlabel{Install from specific Wheel (UBUNTU and Windows)}{sec:install:installinstructions:wheel}
 A way to install the Python package \codeName\ is to use the so-called 'wheels' (file ending \texttt{.whl}).
 Wheels can be downloaded directly from \exuUrl{https://pypi.org/project/exudyn/\#files}{https://pypi.org/project/exudyn/\#files}, for many Python versions and architectures.
 \vspace{6pt}\\
@@ -220,7 +220,7 @@ For UBUNTU20.04 (which by default uses Python 3.8) this may read (version number
   \item \texttt{Python 3.8, 64bit}: pip3 install dist$\backslash$exudyn-1.0.20-cp38-cp38-linux\_x86\_64.whl
 \ei
 NOTE that your installation may have environments with different Python versions, so install that \codeName\ version appropriately!
-If the wheel installation does not work on UBUNTU, it is highly recommended to build \codeName\ for your specific system as given in \refSection{sec:build:ubuntu}.
+If the wheel installation does not work on UBUNTU, it is highly recommended to build \codeName\ for your specific system as given in \refSection{sec:install:installinstructions:buildubuntu}.
 
 \noindent \mybold{Windows}:\vspace{6pt}\\
 First, open an Anaconda prompt:
@@ -258,8 +258,8 @@ For Windows the installation commands may read (version number 1.0.20 may be dif
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Build and install \codeName\ under Windows 10?}
-\label{sec:build:windows}
+\mysubsubsectionlabel{Build and install \codeName\ under Windows 10?}{sec:install:installinstructions:buildwindows}
+%\label{sec:build:windows}
 Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:
 \bi
   \item you need an appropriate compiler (tested with Microsoft Visual Studio; recommended: VS2017)
@@ -284,8 +284,8 @@ This will add a wheel in the \texttt{dist} folder.
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Build and install \codeName\ under Mac OS X?}
-\label{sec:build:MacOS}
+\mysubsubsectionlabel{Build and install \codeName\ under Mac OS X?}{sec:install:installinstructions:buildmacos}
+%\label{sec:build:MacOS}
 Installation and building on Mac OS X is less frequently tested, but successful compilation including GLFW has been achieved.
 Requirements are an according Anaconda (or Miniconda) installation.
 
@@ -351,8 +351,8 @@ in order to interact with the render window, as there is only a single-threaded 
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Build and install \codeName\ under UBUNTU?}
-\label{sec:build:ubuntu}
+\mysubsubsectionlabel{Build and install \codeName\ under UBUNTU?}{sec:install:installinstructions:buildubuntu}
+%
 Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python \mybold{3.6} is already installed on UBUNTU18.04, otherwise use \texttt{sudo apt install python3})\footnote{see also the youtube video: \exuUrl{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg\_jtl6fx}{https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg\_jtl6fx}}:
 
 \noindent First update ...
@@ -424,7 +424,7 @@ Congratulation! \mybold{Now, run a test example} (will also open an OpenGL windo
 \ei
 
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Uninstall \codeName }
+\mysubsubsectionlabel{Uninstall \codeName }{sec:install:installinstructions:uninstall}
 
 To uninstall exudyn under Windows, run (may require admin rights):
 \bi
@@ -450,7 +450,7 @@ In order to make full usage of the C++ code and extending it, you can use:
   \bi
     \item get the files from git
     \item put them into a local directory (recommended: \texttt{C:/DATA/cpp/EXUDYN\_git})
-    \item start \texttt{main\_sln.sln} with Visual Studio
+    \item start \texttt{main\_sln.sln} with Visual Studio (recommended version: 2017, otherwise you have to manually adapt)
     \item compile the code and run \texttt{main/pythonDev/pytest.py} example code
     \item adapt \texttt{pytest.py} for your applications
     \item extend the C++ source code
@@ -463,7 +463,7 @@ In order to make full usage of the C++ code and extending it, you can use:
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsection{Further notes}
-\mysubsubsection{Goals of \codeName}
+\mysubsubsectionlabel{Goals of \codeName}{sec:install:notes:goals}
 After the first development phase (2019-2021), it
 \bi
   \item is a moderately large (2MB on windows!) multibody library, which can be easily linked to other projects,
@@ -492,7 +492,7 @@ For specific open issues, see \texttt{trackerlog.html} -- a document only intend
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsection{Run a simple example in Python}
+\mysubsectionlabel{Run a simple example in Python}{sec:install:simpleexample}
 After performing the steps of the previous section, this section shows a simplistic model which helps you to check if \codeName\ runs on your computer.
 
 In order to start, run the Python interpreter Spyder (or any preferred Python environment).
@@ -550,7 +550,7 @@ The beginning and end of the file should look like: \vspace{6pt}\\
   #Solver Info: stepReductionFailed(or step failed)=0,discontinuousIterationSuccessful=1,newtonSolutionDiverged=0,massMatrixNotInvertible=1,total time steps=100,total Newton iterations=100,total Newton jacobians=100
 \end{lstlisting}
 %
-Within this file, the first column shows the simulation time and the following columns provide coordinates, their derivatives and Lagrange multipliers on system level. For relation of local to global coordinates, see \refSection{sec:systemData:LTG}. As expected, the $x$-coordinate of the point mass has constant acceleration $a=f/m=0.001/10=0.0001$, the velocity grows up to $0.0001$ after 1 second and the point mass moves $0.00005$ along the $x$-axis.
+Within this file, the first column shows the simulation time and the following columns provide coordinates, their derivatives and Lagrange multipliers on system level. For relation of local to global coordinates, see \refSection{sec:overview:ltgmapping}. As expected, the $x$-coordinate of the point mass has constant acceleration $a=f/m=0.001/10=0.0001$, the velocity grows up to $0.0001$ after 1 second and the point mass moves $0.00005$ along the $x$-axis.
 
 Note that line 8 contains the \codeName\ and Python versions\footnote{as well as some other specific information on the platform and compilation settings (which may help you identify with which computer, etc., you created results)} provided in the solution file are the versions at which Exudyn has been compiled with.
 The Python micro version (last digit) may be different from the Python version from which you were running Exudyn.
@@ -559,9 +559,16 @@ This information is also provided in the sensor output files.
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \newpage
-\mysubsection{Trouble shooting and FAQ}
+\mysubsectionlabel{Trouble shooting and FAQ}{sec:install:troubleshootingfaq}
 
 \mysubsubsection{Trouble shooting}
+\codeName\ has a solid exception handling and does lots of error checking on
+inputs as well as during computations. This should usually not lead to an
+unexpected crash as in early days of scientific codes.
+
+For basic information on exception handling, see also the according section on
+Exceptions and Error Messages. In the following, typical error messages are listed. 
+
 \noindent \mybold{Python import errors}:
 \bi
   %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -639,7 +646,7 @@ to explicitly load the version without AVX2.
   ModuleNotFoundError: No module named 'tkinter'
 \end{lstlisting}
 %
-\item[$\ra$] see installation instructions to install missing Python modules, \refSection{sec:installationInstructions}.
+\item[$\ra$] see installation instructions to install missing Python modules, \refSection{sec:install:installinstructions}.
 
 \item Problems with \mybold{tkinter}, especially on MacOS:\\
   \codeName\ uses \texttt{tkinter}, based on tcl/tk, to provide some basic dialogs, such as visualizationSettings\\
@@ -657,15 +664,55 @@ to explicitly load the version without AVX2.
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \noindent \mybold{Typical solver errors}:
 \bi
-  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\item Consider the  example for a mixed error message comes from the solver when called for a (possibly empty) \texttt{mbs} with no prior call to \texttt{mbs.Assemble()}:
+\plainlststyle
+\begin{lstlisting}
+  import exudyn as exu
+  from exudyn.utilities import *
+  SC = exu.SystemContainer()
+  mbs = SC.AddSystem()
+  sims=exu.SimulationSettings()
+  exu.SolveDynamic(mbs, sims)
+\end{lstlisting}
+\item This will results in error messages similar to:
+\begin{lstlisting}
+  =========================================
+  User ERROR [file 'C:\Users\username\.conda\envs\venvP39\lib\site-packages\exudyn\solver.py', line 245]: 
+  Solver: system is inconsistent and cannot be solved (call Assemble() and check error messages)
+  =========================================
+
+  =========================================
+  SYSTEM ERROR [file 'C:\Users\username\.conda\envs\venvP39\lib\site-packages\exudyn\solver.py', line 245]: 
+  EXUDYN raised internal error in 'CSolverBase::InitializeSolver':
+  Exudyn: parsing of Python file terminated due to Python (user) error
+  =========================================
+
+  ******************************
+  DYNAMIC SOLVER FAILED:
+    use showHints=True to show helpful information
+  ******************************
+   
+  Traceback (most recent call last):
+
+    File "C:\Users\username\AppData\Local\Temp\ipykernel_24988\3348856385.py", line 1, in <module>
+      exu.SolveDynamic(mbs, sims)
+
+    File "C:\Users\username\.conda\envs\venvP39\lib\site-packages\exudyn\solver.py", line 255, in SolveDynamic
+      raise ValueError("SolveDynamic terminated")
+
+  ValueError: SolveDynamic terminated
+\end{lstlisting}
+\bi
+\item[$\ra$] it seems clear that you should read this error from top as it indicates that you just forgot to call \texttt{mbs.Assemble()}
+\ei
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \item \texttt{SolveDynamic} or \texttt{SolveStatic} \mybold{terminated due to errors}:
 \bi
 \item[$\ra$] use flag \texttt{showHints = True} in \texttt{SolveDynamic} or \texttt{SolveStatic}
 \ei
 \item Very simple example \mybold{without loads} leads to error: \texttt{SolveDynamic} or \texttt{SolveStatic} \mybold{terminated due to errors}:
 \bi
-\item[$\ra$] see also 'Convergence problems', \refSection{secConvergenceProblems}
+\item[$\ra$] see also 'Convergence problems', \refSection{sec:overview:basics:convergenceproblems}
 \item[$\ra$] may be caused due to nonlinearity of formulation and round off errors, which restrict Newton to achieve desired tolerances; adjust  \texttt{.newton.relativeTolerance} / \texttt{.newton.absoluteTolerance} in static solver or in time integration
 \ei
 \item Typical \mybold{solver error due to redundant constraints or missing inertia terms}, could read as follows:
@@ -726,7 +773,7 @@ which draws the according object in red and others gray/transparent (but sometim
 \item[$\ra$] this solver error is caused, because the nonlinear system cannot be solved using Newton's method.
 \item[$\ra$] the static or dynamic solver by default tries to reduce step size to overcome this problem, but may fail finally (at minimum step size).
 \item[$\ra$] possible reasons are: too large time steps (reduce step size by using more steps/second), inappropriate initial conditions, or inappropriate joints or constraints (remove joints to see if they are the reason), usually within a singular configuration. Sometimes a system may be just unsolvable in the way you set it up.
-\item[$\ra$] see also 'Convergence problems', \refSection{secConvergenceProblems}
+\item[$\ra$] see also 'Convergence problems', \refSection{sec:overview:basics:convergenceproblems}
 \ei
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \item Typical solver error if (e.g., syntax) \mybold{error in user function} (output may be very long, \mybold{read always message on top!}):

@@ -41,6 +41,8 @@ extensions = [
 
 #rtd:
 if html_theme == "sphinx_rtd_theme":
+    html_static_path = ['docs/_static']
+    html_css_files = ['custom.css']
     html_theme_options = {
     'prev_next_buttons_location': 'bottom', #bottom, top, both
     'style_external_links': False,
@@ -53,7 +55,7 @@ if html_theme == "sphinx_rtd_theme":
     # 'includehidden': True,
     'titles_only': False,
     }
-    
+
 #furo:
 if html_theme == "furo":
     html_theme_options = {

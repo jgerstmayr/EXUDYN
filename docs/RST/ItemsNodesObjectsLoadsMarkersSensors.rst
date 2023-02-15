@@ -1,6 +1,9 @@
+
+.. _sec-overview-items:
+
 Items: Nodes, Objects, Loads, Markers, Sensors, ...
 ===================================================
- 
+
 In this section, the most important part of Exudyn are provided. An overview of the interaction of the items is given in [figure in theDoc.pdf]
 
 
@@ -59,6 +62,9 @@ Sensors
 
 Sensors are only used to measure output variables (values) in order to simpler generate the requested output quantities.
 They have a very weak influence on the system, because they are only evaluated after certain solver steps as requested by the user.
+
+
+.. _sec-overview-items-coordinates:
 
 Reference coordinates and displacements
 ---------------------------------------

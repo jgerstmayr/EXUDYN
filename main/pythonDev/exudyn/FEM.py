@@ -1083,6 +1083,7 @@ class ObjectFFRFreducedOrderInterface:
 
     #unused, because done separately in FEMinterface:  computeOutputVariableModeBasis: provide exudyn.OutputVariableType for postprocessing (set to 0 if unused); currently this is only available for linear tetrahedral elements and for exudyn.OutputVariableType = StrainLocal or StressLocal
 
+    ##  UFforce: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced\_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
 
     #**classFunction: add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs; use this function with userfunctions=0 in order to use internal C++ functionality, which is approx. 10x faster; implementation of userfunctions also available for rotation vector (Lie group formulation), which needs further testing
     #**input:
@@ -1094,11 +1095,18 @@ class ObjectFFRFreducedOrderInterface:
     #  initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
     #  eulerParametersRef: DEPRECATED, use rotationParametersRef or rotationMatrixRef in future: reference euler parameters of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
     #  gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
-    #  UFforce: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced\_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
-    #  UFmassMatrix: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFmassFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced\_t):\\  \phantom{XXXX}return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
+    #  UFforce: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; see example
+    #  UFmassMatrix: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; see example
     #  massProportionalDamping: Rayleigh damping factor for mass proportional damping (multiplied with reduced mass matrix), added to floating frame/modal coordinates only
     #  stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only (multiplied with reduced stiffness matrix)
     #  color: provided as list of 4 RGBA values
+    #**example:
+    # #example of a user function for forces:
+    # def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):
+    #     return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
+    # #example of a user function for mass matrix:
+    # def UFmassFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced\_t):
+    #     return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)
     def AddObjectFFRFreducedOrderWithUserFunctions(self, exu, mbs, 
                                                   positionRef=[0,0,0], 
                                                   initialVelocity=[0,0,0], 

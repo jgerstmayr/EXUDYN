@@ -13,14 +13,12 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 - Date:      2021-01-10 
 
 
-.. _sec-models-Manipulator4Rsimple:
+.. _sec-models-manipulator4rsimple:
 
-`Manipulator4Rsimple <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L39>`__\ ()
+`Manipulator4Rsimple <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L38>`__\ ()
 
 - | \ *function description*\ :
   | generate simple 4R manipulator as myRobot dictionary, settings are done in function
-- | \ *input*\ :
-  | nothing
 - | \ *output*\ :
   | myRobot dictionary
 - | \ *notes*\ :
@@ -29,61 +27,53 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 
 ----
 
-.. _sec-models-Manipulator3RSimple:
+.. _sec-models-manipulator3rsimple:
 
-`Manipulator3RSimple <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L119>`__\ ()
+`Manipulator3RSimple <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L117>`__\ ()
 
 - | \ *function description*\ :
   | generate simple 3R manipulator as myRobot dictionary, settings are done in function
-- | \ *input*\ :
-  | nothing
 - | \ *output*\ :
   | myRobot dictionary
 
 
 ----
 
-.. _sec-models-ManipulatorPANDA:
+.. _sec-models-manipulatorpanda:
 
-`ManipulatorPANDA <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L206>`__\ ()
+`ManipulatorPANDA <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L203>`__\ ()
 
 - | \ *function description*\ :
   | generate simple Franka Emika Panda manipulator as myRobot dictionary, settings are done in function
-- | \ *input*\ :
-  | nothing
 - | \ *output*\ :
   | myRobot dictionary
 
 
 ----
 
-.. _sec-models-ManipulatorUR5:
+.. _sec-models-manipulatorur5:
 
-`ManipulatorUR5 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L349>`__\ ()
+`ManipulatorUR5 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L345>`__\ ()
 
 - | \ *function description*\ :
   | generate UR5 manipulator as myRobot dictionary, settings are done in function
-- | \ *input*\ :
-  | nothing
 - | \ *output*\ :
   | myRobot dictionary
 - | \ *notes*\ :
 
   | define myRobot kinematics, UR5 Universal Robotics,
-  | \ ``Standard DH-parameters``\ : [theta, d, a, alpha], according to P. Corke,
+  | Standard DH-parameters: [theta, d, a, alpha], according to P. Corke,
   | Links modeld as cylindrical tubes, Inertia from Parham M. Kebria2016 / Kuefeta2014
 
 
 ----
 
-.. _sec-models-ManipulatorPuma560:
+.. _sec-models-manipulatorpuma560:
 
-`ManipulatorPuma560 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L432>`__\ ()
+`ManipulatorPuma560 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L427>`__\ ()
 
 - | \ *function description*\ :
   | generate puma560 manipulator as myRobot dictionary, settings are done in function
-- | \ *input*\ :
-  | 
 - | \ *output*\ :
   | myRobot dictionary
 - | \ *notes*\ :
@@ -96,9 +86,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-models-LinkList2Robot:
+.. _sec-models-linklist2robot:
 
-`LinkList2Robot <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L528>`__\ (\ ``robotClass``\ , \ ``robotLinkList``\ , \ ``dhmode``\ )
+`LinkList2Robot <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L523>`__\ (\ ``robotClass``\ , \ ``robotLinkList``\ , \ ``dhmode``\ )
 
 - | \ *function description*\ :
   | generate serial manipulator as robotClass object from linklist settings are done in function
@@ -114,7 +104,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
   | DH Parameter Information
   | stdH = [theta, d, a, alpha] with Rz(theta) \* Tz(d) \* Tx(a) \* Rx(alpha)
   | modDH = [alpha, dx, theta, rz] with
-  | \ ``used by Corke and Lynch``\ : Rx(alpha) * Tx(a) * Rz(theta) * Tz(d)
-  | \ ``used by Khali``\ :           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r)
-  | \ ``Important note``\ :  d(khali)=a(corke)  and r(khali)=d(corke)
+  | used by Corke and Lynch: Rx(alpha) \* Tx(a) \* Rz(theta) \* Tz(d)
+  | used by Khali:           Rx(alpha) \* Tx(d) \* Rz(theta) \* Tz(r)
+  | Important note:  d(khali)=a(corke)  and r(khali)=d(corke)
 

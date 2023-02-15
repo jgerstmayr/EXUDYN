@@ -11,7 +11,9 @@ usage: call 'rstviewer README.rst' directly in powershell; alternatively use res
 import copy #for deep copies
 import io   #for utf-8 encoding
 from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, \
-                               RSTheaderString
+                               RSTheaderString, RSTlabelString, ExtractLatexCommand, FindMatchingBracket, ReplaceWords, \
+                               convLatexWords, convLatexCommands
+                               #ReplaceLatexCommands not imported as it has a special local version
 
 sectionFilesDepth = 1 #0=best for pydata theme, 1=best for read the docs theme
 reducedREADME = True #True, if Sphinx anyway used
@@ -27,177 +29,17 @@ destDir='../../../'
 #main files
 filesParsed=[
               'version.tex',
-              'buildDate.tex',
               'gettingStarted.tex',
               'introduction.tex',
               'tutorial.tex',
              ]
 
 
-convWords={'(\\the\\month-\\the\\year)':'',
-           '    \item':'\item',
-           '  \item':'\item',
-           '\item[$\\ra$]':'  |  => ', #'+ ->', #this is always a sublist
-           '\\item[]':'  ', 
-           '\\item[--]':' - ',  #one additional whitespace at beginning for alignment of sub-lists!
-           '\\item':'+ ',
-           '\\small':'',
-           '\\noindent ':'',
-           '\\noindent':'',
-           '$\\ra$':'=>',
-           '\\newpage':'',
-           '\\horizontalRuler':'',
-           '\\\\':'\n\n',
-           '$\\backslash$':'\\',
-           '\\plainlststyle':'',
-           '\\codeName\\':'Exudyn',
-           '\\codeName':'Exudyn',
-           '\\pythonstyle\\begin{lstlisting}':'\n.. code-block:: python\n',
-           '\\begin{lstlisting}':'\n.. code-block::\n',
-           #'\\end{lstlisting}':'\ \n',#gives errors with restview.exe
-           '\\end{lstlisting}':'\n',
-           '\\begin{center}':'',
-           '\\end{center}':'',
-           '\\includegraphics[height=6cm]{../demo/screenshots/plotSpringDamper}':'see theDoc.pdf',
-           # '+++++++++++++++++++++++++++++++':'\\ +++++++++++++++++++++++++++++++\n', #special problems with .rst
-           # '=========================================':'\\ =========================================\n', #special problems with .rst
-           '\\begin{itemize}':'', 
-           '[leftmargin=1.4cm]':'',
-           '[leftmargin=1.2cm]': '',
-           '[leftmargin=0.5cm]':'', 
-           '\\rule{8cm}{0.75pt}':'', 
-           '\\textcolor{steelblue}':'', 
-           '[language=Python, xleftmargin=36pt]':'',
-           '': '',
-           '': '',
-           '': '',
-
-           '\\bi':'', 
-           '\\ei':'',
-           '\\bn':'', 
-           '\\en':'',
-           '\\be':'', 
-           '\\ee':'',
-           '\\it ':'',
-           #specials:
-           '\\ge':'>=',
-           '\\_':'_',
-           '\\textdegree':'°',
-           '\\ac':'',
-           '\\acs':'',
-           '\\acp':'',
-           '\\acf':'',
-           #
-           '{\"a}':'ä',
-           '{\"o}':'ö',
-           '{\"u}':'ü',
-           '\\"a':'ä', #if '{' is already removed earlier
-           '\\"o':'ö',
-           '\\"u':'ü',
-           '{':'',
-           '}':'',
-           '$':'',
-           }
-convCommands={#(precommand,'_USE'/'',postcommand)
-    '\\ignoreRST':('','',''),
-    '\\texttt':('\\ ``','_USE','``\\ '),
-    '\\mysection':('','',''),
-    '\\mysubsection':('','',''),
-    '\\mysubsubsection':('','',''),
-    '\\mysubsubsubsection':('','',''),
-    '\\pythonListing':('','',''),
-    '\\pythonSmallListing':('','',''),
-    '\\smallListing':('','',''),
-    '\\myListing':('','',''),
-    '\\setlength':('','',''),
-    '\\label':('','',''),
-    '\\vspace':('','',''),
-    '\\footnote':(' (','_USE',')'),
-    '\\mybold':('\\ **','_USE','**\\ '),
-    '\\mathrm':('','_USE',''),
-    '\\cite':('','',''),
-    '\\onlyRST':('','_USE',''),
-    '\\refSection':('theDoc.pdf','',''),
-    '\\fig':('[figure in theDoc.pdf]','',''),
-    '\\exuUrl':('`','_USE','`_'),
-    '\\ref':('[theDoc.pdf]','',''),
-    'figure':('','',''),
-    } #TITLE, SUBTITLE, SUBSUBTITLE, ...
 
 sectionsList = []
 
-#replace all occurances of conversionDict in string and return modified string
-def ReplaceWords(s, conversionDict): #replace strings provided in conversion dict
-    for (key,value) in conversionDict.items():
-        s = s.replace(key, value)
-
-    return s
-
-#start searching for { and matching } bracket, including sub-brackets
-def FindMatchingBracket(s, start):
-    cnt = 0
-    bStart = -1
-    for i in range(start,len(s)):
-        if s[i] == '{':
-            cnt += 1
-            bStart = i
-        elif s[i] == '}':
-            cnt -= 1
-
-        if bStart != -1 and cnt == 0:
-            return [bStart,i]
-    return [-1,-1]
-        
-
-#if key is found, return [preString, innerString, innerString2, postString], otherwise -1; '123\section{abc}456' = ['123','abc','456']
-def ExtractCommand(s, key, secondBracket, isBeginEnd):
-    found = -1
-    if isBeginEnd: #find \begin{...} \end{...}
-        #always find next occurances --> will be erased in next run ...
-        sStart = s.find('\\begin{'+key+'}')
-        sEnd = s.find('\\end{'+key+'}')
-        if sStart == -1 or sEnd == -1:
-            return -1
-        else:
-            found = sStart
-            sStart += len('\\begin{'+key+'}') - 1
-            #sEnd += len('\\end{'+key+'}') - 1
-            preString = s[:found]
-            innerString = s[sStart+1:sEnd]
-            postString = s[sEnd+len('\\end{'+key+'}'):]
-
-            return [preString, innerString, '', postString]
-    else:
-        found = s.find(key)
-        if found != -1:
-            [sStart, sEnd] = FindMatchingBracket(s, found)
-
-            preString = s[:found]
-            if sEnd == -1:
-                print('no matching bracket found: '+key+', "'+s[found:min(found+20,len(s))]+'"')
-                raise ValueError('ERROR')
-    
-            innerString = s[sStart+1:sEnd]
-            postString = s[sEnd+1:]
-    
-            sStart2 = -1
-            sEnd2 = -1
-            innerString2 = ''
-            if secondBracket:
-                [sStart2, sEnd2] = FindMatchingBracket(s, sEnd+1)
-                if sEnd2 == -1:
-                    # print("start ", sStart, ", end ", sEnd)
-                    print('no matching second bracket found: '+key+', "'+s[sStart+1:sStart+50]+'"')
-                    raise ValueError('ERROR')
-                innerString2 = s[sStart2+1:sEnd2]
-                postString = s[sEnd2+1:]
-    
-            # print(sStart, sEnd)
-            return [preString, innerString, innerString2, postString]
-        else:
-            return -1
-
-def ReplaceCommands(s, conversionDict): #replace strings provided in conversion dict
+#local copy, will do some extra things and stores sections
+def ReplaceLatexCommands(s, conversionDict): #replace strings provided in conversion dict
     global sectionsList
     s = s.replace('{\\bf ','\\mybold{') #this is then further converted into rst code ...
     for (key,value) in conversionDict.items():
@@ -206,34 +48,53 @@ def ReplaceCommands(s, conversionDict): #replace strings provided in conversion 
         while (found != -1):
             secondBracket = False
             isBeginEnd = False
-            if key == '\\exuUrl': secondBracket = True
+            if key == '\\exuUrl' or 'sectionlabel' in key: 
+                secondBracket = True
             if key == 'figure': isBeginEnd = True
 
-            found = ExtractCommand(s, key, secondBracket, isBeginEnd)
+            found = ExtractLatexCommand(s, key, secondBracket, isBeginEnd)
             if found != -1:
                 [preString, innerString, innerString2, postString] = found
                 # if isBeginEnd:
                 #     print("inner="+innerString+'+++')
+                # if key == '\\label':
+                #     #label in rst needs to be put in front of section ... put in front of 
+                #     nLast = max(0,preString.rfind('\n',0,-1)) #start one char earlier to catch direct \n before; otherwise take start of string
+                #     s = preString[0:nLast]
+                #     s += value[0] + innerString.replace(':','-').lower() + value[2]
+                #     s += preString[nLast:] #this may be the header
+                # else:
                 s = preString
-                innerString = ReplaceWords(innerString, convWords) #needs to be cleaned here already
-                if key == '\\mysection':
+                if key == '\\refSection' or key == '\\label':
+                    innerString=innerString.replace(':','-').lower()
+                else:
+                    innerString = ReplaceWords(innerString, convLatexWords) #needs to be cleaned here already
+
+                # if 'sectionlabel' in key:
+                #     print('label=',innerString2)
+
+                if key == '\\mysection' or key == '\\mysectionlabel':
                     s += sectionMarkerText+'0\n'
+                    if 'label' in key: s += RSTlabelString(innerString2)+'\n'
                     sectionsList += [('0',innerString)]
                     s += RSTheaderString(innerString, 1)
-                elif key == '\\mysubsection':
+                elif key == '\\mysubsection' or key == '\\mysubsectionlabel':
                     if sectionFilesDepth > 0:
                         s += sectionMarkerText+'1\n'
                         sectionsList += [('1',innerString)]
+                    if 'label' in key: s += RSTlabelString(innerString2)+'\n'
                     s += RSTheaderString(innerString, 2)
-                elif key == '\\mysubsubsection':
+                elif key == '\\mysubsubsection' or key == '\\mysubsubsectionlabel':
                     if sectionFilesDepth > 1:
                         s += sectionMarkerText+'2\n'
                         sectionsList += [('2',innerString)]
+                    if 'label' in key: s += RSTlabelString(innerString2)+'\n'
                     s += RSTheaderString(innerString, 3)
-                elif key == '\\mysubsubsubsection':
+                elif key == '\\mysubsubsubsection' or key == '\\mysubsubsubsectionlabel':
                     if sectionFilesDepth > 2:
                         s += sectionMarkerText+'3\n'
                         sectionsList += [('3',innerString)]
+                    if 'label' in key: s += RSTlabelString(innerString2)+'\n'
                     s += RSTheaderString(innerString, 4)
                 elif key == '\\exuUrl':
                     s += value[0]
@@ -249,6 +110,8 @@ def ReplaceCommands(s, conversionDict): #replace strings provided in conversion 
                 
                 s += postString
     return s
+
+
 
 #extract single .rst file and hierarchical files with sections, subsections, etc.
 #marked with %%SECTION %%SUBSECTION 
@@ -313,8 +176,8 @@ def SectionNameToFileName(sectionName):
 
 def ConvertFile(s):
     s=s.replace('\\ ',' ') #replace special spaces from latex first; spaces that are added later shall be kept!
-    s=ReplaceCommands(s, convCommands)
-    s=ReplaceWords(s, convWords)
+    s=ReplaceLatexCommands(s, convLatexCommands)
+    s=ReplaceWords(s, convLatexWords)
     
     return s
 
@@ -522,7 +385,8 @@ Exudyn documentation
    
 #    docs/RST/pythonUtilities/general
 
-    indexRST += """
+    indexRST += """   docs/RST/cInterface/CInterfaceIndex
+
 .. toctree::
    :caption: Reference Manual
 
@@ -563,8 +427,9 @@ Indices and tables
                     if fileOpen:
                         file.write('\n')
                         file.close()
-                    print('write:', destDir+filename+'Index.rst')
+                    #print('write:', destDir+filename+'Index.rst')
                     file=io.open(destDir+filename+'Index.rst','w',encoding='utf8')  #clear file by one write access
+                    
                     lenName = len(name)
                     s=''
                     s += '='*lenName + '\n'
@@ -577,7 +442,7 @@ Indices and tables
                     file.write(s)
                 #also include level 0 file, as this is the introduction (could be renamed ...)
                 s = '   '+filename.replace(rstFolder,'')+'\n' #index file is already located in rstFolder
-                print('local file=',filename.replace(rstFolder,''))
+                #print('local file=',filename.replace(rstFolder,''))
                 file.write(s)
 
         if fileOpen:

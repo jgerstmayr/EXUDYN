@@ -1,0 +1,125 @@
+
+.. _sec-generalcontact:
+
+
+**************
+GeneralContact
+**************
+
+
+
+
+Structure to define general and highly efficient contact functionality in multibody systems (Note that GeneralContact is still developed, use with care.). For further explanations and theoretical backgrounds, see  :ref:`seccontacttheory`\ .
+
+.. code-block:: python
+   
+   #...
+   #code snippet, must be placed anywhere before mbs.Assemble()
+   #Add GeneralContact to mbs:
+   gContact = mbs.AddGeneralContact()
+   #Add contact elements, e.g.:
+   gContact.AddSphereWithMarker(...) #use appropriate arguments
+   gContact.SetFrictionPairings(...) #set friction pairings and adjust searchTree if needed.
+
+\ The class **GeneralContact** has the follwing **functions and structures**:
+
+* | **GetPythonObject**\ (): 
+  | convert member variables of GeneralContact into dictionary; use this for debug only!
+* | **Reset**\ (\ *freeMemory*\  = True): 
+  | remove all contact objects and reset contact parameters
+* | **isActive**:
+  | default = True (compute contact); if isActive=False, no contact computation is performed for this contact set 
+* | **verboseMode**:
+  | default = 0; verboseMode = 1 or higher outputs useful information on the contact creation and computation 
+* | **visualization**:
+  | access visualization data structure 
+* | **resetSearchTreeInterval**:
+  | (default=10000) number of search tree updates (contact computation steps) after which the search tree cells are re-created; this costs some time, will free memory in cells that are not needed any more 
+* | **sphereSphereContact**:
+  | activate/deactivate contact between spheres 
+* | **sphereSphereFrictionRecycle**:
+  | False: compute static friction force based on tangential velocity; True: recycle friction from previous PostNewton step, which greatly improves convergence, but may lead to unphysical artifacts; will be solved in future by step reduction 
+* | **minRelDistanceSpheresTriangles**:
+  | (default=1e-10) tolerance (relative to sphere radiues) below which the contact between triangles and spheres is ignored; used for spheres directly attached to triangles 
+* | **frictionProportionalZone**:
+  | (default=0.001) velocity \ :math:`v_{\mu,reg}`\  upon which the dry friction coefficient is interpolated linearly (regularized friction model); must be greater 0; very small values cause oscillations in friction force 
+* | **frictionVelocityPenalty**:
+  | (default=1e3) regularization factor for friction [N/(m\ :math:`^2 \cdot`\ m/s) ];\ :math:`k_{\mu,reg}`\ , multiplied with tangential velocity to compute friciton force as long as it is smaller than \ :math:`\mu`\  times contact force; large values cause oscillations in friction force 
+* | **excludeOverlappingTrigSphereContacts**:
+  | (default=True) for consistent, closed meshes, we can exclude overlapping contact triangles (which would cause holes if mesh is overlapping and not consistent!!!) 
+* | **excludeDuplicatedTrigSphereContactPoints**:
+  | (default=False) run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts 
+* | **ancfCableUseExactMethod**:
+  | (default=True) if True, uses exact computation of intersection of 3rd order polynomials and contacting circles 
+* | **ancfCableNumberOfContactSegments**:
+  | (default=1) number of segments to be used in case that ancfCableUseExactMethod=False; maximum number of segments=3 
+* | **ancfCableMeasuringSegments**:
+  | (default=20) number of segments used to approximate geometry for ANCFCable2D elements for measuring with ShortestDistanceAlongLine; with 20 segments the relative error due to approximation as compared to 10 segments usually stays below 1e-8 
+* | **SetFrictionPairings**\ (\ *frictionPairings*\ ): 
+  | set Coulomb friction coefficients for pairings of materials (e.g., use material 0,1, then the entries (0,1) and (1,0) define the friction coefficients for this pairing); matrix should be symmetric!
+  | *Example*:
+
+  .. code-block:: python
+
+     \#set 3 surface friction types, all being 0.1:
+     gContact.SetFrictionPairings(0.1*np.ones((3,3)));
+
+* | **SetFrictionProportionalZone**\ (\ *frictionProportionalZone*\ ): 
+  | regularization for friction (m/s); used for all contacts
+* | **SetSearchTreeCellSize**\ (\ *numberOfCells*\ ): 
+  | set number of cells of search tree (boxed search) in x, y and z direction
+  | *Example*:
+
+  .. code-block:: python
+
+     gContact.SetSearchTreeInitSize([10,10,10])
+
+* | **SetSearchTreeBox**\ (\ *pMin*\ , \ *pMax*\ ): 
+  | set geometric dimensions of searchTreeBox (point with minimum coordinates and point with maximum coordinates); if this box becomes smaller than the effective contact objects, contact computations may slow down significantly
+  | *Example*:
+
+  .. code-block:: python
+
+     gContact.SetSearchTreeBox(pMin=[-1,-1,-1],
+        \phantom\{XXXX\}pMax=[1,1,1])
+
+* | **AddSphereWithMarker**\ (\ *markerIndex*\ , \ *radius*\ , \ *contactStiffness*\ , \ *contactDamping*\ , \ *frictionMaterialIndex*\ ): 
+  | add contact object using a marker (Position or Rigid), radius and contact/friction parameters and return localIndex of the contact item in GeneralContact; frictionMaterialIndex refers to frictionPairings in GeneralContact; contact is possible between spheres (circles in 2D) (if intraSphereContact = True), spheres and triangles and between sphere (=circle) and ANCFCable2D; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper
+* | **AddANCFCable**\ (\ *objectIndex*\ , \ *halfHeight*\ , \ *contactStiffness*\ , \ *contactDamping*\ , \ *frictionMaterialIndex*\ ): 
+  | add contact object for an ANCF cable element, using the objectIndex of the cable element and the cable's half height as an additional distance to contacting objects (currently not causing additional torque in case of friction), and return localIndex of the contact item in GeneralContact; currently only contact with spheres (circles in 2D) possible; contact computed using exact geometry of elements, finding max 3 intersecting contact regions
+* | **AddTrianglesRigidBodyBased**\ (\ *rigidBodyMarkerIndex*\ , \ *contactStiffness*\ , \ *contactDamping*\ , \ *frictionMaterialIndex*\ , \ *pointList*\ , \ *triangleList*\ ): 
+  | add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; returns starting local index of trigsRigidBodyBased at which the triangles are stored; mesh can be produced with GraphicsData2TrigsAndPoints(...); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(...)
+* | **GetItemsInBox**\ (\ *pMin*\ , \ *pMax*\ ): 
+  | Get all items in box defined by minimum coordinates given in pMin and maximum coordinates given by pMax, accepting 3D lists or numpy arrays; in case that no objects are found, False is returned; otherwise, a dictionary is returned, containing numpy arrays with indices of obtained MarkerBasedSpheres, TrigsRigidBodyBased, ANCFCable2D, ...; the indices refer to the local index in GeneralContact which can be evaluated e.g. by GetMarkerBasedSphere(localIndex)
+  | *Example*:
+
+  .. code-block:: python
+
+     gContact.GetItemsInBox(pMin=[0,1,1],
+        \phantom\{XXXX\}pMax=[2,3,2])
+
+* | **GetMarkerBasedSphere**\ (\ *localIndex*\ ): 
+  | Get dictionary with position, radius and markerIndex for markerBasedSphere index, as returned e.g. from GetItemsInBox
+* | **ShortestDistanceAlongLine**\ (\ *pStart*\  = [0,0,0], \ *direction*\  = [1,0,0], \ *minDistance*\  = -1e-7, \ *maxDistance*\  = 1e7, \ *asDictionary*\  = False, \ *cylinderRadius*\  = 0, \ *typeIndex*\  = Contact.IndexEndOfEnumList): 
+  | Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is >= minDistance and < maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)
+* | **\_\_repr\_\_()**\ : 
+  | return the string representation of the GeneralContact, containing basic information and statistics
+
+
+
+
+.. _sec-generalcontact-visualization:
+
+
+VisuGeneralContact
+==================
+
+This structure may contains some visualization parameters in future. Currently, all visualization settings are controlled via SC.visualizationSettings
+
+\ The class **VisuGeneralContact** has the follwing **functions and structures**:
+
+* | **Reset**\ (): 
+  | reset visualization parameters to default values
+
+
+

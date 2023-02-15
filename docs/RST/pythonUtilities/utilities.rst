@@ -12,7 +12,7 @@ This library requires numpy (as well as time and copy)
 - Date:      2019-07-26 (created) 
 
 
-.. _sec-utilities-ShowOnlyObjects:
+.. _sec-utilities-showonlyobjects:
 
 `ShowOnlyObjects <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L42>`__\ (\ ``mbs``\ , \ ``objectNumbers = []``\ , \ ``showOthers = False``\ )
 
@@ -29,7 +29,7 @@ This library requires numpy (as well as time and copy)
 
 ----
 
-.. _sec-utilities-HighlightItem:
+.. _sec-utilities-highlightitem:
 
 `HighlightItem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L64>`__\ (\ ``SC``\ , \ ``mbs``\ , \ ``itemNumber``\ , \ ``itemType = exudyn.ItemType.Object``\ , \ ``showNumbers = True``\ )
 
@@ -45,7 +45,7 @@ This library requires numpy (as well as time and copy)
 
 ----
 
-.. _sec-utilities-UFsensorDistance:
+.. _sec-utilities-ufsensordistance:
 
 `\_\_UFsensorDistance <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L103>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
 
@@ -55,7 +55,7 @@ This library requires numpy (as well as time and copy)
 
 ----
 
-.. _sec-utilities-AddDistanceSensor:
+.. _sec-utilities-adddistancesensor:
 
 `AddDistanceSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L163>`__\ (\ ``mbs``\ , \ ``generalContactIndex``\ , \ ``positionOrMarker``\ , \ ``dirSensor``\ , \ ``minDistance = -1e7``\ , \ ``maxDistance = 1e7``\ , \ ``cylinderRadius = 0``\ , \ ``selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList``\ , \ ``storeInternal = False``\ , \ ``fileName = ''``\ , \ ``measureVelocity = False``\ , \ ``addGraphicsObject = False``\ , \ ``drawDisplaced = True``\ )
 
@@ -85,7 +85,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-UFsensorRecord:
+.. _sec-utilities-ufsensorrecord:
 
 `UFsensorRecord <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L217>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
 
@@ -97,7 +97,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-AddSensorRecorder:
+.. _sec-utilities-addsensorrecorder:
 
 `AddSensorRecorder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L238>`__\ (\ ``mbs``\ , \ ``sensorNumber``\ , \ ``endTime``\ , \ ``sensorsWritePeriod``\ , \ ``sensorOutputSize = 3``\ )
 
@@ -122,7 +122,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-LoadSolutionFile:
+.. _sec-utilities-loadsolutionfile:
 
 `LoadSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L265>`__\ (\ ``fileName``\ , \ ``safeMode = False``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ , \ ``hasHeader = True``\ )
 
@@ -145,7 +145,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-NumpyInt8ArrayToString:
+.. _sec-utilities-numpyint8arraytostring:
 
 `NumpyInt8ArrayToString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L396>`__\ (\ ``npArray``\ )
 
@@ -155,7 +155,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-BinaryReadIndex:
+.. _sec-utilities-binaryreadindex:
 
 `BinaryReadIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L403>`__\ (\ ``file``\ , \ ``intType``\ )
 
@@ -165,7 +165,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-BinaryReadReal:
+.. _sec-utilities-binaryreadreal:
 
 `BinaryReadReal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L409>`__\ (\ ``file``\ , \ ``realType``\ )
 
@@ -175,7 +175,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-BinaryReadString:
+.. _sec-utilities-binaryreadstring:
 
 `BinaryReadString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L415>`__\ (\ ``file``\ , \ ``intType``\ )
 
@@ -185,7 +185,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-BinaryReadArrayIndex:
+.. _sec-utilities-binaryreadarrayindex:
 
 `BinaryReadArrayIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L421>`__\ (\ ``file``\ , \ ``intType``\ )
 
@@ -195,7 +195,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-BinaryReadRealVector:
+.. _sec-utilities-binaryreadrealvector:
 
 `BinaryReadRealVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L428>`__\ (\ ``file``\ , \ ``intType``\ , \ ``realType``\ )
 
@@ -207,7 +207,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-LoadBinarySolutionFile:
+.. _sec-utilities-loadbinarysolutionfile:
 
 `LoadBinarySolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L444>`__\ (\ ``fileName``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ )
 
@@ -224,7 +224,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-RecoverSolutionFile:
+.. _sec-utilities-recoversolutionfile:
 
 `RecoverSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L630>`__\ (\ ``fileName``\ , \ ``newFileName``\ , \ ``verbose = 0``\ )
 
@@ -241,7 +241,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-InitializeFromRestartFile:
+.. _sec-utilities-initializefromrestartfile:
 
 `InitializeFromRestartFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L686>`__\ (\ ``mbs``\ , \ ``simulationSettings``\ , \ ``restartFileName``\ , \ ``verbose = True``\ )
 
@@ -259,7 +259,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-SetSolutionState:
+.. _sec-utilities-setsolutionstate:
 
 `SetSolutionState <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L747>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``row``\ , \ ``configuration = exudyn.ConfigurationType.Current``\ , \ ``sendRedrawSignal = True``\ )
 
@@ -269,7 +269,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-AnimateSolution:
+.. _sec-utilities-animatesolution:
 
 `AnimateSolution <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L779>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``createImages = False``\ , \ ``runLoop = False``\ )
 
@@ -293,7 +293,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-DrawSystemGraph:
+.. _sec-utilities-drawsystemgraph:
 
 `DrawSystemGraph <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L821>`__\ (\ ``mbs``\ , \ ``showLoads = True``\ , \ ``showSensors = True``\ , \ ``useItemNames = False``\ , \ ``useItemTypes = False``\ , \ ``addItemTypeNames = True``\ , \ ``multiLine = True``\ , \ ``fontSizeFactor = 1.``\ , \ ``layoutDistanceFactor = 3.``\ , \ ``layoutIterations = 100``\ , \ ``showLegend = True``\ )
 
@@ -322,7 +322,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-CreateTCPIPconnection:
+.. _sec-utilities-createtcpipconnection:
 
 `CreateTCPIPconnection <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1220>`__\ (\ ``sendSize``\ , \ ``receiveSize``\ , \ ``IPaddress = '127.0.0.1'``\ , \ ``port = 52421``\ , \ ``bigEndian = False``\ , \ ``verbose = False``\ )
 
@@ -385,7 +385,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-TCPIPsendReceive:
+.. _sec-utilities-tcpipsendreceive:
 
 `TCPIPsendReceive <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1253>`__\ (\ ``TCPIPobject``\ , \ ``sendData``\ )
 
@@ -415,7 +415,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-utilities-CloseTCPIPconnection:
+.. _sec-utilities-closetcpipconnection:
 
 `CloseTCPIPconnection <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1266>`__\ (\ ``TCPIPobject``\ )
 
@@ -432,5 +432,5 @@ CLASS TCPIPdata (in module utilities)
 **class description**: 
 
     helper class for CreateTCPIPconnection and for TCPIPsendReceive
-    
+
 

@@ -1,5 +1,5 @@
 
-.. _sec-module-basicUtilities:
+.. _sec-module-basicutilities:
 
 Module: basicUtilities
 ======================
@@ -11,14 +11,14 @@ Basic utility functions and constants, not depending on numpy or other python mo
 - | Notes:
   | Additional constants are defined:
   | pi = 3.1415926535897932
-  | sqrt2 = 2**0.5
+  | sqrt2 = 2\*\*0.5
   | g=9.81
   | eye2D (2x2 diagonal matrix)
   | eye3D (3x3 diagonal matrix)
   | Two variables 'gaussIntegrationPoints' and 'gaussIntegrationWeights' define integration points and weights for function GaussIntegrate(...)
 
 
-.. _sec-basicUtilities-ClearWorkspace:
+.. _sec-basicutilities-clearworkspace:
 
 `ClearWorkspace <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L42>`__\ ()
 
@@ -28,7 +28,7 @@ Basic utility functions and constants, not depending on numpy or other python mo
   | 'func' or 'module' in name; it also deletes all items in exudyn.sys and exudyn.variables,
   | EXCEPT from exudyn.sys['renderState'] for pertaining the previous view of the renderer
 - | \ *notes*\ :
-  | Use this function with CARE! In Spyder, it is certainly safer to add the preference Run\ :math:`\ra`\ 'remove all variables before execution'. It is recommended to call ClearWorkspace() at the very beginning of your models, to avoid that variables still exist from previous computations which may destroy repeatability of results
+  | Use this function with CARE! In Spyder, it is certainly safer to add the preference Run\ :math:`\rightarrow`\ 'remove all variables before execution'. It is recommended to call ClearWorkspace() at the very beginning of your models, to avoid that variables still exist from previous computations which may destroy repeatability of results
 - | \ *example*\ :
 
 .. code-block:: python
@@ -51,7 +51,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-basicUtilities-DiagonalMatrix:
+.. _sec-basicutilities-diagonalmatrix:
 
 `DiagonalMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L90>`__\ (\ ``rowsColumns``\ , \ ``value = 1``\ )
 
@@ -67,7 +67,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-basicUtilities-NormL2:
+.. _sec-basicutilities-norml2:
 
 `NormL2 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L104>`__\ (\ ``vector``\ )
 
@@ -85,7 +85,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-basicUtilities-VSum:
+.. _sec-basicutilities-vsum:
 
 `VSum <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L113>`__\ (\ ``vector``\ )
 
@@ -103,7 +103,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-basicUtilities-VAdd:
+.. _sec-basicutilities-vadd:
 
 `VAdd <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L122>`__\ (\ ``v0``\ , \ ``v1``\ )
 
@@ -121,7 +121,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-basicUtilities-VSub:
+.. _sec-basicutilities-vsub:
 
 `VSub <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L133>`__\ (\ ``v0``\ , \ ``v1``\ )
 
@@ -139,7 +139,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-basicUtilities-VMult:
+.. _sec-basicutilities-vmult:
 
 `VMult <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L144>`__\ (\ ``v0``\ , \ ``v1``\ )
 
@@ -148,21 +148,21 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 - | \ *input*\ :
   | vectors v0 and v1 as list or in numpy format
 - | \ *output*\ :
-  | sum of all component wise products: c0[0]\*v1[0] + v0[1]\*v1[0] + ...
+  | sum of all component wise products: c0[0]*v1[0] + v0[1]*v1[0] + ...
 
 
 ----
 
-.. _sec-basicUtilities-ScalarMult:
+.. _sec-basicutilities-scalarmult:
 
 `ScalarMult <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L154>`__\ (\ ``scalar``\ , \ ``v``\ )
 
 - | \ *function description*\ :
   | multiplication vectors with scalar: result = scalar \* v
 - | \ *input*\ :
-  | value {\it scalar} and vector {\it v} as list or in numpy format
+  | value scalar and vector v as list or in numpy format
 - | \ *output*\ :
-  | scalar multiplication of all components of v: [scalar\*v[0], scalar\*v[1], ...]
+  | scalar multiplication of all components of v: [scalar*v[0], scalar*v[1], ...]
 
 Relevant Examples (Ex) and TestModels (TM) with weblink:
 
@@ -171,7 +171,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-basicUtilities-Normalize:
+.. _sec-basicutilities-normalize:
 
 `Normalize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L163>`__\ (\ ``v``\ )
 
@@ -189,16 +189,18 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-basicUtilities-Vec2Tilde:
+.. _sec-basicutilities-vec2tilde:
 
-`Vec2Tilde <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L178>`__\ (\ ``v``\ )
+`Vec2Tilde <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L179>`__\ (\ ``v``\ )
 
 - | \ *function description*\ :
   | apply tilde operator (skew) to 3D-vector and return skew matrix
 - | \ *input*\ :
   | 3D vector v as list or in numpy format
 - | \ *output*\ :
-  | matrix as list of lists containing the skew-symmetric matrix computed from v: \ :math:`\mr{0}{-v[2]}{v[1]} {v[2]}{0}{-v[0]} {-v[1]}{v[0]}{0}`\
+
+  | matrix as list of lists with the skew-symmetric matrix from v:
+  | \ :math:`\left[\!\! \begin{array}{ccc} 0 & -v[2] & v[1] \\ v[2] & 0 & -v[0] \\ -v[1] & v[0] & 0  \end{array} \!\!\right]`\ 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink:
 
@@ -207,9 +209,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-basicUtilities-Tilde2Vec:
+.. _sec-basicutilities-tilde2vec:
 
-`Tilde2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L185>`__\ (\ ``m``\ )
+`Tilde2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L186>`__\ (\ ``m``\ )
 
 - | \ *function description*\ :
   | take skew symmetric matrix and return vector (inverse of Skew(...))
@@ -221,16 +223,16 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-basicUtilities-GaussIntegrate:
+.. _sec-basicutilities-gaussintegrate:
 
-`GaussIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L212>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
+`GaussIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L213>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
 
 - | \ *function description*\ :
   | compute numerical integration of functionOfX in interval [a,b] using Gaussian integration
 - | \ *input*\ :
 
   | \ ``functionOfX``\ : scalar, vector or matrix-valued function with scalar argument (X or other variable)
-  | \ ``integrationOrder``\ : odd number in {1,3,5,7,9}; currently maximum order is 9
+  | \ ``integrationOrder``\ : odd number in \1,3,5,7,9\; currently maximum order is 9
   | \ ``a``\ : integration range start
   | \ ``b``\ : integration range end
 - | \ *output*\ :
@@ -239,16 +241,16 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-basicUtilities-LobattoIntegrate:
+.. _sec-basicutilities-lobattointegrate:
 
-`LobattoIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L248>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
+`LobattoIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L249>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
 
 - | \ *function description*\ :
   | compute numerical integration of functionOfX in interval [a,b] using Lobatto integration
 - | \ *input*\ :
 
   | \ ``functionOfX``\ : scalar, vector or matrix-valued function with scalar argument (X or other variable)
-  | \ ``integrationOrder``\ : odd number in {1,3,5}; currently maximum order is 5
+  | \ ``integrationOrder``\ : odd number in \1,3,5\; currently maximum order is 5
   | \ ``a``\ : integration range start
   | \ ``b``\ : integration range end
 - | \ *output*\ :

@@ -1,8 +1,8 @@
-\mysection{Overview on \codeName }
+\mysectionlabel{Overview on \codeName }{sec:overview}
 %
 This section provides a general overview on important parts of \codeName\ . It is recommended to read these parts as it alleviates your life in creating models, understanding the behavior of the system and resolving errors.
 %
-\mysubsection{Module structure} \label{sec:programStructure}
+\mysubsectionlabel{Module structure}{sec:overview:modulestructure}
 This section will show:
 \bi
   \item Overview of modules
@@ -55,7 +55,7 @@ For an introduction to the solvers, see \refSection{sec:solvers}.
   \label{fig_exudyn_CandPython}
 \end{figure}
 
-\mysubsubsection{Overview of modules}
+\mysubsubsectionlabel{Overview of modules}{sec:overview:overviewmodules}
 Currently, the \codeName\ module structure is split into a C++ core part and a set of 
 Python parts\ignoreRST{, see Figs.\ \ref{fig_exudyn_CandPython}}.
 \bi
@@ -184,7 +184,7 @@ Python parts\ignoreRST{, see Figs.\ \ref{fig_exudyn_CandPython}}.
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-\mysubsubsection{Conventions: items, indexes, coordinates}
+\mysubsubsectionlabel{Conventions: items, indexes, coordinates}{sec:overview:conventionsitems}
 In this documentation, we will use the term \mybold{item} to identify nodes, objects, markers, loads and sensors:
 \be
   \mathrm{item} \in \{\mathrm{node}, \mathrm{object}, \mathrm{marker}, \mathrm{load}, \mathrm{sensor} \}
@@ -209,7 +209,7 @@ As an example, consider a \texttt{NodePoint2D}:
 \ei
 Furthermore, the local position in 2D objects is provided by a 3D vector. Usually, the dimensionality is given in the reference manual. User errors in the dimensionality will be usually detected either by the Python interface (i.e., at the time the item is created) or by the system-preprocessor
 
-\mysubsection{Items: Nodes, Objects, Loads, Markers, Sensors, ...} \label{sec:items}
+\mysubsectionlabel{Items: Nodes, Objects, Loads, Markers, Sensors, ...}{sec:overview:items}
 %
 In this section, the most important part of \codeName\ are provided. An overview of the interaction of the items is given in \fig{fig_items_interaction}
 
@@ -299,14 +299,14 @@ Loads are used to apply forces and torques to the system. The load values are st
 Sensors are only used to measure output variables (values) in order to simpler generate the requested output quantities.
 They have a very weak influence on the system, because they are only evaluated after certain solver steps as requested by the user.
 
-\mysubsubsection{Reference coordinates and displacements}
+\mysubsubsectionlabel{Reference coordinates and displacements}{sec:overview:items:coordinates}
 Nodes usually have separated reference and initial quantities. Here, 
 \texttt{referenceCoordinates} are the coordinates for which the system is defined upon creation. Reference coordinates are needed, e.g., for definition of joints and for the reference configuration of finite elements. In many cases it marks the undeformed configuration (e.g., with finite elements), but not, e.g., for \texttt{ObjectConnectorSpringDamper}, which has its own reference length. 
 
 Initial displacement (or rotation) values are provided separately, in order to start a system from a configuration different from the reference configuration.
 As an example, the initial configuration of a \texttt{NodePoint} is given by \texttt{referenceCoordinates + initialCoordinates}, while the initial state of a dynamic system additionally needs \texttt{initialVelocities}.
 
-\mysubsection{Mapping between local and global coordinate indices} \label{sec:systemData:LTG}
+\mysubsectionlabel{Mapping between local and global coordinate indices}{sec:overview:ltgmapping}
 %
 The \ac{LTG}-index-mappings\footnote{local-to-global coordinate index mappings containing transformation from local object coordinate indices to global (system) coordinate indices; this is different for \mybold{coordinate transformations}!} between local coordinate \mybold{indices}, on node or object level, and global (=system) coordinate \mybold{indices} follows the following rules:
 \bi
@@ -317,8 +317,7 @@ The \ac{LTG}-index-mappings\footnote{local-to-global coordinate index mappings c
 \item Constraints create algebraic variables (Lagrange multipliers) automatically. For a constraint with object number \texttt{k}, the global index to algebraic variables (of \ac{AE}-type) can be accessed via \texttt{mbs.systemData.GetObjectLTGAE(k)}.
 \ei
 
-
-\mysubsection{Exudyn Basics} \label{sec:exudynBasics}
+\mysubsectionlabel{Exudyn Basics}{sec:overview:basics}
 This section will show:
 \bi
   \item Interaction with the \codeName\ module
@@ -329,8 +328,7 @@ This section will show:
   \item Generating animations
 \ei
 
-
-\mysubsubsection{Interaction with the \codeName\ module}
+\mysubsubsectionlabel{Interaction with the \codeName\ module}{sec:overview:basics:interactionmodule}
 It is important that the \codeName\ module is basically a state machine, where you create items on the C++ side using the Python interface. This helps you to easily set up models using many other Python modules (numpy, sympy, matplotlib, ...) while the computation will be performed in the end on the C++ side in a very efficient manner. 
 \vspace{12pt}\\
 \mybold{Where do objects live?}\vspace{6pt}\\
@@ -342,7 +340,7 @@ The system will be prepared for simulation by \texttt{mbs.Assemble()} and can be
 Using \texttt{mbs.Reset()} will clear the system and allows to set up a new system. Items can be modified (\texttt{ModifyObject(...)}) after first initialization, even during simulation.
 %
 
-\mysubsubsection{Simulation settings}
+\mysubsubsectionlabel{Simulation settings}{sec:overview:basics:simulationsettings}
 The simulation settings consists of a couple of substructures, e.g., for \texttt{solutionSettings}, \texttt{staticSolver}, \texttt{timeIntegration} as well as a couple of general options -- for details see Sections \ref{sec:SolutionSettings} -- \ref{sec:SimulationSettings}.
 
 Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver. 
@@ -395,8 +393,7 @@ position, forces or joint data. For viewing sensor results, use the \texttt{Plot
 \texttt{exudyn.plot} tool, see the rigid body and joints tutorial.
 
 
-\mysubsubsection{Visualization settings dialog}
-\label{sec:introduction:visualizationSettings}
+\mysubsubsectionlabel{Visualization settings dialog}{sec:overview:basics:visualizationsettings}
 %
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
 
@@ -465,7 +462,7 @@ The visualization settings structure can be accessed in the system container \te
   SC.visualizationSettings.contour.outputVariableComponent = 1 #0=x, 1=y, 2=z
 \end{lstlisting}
 
-\mysubsubsection{Renderer and 3D graphics}
+\mysubsubsectionlabel{Renderer and 3D graphics}{sec:overview:basics:renderer}
 A 3D renderer is attached to the simulation. Visualization is started with  \texttt{exu.StartRenderer()}, see the examples and tutorials.
 The renderer uses an OpenGL window of a library called GLFW, which is platform-independent. 
 The renderer is set up in a minimalistic way, just to ensure that you can check that the modeling is correct. There is no way to contruct models with the renderer. Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
@@ -493,7 +490,7 @@ Depending on your model (size, place, ...), you may need to adjust the following
 \ei
 
 
-\mysubsubsection{Graphics pipeline}
+\mysubsubsectionlabel{Graphics pipeline}{sec:overview:basics:graphicspipeline}
 %deprecated, since there are user functions!: The user cannot interact with the visualization part for now.
 There are basically two loops during simulation, which feed the graphics pipeline.
 The solver runs a loop:
@@ -513,8 +510,7 @@ The openGL graphics thread (=separate thread) runs the following loop:
   \item check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
 \ei
 
-\mysubsubsection{Storing the model view}
-\label{sec:storing:modelview}
+\mysubsubsectionlabel{Storing the model view}{sec:overview:basics:storingmodelview}
 There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \texttt{SC.GetRenderState()} and \texttt{SC.SetRenderState()},
 see also \refSection{sec:renderState}.
 %
@@ -578,7 +574,7 @@ There are some user functions in order to customize drawing:
 \ei
 Note that all kinds of \texttt{graphicsDataUserFunction}s need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the \texttt{graphicsDataUserFunction} between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.
 
-\mysubsubsection{Color, RGBA and alpha-transparency}
+\mysubsubsectionlabel{Color, RGBA and alpha-transparency}{sec:overview:basics:colorrgba}
 Many functions and objects include color information. In order to allow alpha-transparency, all colors contain a list of 4 RGBA values, all values being in the range [0..1]:
 \bi
   \item red (R) channel 
@@ -588,8 +584,7 @@ Many functions and objects include color information. In order to allow alpha-tr
 \ei
 E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color predefinitions are found in \texttt{exudynGraphicsDataUtilities.py}, e.g., \texttt{color4red} or \texttt{color4steelblue} as well a list of 16 colors \texttt{color4list}, which is convenient to be used in a loop creating objects.
 
-\mysubsubsection{Solution viewer}
-\label{secSolutionViewer}
+\mysubsubsectionlabel{Solution viewer}{sec:overview:basics:solutionviewer}
 \codeName\ offers a convenient WYSIWYS -- 'What you See is What you Simulate' interface, showing you the computation results during simulation in the render window.
 If you are running large models, it may be more convenient to watch results after simulation has been finished.
 For this, you can use
@@ -615,7 +610,7 @@ The \texttt{SolutionViewer} adds a \texttt{tkinter} interactive dialog, which le
 \item As soon as 'Run' is pressed, the player runs (and it may be started automatically as well)
 \item In the 'Static' mode, drag the slider 'Solution steps' to view the solution steps
 \item In the 'Continuous run' mode, the player runs in an infinite loop
-\item In the 'One cycle' mode, the player runs from the current position to the end; this is perfectly suited to record series of images for \mybold{creating animations}, see \refSection{secGeneratingAnimations} and works together with the visualization settings dialog.
+\item In the 'One cycle' mode, the player runs from the current position to the end; this is perfectly suited to record series of images for \mybold{creating animations}, see \refSection{sec:overview:basics:animations} and works together with the visualization settings dialog.
 \ei
 The solution should be loaded with
 \texttt{LoadSolutionFile('coordinatesSolution.txt')}, where 'coordinatesSolution.txt' represents the stored solution file, 
@@ -639,8 +634,7 @@ An example for the \texttt{SolutionViewer} is integrated into the \texttt{Exampl
 \mybold{Note}: The previous function \texttt{AnimateSolution} in \texttt{exudyn.utilities} allows to directly visualize the stored solution for according stored time frames without \texttt{tkinter} (useful for MacOS).
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Generating animations}
-\label{secGeneratingAnimations}
+\mysubsubsectionlabel{Generating animations}{sec:overview:basics:animations}
 %
 In many dynamics simulations, it is very helpful to create animations in order to better understand the motion of bodies. Specifically, the animation can be used to visualize the model much slower or faster than the model is computed.
 
@@ -667,8 +661,7 @@ After the video has been created, you should delete the single images:
 }
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Examples, test models and test suite}
-\label{secExamplesTestModels}
+\mysubsubsectionlabel{Examples, test models and test suite}{sec:overview:basics:examplestestsuite}
 
 The main collection of examples and models is available under
 \bi
@@ -696,8 +689,7 @@ However, the output of the performance tests is not stored on github.
 We are trying hard to achieve error-free algorithms of physically correct models, but there may always be some errors in the code.
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Removing convergence problems and solver failures}
-\label{secConvergenceProblems}
+\mysubsubsectionlabel{Removing convergence problems and solver failures}{sec:overview:basics:convergenceproblems}
 Nonlinear formulations (such as most multibody systems, especially nonlinear finite elements) cause problems and there is no general nonlinear solver which may reliably and accurately solve such problems.
 Tuning solver parameters is at hand of the user. 
 In general, the Newton solver tries to reduce the error by the factor given in \texttt{simulationSettings.staticSolver.newton.relativeTolerance} (for static solver), which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in \texttt{simulationSettings.staticSolver.newton.absoluteTolerance} (for static solver), which is by default rather low (1e-10) -- in order to achieve accurate results for small systems or small motion (in mm or $\mu$m regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.
@@ -718,8 +710,7 @@ In general, the Newton solver tries to reduce the error by the factor given in \
 \ei
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Performance and ways to speed up computations}
-\label{secSpeedUp}
+\mysubsubsectionlabel{Performance and ways to speed up computations}{sec:overview:basics:speedup}
 %
 Multibody dynamics simulation should be accurate and reliable on the one hand side. Most solver settings are such that they lead to comparatively reliable results.
 However, in some cases there is a significant possibility for speeding up computations, which are described in the following list. Not all recommendations may apply to your models.
@@ -772,13 +763,13 @@ The faster versions are available for all release versions, but only for some \t
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsection{Advanced topics} \label{sec:exudynAdvanced}
+\mysubsectionlabel{Advanced topics}{sec:overview:advanced}
 %
 This section covers some advanced topics, which may be only relevant for a smaller group of people. 
 Functionality may be extended but also removed in future
 %
-\mysubsubsection{Camera following objects and interacting with model view}
-\label{secInteractModelView}
+\mysubsubsectionlabel{Camera following objects and interacting with model view}{sec:overview:advanced:camerafollowing}
+%
 For some models, it may be advantageous to track the translation and/or rotation of certain bodies, e.g., for cars, (wheeled) robots or bicycles. 
 To do so, the current render state (\texttt{SC.GetRenderState()}, \texttt{SC.SetRenderState(...)}) can be obtained and modified, in order to always follow a certain position.
 As this needs to be done during redraw of every frame, it is conveniently done in a graphicsUserFunction, e.g., within the ground body. This is shown in the following example, in which \texttt{mbs.variables['nTrackNode']} is a node number to be tracked:
@@ -804,7 +795,7 @@ As this needs to be done during redraw of every frame, it is conveniently done i
 %
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Contact problems}
+\mysubsubsectionlabel{Contact problems}{sec:overview:advanced:contact}
 %
 Since Q4 2021 a contact module is available in \codeName. 
 This separate module \texttt{GeneralContact} $[$\mybold{still under development, consider with care!}$]$ is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
@@ -849,13 +840,13 @@ For details on the contact formulations, see \refSection{secContactTheory}.
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{OpenVR} \label{sec:exudynOpenVR}
+\mysubsubsectionlabel{OpenVR}{sec:overview:advanced:openvr}
 %
 The general open source libraries from Valve, see
 \bi
 \item[] https://github.com/ValveSoftware/openvr
 \ei
-have been linked to \codeName\ . In order to get OpenVR fully integrated, you need to run \texttt{setup.py} \codeName\ with the \texttt{--openvr} flag. For general installation instructions, see \refSection{sec:installationInstructions}.
+have been linked to \codeName\ . In order to get OpenVR fully integrated, you need to run \texttt{setup.py} \codeName\ with the \texttt{--openvr} flag. For general installation instructions, see \refSection{sec:install:installinstructions}.
 
 Running OpenVR either requires an according head mounted display (HMD) or a virtualization using, e.g., Riftcat 2 to use a mobile phone with an according adapter. Visualization settings are available in \texttt{interactive.openVR}, but need to be considered with care.
 An example is provided in \texttt{openVRengine.py}, showing some optimal flags like locking the model rotation, zoom or translation.
@@ -864,7 +855,7 @@ Everything is experimental, but contributions are welcome!
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{Interaction with other codes} \label{sec:interactionOtherCodes}
+\mysubsubsectionlabel{Interaction with other codes}{sec:overview:advanced:interactwithcodes}
 %
 Interaction with other codes and computers (E.g., MATLAB or other C++ codes, or other Python versions)
 is possible. 
@@ -880,7 +871,7 @@ Basically, data can be transmitted in both directions, e.g., within a preStepUse
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsection{ROS} \label{sec:exudynROS}
+\mysubsubsectionlabel{ROS}{sec:overview:advanced:ros}
 %
 Basic interaction with ROS has been tested. However, make sure to use Python 3, as there is no (and will never be any) Python 2
 support for \codeName\ .
@@ -892,7 +883,7 @@ support for \codeName\ .
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-\mysubsection{C++ Code}
+\mysubsectionlabel{C++ Code}{sec:overview:cppcode}
 This section covers some information on the C++ code. For more information see the Open source code and use doxygen.
 
 Exudyn was developed for the efficient simulation of flexible multi-body systems. Exudyn was designed for rapid implementation and testing of new formulations and algorithms in multibody systems, whereby these algorithms can be easily implemented in efficient C++ code. The code is applied to industry-related research projects and applications.
@@ -1104,207 +1095,8 @@ In the following, two use cases are shown, which show the simplicity of the proc
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-\ignoreRST{
-\mysubsection{Changes}
-\label{sec:changes}
-For continuous tracking of changes, see \refSection{sec:issueTracker}.
-}
-%
-%The following list covers changes in the Python interface and functionality:
-%\bi \small
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %%\item \mybold{Version 0.1.2xx $\ra$ Version 0.1.2yy}
-  %%\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
-  %%\bi
-    %%\item \mybold{xxxx}: 
-  %%\ei
-  %%\item[] Changes in the Python interface:
-  %%\bi \ttfamily
-    %%\item $\ra$ 
-  %%\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 1.0.59$\ra$ Version 1.0.61}
-  %\bi
-    %\item \mybold{Major changes}: Changed interface of \texttt{processing.GeneticOptimization()}; 
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 1.0.56$\ra$ Version 1.0.57}
-  %\bi
-    %\item \mybold{Major changes}: added new submodule \texttt{exudyn.signal}; 
-    %\item \mybold{Major changes}: \texttt{FilterSignal} renamed into \texttt{FilterSensorOutput} and moved from \texttt{exudyn.utilities} to \texttt{exudyn.signal}
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 1.0.49$\ra$ Version 1.0.51}
-  %\bi
-  %\item user functions can now be set to zero, e.g.:
-  %\item[] \phantom{XXXX} \texttt{mbs.AddObject(CoordinateSpringDamper(markerNumbers=[m0,m1],
-  %\item[] \phantom{XXXXXXXX} stiffness=k, damping=0.01*k, 
-  %\item[] \phantom{XXXXXXXX} springForceUserFunction=0)}
-  %\item Exception: for \texttt{visualizationSettings.window.keyPressUserFunction} use \\ \texttt{SC.visualizationSettings.window.ResetKeyPressUserFunction()} to set it to zero
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 1.0.42$\ra$ Version 1.0.49}
-  %\bi
-  %\item \mybold{Major changes}: OpenGL default settings for lights and material have been changed; slightly different appearance might result from that! per default, light1 is active as well.
-  %\item \mybold{Major changes}: Added key callback functionality \texttt{keyPressUserFunction} to \texttt{VisualizationSettings.window}
-  %\item added mouse coordinates (OpenGL and screen pixels) to renderState and added a \texttt{GetCurrentMouseCoordinates()} function to SystemContainer
-  %\item added mouse coordinates to renderer window (press 'F3')
-  %\item identified problems with OpenGL lights; light1 is now working
-  %\item solved problems with coordinateSystem
-  %\item added a world basis (coordinate system) at origin of model (0,0,0); \\see \texttt{VisualizationSettings.general.drawWorldBasis}
-  %\item added flag \texttt{simulateInRealtime} to \texttt{simulationSettings.timeIntegration}
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 1.0.38$\ra$ Version 1.0.42}
-  %\bi
-  %\item completed \texttt{Acceleration} output variables for all relevant objects and nodes; 
-  %\item added FilterSignal(...) (\refSection{sec:signal:FilterSignal}) functionality to utilities, which enables numerical differentiation and filtering, using savgol filter, applied to all output values of data loaded from sensors.
-  %\item for example, see \texttt{TestModels/objectFFRFreducedOrderAccelerations.py}.
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 1.0.37$\ra$ Version 1.0.38}
-  %\bi
-  %\item \texttt{SC.StopRenderer()} now stores the last renderState in \texttt{exu.sys['renderState']}, which can be used in subsequent simulations to always have the same view and zoom; 
-  %for an example, see \refSection{sec:storing:modelview}.
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 1.0.32$\ra$ Version 1.0.37}
-  %\bi
-  %\item added Python interfaces (exudyn/solver.py) for static/dynamic solvers and eigensolvers: exu.SolveStatic(mbs) and exu.SolveDynamic(mbs) $\ra$ recommended to be used in future
-  %\item TimeIntegrationSolve and StaticSolve $\ra$ deprecated; get additional return value for success
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 1.0.17 $\ra$ Version 1.0.18}
-  %\bi
-  %\item \mybold{removed} AVX compilation flag for Python 3.6 32bits version due to incompatibility on older Celeron processors
-  %\item added acceleration sensor functionality to most objects and nodes
-  %\item added Lie group utilities (see \texttt{exudyn.lieGroup})
-  %\item added processing utilities for parameter variation and optimization (see \texttt{exudyn.processing})
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 1.0.12 $\ra$ Version 1.0.13}
-  %\item[] corrected LHS (left-hand-side) and RHS (right-hand-side) terminology (issue: 330), see \refSection{eq_equationLHSRHS}:
-  %\bi
-    %\item objects, connectors, etc., use LHS conventions: all terms (mass, stiffness, elastic forces, damping) are computed at LHS of equation
-    %\item forces are written at the RHS
-    %\item system quantities are always written on RHS: $m \ddot q = f_{RHS}$
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 1.0.8 $\ra$ Version 1.0.9}
-  %\item[] change from Index in mbs.AddNode(...), mbs.AddObject, ... to special 'item indexes' (issue: 333):
-  %\bi %\ttfamily
-  %\item before: \texttt{mbs.AddNode(...)} $\ra$ Index; \mybold{now}: \texttt{mbs.AddNode(...)} $\ra$ NodeIndex
-  %\item before: \texttt{mbs.AddObject(...)} $\ra$ Index; \mybold{now}: \texttt{mbs.AddObject(...)} $\ra$ ObjectIndex
-  %\item before: \texttt{mbs.AddMarker(...)} $\ra$ Index; \mybold{now}: \texttt{mbs.AddMarker(...)} $\ra$ MarkerIndex
-  %\item before: \texttt{mbs.AddLoad(...)} $\ra$ Index; \mybold{now}: \texttt{mbs.AddLoad(...)} $\ra$ LoadIndex
-  %\item before: \texttt{mbs.AddSensor(...)} $\ra$ Index; \mybold{now}: \texttt{mbs.AddSensor(...)} $\ra$ SensorIndex
-  %\item Functions previously requiring an itemNumber have been changed to the according itemIndex, e.g., 
-    %\texttt{mbs.SetNodeParameter(nodeNumber=...,...)} now requires a \texttt{nodeNumber} of type \texttt{NodeIndex} in order
-    %to avoid mistakes due to wrong types of indexes.
-  %\item for further details and specific usage, see beginning of \refSection{sec:PCpp:command:interface}!
-  %%\item \mybold{NOTE}: e.g., an index type returned by \texttt{mbs.AddObject(...)} cannot be used as \texttt{nodeNumber}
-  %%\item You can create any item index, e.g., using \texttt{ni = NodeIndex(42)} or \texttt{oi = ObjectIndex(42)}
-  %%\item Still, you can convert any item index, e.g., NodeIndex \texttt{ni} into an integer number using \texttt{int(ni)}
-  %%\item You can also print item indexes, e.g., \texttt{print(ni)} as it converts to string by default
-  %%\item If you are unsure about the type of an index, use \texttt{ni.GetTypeString()} to show the index type
-  %\ei
-  %\item[] finally removed functions mbs.CallNodeFunction(...) and mbs.CallObjectFunction(...) (issue: 288)
-  %\item[] removed functions mbs.GetNodeByName(...), GetObjectByName(...), etc. (issue: 445)
-  %%
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 1.0.6 $\ra$ Version 1.0.7}
-  %\item[] autocreate directories (issue: 431):
-  %\bi %\ttfamily
-  %\item directories (folders) will be created for given paths
-  %\item this applies, e.g., to sensor's \texttt{fileName} or simulation settings \texttt{coordinatesSolutionFileName}
-  %\item previously, a non-existing directory led to an exception
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 0.1.368 $\ra$ Version 1.0.0}
-  %\item[] \mybold{Major changes} in the Python interface, as the utilities moved into the exudyn package:
-  %\bi \ttfamily
-    %\item \texttt{from itemInterface import *} $\ra$ \texttt{from exudyn.itemInterface import *}
-    %\item \texttt{from exudynUtilities import *} $\ra$ \texttt{from exudyn.utilities import *}
-    %\item \texttt{from exudynBasicUtilities import *} $\ra$ \texttt{from exudyn.basicUtilities import *}
-    %\item \texttt{from exudynFEM import *} $\ra$ \texttt{from exudyn.FEM import *}
-    %\item \texttt{from exudynGraphicsDataUtilities import *} $\ra$ \texttt{from exudyn.graphicsDataUtilities import *}
-    %\item \texttt{from exudynGUI import *} $\ra$ \texttt{from exudyn.GUI import *}
-    %\item \texttt{from exudynLieGroupIntegration import *} $\ra$ \texttt{from exudyn.lieGroupIntegration import *}
-    %\item \texttt{from exudynRigidBodyUtilities import *} $\ra$ \texttt{from exudyn.rigidBodyUtilities import *}
-    %\item \texttt{from exudynRobotics import *} $\ra$ \texttt{from exudyn.robotics import *}
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 0.1.360 $\ra$ Version 0.1.361}
-  %\item[] Changes in the Python interface:
-  %\bi \ttfamily
-    %\item \texttt{simulationSettings.timeIntegration.preStepPyExecute} and \\
-    %\texttt{simulationSettings.staticSolver.preStepPyExecute}
-    %are deprecated, DON'T USE any more
-    %\item Use \texttt{mbs.SetPreStepUserFunction(...)} instead!
-  %\ei
-  %%\bf & reset rotation & set rotation such that the scene is oriented in the x/y plane \\ \hline
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 0.1.352 $\ra$ Version 0.1.353}
-  %\item[] Changes in the renderer screen:
-  %\bi \ttfamily
-    %\item Keys '0' and 'KEYPAD 0' $\ra$ not available any more (set default rotation x/y)
-    %\item Use keys CTRL+'1', SHIFT+CTRL+'1', CTRL+'2', ...  $\ra$ keys for new standard views!
-  %\ei
-  %%\bf & reset rotation & set rotation such that the scene is oriented in the x/y plane \\ \hline
-%
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 0.1.288 $\ra$ Version 0.1.289}
-  %\item[] Changes in the Python interface \mybold{(ESSENTIAL!)}:
-  %\bi \ttfamily
-    %\item Added time 't' as additional first argument in user functions: ObjectCoordinateSpringDamper, ObjectConnectorCoordinateSpringDamper, ObjectConnectorCartesianSpringDamper
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 0.1.287 $\ra$ Version 0.1.288}
-  %\item[] Changes in the Python interface \mybold{(ESSENTIAL!)}:
-  %\bi \ttfamily
-    %\item changed the name of \mybold{initialDisplacements} to {initialCoordinates} in all Nodes for consistency reasons with rotation parameters!
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 0.1.282 $\ra$ Version 0.1.284}
-  %\item[] Changes in the Python interface:
-  %\bi \ttfamily
-    %\item all bodyFixed parameters in MarkerRigidBody, which were inactive so far, have been eliminated
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 0.1.260 $\ra$ Version 0.1.263}
-  %\item[] Changes in the Python interface:
-  %\bi \ttfamily
-    %\item mbs.systemData.GetCurrentTime() $\ra$ mbs.systemData.GetTime()
-    %\item mbs.systemData.GetVisualizationTime() $\ra$ mbs.systemData.GetTime(configurationType=exu.ConfigurationType.Visualization)
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 0.1.244 $\ra$ Version 0.1.245}
-  %\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
-  %\bi
-    %\item \mybold{Solvers updated}: static solver and time integration have been updated; old solvers are still available with the 'OldSolver' extension
-  %\ei
-  %\item[] Changes in the Python interface (new functions / interface to call the old solvers):
-  %\bi \ttfamily
-    %\item SC.SolveStaticOldSolver(...)
-    %\item SC.TimeIntegrationSolve(mbs, 'GeneralizedAlphaOldSolver', simulationSettings) 
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   %\item \mybold{Version 0.1.243 $\ra$ Version 0.1.244}
-  %\item[] Changes in the Python interface:
-  %\bi \ttfamily
-    %\item simulationSettings.staticSolver.pauseAfterEachStep \\$\ra$ simulationSettings.pauseAfterEachStep (merged with timeIntegration.pauseAfterEachStep)
-  %\ei
-  %%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  %\item \mybold{Version 0.1.238 $\ra$ Version 0.1.240}
-  %\item[] Changes in the implementation / solver (LEADS TO DIFFERENT RESULTS):
-  %\bi
-    %\item \mybold{generalizedAlpha}: corrected initialization of algorithmic acceleration for discontinuous iteration
-    %\item \mybold{time integration}: corrected time $t$ for evaluation of RHS from beginning to end of time step (improves accuracy for time-dependent loads significantly)
-  %\ei
-  %\item[] Changes in the Python interface:
-  %\bi \ttfamily
-    %\item simulationSettings.timeIntegration.pauseAfterEachStep \\$\ra$ simulationSettings.pauseAfterEachStep 
-    %\item ADDED: simulationSettings.timeIntegration.verboseModeFile
-    %\item ADDED: simulationSettings.staticSolver.verboseModeFile
-  %\ei
-%\ei
+%\ignoreRST{
+%\mysubsection{Changes}
+%\label{sec:changes}
+%For continuous tracking of changes, see \refSection{sec:issueTracker}.
+%}

@@ -10,7 +10,7 @@ Utilities for interactive simulation and results monitoring; NOTE: does not work
 - Date:      2021-01-17 (created) 
 
 
-.. _sec-interactive-AnimateModes:
+.. _sec-interactive-animatemodes:
 
 `AnimateModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L579>`__\ (\ ``systemContainer``\ , \ ``mainSystem``\ , \ ``nodeNumber``\ , \ ``period = 0.04``\ , \ ``stepsPerPeriod = 30``\ , \ ``showTime = True``\ , \ ``renderWindowText = ''``\ , \ ``runOnStart = False``\ , \ ``runMode = 0``\ , \ ``scaleAmplitude = 1``\ , \ ``title = ''``\ , \ ``fontSize = 12``\ , \ ``checkRenderEngineStopFlag = True``\ )
 
@@ -23,7 +23,7 @@ Utilities for interactive simulation and results monitoring; NOTE: does not work
   | \ ``nodeNumber``\ : node number of which the coordinates shall be animated. In case of ObjectFFRFreducedOrder, this is the generic node, e.g., 'nGenericODE2' in the dictionary returned by the function AddObjectFFRFreducedOrderWithUserFunctions(...)
   | \ ``period``\ : delay for animation of every frame; the default of 0.04 results in approximately 25 frames per second
   | \ ``stepsPerPeriod``\ : number of steps into which the animation of one cycle of the mode is split into
-  | \ ``showTime``\ : show a virtual time running from 0 to 2*pi during one mode cycle
+  | \ ``showTime``\ : show a virtual time running from 0 to 2\*pi during one mode cycle
   | \ ``renderWindowText``\ : additional text written into renderwindow before 'Mode X' (use \ :math:`\backslash`\ n to add line breaks)
   | \ ``runOnStart``\ : immediately go into 'Run' mode
   | \ ``runMode``\ : 0=continuous run, 1=static continuous, 2=one cycle, 3=static (use slider/mouse to vary time steps)
@@ -36,7 +36,7 @@ Utilities for interactive simulation and results monitoring; NOTE: does not work
 - | \ *notes*\ :
 
   | Uses class InteractiveDialog in the background, which can be used to adjust animation creation. If meshes are large, animation artifacts may appear, which are resolved by using a larger update period.
-  | Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record animation' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see \refSection{secGeneratingAnimations}); now deactivate 'Record animation' by pressing 'Off' and chose another mode
+  | Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record animation' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see  :ref:`sec-generating-animations`\ ); now deactivate 'Record animation' by pressing 'Off' and chose another mode
 
 Relevant Examples (Ex) and TestModels (TM) with weblink:
 
@@ -45,7 +45,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-interactive-SolutionViewer:
+.. _sec-interactive-solutionviewer:
 
 `SolutionViewer <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L751>`__\ (\ ``mainSystem``\ , \ ``solution = []``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``runOnStart = True``\ , \ ``runMode = 2``\ , \ ``fontSize = 12``\ , \ ``title = ''``\ , \ ``checkRenderEngineStopFlag = True``\ )
 
@@ -87,9 +87,9 @@ CLASS InteractiveDialog (in module interactive)
 
     create an interactive dialog, which allows to interact with simulations
     the dialog has a 'Run' button, which initiates the simulation and a 'Stop' button which stops/pauses simulation; 'Quit' closes the simulation model
-    for examples, see \texttt{simulateInteractively.py} and \texttt{massSpringFrictionInteractive.py}
+    for examples, see \ ``simulateInteractively.py``\  and \ ``massSpringFrictionInteractive.py``\ 
     use __init__ method to setup this class with certain buttons, edit boxes and sliders
-    
+
 - | \ *example*\ :
 
 .. code-block:: python
@@ -144,7 +144,7 @@ CLASS InteractiveDialog (in module interactive)
 
 
 
-.. _sec-interactive-InteractiveDialog-init:
+.. _sec-interactive-interactivedialog-init:
 
 `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L99>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``simulationSettings``\ , \ ``simulationFunction``\ , \ ``dialogItems``\ , \ ``plots = []``\ , \ ``period = 0.04``\ , \ ``realtimeFactor = 1``\ , \ ``userStartSimulation = None``\ , \ ``title = ''``\ , \ ``showTime = False``\ , \ ``fontSize = 12``\ , \ ``doTimeIntegration = True``\ , \ ``runOnStart = False``\ , \ ``addLabelStringVariables = False``\ , \ ``addSliderVariables = False``\ , \ ``checkRenderEngineStopFlag = True``\ , \ ``userOnChange = None``\ )
 
@@ -155,7 +155,7 @@ CLASS InteractiveDialog (in module interactive)
   | \ ``mbs``\ : a multibody system to be simulated
   | \ ``simulationSettings``\ : exudyn.SimulationSettings() according to user settings
   | \ ``simulationFunction``\ : a user function(mbs, self) which is called before a simulation for the short period is started (e.g, assign special values, etc.); the arguments are the MainSystem mbs and the InteractiveDialog (self)
-  | \ ``dialogItems``\ : a list of dictionaries, which describe the contents of the interactive items, where every dict has the structure {'type':[label, entry, button, slider, check] ... according to tkinter widgets, 'callFunction': a function to be called, if item is changed/button pressed, 'grid': (row,col) of item to be placed, 'rowSpan': number of rows to be used, 'columnSpan': number of columns to be used; for special item options see notes}
+  | \ ``dialogItems``\ : a list of dictionaries, which describe the contents of the interactive items, where every dict has the structure 'type':[label, entry, button, slider, check] ... according to tkinter widgets, 'callFunction': a function to be called, if item is changed/button pressed, 'grid': (row,col) of item to be placed, 'rowSpan': number of rows to be used, 'columnSpan': number of columns to be used; for special item options see notes
   | \ ``plots``\ : list of dictionaries to specify a sensor to be plotted live, see example
   | \ ``period``\ : a simulation time span in seconds which is simulated with the simulationFunction in every iteration
   | \ ``realtimeFactor``\ : if 1, the simulation is nearly performed in realtime (except for computation time); if > 1, it runs faster than realtime, if < 1, than it is slower
@@ -174,7 +174,7 @@ CLASS InteractiveDialog (in module interactive)
 
 ----
 
-.. _sec-interactive-InteractiveDialog-OnQuit:
+.. _sec-interactive-interactivedialog-onquit:
 
 `OnQuit <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L342>`__\ (\ ``self``\ , \ ``event = None``\ )
 
@@ -183,7 +183,7 @@ CLASS InteractiveDialog (in module interactive)
 
 ----
 
-.. _sec-interactive-InteractiveDialog-StartSimulation:
+.. _sec-interactive-interactivedialog-startsimulation:
 
 `StartSimulation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L351>`__\ (\ ``self``\ , \ ``event = None``\ )
 
@@ -192,7 +192,7 @@ CLASS InteractiveDialog (in module interactive)
 
 ----
 
-.. _sec-interactive-InteractiveDialog-ProcessWidgetStates:
+.. _sec-interactive-interactivedialog-processwidgetstates:
 
 `ProcessWidgetStates <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L364>`__\ (\ ``self``\ )
 
@@ -201,7 +201,7 @@ CLASS InteractiveDialog (in module interactive)
 
 ----
 
-.. _sec-interactive-InteractiveDialog-ContinuousRunFunction:
+.. _sec-interactive-interactivedialog-continuousrunfunction:
 
 `ContinuousRunFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L375>`__\ (\ ``self``\ , \ ``event = None``\ )
 
@@ -210,7 +210,7 @@ CLASS InteractiveDialog (in module interactive)
 
 ----
 
-.. _sec-interactive-InteractiveDialog-InitializePlots:
+.. _sec-interactive-interactivedialog-initializeplots:
 
 `InitializePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L393>`__\ (\ ``self``\ )
 
@@ -219,7 +219,7 @@ CLASS InteractiveDialog (in module interactive)
 
 ----
 
-.. _sec-interactive-InteractiveDialog-UpdatePlots:
+.. _sec-interactive-interactivedialog-updateplots:
 
 `UpdatePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L440>`__\ (\ ``self``\ )
 
@@ -228,7 +228,7 @@ CLASS InteractiveDialog (in module interactive)
 
 ----
 
-.. _sec-interactive-InteractiveDialog-InitializeSolver:
+.. _sec-interactive-interactivedialog-initializesolver:
 
 `InitializeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L496>`__\ (\ ``self``\ )
 
@@ -237,7 +237,7 @@ CLASS InteractiveDialog (in module interactive)
 
 ----
 
-.. _sec-interactive-InteractiveDialog-FinalizeSolver:
+.. _sec-interactive-interactivedialog-finalizesolver:
 
 `FinalizeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L502>`__\ (\ ``self``\ )
 
@@ -246,7 +246,7 @@ CLASS InteractiveDialog (in module interactive)
 
 ----
 
-.. _sec-interactive-InteractiveDialog-RunSimulationPeriod:
+.. _sec-interactive-interactivedialog-runsimulationperiod:
 
 `RunSimulationPeriod <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L508>`__\ (\ ``self``\ )
 

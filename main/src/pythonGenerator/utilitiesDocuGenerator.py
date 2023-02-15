@@ -9,7 +9,8 @@ goal: generate latex documentation for all utilities packages
 import copy #for deep copies
 import io   #for utf-8 encoding
 from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, \
-      RemoveIndentation, RSTheaderString, RSTlabelString, RSTinlineMath, RSTmath, RSTurl, RSTmarkup, RSTcodeBlock
+          RemoveIndentation, RSTheaderString, RSTlabelString, RSTinlineMath, RSTmath, RSTurl, RSTmarkup, RSTcodeBlock, \
+          LatexString2RST
 
 writeRST = True
 addExampleReferences = True #costs lot of time
@@ -54,54 +55,23 @@ headerTags = ['Details','Author','Date','Copyright','References','Notes','Exampl
 
 tagPreamble = '#**' #this must be given at beginning of any tag
 
-def LatexString2RST(s, replaceMarkups = True): #replace \_ \{ etc. for RST
-    if replaceMarkups:
-        s = s.replace('*','\*')
 
-    s = s.replace('\\{','{')
-    s = s.replace('\\}','}')
-    s = s.replace('\\_','_')
-    #s = s.replace('*','\*') #too much will also remove all markup ...
+def LatexString2RSTspecial(s, replaceMarkups = True): #replace \_ \{ etc. for RST
+
+    s = s.replace('`**kwargs`','`KWARGS`')
+    s = s.replace('`*args**`','`ARGS`')
+    if not replaceMarkups: #don't do twice!
+        s = s.replace('**kwargs','\\*\\*kwargs')
+        s = s.replace('*args','\\*args')
+
+    s = LatexString2RST(s, replaceMarkups=replaceMarkups)
+
+    s = s.replace('`KWARGS`','`**kwargs`')
+    s = s.replace('`ARGS`','`*args`')
 
     s = s.replace('\\ac{T66}','Plücker transformation')
-    s = s.replace('\\"u','ue')
-    s = s.replace('\\"a','ae')
-    s = s.replace('\\"o','oe')
 
-    # s = s.replace('[','\\[')
-    # s = s.replace(']','\\]')
-    s = s.replace('\&','&')
-
-    s = s.replace('`**kwargs`','`**KWARGS`')
-    s = s.replace('`*args**`','`*ARGS`')
-    s = s.replace('**kwargs','\\*\\*kwargs')
-    s = s.replace('*args','\\*args')
-
-    s = s.replace('`**KWARGS`','`**kwargs`')
-    s = s.replace('`*ARGS**`','`*args`')
-
-    #replace latex math to RST inline
-    sNew = ''
-    endFound = False
-    pos = 0
-    while not endFound:
-        val = s.find('$',pos)
-        if val == -1:
-            val = len(s)
-            endFound = True
-        sNew += s[pos:val]
-        if not endFound:
-            val += 1
-            valEnd = s.find('$',val)
-            if valEnd != -1:
-                sNew += RSTinlineMath(s[val:valEnd])
-                val = valEnd+1
-            else:
-                print('WARNING:\nutilities: found no closing $ in:\n', s)
-                endFound = True
-                sNew = s
-        pos = val
-    return sNew
+    return s
 
 
 
@@ -407,10 +377,15 @@ def DictToItemsText(functionDict, tagList, addStr):
     for tag in tagList:
         if tag in functionDict:
             text = tag
+            replaceMarkups = False
             if tag == 'function':
                 text = 'function description'
+                replaceMarkups = True
             if tag == 'class':
                 text = 'class description'
+                replaceMarkups = True
+            if tag == 'input' or tag == 'classFunction' or tag == 'notes': replaceMarkups = True
+
             sLatex += sSpaces+'\\item[--]'+RemoveIndentation(addStr)+'{\\bf ' + text + '}: '
             sRST  += '- | '+RSTmarkup(text) + ':\n'
             # if mycnt < 10:
@@ -422,28 +397,29 @@ def DictToItemsText(functionDict, tagList, addStr):
                 #print("example=", strTag)
                 sLatex += '\\vspace{-12pt}\\ei' #for global itemize list for function
                 sLatex += '\\begin{lstlisting}[language=Python, xleftmargin=36pt]\n'
-                sLatex += RemoveIndentation(strTag, '  ')
+                sLatex += RemoveIndentation(strTag, '  ', False)
+                if sLatex[-1] != '\n': sLatex+='\n'
                 sLatex += '\\end{lstlisting}' #' \\vspace{6pt}'
                 sLatex += '\\vspace{-24pt}\\bi\item[]\\vspace{-24pt}' #for global itemize list for function
-                sRST += '\n'+RSTcodeBlock(RemoveIndentation(strTag.strip(), '  ')+'\n', 'python')
-            elif strTag.count("\n") > 0: #multiple lines are replaced by list
+                sRST += '\n'+RSTcodeBlock(RemoveIndentation(strTag.strip(), '  ', False)+'\n', 'python')
+            elif strTag.count("\n") > 0 and strTag.strip() != '': #multiple lines are replaced by list
                 sLatex += '\\vspace{-6pt}\n'+sSpaces+'\\begin{itemize}[leftmargin=1.2cm]\n'
                 sLatex += '\setlength{\itemindent}{-0.7cm}\n'
-                if strTag[0:2] == '\n':
-                    strTag = strTag[2:]
-                if strTag[-2:] == '\n':
-                    strTag = strTag[:-2]
+                if strTag[0] == '\n':
+                    strTag = strTag[1:]
+                if strTag[-1] == '\n':
+                    strTag = strTag[:-1]
 
                 strTagList = strTag.split('\n')
                 #replace words with ':' with italic characters
                 for s in strTagList:
                     if s.strip() != '':
-                        if s.find(':') != -1: #first occurance
+                        if s.find(':') != -1 and (' ' not in s[:s.find(':')]): #first occurance = argument; may not have spaces
                             n=s.find(':')
-                            sr = RSTmarkup(s[:n],'``') + s[n:] #in this string, there should be no markup ...
+                            sr = RSTmarkup(s[:n],'``') + LatexString2RSTspecial(s[n:], replaceMarkups = replaceMarkups) #in this string, there should be no markup ...
                             s = '{\\it '+s[:n]+'}'+ s[n:]
                         else:
-                            sr = LatexString2RST(s)
+                            sr = LatexString2RSTspecial(s, replaceMarkups = replaceMarkups)
                         sLatex += sSpaces*2+'\item[]'+s+'\n'
                         sRST += '\n  | '+RemoveIndentation(sr)
                     
@@ -451,10 +427,9 @@ def DictToItemsText(functionDict, tagList, addStr):
                 #sRST += '\n'+RemoveIndentation(strTag.strip(), '  | ')
                 sRST += '\n'
             else: #
-                if strTag.find('\n') != -1: print('curious found end line') #check if this ever happens
                 #sLatex += strTag.replace('\n','\\\\ \n') + '\n'
-                sLatex += strTag + '\n'
-                sRST += '  | ' + LatexString2RST(strTag).strip() + '\n'
+                sLatex += strTag.strip() + '\n' #in this case, we strip all spaces and newlines left, may be empty lines
+                sRST += '  | ' + LatexString2RSTspecial(strTag, replaceMarkups = replaceMarkups).strip() + '\n'
     return [sLatex, sRST]
 
 #*****************************************************
@@ -485,13 +460,13 @@ def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFile
     
     #relative file link:
     #sLatex += '\\noindent '+addStr+'{def \\mybold{\exuUrl{file:../../main/pythonDev/exudyn/' + moduleNamePython +'.py'+'}{' + functionName +'}{' '}}}'
-    sLabel = 'sec:'+ moduleNamePython + ':' + classLabelStr + functionName.replace('\_','_')
+    sLabel = 'sec:'+ moduleNamePython + ':' + classLabelStr + functionName.replace('\\_','_')
     sLatex += '\\label{'+sLabel+'}\n'
 
-    sRST += RSTlabelString(sLabel.replace(':','-').replace('_',''))+'\n'
+    sRST += RSTlabelString(sLabel.replace(':','-').replace('_','').lower())+'\n'
 
     #see also https://github.com/sphinx-doc/sphinx/issues/3921
-    sRST += RSTurl(functionName.replace('_','\\_'), url, False) + '_\\ (' #add another _ to make url anonymous (otherwise warning, as function name my be duplicated)
+    sRST += RSTurl(functionName, url, False) + '_\\ (' #add another _ to make url anonymous (otherwise warning, as function name my be duplicated)
 
     sLatex += '('
     sep = ''
@@ -552,7 +527,7 @@ for fileName in filesParsed:
     #*****************************************************
     if 'Details' in header: #write details as intro to section
         sLatex += header['Details'] #+ '\n'
-        sRST += LatexString2RST(RemoveIndentation(header['Details']))
+        sRST += LatexString2RSTspecial(RemoveIndentation(header['Details']))
         #print('header=\n'+sRST)
     if len(header)>1:
         sLatex += '\\begin{itemize}[leftmargin=1.4cm]\n'
@@ -562,7 +537,7 @@ for fileName in filesParsed:
             if tag in header and tag != 'Details' and tag != 'Copyright':
                 if header[tag].find('\\') == -1:
                     sLatex += '\\item[]' + tag + ': ' + header[tag] #+ '\n'
-                    sRST += '- '+ tag + ': ' + header[tag].replace('\n',' ') + '\n'
+                    sRST += '- '+ tag + ': ' + LatexString2RSTspecial(header[tag].replace('\n',' ')) + '\n'
                 else:
                     sRST += '- | ' + tag.strip() + ':'+'\n'
                     listString = header[tag].split('\\\\')
@@ -573,7 +548,7 @@ for fileName in filesParsed:
                     for i in range(len(listString)-0):
                         sTag = listString[i+0]
                         sLatex += '\\item[]' + sTag.replace('\n',' ') + '\n'
-                        sRST += '  | '+ sTag.replace('\n',' ').strip() + '\n'
+                        sRST += '  | '+ LatexString2RSTspecial(sTag.replace('\n',' ').strip()) + '\n'
                     sLatex += '\\ei\n'
                     
         sLatex += '\\ei\n'
@@ -609,7 +584,8 @@ for fileName in filesParsed:
         sLatex += '\\noindent\\textcolor{steelblue}{{\\bf class description}}: ' + classDict['class']
 
         sRST += '\n' + RSTheaderString('CLASS '+classDict['className']+' (in module '+moduleNameLatex+')', sectionLevel+1)
-        sRST += RSTmarkup('class description','**', False)+': ' + '\n\n' + RemoveIndentation(classDict['class'], '    ') #+ '\n'
+        sRST += RSTmarkup('class description','**', False)+': ' + '\n\n' + \
+            RemoveIndentation(LatexString2RSTspecial( classDict['class'] ), '    ') #+ '\n'
 
 
         #sLatex += '\\ei'
@@ -646,7 +622,8 @@ for fileName in filesParsed:
             sRST += '\n'+sExamplesRST
 
     sRST = sRST #.replace('**kwargs','\\*\\*kwargs').replace('*args','\\*args') #only needed, if not in literal
-    listRST += [(moduleNameLatex, LatexString2RST(sRST, replaceMarkups=False))]
+    #listRST += [(moduleNameLatex, LatexString2RSTspecial(sRST, replaceMarkups=False))]
+    listRST += [(moduleNameLatex, sRST)]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
 latexFile = theDocDir+'pythonUtilitiesDescription.tex'
@@ -675,7 +652,7 @@ Furthermore, angles are generally provided in radian ($2\pi$ equals $360\,^o$) a
 
 Functions have been implemented, if not otherwise mentioned, by Johannes Gerstmayr.
 """
-sRSTpreamble = LatexString2RST(sRSTpreamble, replaceMarkups=False)
+sRSTpreamble = LatexString2RSTspecial(sRSTpreamble, replaceMarkups=False)
 
 
 if writeRST:
