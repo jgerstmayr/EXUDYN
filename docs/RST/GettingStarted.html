@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Getting started &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>Run a simple example in Python &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -20,8 +21,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Installation instructions" href="InstallationInstructions.html" />
-    <link rel="prev" title="Installation and Getting Started" href="InstallationAndGettingStarted.html" /> 
+    <link rel="next" title="Trouble shooting and FAQ" href="FurtherNotes.html" />
+    <link rel="prev" title="Further notes" href="TroubleShootingAndFAQ.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,19 +49,16 @@
 <li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="InstallationAndGettingStarted.html">Installation and Getting Started</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Getting started</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#what-is-exudyn">What is Exudyn ?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#developers-of-exudyn-and-thanks">Developers of Exudyn and thanks</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="InstallationInstructions.html">Installation instructions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FurtherNotes.html">Further notes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="RunASimpleExampleInPython.html">Run a simple example in Python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="TroubleShootingAndFAQ.html">Trouble shooting and FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="InstallationInstructions.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="RunASimpleExampleInPython.html">Installation instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TroubleShootingAndFAQ.html">Further notes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Run a simple example in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FurtherNotes.html">Trouble shooting and FAQ</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
@@ -86,7 +84,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
-      <li class="breadcrumb-item active">Getting started</li>
+      <li class="breadcrumb-item active">Run a simple example in Python</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/docs/RST/GettingStarted.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -96,61 +94,65 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="getting-started">
-<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h1>
-<p>This section will show:</p>
+  <section id="run-a-simple-example-in-python">
+<span id="sec-install-simpleexample"></span><h1>Run a simple example in Python<a class="headerlink" href="#run-a-simple-example-in-python" title="Permalink to this heading"></a></h1>
+<p>After performing the steps of the previous section, this section shows a simplistic model which helps you to check if Exudyn runs on your computer.</p>
+<p>In order to start, run the Python interpreter Spyder (or any preferred Python environment).
+In order to test the following example, which creates a mbs, adds a node, an object, a marker and a load and simulates everything with default values,</p>
 <ul class="simple">
-<li><p>What is Exudyn ?</p></li>
-<li><p>Who is developing Exudyn ?</p></li>
-<li><p>How to install Exudyn</p></li>
-<li><p>How to link Exudyn and Python</p></li>
-<li><p>Goals of Exudyn</p></li>
-<li><p>Run a simple example in Python</p></li>
-<li><p>FAQ – Frequently asked questions</p></li>
+<li><p>open <code class="docutils literal notranslate"><span class="pre">myFirstExample.py</span></code> from your <code class="docutils literal notranslate"><span class="pre">Examples</span></code> folder.</p></li>
 </ul>
-<section id="what-is-exudyn">
-<h2>What is Exudyn ?<a class="headerlink" href="#what-is-exudyn" title="Permalink to this heading"></a></h2>
-<p>Exudyn –  (fl<strong>EX</strong>ible m<strong>U</strong>ltibody <strong>DYN</strong>amics  – <strong>EX</strong>tend yo<strong>U</strong>r <strong>DYN</strong>amics)</p>
-<p>Exudyn is a C++ based Python library for efficient simulation of flexible multibody dynamics systems.
-It is the follow up code of the previously developed multibody code HOTINT, which Johannes Gerstmayr started during his PhD-thesis.
-It seemed that the previous code HOTINT reached limits of further (efficient) development and it seemed impossible to continue from this code as it was outdated regarding programming techniques and the numerical formulation at the time Exudyn was started.</p>
-<p>Exudyn is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automatized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of Python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.</p>
-<p>The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, …) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
-For details on the interaction of nodes, objects, markers and loads see theDoc.pdf.</p>
-</section>
-<section id="developers-of-exudyn-and-thanks">
-<h2>Developers of Exudyn and thanks<a class="headerlink" href="#developers-of-exudyn-and-thanks" title="Permalink to this heading"></a></h2>
-<p>Exudyn is currently  developed at the University of Innsbruck.
-In the first phase most of the core code is written by Johannes Gerstmayr, implementing ideas that followed out of the project HOTINT . 15 years of development led to a lot of lessons learned and after 20 years, a code must be re-designed.</p>
-<p>Some important tests for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
-For the interoperability between C++ and Python, we extensively use <strong>Pybind11</strong>, originally written by Jakob Wenzel, see <code class="docutils literal notranslate"><span class="pre">https://github.com/pybind/pybind11</span></code>. Without Pybind11 we couldn’t have made this project – Thanks a lot!</p>
-<p>Important discussions with researchers from the community were important for the design and development of Exudyn , where we like to mention Joachim Schöberl from TU-Vienna who boosted the design of the code with great concepts.</p>
-<p>The cooperation and funding within the EU H2020-MSCA-ITN project ‘Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications’ contributes to the development of the code.</p>
-<p>The following people have contributed to Python and C++ library implementations (as well as to testing, examples, theory, …):</p>
-<ul class="simple">
-<li><p>Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with <code class="docutils literal notranslate"><span class="pre">taskmanager</span></code> for <strong>multi-threaded parallelization</strong>; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)</p></li>
-<li><p>Stefan Holzinger, University of Innsbruck (Lie group module and solvers in Python, Lie group node, testing)</p></li>
-<li><p>Andreas Zwölfer, Technical University Munich (FFRF and CMS formulation)</p></li>
-<li><p>Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation, pip install on linux, wsl with graphics)</p></li>
-<li><p>Martin Sereinig, University of Innsbruck (special robotics functionality)</p></li>
-<li><p>Michael Pieber, University of Innsbruck (helped in several Python libraries)</p></li>
-<li><p>Grzegorz Orzechowski, Lappeenranta University of Technology (coupling with openAI gym and running machine learning algorithms)</p></li>
-<li><p>Aaron Bacher, University of Innsbruck (helped to integrated OpenVR, connection with Franka Emika Panda)</p></li>
-</ul>
-<p>The following people have contributed to examples, testing and theory:</p>
-<ul class="simple">
-<li><p>Konstantina Ntarladima, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Simon Scheiber</p></li>
-</ul>
-<p>– thanks a lot! –</p>
-</section>
+<p>Hereafter, press the play button or <code class="docutils literal notranslate"><span class="pre">F5</span></code> in Spyder.</p>
+<p>If successful, the IPython Console of Spyder will print something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">runfile</span><span class="p">(</span><span class="s1">&#39;C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples/myFirstExample.py&#39;</span><span class="p">,</span>
+  <span class="n">wdir</span><span class="o">=</span><span class="s1">&#39;C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples&#39;</span><span class="p">)</span>
+<span class="o">+++++++++++++++++++++++++++++++</span>
+<span class="n">EXUDYN</span> <span class="n">V1</span><span class="mf">.2.9</span> <span class="n">solver</span><span class="p">:</span> <span class="n">implicit</span> <span class="n">second</span> <span class="n">order</span> <span class="n">time</span> <span class="n">integration</span>
+<span class="n">STEP100</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">sec</span><span class="p">,</span> <span class="n">timeToGo</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">sec</span><span class="p">,</span> <span class="n">Nit</span><span class="o">/</span><span class="n">step</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">solver</span> <span class="n">finished</span> <span class="n">after</span> <span class="mf">0.0007824</span> <span class="n">seconds</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>If you check your current directory (where <code class="docutils literal notranslate"><span class="pre">myFirstExample.py</span></code> lies), you will find a new file <code class="docutils literal notranslate"><span class="pre">coordinatesSolution.txt</span></code>, which contains the results of your computation (with default values for time integration).
+The beginning and end of the file should look like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Exudyn implicit second order time integration solver solution file</span>
+<span class="c1">#simulation started=2022-04-07,19:02:19</span>
+<span class="c1">#columns contain: time, ODE2 displacements, ODE2 velocities, ODE2 accelerations</span>
+<span class="c1">#number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [2,0,0,0]</span>
+<span class="c1">#number of written coordinates [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = [2,2,2,0,0,0,0]</span>
+<span class="c1">#total columns exported  (excl. time) = 6</span>
+<span class="c1">#number of time steps (planned) = 100</span>
+<span class="c1">#Exudyn version = 1.2.33.dev1; Python3.9.11; Windows AVX2 FLOAT64</span>
+<span class="c1">#</span>
+<span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.01</span><span class="p">,</span><span class="mf">5e-09</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">1e-06</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.02</span><span class="p">,</span><span class="mf">2e-08</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">2e-06</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.03</span><span class="p">,</span><span class="mf">4.5e-08</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">3e-06</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.04</span><span class="p">,</span><span class="mf">8e-08</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">4e-06</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.05</span><span class="p">,</span><span class="mf">1.25e-07</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">5e-06</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+
+<span class="o">...</span>
+
+<span class="mf">0.96</span><span class="p">,</span><span class="mf">4.608e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">9.6e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.97</span><span class="p">,</span><span class="mf">4.7045e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">9.7e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.98</span><span class="p">,</span><span class="mf">4.802e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">9.8e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.99</span><span class="p">,</span><span class="mf">4.9005e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">9.9e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mi">1</span><span class="p">,</span><span class="mf">5e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="c1">#simulation finished=2022-04-07,19:02:19</span>
+<span class="c1">#Solver Info: stepReductionFailed(or step failed)=0,discontinuousIterationSuccessful=1,newtonSolutionDiverged=0,massMatrixNotInvertible=1,total time steps=100,total Newton iterations=100,total Newton jacobians=100</span>
+</pre></div>
+</div>
+<p>Within this file, the first column shows the simulation time and the following columns provide coordinates, their derivatives and Lagrange multipliers on system level. For relation of local to global coordinates, see  <a class="reference internal" href="MappingBetweenLocalAndGlobalCoordinateIndices.html#sec-overview-ltgmapping"><span class="std std-ref">Mapping between local and global coordinate indices</span></a>. As expected, the x-coordinate of the point mass has constant acceleration a=f/m=0.001/10=0.0001, the velocity grows up to 0.0001 after 1 second and the point mass moves 0.00005 along the x-axis.</p>
+<p>Note that line 8 contains the Exudyn and Python versions (as well as some other specific information on the platform and compilation settings (which may help you identify with which computer, etc., you created results)) provided in the solution file are the versions at which Exudyn has been compiled with.
+The Python micro version (last digit) may be different from the Python version from which you were running Exudyn.
+This information is also provided in the sensor output files.</p>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="InstallationAndGettingStarted.html" class="btn btn-neutral float-left" title="Installation and Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="InstallationInstructions.html" class="btn btn-neutral float-right" title="Installation instructions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="TroubleShootingAndFAQ.html" class="btn btn-neutral float-left" title="Further notes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="FurtherNotes.html" class="btn btn-neutral float-right" title="Trouble shooting and FAQ" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

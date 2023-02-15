@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: robotics.special &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>Module: robotics.special &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul class="current">
@@ -144,12 +146,12 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </li>
 <li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
-<div class="line">compute velocity dependent manipulability definded by Yoshikawa, see cite{Yoshikawa1985}</div>
+<div class="line">compute velocity dependent manipulability definded by Yoshikawa, see</div>
 </div>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-special-forcemanipulability"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L63">ForceManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singular_weight</span> <span class="pre">=</span> <span class="pre">100</span></code>)</p>
+<p id="sec-special-forcemanipulability"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L63">ForceManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singular\_weight</span> <span class="pre">=</span> <span class="pre">100</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -173,7 +175,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </li>
 <li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
-<div class="line">compute force dependent manipulability definded by Yoshikawa, see cite{Yoshikawa1985}</div>
+<div class="line">compute force dependent manipulability definded by Yoshikawa, see</div>
 </div>
 </li>
 </ul>
@@ -211,7 +213,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </li>
 <li><div class="line-block">
 <div class="line"><em>status</em>:</div>
-<div class="line">this function is {bf currently under development} and under testing!</div>
+<div class="line">this function is <strong>currently under development</strong> and under testing!</div>
 </div>
 </li>
 </ul>
@@ -233,12 +235,12 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
-<div class="line">Link(body)-Jacobi matrix JJ: <span class="math notranslate nohighlight">\(\LU{i}{JJ_i}=[\LU{i}{J_{Ri}},\; \LU{i}{J_{Ti}}]\)</span> for each link i, seperated in rotational (<span class="math notranslate nohighlight">\(J_R\)</span>) and translational (<span class="math notranslate nohighlight">\(J_T\)</span>) part of Jacobian matrix located in the <span class="math notranslate nohighlight">\(i^{th}\)</span> coordiante system, see cite{woernle2016}</div>
+<div class="line">Link(body)-Jacobi matrix JJ: <span class="math notranslate nohighlight">\(^{i}{JJ_i}=[^{i}{J_{Ri}},\; ^{i}{J_{Ti}}]\)</span> for each link i, seperated in rotational (<span class="math notranslate nohighlight">\(J_R\)</span>) and translational (<span class="math notranslate nohighlight">\(J_T\)</span>) part of Jacobian matrix located in the <span class="math notranslate nohighlight">\(i^{th}\)</span> coordiante system, see</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
-<div class="line">runs over number of HTs given in HT (may be less than number of links), caclulations in link coordinate system located at the end of each link regarding Standard  Denavid-Hartenberg parameters, see cite{Corke2013}</div>
+<div class="line">runs over number of HTs given in HT (may be less than number of links), caclulations in link coordinate system located at the end of each link regarding Standard  Denavid-Hartenberg parameters, see</div>
 </div>
 </li>
 </ul>
@@ -268,8 +270,8 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 <div class="line"><em>notes</em>:</div>
 </div>
 <div class="line-block">
-<div class="line"><code class="docutils literal notranslate"><span class="pre">Mass</span> <span class="pre">Matrix</span> <span class="pre">calculation</span> <span class="pre">calculated</span> <span class="pre">in</span> <span class="pre">joint</span> <span class="pre">coordinates</span> <span class="pre">regarding</span> <span class="pre">(std)</span> <span class="pre">DH</span> <span class="pre">parameter</span></code>:</div>
-<div class="line">**       Dynamic equations in minimal coordinates as described in MehrkÃ¶rpersysteme by Woernle, cite{woernle2016}, p206, eq6.90.</div>
+<div class="line">Mass Matrix calculation calculated in joint coordinates regarding (std) DH parameter:</div>
+<div class="line">**       Dynamic equations in minimal coordinates as described in MehrkÃ¶rpersysteme by Woernle, , p206, eq6.90.</div>
 <div class="line">**       Caclulations in link coordinate system at the end of each link</div>
 </div>
 </li>
@@ -308,12 +310,12 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </li>
 <li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
-<div class="line">acceleration dependent manipulability definded by Chiacchio, see cite{Chiacchio1998}, eq.32. The eigenvectors and eigenvalues of N ([eigenvec eigenval]=eig(N))gives the direction and value of minimal and maximal accaleration )</div>
+<div class="line">acceleration dependent manipulability definded by Chiacchio, see , eq.32. The eigenvectors and eigenvalues of N ([eigenvec eigenval]=eig(N))gives the direction and value of minimal and maximal accaleration )</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>status</em>:</div>
-<div class="line">this function is {bf currently under development} and under testing!</div>
+<div class="line">this function is <strong>currently under development</strong> and under testing!</div>
 </div>
 </li>
 </ul>

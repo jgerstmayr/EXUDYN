@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>C++ Code &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>C++ Code &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -67,6 +68,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
@@ -103,7 +105,7 @@
            <div itemprop="articleBody">
              
   <section id="c-code">
-<h1>C++ Code<a class="headerlink" href="#c-code" title="Permalink to this heading"></a></h1>
+<span id="sec-overview-cppcode"></span><h1>C++ Code<a class="headerlink" href="#c-code" title="Permalink to this heading"></a></h1>
 <p>This section covers some information on the C++ code. For more information see the Open source code and use doxygen.</p>
 <p>Exudyn was developed for the efficient simulation of flexible multi-body systems. Exudyn was designed for rapid implementation and testing of new formulations and algorithms in multibody systems, whereby these algorithms can be easily implemented in efficient C++ code. The code is applied to industry-related research projects and applications.</p>
 <section id="focus-of-the-c-code">
@@ -234,7 +236,7 @@
 <h2>No-abbreviations-rule<a class="headerlink" href="#no-abbreviations-rule" title="Permalink to this heading"></a></h2>
 <p>The code uses a <strong>minimum set of abbreviations</strong>; however, the following abbreviation rules are used throughout:
 In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (short, 5-line member functions).</p>
-<p><strong>Exceptions</strong> to the NO-ABBREVIATIONS-RULE, see also hyperref[sec:listOfAbbreviations]underlineList of Abbreviations: %no section number!!!: theDoc.pdf</p>
+<p><strong>Exceptions</strong> to the NO-ABBREVIATIONS-RULE, see also hyperref[sec:listOfAbbreviations]underlineList of Abbreviations: %no section number!!!:  <span class="xref std std-ref">sec-listofabbreviations</span></p>
 <ul class="simple">
 <li><p>ODE</p></li>
 <li><p>ODE2: marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)</p></li>

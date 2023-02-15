@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mass-Spring-Damper tutorial &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>Mass-Spring-Damper tutorial &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -54,6 +55,7 @@
 <li class="toctree-l2"><a class="reference internal" href="RigidBodyAndJointsTutorial.html">Rigid body and joints tutorial</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
@@ -142,7 +144,7 @@ Such a ground node is added via:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 </pre></div>
 </div>
-<p>In the next step, we add an object (sec:programStructure.), which provides equations for coordinates. The <code class="docutils literal notranslate"><span class="pre">MassPoint</span></code> needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:</p>
+<p>In the next step, we add an object (sec:overview:modulestructure.), which provides equations for coordinates. The <code class="docutils literal notranslate"><span class="pre">MassPoint</span></code> needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">massPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">MassPoint</span><span class="p">(</span><span class="n">physicsMass</span> <span class="o">=</span> <span class="n">mass</span><span class="p">,</span> <span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">n1</span><span class="p">))</span>
 </pre></div>
 </div>

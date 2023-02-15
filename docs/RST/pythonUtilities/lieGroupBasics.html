@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: lieGroupBasics &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>Module: lieGroupBasics &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -49,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul class="current">
@@ -119,7 +121,7 @@
 <li><div class="line-block">
 <div class="line">References:</div>
 <div class="line"><br /></div>
-<div class="line">For details on Lie group methods used here, see the references cite{Henderson1977, Simo1988, Bruels2011, Sonneville2014, Sonneville2017, Terze2016, Mueller2017}.                Lie group methods for rotation vector are described in Holzinger and Gerstmayr cite{HolzingerGerstmayr2020, Holzinger2021}.</div>
+<div class="line">For details on Lie group methods used here, see the references .                Lie group methods for rotation vector are described in Holzinger and Gerstmayr .</div>
 </div>
 </li>
 </ul>
@@ -165,7 +167,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">computes 3x3 rotation matrix from 7x7 R3xSO(3) matrix, see cite{Bruels2011}</div>
+<div class="line">computes 3x3 rotation matrix from 7x7 R3xSO(3) matrix, see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -184,7 +186,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">computes translation part of R3xSO(3) matrix, see cite{Bruels2011}</div>
+<div class="line">computes translation part of R3xSO(3) matrix, see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -203,7 +205,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">builds 7x7 matrix as element of the Lie group R3xSO(3), see cite{Bruels2011}</div>
+<div class="line">builds 7x7 matrix as element of the Lie group R3xSO(3), see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -225,7 +227,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute the matrix exponential map on the Lie group SO(3), see cite{Mueller2017}</div>
+<div class="line">compute the matrix exponential map on the Lie group SO(3), see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -244,7 +246,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute the quaternion exponential map on the Lie group S(3), see cite{Terze2016, Mueller2017}</div>
+<div class="line">compute the quaternion exponential map on the Lie group S(3), see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -266,7 +268,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute the matrix logarithmic map on the Lie group SO(3), see cite{Sonneville2014, Sonneville2017}</div>
+<div class="line">compute the matrix logarithmic map on the Lie group SO(3), see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -285,7 +287,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute the tangent operator corresponding to ExpSO3, see cite{Bruels2011}</div>
+<div class="line">compute the tangent operator corresponding to ExpSO3, see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -306,7 +308,7 @@
 <div class="line"><em>function description</em>:</div>
 </div>
 <div class="line-block">
-<div class="line">compute the inverse of the tangent operator TExpSO3, see cite{Sonneville2014}</div>
+<div class="line">compute the inverse of the tangent operator TExpSO3, see</div>
 <div class="line">this function was improved, see coordinateMaps.pdf by Stefan Holzinger</div>
 </div>
 </li>
@@ -326,7 +328,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute the matrix exponential map on the Lie group SE(3), see cite{Bruels2011}</div>
+<div class="line">compute the matrix exponential map on the Lie group SE(3), see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -345,7 +347,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute the matrix logarithm on the Lie group SE(3), see cite{Sonneville2014}</div>
+<div class="line">compute the matrix logarithm on the Lie group SE(3), see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -364,7 +366,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute the tangent operator corresponding to ExpSE3, see cite{Bruels2011}</div>
+<div class="line">compute the tangent operator corresponding to ExpSE3, see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -383,7 +385,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute the inverse of tangent operator TExpSE3, see cite{Sonneville2014}</div>
+<div class="line">compute the inverse of tangent operator TExpSE3, see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -402,7 +404,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute the matrix exponential map on the Lie group R3xSO(3), see cite{Bruels2011}</div>
+<div class="line">compute the matrix exponential map on the Lie group R3xSO(3), see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -421,7 +423,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute the tangent operator corresponding to ExpR3xSO3, see cite{Bruels2011}</div>
+<div class="line">compute the tangent operator corresponding to ExpR3xSO3, see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -505,7 +507,7 @@
 <div class="line"><em>function description</em>:</div>
 </div>
 <div class="line-block">
-<div class="line">compute composition operation for pairs in the group obtained from the direct product of R3 and R3, see cite{HolzingerGerstmayr2020}</div>
+<div class="line">compute composition operation for pairs in the group obtained from the direct product of R3 and R3, see</div>
 <div class="line">the rotation vector is used as rotation parametrizations</div>
 <div class="line">this composition operation can be used in formulations which represent the translational velocities in the global (inertial) frame</div>
 </div>
@@ -610,7 +612,7 @@
 </div>
 <div class="line-block">
 <div class="line">compute composition operation for Euler parameters (unit quaternions)</div>
-<div class="line">this composition operation is quaternion multiplication, see cite{Terze2016}</div>
+<div class="line">this composition operation is quaternion multiplication, see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -632,7 +634,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute composition operation for rotation vectors v0 and Omega, see cite{Holzinger2021}</div>
+<div class="line">compute composition operation for rotation vectors v0 and Omega, see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -654,7 +656,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute composition operation for RotXYZ angles, see cite{Holzinger2021}</div>
+<div class="line">compute composition operation for RotXYZ angles, see</div>
 </div>
 </li>
 <li><div class="line-block">

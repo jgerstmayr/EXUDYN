@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: basicUtilities &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>Module: basicUtilities &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul class="current">
@@ -142,7 +144,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
-<div class="line">Use this function with CARE! In Spyder, it is certainly safer to add the preference Run<span class="math notranslate nohighlight">\(\ra\)</span>‘remove all variables before execution’. It is recommended to call ClearWorkspace() at the very beginning of your models, to avoid that variables still exist from previous computations which may destroy repeatability of results</div>
+<div class="line">Use this function with CARE! In Spyder, it is certainly safer to add the preference Run<span class="math notranslate nohighlight">\(\rightarrow\)</span>‘remove all variables before execution’. It is recommended to call ClearWorkspace() at the very beginning of your models, to avoid that variables still exist from previous computations which may destroy repeatability of results</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -308,7 +310,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-<div class="line">value {it scalar} and vector {it v} as list or in numpy format</div>
+<div class="line">value scalar and vector v as list or in numpy format</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -345,7 +347,7 @@
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ObjectFFRFconvergenceTestHinge.py">ObjectFFRFconvergenceTestHinge.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py">NGsolveCrankShaftTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-basicutilities-vec2tilde"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L178">Vec2Tilde</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+<p id="sec-basicutilities-vec2tilde"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L179">Vec2Tilde</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -359,7 +361,10 @@
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
-<div class="line">matrix as list of lists containing the skew-symmetric matrix computed from v: <span class="math notranslate nohighlight">\(\mr{0}{-v[2]}{v[1]} {v[2]}{0}{-v[0]} {-v[1]}{v[0]}{0}\)</span></div>
+</div>
+<div class="line-block">
+<div class="line">matrix as list of lists with the skew-symmetric matrix from v:</div>
+<div class="line"><span class="math notranslate nohighlight">\(\left[\!\! \begin{array}{ccc} 0 &amp; -v[2] &amp; v[1] \\ v[2] &amp; 0 &amp; -v[0] \\ -v[1] &amp; v[0] &amp; 0  \end{array} \!\!\right]\)</span></div>
 </div>
 </li>
 </ul>
@@ -368,7 +373,7 @@
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py">explicitLieGroupMBSTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-basicutilities-tilde2vec"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L185">Tilde2Vec</a>(<code class="docutils literal notranslate"><span class="pre">m</span></code>)</p>
+<p id="sec-basicutilities-tilde2vec"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L186">Tilde2Vec</a>(<code class="docutils literal notranslate"><span class="pre">m</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -387,7 +392,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-basicutilities-gaussintegrate"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L212">GaussIntegrate</a>(<code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>, <code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>)</p>
+<p id="sec-basicutilities-gaussintegrate"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L213">GaussIntegrate</a>(<code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>, <code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -399,7 +404,7 @@
 </div>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>: scalar, vector or matrix-valued function with scalar argument (X or other variable)</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>: odd number in {1,3,5,7,9}; currently maximum order is 9</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>: odd number in 1,3,5,7,9; currently maximum order is 9</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">a</span></code>: integration range start</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">b</span></code>: integration range end</div>
 </div>
@@ -411,7 +416,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-basicutilities-lobattointegrate"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L248">LobattoIntegrate</a>(<code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>, <code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>)</p>
+<p id="sec-basicutilities-lobattointegrate"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L249">LobattoIntegrate</a>(<code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>, <code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -423,7 +428,7 @@
 </div>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>: scalar, vector or matrix-valued function with scalar argument (X or other variable)</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>: odd number in {1,3,5}; currently maximum order is 5</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>: odd number in 1,3,5; currently maximum order is 5</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">a</span></code>: integration range start</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">b</span></code>: integration range end</div>
 </div>

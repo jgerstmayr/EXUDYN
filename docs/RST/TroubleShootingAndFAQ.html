@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trouble shooting and FAQ &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>Further notes &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -20,8 +21,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Overview on Exudyn" href="OverviewOnExudynIndex.html" />
-    <link rel="prev" title="Run a simple example in Python" href="RunASimpleExampleInPython.html" /> 
+    <link rel="next" title="Run a simple example in Python" href="GettingStarted.html" />
+    <link rel="prev" title="Installation instructions" href="RunASimpleExampleInPython.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,19 +49,19 @@
 <li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="InstallationAndGettingStarted.html">Installation and Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GettingStarted.html">Getting started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="InstallationInstructions.html">Installation instructions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FurtherNotes.html">Further notes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="RunASimpleExampleInPython.html">Run a simple example in Python</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Trouble shooting and FAQ</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#trouble-shooting">Trouble shooting</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#faq">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="InstallationInstructions.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="RunASimpleExampleInPython.html">Installation instructions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Further notes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#goals-of-exudyn">Goals of Exudyn</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="GettingStarted.html">Run a simple example in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FurtherNotes.html">Trouble shooting and FAQ</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
@@ -86,7 +87,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
-      <li class="breadcrumb-item active">Trouble shooting and FAQ</li>
+      <li class="breadcrumb-item active">Further notes</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/docs/RST/TroubleShootingAndFAQ.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -96,323 +97,35 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="trouble-shooting-and-faq">
-<h1>Trouble shooting and FAQ<a class="headerlink" href="#trouble-shooting-and-faq" title="Permalink to this heading"></a></h1>
-<section id="trouble-shooting">
-<h2>Trouble shooting<a class="headerlink" href="#trouble-shooting" title="Permalink to this heading"></a></h2>
-<p><strong>Python import errors</strong>:</p>
+  <section id="further-notes">
+<h1>Further notes<a class="headerlink" href="#further-notes" title="Permalink to this heading"></a></h1>
+<section id="goals-of-exudyn">
+<span id="sec-install-notes-goals"></span><h2>Goals of Exudyn<a class="headerlink" href="#goals-of-exudyn" title="Permalink to this heading"></a></h2>
+<p>After the first development phase (2019-2021), it</p>
 <ul class="simple">
-<li><p>Sometimes the Exudyn module cannot be loaded into Python. Typical <strong>error messages if Python versions are not compatible</strong> are:</p></li>
+<li><p>is a moderately large (2MB on windows!) multibody library, which can be easily linked to other projects,</p></li>
+<li><p>contains basic multibody rigid bodies, flexible bodies, joints, contact, etc.,</p></li>
+<li><p>includes a large Python utility library for convenient building and post processing of models,</p></li>
+<li><p>allows to efficiently simulate small scale systems (compute 100,000s of time steps per second for systems with n_DOF&lt;10),</p></li>
+<li><p>allows to efficiently simulate medium scaled systems for problems with n_DOF &lt; 1,000,000,</p></li>
+<li><p>is a safe and widely accessible module for Python,</p></li>
+<li><p>allows to add user defined objects and solvers in C++,</p></li>
+<li><p>allows to add user defined objects and solvers in Python.</p></li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-
-  <span class="n">File</span> <span class="s2">&quot;&lt;ipython-input-14-df2a108166a6&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-    <span class="kn">import</span> <span class="nn">exudynCPP</span>
-
-<span class="ne">ImportError</span><span class="p">:</span> <span class="n">Module</span> <span class="n">use</span> <span class="n">of</span> <span class="n">python36</span><span class="o">.</span><span class="n">dll</span> <span class="n">conflicts</span> <span class="k">with</span> <span class="n">this</span> <span class="n">version</span> <span class="n">of</span> <span class="n">Python</span><span class="o">.</span>
-
-
-<span class="n">Typical</span> \ <span class="o">**</span><span class="n">error</span> <span class="n">messages</span> <span class="k">if</span> <span class="mi">32</span><span class="o">/</span><span class="mi">64</span> <span class="n">bits</span> <span class="n">versions</span> <span class="n">are</span> <span class="n">mixed</span><span class="o">**</span>\ <span class="p">:</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-
-  <span class="n">File</span> <span class="s2">&quot;&lt;ipython-input-2-df2a108166a6&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-    <span class="kn">import</span> <span class="nn">exudynCPP</span>
-
-<span class="ne">ImportError</span><span class="p">:</span> <span class="n">DLL</span> <span class="n">load</span> <span class="n">failed</span><span class="p">:</span> \<span class="o">%</span><span class="mi">1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">a</span> <span class="n">valid</span> <span class="n">Win32</span> <span class="n">application</span><span class="o">.</span>
-</pre></div>
-</div>
-<p><strong>There are several reasons and workarounds</strong>:</p>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  You mixed up 32 and 64 bits version (see below)</div>
-<div class="line">=&gt;  You are using an exudyn version for Python x_1.y_1 (e.g., 3.6.z_1) different from the Python x_2.y_2 version in your Anaconda (e.g., 3.7.z_2); note that x_1=x_2 and y_1=y_2 must be obeyed while z_1 and z_2 may be different</div>
-</div>
-</div></blockquote>
+<p>Future goals (2022-2024) are:</p>
 <ul class="simple">
-<li><p><strong>Import of exudyn C++ module failed Warning: …</strong>:</p></li>
+<li><p>add more multi-threaded parallel computing techniques (DONE, Q2 2022),</p></li>
+<li><p>add vectorization,</p></li>
+<li><p>add specific and advanced connectors/constraints (extended wheels, contact, control connector)</p></li>
+<li><p>kinematical trees with minimum coordinates (DONE, Q1 2022),</p></li>
+<li><p>automatic step size selection for second order solvers (planned, 2023),</p></li>
+<li><p>deeper integration of Lie groups (Q3 2022),</p></li>
+<li><p>more interfaces for robotics (DONE, Q1 2022),</p></li>
+<li><p>add 3D beams (first attempts exist; planned, Q1 2023),</p></li>
+<li><p>export equations (planned, 2024)</p></li>
 </ul>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  … and similar messages with: ModuleNotFoundError, Warning, with AVX2, without AVX2</div>
-<div class="line">=&gt;  A known reason is that your CPU <strong>does not support AVX2</strong>, while Exudyn is compiled with the AVX2 option (not support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this).</div>
-<div class="line">=&gt;  <strong>solution</strong>: the release versions without the .dev1 ending in the wheel contain C++ libraries which are compiled without AVX/AVX2; the module loader will usually detect automatically, if your CPU supports AVX/AVX2; if not, it will load the exudynCPPnoAVX.cp … .pyd file; if this does not work, try</div>
-</div>
-</div></blockquote>
-<p><code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">sys</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">sys.exudynCPUhasAVX2</span> <span class="pre">=</span> <span class="pre">False</span></code></p>
-<dl>
-<dt>to explicitly load the version without AVX2.</dt><dd><div class="line-block">
-<div class="line">=&gt;  you can also compile for your specific Python version without AVX if you adjust the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file in the <code class="docutils literal notranslate"><span class="pre">main</span></code> folder.</div>
-<div class="line">=&gt;  <strong>DEPRECATED workaround</strong> to solve the AVX problem: use the Python 3.6 version (up to Exudyn V1.2.28 only the 32bit version), which is compiled without AVX2.</div>
-<div class="line">=&gt;  The <code class="docutils literal notranslate"><span class="pre">ModuleNotFoundError</span></code> may also happen if something went wrong during installation (paths, problems with Anaconda, ..) =&gt; very often a new installation of Anaconda and Exudyn helps.</div>
-</div>
-</dd>
-</dl>
-<p><strong>Typical Python errors</strong>:</p>
-<ul class="simple">
-<li><p>Typical Python <strong>syntax error</strong> with missing braces:</p></li>
-</ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="s2">&quot;C:\DATA\cpp\EXUDYN_git\main\pythonDev\Examples\springDamperTutorial.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">42</span>
-    <span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-           <span class="o">^</span>
-<span class="ne">SyntaxError</span><span class="p">:</span> <span class="n">invalid</span> <span class="n">syntax</span>
-
-
-<span class="o">|</span>  <span class="o">=&gt;</span>  <span class="n">such</span> <span class="n">an</span> <span class="n">error</span> <span class="n">points</span> <span class="n">to</span> <span class="n">the</span> <span class="n">line</span> <span class="n">of</span> <span class="n">your</span> <span class="n">code</span> <span class="p">(</span><span class="n">line</span> <span class="mi">42</span><span class="p">),</span> <span class="n">but</span> <span class="ow">in</span> <span class="n">fact</span> <span class="n">the</span> <span class="n">error</span> <span class="n">may</span> <span class="n">have</span> <span class="n">been</span> <span class="n">caused</span> <span class="ow">in</span> <span class="n">previous</span> <span class="n">code</span><span class="p">,</span> <span class="n">such</span> <span class="k">as</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">case</span> <span class="n">there</span> <span class="n">was</span> <span class="n">a</span> <span class="n">missing</span> <span class="n">brace</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">line</span> <span class="mi">40</span><span class="p">,</span> <span class="n">which</span> <span class="n">caused</span> <span class="n">the</span> <span class="n">error</span><span class="p">:</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="mi">38</span>  <span class="n">n1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="mi">39</span>                       <span class="n">initialCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">u0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="mi">40</span>                       <span class="n">initialVelocities</span><span class="o">=</span> <span class="p">[</span><span class="n">v0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="mi">41</span>  <span class="c1">#ground node</span>
-<span class="mi">42</span>  <span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
-<span class="mi">43</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>Typical Python <strong>import error</strong> message on Linux / UBUNTU if Python modules are missing:</p></li>
-</ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Python</span> <span class="n">WARNING</span> <span class="p">[</span><span class="n">file</span> <span class="s1">&#39;/home/johannes/.local/lib/python3.6/site-packages/exudyn/solver.py&#39;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">236</span><span class="p">]:</span>
-<span class="n">Error</span> <span class="n">when</span> <span class="n">executing</span> <span class="n">process</span> <span class="n">ShowVisualizationSettingsDialog</span><span class="s1">&#39;:</span>
-<span class="ne">ModuleNotFoundError</span><span class="p">:</span> <span class="n">No</span> <span class="n">module</span> <span class="n">named</span> <span class="s1">&#39;tkinter&#39;</span>
-
-
-<span class="o">|</span>  <span class="o">=&gt;</span>  <span class="n">see</span> <span class="n">installation</span> <span class="n">instructions</span> <span class="n">to</span> <span class="n">install</span> <span class="n">missing</span> <span class="n">Python</span> <span class="n">modules</span><span class="p">,</span> <span class="n">theDoc</span><span class="o">.</span><span class="n">pdf</span><span class="o">.</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>Problems with <strong>tkinter</strong>, especially on MacOS:</p></li>
-</ul>
-<blockquote>
-<div><p>Exudyn uses <code class="docutils literal notranslate"><span class="pre">tkinter</span></code>, based on tcl/tk, to provide some basic dialogs, such as visualizationSettings</p>
-<p>As Python is not suited for multithreading, this causes problems in window and dialog workflows. Especially on MacOS
-<code class="docutils literal notranslate"><span class="pre">tkinter</span></code> is less stable and compatible with the window manager. Especially, <code class="docutils literal notranslate"><span class="pre">tkinter</span></code> already needs to run
-before the application’s OpenGL window (renderer) is opened. Therefore, on MacOS <code class="docutils literal notranslate"><span class="pre">tkinter.Tk()</span></code> is called before the
-renderer is started.
-In some cases, visualizationSettings dialog may not be available and changes have to be made inside the code.
-|  =&gt;  To resolve issues, the following visualizationSettings may help (before starting renderer!), but may reduce functionality:
-dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False</p>
-</div></blockquote>
-<p><strong>Typical solver errors</strong>:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">SolveDynamic</span></code> or <code class="docutils literal notranslate"><span class="pre">SolveStatic</span></code> <strong>terminated due to errors</strong>:</p></li>
-</ul>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  use flag <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">True</span></code> in <code class="docutils literal notranslate"><span class="pre">SolveDynamic</span></code> or <code class="docutils literal notranslate"><span class="pre">SolveStatic</span></code></div>
-</div>
-</div></blockquote>
-<ul class="simple">
-<li><p>Very simple example <strong>without loads</strong> leads to error: <code class="docutils literal notranslate"><span class="pre">SolveDynamic</span></code> or <code class="docutils literal notranslate"><span class="pre">SolveStatic</span></code> <strong>terminated due to errors</strong>:</p></li>
-</ul>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  see also ‘Convergence problems’, theDoc.pdf</div>
-<div class="line">=&gt;  may be caused due to nonlinearity of formulation and round off errors, which restrict Newton to achieve desired tolerances; adjust  <code class="docutils literal notranslate"><span class="pre">.newton.relativeTolerance</span></code> / <code class="docutils literal notranslate"><span class="pre">.newton.absoluteTolerance</span></code> in static solver or in time integration</div>
-</div>
-</div></blockquote>
-<ul class="simple">
-<li><p>Typical <strong>solver error due to redundant constraints or missing inertia terms</strong>, could read as follows:</p></li>
-</ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>=========================================
-SYSTEM ERROR [file &#39;C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py&#39;, line 207]:
-CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
-time/load step #1, time = 0.0002
-causing system equation number (coordinate number) = 42
-=========================================
-
-
-
-|  =&gt;  this solver error shows that equation 42 is not solvable. The according coordinate is shown later in such an error message:
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>...
-The causing system equation 42 belongs to a algebraic variable (Lagrange multiplier)
-Potential object number(s) causing linear solver to fail: [7]
-    object 7, name=&#39;object7&#39;, type=JointGeneric
-
-
-
-|  =&gt;  object 7 seems to be the reason, possibly there are too much (joint) constraints applied to your system, check this object.
-|  =&gt;  show typical REASONS and SOLUTIONS, by using \ ``showHints=True``\  in \ ``exu.SolveDynamic(...)``\  or \ ``exu.SolveStatic(...)``\
-|  =&gt;  You can also \ **highlight**\  object 7 by using the following code in the iPython console:
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="n">StartRenderer</span><span class="p">()</span>
-<span class="n">HighlightItem</span><span class="p">(</span><span class="n">SC</span><span class="p">,</span><span class="n">mbs</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>which draws the according object in red and others gray/transparent (but sometimes objects may be hidden inside other objects!). See the command’s description for further options, e.g., to highlight nodes.</p>
-<ul class="simple">
-<li><p>Typical <strong>solver error if Newton does not converge</strong>:</p></li>
-</ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+++++++++++++++++++++++++++++++</span>
-<span class="n">EXUDYN</span> <span class="n">V1</span><span class="mf">.0.200</span> <span class="n">solver</span><span class="p">:</span> <span class="n">implicit</span> <span class="n">second</span> <span class="n">order</span> <span class="n">time</span> <span class="n">integration</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#1): convergence failed after 25 iterations; relative error = 0.079958, time = 2</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#1): convergence failed after 25 iterations; relative error = 0.0707764, time = 1</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#1): convergence failed after 25 iterations; relative error = 0.0185745, time = 0.5</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#2): convergence failed after 25 iterations; relative error = 0.332953, time = 0.5</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#2): convergence failed after 25 iterations; relative error = 0.0783815, time = 0.375</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#2): convergence failed after 25 iterations; relative error = 0.0879718, time = 0.3125</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#2): convergence failed after 25 iterations; relative error = 2.84704e-06, time = 0.28125</span>
-  <span class="n">Newton</span> <span class="p">(</span><span class="n">time</span><span class="o">/</span><span class="n">load</span> <span class="n">step</span> <span class="c1">#3): convergence failed after 25 iterations; relative error = 1.9894e-07, time = 0.28125</span>
-<span class="n">STEP348</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">20</span> <span class="n">sec</span><span class="p">,</span> <span class="n">timeToGo</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">sec</span><span class="p">,</span> <span class="n">Nit</span><span class="o">/</span><span class="n">step</span> <span class="o">=</span> <span class="mf">7.00575</span>
-<span class="n">solver</span> <span class="n">finished</span> <span class="n">after</span> <span class="mf">0.258349</span> <span class="n">seconds</span><span class="o">.</span>
-
-
-
-<span class="o">|</span>  <span class="o">=&gt;</span>  <span class="n">this</span> <span class="n">solver</span> <span class="n">error</span> <span class="ow">is</span> <span class="n">caused</span><span class="p">,</span> <span class="n">because</span> <span class="n">the</span> <span class="n">nonlinear</span> <span class="n">system</span> <span class="n">cannot</span> <span class="n">be</span> <span class="n">solved</span> <span class="n">using</span> <span class="n">Newton</span><span class="s1">&#39;s method.</span>
-<span class="o">|</span>  <span class="o">=&gt;</span>  <span class="n">the</span> <span class="n">static</span> <span class="ow">or</span> <span class="n">dynamic</span> <span class="n">solver</span> <span class="n">by</span> <span class="n">default</span> <span class="n">tries</span> <span class="n">to</span> <span class="n">reduce</span> <span class="n">step</span> <span class="n">size</span> <span class="n">to</span> <span class="n">overcome</span> <span class="n">this</span> <span class="n">problem</span><span class="p">,</span> <span class="n">but</span> <span class="n">may</span> <span class="n">fail</span> <span class="k">finally</span> <span class="p">(</span><span class="n">at</span> <span class="n">minimum</span> <span class="n">step</span> <span class="n">size</span><span class="p">)</span><span class="o">.</span>
-<span class="o">|</span>  <span class="o">=&gt;</span>  <span class="n">possible</span> <span class="n">reasons</span> <span class="n">are</span><span class="p">:</span> <span class="n">too</span> <span class="n">large</span> <span class="n">time</span> <span class="n">steps</span> <span class="p">(</span><span class="n">reduce</span> <span class="n">step</span> <span class="n">size</span> <span class="n">by</span> <span class="n">using</span> <span class="n">more</span> <span class="n">steps</span><span class="o">/</span><span class="n">second</span><span class="p">),</span> <span class="n">inappropriate</span> <span class="n">initial</span> <span class="n">conditions</span><span class="p">,</span> <span class="ow">or</span> <span class="n">inappropriate</span> <span class="n">joints</span> <span class="ow">or</span> <span class="n">constraints</span> <span class="p">(</span><span class="n">remove</span> <span class="n">joints</span> <span class="n">to</span> <span class="n">see</span> <span class="k">if</span> <span class="n">they</span> <span class="n">are</span> <span class="n">the</span> <span class="n">reason</span><span class="p">),</span> <span class="n">usually</span> <span class="n">within</span> <span class="n">a</span> <span class="n">singular</span> <span class="n">configuration</span><span class="o">.</span> <span class="n">Sometimes</span> <span class="n">a</span> <span class="n">system</span> <span class="n">may</span> <span class="n">be</span> <span class="n">just</span> <span class="n">unsolvable</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">way</span> <span class="n">you</span> <span class="nb">set</span> <span class="n">it</span> <span class="n">up</span><span class="o">.</span>
-<span class="o">|</span>  <span class="o">=&gt;</span>  <span class="n">see</span> <span class="n">also</span> <span class="s1">&#39;Convergence problems&#39;</span><span class="p">,</span> <span class="n">theDoc</span><span class="o">.</span><span class="n">pdf</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>Typical solver error if (e.g., syntax) <strong>error in user function</strong> (output may be very long, <strong>read always message on top!</strong>):</p></li>
-</ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>=========================================
-SYSTEM ERROR [file &#39;C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py&#39;, line 214]:
-Error in Python USER FUNCTION &#39;LoadCoordinate::loadVectorUserFunction&#39; (referred line number my be wrong!):
-NameError: name &#39;sin&#39; is not defined
-
-At:
-  C:\DATA\cpp\DocumentationAndInformation\tests\springDamperUserFunctionTest.py(48): Sweep
-  C:\DATA\cpp\DocumentationAndInformation\tests\springDamperUserFunctionTest.py(54): userLoad
-  C:\ProgramData\Anaconda3_64b37\lib\site-packages\exudyn\solver.py(214): SolveDynamic
-  C:\DATA\cpp\DocumentationAndInformation\tests\springDamperUserFunctionTest.py(106): &lt;module&gt;
-  C:\ProgramData\Anaconda3_64b37\lib\site-packages\spyder_kernels\customize\spydercustomize.py(377): exec_code
-  C:\ProgramData\Anaconda3_64b37\lib\site-packages\spyder_kernels\customize\spydercustomize.py(476): runfile
-  &lt;ipython-input-14-323569bebfb4&gt;(1): &lt;module&gt;
-  C:\ProgramData\Anaconda3_64b37\lib\site-packages\IPython\core\interactiveshell.py(3331): run_code
-...
-...
-; check your Python code!
-=========================================
-
-Solver stopped! use showHints=True to show helpful information
-
-
-
-|  =&gt;  this indicates an error in the user function \ ``LoadCoordinate::loadVectorUserFunction``\ , because \ ``sin``\  function has not been defined (must be imported, e.g., from \ ``math``\ ). It indicates that the error occurred in line 48 in \ ``springDamperUserFunctionTest.py``\  within function \ ``Sweep``\ , which has been called from function \ ``userLoad``\ , etc.
-</pre></div>
-</div>
-</section>
-<section id="faq">
-<h2>FAQ<a class="headerlink" href="#faq" title="Permalink to this heading"></a></h2>
-<p><strong>Some frequently asked questions</strong>:</p>
-<ul class="simple">
-<li><p>When <strong>importing</strong> Exudyn in Python (windows) I get an error</p></li>
-</ul>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  see trouble shooting instructions above!</div>
-</div>
-</div></blockquote>
-<ul class="simple">
-<li><p>I do not understand the <strong>Python errors</strong> – how can I find the reason of the error or crash?</p></li>
-</ul>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  Read trouble shooting section above!</div>
-<div class="line">=&gt;  First, you should read all error messages and warnings: from the very first to the last message. Very often, there is a definite line number which shows the error. Note, that if you are executing a string (or module) as a Python code, the line numbers refer to the local line number inside the script or module.</div>
-<div class="line">=&gt;  If everything fails, try to execute only part of the code to find out where the first error occurs. By omiting parts of the code, you should find the according source of the error.</div>
-<div class="line">=&gt;  If you think, it is a bug: send an email with a representative code snippet, version, etc. to `` <a class="reference external" href="mailto:reply&#46;exudyn&#37;&#52;&#48;gmail">reply<span>&#46;</span>exudyn<span>&#64;</span>gmail</a>.com``</div>
-</div>
-</div></blockquote>
-<ul class="simple">
-<li><p>Spyder <strong>console hangs</strong> up, does not show error messages, …:</p></li>
-</ul>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  very often a new start of Spyder helps; most times, it is sufficient to restart the kernel or to just press the ‘x’ in your IPython console, which closes the current session and restarts the kernel (this is much faster than restarting Spyder)</div>
-<div class="line">=&gt;  restarting the IPython console also brings back all error messages</div>
-</div>
-</div></blockquote>
-<ul class="simple">
-<li><p>Where do I find the <strong>‘.exe’ file</strong>?</p></li>
-</ul>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  Exudyn is only available via the Python interface as a module ‘<code class="docutils literal notranslate"><span class="pre">exudyn</span></code>‘, the C++ code being inside of <code class="docutils literal notranslate"><span class="pre">exudynCPP.pyd</span></code>, which is located in the exudyn folder where you installed the package. This means that you need to <strong>run Python</strong> (best: Spyder) and import the Exudyn module.</div>
-</div>
-</div></blockquote>
-<ul class="simple">
-<li><p>I get the error message ‘check potential mixing of different (object, node, marker, …) indices’, what does it mean?</p></li>
-</ul>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  probably you used wrong item indexes, see beginning of command interface in theDoc.pdf.</div>
-<div class="line">=&gt;  E.g., an object number <code class="docutils literal notranslate"><span class="pre">oNum</span> <span class="pre">=</span> <span class="pre">mbs.AddObject(...)</span></code> is used at a place where a <code class="docutils literal notranslate"><span class="pre">NodeIndex</span></code> is expected, e.g., <code class="docutils literal notranslate"><span class="pre">mbs.AddObject(MassPoint(nodeNumber=oNum,</span> <span class="pre">...))</span></code></div>
-<div class="line">=&gt;  Usually, this is an ERROR in your code, it does not make sense to mix up these indexes!</div>
-<div class="line">=&gt;  In the exceptional case, that you want to convert numbers, see beginning of theDoc.pdf.</div>
-</div>
-</div></blockquote>
-<ul class="simple">
-<li><p>Why does <strong>type auto completion</strong> not work for mbs (MainSystem)?</p></li>
-</ul>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  UPDATE 2020-06-01: with Spyder 4, using Python 3.7, type auto completion works much better, but may find too many completions.</div>
-<div class="line">=&gt;  most Python environments (e.g., with Spyder 3) only have information up to the first sub-structure, e.g., <code class="docutils literal notranslate"><span class="pre">SC=exu.SystemContainer()</span></code> provides full access to SC in the type completion, but <code class="docutils literal notranslate"><span class="pre">mbs=SC.AddSystem()</span></code> is at the second sub-structure of the module and is not accessible.</div>
-<div class="line">=&gt;  WORKAROUND: type <code class="docutils literal notranslate"><span class="pre">mbs=MainSystem()</span></code> <strong>before</strong> the <code class="docutils literal notranslate"><span class="pre">mbs=SC.AddSystem()</span></code> command and the interpreter will know what type mbs is. This also works for settings, e.g., simulation settings ‘Newton’.</div>
-</div>
-</div></blockquote>
-<ul class="simple">
-<li><p>How to add graphics?</p></li>
-</ul>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  Graphics (lines, text, 3D triangular / sSTL mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object. Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time. Furthermore, ObjectGround allows to add fully user defined graphics.</div>
-</div>
-</div></blockquote>
-<ul class="simple">
-<li><p>In <code class="docutils literal notranslate"><span class="pre">GenerateStraightLineANCFCable2D</span></code></p></li>
-</ul>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  coordinate constraints can be used to constrain position and rotation, e.g., <code class="docutils literal notranslate"><span class="pre">fixedConstraintsNode0</span> <span class="pre">=</span> <span class="pre">[1,1,0,1]</span></code> for a beam aligned along the global x-axis;</div>
-<div class="line">=&gt;  this <strong>does not work</strong> for beams with arbitrary rotation in reference configuration, e.g., 45°. Use a GenericJoint with a rotationMarker instead.</div>
-</div>
-</div></blockquote>
-<ul class="simple">
-<li><p>What is the difference between MarkerBodyPosition and MarkerBodyRigid?</p></li>
-</ul>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  Position markers (and nodes) do not have information on the orientation (rotation). For that reason, there is a difference between position based and rigid-body based markers. In case of a rigid body attached to ground with a SpringDamper, you can use both, MarkerBodyPosition or MarkerBodyRigid, markers. For a prismatic joint, you will need a MarkerBodyRigid.</div>
-</div>
-</div></blockquote>
-<ul class="simple">
-<li><p>I get an error in <code class="docutils literal notranslate"><span class="pre">exu.SolveDynamic(mbs,</span> <span class="pre">...)</span></code> OR in <code class="docutils literal notranslate"><span class="pre">exu.SolveStatic(mbs,</span> <span class="pre">...)</span></code> but no further information – how can I solve it?</p></li>
-</ul>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  Typical <strong>time integration errors</strong> may look like:</div>
-</div>
-</div></blockquote>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>File &quot;C:/DATA/cpp/EXUDYN_git/main/pythonDev/...&lt;file name&gt;&quot;, line XXX, in &lt;module&gt;
-solver.SolveSystem(...)
-SystemError: &lt;built-in method SolveSystem of PyCapsule object at 0x0CC63590&gt; returned a result with an error set
-
-
-|  =&gt;  The pre-checks, which are performed to enable a crash-free simulation are insufficient for your model
-|  =&gt;  As a first try, \ **restart the IPython console**\  in order to get all error messages, which may be blocked due to a previous run of Exudyn.
-|  =&gt;  Very likely, you are using Python user functions inside Exudyn : They lead to an internal Python error, which is not always catched by Exudyn ; e.g., a load user function UFload(mbs,~t,~load), which tries to access component load[3] of a load vector with 3 components will fail internally;
-|  =&gt;  Use the print(...) command in Python at many places to find a possible error in user functions (e.g., put \ ``print(&quot;Start user function XYZ&quot;)``\  at the beginning of every user function; test user functions from iPython console
-|  =&gt;  It is also possible, that you are using inconsistent data, which leads to the crash. In that case, you should try to change your model: omit parts and find out which part is causing your error
-|  =&gt;  see also \ **I do not understand the Python errors -- how can I find the cause?**\
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>Why can’t I get the focus of the simulation window on startup (render window hidden)?</p></li>
-</ul>
-<blockquote>
-<div><div class="line-block">
-<div class="line">=&gt;  Starting Exudyn out of Spyder might not bring the simulation window to front, because of specific settings in Spyder(version 3.2.8), e.g., Tools=&gt;Preferences=&gt;Editor=&gt;Advanced settings: uncheck ‘Maintain focus in the Editor after running cells or selections’; Alternatively, set <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.window.alwaysOnTop=True</span></code> <strong>before</strong> starting the renderer with <code class="docutils literal notranslate"><span class="pre">exu.StartRenderer()</span></code></div>
-</div>
-</div></blockquote>
+<p>For solved issues (and new features), see section ‘Issues and Bugs’,  <a class="reference internal" href="../trackerlogRST.html#sec-issuetracker"><span class="std std-ref">Issue tracker</span></a>.
+For specific open issues, see <code class="docutils literal notranslate"><span class="pre">trackerlog.html</span></code> – a document only intended for developers!</p>
 </section>
 </section>
 
@@ -420,8 +133,8 @@ SystemError: &lt;built-in method SolveSystem of PyCapsule object at 0x0CC63590&g
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="RunASimpleExampleInPython.html" class="btn btn-neutral float-left" title="Run a simple example in Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="OverviewOnExudynIndex.html" class="btn btn-neutral float-right" title="Overview on Exudyn" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="RunASimpleExampleInPython.html" class="btn btn-neutral float-left" title="Installation instructions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="GettingStarted.html" class="btn btn-neutral float-right" title="Run a simple example in Python" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

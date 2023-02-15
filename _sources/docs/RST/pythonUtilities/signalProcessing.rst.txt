@@ -1,5 +1,5 @@
 
-.. _sec-module-signalProcessing:
+.. _sec-module-signalprocessing:
 
 Module: signalProcessing
 ========================
@@ -11,7 +11,7 @@ and for filtering result data.
 - Notes:     This module is still under construction and should be used with care! 
 
 
-.. _sec-signalProcessing-FilterSensorOutput:
+.. _sec-signalprocessing-filtersensoroutput:
 
 `FilterSensorOutput <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L25>`__\ (\ ``signal``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
 
@@ -22,7 +22,7 @@ and for filtering result data.
   | \ ``signal``\ : numpy array (2D array with column-wise storage of signals, as exported by EXUDYN position, displacement, etc. sensors); first column = time, other columns = signals to operate on; note that it is assumed, that time devided in almost constant steps!
   | \ ``derivative``\ : 0=no derivative, 1=first derivative, 2=second derivative, etc. (>2 only possible with filter)
   | \ ``polyOrder``\ : order of polynomial for interpolation filtering
-  | \ ``filterWindow``\ : if zero: produces unfiltered derivative; if positive, must be ODD integer {1,3,5,...} and > polyOrder; filterWindow determines the length of the filter window (e.g., to get rid of noise)
+  | \ ``filterWindow``\ : if zero: produces unfiltered derivative; if positive, must be ODD integer 1,3,5,... and > polyOrder; filterWindow determines the length of the filter window (e.g., to get rid of noise)
   | \ ``centralDifferentiate``\ : if True, it uses a central differentiation for first order, unfiltered derivatives; leads to less phase shift of signal!
 - | \ *output*\ :
   | numpy array containing same columns, but with filtered signal and according derivatives
@@ -34,7 +34,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-signalProcessing-FilterSignal:
+.. _sec-signalprocessing-filtersignal:
 
 `FilterSignal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L81>`__\ (\ ``signal``\ , \ ``samplingRate = -1``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
 
@@ -46,7 +46,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
   | \ ``samplingRate``\ : (time increment) of signal values, needed for derivatives
   | \ ``derivative``\ : 0=no derivative, 1=first derivative, 2=second derivative, etc. (>2 only possible with filter)
   | \ ``polyOrder``\ : order of polynomial for interpolation filtering
-  | \ ``filterWindow``\ : if zero: produces unfiltered derivative; if positive, must be ODD integer {1,3,5,...} and > polyOrder; filterWindow determines the length of the filter window (e.g., to get rid of noise)
+  | \ ``filterWindow``\ : if zero: produces unfiltered derivative; if positive, must be ODD integer 1,3,5,... and > polyOrder; filterWindow determines the length of the filter window (e.g., to get rid of noise)
   | \ ``centralDifferentiate``\ : if True, it uses a central differentiation for first order, unfiltered derivatives; leads to less phase shift of signal!
 - | \ *output*\ :
   | numpy array containing same columns, but with filtered signal and according derivatives
@@ -58,7 +58,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-signalProcessing-ComputeFFT:
+.. _sec-signalprocessing-computefft:
 
 `ComputeFFT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L126>`__\ (\ ``time``\ , \ ``data``\ )
 
@@ -81,7 +81,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-signalProcessing-GetInterpolatedSignalValue:
+.. _sec-signalprocessing-getinterpolatedsignalvalue:
 
 `GetInterpolatedSignalValue <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L163>`__\ (\ ``time``\ , \ ``dataArray``\ , \ ``timeArray = []``\ , \ ``timeArrayIndex = -1``\ , \ ``dataArrayIndex = -1``\ , \ ``rangeWarning = True``\ , \ ``tolerance = 1e-6``\ )
 

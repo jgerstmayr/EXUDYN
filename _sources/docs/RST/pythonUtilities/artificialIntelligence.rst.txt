@@ -1,5 +1,5 @@
 
-.. _sec-module-artificialIntelligence:
+.. _sec-module-artificialintelligence:
 
 Module: artificialIntelligence
 ==============================
@@ -20,9 +20,9 @@ CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
     interface class to set up Exudyn model which can be used as model in open AI gym;
     see specific class functions which contain 'OVERRIDE' to integrate your model;
     in general, set up a model with CreateMBS(), map state to initial values, initial values to state and action to mbs;
-    
 
-.. _sec-artificialIntelligence-OpenAIGymInterfaceEnv-init:
+
+.. _sec-artificialintelligence-openaigyminterfaceenv-init:
 
 `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L35>`__\ (\ ``self``\ , \ ``**kwargs``\ )
 
@@ -31,7 +31,7 @@ CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
 
 ----
 
-.. _sec-artificialIntelligence-OpenAIGymInterfaceEnv-CreateMBS:
+.. _sec-artificialintelligence-openaigyminterfaceenv-creatembs:
 
 `CreateMBS <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L69>`__\ (\ ``self``\ , \ ``SC``\ , \ ``mbs``\ , \ ``simulationSettings``\ , \ ``**kwargs``\ )
 
@@ -42,7 +42,7 @@ CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
 
 ----
 
-.. _sec-artificialIntelligence-OpenAIGymInterfaceEnv-SetupSpaces:
+.. _sec-artificialintelligence-openaigyminterfaceenv-setupspaces:
 
 `SetupSpaces <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L73>`__\ (\ ``self``\ )
 
@@ -51,7 +51,7 @@ CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
 
 ----
 
-.. _sec-artificialIntelligence-OpenAIGymInterfaceEnv-MapAction2MBS:
+.. _sec-artificialintelligence-openaigyminterfaceenv-mapaction2mbs:
 
 `MapAction2MBS <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L78>`__\ (\ ``self``\ , \ ``action``\ )
 
@@ -60,7 +60,7 @@ CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
 
 ----
 
-.. _sec-artificialIntelligence-OpenAIGymInterfaceEnv-Output2StateAndDone:
+.. _sec-artificialintelligence-openaigyminterfaceenv-output2stateanddone:
 
 `Output2StateAndDone <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L83>`__\ (\ ``self``\ )
 
@@ -71,7 +71,7 @@ CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
 
 ----
 
-.. _sec-artificialIntelligence-OpenAIGymInterfaceEnv-State2InitialValues:
+.. _sec-artificialintelligence-openaigyminterfaceenv-state2initialvalues:
 
 `State2InitialValues <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L89>`__\ (\ ``self``\ )
 
@@ -82,7 +82,7 @@ CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
 
 ----
 
-.. _sec-artificialIntelligence-OpenAIGymInterfaceEnv-TestModel:
+.. _sec-artificialintelligence-openaigyminterfaceenv-testmodel:
 
 `TestModel <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L107>`__\ (\ ``self``\ , \ ``numberOfSteps = 500``\ , \ ``seed = 0``\ , \ ``model = None``\ , \ ``solutionFileName = None``\ , \ ``useRenderer = True``\ , \ ``sleepTime = 0.01``\ , \ ``stopIfDone = False``\ , \ ``showTimeSpent = True``\ , \ ``**kwargs``\ )
 
@@ -95,14 +95,14 @@ CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
   | \ ``model``\ : either None to just test the MBS model without learned model, or containing a learned model, e.g., with A2C; use A2C.save(...) and A2C.load(...) for storing and retrieving models
   | \ ``solutionFileName``\ : if given, the MBS internal states are written to the file with given name, which can be loaded with solution viewer and visualized; solution is written every period given in simulationSettings.solutionSettings.solutionWritePeriod
   | \ ``useRenderer``\ : if set True, the internal renderer is used and model updates are shown in visualization of Exudyn
-  | \ ``return_info``\ : internal value in reset function
+  | \ ``return\_info``\ : internal value in reset function
   | \ ``sleepTime``\ : sleep time between time steps to obtain certain frame rate for visualization
   | \ ``stopIfDone``\ : if set to True, the simulation will reset as soon as the defined observation limits are reached and done is set True
   | \ ``showTimeSpent``\ : if True, the total time spent is measured; this helps to check the performance of the model (e.g. how many steps can be computed per second)
 
 ----
 
-.. _sec-artificialIntelligence-OpenAIGymInterfaceEnv-SetSolver:
+.. _sec-artificialintelligence-openaigyminterfaceenv-setsolver:
 
 `SetSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L142>`__\ (\ ``self``\ , \ ``solverType``\ )
 
@@ -111,7 +111,7 @@ CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
 
 ----
 
-.. _sec-artificialIntelligence-OpenAIGymInterfaceEnv-PreInitializeSolver:
+.. _sec-artificialintelligence-openaigyminterfaceenv-preinitializesolver:
 
 `PreInitializeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L168>`__\ (\ ``self``\ )
 
@@ -120,7 +120,7 @@ CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
 
 ----
 
-.. _sec-artificialIntelligence-OpenAIGymInterfaceEnv-IntegrateStep:
+.. _sec-artificialintelligence-openaigyminterfaceenv-integratestep:
 
 `IntegrateStep <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L175>`__\ (\ ``self``\ )
 
@@ -129,7 +129,7 @@ CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
 
 ----
 
-.. _sec-artificialIntelligence-OpenAIGymInterfaceEnv-step:
+.. _sec-artificialintelligence-openaigyminterfaceenv-step:
 
 `step <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L195>`__\ (\ ``self``\ , \ ``action``\ )
 
@@ -138,16 +138,16 @@ CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
 
 ----
 
-.. _sec-artificialIntelligence-OpenAIGymInterfaceEnv-reset:
+.. _sec-artificialintelligence-openaigyminterfaceenv-reset:
 
-`reset <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L236>`__\ (\ ``self``\ , \ ``*``\ , \ ``seed: Optional[int] = None``\ , \ ``return_info: bool = False``\ , \ ``options: Optional[dict] = None``\ )
+`reset <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L236>`__\ (\ ``self``\ , \ ``*``\ , \ ``seed: Optional[int] = None``\ , \ ``return\_info: bool = False``\ , \ ``options: Optional[dict] = None``\ )
 
 - | \ *classFunction*\ :
   | openAI gym function which resets the system
 
 ----
 
-.. _sec-artificialIntelligence-OpenAIGymInterfaceEnv-render:
+.. _sec-artificialintelligence-openaigyminterfaceenv-render:
 
 `render <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L270>`__\ (\ ``self``\ , \ ``mode = "human"``\ )
 
@@ -156,7 +156,7 @@ CLASS OpenAIGymInterfaceEnv (in module artificialIntelligence)
 
 ----
 
-.. _sec-artificialIntelligence-OpenAIGymInterfaceEnv-close:
+.. _sec-artificialintelligence-openaigyminterfaceenv-close:
 
 `close <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py\#L276>`__\ (\ ``self``\ )
 

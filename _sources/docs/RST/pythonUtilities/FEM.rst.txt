@@ -1,5 +1,5 @@
 
-.. _sec-module-FEM:
+.. _sec-module-fem:
 
 Module: FEM
 ===========
@@ -7,12 +7,12 @@ Module: FEM
 Support functions and helper classes for import of meshes, finite element models (ABAQUS, ANSYS, NETGEN) and for generation of FFRF (floating frame of reference) objects.
 
 - | Author:
-  | Johannes Gerstmayr; Stefan Holzinger (Abaqus and Ansys import utilities); Joachim Schoeberl (support for Netgen and NGsolve \cite{Schoeberl1997,NGsolve2014,NGsolve2022} import and eigen computations)
+  | Johannes Gerstmayr; Stefan Holzinger (Abaqus and Ansys import utilities); Joachim Schöberl (support for Netgen and NGsolve  import and eigen computations)
 - Date:      2020-03-10 (created) 
 - Notes:  	internal CSR matrix storage format contains 3 float numbers per row: [row, column, value], can be converted to scipy csr sparse matrices with function CSRtoScipySparseCSR(...) 
 
 
-.. _sec-FEM-CompressedRowSparseToDenseMatrix:
+.. _sec-fem-compressedrowsparsetodensematrix:
 
 `CompressedRowSparseToDenseMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L37>`__\ (\ ``sparseData``\ )
 
@@ -26,7 +26,7 @@ Support functions and helper classes for import of meshes, finite element models
 
 ----
 
-.. _sec-FEM-MapSparseMatrixIndices:
+.. _sec-fem-mapsparsematrixindices:
 
 `MapSparseMatrixIndices <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L46>`__\ (\ ``matrix``\ , \ ``sorting``\ )
 
@@ -36,7 +36,7 @@ Support functions and helper classes for import of meshes, finite element models
 
 ----
 
-.. _sec-FEM-VectorDiadicUnitMatrix3D:
+.. _sec-fem-vectordiadicunitmatrix3d:
 
 `VectorDiadicUnitMatrix3D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L54>`__\ (\ ``v``\ )
 
@@ -46,7 +46,7 @@ Support functions and helper classes for import of meshes, finite element models
 
 ----
 
-.. _sec-FEM-CyclicCompareReversed:
+.. _sec-fem-cycliccomparereversed:
 
 `CyclicCompareReversed <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L61>`__\ (\ ``list1``\ , \ ``list2``\ )
 
@@ -56,7 +56,7 @@ Support functions and helper classes for import of meshes, finite element models
 
 ----
 
-.. _sec-FEM-AddEntryToCompressedRowSparseArray:
+.. _sec-fem-addentrytocompressedrowsparsearray:
 
 `AddEntryToCompressedRowSparseArray <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L70>`__\ (\ ``sparseData``\ , \ ``row``\ , \ ``column``\ , \ ``value``\ )
 
@@ -68,7 +68,7 @@ Support functions and helper classes for import of meshes, finite element models
 
 ----
 
-.. _sec-FEM-CSRtoRowsAndColumns:
+.. _sec-fem-csrtorowsandcolumns:
 
 `CSRtoRowsAndColumns <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L88>`__\ (\ ``sparseMatrixCSR``\ )
 
@@ -78,7 +78,7 @@ Support functions and helper classes for import of meshes, finite element models
 
 ----
 
-.. _sec-FEM-CSRtoScipySparseCSR:
+.. _sec-fem-csrtoscipysparsecsr:
 
 `CSRtoScipySparseCSR <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L94>`__\ (\ ``sparseMatrixCSR``\ )
 
@@ -92,7 +92,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-FEM-ScipySparseCSRtoCSR:
+.. _sec-fem-scipysparsecsrtocsr:
 
 `ScipySparseCSRtoCSR <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L102>`__\ (\ ``scipyCSR``\ )
 
@@ -102,7 +102,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-FEM-ResortIndicesOfCSRmatrix:
+.. _sec-fem-resortindicesofcsrmatrix:
 
 `ResortIndicesOfCSRmatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L110>`__\ (\ ``mXXYYZZ``\ , \ ``numberOfRows``\ )
 
@@ -114,7 +114,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-FEM-ResortIndicesOfNGvector:
+.. _sec-fem-resortindicesofngvector:
 
 `ResortIndicesOfNGvector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L128>`__\ (\ ``vXXYYZZ``\ )
 
@@ -124,7 +124,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-FEM-ResortIndicesExudyn2NGvector:
+.. _sec-fem-resortindicesexudyn2ngvector:
 
 `ResortIndicesExudyn2NGvector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L148>`__\ (\ ``vXYZXYZ``\ )
 
@@ -134,7 +134,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-FEM-ConvertHexToTrigs:
+.. _sec-fem-converthextotrigs:
 
 `ConvertHexToTrigs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L285>`__\ (\ ``nodeNumbers``\ )
 
@@ -150,7 +150,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-FEM-ConvertDenseToCompressedRowMatrix:
+.. _sec-fem-convertdensetocompressedrowmatrix:
 
 `ConvertDenseToCompressedRowMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L297>`__\ (\ ``denseMatrix``\ )
 
@@ -160,7 +160,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-FEM-ReadMatrixFromAnsysMMF:
+.. _sec-fem-readmatrixfromansysmmf:
 
 `ReadMatrixFromAnsysMMF <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L345>`__\ (\ ``fileName``\ , \ ``verbose = False``\ )
 
@@ -178,7 +178,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 - | \ *notes*\ :
 
   | A MMF file can be created in Ansys by placing the following APDL code inside
-  | \ ``the solution tree in Ansys Workbench``\ :
+  | the solution tree in Ansys Workbench:
   | !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   | ! APDL code that exports sparse stiffnes and mass matrix in MMF format. If
   | ! the dense matrix is needed, replace \*SMAT with \*DMAT in the following
@@ -191,7 +191,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
   | \*EXPORT,MatMD,MMF,fileNameMassMatrix,,,
   | !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   | In case a lumped mass matrix is needed, place the following APDL Code inside
-  | \ ``the Modal Analysis Tree``\ :
+  | the Modal Analysis Tree:
   | !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   | ! APDL code to force Ansys to use a lumped mass formulation (if available for
   | ! used elements)
@@ -201,7 +201,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-FEM-ReadMatrixDOFmappingVectorFromAnsysTxt:
+.. _sec-fem-readmatrixdofmappingvectorfromansystxt:
 
 `ReadMatrixDOFmappingVectorFromAnsysTxt <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L386>`__\ (\ ``fileName``\ )
 
@@ -214,7 +214,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-FEM-ReadNodalCoordinatesFromAnsysTxt:
+.. _sec-fem-readnodalcoordinatesfromansystxt:
 
 `ReadNodalCoordinatesFromAnsysTxt <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L442>`__\ (\ ``fileName``\ , \ ``verbose = False``\ )
 
@@ -241,7 +241,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-FEM-ReadElementsFromAnsysTxt:
+.. _sec-fem-readelementsfromansystxt:
 
 `ReadElementsFromAnsysTxt <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L521>`__\ (\ ``fileName``\ , \ ``verbose = False``\ )
 
@@ -268,7 +268,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-FEM-CMSObjectComputeNorm:
+.. _sec-fem-cmsobjectcomputenorm:
 
 `CMSObjectComputeNorm <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L944>`__\ (\ ``mbs``\ , \ ``objectNumber``\ , \ ``outputVariableType``\ , \ ``norm = 'max'``\ , \ ``nodeNumberList = []``\ )
 
@@ -294,7 +294,7 @@ CLASS MaterialBaseClass (in module FEM)
 **class description**: 
 
     material base class, e.g., for FiniteElement
-    
+
 
 
 CLASS KirchhoffMaterial(MaterialBaseClass) (in module FEM)
@@ -302,12 +302,12 @@ CLASS KirchhoffMaterial(MaterialBaseClass) (in module FEM)
 **class description**: 
 
     class for representation of Kirchhoff (linear elastic, 3D and 2D) material
-    
+
 - | \ *notes*\ :
   | use planeStress=False for plane strain
 
 
-.. _sec-FEM-KirchhoffMaterial(MaterialBaseClass)-Strain2Stress:
+.. _sec-fem-kirchhoffmaterial(materialbaseclass)-strain2stress:
 
 `Strain2Stress <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L628>`__\ (\ ``self``\ , \ ``strain``\ )
 
@@ -316,7 +316,7 @@ CLASS KirchhoffMaterial(MaterialBaseClass) (in module FEM)
 
 ----
 
-.. _sec-FEM-KirchhoffMaterial(MaterialBaseClass)-StrainVector2StressVector:
+.. _sec-fem-kirchhoffmaterial(materialbaseclass)-strainvector2stressvector:
 
 `StrainVector2StressVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L639>`__\ (\ ``self``\ , \ ``strainVector``\ )
 
@@ -325,7 +325,7 @@ CLASS KirchhoffMaterial(MaterialBaseClass) (in module FEM)
 
 ----
 
-.. _sec-FEM-KirchhoffMaterial(MaterialBaseClass)-StrainVector2StressVector2D:
+.. _sec-fem-kirchhoffmaterial(materialbaseclass)-strainvector2stressvector2d:
 
 `StrainVector2StressVector2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L643>`__\ (\ ``self``\ , \ ``strainVector2D``\ )
 
@@ -334,7 +334,7 @@ CLASS KirchhoffMaterial(MaterialBaseClass) (in module FEM)
 
 ----
 
-.. _sec-FEM-KirchhoffMaterial(MaterialBaseClass)-LameParameters:
+.. _sec-fem-kirchhoffmaterial(materialbaseclass)-lameparameters:
 
 `LameParameters <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L652>`__\ (\ ``self``\ )
 
@@ -353,7 +353,7 @@ CLASS FiniteElement (in module FEM)
 **class description**: 
 
     finite element base class for lateron implementations of other finite elements
-    
+
 
 
 CLASS Tet4(FiniteElement) (in module FEM)
@@ -361,7 +361,7 @@ CLASS Tet4(FiniteElement) (in module FEM)
 **class description**: 
 
     simplistic 4-noded tetrahedral interface to compute strain/stress at nodal points
-    
+
 
 
 CLASS ObjectFFRFinterface (in module FEM)
@@ -371,9 +371,9 @@ CLASS ObjectFFRFinterface (in module FEM)
     compute terms necessary for ObjectFFRF
     class used internally in FEMinterface to compute ObjectFFRF object
     this class holds all data for ObjectFFRF user functions
-    
 
-.. _sec-FEM-ObjectFFRFinterface-init:
+
+.. _sec-fem-objectffrfinterface-init:
 
 `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L735>`__\ (\ ``self``\ , \ ``femInterface``\ )
 
@@ -385,7 +385,7 @@ CLASS ObjectFFRFinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-ObjectFFRFinterface-AddObjectFFRF:
+.. _sec-fem-objectffrfinterface-addobjectffrf:
 
 `AddObjectFFRF <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L780>`__\ (\ ``self``\ , \ ``exu``\ , \ ``mbs``\ , \ ``positionRef = [0,0,0]``\ , \ ``eulerParametersRef = [1,0,0,0]``\ , \ ``initialVelocity = [0,0,0]``\ , \ ``initialAngularVelocity = [0,0,0]``\ , \ ``gravity = [0,0,0]``\ , \ ``constrainRigidBodyMotion = True``\ , \ ``massProportionalDamping = 0``\ , \ ``stiffnessProportionalDamping = 0``\ , \ ``color = [0.1,0.9,0.1,1.]``\ )
 
@@ -406,18 +406,18 @@ CLASS ObjectFFRFinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-ObjectFFRFinterface-UFforce:
+.. _sec-fem-objectffrfinterface-ufforce:
 
-`UFforce <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L859>`__\ (\ ``self``\ , \ ``exu``\ , \ ``mbs``\ , \ ``t``\ , \ ``q``\ , \ ``q_t``\ )
+`UFforce <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L859>`__\ (\ ``self``\ , \ ``exu``\ , \ ``mbs``\ , \ ``t``\ , \ ``q``\ , \ ``q\_t``\ )
 
 - | \ *classFunction*\ :
   | optional forceUserFunction for ObjectFFRF (per default, this user function is ignored)
 
 ----
 
-.. _sec-FEM-ObjectFFRFinterface-UFmassGenericODE2:
+.. _sec-fem-objectffrfinterface-ufmassgenericode2:
 
-`UFmassGenericODE2 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L905>`__\ (\ ``self``\ , \ ``exu``\ , \ ``mbs``\ , \ ``t``\ , \ ``q``\ , \ ``q_t``\ )
+`UFmassGenericODE2 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L905>`__\ (\ ``self``\ , \ ``exu``\ , \ ``mbs``\ , \ ``t``\ , \ ``q``\ , \ ``q\_t``\ )
 
 - | \ *classFunction*\ :
   | optional massMatrixUserFunction for ObjectFFRF (per default, this user function is ignored)
@@ -434,9 +434,9 @@ CLASS ObjectFFRFreducedOrderInterface (in module FEM)
     compute terms necessary for ObjectFFRFreducedOrder
     class used internally in FEMinterface to compute ObjectFFRFreducedOrder dictionary
     this class holds all data for ObjectFFRFreducedOrder user functions
-    
 
-.. _sec-FEM-ObjectFFRFreducedOrderInterface-init:
+
+.. _sec-fem-objectffrfreducedorderinterface-init:
 
 `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1016>`__\ (\ ``self``\ , \ ``femInterface``\ , \ ``rigidBodyNodeType = 'NodeType.RotationEulerParameters'``\ , \ ``roundMassMatrix = 1e-13``\ , \ ``roundStiffnessMatrix = 1e-13``\ )
 
@@ -453,9 +453,9 @@ CLASS ObjectFFRFreducedOrderInterface (in module FEM)
 
 ----
 
-.. _sec-FEM-ObjectFFRFreducedOrderInterface-AddObjectFFRFreducedOrderWithUserFunctions:
+.. _sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions:
 
-`AddObjectFFRFreducedOrderWithUserFunctions <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1102>`__\ (\ ``self``\ , \ ``exu``\ , \ ``mbs``\ , \ ``positionRef = [0,0,0]``\ , \ ``initialVelocity = [0,0,0]``\ , \ ``rotationMatrixRef = []``\ , \ ``initialAngularVelocity = [0,0,0]``\ , \ ``gravity = [0,0,0]``\ , \ ``UFforce = 0``\ , \ ``UFmassMatrix = 0``\ , \ ``massProportionalDamping = 0``\ , \ ``stiffnessProportionalDamping = 0``\ , \ ``color = [0.1,0.9,0.1,1.]``\ , \ ``eulerParametersRef = []``\ )
+`AddObjectFFRFreducedOrderWithUserFunctions <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1110>`__\ (\ ``self``\ , \ ``exu``\ , \ ``mbs``\ , \ ``positionRef = [0,0,0]``\ , \ ``initialVelocity = [0,0,0]``\ , \ ``rotationMatrixRef = []``\ , \ ``initialAngularVelocity = [0,0,0]``\ , \ ``gravity = [0,0,0]``\ , \ ``UFforce = 0``\ , \ ``UFmassMatrix = 0``\ , \ ``massProportionalDamping = 0``\ , \ ``stiffnessProportionalDamping = 0``\ , \ ``color = [0.1,0.9,0.1,1.]``\ , \ ``eulerParametersRef = []``\ )
 
 - | \ *classFunction*\ :
   | add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs; use this function with userfunctions=0 in order to use internal C++ functionality, which is approx. 10x faster; implementation of userfunctions also available for rotation vector (Lie group formulation), which needs further testing
@@ -469,35 +469,46 @@ CLASS ObjectFFRFreducedOrderInterface (in module FEM)
   | \ ``initialAngularVelocity``\ : initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
   | \ ``eulerParametersRef``\ : DEPRECATED, use rotationParametersRef or rotationMatrixRef in future: reference euler parameters of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
   | \ ``gravity``\ : set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
-  | \ ``UFforce``\ : (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)}
-  | \ ``UFmassMatrix``\ : (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFmassFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):\\  \phantom{XXXX}return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)}
+  | \ ``UFforce``\ : (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; see example
+  | \ ``UFmassMatrix``\ : (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; see example
   | \ ``massProportionalDamping``\ : Rayleigh damping factor for mass proportional damping (multiplied with reduced mass matrix), added to floating frame/modal coordinates only
   | \ ``stiffnessProportionalDamping``\ : Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only (multiplied with reduced stiffness matrix)
   | \ ``color``\ : provided as list of 4 RGBA values
+- | \ *example*\ :
+
+.. code-block:: python
+
+  #example of a user function for forces:
+  def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):
+  return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
+  #example of a user function for mass matrix:
+  def UFmassFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced\_t):
+  return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)
+
 
 ----
 
-.. _sec-FEM-ObjectFFRFreducedOrderInterface-UFmassFFRFreducedOrder:
+.. _sec-fem-objectffrfreducedorderinterface-ufmassffrfreducedorder:
 
-`UFmassFFRFreducedOrder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1255>`__\ (\ ``self``\ , \ ``exu``\ , \ ``mbs``\ , \ ``t``\ , \ ``qReduced``\ , \ ``qReduced_t``\ )
+`UFmassFFRFreducedOrder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1263>`__\ (\ ``self``\ , \ ``exu``\ , \ ``mbs``\ , \ ``t``\ , \ ``qReduced``\ , \ ``qReduced\_t``\ )
 
 - | \ *classFunction*\ :
   | CMS mass matrix user function; qReduced and qReduced_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
 
 ----
 
-.. _sec-FEM-ObjectFFRFreducedOrderInterface-UFforceFFRFreducedOrder:
+.. _sec-fem-objectffrfreducedorderinterface-ufforceffrfreducedorder:
 
-`UFforceFFRFreducedOrder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1306>`__\ (\ ``self``\ , \ ``exu``\ , \ ``mbs``\ , \ ``t``\ , \ ``qReduced``\ , \ ``qReduced_t``\ )
+`UFforceFFRFreducedOrder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1314>`__\ (\ ``self``\ , \ ``exu``\ , \ ``mbs``\ , \ ``t``\ , \ ``qReduced``\ , \ ``qReduced\_t``\ )
 
 - | \ *classFunction*\ :
   | CMS force matrix user function; qReduced and qReduced_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
 
 ----
 
-.. _sec-FEM-ObjectFFRFreducedOrderInterface-AddObjectFFRFreducedOrder:
+.. _sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorder:
 
-`AddObjectFFRFreducedOrder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1389>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``positionRef = [0,0,0]``\ , \ ``initialVelocity = [0,0,0]``\ , \ ``rotationMatrixRef = []``\ , \ ``initialAngularVelocity = [0,0,0]``\ , \ ``massProportionalDamping = 0``\ , \ ``stiffnessProportionalDamping = 0``\ , \ ``gravity = [0,0,0]``\ , \ ``color = [0.1,0.9,0.1,1.]``\ )
+`AddObjectFFRFreducedOrder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1397>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``positionRef = [0,0,0]``\ , \ ``initialVelocity = [0,0,0]``\ , \ ``rotationMatrixRef = []``\ , \ ``initialAngularVelocity = [0,0,0]``\ , \ ``massProportionalDamping = 0``\ , \ ``stiffnessProportionalDamping = 0``\ , \ ``gravity = [0,0,0]``\ , \ ``color = [0.1,0.9,0.1,1.]``\ )
 
 - | \ *classFunction*\ :
   | add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs; use this function in order to use internal C++ functionality, which is approx. 10x faster than AddObjectFFRFreducedOrderWithUserFunctions(...)
@@ -523,12 +534,20 @@ CLASS HCBstaticModeSelection(Enum) (in module FEM)
 --------------------------------------------------
 **class description**: 
 
-    helper calss for function ComputeHurtyCraigBamptonModes, declaring some computation options. It offers the following options:\\
-    - allBoundaryNodes:     compute a single static mode for every boundary coordinate\\
-    - RBE2:                 static modes only for rigid body motion at boundary nodes; using rigid boundary surfaces (additional stiffening)\\
-    - RBE3:                 static modes only for rigid body motion at boundary nodes; averaged rigid body motion at boundary surfaces (leads to deformation at boundaries)\\
-    - noStaticModes:        do not compute static modes, only eigen modes (not recommended; usually only for tests)
+    helper calss for function ComputeHurtyCraigBamptonModes, declaring some computation options. It offers the following options:
     
+    
+    - allBoundaryNodes:     compute a single static mode for every boundary coordinate
+    
+    
+    - RBE2:                 static modes only for rigid body motion at boundary nodes; using rigid boundary surfaces (additional stiffening)
+    
+    
+    - RBE3:                 static modes only for rigid body motion at boundary nodes; averaged rigid body motion at boundary surfaces (leads to deformation at boundaries)
+    
+    
+    - noStaticModes:        do not compute static modes, only eigen modes (not recommended; usually only for tests)
+
 
 
 CLASS FEMinterface (in module FEM)
@@ -536,18 +555,18 @@ CLASS FEMinterface (in module FEM)
 **class description**: 
 
     general interface to different FEM / mesh imports and export to EXUDYN functions
-    use this class to import meshes from different meshing or FEM programs (NETGEN/NGsolve \cite{NGsolve2022}, ABAQUS, ANSYS, ..) and store it in a unique format
+    use this class to import meshes from different meshing or FEM programs (NETGEN/NGsolve , ABAQUS, ANSYS, ..) and store it in a unique format
     do mesh operations, compute eigenmodes and reduced basis, etc.
     load/store the data efficiently with LoadFromFile(...), SaveToFile(...)  if import functions are slow
     export to EXUDYN objects
-    
 
-.. _sec-FEM-FEMinterface-init:
 
-`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1440>`__\ (\ ``self``\ )
+.. _sec-fem-feminterface-init:
+
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1448>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
-  | initalize all data of the FEMinterface by, e.g., \texttt{fem = FEMinterface()}
+  | initalize all data of the FEMinterface by, e.g., \ ``fem = FEMinterface()``\
 - | \ *example*\ :
 
 .. code-block:: python
@@ -568,9 +587,9 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-SaveToFile:
+.. _sec-fem-feminterface-savetofile:
 
-`SaveToFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1460>`__\ (\ ``self``\ , \ ``fileName``\ )
+`SaveToFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1468>`__\ (\ ``self``\ , \ ``fileName``\ )
 
 - | \ *classFunction*\ :
   | save all data (nodes, elements, ...) to a data filename; this function is much faster than the text-based import functions
@@ -579,9 +598,9 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-LoadFromFile:
+.. _sec-fem-feminterface-loadfromfile:
 
-`LoadFromFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1479>`__\ (\ ``self``\ , \ ``fileName``\ )
+`LoadFromFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1487>`__\ (\ ``self``\ , \ ``fileName``\ )
 
 - | \ *classFunction*\ :
 
@@ -592,9 +611,9 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-ImportFromAbaqusInputFile:
+.. _sec-fem-feminterface-importfromabaqusinputfile:
 
-`ImportFromAbaqusInputFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1503>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``typeName = 'Part'``\ , \ ``name = 'Part-1'``\ , \ ``verbose = False``\ )
+`ImportFromAbaqusInputFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1511>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``typeName = 'Part'``\ , \ ``name = 'Part-1'``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
 
@@ -605,13 +624,13 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-ReadMassMatrixFromAbaqus:
+.. _sec-fem-feminterface-readmassmatrixfromabaqus:
 
-`ReadMassMatrixFromAbaqus <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1653>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``type = 'SparseRowColumnValue'``\ )
+`ReadMassMatrixFromAbaqus <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1661>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``type = 'SparseRowColumnValue'``\ )
 
 - | \ *classFunction*\ :
 
-  | \ ``read mass matrix from compressed row text format (exported from Abaqus); in order to export system matrices, write the following lines in your Abaqus input file``\ :
+  | read mass matrix from compressed row text format (exported from Abaqus); in order to export system matrices, write the following lines in your Abaqus input file:
   | \*STEP
   | \*MATRIX GENERATE, STIFFNESS, MASS
   | \*MATRIX OUTPUT, STIFFNESS, MASS, FORMAT=COORDINATE
@@ -619,24 +638,24 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-ReadStiffnessMatrixFromAbaqus:
+.. _sec-fem-feminterface-readstiffnessmatrixfromabaqus:
 
-`ReadStiffnessMatrixFromAbaqus <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1659>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``type = 'SparseRowColumnValue'``\ )
+`ReadStiffnessMatrixFromAbaqus <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1667>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``type = 'SparseRowColumnValue'``\ )
 
 - | \ *classFunction*\ :
   | read stiffness matrix from compressed row text format (exported from Abaqus)
 
 ----
 
-.. _sec-FEM-FEMinterface-ImportMeshFromNGsolve:
+.. _sec-fem-feminterface-importmeshfromngsolve:
 
-`ImportMeshFromNGsolve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1684>`__\ (\ ``self``\ , \ ``mesh``\ , \ ``density``\ , \ ``youngsModulus``\ , \ ``poissonsRatio``\ , \ ``verbose = False``\ , \ ``computeEigenmodes = False``\ , \ ``meshOrder = 1``\ , \ ``**kwargs``\ )
+`ImportMeshFromNGsolve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1692>`__\ (\ ``self``\ , \ ``mesh``\ , \ ``density``\ , \ ``youngsModulus``\ , \ ``poissonsRatio``\ , \ ``verbose = False``\ , \ ``computeEigenmodes = False``\ , \ ``meshOrder = 1``\ , \ ``**kwargs``\ )
 
 - | \ *classFunction*\ :
   | import mesh from NETGEN/NGsolve and setup mechanical problem
 - | \ *input*\ :
 
-  | \ ``mesh``\ : a previously created \texttt{ngs.mesh} (NGsolve mesh, see examples)
+  | \ ``mesh``\ : a previously created \ ``ngs.mesh``\  (NGsolve mesh, see examples)
   | \ ``youngsModulus``\ : Young's modulus used for mechanical model
   | \ ``poissonsRatio``\ : Poisson's ratio used for mechanical model
   | \ ``density``\ : density used for mechanical model
@@ -645,15 +664,15 @@ CLASS FEMinterface (in module FEM)
 - | \ *output*\ :
   | creates according nodes, elements, in FEM and returns [bfM, bfK, fes] which are the (mass matrix M, stiffness matrix K) bilinear forms and the finite element space fes
 - | \ *author*\ :
-  | Johannes Gerstmayr, Joachim Schoeberl
+  | Johannes Gerstmayr, Joachim Schöberl
 - | \ *notes*\ :
   | setting ngsolve.SetNumThreads(nt) you can select the number of treads that are used for assemble or other functionality with NGsolve functionality
 
 ----
 
-.. _sec-FEM-FEMinterface-ComputeEigenmodesNGsolve:
+.. _sec-fem-feminterface-computeeigenmodesngsolve:
 
-`ComputeEigenmodesNGsolve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1869>`__\ (\ ``self``\ , \ ``bfM``\ , \ ``bfK``\ , \ ``nModes``\ , \ ``maxEigensolveIterations = 40``\ , \ ``excludeRigidBodyModes = 0``\ , \ ``verbose = False``\ )
+`ComputeEigenmodesNGsolve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1877>`__\ (\ ``self``\ , \ ``bfM``\ , \ ``bfK``\ , \ ``nModes``\ , \ ``maxEigensolveIterations = 40``\ , \ ``excludeRigidBodyModes = 0``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
   | compute nModes smallest eigenvalues and eigenmodes from mass and stiffnessMatrix; store mode vectors in modeBasis, but exclude a number of 'excludeRigidBodyModes' rigid body modes from modeBasis; uses scipy for solution of generalized eigenvalue problem
@@ -666,16 +685,16 @@ CLASS FEMinterface (in module FEM)
 - | \ *output*\ :
   | eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
 - | \ *author*\ :
-  | Johannes Gerstmayr, Joachim Schoeberl
+  | Johannes Gerstmayr, Joachim Schöberl
 
 ----
 
-.. _sec-FEM-FEMinterface-ComputeHurtyCraigBamptonModesNGsolve:
+.. _sec-fem-feminterface-computehurtycraigbamptonmodesngsolve:
 
-`ComputeHurtyCraigBamptonModesNGsolve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1911>`__\ (\ ``self``\ , \ ``bfM``\ , \ ``bfK``\ , \ ``boundaryNodesList``\ , \ ``nEigenModes``\ , \ ``maxEigensolveIterations = 40``\ , \ ``verbose = False``\ )
+`ComputeHurtyCraigBamptonModesNGsolve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L1919>`__\ (\ ``self``\ , \ ``bfM``\ , \ ``bfK``\ , \ ``boundaryNodesList``\ , \ ``nEigenModes``\ , \ ``maxEigensolveIterations = 40``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
-  | compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part \refSection{sec:theory:CMS}. This function uses internal computational functionality of NGsolve and is often much faster than the scipy variant
+  | compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part  :ref:`sec-theory-cms`\ . This function uses internal computational functionality of NGsolve and is often much faster than the scipy variant
 - | \ *input*\ :
 
   | \ ``bfM``\ : bilinearform for mass matrix as retured in ImportMeshFromNGsolve(...)
@@ -687,13 +706,13 @@ CLASS FEMinterface (in module FEM)
 - | \ *output*\ :
   | stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
 - | \ *author*\ :
-  | Johannes Gerstmayr, Joachim Schoeberl
+  | Johannes Gerstmayr, Joachim Schöberl
 
 ----
 
-.. _sec-FEM-FEMinterface-ComputePostProcessingModesNGsolve:
+.. _sec-fem-feminterface-computepostprocessingmodesngsolve:
 
-`ComputePostProcessingModesNGsolve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2052>`__\ (\ ``self``\ , \ ``fes``\ , \ ``material = 0``\ , \ ``outputVariableType = 'OutputVariableType.StressLocal'``\ , \ ``verbose = False``\ )
+`ComputePostProcessingModesNGsolve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2060>`__\ (\ ``self``\ , \ ``fes``\ , \ ``material = 0``\ , \ ``outputVariableType = 'OutputVariableType.StressLocal'``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
   | compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder; takes a NGsolve fes as input and uses internal NGsolve methods to efficiently compute stresses or strains
@@ -705,42 +724,42 @@ CLASS FEMinterface (in module FEM)
 - | \ *output*\ :
   | post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType
 - | \ *author*\ :
-  | Johannes Gerstmayr, Joachim Schoeberl
+  | Johannes Gerstmayr, Joachim Schöberl
 - | \ *notes*\ :
   | This function is implemented in Python and rather slow for larger meshes; for NGsolve / Netgen meshes, see the according ComputePostProcessingModesNGsolve function, which is usually much faster
 
 ----
 
-.. _sec-FEM-FEMinterface-GetMassMatrix:
+.. _sec-fem-feminterface-getmassmatrix:
 
-`GetMassMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2127>`__\ (\ ``self``\ , \ ``sparse = True``\ )
+`GetMassMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2135>`__\ (\ ``self``\ , \ ``sparse = True``\ )
 
 - | \ *classFunction*\ :
   | get sparse mass matrix in according format
 
 ----
 
-.. _sec-FEM-FEMinterface-GetStiffnessMatrix:
+.. _sec-fem-feminterface-getstiffnessmatrix:
 
-`GetStiffnessMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2134>`__\ (\ ``self``\ , \ ``sparse = True``\ )
+`GetStiffnessMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2142>`__\ (\ ``self``\ , \ ``sparse = True``\ )
 
 - | \ *classFunction*\ :
   | get sparse stiffness matrix in according format
 
 ----
 
-.. _sec-FEM-FEMinterface-NumberOfNodes:
+.. _sec-fem-feminterface-numberofnodes:
 
-`NumberOfNodes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2141>`__\ (\ ``self``\ )
+`NumberOfNodes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2149>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | get total number of nodes
 
 ----
 
-.. _sec-FEM-FEMinterface-GetNodePositionsAsArray:
+.. _sec-fem-feminterface-getnodepositionsasarray:
 
-`GetNodePositionsAsArray <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2153>`__\ (\ ``self``\ )
+`GetNodePositionsAsArray <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2161>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | get node points as array; only possible, if there exists only one type of Position nodes
@@ -757,27 +776,27 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-GetNodePositionsMean:
+.. _sec-fem-feminterface-getnodepositionsmean:
 
-`GetNodePositionsMean <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2161>`__\ (\ ``self``\ , \ ``nodeNumberList``\ )
+`GetNodePositionsMean <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2169>`__\ (\ ``self``\ , \ ``nodeNumberList``\ )
 
 - | \ *classFunction*\ :
   | get mean (average) position of nodes defined by list of node numbers
 
 ----
 
-.. _sec-FEM-FEMinterface-NumberOfCoordinates:
+.. _sec-fem-feminterface-numberofcoordinates:
 
-`NumberOfCoordinates <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2168>`__\ (\ ``self``\ )
+`NumberOfCoordinates <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2176>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | get number of total nodal coordinates
 
 ----
 
-.. _sec-FEM-FEMinterface-GetNodeAtPoint:
+.. _sec-fem-feminterface-getnodeatpoint:
 
-`GetNodeAtPoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2176>`__\ (\ ``self``\ , \ ``point``\ , \ ``tolerance = 1e-5``\ , \ ``raiseException = True``\ )
+`GetNodeAtPoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2184>`__\ (\ ``self``\ , \ ``point``\ , \ ``tolerance = 1e-5``\ , \ ``raiseException = True``\ )
 
 - | \ *classFunction*\ :
 
@@ -786,9 +805,9 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-GetNodesInPlane:
+.. _sec-fem-feminterface-getnodesinplane:
 
-`GetNodesInPlane <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2192>`__\ (\ ``self``\ , \ ``point``\ , \ ``normal``\ , \ ``tolerance = 1e-5``\ )
+`GetNodesInPlane <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2200>`__\ (\ ``self``\ , \ ``point``\ , \ ``normal``\ , \ ``tolerance = 1e-5``\ )
 
 - | \ *classFunction*\ :
 
@@ -797,9 +816,9 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-GetNodesInCube:
+.. _sec-fem-feminterface-getnodesincube:
 
-`GetNodesInCube <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2208>`__\ (\ ``self``\ , \ ``pMin``\ , \ ``pMax``\ )
+`GetNodesInCube <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2216>`__\ (\ ``self``\ , \ ``pMin``\ , \ ``pMax``\ )
 
 - | \ *classFunction*\ :
   | get node numbers in cube, given by pMin and pMax, containing the minimum and maximum x, y, and z coordinates
@@ -814,18 +833,18 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-GetNodesOnLine:
+.. _sec-fem-feminterface-getnodesonline:
 
-`GetNodesOnLine <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2223>`__\ (\ ``self``\ , \ ``p1``\ , \ ``p2``\ , \ ``tolerance = 1e-5``\ )
+`GetNodesOnLine <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2231>`__\ (\ ``self``\ , \ ``p1``\ , \ ``p2``\ , \ ``tolerance = 1e-5``\ )
 
 - | \ *classFunction*\ :
   | get node numbers lying on line defined by points p1 and p2 and tolerance, which is accepted for points slightly outside the surface
 
 ----
 
-.. _sec-FEM-FEMinterface-GetNodesOnCylinder:
+.. _sec-fem-feminterface-getnodesoncylinder:
 
-`GetNodesOnCylinder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2229>`__\ (\ ``self``\ , \ ``p1``\ , \ ``p2``\ , \ ``radius``\ , \ ``tolerance = 1e-5``\ )
+`GetNodesOnCylinder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2237>`__\ (\ ``self``\ , \ ``p1``\ , \ ``p2``\ , \ ``radius``\ , \ ``tolerance = 1e-5``\ )
 
 - | \ *classFunction*\ :
 
@@ -835,9 +854,9 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-GetNodesOnCircle:
+.. _sec-fem-feminterface-getnodesoncircle:
 
-`GetNodesOnCircle <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2257>`__\ (\ ``self``\ , \ ``point``\ , \ ``normal``\ , \ ``r``\ , \ ``tolerance = 1e-5``\ )
+`GetNodesOnCircle <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2265>`__\ (\ ``self``\ , \ ``point``\ , \ ``normal``\ , \ ``r``\ , \ ``tolerance = 1e-5``\ )
 
 - | \ *classFunction*\ :
 
@@ -847,9 +866,9 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-GetNodeWeightsFromSurfaceAreas:
+.. _sec-fem-feminterface-getnodeweightsfromsurfaceareas:
 
-`GetNodeWeightsFromSurfaceAreas <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2277>`__\ (\ ``self``\ , \ ``nodeList``\ , \ ``normalizeWeights = True``\ )
+`GetNodeWeightsFromSurfaceAreas <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2285>`__\ (\ ``self``\ , \ ``nodeList``\ , \ ``normalizeWeights = True``\ )
 
 - | \ *classFunction*\ :
 
@@ -864,18 +883,18 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-GetSurfaceTriangles:
+.. _sec-fem-feminterface-getsurfacetriangles:
 
-`GetSurfaceTriangles <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2329>`__\ (\ ``self``\ )
+`GetSurfaceTriangles <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2337>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | return surface trigs as node number list (for drawing in EXUDYN and for node weights)
 
 ----
 
-.. _sec-FEM-FEMinterface-VolumeToSurfaceElements:
+.. _sec-fem-feminterface-volumetosurfaceelements:
 
-`VolumeToSurfaceElements <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2339>`__\ (\ ``self``\ , \ ``verbose = False``\ )
+`VolumeToSurfaceElements <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2347>`__\ (\ ``self``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
 
@@ -885,36 +904,36 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-GetGyroscopicMatrix:
+.. _sec-fem-feminterface-getgyroscopicmatrix:
 
-`GetGyroscopicMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2468>`__\ (\ ``self``\ , \ ``rotationAxis = 2``\ , \ ``sparse = True``\ )
+`GetGyroscopicMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2476>`__\ (\ ``self``\ , \ ``rotationAxis = 2``\ , \ ``sparse = True``\ )
 
 - | \ *classFunction*\ :
   | get gyroscopic matrix in according format; rotationAxis=[0,1,2] = [x,y,z]
 
 ----
 
-.. _sec-FEM-FEMinterface-ScaleMassMatrix:
+.. _sec-fem-feminterface-scalemassmatrix:
 
-`ScaleMassMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2497>`__\ (\ ``self``\ , \ ``factor``\ )
+`ScaleMassMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2505>`__\ (\ ``self``\ , \ ``factor``\ )
 
 - | \ *classFunction*\ :
   | scale (=multiply) mass matrix with factor
 
 ----
 
-.. _sec-FEM-FEMinterface-ScaleStiffnessMatrix:
+.. _sec-fem-feminterface-scalestiffnessmatrix:
 
-`ScaleStiffnessMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2501>`__\ (\ ``self``\ , \ ``factor``\ )
+`ScaleStiffnessMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2509>`__\ (\ ``self``\ , \ ``factor``\ )
 
 - | \ *classFunction*\ :
   | scale (=multiply) stiffness matrix with factor
 
 ----
 
-.. _sec-FEM-FEMinterface-AddElasticSupportAtNode:
+.. _sec-fem-feminterface-addelasticsupportatnode:
 
-`AddElasticSupportAtNode <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2507>`__\ (\ ``self``\ , \ ``nodeNumber``\ , \ ``springStiffness = [1e8,1e8,1e8]``\ )
+`AddElasticSupportAtNode <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2515>`__\ (\ ``self``\ , \ ``nodeNumber``\ , \ ``springStiffness = [1e8,1e8,1e8]``\ )
 
 - | \ *classFunction*\ :
 
@@ -923,18 +942,18 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-AddNodeMass:
+.. _sec-fem-feminterface-addnodemass:
 
-`AddNodeMass <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2523>`__\ (\ ``self``\ , \ ``nodeNumber``\ , \ ``addedMass``\ )
+`AddNodeMass <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2531>`__\ (\ ``self``\ , \ ``nodeNumber``\ , \ ``addedMass``\ )
 
 - | \ *classFunction*\ :
   | modify mass matrix by adding a mass to a certain node, modifying directly the mass matrix
 
 ----
 
-.. _sec-FEM-FEMinterface-CreateLinearFEMObjectGenericODE2:
+.. _sec-fem-feminterface-createlinearfemobjectgenericode2:
 
-`CreateLinearFEMObjectGenericODE2 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2543>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``color = [0.9,0.4,0.4,1.]``\ )
+`CreateLinearFEMObjectGenericODE2 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2551>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``color = [0.9,0.4,0.4,1.]``\ )
 
 - | \ *classFunction*\ :
   | create GenericODE2 object out of (linear) FEM model; uses always the sparse matrix mode, independent of the solver settings; this model can be directly used inside the multibody system as a static or dynamic FEM subsystem undergoing small deformations; computation is several magnitudes slower than ObjectFFRFreducedOrder
@@ -945,16 +964,16 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-CreateNonlinearFEMObjectGenericODE2NGsolve:
+.. _sec-fem-feminterface-createnonlinearfemobjectgenericode2ngsolve:
 
-`CreateNonlinearFEMObjectGenericODE2NGsolve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2586>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``mesh``\ , \ ``density``\ , \ ``youngsModulus``\ , \ ``poissonsRatio``\ , \ ``meshOrder = 1``\ , \ ``color = [0.9,0.4,0.4,1.]``\ )
+`CreateNonlinearFEMObjectGenericODE2NGsolve <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2594>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``mesh``\ , \ ``density``\ , \ ``youngsModulus``\ , \ ``poissonsRatio``\ , \ ``meshOrder = 1``\ , \ ``color = [0.9,0.4,0.4,1.]``\ )
 
 - | \ *classFunction*\ :
   | create GenericODE2 object fully nonlinear FEM model using NGsolve; uses always the sparse matrix mode, independent of the solver settings; this model can be directly used inside the multibody system as a static or dynamic nonlinear FEM subsystem undergoing large deformations; computation is several magnitudes slower than ObjectFFRFreducedOrder
 - | \ *input*\ :
 
   | \ ``mbs``\ : multibody system to which the GenericODE2 is added
-  | \ ``mesh``\ : a previously created \texttt{ngs.mesh} (NGsolve mesh, see examples)
+  | \ ``mesh``\ : a previously created \ ``ngs.mesh``\  (NGsolve mesh, see examples)
   | \ ``youngsModulus``\ : Young's modulus used for mechanical model
   | \ ``poissonsRatio``\ : Poisson's ratio used for mechanical model
   | \ ``density``\ : density used for mechanical model
@@ -962,20 +981,20 @@ CLASS FEMinterface (in module FEM)
 - | \ *output*\ :
   | return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
 - | \ *author*\ :
-  | Johannes Gerstmayr, Joachim Schoeberl
+  | Johannes Gerstmayr, Joachim Schöberl
 - | \ *notes*\ :
 
-  | The interface to NETGEN/NGsolve has been created together with Joachim Schoeberl, main developer
-  | of NETGEN/NGsolve \cite{Schoeberl1997,NGsolve2014}; Thank's a lot!
-  | \ ``download NGsolve at``\ : https://ngsolve.org/
+  | The interface to NETGEN/NGsolve has been created together with Joachim Schöberl, main developer
+  | of NETGEN/NGsolve ; Thank's a lot!
+  | download NGsolve at: https://ngsolve.org/
   | NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!
   | note that node/element indices in the NGsolve mesh are 1-based and need to be converted to 0-base!
 
 ----
 
-.. _sec-FEM-FEMinterface-ComputeEigenmodes:
+.. _sec-fem-feminterface-computeeigenmodes:
 
-`ComputeEigenmodes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2692>`__\ (\ ``self``\ , \ ``nModes``\ , \ ``excludeRigidBodyModes = 0``\ , \ ``useSparseSolver = True``\ )
+`ComputeEigenmodes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2700>`__\ (\ ``self``\ , \ ``nModes``\ , \ ``excludeRigidBodyModes = 0``\ , \ ``useSparseSolver = True``\ )
 
 - | \ *classFunction*\ :
   | compute nModes smallest eigenvalues and eigenmodes from mass and stiffnessMatrix; store mode vectors in modeBasis, but exclude a number of 'excludeRigidBodyModes' rigid body modes from modeBasis; uses scipy for solution of generalized eigenvalue problem
@@ -991,9 +1010,9 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-ComputeEigenModesWithBoundaryNodes:
+.. _sec-fem-feminterface-computeeigenmodeswithboundarynodes:
 
-`ComputeEigenModesWithBoundaryNodes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2736>`__\ (\ ``self``\ , \ ``boundaryNodes``\ , \ ``nEigenModes``\ , \ ``useSparseSolver = True``\ )
+`ComputeEigenModesWithBoundaryNodes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2744>`__\ (\ ``self``\ , \ ``boundaryNodes``\ , \ ``nEigenModes``\ , \ ``useSparseSolver = True``\ )
 
 - | \ *classFunction*\ :
   | compute eigenmodes, using a set of boundary nodes that are all fixed; very similar to ComputeEigenmodes, but with additional definition of (fixed) boundary nodes.
@@ -1007,12 +1026,12 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-ComputeHurtyCraigBamptonModes:
+.. _sec-fem-feminterface-computehurtycraigbamptonmodes:
 
-`ComputeHurtyCraigBamptonModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2820>`__\ (\ ``self``\ , \ ``boundaryNodesList``\ , \ ``nEigenModes``\ , \ ``useSparseSolver = True``\ , \ ``computationMode = HCBstaticModeSelection.RBE2``\ , \ ``boundaryNodesWeights = []``\ , \ ``excludeRigidBodyMotion = True``\ , \ ``RBE3secondMomentOfAreaWeighting = True``\ , \ ``verboseMode = False``\ )
+`ComputeHurtyCraigBamptonModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L2828>`__\ (\ ``self``\ , \ ``boundaryNodesList``\ , \ ``nEigenModes``\ , \ ``useSparseSolver = True``\ , \ ``computationMode = HCBstaticModeSelection.RBE2``\ , \ ``boundaryNodesWeights = []``\ , \ ``excludeRigidBodyMotion = True``\ , \ ``RBE3secondMomentOfAreaWeighting = True``\ , \ ``verboseMode = False``\ )
 
 - | \ *classFunction*\ :
-  | compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part \refSection{sec:theory:CMS}. Note that this function may need significant time, depending on your hardware, but 50.000 nodes will require approx. 1-2 minutes and more nodes typically raise time more than linearly.
+  | compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part  :ref:`sec-theory-cms`\ . Note that this function may need significant time, depending on your hardware, but 50.000 nodes will require approx. 1-2 minutes and more nodes typically raise time more than linearly.
 - | \ *input*\ :
 
   | \ ``boundaryNodesList``\ : [nodeList0, nodeList1, ...] a list of node lists, each of them representing a set of 'Position' nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!)
@@ -1030,18 +1049,18 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-GetEigenFrequenciesHz:
+.. _sec-fem-feminterface-geteigenfrequencieshz:
 
-`GetEigenFrequenciesHz <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3228>`__\ (\ ``self``\ )
+`GetEigenFrequenciesHz <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3236>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | return list of eigenvalues in Hz of previously computed eigenmodes
 
 ----
 
-.. _sec-FEM-FEMinterface-ComputePostProcessingModes:
+.. _sec-fem-feminterface-computepostprocessingmodes:
 
-`ComputePostProcessingModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3288>`__\ (\ ``self``\ , \ ``material = 0``\ , \ ``outputVariableType = 'OutputVariableType.StressLocal'``\ , \ ``numberOfThreads = 1``\ )
+`ComputePostProcessingModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3296>`__\ (\ ``self``\ , \ ``material = 0``\ , \ ``outputVariableType = 'OutputVariableType.StressLocal'``\ , \ ``numberOfThreads = 1``\ )
 
 - | \ *classFunction*\ :
   | compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder;
@@ -1057,9 +1076,9 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-ComputeCampbellDiagram:
+.. _sec-fem-feminterface-computecampbelldiagram:
 
-`ComputeCampbellDiagram <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3406>`__\ (\ ``self``\ , \ ``terminalFrequency``\ , \ ``nEigenfrequencies = 10``\ , \ ``frequencySteps = 25``\ , \ ``rotationAxis = 2``\ , \ ``plotDiagram = False``\ , \ ``verbose = False``\ , \ ``useCorotationalFrame = False``\ , \ ``useSparseSolver = False``\ )
+`ComputeCampbellDiagram <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3414>`__\ (\ ``self``\ , \ ``terminalFrequency``\ , \ ``nEigenfrequencies = 10``\ , \ ``frequencySteps = 25``\ , \ ``rotationAxis = 2``\ , \ ``plotDiagram = False``\ , \ ``verbose = False``\ , \ ``useCorotationalFrame = False``\ , \ ``useSparseSolver = False``\ )
 
 - | \ *classFunction*\ :
 
@@ -1085,45 +1104,45 @@ CLASS FEMinterface (in module FEM)
 
 ----
 
-.. _sec-FEM-FEMinterface-CheckConsistency:
+.. _sec-fem-feminterface-checkconsistency:
 
-`CheckConsistency <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3591>`__\ (\ ``self``\ )
+`CheckConsistency <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3599>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | perform some consistency checks
 
 ----
 
-.. _sec-FEM-FEMinterface-ReadMassMatrixFromAnsys:
+.. _sec-fem-feminterface-readmassmatrixfromansys:
 
-`ReadMassMatrixFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3615>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``dofMappingVectorFile``\ , \ ``sparse = True``\ , \ ``verbose = False``\ )
+`ReadMassMatrixFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3623>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``dofMappingVectorFile``\ , \ ``sparse = True``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
   | read mass matrix from CSV format (exported from Ansys)
 
 ----
 
-.. _sec-FEM-FEMinterface-ReadStiffnessMatrixFromAnsys:
+.. _sec-fem-feminterface-readstiffnessmatrixfromansys:
 
-`ReadStiffnessMatrixFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3629>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``dofMappingVectorFile``\ , \ ``sparse = True``\ , \ ``verbose = False``\ )
+`ReadStiffnessMatrixFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3637>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``dofMappingVectorFile``\ , \ ``sparse = True``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
   | read stiffness matrix from CSV format (exported from Ansys)
 
 ----
 
-.. _sec-FEM-FEMinterface-ReadNodalCoordinatesFromAnsys:
+.. _sec-fem-feminterface-readnodalcoordinatesfromansys:
 
-`ReadNodalCoordinatesFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3643>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``verbose = False``\ )
+`ReadNodalCoordinatesFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3651>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
   | read nodal coordinates (exported from Ansys as .txt-File)
 
 ----
 
-.. _sec-FEM-FEMinterface-ReadElementsFromAnsys:
+.. _sec-fem-feminterface-readelementsfromansys:
 
-`ReadElementsFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3648>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``verbose = False``\ )
+`ReadElementsFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L3656>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
   | read elements (exported from Ansys as .txt-File)

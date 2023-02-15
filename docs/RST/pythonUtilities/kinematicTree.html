@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: kinematicTree &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>Module: kinematicTree &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul class="current">
@@ -119,8 +121,8 @@
 <span id="sec-module-kinematictree"></span><h1>Module: kinematicTree<a class="headerlink" href="#module-kinematictree" title="Permalink to this heading"></a></h1>
 <p>A library for preparation of minimum coordinates (kinematic tree) formulation.
 This library follows mostly the algorithms of Roy Featherstone, see <a class="reference external" href="http://royfeatherstone.org/">http://royfeatherstone.org/</a>
-His code is availble in MATLAB as well as described in the Springer Handbook of Robotics cite{Siciliano2016}.
-The main formalisms are based on 6x6 matrices, so-called Pluecker transformations, denoted as Plücker transformation, as defined by Featherstone.</p>
+His code is availble in MATLAB as well as described in the Springer Handbook of Robotics .
+The main formalisms are based on 6x6 matrices, so-called Plücker transformations, denoted as T66, as defined by Featherstone.</p>
 <ul class="simple">
 <li><p>Author:    Johannes Gerstmayr</p></li>
 <li><p>Date:      2021-06-22</p></li>
@@ -152,7 +154,7 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">convert inertia as produced with RigidBodyInertia class into 6x6 inertia matrix (as used in KinematicTree66, Featherstone / Handbook of robotics cite{Siciliano2016})</div>
+<div class="line">convert inertia as produced with RigidBodyInertia class into 6x6 inertia matrix (as used in KinematicTree66, Featherstone / Handbook of robotics )</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -180,7 +182,7 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-<div class="line">6x6 numpy array containing rigid body inertia according to Featherstone / Handbook of robotics cite{Siciliano2016}</div>
+<div class="line">6x6 numpy array containing rigid body inertia according to Featherstone / Handbook of robotics</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -199,7 +201,7 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">return 6x6 Pluecker joint transformation matrix evaluated for scalar joint coordinate q and motion subspace (‘free modes’ in Table 2.6 in Handbook of robotics cite{Siciliano2016})</div>
+<div class="line">return 6x6 Plücker joint transformation matrix evaluated for scalar joint coordinate q and motion subspace (‘free modes’ in Table 2.6 in Handbook of robotics )</div>
 </div>
 </li>
 </ul>
@@ -248,7 +250,7 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 <ul>
 <li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
-<div class="line">The formulation and structures widely follows the more efficient formulas (but still implemented in Python!) with 3D vectors and rotation matrices as proposed in Handbook of robotics cite{Siciliano2016}, Chapter 3, but with the rotation matrices (texttt{listOfRotations}) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Pluecker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing</div>
+<div class="line">The formulation and structures widely follows the more efficient formulas (but still implemented in Python!) with 3D vectors and rotation matrices as proposed in Handbook of robotics , Chapter 3, but with the rotation matrices (<code class="docutils literal notranslate"><span class="pre">listOfRotations</span></code>) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Plücker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing</div>
 </div>
 </li>
 </ul>
@@ -264,7 +266,7 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 </div>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">listOfJointTypes</span></code>: mandatory list of joint types ‘Rx’, ‘Ry’, ‘Rz’ denoting revolute joints; ‘Px’, ‘Py’, ‘Pz’, denoting prismatic joints</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfRotations</span></code>: per link rotation matrix, transforming coordinates of the joint coordinate system w.r.t. the previous coordinate system (this is the inverse of Pluecker coordinate transforms (6x6))</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfRotations</span></code>: per link rotation matrix, transforming coordinates of the joint coordinate system w.r.t. the previous coordinate system (this is the inverse of Plücker coordinate transforms (6x6))</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">listOfOffsets</span></code>: per link offset vector from pervious coordinate system to the joint coordinate system</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">listOfInertia3D</span></code>: per link 3D inertia matrix, w.r.t.reference point (not COM!)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">listOfCOM</span></code>: per link vector from reference point to center of mass (COM), in link coordinates</div>
@@ -293,7 +295,7 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-kinematictree-kinematictree33-forwarddynamicscrb"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L216">ForwardDynamicsCRB</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">q_t</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">torques</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">forces</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<p id="sec-kinematictree-kinematictree33-forwarddynamicscrb"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L216">ForwardDynamicsCRB</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">q\_t</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">torques</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">forces</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -305,7 +307,7 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 </div>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">q</span></code>: joint space coordinates for the model at which the forward dynamics is evaluated</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">q_t</span></code>: joint space velocity coordinates for the model at which the forward dynamics is evaluated</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">q\_t</span></code>: joint space velocity coordinates for the model at which the forward dynamics is evaluated</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">torques</span></code>: a vector of torques applied at joint coordinates or list/array with zero length</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">forces</span></code>: forces acting on the bodies using special format</div>
 </div>
@@ -317,7 +319,7 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-kinematictree-kinematictree33-computemassmatrixandforceterms"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L237">ComputeMassMatrixAndForceTerms</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, <code class="docutils literal notranslate"><span class="pre">q_t</span></code>, <code class="docutils literal notranslate"><span class="pre">externalForces</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<p id="sec-kinematictree-kinematictree33-computemassmatrixandforceterms"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L237">ComputeMassMatrixAndForceTerms</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, <code class="docutils literal notranslate"><span class="pre">q\_t</span></code>, <code class="docutils literal notranslate"><span class="pre">externalForces</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -334,13 +336,13 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 </div>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">q</span></code>: current joint coordinates</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">q_t</span></code>: current joint velocities</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">q\_t</span></code>: current joint velocities</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">externalForces</span></code>: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
-<div class="line">mass matrix <span class="math notranslate nohighlight">\(\Mm\)</span> and RHS vector <span class="math notranslate nohighlight">\(\fv_{RHS}\)</span> for equations of motion <span class="math notranslate nohighlight">\(M(q) \cdot q_tt + f(q,q_t,externalForces) = \tau\)</span>; RHS is <span class="math notranslate nohighlight">\(\fv_{RHS}=\tau - f(q,q_t,externalForces)\)</span>; <span class="math notranslate nohighlight">\(\tau\)</span> can be added outside of texttt{ComputeMassMatrixAndForceTerms}</div>
+<div class="line">mass matrix <span class="math notranslate nohighlight">\(\Mm\)</span> and RHS vector <span class="math notranslate nohighlight">\(\fv_{RHS}\)</span> for equations of motion <span class="math notranslate nohighlight">\(M(q) \cdot q_tt + f(q,q_t,externalForces) = \tau\)</span>; RHS is <span class="math notranslate nohighlight">\(\fv_{RHS}=\tau - f(q,q_t,externalForces)\)</span>; <span class="math notranslate nohighlight">\(\tau\)</span> can be added outside of <code class="docutils literal notranslate"><span class="pre">ComputeMassMatrixAndForceTerms</span></code></div>
 </div>
 </li>
 </ul>
@@ -354,12 +356,12 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to define a kinematic tree, which can be used for building serial or tree-structured multibody systems
-(or robots) with a minimum coordinates formulation, using Pluecker coordinate transforms (6x6); for efficient computation, use the C++ ObjectKinematicTree</p>
+(or robots) with a minimum coordinates formulation, using Plücker coordinate transforms (6x6); for efficient computation, use the C++ ObjectKinematicTree</p>
 </div></blockquote>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
-<div class="line">The formulation and structures widely follow Roy Featherstone (<a class="reference external" href="http://royfeatherstone.org/">http://royfeatherstone.org/</a>) / Handbook of robotics cite{Siciliano2016}</div>
+<div class="line">The formulation and structures widely follow Roy Featherstone (<a class="reference external" href="http://royfeatherstone.org/">http://royfeatherstone.org/</a>) / Handbook of robotics</div>
 </div>
 </li>
 </ul>
@@ -375,7 +377,7 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 </div>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">listOfJointTypes</span></code>: mandatory list of joint types ‘Rx’, ‘Ry’, ‘Rz’ denoting revolute joints; ‘Px’, ‘Py’, ‘Pz’, denoting prismatic joints</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfTransformations</span></code>: provide a list of Pluecker coordinate transforms (6x6 numpy matrices), describing the (constant) link transformation from the link coordinate system (previous/parent joint) to this joint coordinate system</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">listOfTransformations</span></code>: provide a list of Plücker coordinate transforms (6x6 numpy matrices), describing the (constant) link transformation from the link coordinate system (previous/parent joint) to this joint coordinate system</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">listOfInertias</span></code>: provide a list of inertias as (6x6 numpy matrices), as produced by the function MassCOMinertia2T66</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">listOfParents</span></code>: list of parent object indices (int), according to the index in jointTypes and transformations; use empty list for kinematic chain and use -1 if no parent exists (parent=base or world frame)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">gravity</span></code>: a 3D list/array containing the gravity applied to the kinematic tree (in world frame)</div>
@@ -401,7 +403,7 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-kinematictree-kinematictree66-forwarddynamicscrb"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L484">ForwardDynamicsCRB</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">q_t</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">torques</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">forces</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<p id="sec-kinematictree-kinematictree66-forwarddynamicscrb"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L484">ForwardDynamicsCRB</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">q\_t</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">torques</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">forces</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -413,7 +415,7 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 </div>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">q</span></code>: joint space coordinates for the model at which the forward dynamics is evaluated</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">q_t</span></code>: joint space velocity coordinates for the model at which the forward dynamics is evaluated</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">q\_t</span></code>: joint space velocity coordinates for the model at which the forward dynamics is evaluated</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">torques</span></code>: a vector of torques applied at joint coordinates or list/array with zero length</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">forces</span></code>: forces acting on the bodies using special format</div>
 </div>
@@ -425,7 +427,7 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-kinematictree-kinematictree66-computemassmatrixandforceterms"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L505">ComputeMassMatrixAndForceTerms</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, <code class="docutils literal notranslate"><span class="pre">q_t</span></code>, <code class="docutils literal notranslate"><span class="pre">externalForces</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<p id="sec-kinematictree-kinematictree66-computemassmatrixandforceterms"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py#L505">ComputeMassMatrixAndForceTerms</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, <code class="docutils literal notranslate"><span class="pre">q\_t</span></code>, <code class="docutils literal notranslate"><span class="pre">externalForces</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -442,13 +444,13 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 </div>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">q</span></code>: current joint coordinates</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">q_t</span></code>: current joint velocities</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">q\_t</span></code>: current joint velocities</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">externalForces</span></code>: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
-<div class="line">mass matrix <span class="math notranslate nohighlight">\(\Mm\)</span> and RHS vector <span class="math notranslate nohighlight">\(\fv_{RHS}\)</span> for equations of motion <span class="math notranslate nohighlight">\(M(q) \cdot q_tt + f(q,q_t,externalForces) = \tau\)</span>; RHS is <span class="math notranslate nohighlight">\(\fv_{RHS}=\tau - f(q,q_t,externalForces)\)</span>; <span class="math notranslate nohighlight">\(\tau\)</span> can be added outside of texttt{ComputeMassMatrixAndForceTerms}</div>
+<div class="line">mass matrix <span class="math notranslate nohighlight">\(\Mm\)</span> and RHS vector <span class="math notranslate nohighlight">\(\fv_{RHS}\)</span> for equations of motion <span class="math notranslate nohighlight">\(M(q) \cdot q_tt + f(q,q_t,externalForces) = \tau\)</span>; RHS is <span class="math notranslate nohighlight">\(\fv_{RHS}=\tau - f(q,q_t,externalForces)\)</span>; <span class="math notranslate nohighlight">\(\tau\)</span> can be added outside of <code class="docutils literal notranslate"><span class="pre">ComputeMassMatrixAndForceTerms</span></code></div>
 </div>
 </li>
 </ul>

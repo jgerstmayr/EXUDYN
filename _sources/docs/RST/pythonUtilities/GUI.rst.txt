@@ -1,5 +1,5 @@
 
-.. _sec-module-GUI:
+.. _sec-module-gui:
 
 Module: GUI
 ===========
@@ -11,7 +11,7 @@ Helper functions and classes for graphical interaction with Exudyn
 - Notes: 	This is an internal library, which is only used inside Exudyn for modifying settings. 
 
 
-.. _sec-GUI-GetTkRootAndNewWindow:
+.. _sec-gui-gettkrootandnewwindow:
 
 `GetTkRootAndNewWindow <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L53>`__\ ()
 
@@ -21,7 +21,7 @@ Helper functions and classes for graphical interaction with Exudyn
 
 ----
 
-.. _sec-GUI-TkRootExists:
+.. _sec-gui-tkrootexists:
 
 `TkRootExists <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L65>`__\ ()
 
@@ -31,7 +31,7 @@ Helper functions and classes for graphical interaction with Exudyn
 
 ----
 
-.. _sec-GUI-EditDictionaryWithTypeInfo:
+.. _sec-gui-editdictionarywithtypeinfo:
 
 `EditDictionaryWithTypeInfo <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L640>`__\ (\ ``settingsStructure``\ , \ ``exu = None``\ , \ ``dictionaryName = 'edit'``\ )
 

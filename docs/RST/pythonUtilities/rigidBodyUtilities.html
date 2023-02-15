@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: rigidBodyUtilities &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>Module: rigidBodyUtilities &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul class="current">
@@ -238,7 +240,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">convert Euler parameters (ep) to local G-matrix (=<span class="math notranslate nohighlight">\(\partial \LU{b}{\tomega} / \partial \pv_t\)</span>)</div>
+<div class="line">convert Euler parameters (ep) to local G-matrix (=<span class="math notranslate nohighlight">\(\partial ^{b}{\tomega} / \partial \pv_t\)</span>)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -332,7 +334,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">rotaton matrix from rotation vector, see appendix B in cite{Simo1988}</div>
+<div class="line">rotaton matrix from rotation vector, see appendix B in</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -420,7 +422,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">convert rotation vector (parameters) (v) to local G-matrix (=<span class="math notranslate nohighlight">\(\partial \LU{b}{\tomega}   / \partial \vv_t\)</span>)</div>
+<div class="line">convert rotation vector (parameters) (v) to local G-matrix (=<span class="math notranslate nohighlight">\(\partial ^{b}{\tomega}   / \partial \vv_t\)</span>)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -439,7 +441,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute rotation matrix from consecutive xyz acp{Rot} (Tait-Bryan angles); A=Ax*Ay*Az; rot=[rotX, rotY, rotZ]</div>
+<div class="line">compute rotation matrix from consecutive xyz pRot (Tait-Bryan angles); A=Ax*Ay*Az; rot=[rotX, rotY, rotZ]</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -485,7 +487,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (<span class="math notranslate nohighlight">\(\LU{0}{\Gm} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta\)</span>)</div>
+<div class="line">compute (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (<span class="math notranslate nohighlight">\(^{0}{\Gm} = \partial ^{0}{\tomega}  / \partial \dot \ttheta\)</span>)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -500,11 +502,11 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotxyz2gt"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L377">RotXYZ2G_t</a>(<code class="docutils literal notranslate"><span class="pre">rot</span></code>, <code class="docutils literal notranslate"><span class="pre">rot_t</span></code>)</p>
+<p id="sec-rigidbodyutilities-rotxyz2gt"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L377">RotXYZ2G_t</a>(<code class="docutils literal notranslate"><span class="pre">rot</span></code>, <code class="docutils literal notranslate"><span class="pre">rot\_t</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute time derivative of (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (<span class="math notranslate nohighlight">\(\LU{0}{\Gm} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta\)</span>)</div>
+<div class="line">compute time derivative of (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (<span class="math notranslate nohighlight">\(^{0}{\Gm} = \partial ^{0}{\tomega}  / \partial \dot \ttheta\)</span>)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -512,7 +514,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 </div>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">rot</span></code>: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">rot_t</span></code>: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rot\_t</span></code>: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -526,7 +528,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute local (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (<span class="math notranslate nohighlight">\(\LU{b}{\Gm} = \partial \LU{b}{\tomega}  / \partial \ttheta_t\)</span>)</div>
+<div class="line">compute local (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (<span class="math notranslate nohighlight">\(^{b}{\Gm} = \partial ^{b}{\tomega}  / \partial \ttheta_t\)</span>)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -541,11 +543,11 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotxyz2glocalt"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L406">RotXYZ2GLocal_t</a>(<code class="docutils literal notranslate"><span class="pre">rot</span></code>, <code class="docutils literal notranslate"><span class="pre">rot_t</span></code>)</p>
+<p id="sec-rigidbodyutilities-rotxyz2glocalt"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L406">RotXYZ2GLocal_t</a>(<code class="docutils literal notranslate"><span class="pre">rot</span></code>, <code class="docutils literal notranslate"><span class="pre">rot\_t</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute time derivative of (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (<span class="math notranslate nohighlight">\(\LU{b}{\Gm} = \partial \LU{b}{\tomega}  / \partial \ttheta_t\)</span>)</div>
+<div class="line">compute time derivative of (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (<span class="math notranslate nohighlight">\(^{b}{\Gm} = \partial ^{b}{\tomega}  / \partial \ttheta_t\)</span>)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -553,7 +555,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 </div>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">rot</span></code>: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">rot_t</span></code>: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rot\_t</span></code>: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -589,7 +591,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute four Euler parameters from given RotXYZ angles, see cite{Henderson1977}</div>
+<div class="line">compute four Euler parameters from given RotXYZ angles, see</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -680,7 +682,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute ac{HT} matrix from rotation matrix A and translation vector r</div>
+<div class="line">compute HT matrix from rotation matrix A and translation vector r</div>
 </div>
 </li>
 </ul>
@@ -693,7 +695,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">ac{HT} for translation with vector r</div>
+<div class="line">HT for translation with vector r</div>
 </div>
 </li>
 </ul>
@@ -706,7 +708,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">ac{HT} for translation along x axis with value x</div>
+<div class="line">HT for translation along x axis with value x</div>
 </div>
 </li>
 </ul>
@@ -719,7 +721,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">ac{HT} for translation along y axis with value y</div>
+<div class="line">HT for translation along y axis with value y</div>
 </div>
 </li>
 </ul>
@@ -732,7 +734,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">ac{HT} for translation along z axis with value z</div>
+<div class="line">HT for translation along z axis with value z</div>
 </div>
 </li>
 </ul>
@@ -741,7 +743,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">identity ac{HT}:</div>
+<div class="line">identity HT:</div>
 </div>
 </li>
 </ul>
@@ -754,7 +756,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">ac{HT} for rotation around axis X (first axis)</div>
+<div class="line">HT for rotation around axis X (first axis)</div>
 </div>
 </li>
 </ul>
@@ -763,7 +765,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">ac{HT} for rotation around axis X (first axis)</div>
+<div class="line">HT for rotation around axis X (first axis)</div>
 </div>
 </li>
 </ul>
@@ -776,7 +778,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">ac{HT} for rotation around axis X (first axis)</div>
+<div class="line">HT for rotation around axis X (first axis)</div>
 </div>
 </li>
 </ul>
@@ -789,7 +791,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">return translation part of ac{HT}</div>
+<div class="line">return translation part of HT</div>
 </div>
 </li>
 </ul>
@@ -802,7 +804,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">return rotation matrix of ac{HT}</div>
+<div class="line">return rotation matrix of HT</div>
 </div>
 </li>
 </ul>
@@ -815,7 +817,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">return inverse ac{HT} such that inv(T)*T = np.eye(4)</div>
+<div class="line">return inverse HT such that inv(T)*T = np.eye(4)</div>
 </div>
 </li>
 </ul>
@@ -828,7 +830,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute 6x6 coordinate transformation matrix for rotation around X axis; output: first 3 components for rotation, second 3 components for translation! See Featherstone / Handbook of robotics cite{Siciliano2016}</div>
+<div class="line">compute 6x6 coordinate transformation matrix for rotation around X axis; output: first 3 components for rotation, second 3 components for translation! See Featherstone / Handbook of robotics</div>
 </div>
 </li>
 </ul>
@@ -891,7 +893,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">convert 6x6 coordinate transformation (Pluecker transform) into rotation and translation</div>
+<div class="line">convert 6x6 coordinate transformation (Plücker transform) into rotation and translation</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -914,7 +916,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">convert inverse 6x6 coordinate transformation (Pluecker transform) into rotation and translation</div>
+<div class="line">convert inverse 6x6 coordinate transformation (Plücker transform) into rotation and translation</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -933,7 +935,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">convert rotation and translation into 6x6 coordinate transformation (Pluecker transform)</div>
+<div class="line">convert rotation and translation into 6x6 coordinate transformation (Plücker transform)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -955,7 +957,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">convert rotation and translation into INVERSE 6x6 coordinate transformation (Pluecker transform)</div>
+<div class="line">convert rotation and translation into INVERSE 6x6 coordinate transformation (Plücker transform)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -981,7 +983,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">convert 6x6 coordinate transformation (Pluecker transform) into 4x4 homogeneous transformation; NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone</div>
+<div class="line">convert 6x6 coordinate transformation (Plücker transform) into 4x4 homogeneous transformation; NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -1004,7 +1006,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Pluecker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone</div>
+<div class="line">convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Plücker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -1297,7 +1299,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-<div class="line">returns a RigidBodyInertia with center of mass com shifted by vec; <span class="math notranslate nohighlight">\(\ra\)</span> transforms the returned inertiaTensor to the new center of rotation</div>
+<div class="line">returns a RigidBodyInertia with center of mass com shifted by vec; <span class="math notranslate nohighlight">\(\rightarrow\)</span> transforms the returned inertiaTensor to the new center of rotation</div>
 </div>
 </li>
 </ul>

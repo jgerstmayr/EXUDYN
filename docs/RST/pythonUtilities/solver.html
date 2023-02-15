@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: solver &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>Module: solver &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -50,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul class="current">
@@ -141,14 +143,14 @@ Most of the solvers are implemented inside the C++ core.</p>
 </div>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: specific simulation settings out of exu.SimulationSettings(), as described in refSection{sec:SolutionSettings}; use options for newton, discontinuous settings, etc., from staticSolver sub-items</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: specific simulation settings out of exu.SimulationSettings(), as described in  <span class="xref std std-ref">sec-solutionsettings</span>; use options for newton, discontinuous settings, etc., from staticSolver sub-items</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">updateInitialValues</span></code>: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">storeSolver</span></code>: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys[‘staticSolver’], and simulationSettings are stored as mbs.sys[‘simulationSettings’]</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
-<div class="line">returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf refSection{sec:solverSubstructures} and the items described in refSection{sec:MainSolverStatic})</div>
+<div class="line">returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf  <span class="xref std std-ref">sec-solversubstructures</span> and the items described in  <span class="xref std std-ref">sec-mainsolverstatic</span>)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -195,7 +197,7 @@ Most of the solvers are implemented inside the C++ core.</p>
 </div>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: specific simulation settings out of exu.SimulationSettings(), as described in refSection{sec:SolutionSettings}; use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special refSection{secSpeedUp})</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: specific simulation settings out of exu.SimulationSettings(), as described in  <span class="xref std std-ref">sec-solutionsettings</span>; use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special  <a class="reference internal" href="../ExudynBasics.html#sec-overview-basics-speedup"><span class="std std-ref">Performance and ways to speed up computations</span></a>)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">solverType</span></code>: use exudyn.DynamicSolverType to set specific solver (default=generalized alpha)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">updateInitialValues</span></code>: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">storeSolver</span></code>: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys[‘staticSolver’], and simulationSettings are stored as mbs.sys[‘simulationSettings’]</div>
@@ -205,7 +207,7 @@ Most of the solvers are implemented inside the C++ core.</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
-<div class="line">returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf refSection{sec:solverSubstructures} and the items described in refSection{sec:MainSolverStatic})</div>
+<div class="line">returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf  <span class="xref std std-ref">sec-solversubstructures</span> and the items described in  <span class="xref std std-ref">sec-mainsolverstatic</span>)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -282,7 +284,7 @@ Most of the solvers are implemented inside the C++ core.</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute eigenvalues for unconstrained ODE2 part of mbs, not considering the effects of algebraic constraints; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState,SetSystemState, see refSection{sec:mbs:systemData}); note that mass and stiffness matrix are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.</div>
+<div class="line">compute eigenvalues for unconstrained ODE2 part of mbs, not considering the effects of algebraic constraints; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState,SetSystemState, see  <a class="reference internal" href="../cInterface/SystemData.html#sec-mbs-systemdata"><span class="std std-ref">SystemData</span></a>); note that mass and stiffness matrix are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.</div>
 </div>
 </li>
 <li><div class="line-block">

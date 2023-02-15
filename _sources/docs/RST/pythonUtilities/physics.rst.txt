@@ -10,7 +10,7 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities
 - Date:      2021-01-20 
 
 
-.. _sec-physics-StribeckFunction:
+.. _sec-physics-stribeckfunction:
 
 `StribeckFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L29>`__\ (\ ``vel``\ , \ ``muDynamic``\ , \ ``muStaticOffset``\ , \ ``muViscous = 0``\ , \ ``expVel = 1e-3``\ , \ ``regVel = 1e-3``\ )
 
@@ -36,7 +36,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-physics-RegularizedFrictionStep:
+.. _sec-physics-regularizedfrictionstep:
 
 `RegularizedFrictionStep <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L38>`__\ (\ ``x``\ , \ ``x0``\ , \ ``h0``\ , \ ``x1``\ , \ ``h1``\ )
 
@@ -46,7 +46,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-physics-RegularizedFriction:
+.. _sec-physics-regularizedfriction:
 
 `RegularizedFriction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L59>`__\ (\ ``vel``\ , \ ``muDynamic``\ , \ ``muStaticOffset``\ , \ ``velStatic``\ , \ ``velDynamic``\ , \ ``muViscous = 0``\ )
 
@@ -63,7 +63,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 - | \ *output*\ :
   | returns velocity dependent friction coefficient (if muDynamic and muStaticOffset are friction coefficients) or friction force (if muDynamic and muStaticOffset are on force level)
 - | \ *notes*\ :
-  | see references: Flores et al. \cite{Flores2008}, Qian et al. \cite{Qian2018}
+  | see references: Flores et al. , Qian et al.
 
 Relevant Examples (Ex) and TestModels (TM) with weblink:
 
@@ -72,7 +72,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-physics-VonMisesStress:
+.. _sec-physics-vonmisesstress:
 
 `VonMisesStress <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L77>`__\ (\ ``stress6D``\ )
 
@@ -86,14 +86,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-physics-UFvonMisesStress:
+.. _sec-physics-ufvonmisesstress:
 
 `UFvonMisesStress <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py\#L100>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
 
 - | \ *function description*\ :
   | Sensor user function to compute equivalent von-Mises stress from sensor with Stress or StressLocal OutputVariableType; if more than 1 sensor is given in sensorNumbers, then the maximum stress is computed
 - | \ *input*\ :
-  | arguments according to \texttt{SensorUserFunction}; factors are ignored
+  | arguments according to \ ``SensorUserFunction``\ ; factors are ignored
 - | \ *output*\ :
   | returns scalar (maximum) equivalent von-Mises stress
 - | \ *example*\ :

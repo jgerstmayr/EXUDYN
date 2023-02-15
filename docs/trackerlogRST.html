@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Issue tracker &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>Issue tracker &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="RST/InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="RST/OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="RST/TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RST/cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
@@ -83,7 +85,7 @@
            <div itemprop="articleBody">
              
   <section id="issue-tracker">
-<h1>Issue tracker<a class="headerlink" href="#issue-tracker" title="Permalink to this heading"></a></h1>
+<span id="sec-issuetracker"></span><h1>Issue tracker<a class="headerlink" href="#issue-tracker" title="Permalink to this heading"></a></h1>
 <p>This is the current issue tracker full information shown in a table. I shows resolved and open issues with all details.
 You may need to use zoom in your browser to see the full column width.</p>
 <!DOCTYPE html>
@@ -103,10 +105,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1429, 
-Number of resolved issues = 1258 (97 in current minor version), 
-Exudyn version = 1.5.97.dev1, 
-last change =  2023-02-13
+Number of issues = 1432, 
+Number of resolved issues = 1261 (100 in current minor version), 
+Exudyn version = 1.5.100.dev1, 
+last change =  2023-02-16
 
 
 <table style = "width:100%">
@@ -2863,6 +2865,54 @@ last change =  2023-02-13
     <td></td>
   </tr>
   <tr style = "background-color:#BBFFBB">
+    <td>1431</td>
+    <td>make github pages   </td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> install workflow for github pages to host pages for exudyn</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-02-16</td>
+    <td>2023-08-15</td>
+    <td>2023-02-16 00:01</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td>due to automatic conversion, there are many small errors (typos) remaining; for safety, check theDoc.pdf in any case</td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1430</td>
+    <td>create rst docu files</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> Create rst (markup language) files for C++ command interface and Python utilities</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-02-15</td>
+    <td>2023-08-14</td>
+    <td>2023-02-16 00:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1429</td>
+    <td>revise docu creation</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> revise several helper functions for docu creation to homogenize latex and rst output</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2023-02-15</td>
+    <td>2023-08-14</td>
+    <td>2023-02-16 00:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
     <td>1428</td>
     <td>ParameterVariation  </td>
     <td>JG</td>
@@ -3507,7 +3557,7 @@ last change =  2023-02-13
     <td>visualizationSettings</td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> increase initial size of visualizations dialog for larger screens; see  \refSection{sec:introduction:visualizationSettings} how to change to a smaller window size</td>
+    <td> increase initial size of visualizations dialog for larger screens; see  \refSection{sec:overview:basics:visualizationsettings} how to change to a smaller window size</td>
     <td>CHANGE</td>
     <td></td>
     <td>2023-01-11</td>
@@ -10755,7 +10805,7 @@ last change =  2023-02-13
     <td>Add LTG description </td>
     <td>JG</td>
     <td>RESOLVED</td>
-    <td> add section on local-to-global mapping of coordinates \refSection{sec:systemData:LTG}</td>
+    <td> add section on local-to-global mapping of coordinates \refSection{sec:overview:ltgmapping}</td>
     <td>DOCU</td>
     <td></td>
     <td>2022-01-08</td>

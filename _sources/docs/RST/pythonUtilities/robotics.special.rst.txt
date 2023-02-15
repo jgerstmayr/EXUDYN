@@ -12,7 +12,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 - Date:      2021-22-09 
 
 
-.. _sec-special-VelocityManipulability:
+.. _sec-special-velocitymanipulability:
 
 `VelocityManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L31>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ )
 
@@ -27,14 +27,14 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 - | \ *output*\ :
   | velocity manipulability measure as scalar value, defined as \ :math:`\sqrt(det(JJ^T))`\
 - | \ *notes*\ :
-  | compute velocity dependent manipulability definded by Yoshikawa, see \cite{Yoshikawa1985}
+  | compute velocity dependent manipulability definded by Yoshikawa, see
 
 
 ----
 
-.. _sec-special-ForceManipulability:
+.. _sec-special-forcemanipulability:
 
-`ForceManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L63>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ , \ ``singular_weight = 100``\ )
+`ForceManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L63>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ , \ ``singular\_weight = 100``\ )
 
 - | \ *function description*\ :
   | compute force manipulability measure for given pose (homogenious transformation)
@@ -47,12 +47,12 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 - | \ *output*\ :
   | force manipulability measure as scalar value, defined as \ :math:`\sqrt((det(JJ^T))^{-1})`\
 - | \ *notes*\ :
-  | compute force dependent manipulability definded by Yoshikawa, see \cite{Yoshikawa1985}
+  | compute force dependent manipulability definded by Yoshikawa, see
 
 
 ----
 
-.. _sec-special-StiffnessManipulability:
+.. _sec-special-stiffnessmanipulability:
 
 `StiffnessManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L106>`__\ (\ ``robot``\ , \ ``JointStiffness``\ , \ ``HT``\ , \ ``mode``\ , \ ``singularWeight = 1000``\ )
 
@@ -72,12 +72,12 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 - | \ *notes*\ :
   | 
 - | \ *status*\ :
-  | this function is {\bf currently under development} and under testing!
+  | this function is \ **currently under development**\  and under testing!
 
 
 ----
 
-.. _sec-special-JointJacobian:
+.. _sec-special-jointjacobian:
 
 `JointJacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L141>`__\ (\ ``robot``\ , \ ``HTJoint``\ , \ ``HTLink``\ )
 
@@ -88,14 +88,14 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
   | \ ``robot``\ : robot class
   | \ ``HT``\ : actual pose as hoogenious transformaton matrix
 - | \ *output*\ :
-  | Link(body)-Jacobi matrix JJ: \ :math:`\LU{i}{JJ_i}=[\LU{i}{J_{Ri}},\; \LU{i}{J_{Ti}}]`\  for each link i, seperated in rotational (\ :math:`J_R`\ ) and translational (\ :math:`J_T`\ ) part of Jacobian matrix located in the \ :math:`i^{th}`\  coordiante system, see \cite{woernle2016}
+  | Link(body)-Jacobi matrix JJ: \ :math:`^{i}{JJ_i}=[^{i}{J_{Ri}},\; ^{i}{J_{Ti}}]`\  for each link i, seperated in rotational (\ :math:`J_R`\ ) and translational (\ :math:`J_T`\ ) part of Jacobian matrix located in the \ :math:`i^{th}`\  coordiante system, see
 - | \ *notes*\ :
-  | runs over number of HTs given in HT (may be less than number of links), caclulations in link coordinate system located at the end of each link regarding Standard  Denavid-Hartenberg parameters, see \cite{Corke2013}
+  | runs over number of HTs given in HT (may be less than number of links), caclulations in link coordinate system located at the end of each link regarding Standard  Denavid-Hartenberg parameters, see
 
 
 ----
 
-.. _sec-special-MassMatrix:
+.. _sec-special-massmatrix:
 
 `MassMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L203>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``jointJacobian``\ )
 
@@ -110,8 +110,8 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
   | MM: Mass matrix
 - | \ *notes*\ :
 
-  | \ ``Mass Matrix calculation calculated in joint coordinates regarding (std) DH parameter``\ :
-  | \*\*       Dynamic equations in minimal coordinates as described in MehrkÃ¶rpersysteme by Woernle, \cite{woernle2016}, p206, eq6.90.
+  | Mass Matrix calculation calculated in joint coordinates regarding (std) DH parameter:
+  | \*\*       Dynamic equations in minimal coordinates as described in MehrkÃ¶rpersysteme by Woernle, , p206, eq6.90.
   | \*\*       Caclulations in link coordinate system at the end of each link
 
 Relevant Examples (Ex) and TestModels (TM) with weblink:
@@ -121,7 +121,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-special-DynamicManipulability:
+.. _sec-special-dynamicmanipulability:
 
 `DynamicManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L236>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``MassMatrix``\ , \ ``Tmax``\ , \ ``mode``\ , \ ``singularWeight = 1000``\ )
 
@@ -140,14 +140,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
   | dynamic manipulability measure as scalar value, defined as minimum Eigenvalaue of the dynamic manipulability matrix N
   | dynamic manipulability matrix
 - | \ *notes*\ :
-  | acceleration dependent manipulability definded by Chiacchio, see \cite{Chiacchio1998}, eq.32. The eigenvectors and eigenvalues of N ([eigenvec eigenval]=eig(N))gives the direction and value of minimal and maximal accaleration )
+  | acceleration dependent manipulability definded by Chiacchio, see , eq.32. The eigenvectors and eigenvalues of N ([eigenvec eigenval]=eig(N))gives the direction and value of minimal and maximal accaleration )
 - | \ *status*\ :
-  | this function is {\bf currently under development} and under testing!
+  | this function is \ **currently under development**\  and under testing!
 
 
 ----
 
-.. _sec-special-ComputeIK3R:
+.. _sec-special-computeik3r:
 
 `ComputeIK3R <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L284>`__\ (\ ``robot``\ , \ ``HT``\ )
 
@@ -170,7 +170,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-special-ComputeIKPuma560:
+.. _sec-special-computeikpuma560:
 
 `ComputeIKPuma560 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L355>`__\ (\ ``robot``\ , \ ``HT``\ )
 
@@ -193,7 +193,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-special-ComputeIKUR:
+.. _sec-special-computeikur:
 
 `ComputeIKUR <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L481>`__\ (\ ``robot``\ , \ ``HTdes``\ )
 

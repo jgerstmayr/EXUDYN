@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advanced topics &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>Advanced topics &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -54,6 +55,7 @@
 <li class="toctree-l2"><a class="reference internal" href="MappingBetweenLocalAndGlobalCoordinateIndices.html">Mapping between local and global coordinate indices</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ExudynBasics.html">Exudyn Basics</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Advanced topics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#camera-following-objects-and-interacting-with-model-view">Camera following objects and interacting with model view</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#contact-problems">Contact problems</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#openvr">OpenVR</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#interaction-with-other-codes">Interaction with other codes</a></li>
@@ -64,6 +66,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
@@ -100,11 +103,11 @@
            <div itemprop="articleBody">
              
   <section id="advanced-topics">
-<h1>Advanced topics<a class="headerlink" href="#advanced-topics" title="Permalink to this heading"></a></h1>
+<span id="sec-overview-advanced"></span><h1>Advanced topics<a class="headerlink" href="#advanced-topics" title="Permalink to this heading"></a></h1>
 <p>This section covers some advanced topics, which may be only relevant for a smaller group of people.
-Functionality may be extended but also removed in future
-Camera following objects and interacting with model view
-——————————————————–</p>
+Functionality may be extended but also removed in future</p>
+<section id="camera-following-objects-and-interacting-with-model-view">
+<span id="sec-overview-advanced-camerafollowing"></span><h2>Camera following objects and interacting with model view<a class="headerlink" href="#camera-following-objects-and-interacting-with-model-view" title="Permalink to this heading"></a></h2>
 <p>For some models, it may be advantageous to track the translation and/or rotation of certain bodies, e.g., for cars, (wheeled) robots or bicycles.
 To do so, the current render state (<code class="docutils literal notranslate"><span class="pre">SC.GetRenderState()</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState(...)</span></code>) can be obtained and modified, in order to always follow a certain position.
 As this needs to be done during redraw of every frame, it is conveniently done in a graphicsUserFunction, e.g., within the ground body. This is shown in the following example, in which <code class="docutils literal notranslate"><span class="pre">mbs.variables['nTrackNode']</span></code> is a node number to be tracked:</p>
@@ -126,8 +129,9 @@ As this needs to be done during redraw of every frame, it is conveniently done i
 <span class="c1">#.... further code for simulation here</span>
 </pre></div>
 </div>
+</section>
 <section id="contact-problems">
-<h2>Contact problems<a class="headerlink" href="#contact-problems" title="Permalink to this heading"></a></h2>
+<span id="sec-overview-advanced-contact"></span><h2>Contact problems<a class="headerlink" href="#contact-problems" title="Permalink to this heading"></a></h2>
 <p>Since Q4 2021 a contact module is available in Exudyn.
 This separate module <code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code> [<strong>still under development, consider with care!</strong>] is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.</p>
 <p><a class="reference internal" href="../../_images/contactTests.png"><img alt="cpic1" src="../../_images/contactTests.png" style="width: 45%;" /></a> <a class="reference internal" href="../../_images/contactTests2.jpg"><img alt="cpic2" src="../../_images/contactTests2.jpg" style="width: 45%;" /></a></p>
@@ -144,21 +148,21 @@ This separate module <code class="docutils literal notranslate"><span class="pre
 <li><p>Triangles mounted on rigid bodies, in contact with Spheres [only explicit]</p></li>
 <li><p>ANCFCable2D contacting with spheres (which then represent circles in 2D) [partially implicit, needs revision]</p></li>
 </ul>
-<p>For details on the contact formulations, see theDoc.pdf.</p>
+<p>For details on the contact formulations, see  <span class="xref std std-ref">seccontacttheory</span>.</p>
 </section>
 <section id="openvr">
-<h2>OpenVR<a class="headerlink" href="#openvr" title="Permalink to this heading"></a></h2>
+<span id="sec-overview-advanced-openvr"></span><h2>OpenVR<a class="headerlink" href="#openvr" title="Permalink to this heading"></a></h2>
 <p>The general open source libraries from Valve, see</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/ValveSoftware/openvr">https://github.com/ValveSoftware/openvr</a></p>
 </div></blockquote>
-<p>have been linked to Exudyn . In order to get OpenVR fully integrated, you need to run <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> Exudyn with the <code class="docutils literal notranslate"><span class="pre">--openvr</span></code> flag. For general installation instructions, see theDoc.pdf.</p>
+<p>have been linked to Exudyn . In order to get OpenVR fully integrated, you need to run <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> Exudyn with the <code class="docutils literal notranslate"><span class="pre">--openvr</span></code> flag. For general installation instructions, see  <a class="reference internal" href="RunASimpleExampleInPython.html#sec-install-installinstructions"><span class="std std-ref">Installation instructions</span></a>.</p>
 <p>Running OpenVR either requires an according head mounted display (HMD) or a virtualization using, e.g., Riftcat 2 to use a mobile phone with an according adapter. Visualization settings are available in <code class="docutils literal notranslate"><span class="pre">interactive.openVR</span></code>, but need to be considered with care.
 An example is provided in <code class="docutils literal notranslate"><span class="pre">openVRengine.py</span></code>, showing some optimal flags like locking the model rotation, zoom or translation.</p>
 <p>Everything is experimental, but contributions are welcome!</p>
 </section>
 <section id="interaction-with-other-codes">
-<h2>Interaction with other codes<a class="headerlink" href="#interaction-with-other-codes" title="Permalink to this heading"></a></h2>
+<span id="sec-overview-advanced-interactwithcodes"></span><h2>Interaction with other codes<a class="headerlink" href="#interaction-with-other-codes" title="Permalink to this heading"></a></h2>
 <p>Interaction with other codes and computers (E.g., MATLAB or other C++ codes, or other Python versions)
 is possible.
 To connect to any other code, it is convenient to use a TCP/IP connection. This is enabled via
@@ -174,7 +178,7 @@ the <code class="docutils literal notranslate"><span class="pre">exudyn.utilitie
 </dl>
 </section>
 <section id="ros">
-<h2>ROS<a class="headerlink" href="#ros" title="Permalink to this heading"></a></h2>
+<span id="sec-overview-advanced-ros"></span><h2>ROS<a class="headerlink" href="#ros" title="Permalink to this heading"></a></h2>
 <p>Basic interaction with ROS has been tested. However, make sure to use Python 3, as there is no (and will never be any) Python 2
 support for Exudyn .</p>
 </section>

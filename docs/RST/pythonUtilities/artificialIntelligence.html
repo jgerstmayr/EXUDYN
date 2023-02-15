@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: artificialIntelligence &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>Module: artificialIntelligence &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -49,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul class="current">
@@ -214,7 +216,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 <div class="line"><code class="docutils literal notranslate"><span class="pre">model</span></code>: either None to just test the MBS model without learned model, or containing a learned model, e.g., with A2C; use A2C.save(…) and A2C.load(…) for storing and retrieving models</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">solutionFileName</span></code>: if given, the MBS internal states are written to the file with given name, which can be loaded with solution viewer and visualized; solution is written every period given in simulationSettings.solutionSettings.solutionWritePeriod</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">useRenderer</span></code>: if set True, the internal renderer is used and model updates are shown in visualization of Exudyn</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">return_info</span></code>: internal value in reset function</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">return\_info</span></code>: internal value in reset function</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">sleepTime</span></code>: sleep time between time steps to obtain certain frame rate for visualization</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">stopIfDone</span></code>: if set to True, the simulation will reset as soon as the defined observation limits are reached and done is set True</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">showTimeSpent</span></code>: if True, the total time spent is measured; this helps to check the performance of the model (e.g. how many steps can be computed per second)</div>
@@ -258,7 +260,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-artificialintelligence-openaigyminterfaceenv-reset"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L236">reset</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">seed:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">return_info:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">options:</span> <span class="pre">Optional[dict]</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<p id="sec-artificialintelligence-openaigyminterfaceenv-reset"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/artificialIntelligence.py#L236">reset</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">seed:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">return\_info:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">options:</span> <span class="pre">Optional[dict]</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>

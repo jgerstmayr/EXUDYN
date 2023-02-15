@@ -1,5 +1,5 @@
 
-.. _sec-module-lieGroupBasics:
+.. _sec-module-liegroupbasics:
 
 Module: lieGroupBasics
 ======================
@@ -10,10 +10,10 @@ Lie group methods and formulas for Lie group integration.
 - Date:      2020-09-11 
 - | References:
   | 
-  | For details on Lie group methods used here, see the references \cite{Henderson1977, Simo1988, Bruels2011, Sonneville2014, Sonneville2017, Terze2016, Mueller2017}.                Lie group methods for rotation vector are described in Holzinger and Gerstmayr \cite{HolzingerGerstmayr2020, Holzinger2021}.
+  | For details on Lie group methods used here, see the references .                Lie group methods for rotation vector are described in Holzinger and Gerstmayr .
 
 
-.. _sec-lieGroupBasics-Sinc:
+.. _sec-liegroupbasics-sinc:
 
 `Sinc <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L34>`__\ (\ ``x``\ )
 
@@ -27,7 +27,7 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-Cot:
+.. _sec-liegroupbasics-cot:
 
 `Cot <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L46>`__\ (\ ``x``\ )
 
@@ -41,12 +41,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-R3xSO3Matrix2RotationMatrix:
+.. _sec-liegroupbasics-r3xso3matrix2rotationmatrix:
 
 `R3xSO3Matrix2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L54>`__\ (\ ``G``\ )
 
 - | \ *function description*\ :
-  | computes 3x3 rotation matrix from 7x7 R3xSO(3) matrix, see \cite{Bruels2011}
+  | computes 3x3 rotation matrix from 7x7 R3xSO(3) matrix, see
 - | \ *input*\ :
   | G: 7x7 matrix as np.array
 - | \ *output*\ :
@@ -55,12 +55,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-R3xSO3Matrix2Translation:
+.. _sec-liegroupbasics-r3xso3matrix2translation:
 
 `R3xSO3Matrix2Translation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L62>`__\ (\ ``G``\ )
 
 - | \ *function description*\ :
-  | computes translation part of R3xSO(3) matrix, see \cite{Bruels2011}
+  | computes translation part of R3xSO(3) matrix, see
 - | \ *input*\ :
   | G: 7x7 matrix as np.array
 - | \ *output*\ :
@@ -69,12 +69,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-R3xSO3Matrix:
+.. _sec-liegroupbasics-r3xso3matrix:
 
 `R3xSO3Matrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L71>`__\ (\ ``x``\ , \ ``R``\ )
 
 - | \ *function description*\ :
-  | builds 7x7 matrix as element of the Lie group R3xSO(3), see \cite{Bruels2011}
+  | builds 7x7 matrix as element of the Lie group R3xSO(3), see
 - | \ *input*\ :
 
   | \ ``x``\ : 3D vector as np.array representing the translation part corresponding to R3
@@ -85,12 +85,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-ExpSO3:
+.. _sec-liegroupbasics-expso3:
 
 `ExpSO3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L93>`__\ (\ ``Omega``\ )
 
 - | \ *function description*\ :
-  | compute the matrix exponential map on the Lie group SO(3), see \cite{Mueller2017}
+  | compute the matrix exponential map on the Lie group SO(3), see
 - | \ *input*\ :
   | 3D rotation vector as np.array
 - | \ *output*\ :
@@ -99,12 +99,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-ExpS3:
+.. _sec-liegroupbasics-exps3:
 
 `ExpS3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L105>`__\ (\ ``Omega``\ )
 
 - | \ *function description*\ :
-  | compute the quaternion exponential map on the Lie group S(3), see \cite{Terze2016, Mueller2017}
+  | compute the quaternion exponential map on the Lie group S(3), see
 - | \ *input*\ :
   | 3D rotation vector as np.array
 - | \ *output*\ :
@@ -115,12 +115,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-LogSO3:
+.. _sec-liegroupbasics-logso3:
 
 `LogSO3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L115>`__\ (\ ``R``\ )
 
 - | \ *function description*\ :
-  | compute the matrix logarithmic map on the Lie group SO(3), see \cite{Sonneville2014, Sonneville2017}
+  | compute the matrix logarithmic map on the Lie group SO(3), see
 - | \ *input*\ :
   | 3x3 rotation matrix as np.array
 - | \ *output*\ :
@@ -129,12 +129,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-TExpSO3:
+.. _sec-liegroupbasics-texpso3:
 
 `TExpSO3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L134>`__\ (\ ``Omega``\ )
 
 - | \ *function description*\ :
-  | compute the tangent operator corresponding to ExpSO3, see \cite{Bruels2011}
+  | compute the tangent operator corresponding to ExpSO3, see
 - | \ *input*\ :
   | 3D rotation vector as np.array
 - | \ *output*\ :
@@ -143,13 +143,13 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-TExpSO3Inv:
+.. _sec-liegroupbasics-texpso3inv:
 
 `TExpSO3Inv <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L154>`__\ (\ ``Omega``\ )
 
 - | \ *function description*\ :
 
-  | compute the inverse of the tangent operator TExpSO3, see \cite{Sonneville2014}
+  | compute the inverse of the tangent operator TExpSO3, see 
   | this function was improved, see coordinateMaps.pdf by Stefan Holzinger
 - | \ *input*\ :
   | 3D rotation vector as np.array
@@ -159,12 +159,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-ExpSE3:
+.. _sec-liegroupbasics-expse3:
 
 `ExpSE3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L176>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
-  | compute the matrix exponential map on the Lie group SE(3), see \cite{Bruels2011}
+  | compute the matrix exponential map on the Lie group SE(3), see
 - | \ *input*\ :
   | 6D incremental motion vector as np.array
 - | \ *output*\ :
@@ -173,12 +173,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-LogSE3:
+.. _sec-liegroupbasics-logse3:
 
 `LogSE3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L187>`__\ (\ ``H``\ )
 
 - | \ *function description*\ :
-  | compute the matrix logarithm on the Lie group SE(3), see \cite{Sonneville2014}
+  | compute the matrix logarithm on the Lie group SE(3), see
 - | \ *input*\ :
   | 4x4 homogeneous transformation matrix as np.array
 - | \ *output*\ :
@@ -187,12 +187,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-TExpSE3:
+.. _sec-liegroupbasics-texpse3:
 
 `TExpSE3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L202>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
-  | compute the tangent operator corresponding to ExpSE3, see \cite{Bruels2011}
+  | compute the tangent operator corresponding to ExpSE3, see
 - | \ *input*\ :
   | 6D incremental motion vector as np.array
 - | \ *output*\ :
@@ -201,12 +201,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-TExpSE3Inv:
+.. _sec-liegroupbasics-texpse3inv:
 
 `TExpSE3Inv <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L228>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
-  | compute the inverse of tangent operator TExpSE3, see \cite{Sonneville2014}
+  | compute the inverse of tangent operator TExpSE3, see
 - | \ *input*\ :
   | 6D incremental motion vector as np.array
 - | \ *output*\ :
@@ -215,12 +215,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-ExpR3xSO3:
+.. _sec-liegroupbasics-expr3xso3:
 
 `ExpR3xSO3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L252>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
-  | compute the matrix exponential map on the Lie group R3xSO(3), see \cite{Bruels2011}
+  | compute the matrix exponential map on the Lie group R3xSO(3), see
 - | \ *input*\ :
   | 6D incremental motion vector as np.array
 - | \ *output*\ :
@@ -229,12 +229,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-TExpR3xSO3:
+.. _sec-liegroupbasics-texpr3xso3:
 
 `TExpR3xSO3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L262>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
-  | compute the tangent operator corresponding to ExpR3xSO3, see \cite{Bruels2011}
+  | compute the tangent operator corresponding to ExpR3xSO3, see
 - | \ *input*\ :
   | 6D incremental motion vector as np.array
 - | \ *output*\ :
@@ -243,7 +243,7 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-TExpR3xSO3Inv:
+.. _sec-liegroupbasics-texpr3xso3inv:
 
 `TExpR3xSO3Inv <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L271>`__\ (\ ``x``\ )
 
@@ -257,7 +257,7 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-CompositionRuleDirectProductR3AndS3:
+.. _sec-liegroupbasics-compositionruledirectproductr3ands3:
 
 `CompositionRuleDirectProductR3AndS3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L294>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
 
@@ -273,7 +273,7 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-CompositionRuleSemiDirectProductR3AndS3:
+.. _sec-liegroupbasics-compositionrulesemidirectproductr3ands3:
 
 `CompositionRuleSemiDirectProductR3AndS3 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L316>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
 
@@ -289,13 +289,13 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-CompositionRuleDirectProductR3AndR3RotVec:
+.. _sec-liegroupbasics-compositionruledirectproductr3andr3rotvec:
 
 `CompositionRuleDirectProductR3AndR3RotVec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L341>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
 
 - | \ *function description*\ :
 
-  | compute composition operation for pairs in the group obtained from the direct product of R3 and R3, see \cite{HolzingerGerstmayr2020}
+  | compute composition operation for pairs in the group obtained from the direct product of R3 and R3, see 
   | the rotation vector is used as rotation parametrizations
   | this composition operation can be used in formulations which represent the translational velocities in the global (inertial) frame
 - | \ *input*\ :
@@ -308,7 +308,7 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-CompositionRuleSemiDirectProductR3AndR3RotVec:
+.. _sec-liegroupbasics-compositionrulesemidirectproductr3andr3rotvec:
 
 `CompositionRuleSemiDirectProductR3AndR3RotVec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L365>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
 
@@ -327,7 +327,7 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-CompositionRuleDirectProductR3AndR3RotXYZAngles:
+.. _sec-liegroupbasics-compositionruledirectproductr3andr3rotxyzangles:
 
 `CompositionRuleDirectProductR3AndR3RotXYZAngles <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L390>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
 
@@ -346,7 +346,7 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-CompositionRuleSemiDirectProductR3AndR3RotXYZAngles:
+.. _sec-liegroupbasics-compositionrulesemidirectproductr3andr3rotxyzangles:
 
 `CompositionRuleSemiDirectProductR3AndR3RotXYZAngles <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L414>`__\ (\ ``q0``\ , \ ``incrementalMotionVector``\ )
 
@@ -365,14 +365,14 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-CompositionRuleForEulerParameters:
+.. _sec-liegroupbasics-compositionruleforeulerparameters:
 
 `CompositionRuleForEulerParameters <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L438>`__\ (\ ``q``\ , \ ``p``\ )
 
 - | \ *function description*\ :
 
   | compute composition operation for Euler parameters (unit quaternions)
-  | this composition operation is quaternion multiplication, see \cite{Terze2016}
+  | this composition operation is quaternion multiplication, see 
 - | \ *input*\ :
 
   | \ ``q``\ : 4D vector as np.array containing Euler parameters
@@ -383,12 +383,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-CompositionRuleForRotationVectors:
+.. _sec-liegroupbasics-compositionruleforrotationvectors:
 
 `CompositionRuleForRotationVectors <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L453>`__\ (\ ``v0``\ , \ ``Omega``\ )
 
 - | \ *function description*\ :
-  | compute composition operation for rotation vectors v0 and Omega, see \cite{Holzinger2021}
+  | compute composition operation for rotation vectors v0 and Omega, see
 - | \ *input*\ :
 
   | \ ``v0``\ : 3D rotation vector as np.array
@@ -399,12 +399,12 @@ Lie group methods and formulas for Lie group integration.
 
 ----
 
-.. _sec-lieGroupBasics-CompositionRuleRotXYZAnglesRotationVector:
+.. _sec-liegroupbasics-compositionrulerotxyzanglesrotationvector:
 
 `CompositionRuleRotXYZAnglesRotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py\#L475>`__\ (\ ``alpha0``\ , \ ``Omega``\ )
 
 - | \ *function description*\ :
-  | compute composition operation for RotXYZ angles, see \cite{Holzinger2021}
+  | compute composition operation for RotXYZ angles, see
 - | \ *input*\ :
 
   | \ ``alpha0``\ : 3D vector as np.array containing RotXYZ angles

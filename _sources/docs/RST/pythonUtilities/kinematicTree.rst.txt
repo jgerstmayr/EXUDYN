@@ -1,19 +1,19 @@
 
-.. _sec-module-kinematicTree:
+.. _sec-module-kinematictree:
 
 Module: kinematicTree
 =====================
 
 A library for preparation of minimum coordinates (kinematic tree) formulation.
 This library follows mostly the algorithms of Roy Featherstone, see http://royfeatherstone.org/
-His code is availble in MATLAB as well as described in the Springer Handbook of Robotics \cite{Siciliano2016}.
-The main formalisms are based on 6x6 matrices, so-called Pluecker transformations, denoted as Plücker transformation, as defined by Featherstone.
+His code is availble in MATLAB as well as described in the Springer Handbook of Robotics .
+The main formalisms are based on 6x6 matrices, so-called Plücker transformations, denoted as T66, as defined by Featherstone.
 
 - Author:    Johannes Gerstmayr 
 - Date:      2021-06-22 
 
 
-.. _sec-kinematicTree-MassCOMinertia2T66:
+.. _sec-kinematictree-masscominertia2t66:
 
 `MassCOMinertia2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L65>`__\ (\ ``mass``\ , \ ``centerOfMass``\ , \ ``inertia``\ )
 
@@ -30,12 +30,12 @@ The main formalisms are based on 6x6 matrices, so-called Pluecker transformation
 
 ----
 
-.. _sec-kinematicTree-Inertia2T66:
+.. _sec-kinematictree-inertia2t66:
 
 `Inertia2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L74>`__\ (\ ``inertia``\ )
 
 - | \ *function description*\ :
-  | convert inertia as produced with RigidBodyInertia class into 6x6 inertia matrix (as used in KinematicTree66, Featherstone / Handbook of robotics \cite{Siciliano2016})
+  | convert inertia as produced with RigidBodyInertia class into 6x6 inertia matrix (as used in KinematicTree66, Featherstone / Handbook of robotics )
 - | \ *output*\ :
   | 6x6 numpy array for further use in minimum coordinates formulation
 - | \ *notes*\ :
@@ -48,14 +48,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-kinematicTree-Inertia66toMassCOMinertia:
+.. _sec-kinematictree-inertia66tomasscominertia:
 
 `Inertia66toMassCOMinertia <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L90>`__\ (\ ``inertia66``\ )
 
 - | \ *function description*\ :
   | convert 6x6 inertia matrix into mass, COM and inertia
 - | \ *input*\ :
-  | 6x6 numpy array containing rigid body inertia according to Featherstone / Handbook of robotics \cite{Siciliano2016}
+  | 6x6 numpy array containing rigid body inertia according to Featherstone / Handbook of robotics
 - | \ *output*\ :
 
   | [mass, centerOfMass, inertia]
@@ -66,12 +66,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-kinematicTree-JointTransformMotionSubspace66:
+.. _sec-kinematictree-jointtransformmotionsubspace66:
 
 `JointTransformMotionSubspace66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L111>`__\ (\ ``jointType``\ , \ ``q``\ )
 
 - | \ *function description*\ :
-  | return 6x6 Pluecker joint transformation matrix evaluated for scalar joint coordinate q and motion subspace ('free modes' in Table 2.6 in Handbook of robotics \cite{Siciliano2016})
+  | return 6x6 Plücker joint transformation matrix evaluated for scalar joint coordinate q and motion subspace ('free modes' in Table 2.6 in Handbook of robotics )
 
 Relevant Examples (Ex) and TestModels (TM) with weblink:
 
@@ -80,7 +80,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-kinematicTree-JointTransformMotionSubspace:
+.. _sec-kinematictree-jointtransformmotionsubspace:
 
 `JointTransformMotionSubspace <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L132>`__\ (\ ``jointType``\ , \ ``q``\ )
 
@@ -94,7 +94,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-kinematicTree-CRM:
+.. _sec-kinematictree-crm:
 
 `CRM <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L412>`__\ (\ ``v``\ )
 
@@ -104,7 +104,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 ----
 
-.. _sec-kinematicTree-CRF:
+.. _sec-kinematictree-crf:
 
 `CRF <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L421>`__\ (\ ``v``\ )
 
@@ -118,12 +118,12 @@ CLASS KinematicTree33 (in module kinematicTree)
 
     class to define a kinematic tree in Python, which can be used for building serial or tree-structured multibody systems
     (or robots) with a minimum coordinates formulation, using rotation matrices and 3D offsets; for efficient computation, use the C++ ObjectKinematicTree
-    
+
 - | \ *notes*\ :
-  | The formulation and structures widely follows the more efficient formulas (but still implemented in Python!) with 3D vectors and rotation matrices as proposed in Handbook of robotics \cite{Siciliano2016}, Chapter 3, but with the rotation matrices (\texttt{listOfRotations}) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Pluecker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing
+  | The formulation and structures widely follows the more efficient formulas (but still implemented in Python!) with 3D vectors and rotation matrices as proposed in Handbook of robotics , Chapter 3, but with the rotation matrices (\ ``listOfRotations``\ ) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Plücker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing
 
 
-.. _sec-kinematicTree-KinematicTree33-init:
+.. _sec-kinematictree-kinematictree33-init:
 
 `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L158>`__\ (\ ``self``\ , \ ``listOfJointTypes``\ , \ ``listOfRotations``\ , \ ``listOfOffsets``\ , \ ``listOfInertia3D``\ , \ ``listOfCOM``\ , \ ``listOfMass``\ , \ ``listOfParents = []``\ , \ ``gravity = [0,0,-9.81]``\ )
 
@@ -132,7 +132,7 @@ CLASS KinematicTree33 (in module kinematicTree)
 - | \ *input*\ :
 
   | \ ``listOfJointTypes``\ : mandatory list of joint types 'Rx', 'Ry', 'Rz' denoting revolute joints; 'Px', 'Py', 'Pz', denoting prismatic joints
-  | \ ``listOfRotations``\ : per link rotation matrix, transforming coordinates of the joint coordinate system w.r.t. the previous coordinate system (this is the inverse of Pluecker coordinate transforms (6x6))
+  | \ ``listOfRotations``\ : per link rotation matrix, transforming coordinates of the joint coordinate system w.r.t. the previous coordinate system (this is the inverse of Plücker coordinate transforms (6x6))
   | \ ``listOfOffsets``\ : per link offset vector from pervious coordinate system to the joint coordinate system
   | \ ``listOfInertia3D``\ : per link 3D inertia matrix, w.r.t.\ reference point (not COM!)
   | \ ``listOfCOM``\ : per link vector from reference point to center of mass (COM), in link coordinates
@@ -142,7 +142,7 @@ CLASS KinematicTree33 (in module kinematicTree)
 
 ----
 
-.. _sec-kinematicTree-KinematicTree33-Size:
+.. _sec-kinematictree-kinematictree33-size:
 
 `Size <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L199>`__\ (\ ``self``\ )
 
@@ -151,7 +151,7 @@ CLASS KinematicTree33 (in module kinematicTree)
 
 ----
 
-.. _sec-kinematicTree-KinematicTree33-XL:
+.. _sec-kinematictree-kinematictree33-xl:
 
 `XL <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L205>`__\ (\ ``self``\ , \ ``i``\ )
 
@@ -160,16 +160,16 @@ CLASS KinematicTree33 (in module kinematicTree)
 
 ----
 
-.. _sec-kinematicTree-KinematicTree33-ForwardDynamicsCRB:
+.. _sec-kinematictree-kinematictree33-forwarddynamicscrb:
 
-`ForwardDynamicsCRB <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L216>`__\ (\ ``self``\ , \ ``q = []``\ , \ ``q_t = []``\ , \ ``torques = []``\ , \ ``forces = []``\ )
+`ForwardDynamicsCRB <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L216>`__\ (\ ``self``\ , \ ``q = []``\ , \ ``q\_t = []``\ , \ ``torques = []``\ , \ ``forces = []``\ )
 
 - | \ *classFunction*\ :
   | compute forward dynamics using composite rigid body algorithm
 - | \ *input*\ :
 
   | \ ``q``\ : joint space coordinates for the model at which the forward dynamics is evaluated
-  | \ ``q_t``\ : joint space velocity coordinates for the model at which the forward dynamics is evaluated
+  | \ ``q\_t``\ : joint space velocity coordinates for the model at which the forward dynamics is evaluated
   | \ ``torques``\ : a vector of torques applied at joint coordinates or list/array with zero length
   | \ ``forces``\ : forces acting on the bodies using special format
 - | \ *output*\ :
@@ -177,9 +177,9 @@ CLASS KinematicTree33 (in module kinematicTree)
 
 ----
 
-.. _sec-kinematicTree-KinematicTree33-ComputeMassMatrixAndForceTerms:
+.. _sec-kinematictree-kinematictree33-computemassmatrixandforceterms:
 
-`ComputeMassMatrixAndForceTerms <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L237>`__\ (\ ``self``\ , \ ``q``\ , \ ``q_t``\ , \ ``externalForces = []``\ )
+`ComputeMassMatrixAndForceTerms <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L237>`__\ (\ ``self``\ , \ ``q``\ , \ ``q\_t``\ , \ ``externalForces = []``\ )
 
 - | \ *classFunction*\ :
 
@@ -190,10 +190,10 @@ CLASS KinematicTree33 (in module kinematicTree)
 - | \ *input*\ :
 
   | \ ``q``\ : current joint coordinates
-  | \ ``q_t``\ : current joint velocities
+  | \ ``q\_t``\ : current joint velocities
   | \ ``externalForces``\ : list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
 - | \ *output*\ :
-  | mass matrix \ :math:`\Mm`\  and RHS vector \ :math:`\fv_{RHS}`\  for equations of motion \ :math:`M(q) \cdot q_tt + f(q,q_t,externalForces) = \tau`\ ; RHS is \ :math:`\fv_{RHS}=\tau - f(q,q_t,externalForces)`\ ; \ :math:`\tau`\  can be added outside of \texttt{ComputeMassMatrixAndForceTerms}
+  | mass matrix \ :math:`\Mm`\  and RHS vector \ :math:`\fv_{RHS}`\  for equations of motion \ :math:`M(q) \cdot q_tt + f(q,q_t,externalForces) = \tau`\ ; RHS is \ :math:`\fv_{RHS}=\tau - f(q,q_t,externalForces)`\ ; \ :math:`\tau`\  can be added outside of \ ``ComputeMassMatrixAndForceTerms``\
 
 Relevant Examples (Ex) and TestModels (TM) with weblink:
 
@@ -205,13 +205,13 @@ CLASS KinematicTree66 (in module kinematicTree)
 **class description**: 
 
     class to define a kinematic tree, which can be used for building serial or tree-structured multibody systems
-    (or robots) with a minimum coordinates formulation, using Pluecker coordinate transforms (6x6); for efficient computation, use the C++ ObjectKinematicTree
-    
+    (or robots) with a minimum coordinates formulation, using Plücker coordinate transforms (6x6); for efficient computation, use the C++ ObjectKinematicTree
+
 - | \ *notes*\ :
-  | The formulation and structures widely follow Roy Featherstone (http://royfeatherstone.org/) / Handbook of robotics \cite{Siciliano2016}
+  | The formulation and structures widely follow Roy Featherstone (http://royfeatherstone.org/) / Handbook of robotics
 
 
-.. _sec-kinematicTree-KinematicTree66-init:
+.. _sec-kinematictree-kinematictree66-init:
 
 `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L440>`__\ (\ ``self``\ , \ ``listOfJointTypes``\ , \ ``listOfTransformations``\ , \ ``listOfInertias``\ , \ ``listOfParents = []``\ , \ ``gravity = [0,0,-9.81]``\ )
 
@@ -220,14 +220,14 @@ CLASS KinematicTree66 (in module kinematicTree)
 - | \ *input*\ :
 
   | \ ``listOfJointTypes``\ : mandatory list of joint types 'Rx', 'Ry', 'Rz' denoting revolute joints; 'Px', 'Py', 'Pz', denoting prismatic joints
-  | \ ``listOfTransformations``\ : provide a list of Pluecker coordinate transforms (6x6 numpy matrices), describing the (constant) link transformation from the link coordinate system (previous/parent joint) to this joint coordinate system
+  | \ ``listOfTransformations``\ : provide a list of Plücker coordinate transforms (6x6 numpy matrices), describing the (constant) link transformation from the link coordinate system (previous/parent joint) to this joint coordinate system
   | \ ``listOfInertias``\ : provide a list of inertias as (6x6 numpy matrices), as produced by the function MassCOMinertia2T66
   | \ ``listOfParents``\ : list of parent object indices (int), according to the index in jointTypes and transformations; use empty list for kinematic chain and use -1 if no parent exists (parent=base or world frame)
   | \ ``gravity``\ : a 3D list/array containing the gravity applied to the kinematic tree (in world frame)
 
 ----
 
-.. _sec-kinematicTree-KinematicTree66-Size:
+.. _sec-kinematictree-kinematictree66-size:
 
 `Size <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L469>`__\ (\ ``self``\ )
 
@@ -236,7 +236,7 @@ CLASS KinematicTree66 (in module kinematicTree)
 
 ----
 
-.. _sec-kinematicTree-KinematicTree66-XL:
+.. _sec-kinematictree-kinematictree66-xl:
 
 `XL <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L473>`__\ (\ ``self``\ , \ ``i``\ )
 
@@ -245,16 +245,16 @@ CLASS KinematicTree66 (in module kinematicTree)
 
 ----
 
-.. _sec-kinematicTree-KinematicTree66-ForwardDynamicsCRB:
+.. _sec-kinematictree-kinematictree66-forwarddynamicscrb:
 
-`ForwardDynamicsCRB <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L484>`__\ (\ ``self``\ , \ ``q = []``\ , \ ``q_t = []``\ , \ ``torques = []``\ , \ ``forces = []``\ )
+`ForwardDynamicsCRB <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L484>`__\ (\ ``self``\ , \ ``q = []``\ , \ ``q\_t = []``\ , \ ``torques = []``\ , \ ``forces = []``\ )
 
 - | \ *classFunction*\ :
   | compute forward dynamics using composite rigid body algorithm
 - | \ *input*\ :
 
   | \ ``q``\ : joint space coordinates for the model at which the forward dynamics is evaluated
-  | \ ``q_t``\ : joint space velocity coordinates for the model at which the forward dynamics is evaluated
+  | \ ``q\_t``\ : joint space velocity coordinates for the model at which the forward dynamics is evaluated
   | \ ``torques``\ : a vector of torques applied at joint coordinates or list/array with zero length
   | \ ``forces``\ : forces acting on the bodies using special format
 - | \ *output*\ :
@@ -262,9 +262,9 @@ CLASS KinematicTree66 (in module kinematicTree)
 
 ----
 
-.. _sec-kinematicTree-KinematicTree66-ComputeMassMatrixAndForceTerms:
+.. _sec-kinematictree-kinematictree66-computemassmatrixandforceterms:
 
-`ComputeMassMatrixAndForceTerms <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L505>`__\ (\ ``self``\ , \ ``q``\ , \ ``q_t``\ , \ ``externalForces = []``\ )
+`ComputeMassMatrixAndForceTerms <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L505>`__\ (\ ``self``\ , \ ``q``\ , \ ``q\_t``\ , \ ``externalForces = []``\ )
 
 - | \ *classFunction*\ :
 
@@ -275,14 +275,14 @@ CLASS KinematicTree66 (in module kinematicTree)
 - | \ *input*\ :
 
   | \ ``q``\ : current joint coordinates
-  | \ ``q_t``\ : current joint velocities
+  | \ ``q\_t``\ : current joint velocities
   | \ ``externalForces``\ : list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
 - | \ *output*\ :
-  | mass matrix \ :math:`\Mm`\  and RHS vector \ :math:`\fv_{RHS}`\  for equations of motion \ :math:`M(q) \cdot q_tt + f(q,q_t,externalForces) = \tau`\ ; RHS is \ :math:`\fv_{RHS}=\tau - f(q,q_t,externalForces)`\ ; \ :math:`\tau`\  can be added outside of \texttt{ComputeMassMatrixAndForceTerms}
+  | mass matrix \ :math:`\Mm`\  and RHS vector \ :math:`\fv_{RHS}`\  for equations of motion \ :math:`M(q) \cdot q_tt + f(q,q_t,externalForces) = \tau`\ ; RHS is \ :math:`\fv_{RHS}=\tau - f(q,q_t,externalForces)`\ ; \ :math:`\tau`\  can be added outside of \ ``ComputeMassMatrixAndForceTerms``\
 
 ----
 
-.. _sec-kinematicTree-KinematicTree66-AddExternalForces:
+.. _sec-kinematictree-kinematictree66-addexternalforces:
 
 `AddExternalForces <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L579>`__\ (\ ``self``\ , \ ``Xup``\ , \ ``fvp``\ , \ ``externalForces = []``\ )
 

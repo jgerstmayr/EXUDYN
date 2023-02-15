@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: robotics.models &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>Module: robotics.models &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -49,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul class="current">
@@ -120,16 +122,11 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 <li><p>Author:    Martin Sereinig</p></li>
 <li><p>Date:      2021-01-10</p></li>
 </ul>
-<p id="sec-models-manipulator4rsimple"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L39">Manipulator4Rsimple</a>()</p>
+<p id="sec-models-manipulator4rsimple"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L38">Manipulator4Rsimple</a>()</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
 <div class="line">generate simple 4R manipulator as myRobot dictionary, settings are done in function</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><em>input</em>:</div>
-<div class="line">nothing</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -144,7 +141,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-models-manipulator3rsimple"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L119">Manipulator3RSimple</a>()</p>
+<p id="sec-models-manipulator3rsimple"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L117">Manipulator3RSimple</a>()</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -152,18 +149,13 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><em>input</em>:</div>
-<div class="line">nothing</div>
-</div>
-</li>
-<li><div class="line-block">
 <div class="line"><em>output</em>:</div>
 <div class="line">myRobot dictionary</div>
 </div>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-models-manipulatorpanda"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L206">ManipulatorPANDA</a>()</p>
+<p id="sec-models-manipulatorpanda"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L203">ManipulatorPANDA</a>()</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -171,27 +163,17 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><em>input</em>:</div>
-<div class="line">nothing</div>
-</div>
-</li>
-<li><div class="line-block">
 <div class="line"><em>output</em>:</div>
 <div class="line">myRobot dictionary</div>
 </div>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-models-manipulatorur5"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L349">ManipulatorUR5</a>()</p>
+<p id="sec-models-manipulatorur5"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L345">ManipulatorUR5</a>()</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
 <div class="line">generate UR5 manipulator as myRobot dictionary, settings are done in function</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><em>input</em>:</div>
-<div class="line">nothing</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -204,22 +186,17 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </div>
 <div class="line-block">
 <div class="line">define myRobot kinematics, UR5 Universal Robotics,</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">Standard</span> <span class="pre">DH-parameters</span></code>: [theta, d, a, alpha], according to P. Corke,</div>
+<div class="line">Standard DH-parameters: [theta, d, a, alpha], according to P. Corke,</div>
 <div class="line">Links modeld as cylindrical tubes, Inertia from Parham M. Kebria2016 / Kuefeta2014</div>
 </div>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-models-manipulatorpuma560"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L432">ManipulatorPuma560</a>()</p>
+<p id="sec-models-manipulatorpuma560"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L427">ManipulatorPuma560</a>()</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
 <div class="line">generate puma560 manipulator as myRobot dictionary, settings are done in function</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><em>input</em>:</div>
-<div class="line"><br /></div>
 </div>
 </li>
 <li><div class="line-block">
@@ -238,7 +215,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py">serialRobotKinematicTreeDigging.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-models-linklist2robot"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L528">LinkList2Robot</a>(<code class="docutils literal notranslate"><span class="pre">robotClass</span></code>, <code class="docutils literal notranslate"><span class="pre">robotLinkList</span></code>, <code class="docutils literal notranslate"><span class="pre">dhmode</span></code>)</p>
+<p id="sec-models-linklist2robot"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py#L523">LinkList2Robot</a>(<code class="docutils literal notranslate"><span class="pre">robotClass</span></code>, <code class="docutils literal notranslate"><span class="pre">robotLinkList</span></code>, <code class="docutils literal notranslate"><span class="pre">dhmode</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -266,9 +243,9 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 <div class="line">DH Parameter Information</div>
 <div class="line">stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha)</div>
 <div class="line">modDH = [alpha, dx, theta, rz] with</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">used</span> <span class="pre">by</span> <span class="pre">Corke</span> <span class="pre">and</span> <span class="pre">Lynch</span></code>: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d)</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">used</span> <span class="pre">by</span> <span class="pre">Khali</span></code>:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r)</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">Important</span> <span class="pre">note</span></code>:  d(khali)=a(corke)  and r(khali)=d(corke)</div>
+<div class="line">used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d)</div>
+<div class="line">used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r)</div>
+<div class="line">Important note:  d(khali)=a(corke)  and r(khali)=d(corke)</div>
 </div>
 </li>
 </ul>

@@ -1,11 +1,16 @@
+
+.. _sec-overview-advanced:
+
 Advanced topics
 ===============
- 
+
 This section covers some advanced topics, which may be only relevant for a smaller group of people. 
 Functionality may be extended but also removed in future
+
+.. _sec-overview-advanced-camerafollowing:
+
 Camera following objects and interacting with model view
 --------------------------------------------------------
-
 
 For some models, it may be advantageous to track the translation and/or rotation of certain bodies, e.g., for cars, (wheeled) robots or bicycles. 
 To do so, the current render state (\ ``SC.GetRenderState()``\ , \ ``SC.SetRenderState(...)``\ ) can be obtained and modified, in order to always follow a certain position.
@@ -30,6 +35,9 @@ As this needs to be done during redraw of every frame, it is conveniently done i
                  VObjectGround(graphicsDataUserFunction=UFgraphics)))
   #.... further code for simulation here
 
+
+
+.. _sec-overview-advanced-contact:
 
 Contact problems
 ----------------
@@ -64,25 +72,31 @@ Currently, \ ``GeneralContact``\  includes:
 +  Triangles mounted on rigid bodies, in contact with Spheres [only explicit]
 +  ANCFCable2D contacting with spheres (which then represent circles in 2D) [partially implicit, needs revision]
 
-For details on the contact formulations, see theDoc.pdf.
+For details on the contact formulations, see  :ref:`seccontacttheory`\ .
+
+
+.. _sec-overview-advanced-openvr:
 
 OpenVR
 ------
- 
+
 The general open source libraries from Valve, see
 
    https://github.com/ValveSoftware/openvr
 
-have been linked to Exudyn . In order to get OpenVR fully integrated, you need to run \ ``setup.py``\  Exudyn with the \ ``--openvr``\  flag. For general installation instructions, see theDoc.pdf.
+have been linked to Exudyn . In order to get OpenVR fully integrated, you need to run \ ``setup.py``\  Exudyn with the \ ``--openvr``\  flag. For general installation instructions, see  :ref:`sec-install-installinstructions`\ .
 
 Running OpenVR either requires an according head mounted display (HMD) or a virtualization using, e.g., Riftcat 2 to use a mobile phone with an according adapter. Visualization settings are available in \ ``interactive.openVR``\ , but need to be considered with care.
 An example is provided in \ ``openVRengine.py``\ , showing some optimal flags like locking the model rotation, zoom or translation.
 
 Everything is experimental, but contributions are welcome!
 
+
+.. _sec-overview-advanced-interactwithcodes:
+
 Interaction with other codes
 ----------------------------
- 
+
 Interaction with other codes and computers (E.g., MATLAB or other C++ codes, or other Python versions)
 is possible. 
 To connect to any other code, it is convenient to use a TCP/IP connection. This is enabled via 
@@ -95,9 +109,12 @@ the \ ``exudyn.utilities``\  functions
 Basically, data can be transmitted in both directions, e.g., within a preStepUserFunction. In Examples, you can find 
  TCPIPexudynMatlab.py which shows a basic example for such a connectivity.
 
+
+.. _sec-overview-advanced-ros:
+
 ROS
 ---
- 
+
 Basic interaction with ROS has been tested. However, make sure to use Python 3, as there is no (and will never be any) Python 2
 support for Exudyn .
 

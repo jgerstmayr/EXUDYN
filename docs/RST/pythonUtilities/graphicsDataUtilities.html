@@ -4,10 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: graphicsDataUtilities &mdash; Exudyn 1.5.97.dev1 documentation</title>
+  <title>Module: graphicsDataUtilities &mdash; Exudyn 1.5.100.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -49,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul class="current">
@@ -919,7 +921,7 @@ which contain line, text or triangle primitives for drawing in Exudyn using Open
 </div>
 <div class="line-block">
 <div class="line">generate graphics data for simple quad with option for checkerboard pattern;</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">points</span> <span class="pre">are</span> <span class="pre">arranged</span> <span class="pre">counter-clock-wise,</span> <span class="pre">e.g.</span></code>: p0=[0,0,0], p1=[1,0,0], p2=[1,1,0], p3=[0,1,0]</div>
+<div class="line">points are arranged counter-clock-wise, e.g.: p0=[0,0,0], p1=[1,0,0], p2=[1,1,0], p3=[0,1,0]</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -962,7 +964,7 @@ which contain line, text or triangle primitives for drawing in Exudyn using Open
 </div>
 <div class="line-block">
 <div class="line">function to generate checkerboard background;</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">points</span> <span class="pre">are</span> <span class="pre">arranged</span> <span class="pre">counter-clock-wise,</span> <span class="pre">e.g.</span></code>:</div>
+<div class="line">points are arranged counter-clock-wise, e.g.:</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -1018,7 +1020,9 @@ which contain line, text or triangle primitives for drawing in Exudyn using Open
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">vertices</span></code>: list of pairs of coordinates of vertices in mesh [x,y]</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">segments</span></code>: list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh;</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">the</span> <span class="pre">ordering</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">nodes</span> <span class="pre">is</span> <span class="pre">such</span> <span class="pre">that</span> <span class="pre">left</span> <span class="pre">triangle</span> <span class="pre">=</span> <span class="pre">inside,</span> <span class="pre">right</span> <span class="pre">triangle</span> <span class="pre">=</span> <span class="pre">outside,</span> <span class="pre">compare</span> <span class="pre">example</span> <span class="pre">with</span> <span class="pre">segment</span> <span class="pre">[V1,V2]</span></code>:\</div>
+<div class="line">the ordering of the nodes is such that left triangle = inside, right triangle = outside, compare example with segment [V1,V2]:</div>
+</div>
+<div class="line-block">
 <div class="line">inside</div>
 <div class="line">V1         V2</div>
 <div class="line">O———-O</div>

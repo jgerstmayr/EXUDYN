@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data structures &mdash; Exudyn 1.5.100.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Type definitions" href="TypeDefinitions.html" />
+    <link rel="prev" title="GeneralContact" href="GeneralContact.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="CInterfaceIndex.html">Python-C++ command interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information on Python-C++ interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SystemContainer.html">SystemContainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MainSystem.html">MainSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SystemData.html">SystemData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GeneralContact.html">GeneralContact</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Data structures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#matrixcontainer">MatrixContainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vector3dlist">Vector3DList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vector2dlist">Vector2DList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vector6dlist">Vector6DList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matrix3dlist">Matrix3DList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matrix6dlist">Matrix6DList</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html">Type definitions</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="CInterfaceIndex.html">Python-C++ command interface</a></li>
+      <li class="breadcrumb-item active">Data structures</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/cInterface/DataStructures.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-structures">
+<span id="sec-cinterface-datastructures"></span><h1>Data structures<a class="headerlink" href="#data-structures" title="Permalink to this heading"></a></h1>
+<p>This section describes a set of special data structures which are used in the Python-C++ interface,
+such as a MatrixContainer for dense/sparse matrices or a list of 3D vectors.
+Note that there are many native data types, such as lists, dicts and numpy arrays (e.g. 3D vectors),
+which are not described here as they are native to Pybind11, but can be passed as arguments when appropriate.</p>
+<section id="matrixcontainer">
+<h2>MatrixContainer<a class="headerlink" href="#matrixcontainer" title="Permalink to this heading"></a></h2>
+<p>The MatrixContainer is a versatile representation for dense and sparse matrices.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create empty MatrixContainer:</span>
+<span class="n">mc</span> <span class="o">=</span> <span class="n">MatrixContainer</span><span class="p">()</span>
+
+<span class="c1">#Create MatrixContainer with dense matrix:</span>
+<span class="c1">#matrix can be a list of lists or a numpy array, e.g.:</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">mc</span> <span class="o">=</span> <span class="n">MatrixContainer</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+
+<span class="c1">#Set with dense pyArray (a numpy array):</span>
+<span class="n">mc</span><span class="o">.</span><span class="n">SetWithDenseMatrix</span><span class="p">(</span><span class="n">pyArray</span><span class="p">,</span> <span class="n">useDenseMatrix</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The class <strong>MatrixContainer</strong> has the follwing <strong>functions and structures</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>SetWithDenseMatrix</strong>(<em>pyArray</em>, <em>useDenseMatrix</em> = False):</div>
+<div class="line">set MatrixContainer with dense numpy array; array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetWithSparseMatrixCSR</strong>(<em>numberOfRowsInit</em>, <em>numberOfColumnsInit</em>, <em>pyArrayCSR</em>, <em>useDenseMatrix</em> = True):</div>
+<div class="line">set with sparse CSR matrix format: numpy array ‘pyArrayCSR’ contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetPythonObject</strong>():</div>
+<div class="line">convert MatrixContainer to numpy array (dense) or dictionary (sparse): containing nr. of rows, nr. of columns, numpy matrix with sparse triplets</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Convert2DenseMatrix</strong>():</div>
+<div class="line">convert MatrixContainer to dense numpy array (SLOW and may fail for too large sparse matrices)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>UseDenseMatrix</strong>():</div>
+<div class="line">returns True if dense matrix is used, otherwise False</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__repr__()</strong>:</div>
+<div class="line">return the string representation of the MatrixContainer</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vector3dlist">
+<h2>Vector3DList<a class="headerlink" href="#vector3dlist" title="Permalink to this heading"></a></h2>
+<p>The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++.</p>
+<p>Usage:
++  Create empty <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with list of numpy arrays:</p>
+<p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList([</span> <span class="pre">numpy.array([1.,2.,3.]),</span> <span class="pre">numpy.array([4.,5.,6.])</span> <span class="pre">])</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with list of lists <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList([[1.,2.,3.],</span> <span class="pre">[4.,5.,6.]])</span></code>+  Append item: <code class="docutils literal notranslate"><span class="pre">x.Append([0.,2.,4.])</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code></p>
+<p>The class <strong>Vector3DList</strong> has the follwing <strong>functions and structures</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>Append</strong>(<em>pyArray</em>):</div>
+<div class="line">add single array or list to Vector3DList; array or list must have appropriate dimension!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetPythonObject</strong>():</div>
+<div class="line">convert Vector3DList into (copied) list of numpy arrays</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>len(data)</strong>:</div>
+<div class="line">return length of the Vector3DList, using len(data) where data is the Vector3DList</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>data[index]= …</strong>:</div>
+<div class="line">set list item ‘index’ with data, write: data[index] = …</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>… = data[index]</strong>:</div>
+<div class="line">get copy of list item with ‘index’ as vector</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__repr__()</strong>:</div>
+<div class="line">return the string representation of the Vector3DList data, e.g.: print(data)</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vector2dlist">
+<h2>Vector2DList<a class="headerlink" href="#vector2dlist" title="Permalink to this heading"></a></h2>
+<p>The Vector2DList is used to represent lists of 2D vectors. This is used to transfer such lists from Python to C++.</p>
+<p>Usage:
++  Create empty <code class="docutils literal notranslate"><span class="pre">Vector2DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector2DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector2DList</span></code> with list of numpy arrays:</p>
+<p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector2DList([</span> <span class="pre">numpy.array([1.,2.]),</span> <span class="pre">numpy.array([4.,5.])</span> <span class="pre">])</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector2DList</span></code> with list of lists <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector2DList([[1.,2.],</span> <span class="pre">[4.,5.]])</span></code>+  Append item: <code class="docutils literal notranslate"><span class="pre">x.Append([0.,2.])</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code>+  similar to Vector3DList !</p>
+<p>The class <strong>Vector2DList</strong> has the follwing <strong>functions and structures</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>Append</strong>(<em>pyArray</em>):</div>
+<div class="line">add single array or list to Vector2DList; array or list must have appropriate dimension!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetPythonObject</strong>():</div>
+<div class="line">convert Vector2DList into (copied) list of numpy arrays</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>len(data)</strong>:</div>
+<div class="line">return length of the Vector2DList, using len(data) where data is the Vector2DList</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>data[index]= …</strong>:</div>
+<div class="line">set list item ‘index’ with data, write: data[index] = …</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>… = data[index]</strong>:</div>
+<div class="line">get copy of list item with ‘index’ as vector</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__repr__()</strong>:</div>
+<div class="line">return the string representation of the Vector2DList data, e.g.: print(data)</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vector6dlist">
+<h2>Vector6DList<a class="headerlink" href="#vector6dlist" title="Permalink to this heading"></a></h2>
+<p>The Vector6DList is used to represent lists of 6D vectors. This is used to transfer such lists from Python to C++.</p>
+<p>Usage:
++  Create empty <code class="docutils literal notranslate"><span class="pre">Vector6DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector6DList()</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code>+  similar to Vector3DList !</p>
+<p>The class <strong>Vector6DList</strong> has the follwing <strong>functions and structures</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>Append</strong>(<em>pyArray</em>):</div>
+<div class="line">add single array or list to Vector6DList; array or list must have appropriate dimension!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetPythonObject</strong>():</div>
+<div class="line">convert Vector6DList into (copied) list of numpy arrays</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>len(data)</strong>:</div>
+<div class="line">return length of the Vector6DList, using len(data) where data is the Vector6DList</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>data[index]= …</strong>:</div>
+<div class="line">set list item ‘index’ with data, write: data[index] = …</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>… = data[index]</strong>:</div>
+<div class="line">get copy of list item with ‘index’ as vector</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__repr__()</strong>:</div>
+<div class="line">return the string representation of the Vector6DList data, e.g.: print(data)</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="matrix3dlist">
+<h2>Matrix3DList<a class="headerlink" href="#matrix3dlist" title="Permalink to this heading"></a></h2>
+<p>The Matrix3DList is used to represent lists of 3D Matrices. . This is used to transfer such lists from Python to C++.</p>
+<p>Usage:
++  Create empty <code class="docutils literal notranslate"><span class="pre">Matrix3DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix3DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Matrix3DList</span></code> with list of numpy arrays:</p>
+<p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix3DList([</span> <span class="pre">numpy.eye(3),</span> <span class="pre">numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]])</span> <span class="pre">])</span></code>+  Append item: <code class="docutils literal notranslate"><span class="pre">x.Append(numpy.eye(3))</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code>+  similar to Vector3DList !</p>
+<p>The class <strong>Matrix3DList</strong> has the follwing <strong>functions and structures</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>Append</strong>(<em>pyArray</em>):</div>
+<div class="line">add single 3D array or list of lists to Matrix3DList; array or lists must have appropriate dimension!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetPythonObject</strong>():</div>
+<div class="line">convert Matrix3DList into (copied) list of 2D numpy arrays</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>len(data)</strong>:</div>
+<div class="line">return length of the Matrix3DList, using len(data) where data is the Matrix3DList</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>data[index]= …</strong>:</div>
+<div class="line">set list item ‘index’ with matrix, write: data[index] = …</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>… = data[index]</strong>:</div>
+<div class="line">get copy of list item with ‘index’ as matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__repr__()</strong>:</div>
+<div class="line">return the string representation of the Matrix3DList data, e.g.: print(data)</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="matrix6dlist">
+<h2>Matrix6DList<a class="headerlink" href="#matrix6dlist" title="Permalink to this heading"></a></h2>
+<p>The Matrix6DList is used to represent lists of 6D Matrices. . This is used to transfer such lists from Python to C++.</p>
+<p>Usage:
++  Create empty <code class="docutils literal notranslate"><span class="pre">Matrix6DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix6DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Matrix6DList</span></code> with list of numpy arrays:</p>
+<p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix6DList([</span> <span class="pre">numpy.eye(6),</span> <span class="pre">2*numpy.eye(6)</span> <span class="pre">])</span></code>+  Append item: <code class="docutils literal notranslate"><span class="pre">x.Append(numpy.eye(6))</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code>+  similar to Matrix3DList !</p>
+<p>The class <strong>Matrix6DList</strong> has the follwing <strong>functions and structures</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>Append</strong>(<em>pyArray</em>):</div>
+<div class="line">add single 6D array or list of lists to Matrix6DList; array or lists must have appropriate dimension!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetPythonObject</strong>():</div>
+<div class="line">convert Matrix6DList into (copied) list of 2D numpy arrays</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>len(data)</strong>:</div>
+<div class="line">return length of the Matrix6DList, using len(data) where data is the Matrix6DList</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>data[index]= …</strong>:</div>
+<div class="line">set list item ‘index’ with matrix, write: data[index] = …</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>… = data[index]</strong>:</div>
+<div class="line">get copy of list item with ‘index’ as matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__repr__()</strong>:</div>
+<div class="line">return the string representation of the Matrix6DList data, e.g.: print(data)</div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="GeneralContact.html" class="btn btn-neutral float-left" title="GeneralContact" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="TypeDefinitions.html" class="btn btn-neutral float-right" title="Type definitions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
