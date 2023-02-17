@@ -15,10 +15,10 @@ table{
 
 <h2>ISSUE Tracker</h2>
 
-Number of issues = 1432, 
-Number of resolved issues = 1261 (100 in current minor version), 
-Exudyn version = 1.5.100.dev1, 
-last change =  2023-02-16
+Number of issues = 1437, 
+Number of resolved issues = 1264 (103 in current minor version), 
+Exudyn version = 1.5.103.dev1, 
+last change =  2023-02-18
 
 
 <table style = "width:100%">
@@ -38,6 +38,38 @@ last change =  2023-02-16
 <th>l</th>
 <th>notes</th>
 </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1435</td>
+    <td>solver              </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add deriviative of loads to regular jacobian computation with flag (default=False); use numerical diff sim. to JacobianODE2</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-02-16</td>
+    <td>2023-08-15</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#FFB266">
+    <td>1434</td>
+    <td>solver              </td>
+    <td>JG</td>
+    <td>RAISED  </td>
+    <td> add CqT*lambda terms to systemwide jacobian computation with flag</td>
+    <td>EXTENSION</td>
+    <td></td>
+    <td>2023-02-16</td>
+    <td>2023-08-15</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
   <tr style = "background-color:#FFB266">
     <td>1426</td>
     <td>cleanup howto files </td>
@@ -2770,6 +2802,54 @@ last change =  2023-02-16
     <td>2019-07-01</td>
     <td></td>
     <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1436</td>
+    <td>sphinx / github pages</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> add settings and structures; fix latex parts; fix links</td>
+    <td>DOCU</td>
+    <td></td>
+    <td>2023-02-18</td>
+    <td>2023-08-17</td>
+    <td>2023-02-18 00:56</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1433</td>
+    <td>Lie group integration</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> system with > 1 node raises LinkedDataVectorBases exception</td>
+    <td>BUG</td>
+    <td></td>
+    <td>2023-02-16</td>
+    <td>2023-08-15</td>
+    <td>2023-02-16 16:00</td>
+    <td>JG</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr style = "background-color:#BBFFBB">
+    <td>1432</td>
+    <td>artificialIntelligence module</td>
+    <td>JG</td>
+    <td>RESOLVED</td>
+    <td> fix np.float64 not beeing detected as a scalar (float) for initializationValues of RL environment and possible waiting without activated renderer</td>
+    <td>FIX</td>
+    <td></td>
+    <td>2023-02-16</td>
+    <td>2023-08-15</td>
+    <td>2023-02-16 15:58</td>
+    <td>P. Manzl</td>
     <td></td>
     <td></td>
     <td></td>

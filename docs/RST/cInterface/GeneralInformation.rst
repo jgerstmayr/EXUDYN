@@ -38,7 +38,7 @@ To add a MainSystem to system container SC and store as variable mbs, write:
   | \ ``mbs = SC.AddSystem()``\ 
 
 
-Furthermore, there are a couple of commands available directly in the Exudyn module, given in the following subsections.Regarding the \ **(basic) module access**\ , functions are related to the \ ``exudyn = exu``\  module, see these examples:
+Furthermore, there are a couple of commands available directly in the \ ``exudyn``\  module, given in the following subsections.Regarding the \ **(basic) module access**\ , functions are related to the \ ``exudyn = exu``\  module, see these examples:
 
 .. code-block:: python
    
@@ -53,7 +53,7 @@ Furthermore, there are a couple of commands available directly in the Exudyn mod
    #  invalid index, may depend on compilation settings:
    nInvalid = exu.InvalidIndex() #the invalid index, depends on architecture and version
 
-Understanding the usage of functions for python object \ ``SystemContainer``\  provided by Exudyn, the following examples might help:
+Understanding the usage of functions for python object \ ``SystemContainer``\  of the module \ ``exudyn``\ , the following examples might help:
 
 .. code-block:: python
    
@@ -139,7 +139,7 @@ Exceptions and Error Messages
 
 There are several levels of type and argument checks, leading to different types of errors and exceptions. The according error messages are non-unique, because they may be raised in Python modules or in C++, and they may be raised on different levels of the code. Error messages depend on Python version and on your iPython console. Very often the exception may be called \ ``ValueError``\ , but it mustnot mean that it is a wrong error, but it could also be, e.g., a wrong order of function calls.
 
-A type conversion error is raised when providing wrong argument types, e.g., try \ ``exu.GetVersionString('abs')``\ :
+As an example, a type conversion error is raised when providing wrong argument types, e.g., try \ ``exu.GetVersionString('abs')``\ :
 
 .. code-block:: 
    

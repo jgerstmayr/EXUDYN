@@ -764,7 +764,7 @@ The Jacobian has the following $3 \times 3$ structure,
 \ee
 in which we consider $\Jm_{\FO\SO}$ and $\Jm_{\SO\FO}$ to vanish in the current implementations, which means that coupling of \hac{ODE1} and \hac{ODE2} coordinates is only possible due to algebraic equations.
 
-The remaining terms in the Jacobian read
+The remaining terms in the Jacobian are currently (or by default settings) evaluated as:
 \bea
   \Jm_{\SO\SO}&=&\frac{\partial \rv^\GA_\SO}{\partial \avu} 
 							 = \frac{\partial \rv^\GA_\SO}{\partial \qv} \frac{\partial \qv}{\partial \avu} 
@@ -785,7 +785,8 @@ The remaining terms in the Jacobian read
 	\Jm_{\AE\AE}&=&\frac{\partial \rv^\GA_\AE}{\partial \tlambda}
 							 = \frac{\partial \gv}{\partial \tlambda}
 \eea
-%
+Note that some parts of the Jacobian are \mybold{neglected}, such as mass matrix and constraint Jacobian terms in $\Jm_{\SO\SO}$, which are usually of minor influence. Furthermore, Jacobians for state-dependent loads are neglected except for system-wide numerical Jacobians.
+
 Once an update $\qv^\mathrm{Newton}_{k+1}$ has been computed, the interpolation formulas \eqref{eq_Newmark_interpolation} need to be evaluated before the next residual and Jacobian can be computed.
 %
 \mysubsubsubsection{(B) Solve for unknown displacements}

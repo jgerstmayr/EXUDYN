@@ -56,7 +56,7 @@ plrmain.AddDocu('Note that creating a second \\texttt{exu.SystemContainer()} wil
 plrmain.AddDocu('To add a MainSystem to system container SC and store as variable mbs, write:')
 plrmain.AddDocuList(itemList=['\\texttt{mbs = SC.AddSystem()}'], itemText='[]')
 
-plrmain.AddDocu('Furthermore, there are a couple of commands available directly in the \\codeName\\ module, given in the following subsections.'+
+plrmain.AddDocu('Furthermore, there are a couple of commands available directly in the \\texttt{exudyn} module, given in the following subsections.'+
                 'Regarding the \\mybold{(basic) module access}, functions are related to the \\texttt{exudyn = exu} module, see these examples:')
 
 plrmain.AddDocuCodeBlock(code="""
@@ -72,7 +72,7 @@ exu.SetWriteToConsole(False)
 nInvalid = exu.InvalidIndex() #the invalid index, depends on architecture and version
 """)
 
-plrmain.AddDocu('Understanding the usage of functions for python object \\texttt{SystemContainer} provided by \\codeName, the following examples might help:')
+plrmain.AddDocu('Understanding the usage of functions for python object \\texttt{SystemContainer} of the module \\texttt{exudyn}, the following examples might help:')
 plrmain.AddDocuCodeBlock(code="""
 #import exudyn module:
 import exudyn as exu
@@ -152,7 +152,7 @@ plrmain.AddDocu('There are several levels of type and argument checks, leading t
                 'not mean that it is a wrong error, but it could also be, e.g., a wrong order of function calls.',
                 section='Exceptions and Error Messages', sectionLevel=2,sectionLabel='sec:cinterface:exceptions')
 
-plrmain.AddDocu("A type conversion error is raised when providing wrong argument types, e.g., try \\texttt{exu.GetVersionString('abs')}:")
+plrmain.AddDocu("As an example, a type conversion error is raised when providing wrong argument types, e.g., try \\texttt{exu.GetVersionString('abs')}:")
 
 plrmain.AddDocuCodeBlock(code="""
 Traceback (most recent call last):

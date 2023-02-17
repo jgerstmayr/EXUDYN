@@ -421,11 +421,11 @@ def DictToItemsText(functionDict, tagList, addStr):
                         else:
                             sr = LatexString2RSTspecial(s, replaceMarkups = replaceMarkups)
                         sLatex += sSpaces*2+'\item[]'+s+'\n'
-                        sRST += '\n  | '+RemoveIndentation(sr)
+                        sRST += '  | '+RemoveIndentation(sr) + '\n'
                     
                 sLatex += '\\end{itemize}\n'
                 #sRST += '\n'+RemoveIndentation(strTag.strip(), '  | ')
-                sRST += '\n'
+                #sRST += '\n'
             else: #
                 #sLatex += strTag.replace('\n','\\\\ \n') + '\n'
                 sLatex += strTag.strip() + '\n' #in this case, we strip all spaces and newlines left, may be empty lines
@@ -466,6 +466,10 @@ def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFile
     sRST += RSTlabelString(sLabel.replace(':','-').replace('_','').lower())+'\n'
 
     #see also https://github.com/sphinx-doc/sphinx/issues/3921
+    if isClassFunction:
+        sRST += 'Class function: '
+    else:
+        sRST += 'Function: '
     sRST += RSTurl(functionName, url, False) + '_\\ (' #add another _ to make url anonymous (otherwise warning, as function name my be duplicated)
 
     sLatex += '('
@@ -473,7 +477,7 @@ def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFile
     for i in range(len(argList)):
         if len(argList[i].strip()) != 0:
             sLatex += sep+'{\\it '+argList[i]+'}'
-            sRST += sep + '\\ ``' + argList[i]
+            sRST += sep + '\\ ``' + argList[i].replace('\\_','_')
             if len(argDefault[i]) != 0:
                 sLatex += '= '+argDefault[i]
                 sRST += ' = '+argDefault[i] 

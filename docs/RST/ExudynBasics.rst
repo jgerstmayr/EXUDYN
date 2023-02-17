@@ -39,7 +39,7 @@ Using \ ``mbs.Reset()``\  will clear the system and allows to set up a new syste
 Simulation settings
 -------------------
 
-The simulation settings consists of a couple of substructures, e.g., for \ ``solutionSettings``\ , \ ``staticSolver``\ , \ ``timeIntegration``\  as well as a couple of general options -- for details see Sections [theDoc.pdf] -- [theDoc.pdf].
+The simulation settings consists of a couple of substructures, e.g., for \ ``solutionSettings``\ , \ ``staticSolver``\ , \ ``timeIntegration``\  as well as a couple of general options -- for details see Sections Section :ref:`sec-solutionsettings`\  -- Section :ref:`sec-simulationsettings`\ .
 
 Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver. 
 
@@ -108,9 +108,9 @@ Visualization settings dialog
 
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
 
-Details on visualization settings and its substructures are provided in Sections [theDoc.pdf] -- [theDoc.pdf]. These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \ ``SC.WaitForRenderEngineStopFlag()``\  or 
+Details on visualization settings and its substructures are provided in Section :ref:`sec-vsettingsgeneral`\  -- Section :ref:`sec-visualizationsettings`\ . These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \ ``SC.WaitForRenderEngineStopFlag()``\  or 
 \ ``mbs.WaitForUserToContinue()``\  ).
-
+The visualization settings dialog is shown exemplarily in Fig. :ref:`fig-visualizationsettings`\ .
 Note that this dialog is automatically created and uses Python's \ ``tkinter``\ , which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn .
 
 The appearance of visualization settings dialogs may be adjusted by directly modifying \ ``exudyn.GUI``\  variables (this may change in the future). For example write in your code before opening the render window (treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click):
@@ -132,12 +132,11 @@ The appearance of visualization settings dialogs may be adjusted by directly mod
 
 
 
-.. |picVisSettings| image:: ../theDoc/figures/visualizationSettings.png
-   :width: 60%
+.. _fig-visualizationsettings:
+.. figure:: ../theDoc/figures/visualizationSettings.png
+   :width: 80%
 
-|picVisSettings|
-
-[View of visualization settings (press 'V' in render window to open dialog).]
+   View of visualization settings (press 'V' in render window to open dialog)
 
 
 
@@ -190,7 +189,7 @@ There are some main features in the renderer, using keyboard and mouse:
 +  open visualization dialog: key V
 +  show item number: click on graphics element with left mouse button
 +  show item dictionary: click on graphics element with right mouse button  
-+  ... (see  :ref:`sec-vsettingsgeneral`\ ff.)
++  ... (see Section :ref:`sec-vsettingsgeneral`\ ff.)
 
 Depending on your model (size, place, ...), you may need to adjust the following \ ``openGL``\  parameters in \ ``visualizationSettings``\ :
 
@@ -198,7 +197,7 @@ Depending on your model (size, place, ...), you may need to adjust the following
 +  shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
 +  visibility of nodes, markers, etc. in according bodies, nodes, markers, ..., \ ``visualizationSettings``\ 
 +  move camera with a selected marker: adjust \ ``trackMarker``\  in \ ``visualizationSettings.interactive``\ 
-+  ... (see  :ref:`sec-vsettingsgeneral`\ ff.)
++  ... (see Section :ref:`sec-vsettingsgeneral`\ ff.)
 
 
 
@@ -233,7 +232,7 @@ Storing the model view
 ----------------------
 
 There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \ ``SC.GetRenderState()``\  and \ ``SC.SetRenderState()``\ ,
-see also  :ref:`sec-renderstate`\ .
+see also Section :ref:`sec-renderstate`\ .
 A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation (
 note that \ ``visualizationSettings.general.autoFitScene``\  should be set False if you want to use the stored zoom factor):
 
@@ -290,7 +289,7 @@ Now copy the output and set this with \ ``SC.SetRenderState``\  in your Python c
 
 
 Note that in the current version of Exudyn there is more data stored in render state, which is not used in \ ``SC.SetRenderState``\ ,
-see also  :ref:`sec-renderstate`\ .
+see also Section :ref:`sec-renderstate`\ .
 
 
 Graphics user functions via Python
@@ -299,7 +298,7 @@ Graphics user functions via Python
 There are some user functions in order to customize drawing:
 
 +  You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (\ ``GraphicsDataFromSTLfileTxt``\ ) using the established format STL (STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems).
-+  Some objects, e.g., \ ``ObjectGenericODE2``\  or \ ``ObjectRigidBody``\ , provide customized a function \ ``graphicsDataUserFunction``\ . This user function just returns a list of GraphicsData, see  :ref:`sec-graphicsdata`\ . With this function you can change the shape of the body in every step of the computation.
++  Some objects, e.g., \ ``ObjectGenericODE2``\  or \ ``ObjectRigidBody``\ , provide customized a function \ ``graphicsDataUserFunction``\ . This user function just returns a list of GraphicsData, see Section :ref:`sec-graphicsdata`\ . With this function you can change the shape of the body in every step of the computation.
 +  Specifically, the \ ``graphicsDataUserFunction``\  in \ ``ObjectGround``\  can be used to draw any moving background in the scene.
 
 Note that all kinds of \ ``graphicsDataUserFunction``\ s need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the \ ``graphicsDataUserFunction``\  between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.
@@ -329,8 +328,18 @@ Exudyn offers a convenient WYSIWYS -- 'What you See is What you Simulate' interf
 If you are running large models, it may be more convenient to watch results after simulation has been finished.
 For this, you can use
 
-+  \ ``interactive.SolutionViewer``\ , see Section [theDoc.pdf]
-+  \ ``interactive.AnimateModes``\ , lets you view the animation of computed modes, see Section [theDoc.pdf]
++  \ ``interactive.SolutionViewer``\ , see  :ref:`Section <sec-interactive-solutionviewer>`\ 
++  \ ``interactive.AnimateModes``\ , lets you view the animation of computed modes, see  :ref:`Section <sec-interactive-animatemodes>`\ 
+
+shown exemplary in Fig. :ref:`fig-solutionviewer`\ .
+
+
+.. _fig-solutionviewer:
+.. figure:: ../theDoc/figures/solutionViewer.png
+   :width: 60%
+
+   View of \ ``SolutionViewer``\  (as of Exudyn 1.5.42.dev1)
+
 
 
 The \ ``SolutionViewer``\  adds a \ ``tkinter``\  interactive dialog, which lets you interact with the model, with the following features:
@@ -340,7 +349,7 @@ The \ ``SolutionViewer``\  adds a \ ``tkinter``\  interactive dialog, which lets
 +  As soon as 'Run' is pressed, the player runs (and it may be started automatically as well)
 +  In the 'Static' mode, drag the slider 'Solution steps' to view the solution steps
 +  In the 'Continuous run' mode, the player runs in an infinite loop
-+  In the 'One cycle' mode, the player runs from the current position to the end; this is perfectly suited to record series of images for \ **creating animations**\ , see  :ref:`sec-overview-basics-animations`\  and works together with the visualization settings dialog.
++  In the 'One cycle' mode, the player runs from the current position to the end; this is perfectly suited to record series of images for \ **creating animations**\ , see Section :ref:`sec-overview-basics-animations`\  and works together with the visualization settings dialog.
 
 The solution should be loaded with
 \ ``LoadSolutionFile('coordinatesSolution.txt')``\ , where 'coordinatesSolution.txt' represents the stored solution file, 

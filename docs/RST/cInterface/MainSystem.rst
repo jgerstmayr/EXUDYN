@@ -131,10 +131,10 @@ This section provides functions for adding, reading and modifying nodes. Nodes a
 
      item = Rigid2D( referenceCoordinates= [1,0.5,0], initialVelocities= [10,0,0]) 
      mbs.AddNode(item) 
-     nodeDict = \{'nodeType': 'Point', 
+     nodeDict = {'nodeType': 'Point', 
      'referenceCoordinates': [1.0, 0.0, 0.0], 
      'initialCoordinates': [0.0, 2.0, 0.0], 
-     'name': 'example node'\} 
+     'name': 'example node'} 
       mbs.AddNode(nodeDict)
 
 * | **GetNodeNumber**\ (\ *nodeName*\ ): 
@@ -251,10 +251,10 @@ This section provides functions for adding, reading and modifying objects, which
 
      item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) 
      mbs.AddObject(item) 
-     objectDict = \{'objectType': 'MassPoint', 
+     objectDict = {'objectType': 'MassPoint', 
      'physicsMass': 10, 
      'nodeNumber': 0, 
-     'name': 'example object'\} 
+     'name': 'example object'} 
       mbs.AddObject(objectDict)
 
 * | **GetObjectNumber**\ (\ *objectName*\ ): 
@@ -358,9 +358,9 @@ This section provides functions for adding, reading and modifying markers. Marke
 
      item = MarkerNodePosition(name='my marker',nodeNumber=1) 
      mbs.AddMarker(item)
-     markerDict = \{'markerType': 'NodePosition', 
+     markerDict = {'markerType': 'NodePosition', 
       'nodeNumber': 0, 
-      'name': 'position0'\}
+      'name': 'position0'}
       mbs.AddMarker(markerDict)
 
 * | **GetMarkerNumber**\ (\ *markerName*\ ): 
@@ -443,10 +443,10 @@ This section provides functions for adding, reading and modifying operating load
 
      item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) 
      mbs.AddLoad(item)
-     loadDict = \{'loadType': 'ForceVector',
+     loadDict = {'loadType': 'ForceVector',
       'markerNumber': 0,
       'loadVector': [1.0, 0.0, 0.0],
-      'name': 'heavy load'\} 
+      'name': 'heavy load'} 
       mbs.AddLoad(loadDict)
 
 * | **GetLoadNumber**\ (\ *loadName*\ ): 
@@ -529,10 +529,10 @@ This section provides functions for adding, reading and modifying operating sens
 
      item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) 
      mbs.AddSensor(item)
-     sensorDict = \{'sensorType': 'Node',
+     sensorDict = {'sensorType': 'Node',
       'nodeNumber': 0,
       'fileName': 'sensor.txt',
-      'name': 'test sensor'\} 
+      'name': 'test sensor'} 
       mbs.AddSensor(sensorDict)
 
 * | **GetSensorNumber**\ (\ *sensorName*\ ): 

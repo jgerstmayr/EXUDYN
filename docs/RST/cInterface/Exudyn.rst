@@ -6,7 +6,7 @@ Exudyn
 
 
 
-These are the access functions to the Exudyn module. General usage is explained in  :ref:`sec-generalpythoninterface`\  and examples are provided there. The C++ module \ ``exudyn``\  is the root level object linked between Python and C++.In the installed site-packages, the according file is usually denoted as \ ``exudynCPP.pyd``\  for the regular module, \ ``exudynCPPfast.pyd``\  for the module without range checks and \ ``exudynCPPnoAVX.pyd``\  for the module compiled without AVX vector extensions (may depend on your installation).
+These are the access functions to the Exudyn module. General usage is explained in Section :ref:`sec-generalpythoninterface`\  and examples are provided there. The C++ module \ ``exudyn``\  is the root level object linked between Python and C++.In the installed site-packages, the according file is usually denoted as \ ``exudynCPP.pyd``\  for the regular module, \ ``exudynCPPfast.pyd``\  for the module without range checks and \ ``exudynCPPnoAVX.pyd``\  for the module compiled without AVX vector extensions (may depend on your installation).
 
 .. code-block:: python
    
@@ -39,11 +39,11 @@ These are the access functions to the Exudyn module. General usage is explained 
 * | **DoRendererIdleTasks**\ (\ *waitSeconds*\  = 0): 
   | Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 to wait until window is closed
 * | **SolveStatic**\ (\ *mbs*\ , \ *simulationSettings*\  = exudyn.SimulationSettings(), \ *updateInitialValues*\  = False, \ *storeSolver*\  = True): 
-  | Static solver function, mapped from module \ ``solver``\ ; for details on the Python interface see  :ref:`sec-solver-solvestatic`\ ; for background on solvers, see  :ref:`sec-solvers`\ 
+  | Static solver function, mapped from module \ ``solver``\ ; for details on the Python interface see Section :ref:`sec-solver-solvestatic`\ ; for background on solvers, see Section :ref:`sec-solvers`\ 
 * | **SolveDynamic**\ (\ *mbs*\ , \ *simulationSettings*\  = exudyn.SimulationSettings(), \ *solverType*\  = exudyn.DynamicSolverType.GeneralizedAlpha, \ *updateInitialValues*\  = False, \ *storeSolver*\  = True): 
-  | Dynamic solver function, mapped from module \ ``solver``\ ; for details on the Python interface see  :ref:`sec-solver-solvedynamic`\ ; for background on solvers, see  :ref:`sec-solvers`\ 
+  | Dynamic solver function, mapped from module \ ``solver``\ ; for details on the Python interface see Section :ref:`sec-solver-solvedynamic`\ ; for background on solvers, see Section :ref:`sec-solvers`\ 
 * | **ComputeODE2Eigenvalues**\ (\ *mbs*\ , \ *simulationSettings*\  = exudyn.SimulationSettings(), \ *useSparseSolver*\  = False, \ *numberOfEigenvalues*\  = -1, \ *setInitialValues*\  = True, \ *convert2Frequencies*\  = False): 
-  | Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \ ``solver``\ ; for details on the Python interface see  :ref:`sec-solver-computeode2eigenvalues`\ 
+  | Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \ ``solver``\ ; for details on the Python interface see Section :ref:`sec-solver-computeode2eigenvalues`\ 
 * | **SetOutputPrecision**\ (\ *numberOfDigits*\ ): 
   | Set the precision (integer) for floating point numbers written to console (reset when simulation is started!); NOTE: this affects only floats converted to strings inside C++ exudyn; if you print a float from Python, it is usually printed with 16 digits; if printing numpy arrays, 8 digits are used as standard, to be changed with numpy.set_printoptions(precision=16); alternatively convert into a list
 * | **SetLinalgOutputFormatPython**\ (\ *flagPythonFormat*\ ): 

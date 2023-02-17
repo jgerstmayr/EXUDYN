@@ -1,14 +1,17 @@
 % definition of structures
 
+
 %++++++++++++++++++++++++++++++++++++++
 \mysubsection{Structures for structural elements}
 This section includes data structures for structural elements, surch as beams (and plates in future). These classes are used as interface between Python libraries for structural elements and Exudyn internal classes.
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{PyBeamSection} \label{sec:PyBeamSection}
-Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which $X$ represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t.\ bending; $Y$ and $Z$ are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero.\\ 
-%
-PyBeamSection has the following items:
+
+\mysubsubsubsection{PyBeamSection}
+\label{sec:PyBeamSection}
+Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which $X$ represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t.\ bending; $Y$ and $Z$ are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero.
+
+\noindent PyBeamSection has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -22,11 +25,14 @@ PyBeamSection has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{BeamSectionGeometry} \label{sec:BeamSectionGeometry}
-Data structure for definition of 2D and 3D beam (cross) section geometrical properties. Used for visualization and contact.\\ 
-%
-BeamSectionGeometry has the following items:
+
+\mysubsubsubsection{BeamSectionGeometry}
+\label{sec:BeamSectionGeometry}
+Data structure for definition of 2D and 3D beam (cross) section geometrical properties. Used for visualization and contact.
+
+\noindent BeamSectionGeometry has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -40,15 +46,18 @@ BeamSectionGeometry has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %++++++++++++++++++++++++++++++++++++++
 \mysubsection{Simulation settings}
 This section includes hierarchical structures for simulation settings, e.g., time integration, static solver, Newton iteration and solution file export.
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{SolutionSettings} \label{sec:SolutionSettings}
-General settings for exporting the solution (results) of a simulation.\\ 
-%
-SolutionSettings has the following items:
+
+\mysubsubsubsection{SolutionSettings}
+\label{sec:SolutionSettings}
+General settings for exporting the solution (results) of a simulation.
+
+\noindent SolutionSettings has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -84,11 +93,14 @@ SolutionSettings has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{NumericalDifferentiationSettings} \label{sec:NumericalDifferentiationSettings}
-Settings for numerical differentiation of a function (needed for computation of numerical jacobian e.g. in implizit integration); HOTINT1: relativeEpsilon * Maximum(minimumCoordinateSize, fabs(x(i))).\\ 
-%
-NumericalDifferentiationSettings has the following items:
+
+\mysubsubsubsection{NumericalDifferentiationSettings}
+\label{sec:NumericalDifferentiationSettings}
+Settings for numerical differentiation of a function (needed for computation of numerical jacobian e.g. in implizit integration).
+
+\noindent NumericalDifferentiationSettings has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -106,11 +118,14 @@ NumericalDifferentiationSettings has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{DiscontinuousSettings} \label{sec:DiscontinuousSettings}
-Settings for discontinuous iterations, as in contact, friction, plasticity and general switching phenomena.\\ 
-%
-DiscontinuousSettings has the following items:
+
+\mysubsubsubsection{DiscontinuousSettings}
+\label{sec:DiscontinuousSettings}
+Settings for discontinuous iterations, as in contact, friction, plasticity and general switching phenomena.
+
+\noindent DiscontinuousSettings has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -123,11 +138,14 @@ DiscontinuousSettings has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{NewtonSettings} \label{sec:NewtonSettings}
-Settings for Newton method used in static or dynamic simulation.\\ 
-%
-NewtonSettings has the following items:
+
+\mysubsubsubsection{NewtonSettings}
+\label{sec:NewtonSettings}
+Settings for Newton method used in static or dynamic simulation.
+
+\noindent NewtonSettings has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -151,11 +169,14 @@ NewtonSettings has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{GeneralizedAlphaSettings} \label{sec:GeneralizedAlphaSettings}
-Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods.\\ 
-%
-GeneralizedAlphaSettings has the following items:
+
+\mysubsubsubsection{GeneralizedAlphaSettings}
+\label{sec:GeneralizedAlphaSettings}
+Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods.
+
+\noindent GeneralizedAlphaSettings has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -173,11 +194,14 @@ GeneralizedAlphaSettings has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{ExplicitIntegrationSettings} \label{sec:ExplicitIntegrationSettings}
-Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods.\\ 
-%
-ExplicitIntegrationSettings has the following items:
+
+\mysubsubsubsection{ExplicitIntegrationSettings}
+\label{sec:ExplicitIntegrationSettings}
+Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods.
+
+\noindent ExplicitIntegrationSettings has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -192,11 +216,14 @@ ExplicitIntegrationSettings has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{TimeIntegrationSettings} \label{sec:TimeIntegrationSettings}
-General parameters used in time integration; specific parameters are provided in the according solver settings, e.g. for generalizedAlpha.\\ 
-%
-TimeIntegrationSettings has the following items:
+
+\mysubsubsubsection{TimeIntegrationSettings}
+\label{sec:TimeIntegrationSettings}
+General parameters used in time integration; specific parameters are provided in the according solver settings, e.g. for generalizedAlpha.
+
+\noindent TimeIntegrationSettings has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -232,11 +259,14 @@ TimeIntegrationSettings has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{StaticSolverSettings} \label{sec:StaticSolverSettings}
-Settings for static solver linear or nonlinear (Newton).\\ 
-%
-StaticSolverSettings has the following items:
+
+\mysubsubsubsection{StaticSolverSettings}
+\label{sec:StaticSolverSettings}
+Settings for static solver linear or nonlinear (Newton).
+
+\noindent StaticSolverSettings has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -264,11 +294,14 @@ StaticSolverSettings has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{LinearSolverSettings} \label{sec:LinearSolverSettings}
-Settings for linear solver, both dense and sparse (Eigen).\\ 
-%
-LinearSolverSettings has the following items:
+
+\mysubsubsubsection{LinearSolverSettings}
+\label{sec:LinearSolverSettings}
+Settings for linear solver, both dense and sparse (Eigen).
+
+\noindent LinearSolverSettings has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -283,11 +316,14 @@ LinearSolverSettings has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{Parallel} \label{sec:Parallel}
-Settings for linear solver, both dense and sparse (Eigen).\\ 
-%
-Parallel has the following items:
+
+\mysubsubsubsection{Parallel}
+\label{sec:Parallel}
+Settings for linear solver, both dense and sparse (Eigen).
+
+\noindent Parallel has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -304,11 +340,14 @@ Parallel has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{SimulationSettings} \label{sec:SimulationSettings}
-General Settings for simulation; according settings for solution and solvers are given in subitems of this structure. \\ 
-%
-SimulationSettings has the following items:
+
+\mysubsubsubsection{SimulationSettings}
+\label{sec:SimulationSettings}
+General Settings for simulation; according settings for solution and solvers are given in subitems of this structure. 
+
+\noindent SimulationSettings has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -330,15 +369,18 @@ SimulationSettings has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %++++++++++++++++++++++++++++++++++++++
 \mysubsection{Visualization settings}
 This section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see \refSection{sec:overview:basics:visualizationsettings}.
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsGeneral} \label{sec:VSettingsGeneral}
-General settings for visualization.\\ 
-%
-VSettingsGeneral has the following items:
+
+\mysubsubsubsection{VSettingsGeneral}
+\label{sec:VSettingsGeneral}
+General settings for visualization.
+
+\noindent VSettingsGeneral has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -379,11 +421,14 @@ VSettingsGeneral has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsContour} \label{sec:VSettingsContour}
-Settings for contour plots; use these options to visualize field data, such as displacements, stresses, strains, etc. for bodies, nodes and finite elements.\\ 
-%
-VSettingsContour has the following items:
+
+\mysubsubsubsection{VSettingsContour}
+\label{sec:VSettingsContour}
+Settings for contour plots; use these options to visualize field data, such as displacements, stresses, strains, etc. for bodies, nodes and finite elements.
+
+\noindent VSettingsContour has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -404,11 +449,14 @@ VSettingsContour has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsNodes} \label{sec:VSettingsNodes}
-Visualization settings for nodes.\\ 
-%
-VSettingsNodes has the following items:
+
+\mysubsubsubsection{VSettingsNodes}
+\label{sec:VSettingsNodes}
+Visualization settings for nodes.
+
+\noindent VSettingsNodes has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -427,11 +475,14 @@ VSettingsNodes has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsBeams} \label{sec:VSettingsBeams}
-Visualization settings for beam finite elements.\\ 
-%
-VSettingsBeams has the following items:
+
+\mysubsubsubsection{VSettingsBeams}
+\label{sec:VSettingsBeams}
+Visualization settings for beam finite elements.
+
+\noindent VSettingsBeams has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -451,11 +502,14 @@ VSettingsBeams has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsKinematicTree} \label{sec:VSettingsKinematicTree}
-Visualization settings for kinematic trees.\\ 
-%
-VSettingsKinematicTree has the following items:
+
+\mysubsubsubsection{VSettingsKinematicTree}
+\label{sec:VSettingsKinematicTree}
+Visualization settings for kinematic trees.
+
+\noindent VSettingsKinematicTree has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -469,11 +523,14 @@ VSettingsKinematicTree has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsBodies} \label{sec:VSettingsBodies}
-Visualization settings for bodies.\\ 
-%
-VSettingsBodies has the following items:
+
+\mysubsubsubsection{VSettingsBodies}
+\label{sec:VSettingsBodies}
+Visualization settings for bodies.
+
+\noindent VSettingsBodies has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -490,11 +547,14 @@ VSettingsBodies has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsConnectors} \label{sec:VSettingsConnectors}
-Visualization settings for connectors.\\ 
-%
-VSettingsConnectors has the following items:
+
+\mysubsubsubsection{VSettingsConnectors}
+\label{sec:VSettingsConnectors}
+Visualization settings for connectors.
+
+\noindent VSettingsConnectors has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -514,11 +574,14 @@ VSettingsConnectors has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsMarkers} \label{sec:VSettingsMarkers}
-Visualization settings for markers.\\ 
-%
-VSettingsMarkers has the following items:
+
+\mysubsubsubsection{VSettingsMarkers}
+\label{sec:VSettingsMarkers}
+Visualization settings for markers.
+
+\noindent VSettingsMarkers has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -533,11 +596,14 @@ VSettingsMarkers has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsLoads} \label{sec:VSettingsLoads}
-Visualization settings for loads.\\ 
-%
-VSettingsLoads has the following items:
+
+\mysubsubsubsection{VSettingsLoads}
+\label{sec:VSettingsLoads}
+Visualization settings for loads.
+
+\noindent VSettingsLoads has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -555,11 +621,14 @@ VSettingsLoads has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsSensors} \label{sec:VSettingsSensors}
-Visualization settings for sensors.\\ 
-%
-VSettingsSensors has the following items:
+
+\mysubsubsubsection{VSettingsSensors}
+\label{sec:VSettingsSensors}
+Visualization settings for sensors.
+
+\noindent VSettingsSensors has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -574,11 +643,14 @@ VSettingsSensors has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsContact} \label{sec:VSettingsContact}
-Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization. \\ 
-%
-VSettingsContact has the following items:
+
+\mysubsubsubsection{VSettingsContact}
+\label{sec:VSettingsContact}
+Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization. 
+
+\noindent VSettingsContact has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -597,11 +669,14 @@ VSettingsContact has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsWindow} \label{sec:VSettingsWindow}
-OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.\\ 
-%
-VSettingsWindow has the following items:
+
+\mysubsubsubsection{VSettingsWindow}
+\label{sec:VSettingsWindow}
+OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.
+
+\noindent VSettingsWindow has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -621,11 +696,14 @@ VSettingsWindow has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsDialogs} \label{sec:VSettingsDialogs}
-Settings related to dialogs (e.g., visualization settings dialog).\\ 
-%
-VSettingsDialogs has the following items:
+
+\mysubsubsubsection{VSettingsDialogs}
+\label{sec:VSettingsDialogs}
+Settings related to dialogs (e.g., visualization settings dialog).
+
+\noindent VSettingsDialogs has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -640,11 +718,14 @@ VSettingsDialogs has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsOpenGL} \label{sec:VSettingsOpenGL}
-OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL functionality. \\ 
-%
-VSettingsOpenGL has the following items:
+
+\mysubsubsubsection{VSettingsOpenGL}
+\label{sec:VSettingsOpenGL}
+OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL functionality. 
+
+\noindent VSettingsOpenGL has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -701,11 +782,14 @@ VSettingsOpenGL has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsExportImages} \label{sec:VSettingsExportImages}
-Functionality to export images to files (PNG or TGA format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.\\ 
-%
-VSettingsExportImages has the following items:
+
+\mysubsubsubsection{VSettingsExportImages}
+\label{sec:VSettingsExportImages}
+Functionality to export images to files (PNG or TGA format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.
+
+\noindent VSettingsExportImages has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -726,11 +810,14 @@ VSettingsExportImages has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsOpenVR} \label{sec:VSettingsOpenVR}
-Functionality to interact openVR; requires special hardware or software emulator, see steam / openVR descriptions. \\ 
-%
-VSettingsOpenVR has the following items:
+
+\mysubsubsubsection{VSettingsOpenVR}
+\label{sec:VSettingsOpenVR}
+Functionality to interact openVR; requires special hardware or software emulator, see steam / openVR descriptions. 
+
+\noindent VSettingsOpenVR has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -744,11 +831,14 @@ VSettingsOpenVR has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VSettingsInteractive} \label{sec:VSettingsInteractive}
-Functionality to interact with render window; will include left and right mouse press actions and others in future.\\ 
-%
-VSettingsInteractive has the following items:
+
+\mysubsubsubsection{VSettingsInteractive}
+\label{sec:VSettingsInteractive}
+Functionality to interact with render window; will include left and right mouse press actions and others in future.
+
+\noindent VSettingsInteractive has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -781,11 +871,14 @@ VSettingsInteractive has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{VisualizationSettings} \label{sec:VisualizationSettings}
-Settings for visualization. \\ 
-%
-VisualizationSettings has the following items:
+
+\mysubsubsubsection{VisualizationSettings}
+\label{sec:VisualizationSettings}
+Settings for visualization. 
+
+\noindent VisualizationSettings has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -809,15 +902,18 @@ VisualizationSettings has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %++++++++++++++++++++++++++++++++++++++
-\mysubsection{Solver substructures}\label{sec:solverSubstructures}
+\mysubsectionlabel{Solver substructures}{sec:solverSubstructures}
 This section includes structures contained in the solver, which can be accessed via the Python interface during solution or for building a customized solver in Python.
 
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{CSolverTimer} \label{sec:CSolverTimer}
-Structure for timing in solver. Each Real variable is used to measure the CPU time which certain parts of the solver need. This structure is only active if the code is not compiled with the \_\_FAST\_EXUDYN\_LINALG option and if displayComputationTime is set True. Timings will only be filled, if useTimer is True.\\ 
-%
-CSolverTimer has the following items:
+
+\mysubsubsubsection{CSolverTimer}
+\label{sec:CSolverTimer}
+Structure for timing in solver. Each Real variable is used to measure the CPU time which certain parts of the solver need. This structure is only active if the code is not compiled with the \_\_FAST\_EXUDYN\_LINALG option and if displayComputationTime is set True. Timings will only be filled, if useTimer is True.
+
+\noindent CSolverTimer has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -853,11 +949,14 @@ CSolverTimer has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{SolverLocalData} \label{sec:SolverLocalData}
-Solver local data structure for solution vectors, system matrices and temporary vectors and data structures.\\ 
-%
-SolverLocalData has the following items:
+
+\mysubsubsubsection{SolverLocalData}
+\label{sec:SolverLocalData}
+Solver local data structure for solution vectors, system matrices and temporary vectors and data structures.
+
+\noindent SolverLocalData has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -886,11 +985,14 @@ SolverLocalData has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{SolverIterationData} \label{sec:SolverIterationData}
-Solver internal structure for counters, steps, step size, time, etc.; solution vectors, residuals, etc. are SolverLocalData. The given default values are overwritten by the simulationSettings when initializing the solver.\\ 
-%
-SolverIterationData has the following items:
+
+\mysubsubsubsection{SolverIterationData}
+\label{sec:SolverIterationData}
+Solver internal structure for counters, steps, step size, time, etc.; solution vectors, residuals, etc. are SolverLocalData. The given default values are overwritten by the simulationSettings when initializing the solver.
+
+\noindent SolverIterationData has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -922,11 +1024,14 @@ SolverIterationData has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{SolverConvergenceData} \label{sec:SolverConvergenceData}
-Solver internal structure for convergence information: residua, iteration loop errors and error flags. For detailed behavior of these flags, visit the source code!. \\ 
-%
-SolverConvergenceData has the following items:
+
+\mysubsubsubsection{SolverConvergenceData}
+\label{sec:SolverConvergenceData}
+Solver internal structure for convergence information: residua, iteration loop errors and error flags. For detailed behavior of these flags, visit the source code!. 
+
+\noindent SolverConvergenceData has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -951,11 +1056,14 @@ SolverConvergenceData has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{SolverOutputData} \label{sec:SolverOutputData}
-Solver internal structure for output modes, output timers and counters.\\ 
-%
-SolverOutputData has the following items:
+
+\mysubsubsubsection{SolverOutputData}
+\label{sec:SolverOutputData}
+Solver internal structure for output modes, output timers and counters.
+
+\noindent SolverOutputData has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -985,14 +1093,17 @@ SolverOutputData has the following items:
 	  \end{longtable}
 	\end{center}
 
+
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{MainSolverStatic} \label{sec:MainSolverStatic}
-PyBind interface (trampoline) class for static solver. With this interface, the static solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write: \bi
- \item[] solver = MainSolverStatic() 
-\ei
- and hereafter you can access all data and functions via 'solver'.\\ 
-%
-MainSolverStatic has the following items:
+
+\mysubsubsubsection{MainSolverStatic}
+\label{sec:MainSolverStatic}
+PyBind interface (trampoline) class for static solver. With this interface, the static solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write: \\ 
+ \texttt{solver = MainSolverStatic()} \\ 
+and hereafter you can access all data and functions via 'solver'.
+
+\noindent MainSolverStatic has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -1055,15 +1166,17 @@ MainSolverStatic has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{MainSolverImplicitSecondOrder} \label{sec:MainSolverImplicitSecondOrder}
-PyBind interface (trampoline) class for dynamic implicit solver. Note that this solver includes the classical Newmark method (set useNewmark True; with option of index 2 reduction) as well as the generalized-alpha method. With the interface, the dynamic implicit solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write \bi
- \item[] solver = MainSolverImplicitSecondOrder() 
-\ei
- and hereafter you can access all data and functions via 'solver'.
- In this solver, user functions are possible to extend the solver at certain parts, while keeping the overal C++ performance. User functions, which are added with SetUserFunction...(...), have the arguments (MainSolver, MainSystem, simulationSettings), except for ComputeNewtonUpdate which adds the initial flag as an additional argument and ComputeNewtonResidual, which returns the scalar residual.\\ 
-%
-MainSolverImplicitSecondOrder has the following items:
+
+\mysubsubsubsection{MainSolverImplicitSecondOrder}
+\label{sec:MainSolverImplicitSecondOrder}
+PyBind interface (trampoline) class for dynamic implicit solver. Note that this solver includes the classical Newmark method (set useNewmark True; with option of index 2 reduction) as well as the generalized-alpha method. With the interface, the dynamic implicit solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write: \\ 
+ \texttt{solver = MainSolverImplicitSecondOrder()} \\ 
+and hereafter you can access all data and functions via 'solver'.
+ In this solver, user functions are possible to extend the solver at certain parts, while keeping the overal C++ performance. User functions, which are added with SetUserFunction...(...), have the arguments (MainSolver, MainSystem, simulationSettings), except for ComputeNewtonUpdate which adds the initial flag as an additional argument and ComputeNewtonResidual, which returns the scalar residual.
+
+\noindent MainSolverImplicitSecondOrder has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -1144,15 +1257,17 @@ MainSolverImplicitSecondOrder has the following items:
 	  \end{longtable}
 	\end{center}
 
+
 %+++++++++++++++++++++++++++++++++++
-\mysubsubsection{MainSolverExplicit} \label{sec:MainSolverExplicit}
-PyBind interface (trampoline) class for dynamic explicit solver. Note that this solver includes the 1st order explicit Euler scheme and the 4th order Runge-Kutta scheme with 5th order error estimation (DOPRI5). With the interface, the solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write \bi
- \item[] solver = MainSolverExplicit() 
-\ei
- and hereafter you can access all data and functions via 'solver'.
- In this solver, no user functions are possible, but you can use SolverImplicitSecondOrder instead (turning off Newton gives explicit scheme ...).\\ 
-%
-MainSolverExplicit has the following items:
+
+\mysubsubsubsection{MainSolverExplicit}
+\label{sec:MainSolverExplicit}
+PyBind interface (trampoline) class for dynamic explicit solver. Note that this solver includes the 1st order explicit Euler scheme and the 4th order Runge-Kutta scheme with 5th order error estimation (DOPRI5). With the interface, the solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write \\ 
+ \texttt{solver = MainSolverExplicit()} \\ 
+and hereafter you can access all data and functions via 'solver'.
+ In this solver, no user functions are possible, but you can use SolverImplicitSecondOrder instead (turning off Newton gives explicit scheme ...).
+
+\noindent MainSolverExplicit has the following items:
 %reference manual TABLE
 \begin{center}
   \footnotesize
@@ -1207,3 +1322,7 @@ MainSolverExplicit has the following items:
     WriteSolutionFileHeader(...) &     void &      &     mainSystem, simulationSettings &     write unique file header, depending on static/ dynamic simulation\\ \hline
 	  \end{longtable}
 	\end{center}
+
+This section includes the reference manual for structures (such as for solvers, helper structures, etc.) 
+and settings which are available in the python interface, e.g., simulation settings, visualization settings. 
+The data is auto-generated from the according interfaces in order to keep fully up-to-date with changes.

@@ -9,7 +9,7 @@ GeneralContact
 
 
 
-Structure to define general and highly efficient contact functionality in multibody systems (Note that GeneralContact is still developed, use with care.). For further explanations and theoretical backgrounds, see  :ref:`seccontacttheory`\ .
+Structure to define general and highly efficient contact functionality in multibody systems (Note that GeneralContact is still developed, use with care.). For further explanations and theoretical backgrounds, see Section :ref:`seccontacttheory`\ .
 
 .. code-block:: python
    
@@ -81,7 +81,7 @@ Structure to define general and highly efficient contact functionality in multib
   .. code-block:: python
 
      gContact.SetSearchTreeBox(pMin=[-1,-1,-1],
-        \phantom\{XXXX\}pMax=[1,1,1])
+        \phantom{XXXX}pMax=[1,1,1])
 
 * | **AddSphereWithMarker**\ (\ *markerIndex*\ , \ *radius*\ , \ *contactStiffness*\ , \ *contactDamping*\ , \ *frictionMaterialIndex*\ ): 
   | add contact object using a marker (Position or Rigid), radius and contact/friction parameters and return localIndex of the contact item in GeneralContact; frictionMaterialIndex refers to frictionPairings in GeneralContact; contact is possible between spheres (circles in 2D) (if intraSphereContact = True), spheres and triangles and between sphere (=circle) and ANCFCable2D; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper
@@ -96,7 +96,7 @@ Structure to define general and highly efficient contact functionality in multib
   .. code-block:: python
 
      gContact.GetItemsInBox(pMin=[0,1,1],
-        \phantom\{XXXX\}pMax=[2,3,2])
+        \phantom{XXXX}pMax=[2,3,2])
 
 * | **GetMarkerBasedSphere**\ (\ *localIndex*\ ): 
   | Get dictionary with position, radius and markerIndex for markerBasedSphere index, as returned e.g. from GetItemsInBox

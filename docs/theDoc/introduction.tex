@@ -13,12 +13,11 @@ This section will show:
 For an introduction to the solvers, see \refSection{sec:solvers}.
 \onlyRST{
 
-.. |picOverviewExudynModules| image:: docs/theDoc/figures/overviewExudynModules.png
-   :width: 60%
+.. _fig-exudyn-candpython:
+.. figure:: docs/theDoc/figures/overviewExudynModules.png
+   :width: 50%
 
-|picOverviewExudynModules|
-
-[Overview on Exudyn C++ and Python modules]
+   Overview on Exudyn C++ and Python modules
 
 }
 
@@ -57,9 +56,9 @@ For an introduction to the solvers, see \refSection{sec:solvers}.
 
 \mysubsubsectionlabel{Overview of modules}{sec:overview:overviewmodules}
 Currently, the \codeName\ module structure is split into a C++ core part and a set of 
-Python parts\ignoreRST{, see Figs.\ \ref{fig_exudyn_CandPython}}.
+Python parts, see \fig{fig_exudyn_CandPython}.
 \bi
-  \item \mybold{C++ parts}\ignoreRST{, see Figs.\ \ref{fig_exudyn_CPP} and \ref{fig_system_overview}}:
+  \item \mybold{C++ parts}, see \fig{fig_exudyn_CPP} and \fig{fig_system_overview}:
   \bi
     \item[--] \texttt{exudyn}:
     on this level, there are just very few functions: \texttt{SystemContainer()}, \texttt{StartRenderer()}, \texttt{StopRenderer()}, \texttt{GetVersionString()}, \texttt{SolveStatic(...)}, \texttt{SolveDynamic(...)}, ... as well as system and user variable dictionaries \texttt{exudyn.variables} and \texttt{exudyn.sys}
@@ -90,12 +89,11 @@ Python parts\ignoreRST{, see Figs.\ \ref{fig_exudyn_CandPython}}.
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \onlyRST{
 
-.. |picOverviewExudynCppModule| image:: docs/theDoc/figures/overviewExudynCppModule.png
-   :width: 60%
+.. _fig-exudyn-cpp:
+.. figure:: docs/theDoc/figures/overviewExudynCppModule.png
+   :width: 80%
 
-|picOverviewExudynCppModule|
-
-[Overview on Exudyn C++ module]
+   Overview on Exudyn C++ module
 
 }
 \begin{figure}
@@ -139,6 +137,16 @@ Python parts\ignoreRST{, see Figs.\ \ref{fig_exudyn_CandPython}}.
 \end{figure}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+\onlyRST{
+
+.. _fig-system-overview:
+.. figure:: docs/theDoc/figures/overviewSystemData.png
+   :width: 90%
+
+   Overview of systemData
+
+SystemData connects items, states and stores the \acs{LTG}. Note that access to items is provided via functions in \texttt{MainSystem}.
+}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \begin{figure}
   \centering
@@ -151,15 +159,15 @@ Python parts\ignoreRST{, see Figs.\ \ref{fig_exudyn_CandPython}}.
       \node [wideblock, text width=3cm, below of=current] (initial) {initial state};
       \node [wideblock, text width=3cm, below of=initial] (reference) {reference state};
       \node [wideblock, text width=3cm, dashed, fill=gray!10, below of=reference] (otherStates) {other states};
-      
+%
       \node [wideblock, right of=systemData, node distance=5cm] (ltg) {\acs{LTG} coordinate index lists};
-      
+%
       \node [wideblock, below of=systemData, xshift=2.4cm] (nodes) {list of nodes};
       \node [wideblock, below of=nodes] (objects) {list of objects};
       \node [wideblock, below of=objects] (markers) {list of markers};
       \node [wideblock, below of=markers] (loads) {list of loads};
       \node [wideblock, below of=loads] (sensors) {list of sensors};
-
+%
       % Draw edges
       \path [line] (system) -- (systemData);
       \path [line] (systemData) -- (systemStates);
@@ -167,9 +175,9 @@ Python parts\ignoreRST{, see Figs.\ \ref{fig_exudyn_CandPython}}.
       \path [line] (systemStates) |- (initial);
       \path [line] (systemStates) |- (reference);
       \path [line, dashed] (systemStates) |- (otherStates);
-
+%
       \path [line] (systemData) -- (ltg);
-
+%
       \path [line] (systemData) |- (nodes);
       \path [line] (systemData) |- (objects);
       \path [line] (systemData) |- (markers);
@@ -177,7 +185,7 @@ Python parts\ignoreRST{, see Figs.\ \ref{fig_exudyn_CandPython}}.
       \path [line] (systemData) |- (sensors);
 %
   \end{tikzpicture}
-  \caption{Overview of systemData, which connects items, states and stores the \acs{LTG}. Note that access to items is provided via functions in \texttt{system}.}
+  \caption{Overview of systemData, which connects items, states and stores the \acs{LTG}. Note that access to items is provided via functions in \texttt{MainSystem}.}
   \label{fig_system_overview}
 
 \end{figure}
@@ -185,12 +193,11 @@ Python parts\ignoreRST{, see Figs.\ \ref{fig_exudyn_CandPython}}.
 
 
 \mysubsubsectionlabel{Conventions: items, indexes, coordinates}{sec:overview:conventionsitems}
-In this documentation, we will use the term \mybold{item} to identify nodes, objects, markers, loads and sensors:
-\be
-  \mathrm{item} \in \{\mathrm{node}, \mathrm{object}, \mathrm{marker}, \mathrm{load}, \mathrm{sensor} \}
-\ee
-\vspace{12pt}\\
-\mybold{Indexes: arrays and vectors starting with 0:} \vspace{6pt}\\
+In this documentation, we will use the term \mybold{item} to identify nodes, objects, markers, loads and sensors: \vspace{6pt}
+
+  item $\in$ \{node, object, marker, load, sensor\} \vspace{12pt}
+
+\noindent \mybold{Indexes: arrays and vectors starting with 0:} \vspace{6pt}\\
 As known from Python, all \mybold{indexes} of arrays, vectors, matrices, ...\ are starting with 0. This means that the first component of the vector \texttt{v=[1,2,3]} is accessed with \texttt{v[0]} in Python (and also in the C++ part of \codeName ). The range is usually defined as \texttt{range(0,3)}, in which '3' marks the index after the last valid component of an array or vector.
 \ignoreRST{\vspace{12pt}\\}
 %
@@ -213,6 +220,18 @@ Furthermore, the local position in 2D objects is provided by a 3D vector. Usuall
 %
 In this section, the most important part of \codeName\ are provided. An overview of the interaction of the items is given in \fig{fig_items_interaction}
 
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\onlyRST{
+
+.. _fig-items-interaction:
+.. figure:: docs/theDoc/figures/itemsMultibodySystem.png
+   :width: 90%
+
+   Interaction of items in a multibody system
+
+Note that both, bodies and connectors (including constraints) are -- computational -- objects. The arrows indicate, that, e.g., object 1 has node 1 and node 2 (indexes) and that marker 0 is attached to object 0, while load 0 uses marker 0 to apply the load. Sensors could additionally be attached to certain items.
+
+}
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \begin{figure}
   \centering
@@ -248,7 +267,9 @@ In this section, the most important part of \codeName\ are provided. An overview
       %\path [line] (systemData) |- (loads);
 
   \end{tikzpicture}
-  \caption{Typical interaction of items in a multibody system. Note that both, bodies and connectors/constraints are (computational) objects. The arrows indicate, that, e.g., object 1 has node 1 and node 2 (indexes) and that marker 0 is attached to object 0, while load 0 uses marker 0 to apply the load. Sensors could additionally be attached to certain items.}
+  \caption{Interaction of items in a multibody system. 
+Note that both, bodies and connectors (including constraints) are -- computational -- objects.
+The arrows indicate, that, e.g., object 1 has node 1 and node 2 (indexes) and that marker 0 is attached to object 0, while load 0 uses marker 0 to apply the load. Sensors could additionally be attached to certain items.}
   \label{fig_items_interaction}
 
 \end{figure}
@@ -341,7 +362,7 @@ Using \texttt{mbs.Reset()} will clear the system and allows to set up a new syst
 %
 
 \mysubsubsectionlabel{Simulation settings}{sec:overview:basics:simulationsettings}
-The simulation settings consists of a couple of substructures, e.g., for \texttt{solutionSettings}, \texttt{staticSolver}, \texttt{timeIntegration} as well as a couple of general options -- for details see Sections \ref{sec:SolutionSettings} -- \ref{sec:SimulationSettings}.
+The simulation settings consists of a couple of substructures, e.g., for \texttt{solutionSettings}, \texttt{staticSolver}, \texttt{timeIntegration} as well as a couple of general options -- for details see Sections \refSection{sec:SolutionSettings} -- \refSection{sec:SimulationSettings}.
 
 Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver. 
 
@@ -397,9 +418,9 @@ position, forces or joint data. For viewing sensor results, use the \texttt{Plot
 %
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
 
-Details on visualization settings and its substructures are provided in Sections \ref{sec:VSettingsGeneral} -- \ref{sec:VisualizationSettings}. These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \texttt{SC.WaitForRenderEngineStopFlag()} or 
+Details on visualization settings and its substructures are provided in \refSection{sec:VSettingsGeneral} -- \refSection{sec:VisualizationSettings}. These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \texttt{SC.WaitForRenderEngineStopFlag()} or 
 \texttt{mbs.WaitForUserToContinue()} ).
-\ignoreRST{The visualization settings dialog is shown exemplarily in \fig{fig_visualizationSettings}.}
+The visualization settings dialog is shown exemplarily in \fig{fig_visualizationSettings}.
 Note that this dialog is automatically created and uses Python's \texttt{tkinter}, which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for \codeName\ .
 
 The appearance of visualization settings dialogs may be adjusted by directly modifying \texttt{exudyn.GUI} variables (this may change in the future). For example write in your code before opening the render window\footnote{treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click}:
@@ -419,12 +440,11 @@ The appearance of visualization settings dialogs may be adjusted by directly mod
 %
 \onlyRST{
 
-.. |picVisSettings| image:: docs/theDoc/figures/visualizationSettings.png
-   :width: 60%
+.. _fig-visualizationsettings:
+.. figure:: docs/theDoc/figures/visualizationSettings.png
+   :width: 80%
 
-|picVisSettings|
-
-[View of visualization settings (press 'V' in render window to open dialog).]
+   View of visualization settings (press 'V' in render window to open dialog)
 
 }
 \ignoreRST{
@@ -432,7 +452,7 @@ The appearance of visualization settings dialogs may be adjusted by directly mod
 \begin{center}
 \includegraphics[width=0.8\columnwidth]{figures/visualizationSettings}
 \end{center}
-\caption{View of visualization settings (as of \codeName\ 1.5.51.dev1) (press 'V' in render window to open dialog).}%
+\caption{View of visualization settings (as of \codeName\ 1.5.51.dev1) (press 'V' in render window to open dialog)}%
 \label{fig_visualizationSettings}%
 \end{figure}
 }
@@ -589,17 +609,25 @@ E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color p
 If you are running large models, it may be more convenient to watch results after simulation has been finished.
 For this, you can use
 \bi
-%deprecated: \item \texttt{utilities.AnimateSolution}, see Section \ref{sec:utilities:AnimateSolution}
-  \item \texttt{interactive.SolutionViewer}, see Section \ref{sec:interactive:SolutionViewer}
-  \item \texttt{interactive.AnimateModes}, lets you view the animation of computed modes, see Section \ref{sec:interactive:AnimateModes}
+  \item \texttt{interactive.SolutionViewer}, see \refSectionA{sec:interactive:SolutionViewer}
+  \item \texttt{interactive.AnimateModes}, lets you view the animation of computed modes, see \refSectionA{sec:interactive:AnimateModes}
 \ei
-\ignoreRST{
 shown exemplary in \fig{fig_solutionViewer}.
+\onlyRST{
+
+.. _fig-solutionviewer:
+.. figure:: docs/theDoc/figures/solutionViewer.png
+   :width: 60%
+
+   View of \texttt{SolutionViewer} (as of \codeName\ 1.5.42.dev1)
+
+}
+\ignoreRST{
 \begin{figure}[tbhp]%
 \begin{center}
 \includegraphics[width=0.98\columnwidth]{figures/solutionViewer}
 \end{center}
-\caption{View of \texttt{SolutionViewer} (as of \codeName\ 1.5.42.dev1).}%
+\caption{View of \texttt{SolutionViewer} (as of \codeName\ 1.5.42.dev1)}%
 \label{fig_solutionViewer}%
 \end{figure}
 }
@@ -801,17 +829,26 @@ Since Q4 2021 a contact module is available in \codeName.
 This separate module \texttt{GeneralContact} $[$\mybold{still under development, consider with care!}$]$ is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
 \onlyRST{
 
-.. |cpic1| image:: docs/theDoc/figures/contactTests.png
+.. _fig-contactexamples:
+.. figure:: docs/theDoc/figures/contactTests.png
    :width: 45%
-
-.. |cpic2| image:: docs/theDoc/figures/contactTests2.jpg
+   
+.. figure:: docs/theDoc/figures/contactTests2.jpg
    :width: 45%
-
-|cpic1| |cpic2|
-
-[Some tests and examples using \texttt{GeneralContact}]
+  
+   Some tests and examples using \texttt{GeneralContact}
 
 }
+%.. |cpic1| image:: docs/theDoc/figures/
+%   :width: 45%
+%
+%.. |cpic2| image:: docs/theDoc/figures/contactTests2.jpg
+%   :width: 45%
+%
+%|cpic1| |cpic2|
+%
+%[Some tests and examples using \texttt{GeneralContact}]
+
 \ignoreRST{
 \begin{figure}[tbh]%
 \begin{center}

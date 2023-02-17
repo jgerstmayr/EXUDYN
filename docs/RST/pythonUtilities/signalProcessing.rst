@@ -13,12 +13,11 @@ and for filtering result data.
 
 .. _sec-signalprocessing-filtersensoroutput:
 
-`FilterSensorOutput <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L25>`__\ (\ ``signal``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
+Function: `FilterSensorOutput <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L25>`__\ (\ ``signal``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
 
 - | \ *function description*\ :
   | filter output of sensors (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal
 - | \ *input*\ :
-
   | \ ``signal``\ : numpy array (2D array with column-wise storage of signals, as exported by EXUDYN position, displacement, etc. sensors); first column = time, other columns = signals to operate on; note that it is assumed, that time devided in almost constant steps!
   | \ ``derivative``\ : 0=no derivative, 1=first derivative, 2=second derivative, etc. (>2 only possible with filter)
   | \ ``polyOrder``\ : order of polynomial for interpolation filtering
@@ -36,12 +35,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 .. _sec-signalprocessing-filtersignal:
 
-`FilterSignal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L81>`__\ (\ ``signal``\ , \ ``samplingRate = -1``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
+Function: `FilterSignal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L81>`__\ (\ ``signal``\ , \ ``samplingRate = -1``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
 
 - | \ *function description*\ :
   | filter 1D signal (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal
 - | \ *input*\ :
-
   | \ ``signal``\ : 1D numpy array
   | \ ``samplingRate``\ : (time increment) of signal values, needed for derivatives
   | \ ``derivative``\ : 0=no derivative, 1=first derivative, 2=second derivative, etc. (>2 only possible with filter)
@@ -60,16 +58,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 .. _sec-signalprocessing-computefft:
 
-`ComputeFFT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L126>`__\ (\ ``time``\ , \ ``data``\ )
+Function: `ComputeFFT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L126>`__\ (\ ``time``\ , \ ``data``\ )
 
 - | \ *function description*\ :
   | computes fast-fourier-transform (FFT) resulting in frequency, magnitude and phase of signal data using numpy.fft of numpy
 - | \ *input*\ :
-
   | time ... time vector in SECONDS in numpy format, having constant sampling rate (not checked!)
   | data ... data vector in numpy format
 - | \ *output*\ :
-
   | frequency ... frequency vector (Hz, if time is in SECONDS)
   | magnitude ... magnitude vector
   | phase     ... phase vector (in radiant)
@@ -83,12 +79,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 
 .. _sec-signalprocessing-getinterpolatedsignalvalue:
 
-`GetInterpolatedSignalValue <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L163>`__\ (\ ``time``\ , \ ``dataArray``\ , \ ``timeArray = []``\ , \ ``timeArrayIndex = -1``\ , \ ``dataArrayIndex = -1``\ , \ ``rangeWarning = True``\ , \ ``tolerance = 1e-6``\ )
+Function: `GetInterpolatedSignalValue <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L163>`__\ (\ ``time``\ , \ ``dataArray``\ , \ ``timeArray = []``\ , \ ``timeArrayIndex = -1``\ , \ ``dataArrayIndex = -1``\ , \ ``rangeWarning = True``\ , \ ``tolerance = 1e-6``\ )
 
 - | \ *function description*\ :
   | Interpolate signal having time values with constant sampling rate in timeArray and according data in dataArray
 - | \ *input*\ :
-
   | \ ``time``\ : time at which the data should be evaluated
   | \ ``dataArray``\ : 1D numpy array containing data values to be interpolated [alternatively: 2D numpy array, rows containg the data of the according time point; use dataArrayColumnIndex to specify the column of requested data]
   | \ ``timeArray``\ : 1D numpy array containing time values with CONSTANT SAMPLING RATE to be interpolated [alternatively: 2D numpy array, rows containg the time and data of the according time point; use timeArrayColumnIndex to specify the column representing time]; if timeArray is empty list [], dataArray is used instead!

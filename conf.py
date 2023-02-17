@@ -6,15 +6,16 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Exudyn'
-copyright = '2023' #'2023, Johannes Gerstmayr'
-author = 'Johannes Gerstmayr'
-
 #create exudynVersionString
 file='main/src/pythonGenerator/exudynVersion.py'
 exec(open(file).read(), globals())
 
 release = exudynVersionString
+
+project = 'Exudyn'+release
+copyright = '2023' #'2023, Johannes Gerstmayr'
+author = 'Johannes Gerstmayr'
+
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -36,6 +37,7 @@ html_theme = "sphinx_rtd_theme"
 #only works on readthedocs.io :
 extensions = [
    'sphinx_search.extension', #pip install readthedocs-sphinx-search
+   # 'sphinx.ext.mathjax', #not needed
 ]
 #html_theme_path = ["_themes", ]
 
@@ -76,5 +78,33 @@ if html_theme == "furo":
             # "admonition-title-font-size": "0.6125%",
         # },
     }
+
+#this does some magic and will add macros for mathjax (Default in sphinx for math: / latex formulas)
+mathjax3_config = {                  
+    "tex": {                        
+        "macros": { #write defs without '\' at beginning; use [,n] with n arguments
+            'vp': [r'{\left[\!\! \begin{array}{c} { #1} \\ { #2} \end{array} \right]}',2],
+            'vspace': [r'{}',1], #does not work with mathjax
+            'teps': r'{\boldsymbol{\varepsilon}}',
+            'tkappa':r'{\boldsymbol{\kappa}}',
+            'tomega':r'{\boldsymbol{\omega}}',
+            'ttheta':r'{\boldsymbol{\theta}}',
+            #
+            'varepsilonDot': r'{\boldsymbol{\varepsilon}}',
+            'tepsDot': r'{\dot{\boldsymbol{\varepsilon}}}',
+            'tkappaDot':r'{\dot{\boldsymbol{\kappa}}}',
+            'ra': r'{\rightarrow}',
+            'Rcal': r'{\mathbb{R}}',
+            'LU': [r'{\,^ #1}',1],
+            #
+            #'bold': [r'{\bf #1}',1],
+            #'RR': r'{\bf R}',       
+            }                       
+        }                           
+    }       
+
+
+
+
 
 

@@ -692,6 +692,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 	{
 		if (useLieGroupIntegration)
 		{
+			//lieGroupDirectUpdateNewtonSolution = Delta \bar q
 			SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(computationalSystem, lieGroupDirectUpdateNewtonSolution, solutionODE2);
 		}
 
@@ -716,6 +717,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 		if (useLieGroupIntegration)
 		{
 			SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(computationalSystem, solutionODE2, lieGroupDirectUpdateNewtonSolution);
+			//lieGroupDirectUpdateNewtonSolution = Delta \bar q + Delta q
 		}
 	}
 
@@ -728,8 +730,9 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 			solutionODE2, computationalSystem.GetSystemData().GetCData().currentState.dataCoords);
 		//update ODE2 coordinates with composition rule; reference configuration is considered in node.ComputationRule
 		CompositionRuleCoordinatesLieGroupIntegrator(computationalSystem, lieGroupDirectUpdateNodes,
-			computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords,
-			solutionODE2, solutionODE2);
+			computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords, //q_n
+			solutionODE2,  //Delta \bar q + Delta q
+			solutionODE2); //q_n+1 = q_n o exp(Delta \bar q + Delta q)
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

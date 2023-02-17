@@ -16,7 +16,7 @@ So far (2021-07), we tested
 
 +  \ **Anaconda 2021-11, 64bit, Python 3.9**\  (older Anaconda3 versions can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\ )
 +  Currently, we work with Python 3.6 - Python 3.10 \ **conda environments**\  on Windows, Linux and MacOS (3.8-3.10).
-+  \ **Spyder 5.1.5**\  (with Python 3.9.7, 64bit) and \ **Spyder 4.1.3**\  (with Python 3.7.7, 64bit), which is included in the Anaconda installation (or 64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments
++  \ **Spyder 5.1.5**\  (with Python 3.9.7, 64bit) and \ **Spyder 4.1.3**\  (with Python 3.7.7, 64bit), which is included in the Anaconda installation (Note that it is important that Spyder, Python and Exudyn  are \ **either**\  32bit \ **or**\  64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments
 
 Many alternative options exist:
 
@@ -27,7 +27,9 @@ Many alternative options exist:
 If you plan to extend the C++ code, we recommend to use VS2017 (previously, VS2019 was recommended: However, VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.) to compile your code, which offers Python 3.7 compatibility.
 Once again, remember that Python versions and the version of the Exudyn module must be identical (e.g., Python 3.6 32 bit \ **both**\  in the Exudyn module and in Spyder).
 
-\paragraphRun without Anaconda:
+Run without Anaconda
+^^^^^^^^^^^^^^^^^^^^
+
 If you do not install Anaconda (e.g., under Linux), make sure that you have the according Python packages installed:
 
 +  \ ``numpy``\  (used throughout the code, inevitable)
@@ -36,6 +38,7 @@ If you do not install Anaconda (e.g., under Linux), make sure that you have the 
 +  \ ``scipy``\  (needed for eigenvalue computation)
 
 You can install most of these packages using \ ``pip install numpy``\  (Windows) or \ ``pip3 install numpy``\  (Linux).
+NOTE: as there is only \ ``numpy``\  needed (but not for all sub-packages) and \ ``numpy``\  supports many variants, we do not add a particular requirement for installation of depending packages. It is not necessary to install \ ``scipy``\  as long as you are not using features of \ ``scipy``\ . Same reason for \ ``tkinter``\  and \ ``matplotlib``\ .
 
 For interaction (right-mouse-click, some key-board commands) you need the Python module \ ``tkinter``\ . This is included in regular Anaconda distributions (recommended, see below), but on UBUNTU you need to type alike (do not forget the '3', otherwise it installs for Python2 ...):
 
@@ -65,7 +68,7 @@ For pre-releases (use with care!), add '--pre' flag:
 
    \ ``pip install exudyn --pre``\ 
 
-In some cases (e.g. for AppleM1), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the 'Build and install' sections,  :ref:`sec-install-installinstructions-buildwindows`\ .
+In some cases (e.g. for AppleM1), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the 'Build and install' sections, Section :ref:`sec-install-installinstructions-buildwindows`\ .
 
 
 .. _sec-install-installinstructions-wheel:
@@ -87,7 +90,7 @@ For UBUNTU20.04 (which by default uses Python 3.8) this may read (version number
 +  \ ``Python 3.8, 64bit``\ : pip3 install dist\exudyn-1.0.20-cp38-cp38-linux_x86_64.whl
 
 NOTE that your installation may have environments with different Python versions, so install that Exudyn version appropriately!
-If the wheel installation does not work on UBUNTU, it is highly recommended to build Exudyn for your specific system as given in  :ref:`sec-install-installinstructions-buildubuntu`\ .
+If the wheel installation does not work on UBUNTU, it is highly recommended to build Exudyn for your specific system as given in Section :ref:`sec-install-installinstructions-buildubuntu`\ .
 
 \ **Windows**\ :
 
@@ -205,7 +208,7 @@ in order to interact with the render window, as there is only a single-threaded 
 Build and install Exudyn under UBUNTU?
 --------------------------------------
 
-Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python \ **3.6**\  is already installed on UBUNTU18.04, otherwise use \ ``sudo apt install python3``\ ) (https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx):
+Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python \ **3.6**\  is already installed on UBUNTU18.04, otherwise use \ ``sudo apt install python3``\ ) (see also the youtube video: `https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_):
 
 First update ...
 

@@ -8,8 +8,10 @@ goal: automatically generate interfaces for structures
 currently: automatic generate structures with ostream and initialization
 """
 import datetime # for current date
-from autoGenerateHelper import RemoveSpacesTabs, CountLines, TypeConversion, GenerateHeader, SplitString, Str2Latex, Str2Doxygen, GetDateStr
+from autoGenerateHelper import RemoveSpacesTabs, CountLines, TypeConversion, GenerateHeader, SplitString, Str2Latex, Str2Doxygen, GetDateStr, \
+    PyLatexRST #RemoveIndentation, LatexString2RST
 import copy
+import io
 
 sortStructures = True
 
@@ -71,6 +73,7 @@ globalList=[]
 def WriteFile(parseInfo, parameterList, typeConversion):
     #print (parseInfo)
     #print('file="'+parseInfo['writeFile']+'"')
+    plr = PyLatexRST()
     
     now=datetime.datetime.now()
     monthZero = '' #add leading zero for month
@@ -81,8 +84,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         dayZero = '0'
         
     dateStr = str(now.year) + '-' + monthZero + str(now.month) + '-' + dayZero + str(now.day)
+
+    plr.AddDocu(parseInfo['latexText']) #.replace('\\n','\n') #this is the string for latex documentation
     
-    sLatex = parseInfo['latexText'] #.replace('\\n','\n') #this is the string for latex documentation
     cppText = parseInfo['cppText'] #.replace('\\n','\n') #this is the string for latex documentation
     sGetSetDictionarys = '' #goes into separate file
 
@@ -138,6 +142,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     # if parseInfo['class'] == 'NewtonSettings': globalList = parameterListSorted
 
     #************************************
+    
     #Latex doc:
     hasPybindInterface = False
     for parameter in parameterList:
@@ -148,16 +153,24 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         descriptionStr = parseInfo['classDescription']
         if descriptionStr[-1] != '.': descriptionStr += '. '
         
-        sLatex += '\n%+++++++++++++++++++++++++++++++++++\n\mysubsubsection{' + parseInfo['class'] + '} \label{sec:' + parseInfo['class'].replace(' ','') + '}\n'
-        sLatex += Str2Latex(descriptionStr, replaceCurlyBracket=False) + '\\\\ \n'
-        sLatex += '%\n'
-        sLatex += parseInfo['class'] + ' has the following items:\n'
-        sLatex += '%reference manual TABLE\n'
-        sLatex += '\\begin{center}\n'
-        sLatex += '  \\footnotesize\n'
-        sLatex += '  \\begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}\n'
-        sLatex += '    \\hline\n'
-        sLatex += '    \\bf Name & \\bf type / function return type & \\bf size & \\bf default value / function args & \\bf description \\\\ \\hline\n'
+        plr.sLatex += '\n%+++++++++++++++++++++++++++++++++++\n'
+        plr.AddDocu(Str2Latex(descriptionStr, replaceCurlyBracket=False)+
+                    '\n\n\\noindent '+
+                    parseInfo['class'] + ' has the following items:\n', 
+                    section=parseInfo['class'], sectionLevel=3, 
+                    sectionLabel='sec:' + parseInfo['class'].replace(' ',''))
+        plr.sRST += '\n' #newline for start of list
+
+        # plr.sLatex += '\mysubsubsection{' + parseInfo['class'] + '} \label{sec:' + parseInfo['class'].replace(' ','') + '}\n'
+        # plr.sLatex += Str2Latex(descriptionStr, replaceCurlyBracket=False) + '\\\\ \n'
+        # plr.sLatex += '%\n\\noindent '
+        # plr.sLatex += parseInfo['class'] + ' has the following items:\n'
+        plr.sLatex += '%reference manual TABLE\n'
+        plr.sLatex += '\\begin{center}\n'
+        plr.sLatex += '  \\footnotesize\n'
+        plr.sLatex += '  \\begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}\n'
+        plr.sLatex += '    \\hline\n'
+        plr.sLatex += '    \\bf Name & \\bf type / function return type & \\bf size & \\bf default value / function args & \\bf description \\\\ \\hline\n'
     
         for parameter in parameterListSorted:
             if (parameter['lineType'].find('V') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a member variable
@@ -177,12 +190,16 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     
                 if parameter['type'] != 'String' and parameter['type'] != 'FileName': #don't do this for file names, because 'f' is erased!
                     defaultValueStr = Str2Latex(defaultValueStr, True)
+
+                plr.SystemStructuresWriteDefRow(pythonName, typeName, Str2Latex(parameter['size']), 
+                                            sString+defaultValueStr+sString, paramDescriptionStr )
                     
-                sLatex += '    ' + pythonName + ' & '                
-                sLatex += '    ' + typeName + ' & '
-                sLatex += '    ' + Str2Latex(parameter['size']) + ' & '
-                sLatex += '    ' + sString+defaultValueStr+sString + ' & '
-                sLatex += '    ' + paramDescriptionStr + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
+                # plr.sLatex += '    ' + pythonName + ' & '                
+                # plr.sLatex += '    ' + typeName + ' & '
+                # plr.sLatex += '    ' + Str2Latex(parameter['size']) + ' & '
+                # plr.sLatex += '    ' + sString+defaultValueStr+sString + ' & '
+                # plr.sLatex += '    ' + paramDescriptionStr + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
+                
 
             if (parameter['lineType'].find('F') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a function
                 #write latex doc:
@@ -205,15 +222,15 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 if (len(functionName)>28): 
                     functionType = '\\tabnewline ' + functionType
 
-                sLatex += '    ' + functionName + ' & '
-                sLatex += '    ' + functionType + ' & '
-                sLatex += '    ' + Str2Latex(parameter['size']) + ' & '
+                plr.sLatex += '    ' + functionName + ' & '
+                plr.sLatex += '    ' + functionType + ' & '
+                plr.sLatex += '    ' + Str2Latex(parameter['size']) + ' & '
 
-                sLatex += '    ' + argStr + ' & '
-                sLatex += '    ' + Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False) + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
+                plr.sLatex += '    ' + argStr + ' & '
+                plr.sLatex += '    ' + Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False) + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
                 
-        sLatex += '	  \\end{longtable}\n'
-        sLatex += '	\\end{center}\n'
+        plr.sLatex += '	  \\end{longtable}\n'
+        plr.sLatex += '	\\end{center}\n'
 
 
     #************************************
@@ -542,7 +559,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     s+='};\n\n\n' #class
 
 
-    return [s, sLatex, sGetSetDictionarys]
+    return [s, plr.sLatex, sGetSetDictionarys, plr.sRST]
 
 #**************************************************************************************
 #**************************************************************************************
@@ -665,6 +682,14 @@ def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
 #MAIN CONVERSION
 #************************************************
     
+rstFileDict={'SimulationSettings':'',
+             'VisualizationSettings':'',
+             'CSolverStructures':'',
+             'MainSolver':'',
+             'PyStructuralElementsDataStructures':'',
+             'BeamSectionGeometry':'',
+             } #contains available file names and text
+
 
 try: #still close file if crashes
     print('******************************')
@@ -809,7 +834,7 @@ try: #still close file if crashes
                                     mode = 0
                                     #++++++++++++++++++++++++++++++
                                     #now write C++ header file for defined class
-                                    [fileStr, latexStr, getSetDict] = WriteFile(parseInfo, parameterList, typeConversion)
+                                    [fileStr, latexStr, getSetDict, rstStr] = WriteFile(parseInfo, parameterList, typeConversion)
                                     globalLatexStr += latexStr
                                     strFileMode = 'w'
                                     if parseInfo['appendToFile'] == 'True':
@@ -819,7 +844,10 @@ try: #still close file if crashes
                                     file=open(directoryString+parseInfo['writeFile'],strFileMode) 
                                     file.write(fileStr)
                                     file.close()
-                                    
+
+                                    fileName = parseInfo['writeFile'].split('.')[0]
+                                    if fileName in rstFileDict:
+                                       rstFileDict[fileName] += rstStr
 
                                     #++++++++++++++++++++++++++++++
                                     #write Python/pybind11 includes
@@ -873,14 +901,47 @@ try: #still close file if crashes
 
     print('total number of lines generated =',totalNumberOfLines)
     
+    
+    latexText = """
+This section includes the reference manual for structures (such as for solvers, helper structures, etc.) 
+and settings which are available in the python interface, e.g., simulation settings, visualization settings. 
+The data is auto-generated from the according interfaces in order to keep fully up-to-date with changes.
+"""
+    globalLatexStr += latexText
+    
     fileLatex=open(latexFile,'w')  #clear file by one write access
     fileLatex.write('% definition of structures\n')
     fileLatex.write(globalLatexStr)
     fileLatex.close()
 
-    file=open(getSetFile,'a')  #clear file by one write access
-    file.write('} //namespace EPyUtils \n\n')
-    file.write("\n#endif //#ifdef include once...\n")
+    fileGetSet=open(getSetFile,'a')  #clear file by one write access
+    fileGetSet.write('} //namespace EPyUtils \n\n')
+    fileGetSet.write("\n#endif //#ifdef include once...\n")
+    fileGetSet.close()
+
+    rstDir = '../../../docs/RST/structures/'
+    rstIndex = """
+=======================
+Structures and Settings
+=======================
+"""
+    rstIndex += latexText
+    rstIndex += """
+.. toctree::
+   :maxdepth: 2
+    
+"""
+    
+    
+    for key, value in rstFileDict.items():
+        # print('RST: write '+key)#, ':',value[:200])
+        file=io.open(rstDir+key+'.rst','w',encoding='utf8')  #clear file by one write access
+        file.write(value+'\n')
+        file.close()
+        rstIndex += '   '+key+'\n'
+
+    file=io.open(rstDir+'StructuresAndSettingsIndex.rst','w',encoding='utf8')  #clear file by one write access
+    file.write(rstIndex+'\n')
     file.close()
 
 finally:    

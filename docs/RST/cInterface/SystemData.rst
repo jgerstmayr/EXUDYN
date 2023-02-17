@@ -176,7 +176,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
   .. code-block:: python
 
-     vCurrent = mbs.systemData.GetODE2Coordinates\_t()
+     vCurrent = mbs.systemData.GetODE2Coordinates_t()
 
 * | **SetODE2Coordinates\_t**\ (\ *coordinates*\ , \ *configuration*\  = exu.ConfigurationType.Current): 
   | set ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!
@@ -184,7 +184,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
   .. code-block:: python
 
-     mbs.systemData.SetODE2Coordinates\_t(vCurrent)
+     mbs.systemData.SetODE2Coordinates_t(vCurrent)
 
 * | **GetODE2Coordinates\_tt**\ (\ *configuration*\  = exu.ConfigurationType.Current): 
   | get ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current)
@@ -192,7 +192,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
   .. code-block:: python
 
-     vCurrent = mbs.systemData.GetODE2Coordinates\_tt()
+     vCurrent = mbs.systemData.GetODE2Coordinates_tt()
 
 * | **SetODE2Coordinates\_tt**\ (\ *coordinates*\ , \ *configuration*\  = exu.ConfigurationType.Current): 
   | set ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!
@@ -200,7 +200,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
   .. code-block:: python
 
-     mbs.systemData.SetODE2Coordinates\_tt(aCurrent)
+     mbs.systemData.SetODE2Coordinates_tt(aCurrent)
 
 * | **GetODE1Coordinates**\ (\ *configuration*\  = exu.ConfigurationType.Current): 
   | get ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)
@@ -216,7 +216,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
   .. code-block:: python
 
-     mbs.systemData.SetODE1Coordinates\_t(qCurrent)
+     mbs.systemData.SetODE1Coordinates_t(qCurrent)
 
 * | **GetODE1Coordinates\_t**\ (\ *configuration*\  = exu.ConfigurationType.Current): 
   | get ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)
@@ -224,7 +224,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
   .. code-block:: python
 
-     qCurrent = mbs.systemData.GetODE1Coordinates\_t()
+     qCurrent = mbs.systemData.GetODE1Coordinates_t()
 
 * | **SetODE1Coordinates\_t**\ (\ *coordinates*\ , \ *configuration*\  = exu.ConfigurationType.Current): 
   | set ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!
@@ -294,7 +294,7 @@ SystemData: Get object LTG coordinate mappings
 
 
 
-This section provides access functions the LTG-lists for every object (body, constraint, ...) in the system. For details on the LTG mapping, see  :ref:`sec-overview-ltgmapping`\ 
+This section provides access functions the LTG-lists for every object (body, constraint, ...) in the system. For details on the LTG mapping, see Section :ref:`sec-overview-ltgmapping`\ 
 
 \ The class **MainSystemData** has the follwing **functions and structures** regarding **object LTG coordinate mappings**:
 

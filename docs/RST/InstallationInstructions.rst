@@ -25,7 +25,7 @@ It seemed that the previous code HOTINT reached limits of further (efficient) de
 Exudyn is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automatized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of Python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.
 
 The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
-For details on the interaction of nodes, objects, markers and loads see  :ref:`sec-overview-items`\ .
+For details on the interaction of nodes, objects, markers and loads see Section :ref:`sec-overview-items`\ .
 
 Developers of Exudyn and thanks
 -------------------------------

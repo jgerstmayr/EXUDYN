@@ -54,7 +54,7 @@ Exceptions and Error Messages. In the following, typical error messages are list
 +  \ **Import of exudyn C++ module failed Warning: ...**\ :
 
   |  →  ... and similar messages with: ModuleNotFoundError, Warning, with AVX2, without AVX2
-  |  →  A known reason is that your CPU \ **does not support AVX2**\ , while Exudyn is compiled with the AVX2 option (not support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this).
+  |  →  A known reason is that your CPU \ **does not support AVX2**\ , while Exudyn is compiled with the AVX2 option (modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, especially Zen and Zen-2 architectures should have no problems with AVX2; however, low-cost Celeron, Pentium and older AMD processors do \ **not**\  support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this).
   |  →  \ **solution**\ : the release versions without the .dev1 ending in the wheel contain C++ libraries which are compiled without AVX/AVX2; the module loader will usually detect automatically, if your CPU supports AVX/AVX2; if not, it will load the exudynCPPnoAVX.cp ... .pyd file; if this does not work, try
 
 
@@ -105,7 +105,7 @@ to explicitly load the version without AVX2.
   ModuleNotFoundError: No module named 'tkinter'
 
 
-  |  →  see installation instructions to install missing Python modules,  :ref:`sec-install-installinstructions`\ .
+  |  →  see installation instructions to install missing Python modules, Section :ref:`sec-install-installinstructions`\ .
 
 +  Problems with \ **tkinter**\ , especially on MacOS:
 
@@ -179,7 +179,7 @@ to explicitly load the version without AVX2.
 
 +  Very simple example \ **without loads**\  leads to error: \ ``SolveDynamic``\  or \ ``SolveStatic``\  \ **terminated due to errors**\ :
 
-  |  →  see also 'Convergence problems',  :ref:`sec-overview-basics-convergenceproblems`\ 
+  |  →  see also 'Convergence problems', Section :ref:`sec-overview-basics-convergenceproblems`\ 
   |  →  may be caused due to nonlinearity of formulation and round off errors, which restrict Newton to achieve desired tolerances; adjust  \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration
 
 +  Typical \ **solver error due to redundant constraints or missing inertia terms**\ , could read as follows:
@@ -245,7 +245,7 @@ which draws the according object in red and others gray/transparent (but sometim
   |  →  this solver error is caused, because the nonlinear system cannot be solved using Newton's method.
   |  →  the static or dynamic solver by default tries to reduce step size to overcome this problem, but may fail finally (at minimum step size).
   |  →  possible reasons are: too large time steps (reduce step size by using more steps/second), inappropriate initial conditions, or inappropriate joints or constraints (remove joints to see if they are the reason), usually within a singular configuration. Sometimes a system may be just unsolvable in the way you set it up.
-  |  →  see also 'Convergence problems',  :ref:`sec-overview-basics-convergenceproblems`\ 
+  |  →  see also 'Convergence problems', Section :ref:`sec-overview-basics-convergenceproblems`\ 
 
 +  Typical solver error if (e.g., syntax) \ **error in user function**\  (output may be very long, \ **read always message on top!**\ ):
 
@@ -304,10 +304,10 @@ FAQ
 
 +  I get the error message 'check potential mixing of different (object, node, marker, ...) indices', what does it mean?
 
-  |  →  probably you used wrong item indexes, see beginning of command interface in  :ref:`sec-pcpp-command-interface`\ . 
+  |  →  probably you used wrong item indexes, see beginning of command interface in Section :ref:`sec-pcpp-command-interface`\ . 
   |  →  E.g., an object number \ ``oNum = mbs.AddObject(...)``\  is used at a place where a \ ``NodeIndex``\  is expected, e.g., \ ``mbs.AddObject(MassPoint(nodeNumber=oNum, ...))``\ 
   |  →  Usually, this is an ERROR in your code, it does not make sense to mix up these indexes!
-  |  →  In the exceptional case, that you want to convert numbers, see beginning of  :ref:`sec-pcpp-command-interface`\ .
+  |  →  In the exceptional case, that you want to convert numbers, see beginning of Section :ref:`sec-pcpp-command-interface`\ .
 
 +  Why does \ **type auto completion**\  not work for mbs (MainSystem)?
 
@@ -317,7 +317,7 @@ FAQ
 
 +  How to add graphics?
 
-  |  →  Graphics (lines, text, 3D triangular / sSTL mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object. Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time. Furthermore, ObjectGround allows to add fully user defined graphics.
+  |  →  Graphics (lines, text, 3D triangular / STL mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object. Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time. Furthermore, ObjectGround allows to add fully user defined graphics.
 
 +  In \ ``GenerateStraightLineANCFCable2D``\  
 

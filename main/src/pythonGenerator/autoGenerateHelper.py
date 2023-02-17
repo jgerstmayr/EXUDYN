@@ -232,9 +232,19 @@ def TypeConversion(typeStr, typeConversion):
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #abbreviations inside $$ latex math
 convLatexMath={
-    '\\ra':'\\rightarrow',
-    '\\LU':'^',
+    #r'\ra':     r'\rightarrow',
+    # r'\LU':     r'\,^',
+    #r'\Rcal':   r'\mathbb{R}',
+    # r'\teps':   r'\varepsilon',
+    # r'\varepsilonDot':r'\dot\varepsilon',
+    # r'\tkappa':   r'\kappa',
+    # r'\tkappaDot':   r'\dot\kappa',
     }
+
+abc = 'acdefghijklmnopqrstuvwxyz'
+for c in abc:
+    convLatexMath['\\'+c+'v'] = r'{\mathbf{'+c+'}}'
+    convLatexMath['\\'+c.upper()+'m'] = r'{\mathbf{'+c.upper()+'}}'
 
 convLatexWords={'(\\the\\month-\\the\\year)':'',
            '    \item':'\item',
@@ -260,7 +270,7 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '\\end{lstlisting}':'\n',
            '\\begin{center}':'',
            '\\end{center}':'',
-           '\\includegraphics[height=6cm]{../demo/screenshots/plotSpringDamper}':'see theDoc.pdf',
+           #'\\includegraphics[height=6cm]{../demo/screenshots/plotSpringDamper}':'see theDoc.pdf',
            # '+++++++++++++++++++++++++++++++':'\\ +++++++++++++++++++++++++++++++\n', #special problems with .rst
            # '=========================================':'\\ =========================================\n', #special problems with .rst
            '\\begin{itemize}':'', 
@@ -285,10 +295,10 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '\\ge':'>=',
            '\\_':'_',
            '\\textdegree':'°',
-           '\\ac':'',
            '\\acs':'',
            '\\acp':'',
            '\\acf':'',
+           '\\ac':'',
            #
            '{\"a}':'ä',
            '{\"o}':'ö',
@@ -319,17 +329,19 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     '\\myListing':('','',''),
     '\\setlength':('','',''),
     '\\vspace':('','',''),
-    '\\footnote':(' (','_USE',')'),
+    '\\footnote':(' (','_USE',')'), #rst footnotes may be used instead: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#footnotes
     '\\mybold':('\\ **','_USE','**\\ '),
     '\\mathrm':('','_USE',''),
     '\\cite':('','',''),
     '\\onlyRST':('','_USE',''),
     #'\\refSection':('theDoc.pdf','',''),
     #'\\refSection':(' `','_USE','`_\\ '),
-    '\\refSection':(' :ref:`','_USE','`\\ '),
-    '\\fig':('[figure in theDoc.pdf]','',''),
+    '\\refSectionA':(' :ref:`Section <','_USE','>`\\ '), #anonymous -> if no header given
+    '\\refSection':('Section :ref:`','_USE','`\\ '), #anonymous -> if no header given
     '\\exuUrl':('`','_USE','`_'),
-    '\\ref':('[theDoc.pdf]','',''),
+    '\\ref':(' :ref:`','_USE','`\\ '),
+    '\\fig':('Fig. :ref:`','_USE','`\\ '),
+    #'\\fig':(' :ref:`Figure <','_USE','>`\\ '),
     'figure':('','',''),
     } #TITLE, SUBTITLE, SUBSUBTITLE, ...
 
@@ -412,7 +424,8 @@ def FindMatchingBracket(s, start, openBracket='{', closingBracket='}'):
     for i in range(start,len(s)):
         if s[i] == openBracket:
             cnt += 1
-            bStart = i
+            if bStart == -1:
+                bStart = i
         elif s[i] == closingBracket:
             cnt -= 1
 
@@ -522,6 +535,17 @@ def ExtractLatexCommand(s, key, secondBracket, isBeginEnd):
             return -1
 
 def ReplaceLatexCommands(s, conversionDict): #replace strings provided in conversion dict
+    #remove comments:
+    slines = s.split('\n')
+    s = ''
+    for line in slines:
+        ls = line.lstrip()
+        if len(ls) != 0 and ls[0] == '%':
+            continue
+        s+=line+'\n'
+    s = s[:-1]
+
+    #remove commands        
     s = s.replace('{\\bf ','\\mybold{') #this is then further converted into rst code ...
     for (key,value) in conversionDict.items():
         found = 0
@@ -531,10 +555,12 @@ def ReplaceLatexCommands(s, conversionDict): #replace strings provided in conver
             if key == '\\exuUrl' or 'sectionlabel' in key: 
                 secondBracket = True
             if key == 'figure': isBeginEnd = True
-
+            
             found = ExtractLatexCommand(s, key, secondBracket, isBeginEnd)
+
             if found != -1:
                 [preString, innerString, innerString2, postString] = found
+
                 # if isBeginEnd:
                 #     print("inner="+innerString+'+++')
                 # if key == '\\label':
@@ -545,23 +571,25 @@ def ReplaceLatexCommands(s, conversionDict): #replace strings provided in conver
                 #     s += preString[nLast:] #this may be the header
                 # else:
                 s = preString
-                if key == '\\refSection' or key == '\\label':
-                    innerString=innerString.replace(':','-').lower()
+                if '\\refSection' in key or key == '\\label' or key == '\\fig' or key == '\\ref':
+                    innerString=innerString.replace(':','-').replace('_','-').lower()
                 else:
-                    innerString = ReplaceWords(innerString, convLatexWords) #needs to be cleaned here already
+                    if key != '\\exuUrl':
+                        innerString = ReplaceLatexCommands(innerString, convLatexCommands)
+                        innerString = ReplaceWords(innerString, convLatexWords) #needs to be cleaned here already
                 
                 if key == '\\mysection' or key == '\\mysectionlabel':
                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    s += '\n'+RSTheaderString(innerString, 1)
+                    s += '\n'+RSTheaderString(innerString, 0)
                 elif key == '\\mysubsection' or key == '\\mysubsectionlabel':
                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    s += '\n'+RSTheaderString(innerString, 2)
+                    s += '\n'+RSTheaderString(innerString, 1)
                 elif key == '\\mysubsubsection' or key == '\\mysubsubsectionlabel':
                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    s += '\n'+RSTheaderString(innerString, 3)
+                    s += '\n'+RSTheaderString(innerString, 2)
                 elif key == '\\mysubsubsubsection' or key == '\\mysubsubsubsectionlabel':
                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    s += '\n'+RSTheaderString(innerString, 4)
+                    s += '\n'+RSTheaderString(innerString, 3)
                 elif key == '\\exuUrl':
                     s += value[0]
                     s += innerString2 + ' <' + innerString + '>'
@@ -691,6 +719,10 @@ class PyLatexRST:
             self.sRST += '\n'
             self.sLatex += '\\ei'
 
+    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #for autoGEneratePyBindings:
+        
     #start a new table to describe class bindings in latex;
     def DefLatexStartTable(self, classStr=''):
         self.sLatex += '\\begin{center}\n'
@@ -853,8 +885,8 @@ class PyLatexRST:
         #self.sRST += ': \n' +  RemoveIndentation(description.replace('_','\_'), '  | ') + '\n'
         self.sRST += ': \n' +  RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
         if example != '':
-            example = Str2Latex(example)
             exampleRST = example
+            example = Str2Latex(example)
             example = example.replace('\\\\','\\tabnewline\n    ')
             example = example.replace('\\TAB','\\phantom{XXXX}') #phantom spaces, not visible
             self.sLatex += '\\tabnewline \n    \\textcolor{steelblue}{{\\bf EXAMPLE}: \\tabnewline \n    \\texttt{' + example.replace("'","{\\textquotesingle}") + '}}'
@@ -871,6 +903,29 @@ class PyLatexRST:
         #self.sLatex += '  ' + Str2Latex(itemName) + ' & ' + Str2Latex(description) + '\\\\ \\hline \n'
         self.DefLatexDataAccess(itemName, description) #Str2Latex(...) done inside function
 
+    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #for SystemStructures:
+        
+    #one row for definition of system structures
+    def SystemStructuresWriteDefRow(self, pythonName, typeName, sSize, sDefaultVal, description):
+        #latex:
+        self.sLatex += '    ' + pythonName + ' & '                
+        self.sLatex += '    ' + typeName + ' & '
+        self.sLatex += '    ' + sSize + ' & '
+        self.sLatex += '    ' + sDefaultVal + ' & '
+        self.sLatex += '    ' + description + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
+        
+        #RST:
+        s = '* | **' + pythonName + '** [type = ' + typeName
+        if sDefaultVal != '':
+            s += ', default = ' + sDefaultVal
+        if sSize != '':
+            s += ', size = '+sSize
+        s += ']:\n'
+        s += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
+        self.sRST += s
+        
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

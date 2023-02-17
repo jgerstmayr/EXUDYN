@@ -72,7 +72,7 @@ def RegularizedFriction(vel, muDynamic, muStaticOffset, velStatic, velDynamic, m
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: compute equivalent von-Mises stress given 6 stress components or list of stress6D (or stress6D in rows of np.array)
 #**input:
-#  stress6D: 6 stress components as list or np.array, using ordering $[\sigma_{xx}$, $[\sigma_{yy}$, $[\sigma_{zz}$, $[\sigma_{yz}$, $[\sigma_{xz}$, $[\sigma_{xy}]$
+#  stress6D: 6 stress components as list or np.array, using ordering $[\sigma_{xx}$, $\sigma_{yy}$, $\sigma_{zz}$, $\sigma_{yz}$, $\sigma_{xz}$, $\sigma_{xy}]$
 #**output: returns scalar equivalent von-Mises stress or np.array of von-Mises stresses for all stress6D
 def VonMisesStress(stress6D):
     s = np.array(stress6D)

@@ -1120,8 +1120,10 @@ void CSystem::ComputeLieGroupNodeCompositionEps(Vector& currentODE2,
     CHECKandTHROW(nPos + nRot <= 6, "CSystem::ComputeLieGroupNodeCompositionEps: only possible for node size <= 6");
 
     storedNodeODE2.CopyFrom(nodeODE2coordsLink);
-	LinkedDataVector currentPosition(storedNodeODE2, off, nPos);
-	LinkedDataVector currentOrientation(storedNodeODE2, off + nPos, nRot);
+	//LinkedDataVector currentPosition(storedNodeODE2, off, nPos); //wrong, no offset off needed here!
+	//LinkedDataVector currentOrientation(storedNodeODE2, off + nPos, nRot);
+	LinkedDataVector currentPosition(storedNodeODE2, 0, nPos);
+	LinkedDataVector currentOrientation(storedNodeODE2, nPos, nRot);
 
 	LinkedDataVector newPosition(currentODE2, off, nPos);
 	LinkedDataVector newOrientation(currentODE2, off + nPos, nRot);

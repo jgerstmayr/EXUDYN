@@ -18,6 +18,7 @@
 ##optional: pip install pygame
 
 import exudyn as exu
+from exudyn.advancedUtilities import IsReal, IsInteger
 from typing import Optional #, Union
 
 import numpy as np
@@ -130,7 +131,7 @@ class OpenAIGymInterfaceEnv:
                 break
             if stopIfDone and done:
                 observation, info = self.reset(return_info=True)
-            if sleepTime!=0:
+            if useRenderer and sleepTime!=0:
                 time.sleep(sleepTime)        
         if showTimeSpent:
             print('time spent=',ts+time.time())
@@ -243,12 +244,15 @@ class OpenAIGymInterfaceEnv:
         #super().reset(seed=seed)
         randSize = (self.stateSize)
         #randomInitializationValue could also be a vector!
-        if not (type(self.randomInitializationValue) == float
-                or type(self.randomInitializationValue) == int):
+        if not(IsReal(self.randomInitializationValue)) and not(IsInteger(self.randomInitializationValue)): 
+            # if the randomInitializationValue is not a float/int/np.floating it should be a 
+            # list or np.array to pass different initialization values for different states (thereby the list must have )
             randSize = None
-            
+            if type(self.randomInitializationValue) == list:  
+                # cast to array to obtain -self.randomInitializationValue
+                self.randomInitializationValue = np.array(self.randomInitializationValue)
         self.state = np.random.uniform(low=-self.randomInitializationValue, 
-                                       high=self.randomInitializationValue, size=randSize)
+                                   high=self.randomInitializationValue, size=randSize)
         self.steps_beyond_done = None
 
 

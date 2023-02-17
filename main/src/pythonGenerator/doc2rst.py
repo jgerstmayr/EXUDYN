@@ -11,7 +11,7 @@ usage: call 'rstviewer README.rst' directly in powershell; alternatively use res
 import copy #for deep copies
 import io   #for utf-8 encoding
 from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, \
-                               RSTheaderString, RSTlabelString, ExtractLatexCommand, FindMatchingBracket, ReplaceWords, \
+                               RSTheaderString, RSTlabelString, ExtractLatexCommand, FindMatchingBracket, ReplaceWords, RSTurl, \
                                convLatexWords, convLatexCommands
                                #ReplaceLatexCommands not imported as it has a special local version
 
@@ -34,7 +34,29 @@ filesParsed=[
               'tutorial.tex',
              ]
 
-
+undefLabelList = [
+    ('Theory: Contact','seccontacttheory'),
+    ('List of Abbreviations','sec-listofabbreviations'),
+    ('Render State','sec-renderstate'),
+    ('GraphicsData','sec-graphicsdata'),
+    ('Solvers','sec-solvers'),
+    ('Items Reference Manual','sec-item-reference-manual'),
+    ('Solvers: Static','sec-solver-solvestatic'),
+    ('Solvers: Dynamic','sec-solver-solvedynamic'),
+    ('Solvers: Eigenvalues','sec-solver-computeode2eigenvalues'),
+    ('Theory: Component Mode Synthesis','sec-theory-cms'),
+    #'sec-mainsolverstatic',
+    ('Graphics: UTF-8','sec-utf8'),
+    ('Solver: Explicit','sec-explicitsolver'),
+    ]
+undefLabels =''
+for i, (header, label) in enumerate(undefLabelList): 
+    undefLabels+='.. _'+label+':\n\n'+header+'\n'+'='*len(header)+'\n\n'
+    undefLabels+='See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ \n\n'
+    
+undefLabels+='Further information\n'
+undefLabels+='===================\n\n'
+undefLabels+='\ **SEE Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ '
 
 sectionsList = []
 
@@ -55,6 +77,8 @@ def ReplaceLatexCommands(s, conversionDict): #replace strings provided in conver
             found = ExtractLatexCommand(s, key, secondBracket, isBeginEnd)
             if found != -1:
                 [preString, innerString, innerString2, postString] = found
+                # if key == '\\onlyRST':
+                #     print('onlyRST=',innerString)
                 # if isBeginEnd:
                 #     print("inner="+innerString+'+++')
                 # if key == '\\label':
@@ -65,10 +89,19 @@ def ReplaceLatexCommands(s, conversionDict): #replace strings provided in conver
                 #     s += preString[nLast:] #this may be the header
                 # else:
                 s = preString
-                if key == '\\refSection' or key == '\\label':
-                    innerString=innerString.replace(':','-').lower()
+                if '\\refSection' in key  or key == '\\label' or key == '\\fig' or key == '\\ref':
+                    innerString=innerString.replace(':','-').replace('_','-').lower()
                 else:
+                    innerString = ReplaceLatexCommands(innerString, convLatexCommands)
                     innerString = ReplaceWords(innerString, convLatexWords) #needs to be cleaned here already
+
+                # if key == '\\fig':
+                #     print('found \\fig: ...'+ innerString)
+                # if key == '\\ref':
+                #     print('found \\ref: ...'+ innerString)
+
+                # if key == '\\footnote':
+                #     print('found \\footnote: ...'+ innerString)
 
                 # if 'sectionlabel' in key:
                 #     print('label=',innerString2)
@@ -383,14 +416,14 @@ Exudyn documentation
 #    :caption: Python utility functions
 #    :maxdepth: 3
    
-#    docs/RST/pythonUtilities/general
-
+   # docs/RST/items/index.rst
     indexRST += """   docs/RST/cInterface/CInterfaceIndex
 
 .. toctree::
    :caption: Reference Manual
 
    docs/RST/pythonUtilities/index.rst
+   docs/RST/structures/StructuresAndSettingsIndex.rst
 
 .. toctree::
    :caption: Issue Tracker
@@ -404,7 +437,8 @@ Indices and tables
 * :ref:`search`
 
 """
-
+    indexRST += undefLabels + '\n'
+    
     file=open(destDir+'index.rst','w')  #clear file by one write access
     file.write(indexRST)
     file.close()
@@ -446,6 +480,7 @@ Indices and tables
                 file.write(s)
 
         if fileOpen:
+            file.write('\n')
             file.close()
 
 

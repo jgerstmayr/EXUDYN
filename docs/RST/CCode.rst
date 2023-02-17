@@ -145,7 +145,7 @@ No-abbreviations-rule
 The code uses a \ **minimum set of abbreviations**\ ; however, the following abbreviation rules are used throughout:
 In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (short, 5-line member functions).
 
-\ **Exceptions**\  to the NO-ABBREVIATIONS-RULE, see also \hyperref[sec:listOfAbbreviations]\underlineList of Abbreviations: %no section number!!!:  :ref:`sec-listofabbreviations`\ 
+\ **Exceptions**\  to the NO-ABBREVIATIONS-RULE, see also \hyperref[sec:listOfAbbreviations]\underlineList of Abbreviations: %no section number!!!: Section :ref:`sec-listofabbreviations`\ 
 
 +  ODE
 +  ODE2: marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)
