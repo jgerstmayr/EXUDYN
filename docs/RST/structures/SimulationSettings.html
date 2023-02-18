@@ -122,131 +122,157 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>appendToFile</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.appendToFile</span></code></div>
 <div class="line">flag (true/false); if true, solution and solverInformation is appended to existing file (otherwise created); in BINARY mode, files are always replaced and this parameter is ineffective!</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>binarySolutionFile</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.binarySolutionFile</span></code></div>
 <div class="line">if true, the solution file is written in binary format for improved speed and smaller file sizes; setting outputPrecision &gt;= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that appendToFile is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>coordinatesSolutionFileName</strong> [type = FileName, default = ‘coordinatesSolution’]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.coordinatesSolutionFileName</span></code></div>
 <div class="line">tabnewline filename and (relative) path of solution file (coordinatesSolutionFile) containing all coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and ‘_’ only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>exportAccelerations</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportAccelerations</span></code></div>
 <div class="line">add hacODE2 accelerations to solution file (coordinatesSolutionFile)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>exportAlgebraicCoordinates</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportAlgebraicCoordinates</span></code></div>
 <div class="line">add algebraicCoordinates (=Lagrange multipliers) to solution file (coordinatesSolutionFile)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>exportDataCoordinates</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportDataCoordinates</span></code></div>
 <div class="line">add DataCoordinates to solution file (coordinatesSolutionFile)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>exportODE1Velocities</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportODE1Velocities</span></code></div>
 <div class="line">add coordinatesODE1_t to solution file (coordinatesSolutionFile)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>exportVelocities</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportVelocities</span></code></div>
 <div class="line">add hacODE2 velocities to solution file (coordinatesSolutionFile)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>flushFilesDOF</strong> [type = PInt, default = 10000]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.flushFilesDOF</span></code></div>
 <div class="line">number of DOF, above which solution file (coordinatesSolutionFile) buffers are always flushed, irrespectively of whether flushFilesImmediately is set True or False (see also flushFilesImmediately); for larger files, writing takes so much time that flushing does not add considerable time</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>flushFilesImmediately</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.flushFilesImmediately</span></code></div>
 <div class="line">flush file buffers after every solution period written (coordinatesSolutionFile and sensor files); if set False, the output is written through a buffer, which is highly efficient, but during simulation, files may be always in an incomplete state; if set True, this may add a large amount of CPU time as the process waits until files are really written to hard disc (especially for simulation of small scale systems, writing 10.000s of time steps; at least 5us per step/file, depending on hardware)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>outputPrecision</strong> [type = UInt, default = 10]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.outputPrecision</span></code></div>
 <div class="line">precision for floating point numbers written to solution and sensor files</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>recordImagesInterval</strong> [type = Real, default = -1.]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.recordImagesInterval</span></code></div>
 <div class="line">record frames (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>restartFileName</strong> [type = FileName, default = ‘restartFile.txt’]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.restartFileName</span></code></div>
 <div class="line">filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(…) to consistently restart</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>restartWritePeriod</strong> [type = UReal, default = 0.01]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.restartWritePeriod</span></code></div>
 <div class="line">time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>sensorsAppendToFile</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.sensorsAppendToFile</span></code></div>
 <div class="line">flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>sensorsWriteFileFooter</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.sensorsWriteFileFooter</span></code></div>
 <div class="line">flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>sensorsWriteFileHeader</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.sensorsWriteFileHeader</span></code></div>
 <div class="line">flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>sensorsWritePeriod</strong> [type = UReal, default = 0.01]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.sensorsWritePeriod</span></code></div>
 <div class="line">time span (period), determines how often the sensor output is written to file or internal storage during a simulation</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>solutionInformation</strong> [type = String, default = ‘’]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.solutionInformation</span></code></div>
 <div class="line">special information added to header of solution file (e.g. parameters and settings, modes, …); character encoding my be UTF-8, restricted to characters in Section <a class="reference internal" href="../../../index.html#sec-utf8"><span class="std std-ref">Graphics: UTF-8</span></a>, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>solutionWritePeriod</strong> [type = UReal, default = 0.01]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.solutionWritePeriod</span></code></div>
 <div class="line">time span (period), determines how often the solution file (coordinatesSolutionFile) is written during a simulation</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>solverInformationFileName</strong> [type = FileName, default = ‘solverInformation.txt’]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.solverInformationFileName</span></code></div>
 <div class="line">tabnewline filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and ‘_’ only</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>writeFileFooter</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.writeFileFooter</span></code></div>
 <div class="line">flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>writeFileHeader</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.writeFileHeader</span></code></div>
 <div class="line">flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>writeInitialValues</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.writeInitialValues</span></code></div>
 <div class="line">flag (true/false); if true, initial values are exported for the start time; applies to coordinatesSolution and sensor files; this may not be wanted in the append file mode if the initial values are identical to the final values of a previous computation</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>writeRestartFile</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.writeRestartFile</span></code></div>
 <div class="line">flag (true/false), which determines if restart file is written regularly, see restartFileName for details</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>writeSolutionToFile</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.writeSolutionToFile</span></code></div>
 <div class="line">flag (true/false), which determines if (global) solution vector is written to the solution file (coordinatesSolutionFile); standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional coordinates in the solution file, see the options below</div>
 </div>
 </li>
@@ -259,41 +285,49 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>addReferenceCoordinatesToEpsilon</strong> [type = tabnewline bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon</span></code></div>
 <div class="line">True: for the size estimation of the differentiation parameter, the reference coordinate <span class="math notranslate nohighlight">\(q^{Ref}_i\)</span> is added to hacODE2 coordinates –&gt; see; False: only the current coordinate is used for size estimation of the differentiation parameter</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>doSystemWideDifferentiation</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.doSystemWideDifferentiation</span></code></div>
 <div class="line">True: system wide differentiation (e.g. all hacODE2 equations w.r.t. all hacODE2 coordinates); False: only local (object) differentiation</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>forAE</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.forAE</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.forAE</span></code></div>
 <div class="line">flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, ‘true’ should only be used for verification</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>forODE2</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2</span></code></div>
 <div class="line">flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; numerical differentiation is less efficient and may lead to numerical problems, but may smoothen problems of analytical derivatives; sometimes the analytical derivative may neglect terms</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>forODE2connectors</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2connectors</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2connectors</span></code></div>
 <div class="line">flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>jacobianConnectorDerivative</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.jacobianConnectorDerivative</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.jacobianConnectorDerivative</span></code></div>
 <div class="line">True: for analytic Jacobians of connectors, the Jacobian derivative is computed, causing additional CPU costs and not beeing available for all connectors or markers (thus switching to numerical differentiation); False: Jacobian derivative is neglected in analytic Jacobians (but included in numerical Jacobians), which often has only minor influence on convergence</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>minimumCoordinateSize</strong> [type = UReal, default = 1e-2]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.minimumCoordinateSize</span></code></div>
 <div class="line">minimum size of coordinates in relative differentiation parameter</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>relativeEpsilon</strong> [type = UReal, default = 1e-7]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon</span></code></div>
 <div class="line">relative differentiation parameter epsilon; the numerical differentiation parameter <span class="math notranslate nohighlight">\(\varepsilon\)</span> follows from the formula (<span class="math notranslate nohighlight">\(\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)\)</span>, with <span class="math notranslate nohighlight">\(\varepsilon_\mathrm{relative}\)</span>=relativeEpsilon, <span class="math notranslate nohighlight">\(q_{min} = `\ minimumCoordinateSize, \ :math:`q_i\)</span> is the current coordinate which is differentiated, and <span class="math notranslate nohighlight">\(qRef_i\)</span> is the reference coordinate of the current coordinate</div>
 </div>
 </li>
@@ -306,16 +340,19 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>ignoreMaxIterations</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.discontinuous.ignoreMaxIterations</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.discontinuous.ignoreMaxIterations</span></code></div>
 <div class="line">continue solver if maximum number of discontinuous (post Newton) iterations is reached (ignore tolerance)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>iterationTolerance</strong> [type = UReal, default = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.discontinuous.iterationTolerance</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.discontinuous.iterationTolerance</span></code></div>
 <div class="line">absolute tolerance for discontinuous (post Newton) iterations; the errors represent absolute residuals and can be quite high</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>maxIterations</strong> [type = UInt, default = 5]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.discontinuous.maxIterations</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.discontinuous.maxIterations</span></code></div>
 <div class="line">maximum number of discontinuous (post Newton) iterations</div>
 </div>
 </li>
@@ -328,71 +365,85 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>numericalDifferentiation</strong> [type = NumericalDifferentiationSettings]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation</span></code></div>
 <div class="line">numerical differentiation parameters for numerical jacobian (e.g. Newton in static solver or implicit time integration)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>absoluteTolerance</strong> [type = UReal, default = 1e-10]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.absoluteTolerance</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.absoluteTolerance</span></code></div>
 <div class="line">absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates &lt;= absoluteTolerance</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptInitialResidual</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.adaptInitialResidual</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.adaptInitialResidual</span></code></div>
 <div class="line">flag (true/false); false = standard; True: if initialResidual is very small (or zero), it may increas dramatically in first step; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>maximumSolutionNorm</strong> [type = UReal, default = 1e38]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.maximumSolutionNorm</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.maximumSolutionNorm</span></code></div>
 <div class="line">this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (value=<span class="math notranslate nohighlight">\(u_1^2\)</span>+<span class="math notranslate nohighlight">\(u_2^2\)</span>+…), and solutionV/A…; if the norm of solution vectors are larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>maxIterations</strong> [type = UInt, default = 25]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.maxIterations</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.maxIterations</span></code></div>
 <div class="line">maximum number of iterations (including modified + restart Newton steps); after that iterations, the static/dynamic solver stops with error</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>maxModifiedNewtonIterations</strong> [type = UInt, default = 8]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.maxModifiedNewtonIterations</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.maxModifiedNewtonIterations</span></code></div>
 <div class="line">maximum number of iterations for modified Newton (without Jacobian update); after that number of iterations, the modified Newton method gets a jacobian update and is further iterated</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>maxModifiedNewtonRestartIterations</strong> [type = tabnewline UInt, default = 7]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.maxModifiedNewtonRestartIterations</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.maxModifiedNewtonRestartIterations</span></code></div>
 <div class="line">maximum number of iterations for modified Newton after aJacobian update; after that number of iterations, the full Newton method is started for this step</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>modifiedNewtonContractivity</strong> [type = PReal, default = 0.5]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.modifiedNewtonContractivity</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.modifiedNewtonContractivity</span></code></div>
 <div class="line">maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>modifiedNewtonJacUpdatePerStep</strong> [type = tabnewline bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.modifiedNewtonJacUpdatePerStep</span></code></div>
 <div class="line">True: compute Jacobian at every time step, but not in every iteration (except for bad convergence ==&gt; switch to full Newton)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>newtonResidualMode</strong> [type = UInt, default = 0]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.newtonResidualMode</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.newtonResidualMode</span></code></div>
 <div class="line">0 … use residual for computation of error (standard); 1 … use hacODE2 and hacODE1 newton increment for error (set relTol and absTol to same values!) ==&gt; may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>relativeTolerance</strong> [type = UReal, default = 1e-8]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.relativeTolerance</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.relativeTolerance</span></code></div>
 <div class="line">relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>useModifiedNewton</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.useModifiedNewton</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.useModifiedNewton</span></code></div>
 <div class="line">True: compute Jacobian only at first step; no Jacobian updates per step; False: Jacobian computed in every step</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>useNewtonSolver</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.useNewtonSolver</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.useNewtonSolver</span></code></div>
 <div class="line">flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>weightTolerancePerCoordinate</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.weightTolerancePerCoordinate</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.weightTolerancePerCoordinate</span></code></div>
 <div class="line">flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size</div>
 </div>
 </li>
@@ -405,41 +456,49 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>computeInitialAccelerations</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations</span></code></div>
 <div class="line">True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>lieGroupAddTangentOperator</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator</span></code></div>
 <div class="line">True: for Lie group nodes, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>newmarkBeta</strong> [type = UReal, default = 0.25]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.generalizedAlpha.newmarkBeta</span></code></div>
 <div class="line">value beta for Newmark method; default value beta = <span class="math notranslate nohighlight">\(\frac 1 4\)</span> corresponds to (undamped) trapezoidal rule</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>newmarkGamma</strong> [type = UReal, default = 0.5]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.generalizedAlpha.newmarkGamma</span></code></div>
 <div class="line">value gamma for Newmark method; default value gamma = <span class="math notranslate nohighlight">\(\frac 1 2\)</span> corresponds to (undamped) trapezoidal rule</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>resetAccelerations</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.generalizedAlpha.resetAccelerations</span></code></div>
 <div class="line">this flag only affects if computeInitialAccelerations=False: if resetAccelerations=True, accelerations are set zero in the solver function InitializeSolverInitialConditions; this may be unwanted in case of repeatedly called SolveSteps() and in cases where solutions shall be prolonged from previous computations</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>spectralRadius</strong> [type = UReal, default = 0.9]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.generalizedAlpha.spectralRadius</span></code></div>
 <div class="line">spectral radius for Generalized-alpha solver; set this value to 1 for no damping or to 0 &lt; spectralRadius &lt; 1 for damping of high-frequency dynamics; for position-level constraints (index 3), spectralRadius must be &lt; 1</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>useIndex2Constraints</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints</span></code></div>
 <div class="line">set useIndex2Constraints = true in order to use index2 (velocity level constraints) formulation</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>useNewmark</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.generalizedAlpha.useNewmark</span></code></div>
 <div class="line">if true, use Newmark method with beta and gamma instead of generalized-Alpha</div>
 </div>
 </li>
@@ -452,26 +511,31 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>computeEndOfStepAccelerations</strong> [type = tabnewline bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations</span></code></div>
 <div class="line">accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>computeMassMatrixInversePerBody</strong> [type = tabnewline bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody</span></code></div>
 <div class="line">If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>dynamicSolverType</strong> [type = DynamicSolverType, default = DynamicSolverType::DOPRI5]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType</span></code></div>
 <div class="line">tabnewline selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, …), for detailed description see DynamicSolverType, Section <a class="reference internal" href="../cInterface/TypeDefinitions.html#sec-dynamicsolvertype"><span class="std std-ref">DynamicSolverType</span></a>, but only referring to explicit solvers.</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>eliminateConstraints</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration.eliminateConstraints</span></code></div>
 <div class="line">True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>useLieGroupIntegration</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration.useLieGroupIntegration</span></code></div>
 <div class="line">True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates!</div>
 </div>
 </li>
@@ -484,131 +548,157 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>discontinuous</strong> [type = DiscontinuousSettings]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.discontinuous</span></code></div>
 <div class="line">parameters for treatment of discontinuities</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>explicitIntegration</strong> [type = ExplicitIntegrationSettings]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration</span></code></div>
 <div class="line">special parameters for explicit time integration</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>generalizedAlpha</strong> [type = GeneralizedAlphaSettings]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.generalizedAlpha</span></code></div>
 <div class="line">parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>newton</strong> [type = NewtonSettings]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton</span></code></div>
 <div class="line">parameters for Newton method; used for implicit time integration methods only</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>absoluteTolerance</strong> [type = UReal, default = 1e-8]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.absoluteTolerance</span></code></div>
 <div class="line"><span class="math notranslate nohighlight">\(a_{tol}\)</span>: if automaticStepSize=True, absolute tolerance for the error control; must fulfill <span class="math notranslate nohighlight">\(a_{tol} &gt; 0\)</span>; see Section <a class="reference internal" href="../../../index.html#sec-explicitsolver"><span class="std std-ref">Solver: Explicit</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStep</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.adaptiveStep</span></code></div>
 <div class="line">True: the step size may be reduced if step fails; no automatic stepsize control</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStepDecrease</strong> [type = UReal, default = 0.5]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.adaptiveStepDecrease</span></code></div>
 <div class="line">Multiplicative factor (MUST BE: 0 &lt; factor &lt; 1) for step size to decrese due to discontinuousIteration or Newton errors</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStepIncrease</strong> [type = UReal, default = 2]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.adaptiveStepIncrease</span></code></div>
 <div class="line">Multiplicative factor (MUST BE &gt; 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStepRecoveryIterations</strong> [type = tabnewline UInt, default = 7]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.adaptiveStepRecoveryIterations</span></code></div>
 <div class="line">Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStepRecoverySteps</strong> [type = UInt, default = 10]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.adaptiveStepRecoverySteps</span></code></div>
 <div class="line">Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>automaticStepSize</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.automaticStepSize</span></code></div>
 <div class="line">True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; False: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads <span class="math notranslate nohighlight">\(h = h_{max} = \frac{t_{end} - t_{start}}{n_{steps}}\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>endTime</strong> [type = UReal, default = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.endTime</span></code></div>
 <div class="line"><span class="math notranslate nohighlight">\(t_{end}\)</span>: end time of time integration</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>initialStepSize</strong> [type = UReal, default = 0]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.initialStepSize</span></code></div>
 <div class="line"><span class="math notranslate nohighlight">\(h_{init}\)</span>: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>minimumStepSize</strong> [type = PReal, default = 1e-8]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.minimumStepSize</span></code></div>
 <div class="line"><span class="math notranslate nohighlight">\(h_{min}\)</span>: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>numberOfSteps</strong> [type = PInt, default = 100]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.numberOfSteps</span></code></div>
 <div class="line"><span class="math notranslate nohighlight">\(n_{steps}\)</span>: number of steps in time integration; (maximum) stepSize <span class="math notranslate nohighlight">\(h\)</span> is computed from <span class="math notranslate nohighlight">\(h = \frac{t_{end} - t_{start}}{n_{steps}}\)</span>; for automatic stepsize control, this stepSize is the maximum steps size, <span class="math notranslate nohighlight">\(h_{max} = h\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>realtimeFactor</strong> [type = PReal, default = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.realtimeFactor</span></code></div>
 <div class="line">if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor &lt; 1) or faster than realtime (factor &gt; 1)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>realtimeWaitMicroseconds</strong> [type = PInt, default = 1000]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.realtimeWaitMicroseconds</span></code></div>
 <div class="line">if simulateInRealtime=True, a loop runs which waits realtimeWaitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (&lt; 1000) increase CPU usage but improve realtime accuracy</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>relativeTolerance</strong> [type = UReal, default = 1e-8]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.relativeTolerance</span></code></div>
 <div class="line"><span class="math notranslate nohighlight">\(r_{tol}\)</span>: if automaticStepSize=True, relative tolerance for the error control; must fulfill <span class="math notranslate nohighlight">\(r_{tol} \ge 0\)</span>; see Section <a class="reference internal" href="../../../index.html#sec-explicitsolver"><span class="std std-ref">Solver: Explicit</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>reuseConstantMassMatrix</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.reuseConstantMassMatrix</span></code></div>
 <div class="line">True: does not recompute constant mass matrices (e.g. of some finite elements, mass points, etc.); if False, it always recomputes the mass matrix (e.g. needed, if user changes mass parameters via Python)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>simulateInRealtime</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.simulateInRealtime</span></code></div>
 <div class="line">True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>startTime</strong> [type = UReal, default = 0]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.startTime</span></code></div>
 <div class="line"><span class="math notranslate nohighlight">\(t_{start}\)</span>: start time of time integration (usually set to zero)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>stepInformation</strong> [type = UInt, default = 67]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.stepInformation</span></code></div>
 <div class="line">add up the following binary flags: 0 … show only step time, 1 … show time to go, 2 … show newton iterations (Nit) per step or period, 4 … show Newton jacobians (jac) per step or period, 8 … show discontinuous iterations (Dit) per step or period, 16 … show step size (dt), 32 … show CPU time spent; 64 … show adaptive step reduction warnings; 128 … show step increase information; 1024 … show every time step; time is usually shown in fractions of seconds (s), hours (h), or days</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>stepSizeMaxIncrease</strong> [type = UReal, default = 2]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.stepSizeMaxIncrease</span></code></div>
 <div class="line"><span class="math notranslate nohighlight">\(f_{maxInc}\)</span>: if automaticStepSize=True, maximum increase of step size per step, see Section <a class="reference internal" href="../../../index.html#sec-explicitsolver"><span class="std std-ref">Solver: Explicit</span></a>; make this factor smaller (but <span class="math notranslate nohighlight">\(&gt; 1\)</span>) if too many rejected steps</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>stepSizeSafety</strong> [type = UReal, default = 0.90]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.stepSizeSafety</span></code></div>
 <div class="line"><span class="math notranslate nohighlight">\(r_{sfty}\)</span>: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see Section <a class="reference internal" href="../../../index.html#sec-explicitsolver"><span class="std std-ref">Solver: Explicit</span></a>. Make this factor smaller if many steps are rejected.</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>verboseMode</strong> [type = UInt, default = 0]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.verboseMode</span></code></div>
 <div class="line">0 … no output, 1 … show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 … show every step information, 3 … show also solution vector, 4 … show also mass matrix and jacobian (implicit methods), 5 … show also Jacobian inverse (implicit methods)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>verboseModeFile</strong> [type = UInt, default = 0]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.verboseModeFile</span></code></div>
 <div class="line">same behaviour as verboseMode, but outputs all solver information to file</div>
 </div>
 </li>
@@ -621,91 +711,109 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>discontinuous</strong> [type = DiscontinuousSettings]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.discontinuous</span></code></div>
 <div class="line">parameters for treatment of discontinuities</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>newton</strong> [type = NewtonSettings]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.newton</span></code></div>
 <div class="line">parameters for Newton method (e.g. in static solver or time integration)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStep</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.adaptiveStep</span></code></div>
 <div class="line">True: use step reduction if step fails; False: fixed step size</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStepDecrease</strong> [type = UReal, default = 0.25]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.adaptiveStepDecrease</span></code></div>
 <div class="line">Multiplicative factor (MUST BE: 0 &lt; factor &lt; 1) for step size to decrese due to discontinuousIteration or Newton errors</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStepIncrease</strong> [type = UReal, default = 2]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.adaptiveStepIncrease</span></code></div>
 <div class="line">Multiplicative factor (MUST BE &gt; 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStepRecoveryIterations</strong> [type = tabnewline UInt, default = 7]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.adaptiveStepRecoveryIterations</span></code></div>
 <div class="line">Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>adaptiveStepRecoverySteps</strong> [type = UInt, default = 4]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.adaptiveStepRecoverySteps</span></code></div>
 <div class="line">Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>loadStepDuration</strong> [type = PReal, default = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.loadStepDuration</span></code></div>
 <div class="line">quasi-time for all load steps (added to current time in load steps)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>loadStepGeometric</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.loadStepGeometric</span></code></div>
 <div class="line">if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,…); if true, the load steps are increased in a geometric series, e.g. for <span class="math notranslate nohighlight">\(n=8\)</span> numberOfLoadSteps and <span class="math notranslate nohighlight">\(d = 1000\)</span> loadStepGeometricRange, it follows: <span class="math notranslate nohighlight">\(1000^{1/8}/1000=0.00237\)</span>, <span class="math notranslate nohighlight">\(1000^{2/8}/1000=0.00562\)</span>, <span class="math notranslate nohighlight">\(1000^{3/8}/1000=0.0133\)</span>, …, <span class="math notranslate nohighlight">\(1000^{7/8}/1000=0.422\)</span>, <span class="math notranslate nohighlight">\(1000^{8/8}/1000=1\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>loadStepGeometricRange</strong> [type = PReal, default = 1000]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.loadStepGeometricRange</span></code></div>
 <div class="line">if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>loadStepStart</strong> [type = UReal, default = 0]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.loadStepStart</span></code></div>
 <div class="line">a quasi time, which can be used for the output (first column) as well as for time-dependent forces; quasi-time is increased in every step i by loadStepDuration/numberOfLoadSteps; loadStepTime = loadStepStart + i*loadStepDuration/numberOfLoadSteps, but loadStepStart untouched ==&gt; increment by user</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>minimumStepSize</strong> [type = PReal, default = 1e-8]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.minimumStepSize</span></code></div>
 <div class="line">lower limit of step size, before nonlinear solver stops</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>numberOfLoadSteps</strong> [type = PInt, default = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.numberOfLoadSteps</span></code></div>
 <div class="line">number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>stabilizerODE2term</strong> [type = UReal, default = 0]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.stabilizerODE2term</span></code></div>
 <div class="line">add mass-proportional stabilizer term in hacODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with <span class="math notranslate nohighlight">\(stabilizer = (1-loadStepFactor^2)\)</span>, and go to zero at the end of all load steps: <span class="math notranslate nohighlight">\(loadStepFactor=1\)</span> -&gt; <span class="math notranslate nohighlight">\(stabilizer = 0\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>stepInformation</strong> [type = UInt, default = 67]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.stepInformation</span></code></div>
 <div class="line">add up the following binary flags: 0 … show only step time, 1 … show time to go, 2 … show newton iterations (Nit) per step or period, 4 … show Newton jacobians (jac) per step or period, 8 … show discontinuous iterations (Dit) per step or period, 16 … show step size (dt), 32 … show CPU time spent; 64 … show adaptive step reduction warnings; 128 … show step increase information; 1024 … show every time step; time is usually shown in fractions of seconds (s), hours (h), or days</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>useLoadFactor</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.useLoadFactor</span></code></div>
 <div class="line">True: compute a load factor <span class="math notranslate nohighlight">\(\in [0,1]\)</span> from static step time; all loads are scaled by the load factor; False: loads are always scaled with 1 – use this option if time dependent loads use a userFunction</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>verboseMode</strong> [type = UInt, default = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.verboseMode</span></code></div>
 <div class="line">0 … no output, 1 … show errors and load steps, 2 … show short Newton step information (error), 3 … show also solution vector, 4 … show also jacobian, 5 … show also Jacobian inverse</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>verboseModeFile</strong> [type = UInt, default = 0]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.verboseModeFile</span></code></div>
 <div class="line">same behaviour as verboseMode, but outputs all solver information to file</div>
 </div>
 </li>
@@ -718,26 +826,31 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>ignoreRedundantConstraints</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.ignoreRedundantConstraints</span></code></div>
 <div class="line">[ONLY implemented for dense matrices] False: standard way, fails if redundant equations or singular matrices occur; True: if redundant constraints appear, the solver tries to resolve them by setting according Lagrange multipliers to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>ignoreSingularJacobian</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.ignoreSingularJacobian</span></code></div>
 <div class="line">[ONLY implemented for dense matrices] False: standard way, fails if jacobian is singular; True: if singularities appear in jacobian (e.g. no equation attributed to a node, redundant equations, zero mass matrix, zero eigenvalue for static problem, etc.), the jacobian inverse is resolved such that according solution variables are set to zero; this may help, but it MAY LEAD TO ERRONEOUS BEHAVIOUR; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>pivotTreshold</strong> [type = PReal, default = 0]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.pivotTreshold</span></code></div>
 <div class="line">treshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>reuseAnalyzedPattern</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.reuseAnalyzedPattern</span></code></div>
 <div class="line">[ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(…) and should be handled with care!</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>showCausingItems</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.showCausingItems</span></code></div>
 <div class="line">False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!</div>
 </div>
 </li>
@@ -750,36 +863,43 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>multithreadedLLimitJacobians</strong> [type = PInt, default = 20]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.multithreadedLLimitJacobians</span></code></div>
 <div class="line">compute jacobians (ODE2, AE, …) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(…)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>multithreadedLLimitLoads</strong> [type = PInt, default = 20]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.multithreadedLLimitLoads</span></code></div>
 <div class="line">compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(…)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>multithreadedLLimitMassMatrices</strong> [type = tabnewline PInt, default = 20]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.multithreadedLLimitMassMatrices</span></code></div>
 <div class="line">compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(…)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>multithreadedLLimitResiduals</strong> [type = PInt, default = 20]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.multithreadedLLimitResiduals</span></code></div>
 <div class="line">compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(…)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>numberOfThreads</strong> [type = PInt, default = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.numberOfThreads</span></code></div>
 <div class="line">number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>taskSplitMinItems</strong> [type = PInt, default = 50]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.taskSplitMinItems</span></code></div>
 <div class="line">number of items from which on the tasks are split into subtasks (which slightly increases threading performance; this may be critical for smaller number of objects, should be roughly between 50 and 5000; flag is copied into MainSystem internal flag at InitializeSolverData(…)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>taskSplitTasksPerThread</strong> [type = PInt, default = 16]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.taskSplitTasksPerThread</span></code></div>
 <div class="line">this is the number of subtasks that every thread receives; minimum is 1, the maximum should not be larger than 100; this factor is 1 as long as the taskSplitMinItems is not reached; flag is copied into MainSystem internal flag at InitializeSolverData(…)</div>
 </div>
 </li>
@@ -792,61 +912,73 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>linearSolverSettings</strong> [type = LinearSolverSettings]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">.simulationSettings.linearSolverSettings</span></code></div>
 <div class="line">linear solver parameters (used for dense and sparse solvers)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>parallel</strong> [type = Parallel]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">.simulationSettings.parallel</span></code></div>
 <div class="line">parameters for vectorized and parallelized (multi-threaded) computations</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>solutionSettings</strong> [type = SolutionSettings]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">.simulationSettings.solutionSettings</span></code></div>
 <div class="line">settings for solution files</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>staticSolver</strong> [type = StaticSolverSettings]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">.simulationSettings.staticSolver</span></code></div>
 <div class="line">static solver parameters</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>timeIntegration</strong> [type = TimeIntegrationSettings]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">.simulationSettings.timeIntegration</span></code></div>
 <div class="line">time integration parameters</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>cleanUpMemory</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">.simulationSettings.cleanUpMemory</span></code></div>
 <div class="line">True: solvers will free memory at exit (recommended for large systems); False: keep allocated memory for repeated computations to increase performance</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>displayComputationTime</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">.simulationSettings.displayComputationTime</span></code></div>
 <div class="line">display computation time statistics at end of solving</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>displayGlobalTimers</strong> [type = bool, default = True]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">.simulationSettings.displayGlobalTimers</span></code></div>
 <div class="line">display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>displayStatistics</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">.simulationSettings.displayStatistics</span></code></div>
 <div class="line">display general computation information at end of time step (steps, iterations, function calls, step rejections, …</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>linearSolverType</strong> [type = LinearSolverType, default = LinearSolverType::EXUdense]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">.simulationSettings.linearSolverType</span></code></div>
 <div class="line">tabnewline selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), … (enumeration type)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>outputPrecision</strong> [type = UInt, default = 6]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">.simulationSettings.outputPrecision</span></code></div>
 <div class="line">precision for floating point numbers written to console; e.g. values written by solver</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>pauseAfterEachStep</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">.simulationSettings.pauseAfterEachStep</span></code></div>
 <div class="line">pause after every time step or static load step(user press SPACE)</div>
 </div>
 </li>

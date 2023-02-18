@@ -195,6 +195,31 @@
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><strong>Reset(…)</strong> [type = void, default = useSolverTimer]:</div>
+<div class="line">reset solver timings to initial state by assigning default values; useSolverTimer sets the useTimer flag</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>StartTimer(…)</strong> [type = void, default = value]:</div>
+<div class="line">start timer function for a given variable; subtracts current CPU time from value</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>StopTimer(…)</strong> [type = void, default = value]:</div>
+<div class="line">stop timer function for a given variable; adds current CPU time to value</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Sum()</strong> [type = Real]:</div>
+<div class="line">compute sum of all timers (except for those counted multiple, e.g., jacobians</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ToString()</strong> [type = String]:</div>
+<div class="line">converts the current timings to a string</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><strong>total</strong> [type = Real, default = 0.]:</div>
 <div class="line">total time measured between start and end of computation (static/dynamics)</div>
 </div>
@@ -232,6 +257,16 @@
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><strong>CleanUpMemory()</strong> [type = void]:</div>
+<div class="line">if desired, temporary data is cleaned up to safe memory</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetLinearSolverType()</strong> [type = LinearSolverType]:</div>
+<div class="line">return current linear solver type (dense/sparse)</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><strong>nAE</strong> [type = Index, default = 0]:</div>
 <div class="line">number of algebraic coordinates</div>
 </div>
@@ -259,6 +294,11 @@
 <li><div class="line-block">
 <div class="line"><strong>nSys</strong> [type = Index, default = 0]:</div>
 <div class="line">number of system (unknown) coordinates = nODE2+nODE1+nAE</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetLinearSolverType(…)</strong> [type = void, default = linearSolverType, reuseAnalyzedPattern]:</div>
+<div class="line">set linear solver type and matrix version: links system matrices to according dense/sparse versions</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -418,6 +458,11 @@
 <div class="line">time at beginning of time integration</div>
 </div>
 </li>
+<li><div class="line-block">
+<div class="line"><strong>ToString()</strong> [type = String]:</div>
+<div class="line">convert iteration statistics to string; used for displayStatistics option</div>
+</div>
+</li>
 </ul>
 </section>
 <section id="solverconvergencedata">
@@ -443,6 +488,11 @@
 <li><div class="line-block">
 <div class="line"><strong>errorCoordinateFactor</strong> [type = Real, default = 1.]:</div>
 <div class="line">factor may include the number of system coordinates to reduce the residual</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeData()</strong> [type = void]:</div>
+<div class="line">initialize SolverConvergenceData by assigning default values</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -515,6 +565,11 @@
 <li><div class="line-block">
 <div class="line"><strong>finishedSuccessfully</strong> [type = bool, default = False]:</div>
 <div class="line">flag is false until solver finshed successfully (can be used as external trigger)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeData()</strong> [type = void]:</div>
+<div class="line">initialize SolverOutputData by assigning default values</div>
 </div>
 </li>
 <li><div class="line-block">

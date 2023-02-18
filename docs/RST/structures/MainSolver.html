@@ -132,8 +132,243 @@
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><strong>CheckInitialized(…)</strong> [type = bool, default = mainSystem]:</div>
+<div class="line">check if MainSolver and MainSystem are correctly initialized ==&gt; otherwise raise SysError</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeAlgebraicEquations(…)</strong> [type = tabnewline void, default = mainSystem, velocityLevel=false]:</div>
+<div class="line">compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeJacobianAE(…)</strong> [type = void, default = mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=false]:</div>
+<div class="line">add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. hacODE2 coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeJacobianODE1RHS(…)</strong> [type = void, default = mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1.]:</div>
+<div class="line">ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(…); the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeJacobianODE2RHS(…)</strong> [type = void, default = mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1.]:</div>
+<div class="line">set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor_ODE2=-1,scalarFactor_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor_ODE2=0,scalarFactor_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeLoadFactor(…)</strong> [type = Real, default = simulationSettings]:</div>
+<div class="line">for static solver, this is a factor in interval [0,1]; MUST be overwritten</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeMassMatrix(…)</strong> [type = void, default = mainSystem, scalarFactor=1.]:</div>
+<div class="line">compute systemMassMatrix (multiplied with factor) in cSolver and return mass nODE2 x nODE2 matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeNewtonJacobian(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">compute jacobian for newton method of given solver method; store result in systemJacobian</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeNewtonResidual(…)</strong> [type = Real, default = mainSystem, simulationSettings]:</div>
+<div class="line">compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeNewtonUpdate(…)</strong> [type = void, default = mainSystem, simulationSettings, initial=true]:</div>
+<div class="line">compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeODE2RHS(…)</strong> [type = void, default = mainSystem]:</div>
+<div class="line">compute the RHS of hacODE2 equations in systemResidual in range(0,nODE2)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>DiscontinuousIteration(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>FinalizeSolver(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">write concluding information (timer statistics, messages) and close files</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>FinishStep(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">finish static step / time step; write output of results to file</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetAEsize()</strong> [type = Index]:</div>
+<div class="line">number of algebraic equations in solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetDataSize()</strong> [type = Index]:</div>
+<div class="line">number of data (history) variables in solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetNewtonSolution()</strong> [type = NumpyVector]:</div>
+<div class="line">get locally stored / last computed solution (=increment) of Newton</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetODE1size()</strong> [type = Index]:</div>
+<div class="line">number of hacODE1 equations in solver (not yet implemented)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetODE2size()</strong> [type = Index]:</div>
+<div class="line">number of hacODE2 equations in solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetSimulationEndTime(…)</strong> [type = Real, default = simulationSettings]:</div>
+<div class="line">compute simulation end time (depends on static or time integration solver)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetSolverName()</strong> [type = std::string]:</div>
+<div class="line">get solver name - needed for output file header and visualization window</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetSystemJacobian()</strong> [type = NumpyMatrix]:</div>
+<div class="line">get locally stored / last computed system jacobian of solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetSystemMassMatrix()</strong> [type = NumpyMatrix]:</div>
+<div class="line">get locally stored / last computed mass matrix of solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetSystemResidual()</strong> [type = NumpyVector]:</div>
+<div class="line">get locally stored / last computed system residual</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>HasAutomaticStepSizeControl(…)</strong> [type = tabnewline bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">return true, if solver supports automatic stepsize control, otherwise false</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>IncreaseStepSize(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">increase step size if convergence is good</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolver(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolverData(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">initialize all data,it,conv; called from InitializeSolver()</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolverInitialConditions(…)</strong> [type = tabnewline void, default = mainSystem, simulationSettings]:</div>
+<div class="line">set/compute initial conditions (solver-specific!); called from InitializeSolver()</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolverOutput(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">initialize output files; called from InitializeSolver()</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolverPreChecks(…)</strong> [type = tabnewline bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">check if system is solvable; initialize dense/sparse computation modes</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeStep(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">initialize static step / time step; Python-functions; do some outputs, checks, etc.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>IsStaticSolver()</strong> [type = bool]:</div>
+<div class="line">return true, if static solver; needs to be overwritten in derived class</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>IsVerboseCheck(…)</strong> [type = bool, default = level]:</div>
+<div class="line">return true, if file or console output is at or above the given level</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><strong>loadStepGeometricFactor</strong> [type = Real]:</div>
 <div class="line">multiplicative load step factor; this factor is computed from loadStepGeometric parameters in SolveSystem(…)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Newton(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">perform Newton method for given solver method</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>PostInitializeSolverSpecific(…)</strong> [type = tabnewline void, default = mainSystem, simulationSettings]:</div>
+<div class="line">post-initialize for solver specific tasks; called at the end of InitializeSolver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>PreInitializeSolverSpecific(…)</strong> [type = tabnewline void, default = mainSystem, simulationSettings]:</div>
+<div class="line">pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ReduceStepSize(…)</strong> [type = bool, default = mainSystem, simulationSettings, severity]:</div>
+<div class="line">reduce step size (1..normal, 2..severe problems); return true, if reduction was successful</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetSystemJacobian(…)</strong> [type = void, default = systemJacobian]:</div>
+<div class="line">set locally stored system jacobian of solver; must have size nODE2+nODE1+nAE</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetSystemMassMatrix(…)</strong> [type = void, default = systemMassMatrix]:</div>
+<div class="line">set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetSystemResidual(…)</strong> [type = void, default = systemResidual]:</div>
+<div class="line">set locally stored system residual; must have size nODE2+nODE1+nAE</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SolveSteps(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">main solver part: calls multiple InitializeStep(…)/ DiscontinuousIteration(…)/ FinishStep(…); do step reduction if necessary; return true if success, false else</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SolveSystem(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">solve System: InitializeSolver, SolveSteps, FinalizeSolver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>UpdateCurrentTime(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">update currentTime (and load factor); MUST be overwritten in special solver class</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>VerboseWrite(…)</strong> [type = void, default = level, str]:</div>
+<div class="line">write to console and/or file in case of level</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>WriteCoordinatesToFile(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">write unique coordinates solution file</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>WriteSolutionFileHeader(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">write unique file header, depending on static/ dynamic simulation</div>
 </div>
 </li>
 </ul>
@@ -186,8 +421,193 @@
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><strong>CheckInitialized(…)</strong> [type = bool, default = mainSystem]:</div>
+<div class="line">check if MainSolver and MainSystem are correctly initialized ==&gt; otherwise raise SysError</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeAlgebraicEquations(…)</strong> [type = tabnewline void, default = mainSystem, velocityLevel=false]:</div>
+<div class="line">compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeJacobianAE(…)</strong> [type = void, default = mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=false]:</div>
+<div class="line">add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. hacODE2 coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeJacobianODE1RHS(…)</strong> [type = void, default = mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1.]:</div>
+<div class="line">ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(…); the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeJacobianODE2RHS(…)</strong> [type = void, default = mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1.]:</div>
+<div class="line">set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor_ODE2=-1,scalarFactor_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor_ODE2=0,scalarFactor_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeLoadFactor(…)</strong> [type = Real, default = simulationSettings]:</div>
+<div class="line">for static solver, this is a factor in interval [0,1]; MUST be overwritten</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeMassMatrix(…)</strong> [type = void, default = mainSystem, scalarFactor=1.]:</div>
+<div class="line">compute systemMassMatrix (multiplied with factor) in cSolver and return mass nODE2 x nODE2 matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeNewtonJacobian(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">compute jacobian for newton method of given solver method; store result in systemJacobian</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeNewtonResidual(…)</strong> [type = Real, default = mainSystem, simulationSettings]:</div>
+<div class="line">compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeNewtonUpdate(…)</strong> [type = void, default = mainSystem, simulationSettings, initial=true]:</div>
+<div class="line">compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeODE1RHS(…)</strong> [type = void, default = mainSystem]:</div>
+<div class="line">compute the RHS of hacODE1 equations in systemResidual in range(0,nODE1)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeODE2RHS(…)</strong> [type = void, default = mainSystem]:</div>
+<div class="line">compute the RHS of hacODE2 equations in systemResidual in range(0,nODE2)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>DiscontinuousIteration(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><strong>factJacAlgorithmic</strong> [type = Real]:</div>
 <div class="line">locally computed parameter from generalizedAlpha parameters</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>FinalizeSolver(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">write concluding information (timer statistics, messages) and close files</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>FinishStep(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">finish static step / time step; write output of results to file</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetAAlgorithmic()</strong> [type = NumpyVector]:</div>
+<div class="line">get locally stored / last computed algorithmic accelerations</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetAEsize()</strong> [type = Index]:</div>
+<div class="line">number of algebraic equations in solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetDataSize()</strong> [type = Index]:</div>
+<div class="line">number of data (history) variables in solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetNewtonSolution()</strong> [type = NumpyVector]:</div>
+<div class="line">get locally stored / last computed solution (=increment) of Newton</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetODE1size()</strong> [type = Index]:</div>
+<div class="line">number of hacODE1 equations in solver (not yet implemented)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetODE2size()</strong> [type = Index]:</div>
+<div class="line">number of hacODE2 equations in solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetSimulationEndTime(…)</strong> [type = Real, default = simulationSettings]:</div>
+<div class="line">compute simulation end time (depends on static or time integration solver)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetSolverName()</strong> [type = std::string]:</div>
+<div class="line">get solver name - needed for output file header and visualization window</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetStartOfStepStateAAlgorithmic()</strong> [type = tabnewline NumpyVector]:</div>
+<div class="line">get locally stored / last computed algorithmic accelerations at start of step</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetSystemJacobian()</strong> [type = NumpyMatrix]:</div>
+<div class="line">get locally stored / last computed system jacobian of solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetSystemMassMatrix()</strong> [type = NumpyMatrix]:</div>
+<div class="line">get locally stored / last computed mass matrix of solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetSystemResidual()</strong> [type = NumpyVector]:</div>
+<div class="line">get locally stored / last computed system residual</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>HasAutomaticStepSizeControl(…)</strong> [type = tabnewline bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">return true, if solver supports automatic stepsize control, otherwise false</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>IncreaseStepSize(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">increase step size if convergence is good</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolver(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolverData(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">initialize all data,it,conv; called from InitializeSolver()</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolverInitialConditions(…)</strong> [type = tabnewline void, default = mainSystem, simulationSettings]:</div>
+<div class="line">set/compute initial conditions (solver-specific!); called from InitializeSolver()</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolverOutput(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">initialize output files; called from InitializeSolver()</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolverPreChecks(…)</strong> [type = tabnewline bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">check if system is solvable; initialize dense/sparse computation modes</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeStep(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">initialize static step / time step; Python-functions; do some outputs, checks, etc.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>IsStaticSolver()</strong> [type = bool]:</div>
+<div class="line">return true, if static solver; needs to be overwritten in derived class</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>IsVerboseCheck(…)</strong> [type = bool, default = level]:</div>
+<div class="line">return true, if file or console output is at or above the given level</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -201,8 +621,123 @@
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><strong>Newton(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">perform Newton method for given solver method</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>PostInitializeSolverSpecific(…)</strong> [type = tabnewline void, default = mainSystem, simulationSettings]:</div>
+<div class="line">post-initialize for solver specific tasks; called at the end of InitializeSolver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>PostNewton(…)</strong> [type = Real, default = mainSystem, simulationSettings]:</div>
+<div class="line">call PostNewton for all relevant objects (contact, friction, … iterations); returns error for discontinuous iteration</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>PreInitializeSolverSpecific(…)</strong> [type = tabnewline void, default = mainSystem, simulationSettings]:</div>
+<div class="line">pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ReduceStepSize(…)</strong> [type = bool, default = mainSystem, simulationSettings, severity]:</div>
+<div class="line">reduce step size (1..normal, 2..severe problems); return true, if reduction was successful</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetSystemJacobian(…)</strong> [type = void, default = systemJacobian]:</div>
+<div class="line">set locally stored system jacobian of solver; must have size nODE2+nODE1+nAE</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetSystemMassMatrix(…)</strong> [type = void, default = systemMassMatrix]:</div>
+<div class="line">set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetSystemResidual(…)</strong> [type = void, default = systemResidual]:</div>
+<div class="line">set locally stored system residual; must have size nODE2+nODE1+nAE</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetUserFunctionComputeNewtonJacobian(…)</strong> [type = tabnewline void, default = mainSystem, userFunction]:</div>
+<div class="line">set user function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetUserFunctionComputeNewtonResidual(…)</strong> [type = tabnewline void, default = mainSystem, userFunction]:</div>
+<div class="line">set user function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetUserFunctionComputeNewtonUpdate(…)</strong> [type = tabnewline void, default = mainSystem, userFunction]:</div>
+<div class="line">set user function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetUserFunctionDiscontinuousIteration(…)</strong> [type = tabnewline void, default = mainSystem, userFunction]:</div>
+<div class="line">set user function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetUserFunctionFinishStep(…)</strong> [type = tabnewline void, default = mainSystem, userFunction]:</div>
+<div class="line">set user function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetUserFunctionInitializeStep(…)</strong> [type = tabnewline void, default = mainSystem, userFunction]:</div>
+<div class="line">set user function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetUserFunctionNewton(…)</strong> [type = void, default = mainSystem, userFunction]:</div>
+<div class="line">set user function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetUserFunctionPostNewton(…)</strong> [type = tabnewline void, default = mainSystem, userFunction]:</div>
+<div class="line">set user function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetUserFunctionUpdateCurrentTime(…)</strong> [type = tabnewline void, default = mainSystem, userFunction]:</div>
+<div class="line">set user function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SolveSteps(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">main solver part: calls multiple InitializeStep(…)/ DiscontinuousIteration(…)/ FinishStep(…); do step reduction if necessary; return true if success, false else</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SolveSystem(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">solve System: InitializeSolver, SolveSteps, FinalizeSolver</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><strong>spectralRadius</strong> [type = Real]:</div>
 <div class="line">copy of parameter in timeIntegration.generalizedAlpha</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>UpdateCurrentTime(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">update currentTime (and load factor); MUST be overwritten in special solver class</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>VerboseWrite(…)</strong> [type = void, default = level, str]:</div>
+<div class="line">write to console and/or file in case of level</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>WriteCoordinatesToFile(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">write unique coordinates solution file</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>WriteSolutionFileHeader(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">write unique file header, depending on static/ dynamic simulation</div>
 </div>
 </li>
 </ul>
@@ -237,6 +772,216 @@
 <li><div class="line-block">
 <div class="line"><strong>timer</strong> [type = CSolverTimer]:</div>
 <div class="line">timer which measures the CPU time of solver sub functions</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeLoadFactor(…)</strong> [type = Real, default = simulationSettings]:</div>
+<div class="line">for static solver, this is a factor in interval [0,1]; MUST be overwritten</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeMassMatrix(…)</strong> [type = void, default = mainSystem, scalarFactor=1.]:</div>
+<div class="line">compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeNewtonJacobian(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">compute jacobian for newton method of given solver method; store result in systemJacobian</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeNewtonResidual(…)</strong> [type = Real, default = mainSystem, simulationSettings]:</div>
+<div class="line">compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeNewtonUpdate(…)</strong> [type = void, default = mainSystem, simulationSettings, initial=true]:</div>
+<div class="line">compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeODE1RHS(…)</strong> [type = void, default = mainSystem]:</div>
+<div class="line">compute the RHS of hacODE1 equations in systemResidual in range(0,nODE1)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ComputeODE2RHS(…)</strong> [type = void, default = mainSystem]:</div>
+<div class="line">compute the RHS of hacODE2 equations in systemResidual in range(0,nODE2)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>DiscontinuousIteration(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>FinalizeSolver(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">write concluding information (timer statistics, messages) and close files</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>FinishStep(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">finish static step / time step; write output of results to file</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetAEsize()</strong> [type = Index]:</div>
+<div class="line">number of algebraic equations in solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetDataSize()</strong> [type = Index]:</div>
+<div class="line">number of data (history) variables in solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetMethodOrder()</strong> [type = Index]:</div>
+<div class="line">return order of method (higher value in methods with automatic step size, e.g., DOPRI5=5)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetNumberOfStages()</strong> [type = Index]:</div>
+<div class="line">return number of stages in current method</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetODE1size()</strong> [type = Index]:</div>
+<div class="line">number of hacODE1 equations in solver (not yet implemented)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetODE2size()</strong> [type = Index]:</div>
+<div class="line">number of hacODE2 equations in solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetSimulationEndTime(…)</strong> [type = Real, default = simulationSettings]:</div>
+<div class="line">compute simulation end time (depends on static or time integration solver)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetSolverName()</strong> [type = std::string]:</div>
+<div class="line">get solver name - needed for output file header and visualization window</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetSystemMassMatrix()</strong> [type = NumpyMatrix]:</div>
+<div class="line">get locally stored / last computed mass matrix of solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetSystemResidual()</strong> [type = NumpyVector]:</div>
+<div class="line">get locally stored / last computed system residual</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>HasAutomaticStepSizeControl(…)</strong> [type = tabnewline bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">return true, if solver supports automatic stepsize control, otherwise false</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>IncreaseStepSize(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">increase step size if convergence is good</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolver(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolverData(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">initialize all data,it,conv; called from InitializeSolver()</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolverInitialConditions(…)</strong> [type = tabnewline void, default = mainSystem, simulationSettings]:</div>
+<div class="line">set/compute initial conditions (solver-specific!); called from InitializeSolver()</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolverOutput(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">initialize output files; called from InitializeSolver()</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeSolverPreChecks(…)</strong> [type = tabnewline bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">check if system is solvable; initialize dense/sparse computation modes</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>InitializeStep(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">initialize static step / time step; Python-functions; do some outputs, checks, etc.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>IsStaticSolver()</strong> [type = bool]:</div>
+<div class="line">return true, if static solver; needs to be overwritten in derived class</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>IsVerboseCheck(…)</strong> [type = bool, default = level]:</div>
+<div class="line">return true, if file or console output is at or above the given level</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Newton(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">perform Newton method for given solver method</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>PostInitializeSolverSpecific(…)</strong> [type = tabnewline void, default = mainSystem, simulationSettings]:</div>
+<div class="line">post-initialize for solver specific tasks; called at the end of InitializeSolver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>PreInitializeSolverSpecific(…)</strong> [type = tabnewline void, default = mainSystem, simulationSettings]:</div>
+<div class="line">pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ReduceStepSize(…)</strong> [type = bool, default = mainSystem, simulationSettings, severity]:</div>
+<div class="line">reduce step size (1..normal, 2..severe problems); return true, if reduction was successful</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetSystemMassMatrix(…)</strong> [type = void, default = systemMassMatrix]:</div>
+<div class="line">set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SetSystemResidual(…)</strong> [type = void, default = systemResidual]:</div>
+<div class="line">set locally stored system residual; must have size nODE2+nODE1+nAE</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SolveSteps(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">main solver part: calls multiple InitializeStep(…)/ DiscontinuousIteration(…)/ FinishStep(…); do step reduction if necessary; return true if success, false else</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>SolveSystem(…)</strong> [type = bool, default = mainSystem, simulationSettings]:</div>
+<div class="line">solve System: InitializeSolver, SolveSteps, FinalizeSolver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>UpdateCurrentTime(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">update currentTime (and load factor); MUST be overwritten in special solver class</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>VerboseWrite(…)</strong> [type = void, default = level, str]:</div>
+<div class="line">write to console and/or file in case of level</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>WriteCoordinatesToFile(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">write unique coordinates solution file</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>WriteSolutionFileHeader(…)</strong> [type = void, default = mainSystem, simulationSettings]:</div>
+<div class="line">write unique file header, depending on static/ dynamic simulation</div>
 </div>
 </li>
 </ul>
