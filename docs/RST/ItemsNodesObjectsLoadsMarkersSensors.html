@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Items: Nodes, Objects, Loads, Markers, Sensors, … &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>Items: Nodes, Objects, Loads, Markers, Sensors, … &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -72,6 +72,7 @@
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -84,7 +85,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn</a>
+          <a href="../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -105,7 +106,14 @@
              
   <section id="items-nodes-objects-loads-markers-sensors">
 <span id="sec-overview-items"></span><h1>Items: Nodes, Objects, Loads, Markers, Sensors, …<a class="headerlink" href="#items-nodes-objects-loads-markers-sensors" title="Permalink to this heading"></a></h1>
-<p>In this section, the most important part of Exudyn are provided. An overview of the interaction of the items is given in [figure in theDoc.pdf]</p>
+<p>In this section, the most important part of Exudyn are provided. An overview of the interaction of the items is given in Fig. <a class="reference internal" href="#fig-items-interaction"><span class="std std-ref">Interaction of items in a multibody system</span></a></p>
+<figure class="align-default" id="id1">
+<span id="fig-items-interaction"></span><a class="reference internal image-reference" href="../../_images/itemsMultibodySystem.png"><img alt="../../_images/itemsMultibodySystem.png" src="../../_images/itemsMultibodySystem.png" style="width: 90%;" /></a>
+<figcaption>
+<p><span class="caption-text">Interaction of items in a multibody system</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>Note that both, bodies and connectors (including constraints) are – computational – objects. The arrows indicate, that, e.g., object 1 has node 1 and node 2 (indexes) and that marker 0 is attached to object 0, while load 0 uses marker 0 to apply the load. Sensors could additionally be attached to certain items.</p>
 <section id="nodes">
 <h2>Nodes<a class="headerlink" href="#nodes" title="Permalink to this heading"></a></h2>
 <p>Nodes provide the coordinates (and the degrees of freedom) to the system. They have no mass, stiffness or whatsoever assigned.

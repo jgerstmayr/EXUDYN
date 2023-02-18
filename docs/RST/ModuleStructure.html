@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module structure &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>Module structure &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -68,6 +68,7 @@
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -80,7 +81,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn</a>
+          <a href="../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -108,28 +109,32 @@
 <li><p>Coordinates: reference coordinates and displacements</p></li>
 <li><p>Nodes, Objects, Markers and Loads</p></li>
 </ul>
-<p>For an introduction to the solvers, see  <span class="xref std std-ref">sec-solvers</span>.</p>
-<p><a class="reference internal" href="../../_images/overviewExudynModules.png"><img alt="picOverviewExudynModules" src="../../_images/overviewExudynModules.png" style="width: 60%;" /></a></p>
-<p>[Overview on Exudyn C++ and Python modules]</p>
+<p>For an introduction to the solvers, see Section <a class="reference internal" href="../../index.html#sec-solvers"><span class="std std-ref">Solvers</span></a>.</p>
+<figure class="align-default" id="id1">
+<span id="fig-exudyn-candpython"></span><a class="reference internal image-reference" href="../../_images/overviewExudynModules.png"><img alt="../../_images/overviewExudynModules.png" src="../../_images/overviewExudynModules.png" style="width: 50%;" /></a>
+<figcaption>
+<p><span class="caption-text">Overview on Exudyn C++ and Python modules</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
 <section id="overview-of-modules">
 <span id="sec-overview-overviewmodules"></span><h2>Overview of modules<a class="headerlink" href="#overview-of-modules" title="Permalink to this heading"></a></h2>
 <p>Currently, the Exudyn module structure is split into a C++ core part and a set of
-Python parts.</p>
+Python parts, see Fig. <a class="reference internal" href="#fig-exudyn-candpython"><span class="std std-ref">Overview on Exudyn C++ and Python modules</span></a>.</p>
 <ul class="simple">
-<li><p><strong>C++ parts</strong>:</p></li>
+<li><p><strong>C++ parts</strong>, see Fig. <a class="reference internal" href="#fig-exudyn-cpp"><span class="std std-ref">Overview on Exudyn C++ module</span></a> and Fig. <a class="reference internal" href="#fig-system-overview"><span class="std std-ref">Overview of systemData</span></a>:</p></li>
 </ul>
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">exudyn</span></code>:
 on this level, there are just very few functions: <code class="docutils literal notranslate"><span class="pre">SystemContainer()</span></code>, <code class="docutils literal notranslate"><span class="pre">StartRenderer()</span></code>, <code class="docutils literal notranslate"><span class="pre">StopRenderer()</span></code>, <code class="docutils literal notranslate"><span class="pre">GetVersionString()</span></code>, <code class="docutils literal notranslate"><span class="pre">SolveStatic(...)</span></code>, <code class="docutils literal notranslate"><span class="pre">SolveDynamic(...)</span></code>, … as well as system and user variable dictionaries <code class="docutils literal notranslate"><span class="pre">exudyn.variables</span></code> and <code class="docutils literal notranslate"><span class="pre">exudyn.sys</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code>: contains the systems (most important), solvers (static, dynamics, …), visualization settings</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: fmbs created with <code class="docutils literal notranslate"><span class="pre">mbs</span> <span class="pre">=</span> <span class="pre">SC.AddSystem()</span></code>, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers,
-loads can added to the system, see  <span class="xref std std-ref">sec-item-reference-manual</span>;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mbs.systemData</span></code>: contains the initial, current, visualization, … states of the system and holds the items, see [figure in theDoc.pdf]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: mbs created with <code class="docutils literal notranslate"><span class="pre">mbs</span> <span class="pre">=</span> <span class="pre">SC.AddSystem()</span></code>, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers,
+loads can added to the system, see Section <a class="reference internal" href="../../index.html#sec-item-reference-manual"><span class="std std-ref">Items Reference Manual</span></a>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs.systemData</span></code>: contains the initial, current, visualization, … states of the system and holds the items, see Fig. <a class="reference internal" href="#fig-system-overview"><span class="std std-ref">Overview of systemData</span></a></p></li>
 </ul>
 </div></blockquote>
 <ul class="simple">
-<li><p><strong>Python parts</strong> (this list is continuously extended, see  <a class="reference internal" href="pythonUtilities/pythonUtilities.html#sec-pythonutilityfunctions"><span class="std std-ref">Python Utility Functions</span></a>), sorted by importance:</p></li>
+<li><p><strong>Python parts</strong> (this list is continuously extended, see Section <a class="reference internal" href="pythonUtilities/pythonUtilities.html#sec-pythonutilityfunctions"><span class="std std-ref">Python Utility Functions</span></a>), sorted by importance:</p></li>
 </ul>
 <blockquote>
 <div><ul class="simple">
@@ -137,7 +142,7 @@ loads can added to the system, see  <span class="xref std std-ref">sec-item-refe
 <li><p><code class="docutils literal notranslate"><span class="pre">exudyn.itemInterface</span></code>: contains the interface, which transfers Python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">exudyn.basicUtilities</span></code>: contains basic helper classes, without importing numpy</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">exudyn.rigidBodyUtilities</span></code>: contains important helper classes for creation of rigid body inertia, rigid bodies, and rigid body joints; includes helper functions for rotation parameterization, rotation matrices, homogeneous transformations, etc.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">exudyn.graphicsDataUtilities</span></code>: provides some basic drawing utilities, definition of colors and basic drawing objects (including sSTL import); rotation/translation of graphicsData objects</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exudyn.graphicsDataUtilities</span></code>: provides some basic drawing utilities, definition of colors and basic drawing objects (including STL import); rotation/translation of graphicsData objects</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">exudyn.plot</span></code>: contains PlotSensor(…), a very versatile interface to matplotlib and other valuable helper functions</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">exudyn.processing</span></code>: methods for optimization, parameter variation, sensitivity analysis, etc.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">exudyn.FEM</span></code>: everything related to finite element import and creation of model order reduction flexible bodies</p></li>
@@ -149,14 +154,25 @@ loads can added to the system, see  <span class="xref std std-ref">sec-item-refe
 <li><p><code class="docutils literal notranslate"><span class="pre">exudyn.solver</span></code>: functions imported when loading <code class="docutils literal notranslate"><span class="pre">exudyn</span></code>, containing main solvers</p></li>
 </ul>
 </div></blockquote>
-<p><a class="reference internal" href="../../_images/overviewExudynCppModule.png"><img alt="picOverviewExudynCppModule" src="../../_images/overviewExudynCppModule.png" style="width: 60%;" /></a></p>
-<p>[Overview on Exudyn C++ module]</p>
+<figure class="align-default" id="id2">
+<span id="fig-exudyn-cpp"></span><a class="reference internal image-reference" href="../../_images/overviewExudynCppModule.png"><img alt="../../_images/overviewExudynCppModule.png" src="../../_images/overviewExudynCppModule.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text">Overview on Exudyn C++ module</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id3">
+<span id="fig-system-overview"></span><a class="reference internal image-reference" href="../../_images/overviewSystemData.png"><img alt="../../_images/overviewSystemData.png" src="../../_images/overviewSystemData.png" style="width: 90%;" /></a>
+<figcaption>
+<p><span class="caption-text">Overview of systemData</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>SystemData connects items, states and stores the LTG. Note that access to items is provided via functions in <code class="docutils literal notranslate"><span class="pre">MainSystem</span></code>.</p>
 </section>
 <section id="conventions-items-indexes-coordinates">
 <span id="sec-overview-conventionsitems"></span><h2>Conventions: items, indexes, coordinates<a class="headerlink" href="#conventions-items-indexes-coordinates" title="Permalink to this heading"></a></h2>
 <p>In this documentation, we will use the term <strong>item</strong> to identify nodes, objects, markers, loads and sensors:</p>
 <blockquote>
-<div><p>item in node, object, marker, load, sensor </p>
+<div><p>item in node, object, marker, load, sensor</p>
 </div></blockquote>
 <p><strong>Indexes: arrays and vectors starting with 0:</strong></p>
 <p>As known from Python, all <strong>indexes</strong> of arrays, vectors, matrices, … are starting with 0. This means that the first component of the vector <code class="docutils literal notranslate"><span class="pre">v=[1,2,3]</span></code> is accessed with <code class="docutils literal notranslate"><span class="pre">v[0]</span></code> in Python (and also in the C++ part of Exudyn ). The range is usually defined as <code class="docutils literal notranslate"><span class="pre">range(0,3)</span></code>, in which ‘3’ marks the index after the last valid component of an array or vector.</p>

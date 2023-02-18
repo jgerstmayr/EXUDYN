@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: basicUtilities &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>Module: basicUtilities &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,8 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -35,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -82,6 +83,7 @@
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -94,7 +96,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn</a>
+          <a href="../../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -131,12 +133,10 @@
 </div>
 </li>
 </ul>
-<p id="sec-basicutilities-clearworkspace"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L42">ClearWorkspace</a>()</p>
+<p id="sec-basicutilities-clearworkspace">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L42">ClearWorkspace</a>()</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">clear all workspace variables except for system variables with ‘_’ at beginning,</div>
 <div class="line">‘func’ or ‘module’ in name; it also deletes all items in exudyn.sys and exudyn.variables,</div>
 <div class="line">EXCEPT from exudyn.sys[‘renderState’] for pertaining the previous view of the renderer</div>
@@ -144,7 +144,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
-<div class="line">Use this function with CARE! In Spyder, it is certainly safer to add the preference Run<span class="math notranslate nohighlight">\(\rightarrow\)</span>‘remove all variables before execution’. It is recommended to call ClearWorkspace() at the very beginning of your models, to avoid that variables still exist from previous computations which may destroy repeatability of results</div>
+<div class="line">Use this function with CARE! In Spyder, it is certainly safer to add the preference Run<span class="math notranslate nohighlight">\(\ra\)</span>‘remove all variables before execution’. It is recommended to call ClearWorkspace() at the very beginning of your models, to avoid that variables still exist from previous computations which may destroy repeatability of results</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -168,7 +168,7 @@
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springDamperUserFunctionNumbaJIT.py">springDamperUserFunctionNumbaJIT.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-basicutilities-diagonalmatrix"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L90">DiagonalMatrix</a>(<code class="docutils literal notranslate"><span class="pre">rowsColumns</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">1</span></code>)</p>
+<p id="sec-basicutilities-diagonalmatrix">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L90">DiagonalMatrix</a>(<code class="docutils literal notranslate"><span class="pre">rowsColumns</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span> <span class="pre">=</span> <span class="pre">1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -177,8 +177,6 @@
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">rowsColumns</span></code>: provides the number of rows and columns</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">value</span></code>: initialization value for diagonal terms</div>
 </div>
@@ -190,7 +188,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-basicutilities-norml2"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L104">NormL2</a>(<code class="docutils literal notranslate"><span class="pre">vector</span></code>)</p>
+<p id="sec-basicutilities-norml2">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L104">NormL2</a>(<code class="docutils literal notranslate"><span class="pre">vector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -213,7 +211,7 @@
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springsDeactivateConnectors.py">springsDeactivateConnectors.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py">distanceSensor.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py">explicitLieGroupIntegratorTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismRedundant.py">fourBarMechanismRedundant.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericODE2test.py">genericODE2test.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-basicutilities-vsum"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L113">VSum</a>(<code class="docutils literal notranslate"><span class="pre">vector</span></code>)</p>
+<p id="sec-basicutilities-vsum">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L113">VSum</a>(<code class="docutils literal notranslate"><span class="pre">vector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -236,7 +234,7 @@
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py">serialRobotTSD.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py">serialRobotTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-basicutilities-vadd"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L122">VAdd</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
+<p id="sec-basicutilities-vadd">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L122">VAdd</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -259,7 +257,7 @@
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py">carRollingDiscTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py">mecanumWheelRollingDiscTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py">NGsolveCrankShaftTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py">rigidBodyCOMtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py">sliderCrank3Dbenchmark.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dtest.py">sliderCrank3Dtest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-basicutilities-vsub"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L133">VSub</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
+<p id="sec-basicutilities-vsub">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L133">VSub</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -282,7 +280,7 @@
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ObjectFFRFconvergenceTestHinge.py">ObjectFFRFconvergenceTestHinge.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py">NGsolveCrankShaftTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py">rigidBodyCOMtest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-basicutilities-vmult"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L144">VMult</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
+<p id="sec-basicutilities-vmult">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L144">VMult</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -301,7 +299,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-basicutilities-scalarmult"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L154">ScalarMult</a>(<code class="docutils literal notranslate"><span class="pre">scalar</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+<p id="sec-basicutilities-scalarmult">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L154">ScalarMult</a>(<code class="docutils literal notranslate"><span class="pre">scalar</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -324,7 +322,7 @@
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/pendulumFriction.py">pendulumFriction.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py">sliderCrank3Dbenchmark.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dtest.py">sliderCrank3Dtest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-basicutilities-normalize"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L163">Normalize</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+<p id="sec-basicutilities-normalize">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L163">Normalize</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -347,7 +345,7 @@
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ObjectFFRFconvergenceTestHinge.py">ObjectFFRFconvergenceTestHinge.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py">NGsolveCrankShaftTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-basicutilities-vec2tilde"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L179">Vec2Tilde</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+<p id="sec-basicutilities-vec2tilde">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L179">Vec2Tilde</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -361,8 +359,6 @@
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">matrix as list of lists with the skew-symmetric matrix from v:</div>
 <div class="line"><span class="math notranslate nohighlight">\(\left[\!\! \begin{array}{ccc} 0 &amp; -v[2] &amp; v[1] \\ v[2] &amp; 0 &amp; -v[0] \\ -v[1] &amp; v[0] &amp; 0  \end{array} \!\!\right]\)</span></div>
 </div>
@@ -373,7 +369,7 @@
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py">explicitLieGroupMBSTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-basicutilities-tilde2vec"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L186">Tilde2Vec</a>(<code class="docutils literal notranslate"><span class="pre">m</span></code>)</p>
+<p id="sec-basicutilities-tilde2vec">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L186">Tilde2Vec</a>(<code class="docutils literal notranslate"><span class="pre">m</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -392,7 +388,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-basicutilities-gaussintegrate"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L213">GaussIntegrate</a>(<code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>, <code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>)</p>
+<p id="sec-basicutilities-gaussintegrate">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L213">GaussIntegrate</a>(<code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>, <code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -401,8 +397,6 @@
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>: scalar, vector or matrix-valued function with scalar argument (X or other variable)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>: odd number in 1,3,5,7,9; currently maximum order is 9</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">a</span></code>: integration range start</div>
@@ -416,7 +410,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-basicutilities-lobattointegrate"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L249">LobattoIntegrate</a>(<code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>, <code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>)</p>
+<p id="sec-basicutilities-lobattointegrate">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py#L249">LobattoIntegrate</a>(<code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>, <code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -425,8 +419,6 @@
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>: scalar, vector or matrix-valued function with scalar argument (X or other variable)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>: odd number in 1,3,5; currently maximum order is 5</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">a</span></code>: integration range start</div>

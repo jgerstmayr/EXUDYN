@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rigid body and joints tutorial &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>Rigid body and joints tutorial &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -60,6 +60,7 @@
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -72,7 +73,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn</a>
+          <a href="../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -154,7 +155,7 @@ The <code class="docutils literal notranslate"><span class="pre">RigidBodyInerti
 </pre></div>
 </div>
 <p>which also adds a gravity load and could also set initial velocities, if wanted.
-The <code class="docutils literal notranslate"><span class="pre">nodeType</span></code> specifies the underlying model for the rigid body node, see  <a class="reference internal" href="cInterface/TypeDefinitions.html#sec-nodetype"><span class="std std-ref">NodeType</span></a>.
+The <code class="docutils literal notranslate"><span class="pre">nodeType</span></code> specifies the underlying model for the rigid body node, see Section <a class="reference internal" href="cInterface/TypeDefinitions.html#sec-nodetype"><span class="std std-ref">NodeType</span></a>.
 We can use</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">RotationEulerParameters</span></code>: for fast computation, but leads to an additional algebraic equation and thus needs an implicit solver</p></li>
@@ -298,7 +299,7 @@ The meaning of markers can be seen in the graphical representation described bel
 <p>The <code class="docutils literal notranslate"><span class="pre">verboseMode</span></code> tells the solver the amount of output during solving. Higher values (2, 3, …) show residual vectors, jacobians, etc. for every time step, but slow down simulation significantly.
 The option <code class="docutils literal notranslate"><span class="pre">simulateInRealtime</span></code> is used to view the model during simulation, while setting this false, the simulation finishes after fractions of a second. It should be set to false in general, while solution can be viewed using the <code class="docutils literal notranslate"><span class="pre">SolutionViewer()</span></code>.
 With <code class="docutils literal notranslate"><span class="pre">solutionWritePeriod</span></code> you can adjust the frequency which is used to store the solution of the whole model, which may lead to very large files and may slow down simulation, but is used in the <code class="docutils literal notranslate"><span class="pre">SolutionViewer()</span></code> to reload the solution after simulation.</p>
-<p>In order to improve visualization, there are hundreds of options, see Visualization settings in  <span class="xref std std-ref">sec-vsettingsgeneral</span>, some of them used here:</p>
+<p>In order to improve visualization, there are hundreds of options, see Visualization settings in Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref">VSettingsGeneral</span></a>, some of them used here:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1600</span><span class="p">,</span><span class="mi">1200</span><span class="p">]</span>
 <span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1">#improved OpenGL rendering</span>
 <span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>

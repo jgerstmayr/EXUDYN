@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SystemData &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>SystemData &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -69,6 +69,7 @@
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -81,7 +82,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn</a>
+          <a href="../../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -271,7 +272,7 @@
 <div class="line">get ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vCurrent</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">GetODE2Coordinates</span>\<span class="n">_t</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vCurrent</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">GetODE2Coordinates_t</span><span class="p">()</span>
 </pre></div>
 </div>
 </li>
@@ -280,7 +281,7 @@
 <div class="line">set ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">SetODE2Coordinates</span>\<span class="n">_t</span><span class="p">(</span><span class="n">vCurrent</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">SetODE2Coordinates_t</span><span class="p">(</span><span class="n">vCurrent</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -289,7 +290,7 @@
 <div class="line">get ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vCurrent</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">GetODE2Coordinates</span>\<span class="n">_tt</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vCurrent</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">GetODE2Coordinates_tt</span><span class="p">()</span>
 </pre></div>
 </div>
 </li>
@@ -298,7 +299,7 @@
 <div class="line">set ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">SetODE2Coordinates</span>\<span class="n">_tt</span><span class="p">(</span><span class="n">aCurrent</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">SetODE2Coordinates_tt</span><span class="p">(</span><span class="n">aCurrent</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -316,7 +317,7 @@
 <div class="line">set ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">SetODE1Coordinates</span>\<span class="n">_t</span><span class="p">(</span><span class="n">qCurrent</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">SetODE1Coordinates_t</span><span class="p">(</span><span class="n">qCurrent</span><span class="p">)</span>
 </pre></div>
 </div>
 </li>
@@ -325,7 +326,7 @@
 <div class="line">get ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">qCurrent</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">GetODE1Coordinates</span>\<span class="n">_t</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">qCurrent</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">systemData</span><span class="o">.</span><span class="n">GetODE1Coordinates_t</span><span class="p">()</span>
 </pre></div>
 </div>
 </li>
@@ -396,7 +397,7 @@
 </section>
 <section id="systemdata-get-object-ltg-coordinate-mappings">
 <span id="sec-systemdata-objectltg"></span><h2>SystemData: Get object LTG coordinate mappings<a class="headerlink" href="#systemdata-get-object-ltg-coordinate-mappings" title="Permalink to this heading"></a></h2>
-<p>This section provides access functions the LTG-lists for every object (body, constraint, …) in the system. For details on the LTG mapping, see  <a class="reference internal" href="../MappingBetweenLocalAndGlobalCoordinateIndices.html#sec-overview-ltgmapping"><span class="std std-ref">Mapping between local and global coordinate indices</span></a></p>
+<p>This section provides access functions the LTG-lists for every object (body, constraint, …) in the system. For details on the LTG mapping, see Section <a class="reference internal" href="../MappingBetweenLocalAndGlobalCoordinateIndices.html#sec-overview-ltgmapping"><span class="std std-ref">Mapping between local and global coordinate indices</span></a></p>
 <p>The class <strong>MainSystemData</strong> has the follwing <strong>functions and structures</strong> regarding <strong>object LTG coordinate mappings</strong>:</p>
 <ul>
 <li><div class="line-block">

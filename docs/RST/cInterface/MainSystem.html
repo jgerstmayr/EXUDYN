@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MainSystem &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>MainSystem &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -72,6 +72,7 @@
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -84,7 +85,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn</a>
+          <a href="../../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -283,10 +284,10 @@
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="n">Rigid2D</span><span class="p">(</span> <span class="n">referenceCoordinates</span><span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">initialVelocities</span><span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-<span class="n">nodeDict</span> <span class="o">=</span> \<span class="p">{</span><span class="s1">&#39;nodeType&#39;</span><span class="p">:</span> <span class="s1">&#39;Point&#39;</span><span class="p">,</span>
+<span class="n">nodeDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nodeType&#39;</span><span class="p">:</span> <span class="s1">&#39;Point&#39;</span><span class="p">,</span>
 <span class="s1">&#39;referenceCoordinates&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
 <span class="s1">&#39;initialCoordinates&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-<span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;example node&#39;</span>\<span class="p">}</span>
+<span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;example node&#39;</span><span class="p">}</span>
  <span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">nodeDict</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -404,10 +405,10 @@
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="n">MassPoint</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;heavy object&#39;</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">physicsMass</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-<span class="n">objectDict</span> <span class="o">=</span> \<span class="p">{</span><span class="s1">&#39;objectType&#39;</span><span class="p">:</span> <span class="s1">&#39;MassPoint&#39;</span><span class="p">,</span>
+<span class="n">objectDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;objectType&#39;</span><span class="p">:</span> <span class="s1">&#39;MassPoint&#39;</span><span class="p">,</span>
 <span class="s1">&#39;physicsMass&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
 <span class="s1">&#39;nodeNumber&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-<span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;example object&#39;</span>\<span class="p">}</span>
+<span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;example object&#39;</span><span class="p">}</span>
  <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">objectDict</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -513,9 +514,9 @@
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="n">MarkerNodePosition</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my marker&#39;</span><span class="p">,</span><span class="n">nodeNumber</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-<span class="n">markerDict</span> <span class="o">=</span> \<span class="p">{</span><span class="s1">&#39;markerType&#39;</span><span class="p">:</span> <span class="s1">&#39;NodePosition&#39;</span><span class="p">,</span>
+<span class="n">markerDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;markerType&#39;</span><span class="p">:</span> <span class="s1">&#39;NodePosition&#39;</span><span class="p">,</span>
  <span class="s1">&#39;nodeNumber&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
- <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;position0&#39;</span>\<span class="p">}</span>
+ <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;position0&#39;</span><span class="p">}</span>
  <span class="n">mbs</span><span class="o">.</span><span class="n">AddMarker</span><span class="p">(</span><span class="n">markerDict</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -600,10 +601,10 @@
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddLoad</span><span class="p">(</span><span class="n">LoadForceVector</span><span class="p">(</span><span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">markerNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;heavy load&#39;</span><span class="p">))</span>
 <span class="n">mbs</span><span class="o">.</span><span class="n">AddLoad</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-<span class="n">loadDict</span> <span class="o">=</span> \<span class="p">{</span><span class="s1">&#39;loadType&#39;</span><span class="p">:</span> <span class="s1">&#39;ForceVector&#39;</span><span class="p">,</span>
+<span class="n">loadDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;loadType&#39;</span><span class="p">:</span> <span class="s1">&#39;ForceVector&#39;</span><span class="p">,</span>
  <span class="s1">&#39;markerNumber&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
  <span class="s1">&#39;loadVector&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
- <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;heavy load&#39;</span>\<span class="p">}</span>
+ <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;heavy load&#39;</span><span class="p">}</span>
  <span class="n">mbs</span><span class="o">.</span><span class="n">AddLoad</span><span class="p">(</span><span class="n">loadDict</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -690,10 +691,10 @@
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">item</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddSensor</span><span class="p">(</span><span class="n">SensorNode</span><span class="p">(</span><span class="n">sensorType</span><span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SensorType</span><span class="o">.</span><span class="n">Node</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;test sensor&#39;</span><span class="p">))</span>
 <span class="n">mbs</span><span class="o">.</span><span class="n">AddSensor</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-<span class="n">sensorDict</span> <span class="o">=</span> \<span class="p">{</span><span class="s1">&#39;sensorType&#39;</span><span class="p">:</span> <span class="s1">&#39;Node&#39;</span><span class="p">,</span>
+<span class="n">sensorDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sensorType&#39;</span><span class="p">:</span> <span class="s1">&#39;Node&#39;</span><span class="p">,</span>
  <span class="s1">&#39;nodeNumber&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
  <span class="s1">&#39;fileName&#39;</span><span class="p">:</span> <span class="s1">&#39;sensor.txt&#39;</span><span class="p">,</span>
- <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;test sensor&#39;</span>\<span class="p">}</span>
+ <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;test sensor&#39;</span><span class="p">}</span>
  <span class="n">mbs</span><span class="o">.</span><span class="n">AddSensor</span><span class="p">(</span><span class="n">sensorDict</span><span class="p">)</span>
 </pre></div>
 </div>

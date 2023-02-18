@@ -11,15 +11,14 @@ This section will show:
 +  Coordinates: reference coordinates and displacements
 +  Nodes, Objects, Markers and Loads
 
-For an introduction to the solvers, see  :ref:`sec-solvers`\ .
+For an introduction to the solvers, see Section :ref:`sec-solvers`\ .
 
 
-.. |picOverviewExudynModules| image:: ../theDoc/figures/overviewExudynModules.png
-   :width: 60%
+.. _fig-exudyn-candpython:
+.. figure:: ../theDoc/figures/overviewExudynModules.png
+   :width: 50%
 
-|picOverviewExudynModules|
-
-[Overview on Exudyn C++ and Python modules]
+   Overview on Exudyn C++ and Python modules
 
 
 
@@ -32,24 +31,24 @@ Overview of modules
 -------------------
 
 Currently, the Exudyn module structure is split into a C++ core part and a set of 
-Python parts.
+Python parts, see Fig. :ref:`fig-exudyn-candpython`\ .
 
-+  \ **C++ parts**\ :
++  \ **C++ parts**\ , see Fig. :ref:`fig-exudyn-cpp`\  and Fig. :ref:`fig-system-overview`\ :
   
  -  \ ``exudyn``\ :
     on this level, there are just very few functions: \ ``SystemContainer()``\ , \ ``StartRenderer()``\ , \ ``StopRenderer()``\ , \ ``GetVersionString()``\ , \ ``SolveStatic(...)``\ , \ ``SolveDynamic(...)``\ , ... as well as system and user variable dictionaries \ ``exudyn.variables``\  and \ ``exudyn.sys``\ 
  -  \ ``SystemContainer``\ : contains the systems (most important), solvers (static, dynamics, ...), visualization settings
- -  \ ``mbs``\ : fmbs created with \ ``mbs = SC.AddSystem()``\ , this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
-    loads can added to the system, see  :ref:`sec-item-reference-manual`\ ;
- -  \ ``mbs.systemData``\ : contains the initial, current, visualization, ... states of the system and holds the items, see [figure in theDoc.pdf]
+ -  \ ``mbs``\ : mbs created with \ ``mbs = SC.AddSystem()``\ , this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
+    loads can added to the system, see Section :ref:`sec-item-reference-manual`\ ;
+ -  \ ``mbs.systemData``\ : contains the initial, current, visualization, ... states of the system and holds the items, see Fig. :ref:`fig-system-overview`\ 
   
-+  \ **Python parts**\  (this list is continuously extended, see  :ref:`sec-pythonutilityfunctions`\ ), sorted by importance:
++  \ **Python parts**\  (this list is continuously extended, see Section :ref:`sec-pythonutilityfunctions`\ ), sorted by importance:
   
  -  \ ``exudyn.utilities``\ : constains helper classes in Python and includes Exudyn modules \ ``basicUtilities``\ , \ ``rigidBodyUtilities``\ , \ ``graphicsDataUtilities``\ , and \ ``itemInterface``\ , which is recommended to be loaded at beginning of your model file
  -  \ ``exudyn.itemInterface``\ : contains the interface, which transfers Python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
  -  \ ``exudyn.basicUtilities``\ : contains basic helper classes, without importing numpy
  -  \ ``exudyn.rigidBodyUtilities``\ : contains important helper classes for creation of rigid body inertia, rigid bodies, and rigid body joints; includes helper functions for rotation parameterization, rotation matrices, homogeneous transformations, etc.
- -  \ ``exudyn.graphicsDataUtilities``\ : provides some basic drawing utilities, definition of colors and basic drawing objects (including sSTL import); rotation/translation of graphicsData objects
+ -  \ ``exudyn.graphicsDataUtilities``\ : provides some basic drawing utilities, definition of colors and basic drawing objects (including STL import); rotation/translation of graphicsData objects
  -  \ ``exudyn.plot``\ : contains PlotSensor(...), a very versatile interface to matplotlib and other valuable helper functions
  -  \ ``exudyn.processing``\ : methods for optimization, parameter variation, sensitivity analysis, etc.
  -  \ ``exudyn.FEM``\ : everything related to finite element import and creation of model order reduction flexible bodies
@@ -63,15 +62,24 @@ Python parts.
 
 
 
-.. |picOverviewExudynCppModule| image:: ../theDoc/figures/overviewExudynCppModule.png
-   :width: 60%
+.. _fig-exudyn-cpp:
+.. figure:: ../theDoc/figures/overviewExudynCppModule.png
+   :width: 80%
 
-|picOverviewExudynCppModule|
-
-[Overview on Exudyn C++ module]
-
+   Overview on Exudyn C++ module
 
 
+
+
+
+
+.. _fig-system-overview:
+.. figure:: ../theDoc/figures/overviewSystemData.png
+   :width: 90%
+
+   Overview of systemData
+
+SystemData connects items, states and stores the LTG. Note that access to items is provided via functions in \ ``MainSystem``\ .
 
 
 
@@ -82,12 +90,9 @@ Python parts.
 Conventions: items, indexes, coordinates
 ----------------------------------------
 
-In this documentation, we will use the term \ **item**\  to identify nodes, objects, markers, loads and sensors:
+In this documentation, we will use the term \ **item**\  to identify nodes, objects, markers, loads and sensors: 
 
-  item \in \node, object, marker, load, sensor \
-
-
-
+  item \in \node, object, marker, load, sensor\ 
 
 \ **Indexes: arrays and vectors starting with 0:**\  
 

@@ -13,7 +13,7 @@ Helper functions and classes for graphical interaction with Exudyn
 
 .. _sec-gui-gettkrootandnewwindow:
 
-`GetTkRootAndNewWindow <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L53>`__\ ()
+Function: `GetTkRootAndNewWindow <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L53>`__\ ()
 
 - | \ *function description*\ :
   | get new or current root and new window app; return list of [tkRoot, tkWindow, tkRuns]
@@ -23,7 +23,7 @@ Helper functions and classes for graphical interaction with Exudyn
 
 .. _sec-gui-tkrootexists:
 
-`TkRootExists <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L65>`__\ ()
+Function: `TkRootExists <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L65>`__\ ()
 
 - | \ *function description*\ :
   | this function returns True, if tkinter has already a root window (which is assumed to have already a mainloop running)
@@ -33,12 +33,11 @@ Helper functions and classes for graphical interaction with Exudyn
 
 .. _sec-gui-editdictionarywithtypeinfo:
 
-`EditDictionaryWithTypeInfo <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L640>`__\ (\ ``settingsStructure``\ , \ ``exu = None``\ , \ ``dictionaryName = 'edit'``\ )
+Function: `EditDictionaryWithTypeInfo <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/GUI.py\#L640>`__\ (\ ``settingsStructure``\ , \ ``exu = None``\ , \ ``dictionaryName = 'edit'``\ )
 
 - | \ *function description*\ :
   | edit dictionaryData and return modified (new) dictionary
 - | \ *input*\ :
-
   | \ ``settingsStructure``\ : hierarchical settings structure, e.g., SC.visualizationSettings
   | \ ``exu``\ : exudyn module
   | \ ``dictionaryName``\ : name displayed in dialog

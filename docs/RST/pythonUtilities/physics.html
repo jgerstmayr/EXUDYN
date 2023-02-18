@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: physics &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>Module: physics &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,8 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -35,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -82,6 +83,7 @@
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -94,7 +96,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn</a>
+          <a href="../../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -120,20 +122,16 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities</p>
 <ul class="simple">
 <li><p>Date:      2021-01-20</p></li>
 </ul>
-<p id="sec-physics-stribeckfunction"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L29">StribeckFunction</a>(<code class="docutils literal notranslate"><span class="pre">vel</span></code>, <code class="docutils literal notranslate"><span class="pre">muDynamic</span></code>, <code class="docutils literal notranslate"><span class="pre">muStaticOffset</span></code>, <code class="docutils literal notranslate"><span class="pre">muViscous</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">expVel</span> <span class="pre">=</span> <span class="pre">1e-3</span></code>, <code class="docutils literal notranslate"><span class="pre">regVel</span> <span class="pre">=</span> <span class="pre">1e-3</span></code>)</p>
+<p id="sec-physics-stribeckfunction">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L29">StribeckFunction</a>(<code class="docutils literal notranslate"><span class="pre">vel</span></code>, <code class="docutils literal notranslate"><span class="pre">muDynamic</span></code>, <code class="docutils literal notranslate"><span class="pre">muStaticOffset</span></code>, <code class="docutils literal notranslate"><span class="pre">muViscous</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">expVel</span> <span class="pre">=</span> <span class="pre">1e-3</span></code>, <code class="docutils literal notranslate"><span class="pre">regVel</span> <span class="pre">=</span> <span class="pre">1e-3</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">describes regularized Stribeck function with optial viscous part for given velocity,</div>
 <div class="line"><span class="math notranslate nohighlight">\(f(v) = \begin{cases} (\mu_d + \mu_{s_{off}}) v, \quad \mathrm{if} \quad |v| &lt;= v_{reg}\\ \mathrm{Sign}(v)\left( \mu_d + \mu_{s_{off}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} + \mu_v (|v|-v_{reg}) \right), \quad \mathrm{else}\end{cases}\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">vel</span></code>: input velocity <span class="math notranslate nohighlight">\(v\)</span></div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">muDynamic</span></code>: dynamic friction coefficient <span class="math notranslate nohighlight">\(\mu_d\)</span></div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">muStaticOffset</span></code>: <span class="math notranslate nohighlight">\(\mu_{s_{off}}\)</span>, offset to dynamic friction, which gives muStaticFriction = muDynamic + muStaticOffset</div>
@@ -153,7 +151,7 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py">massSpringFrictionInteractive.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-physics-regularizedfrictionstep"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L38">RegularizedFrictionStep</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">x0</span></code>, <code class="docutils literal notranslate"><span class="pre">h0</span></code>, <code class="docutils literal notranslate"><span class="pre">x1</span></code>, <code class="docutils literal notranslate"><span class="pre">h1</span></code>)</p>
+<p id="sec-physics-regularizedfrictionstep">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L38">RegularizedFrictionStep</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">x0</span></code>, <code class="docutils literal notranslate"><span class="pre">h0</span></code>, <code class="docutils literal notranslate"><span class="pre">x1</span></code>, <code class="docutils literal notranslate"><span class="pre">h1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -162,7 +160,7 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-physics-regularizedfriction"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L59">RegularizedFriction</a>(<code class="docutils literal notranslate"><span class="pre">vel</span></code>, <code class="docutils literal notranslate"><span class="pre">muDynamic</span></code>, <code class="docutils literal notranslate"><span class="pre">muStaticOffset</span></code>, <code class="docutils literal notranslate"><span class="pre">velStatic</span></code>, <code class="docutils literal notranslate"><span class="pre">velDynamic</span></code>, <code class="docutils literal notranslate"><span class="pre">muViscous</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+<p id="sec-physics-regularizedfriction">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L59">RegularizedFriction</a>(<code class="docutils literal notranslate"><span class="pre">vel</span></code>, <code class="docutils literal notranslate"><span class="pre">muDynamic</span></code>, <code class="docutils literal notranslate"><span class="pre">muStaticOffset</span></code>, <code class="docutils literal notranslate"><span class="pre">velStatic</span></code>, <code class="docutils literal notranslate"><span class="pre">velDynamic</span></code>, <code class="docutils literal notranslate"><span class="pre">muViscous</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -171,8 +169,6 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">vel</span></code>: input velocity</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">muDynamic</span></code>: dynamic friction coefficient</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">muStaticOffset</span></code>: offset to dynamic friction, which gives muStaticFriction = muDynamic + muStaticOffset</div>
@@ -197,7 +193,7 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py">massSpringFrictionInteractive.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-physics-vonmisesstress"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L77">VonMisesStress</a>(<code class="docutils literal notranslate"><span class="pre">stress6D</span></code>)</p>
+<p id="sec-physics-vonmisesstress">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L77">VonMisesStress</a>(<code class="docutils literal notranslate"><span class="pre">stress6D</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -206,7 +202,7 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-<div class="line">stress6D: 6 stress components as list or np.array, using ordering <span class="math notranslate nohighlight">\([\sigma_{xx}\)</span>, <span class="math notranslate nohighlight">\([\sigma_{yy}\)</span>, <span class="math notranslate nohighlight">\([\sigma_{zz}\)</span>, <span class="math notranslate nohighlight">\([\sigma_{yz}\)</span>, <span class="math notranslate nohighlight">\([\sigma_{xz}\)</span>, <span class="math notranslate nohighlight">\([\sigma_{xy}]\)</span></div>
+<div class="line">stress6D: 6 stress components as list or np.array, using ordering <span class="math notranslate nohighlight">\([\sigma_{xx}\)</span>, <span class="math notranslate nohighlight">\(\sigma_{yy}\)</span>, <span class="math notranslate nohighlight">\(\sigma_{zz}\)</span>, <span class="math notranslate nohighlight">\(\sigma_{yz}\)</span>, <span class="math notranslate nohighlight">\(\sigma_{xz}\)</span>, <span class="math notranslate nohighlight">\(\sigma_{xy}]\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
@@ -216,7 +212,7 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-physics-ufvonmisesstress"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L100">UFvonMisesStress</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorNumbers</span></code>, <code class="docutils literal notranslate"><span class="pre">factors</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code>)</p>
+<p id="sec-physics-ufvonmisesstress">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/physics.py#L100">UFvonMisesStress</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorNumbers</span></code>, <code class="docutils literal notranslate"><span class="pre">factors</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>

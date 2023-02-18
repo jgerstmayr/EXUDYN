@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>Exudyn &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -65,6 +65,7 @@
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -77,7 +78,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn</a>
+          <a href="../../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -98,7 +99,7 @@
              
   <section id="exudyn">
 <h1>Exudyn<a class="headerlink" href="#exudyn" title="Permalink to this heading"></a></h1>
-<p>These are the access functions to the Exudyn module. General usage is explained in  <a class="reference internal" href="GeneralInformation.html#sec-generalpythoninterface"><span class="std std-ref">General information on Python-C++ interface</span></a> and examples are provided there. The C++ module <code class="docutils literal notranslate"><span class="pre">exudyn</span></code> is the root level object linked between Python and C++.In the installed site-packages, the according file is usually denoted as <code class="docutils literal notranslate"><span class="pre">exudynCPP.pyd</span></code> for the regular module, <code class="docutils literal notranslate"><span class="pre">exudynCPPfast.pyd</span></code> for the module without range checks and <code class="docutils literal notranslate"><span class="pre">exudynCPPnoAVX.pyd</span></code> for the module compiled without AVX vector extensions (may depend on your installation).</p>
+<p>These are the access functions to the Exudyn module. General usage is explained in Section <a class="reference internal" href="GeneralInformation.html#sec-generalpythoninterface"><span class="std std-ref">General information on Python-C++ interface</span></a> and examples are provided there. The C++ module <code class="docutils literal notranslate"><span class="pre">exudyn</span></code> is the root level object linked between Python and C++.In the installed site-packages, the according file is usually denoted as <code class="docutils literal notranslate"><span class="pre">exudynCPP.pyd</span></code> for the regular module, <code class="docutils literal notranslate"><span class="pre">exudynCPPfast.pyd</span></code> for the module without range checks and <code class="docutils literal notranslate"><span class="pre">exudynCPPnoAVX.pyd</span></code> for the module compiled without AVX vector extensions (may depend on your installation).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#import exudyn module:</span>
 <span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
 <span class="c1">#create systemcontainer and mbs:</span>
@@ -149,17 +150,17 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>SolveStatic</strong>(<em>mbs</em>, <em>simulationSettings</em> = exudyn.SimulationSettings(), <em>updateInitialValues</em> = False, <em>storeSolver</em> = True):</div>
-<div class="line">Static solver function, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>; for details on the Python interface see  <span class="xref std std-ref">sec-solver-solvestatic</span>; for background on solvers, see  <span class="xref std std-ref">sec-solvers</span></div>
+<div class="line">Static solver function, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>; for details on the Python interface see Section <a class="reference internal" href="../../../index.html#sec-solver-solvestatic"><span class="std std-ref">Solvers: Static</span></a>; for background on solvers, see Section <a class="reference internal" href="../../../index.html#sec-solvers"><span class="std std-ref">Solvers</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>SolveDynamic</strong>(<em>mbs</em>, <em>simulationSettings</em> = exudyn.SimulationSettings(), <em>solverType</em> = exudyn.DynamicSolverType.GeneralizedAlpha, <em>updateInitialValues</em> = False, <em>storeSolver</em> = True):</div>
-<div class="line">Dynamic solver function, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>; for details on the Python interface see  <span class="xref std std-ref">sec-solver-solvedynamic</span>; for background on solvers, see  <span class="xref std std-ref">sec-solvers</span></div>
+<div class="line">Dynamic solver function, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>; for details on the Python interface see Section <a class="reference internal" href="../../../index.html#sec-solver-solvedynamic"><span class="std std-ref">Solvers: Dynamic</span></a>; for background on solvers, see Section <a class="reference internal" href="../../../index.html#sec-solvers"><span class="std std-ref">Solvers</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>ComputeODE2Eigenvalues</strong>(<em>mbs</em>, <em>simulationSettings</em> = exudyn.SimulationSettings(), <em>useSparseSolver</em> = False, <em>numberOfEigenvalues</em> = -1, <em>setInitialValues</em> = True, <em>convert2Frequencies</em> = False):</div>
-<div class="line">Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>; for details on the Python interface see  <span class="xref std std-ref">sec-solver-computeode2eigenvalues</span></div>
+<div class="line">Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>; for details on the Python interface see Section <a class="reference internal" href="../../../index.html#sec-solver-computeode2eigenvalues"><span class="std std-ref">Solvers: Eigenvalues</span></a></div>
 </div>
 </li>
 <li><div class="line-block">

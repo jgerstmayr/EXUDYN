@@ -77,7 +77,7 @@ Such a ground node is added via:
   nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
 
 
-In the next step, we add an object (sec:overview:modulestructure.), which provides equations for coordinates. The \ ``MassPoint``\  needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:
+In the next step, we add an object (For the moment, we just need to know that objects either depend on one or more nodes, which are usually bodies and finite elements, or they can be connectors, which connect (the coordinates of) objects via markers, see Section :ref:`sec-overview-modulestructure`\ .), which provides equations for coordinates. The \ ``MassPoint``\  needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:
 
 .. code-block:: python
 
@@ -167,7 +167,7 @@ In order to visualize the results online, a renderer can be started. As our comp
   #mbs.WaitForUserToContinue()     #wait for pressing SPACE bar to continue (in render window!)
 
 
-As the simulation is still very fast, we will not see the motion of our node. Using e.g. \ ``steps=10000000``\  in the lines above allows you online visualize the resulting oscillations.
+As the simulation is still very fast, we will not see the motion of our node. Using a very small step size of, e.g., \ ``h=1e-7``\  in the lines above allows us to visualize the resulting oscillations in realtime.
 
 Finally, we start the solver, by telling which system to be solved, solver type and the simulation settings:
 

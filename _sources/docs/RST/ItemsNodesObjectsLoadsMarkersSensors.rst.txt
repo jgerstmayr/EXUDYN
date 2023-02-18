@@ -4,7 +4,18 @@
 Items: Nodes, Objects, Loads, Markers, Sensors, ...
 ===================================================
 
-In this section, the most important part of Exudyn are provided. An overview of the interaction of the items is given in [figure in theDoc.pdf]
+In this section, the most important part of Exudyn are provided. An overview of the interaction of the items is given in Fig. :ref:`fig-items-interaction`\ 
+
+
+
+.. _fig-items-interaction:
+.. figure:: ../theDoc/figures/itemsMultibodySystem.png
+   :width: 90%
+
+   Interaction of items in a multibody system
+
+Note that both, bodies and connectors (including constraints) are -- computational -- objects. The arrows indicate, that, e.g., object 1 has node 1 and node 2 (indexes) and that marker 0 is attached to object 0, while load 0 uses marker 0 to apply the load. Sensors could additionally be attached to certain items.
+
 
 
 

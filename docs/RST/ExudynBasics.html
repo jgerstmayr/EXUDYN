@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn Basics &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>Exudyn Basics &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -80,6 +80,7 @@
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -92,7 +93,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn</a>
+          <a href="../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -134,7 +135,7 @@ Using <code class="docutils literal notranslate"><span class="pre">mbs.Reset()</
 </section>
 <section id="simulation-settings">
 <span id="sec-overview-basics-simulationsettings"></span><h2>Simulation settings<a class="headerlink" href="#simulation-settings" title="Permalink to this heading"></a></h2>
-<p>The simulation settings consists of a couple of substructures, e.g., for <code class="docutils literal notranslate"><span class="pre">solutionSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">staticSolver</span></code>, <code class="docutils literal notranslate"><span class="pre">timeIntegration</span></code> as well as a couple of general options – for details see Sections [theDoc.pdf] – [theDoc.pdf].</p>
+<p>The simulation settings consists of a couple of substructures, e.g., for <code class="docutils literal notranslate"><span class="pre">solutionSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">staticSolver</span></code>, <code class="docutils literal notranslate"><span class="pre">timeIntegration</span></code> as well as a couple of general options – for details see Sections Section <a class="reference internal" href="structures/SimulationSettings.html#sec-solutionsettings"><span class="std std-ref">SolutionSettings</span></a> – Section <a class="reference internal" href="structures/SimulationSettings.html#sec-simulationsettings"><span class="std std-ref">SimulationSettings</span></a>.</p>
 <p>Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver.</p>
 <p>The simulation settings structure is created with</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SimulationSettings</span><span class="p">()</span>
@@ -183,9 +184,10 @@ position, forces or joint data. For viewing sensor results, use the <code class=
 <section id="visualization-settings-dialog">
 <span id="sec-overview-basics-visualizationsettings"></span><h2>Visualization settings dialog<a class="headerlink" href="#visualization-settings-dialog" title="Permalink to this heading"></a></h2>
 <p>Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance – e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.</p>
-<p>Details on visualization settings and its substructures are provided in Sections [theDoc.pdf] – [theDoc.pdf]. These settings may also be edited by pressing ‘V’ in the active render window (does not work, if there is no active render loop using, e.g., <code class="docutils literal notranslate"><span class="pre">SC.WaitForRenderEngineStopFlag()</span></code> or
-<code class="docutils literal notranslate"><span class="pre">mbs.WaitForUserToContinue()</span></code> ).</p>
-<p>Note that this dialog is automatically created and uses Python’s <code class="docutils literal notranslate"><span class="pre">tkinter</span></code>, which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn .</p>
+<p>Details on visualization settings and its substructures are provided in Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref">VSettingsGeneral</span></a> – Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-visualizationsettings"><span class="std std-ref">VisualizationSettings</span></a>. These settings may also be edited by pressing ‘V’ in the active render window (does not work, if there is no active render loop using, e.g., <code class="docutils literal notranslate"><span class="pre">SC.WaitForRenderEngineStopFlag()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">mbs.WaitForUserToContinue()</span></code> ).
+The visualization settings dialog is shown exemplarily in Fig. <a class="reference internal" href="#fig-visualizationsettings"><span class="std std-ref">View of visualization settings (press ‘V’ in render window to open dialog)</span></a>.
+Note that this dialog is automatically created and uses Python’s <code class="docutils literal notranslate"><span class="pre">tkinter</span></code>, which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn .</p>
 <p>The appearance of visualization settings dialogs may be adjusted by directly modifying <code class="docutils literal notranslate"><span class="pre">exudyn.GUI</span></code> variables (this may change in the future). For example write in your code before opening the render window (treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn.GUI</span>
 <span class="n">exudyn</span><span class="o">.</span><span class="n">GUI</span><span class="o">.</span><span class="n">dialogDefaultWidth</span>             <span class="c1">#unscaled width of, e.g., right-mouse-button dialog</span>
@@ -200,8 +202,12 @@ position, forces or joint data. For viewing sensor results, use the <code class=
 <span class="n">exudyn</span><span class="o">.</span><span class="n">GUI</span><span class="o">.</span><span class="n">textHeightFactor</span> <span class="o">=</span> <span class="mf">1.45</span>        <span class="c1">#this factor is used to increase height of lines in tree view as compared to font size</span>
 </pre></div>
 </div>
-<p><a class="reference internal" href="../../_images/visualizationSettings.png"><img alt="picVisSettings" src="../../_images/visualizationSettings.png" style="width: 60%;" /></a></p>
-<p>[View of visualization settings (press ‘V’ in render window to open dialog).]</p>
+<figure class="align-default" id="id1">
+<span id="fig-visualizationsettings"></span><a class="reference internal image-reference" href="../../_images/visualizationSettings.png"><img alt="../../_images/visualizationSettings.png" src="../../_images/visualizationSettings.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text">View of visualization settings (press ‘V’ in render window to open dialog)</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
 <p>The visualization settings structure can be accessed in the system container <code class="docutils literal notranslate"><span class="pre">SC</span></code> (access per reference, no copying!), accessing every value or structure directly, e.g.,</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="n">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mf">0.001</span>      <span class="c1">#draw nodes very small</span>
 
@@ -241,7 +247,7 @@ The renderer is set up in a minimalistic way, just to ensure that you can check 
 <li><p>open visualization dialog: key V</p></li>
 <li><p>show item number: click on graphics element with left mouse button</p></li>
 <li><p>show item dictionary: click on graphics element with right mouse button</p></li>
-<li><p>… (see  <span class="xref std std-ref">sec-vsettingsgeneral</span>ff.)</p></li>
+<li><p>… (see Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref">VSettingsGeneral</span></a>ff.)</p></li>
 </ul>
 <p>Depending on your model (size, place, …), you may need to adjust the following <code class="docutils literal notranslate"><span class="pre">openGL</span></code> parameters in <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code>:</p>
 <ul class="simple">
@@ -249,7 +255,7 @@ The renderer is set up in a minimalistic way, just to ensure that you can check 
 <li><p>shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card</p></li>
 <li><p>visibility of nodes, markers, etc. in according bodies, nodes, markers, …, <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code></p></li>
 <li><p>move camera with a selected marker: adjust <code class="docutils literal notranslate"><span class="pre">trackMarker</span></code> in <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive</span></code></p></li>
-<li><p>… (see  <span class="xref std std-ref">sec-vsettingsgeneral</span>ff.)</p></li>
+<li><p>… (see Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref">VSettingsGeneral</span></a>ff.)</p></li>
 </ul>
 </section>
 <section id="graphics-pipeline">
@@ -275,7 +281,7 @@ The solver runs a loop:</p>
 <section id="storing-the-model-view">
 <span id="sec-overview-basics-storingmodelview"></span><h2>Storing the model view<a class="headerlink" href="#storing-the-model-view" title="Permalink to this heading"></a></h2>
 <p>There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using <code class="docutils literal notranslate"><span class="pre">SC.GetRenderState()</span></code> and <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState()</span></code>,
-see also  <span class="xref std std-ref">sec-renderstate</span>.
+see also Section <a class="reference internal" href="../../index.html#sec-renderstate"><span class="std std-ref">Render State</span></a>.
 A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation (
 note that <code class="docutils literal notranslate"><span class="pre">visualizationSettings.general.autoFitScene</span></code> should be set False if you want to use the stored zoom factor):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
@@ -320,14 +326,14 @@ Now copy the output and set this with <code class="docutils literal notranslate"
 </pre></div>
 </div>
 <p>Note that in the current version of Exudyn there is more data stored in render state, which is not used in <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState</span></code>,
-see also  <span class="xref std std-ref">sec-renderstate</span>.</p>
+see also Section <a class="reference internal" href="../../index.html#sec-renderstate"><span class="std std-ref">Render State</span></a>.</p>
 </section>
 <section id="graphics-user-functions-via-python">
 <h2>Graphics user functions via Python<a class="headerlink" href="#graphics-user-functions-via-python" title="Permalink to this heading"></a></h2>
 <p>There are some user functions in order to customize drawing:</p>
 <ul class="simple">
 <li><p>You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (<code class="docutils literal notranslate"><span class="pre">GraphicsDataFromSTLfileTxt</span></code>) using the established format STL (STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems).</p></li>
-<li><p>Some objects, e.g., <code class="docutils literal notranslate"><span class="pre">ObjectGenericODE2</span></code> or <code class="docutils literal notranslate"><span class="pre">ObjectRigidBody</span></code>, provide customized a function <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction</span></code>. This user function just returns a list of GraphicsData, see  <span class="xref std std-ref">sec-graphicsdata</span>. With this function you can change the shape of the body in every step of the computation.</p></li>
+<li><p>Some objects, e.g., <code class="docutils literal notranslate"><span class="pre">ObjectGenericODE2</span></code> or <code class="docutils literal notranslate"><span class="pre">ObjectRigidBody</span></code>, provide customized a function <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction</span></code>. This user function just returns a list of GraphicsData, see Section <a class="reference internal" href="../../index.html#sec-graphicsdata"><span class="std std-ref">GraphicsData</span></a>. With this function you can change the shape of the body in every step of the computation.</p></li>
 <li><p>Specifically, the <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction</span></code> in <code class="docutils literal notranslate"><span class="pre">ObjectGround</span></code> can be used to draw any moving background in the scene.</p></li>
 </ul>
 <p>Note that all kinds of <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction</span></code>s need to be called from the main (=computation) process as Python functions may not be called from separate threads (GIL). Therefore, the computation thread is interrupted to execute the <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction</span></code> between two time steps, such that the graphics Python user function can be executed. There is a timeout variable for this interruption of the computation with a warning if scenes get too complicated.</p>
@@ -349,9 +355,16 @@ see also  <span class="xref std std-ref">sec-renderstate</span>.</p>
 If you are running large models, it may be more convenient to watch results after simulation has been finished.
 For this, you can use</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">interactive.SolutionViewer</span></code>, see Section [theDoc.pdf]</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">interactive.AnimateModes</span></code>, lets you view the animation of computed modes, see Section [theDoc.pdf]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">interactive.SolutionViewer</span></code>, see  <a class="reference internal" href="pythonUtilities/interactive.html#sec-interactive-solutionviewer"><span class="std std-ref">Section</span></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">interactive.AnimateModes</span></code>, lets you view the animation of computed modes, see  <a class="reference internal" href="pythonUtilities/interactive.html#sec-interactive-animatemodes"><span class="std std-ref">Section</span></a></p></li>
 </ul>
+<p>shown exemplary in Fig. <a class="reference internal" href="#fig-solutionviewer"><span class="std std-ref">View of SolutionViewer (as of Exudyn 1.5.42.dev1)</span></a>.</p>
+<figure class="align-default" id="id2">
+<span id="fig-solutionviewer"></span><a class="reference internal image-reference" href="../../_images/solutionViewer.png"><img alt="../../_images/solutionViewer.png" src="../../_images/solutionViewer.png" style="width: 60%;" /></a>
+<figcaption>
+<p><span class="caption-text">View of <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> (as of Exudyn 1.5.42.dev1)</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
 <p>The <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> adds a <code class="docutils literal notranslate"><span class="pre">tkinter</span></code> interactive dialog, which lets you interact with the model, with the following features:</p>
 <ul class="simple">
 <li><p>The SolutionViewer represents a ‘Player’ for the dynamic solution or a series of static solutions, which is available after simulation if <code class="docutils literal notranslate"><span class="pre">solutionSettings.writeSolutionToFile</span> <span class="pre">=</span> <span class="pre">True</span></code></p></li>
@@ -359,7 +372,7 @@ For this, you can use</p>
 <li><p>As soon as ‘Run’ is pressed, the player runs (and it may be started automatically as well)</p></li>
 <li><p>In the ‘Static’ mode, drag the slider ‘Solution steps’ to view the solution steps</p></li>
 <li><p>In the ‘Continuous run’ mode, the player runs in an infinite loop</p></li>
-<li><p>In the ‘One cycle’ mode, the player runs from the current position to the end; this is perfectly suited to record series of images for <strong>creating animations</strong>, see  <a class="reference internal" href="#sec-overview-basics-animations"><span class="std std-ref">Generating animations</span></a> and works together with the visualization settings dialog.</p></li>
+<li><p>In the ‘One cycle’ mode, the player runs from the current position to the end; this is perfectly suited to record series of images for <strong>creating animations</strong>, see Section <a class="reference internal" href="#sec-overview-basics-animations"><span class="std std-ref">Generating animations</span></a> and works together with the visualization settings dialog.</p></li>
 </ul>
 <p>The solution should be loaded with
 <code class="docutils literal notranslate"><span class="pre">LoadSolutionFile('coordinatesSolution.txt')</span></code>, where ‘coordinatesSolution.txt’ represents the stored solution file,

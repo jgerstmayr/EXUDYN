@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: FEM &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>Module: FEM &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,8 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -35,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -92,6 +93,7 @@
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -104,7 +106,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn</a>
+          <a href="../../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -135,7 +137,7 @@
 <li><p>Date:      2020-03-10 (created)</p></li>
 <li><p>Notes:        internal CSR matrix storage format contains 3 float numbers per row: [row, column, value], can be converted to scipy csr sparse matrices with function CSRtoScipySparseCSR(…)</p></li>
 </ul>
-<p id="sec-fem-compressedrowsparsetodensematrix"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L37">CompressedRowSparseToDenseMatrix</a>(<code class="docutils literal notranslate"><span class="pre">sparseData</span></code>)</p>
+<p id="sec-fem-compressedrowsparsetodensematrix">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L37">CompressedRowSparseToDenseMatrix</a>(<code class="docutils literal notranslate"><span class="pre">sparseData</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -154,7 +156,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-mapsparsematrixindices"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L46">MapSparseMatrixIndices</a>(<code class="docutils literal notranslate"><span class="pre">matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">sorting</span></code>)</p>
+<p id="sec-fem-mapsparsematrixindices">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L46">MapSparseMatrixIndices</a>(<code class="docutils literal notranslate"><span class="pre">matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">sorting</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -163,7 +165,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-vectordiadicunitmatrix3d"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L54">VectorDiadicUnitMatrix3D</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+<p id="sec-fem-vectordiadicunitmatrix3d">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L54">VectorDiadicUnitMatrix3D</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -172,7 +174,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-cycliccomparereversed"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L61">CyclicCompareReversed</a>(<code class="docutils literal notranslate"><span class="pre">list1</span></code>, <code class="docutils literal notranslate"><span class="pre">list2</span></code>)</p>
+<p id="sec-fem-cycliccomparereversed">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L61">CyclicCompareReversed</a>(<code class="docutils literal notranslate"><span class="pre">list1</span></code>, <code class="docutils literal notranslate"><span class="pre">list2</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -181,19 +183,17 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-addentrytocompressedrowsparsearray"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L70">AddEntryToCompressedRowSparseArray</a>(<code class="docutils literal notranslate"><span class="pre">sparseData</span></code>, <code class="docutils literal notranslate"><span class="pre">row</span></code>, <code class="docutils literal notranslate"><span class="pre">column</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span></code>)</p>
+<p id="sec-fem-addentrytocompressedrowsparsearray">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L70">AddEntryToCompressedRowSparseArray</a>(<code class="docutils literal notranslate"><span class="pre">sparseData</span></code>, <code class="docutils literal notranslate"><span class="pre">row</span></code>, <code class="docutils literal notranslate"><span class="pre">column</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">add entry to compressedRowSparse matrix, avoiding duplicates</div>
 <div class="line">value is either added to existing entry (avoid duplicates) or a new entry is appended</div>
 </div>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-csrtorowsandcolumns"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L88">CSRtoRowsAndColumns</a>(<code class="docutils literal notranslate"><span class="pre">sparseMatrixCSR</span></code>)</p>
+<p id="sec-fem-csrtorowsandcolumns">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L88">CSRtoRowsAndColumns</a>(<code class="docutils literal notranslate"><span class="pre">sparseMatrixCSR</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -202,7 +202,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-csrtoscipysparsecsr"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L94">CSRtoScipySparseCSR</a>(<code class="docutils literal notranslate"><span class="pre">sparseMatrixCSR</span></code>)</p>
+<p id="sec-fem-csrtoscipysparsecsr">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L94">CSRtoScipySparseCSR</a>(<code class="docutils literal notranslate"><span class="pre">sparseMatrixCSR</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -215,7 +215,7 @@
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-fem-scipysparsecsrtocsr"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L102">ScipySparseCSRtoCSR</a>(<code class="docutils literal notranslate"><span class="pre">scipyCSR</span></code>)</p>
+<p id="sec-fem-scipysparsecsrtocsr">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L102">ScipySparseCSRtoCSR</a>(<code class="docutils literal notranslate"><span class="pre">scipyCSR</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -224,19 +224,17 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-resortindicesofcsrmatrix"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L110">ResortIndicesOfCSRmatrix</a>(<code class="docutils literal notranslate"><span class="pre">mXXYYZZ</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfRows</span></code>)</p>
+<p id="sec-fem-resortindicesofcsrmatrix">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L110">ResortIndicesOfCSRmatrix</a>(<code class="docutils literal notranslate"><span class="pre">mXXYYZZ</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfRows</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">resort indices of given NGsolve CSR matrix in XXXYYYZZZ format to XYZXYZXYZ format; numberOfRows must be equal to columns</div>
 <div class="line">needed for import from NGsolve</div>
 </div>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-resortindicesofngvector"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L128">ResortIndicesOfNGvector</a>(<code class="docutils literal notranslate"><span class="pre">vXXYYZZ</span></code>)</p>
+<p id="sec-fem-resortindicesofngvector">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L128">ResortIndicesOfNGvector</a>(<code class="docutils literal notranslate"><span class="pre">vXXYYZZ</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -245,7 +243,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-resortindicesexudyn2ngvector"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L148">ResortIndicesExudyn2NGvector</a>(<code class="docutils literal notranslate"><span class="pre">vXYZXYZ</span></code>)</p>
+<p id="sec-fem-resortindicesexudyn2ngvector">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L148">ResortIndicesExudyn2NGvector</a>(<code class="docutils literal notranslate"><span class="pre">vXYZXYZ</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -254,12 +252,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-converthextotrigs"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L285">ConvertHexToTrigs</a>(<code class="docutils literal notranslate"><span class="pre">nodeNumbers</span></code>)</p>
+<p id="sec-fem-converthextotrigs">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L285">ConvertHexToTrigs</a>(<code class="docutils literal notranslate"><span class="pre">nodeNumbers</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">convert list of Hex8/C3D8  element with 8 nodes in nodeNumbers into triangle-List</div>
 <div class="line">also works for Hex20 elements, but does only take the corner nodes!</div>
 </div>
@@ -270,7 +266,7 @@
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py">objectFFRFTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-fem-convertdensetocompressedrowmatrix"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L297">ConvertDenseToCompressedRowMatrix</a>(<code class="docutils literal notranslate"><span class="pre">denseMatrix</span></code>)</p>
+<p id="sec-fem-convertdensetocompressedrowmatrix">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L297">ConvertDenseToCompressedRowMatrix</a>(<code class="docutils literal notranslate"><span class="pre">denseMatrix</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -279,12 +275,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-readmatrixfromansysmmf"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L345">ReadMatrixFromAnsysMMF</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-fem-readmatrixfromansysmmf">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L345">ReadMatrixFromAnsysMMF</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">This function reads either the mass or stiffness matrix from an Ansys</div>
 <div class="line">Matrix Market Format (MMF). The corresponding matrix can either be exported</div>
 <div class="line">as dense matrix or sparse matrix.</div>
@@ -307,8 +301,6 @@
 </li>
 <li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">A MMF file can be created in Ansys by placing the following APDL code inside</div>
 <div class="line">the solution tree in Ansys Workbench:</div>
 <div class="line">!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</div>
@@ -333,12 +325,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-readmatrixdofmappingvectorfromansystxt"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L386">ReadMatrixDOFmappingVectorFromAnsysTxt</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>)</p>
+<p id="sec-fem-readmatrixdofmappingvectorfromansystxt">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L386">ReadMatrixDOFmappingVectorFromAnsysTxt</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">read sorting vector for ANSYS mass and stiffness matrices and return sorting vector as np.array</div>
 <div class="line">the file contains sorting for nodes and applies this sorting to the DOF (assuming 3 DOF per node!)</div>
 <div class="line">the resulting sorted vector is already converted to 0-based indices</div>
@@ -346,7 +336,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-readnodalcoordinatesfromansystxt"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L442">ReadNodalCoordinatesFromAnsysTxt</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-fem-readnodalcoordinatesfromansystxt">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L442">ReadNodalCoordinatesFromAnsysTxt</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -370,8 +360,6 @@
 </li>
 <li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">The nodal coordinates can be exported from Ansys by creating a named selection</div>
 <div class="line">of the body whos mesh should to exported by choosing its geometry. Next,</div>
 <div class="line">create a second named selcetion by using a worksheet. Add the named selection</div>
@@ -385,7 +373,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-readelementsfromansystxt"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L521">ReadElementsFromAnsysTxt</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-fem-readelementsfromansystxt">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L521">ReadElementsFromAnsysTxt</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -409,8 +397,6 @@
 </li>
 <li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">The elements can be exported from Ansys by creating a named selection</div>
 <div class="line">of the body whos mesh should to exported by choosing its geometry. Next,</div>
 <div class="line">create a second named selcetion by using a worksheet. Add the named selection</div>
@@ -424,7 +410,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-cmsobjectcomputenorm"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L944">CMSObjectComputeNorm</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">objectNumber</span></code>, <code class="docutils literal notranslate"><span class="pre">outputVariableType</span></code>, <code class="docutils literal notranslate"><span class="pre">norm</span> <span class="pre">=</span> <span class="pre">'max'</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumberList</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<p id="sec-fem-cmsobjectcomputenorm">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L944">CMSObjectComputeNorm</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">objectNumber</span></code>, <code class="docutils literal notranslate"><span class="pre">outputVariableType</span></code>, <code class="docutils literal notranslate"><span class="pre">norm</span> <span class="pre">=</span> <span class="pre">'max'</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumberList</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -433,8 +419,6 @@
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: MainSystem of objectNumber</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">objectNumber</span></code>: number of ObjectFFRFreducedOrder in mbs</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">outputVariableType</span></code>: a exu.OutputVariableType out of [StressLocal, DisplacementLocal, VelocityLocal]</div>
@@ -472,7 +456,7 @@
 </div>
 </li>
 </ul>
-<p id="sec-fem-kirchhoffmaterial-materialbaseclass-strain2stress"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L628">Strain2Stress</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">strain</span></code>)</p>
+<p id="sec-fem-kirchhoffmaterial-materialbaseclass-strain2stress">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L628">Strain2Stress</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">strain</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -481,7 +465,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-kirchhoffmaterial-materialbaseclass-strainvector2stressvector"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L639">StrainVector2StressVector</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">strainVector</span></code>)</p>
+<p id="sec-fem-kirchhoffmaterial-materialbaseclass-strainvector2stressvector">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L639">StrainVector2StressVector</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">strainVector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -490,7 +474,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-kirchhoffmaterial-materialbaseclass-strainvector2stressvector2d"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L643">StrainVector2StressVector2D</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">strainVector2D</span></code>)</p>
+<p id="sec-fem-kirchhoffmaterial-materialbaseclass-strainvector2stressvector2d">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L643">StrainVector2StressVector2D</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">strainVector2D</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -499,7 +483,7 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-kirchhoffmaterial-materialbaseclass-lameparameters"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L652">LameParameters</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p id="sec-fem-kirchhoffmaterial-materialbaseclass-lameparameters">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L652">LameParameters</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -539,12 +523,10 @@
 class used internally in FEMinterface to compute ObjectFFRF object
 this class holds all data for ObjectFFRF user functions</p>
 </div></blockquote>
-<p id="sec-fem-objectffrfinterface-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L735">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">femInterface</span></code>)</p>
+<p id="sec-fem-objectffrfinterface-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L735">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">femInterface</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">initialize ObjectFFRFinterface with FEMinterface class</div>
 <div class="line">initializes the ObjectFFRFinterface with nodes, modes, surface description and systemmatrices from FEMinterface</div>
 <div class="line">data is then transfered to mbs object with classFunction AddObjectFFRF(…)</div>
@@ -552,7 +534,7 @@ this class holds all data for ObjectFFRF user functions</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-objectffrfinterface-addobjectffrf"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L780">AddObjectFFRF</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">exu</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionRef</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">eulerParametersRef</span> <span class="pre">=</span> <span class="pre">[1,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">initialVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">initialAngularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">constrainRigidBodyMotion</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalDamping</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">stiffnessProportionalDamping</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.1,0.9,0.1,1.]</span></code>)</p>
+<p id="sec-fem-objectffrfinterface-addobjectffrf">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L780">AddObjectFFRF</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">exu</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionRef</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">eulerParametersRef</span> <span class="pre">=</span> <span class="pre">[1,0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">initialVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">initialAngularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">constrainRigidBodyMotion</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalDamping</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">stiffnessProportionalDamping</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.1,0.9,0.1,1.]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -561,8 +543,6 @@ this class holds all data for ObjectFFRF user functions</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">exu</span></code>: the exudyn module</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: a MainSystem object</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">positionRef</span></code>: reference position of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)</div>
@@ -577,7 +557,7 @@ this class holds all data for ObjectFFRF user functions</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-objectffrfinterface-ufforce"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L859">UFforce</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">exu</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, <code class="docutils literal notranslate"><span class="pre">q\_t</span></code>)</p>
+<p id="sec-fem-objectffrfinterface-ufforce">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L859">UFforce</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">exu</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, <code class="docutils literal notranslate"><span class="pre">q_t</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -586,7 +566,7 @@ this class holds all data for ObjectFFRF user functions</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-objectffrfinterface-ufmassgenericode2"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L905">UFmassGenericODE2</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">exu</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, <code class="docutils literal notranslate"><span class="pre">q\_t</span></code>)</p>
+<p id="sec-fem-objectffrfinterface-ufmassgenericode2">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L905">UFmassGenericODE2</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">exu</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>, <code class="docutils literal notranslate"><span class="pre">q_t</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -607,12 +587,10 @@ this class holds all data for ObjectFFRF user functions</p>
 class used internally in FEMinterface to compute ObjectFFRFreducedOrder dictionary
 this class holds all data for ObjectFFRFreducedOrder user functions</p>
 </div></blockquote>
-<p id="sec-fem-objectffrfreducedorderinterface-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1016">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">femInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">rigidBodyNodeType</span> <span class="pre">=</span> <span class="pre">'NodeType.RotationEulerParameters'</span></code>, <code class="docutils literal notranslate"><span class="pre">roundMassMatrix</span> <span class="pre">=</span> <span class="pre">1e-13</span></code>, <code class="docutils literal notranslate"><span class="pre">roundStiffnessMatrix</span> <span class="pre">=</span> <span class="pre">1e-13</span></code>)</p>
+<p id="sec-fem-objectffrfreducedorderinterface-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1016">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">femInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">rigidBodyNodeType</span> <span class="pre">=</span> <span class="pre">'NodeType.RotationEulerParameters'</span></code>, <code class="docutils literal notranslate"><span class="pre">roundMassMatrix</span> <span class="pre">=</span> <span class="pre">1e-13</span></code>, <code class="docutils literal notranslate"><span class="pre">roundStiffnessMatrix</span> <span class="pre">=</span> <span class="pre">1e-13</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">initialize ObjectFFRFreducedOrderInterface with FEMinterface class</div>
 <div class="line">initializes the ObjectFFRFreducedOrderInterface with nodes, modes, surface description and reduced system matrices from FEMinterface</div>
 <div class="line">data is then transfered to mbs object with classFunction AddObjectFFRFreducedOrderWithUserFunctions(…)</div>
@@ -620,8 +598,6 @@ this class holds all data for ObjectFFRFreducedOrder user functions</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">femInterface</span></code>: must provide nodes, surfaceTriangles, modeBasis, massMatrix, stiffness</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">roundMassMatrix</span></code>: use this value to set entries of reduced mass matrix to zero which are below the treshold</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">roundStiffnessMatrix</span></code>: use this value to set entries of reduced stiffness matrix to zero which are below the treshold</div>
@@ -629,7 +605,7 @@ this class holds all data for ObjectFFRFreducedOrder user functions</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1110">AddObjectFFRFreducedOrderWithUserFunctions</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">exu</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionRef</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">initialVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrixRef</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">initialAngularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">UFforce</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">UFmassMatrix</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalDamping</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">stiffnessProportionalDamping</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.1,0.9,0.1,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">eulerParametersRef</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<p id="sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1110">AddObjectFFRFreducedOrderWithUserFunctions</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">exu</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionRef</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">initialVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrixRef</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">initialAngularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">UFforce</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">UFmassMatrix</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalDamping</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">stiffnessProportionalDamping</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.1,0.9,0.1,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">eulerParametersRef</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -638,8 +614,6 @@ this class holds all data for ObjectFFRFreducedOrder user functions</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">exu</span></code>: the exudyn module</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: a MainSystem object</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">positionRef</span></code>: reference position of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)</div>
@@ -669,7 +643,7 @@ this class holds all data for ObjectFFRFreducedOrder user functions</p>
 </pre></div>
 </div>
 <hr class="docutils" />
-<p id="sec-fem-objectffrfreducedorderinterface-ufmassffrfreducedorder"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1263">UFmassFFRFreducedOrder</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">exu</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">qReduced</span></code>, <code class="docutils literal notranslate"><span class="pre">qReduced\_t</span></code>)</p>
+<p id="sec-fem-objectffrfreducedorderinterface-ufmassffrfreducedorder">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1263">UFmassFFRFreducedOrder</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">exu</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">qReduced</span></code>, <code class="docutils literal notranslate"><span class="pre">qReduced_t</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -678,7 +652,7 @@ this class holds all data for ObjectFFRFreducedOrder user functions</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-objectffrfreducedorderinterface-ufforceffrfreducedorder"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1314">UFforceFFRFreducedOrder</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">exu</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">qReduced</span></code>, <code class="docutils literal notranslate"><span class="pre">qReduced\_t</span></code>)</p>
+<p id="sec-fem-objectffrfreducedorderinterface-ufforceffrfreducedorder">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1314">UFforceFFRFreducedOrder</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">exu</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">qReduced</span></code>, <code class="docutils literal notranslate"><span class="pre">qReduced_t</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -687,7 +661,7 @@ this class holds all data for ObjectFFRFreducedOrder user functions</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorder"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1397">AddObjectFFRFreducedOrder</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionRef</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">initialVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrixRef</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">initialAngularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalDamping</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">stiffnessProportionalDamping</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.1,0.9,0.1,1.]</span></code>)</p>
+<p id="sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorder">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1397">AddObjectFFRFreducedOrder</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">positionRef</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">initialVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrixRef</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">initialAngularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">massProportionalDamping</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">stiffnessProportionalDamping</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.1,0.9,0.1,1.]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -696,8 +670,6 @@ this class holds all data for ObjectFFRFreducedOrder user functions</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">exu</span></code>: the exudyn module</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: a MainSystem object</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">positionRef</span></code>: reference position of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)</div>
@@ -739,7 +711,7 @@ do mesh operations, compute eigenmodes and reduced basis, etc.
 load/store the data efficiently with LoadFromFile(…), SaveToFile(…)  if import functions are slow
 export to EXUDYN objects</p>
 </div></blockquote>
-<p id="sec-fem-feminterface-init"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1448">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p id="sec-fem-feminterface-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1448">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -766,7 +738,7 @@ export to EXUDYN objects</p>
 </pre></div>
 </div>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-savetofile"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1468">SaveToFile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>)</p>
+<p id="sec-fem-feminterface-savetofile">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1468">SaveToFile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -780,12 +752,10 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-loadfromfile"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1487">LoadFromFile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>)</p>
+<p id="sec-fem-feminterface-loadfromfile">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1487">LoadFromFile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">load all data (nodes, elements, …) from a data filename previously stored with SaveToFile(…).</div>
 <div class="line">this function is much faster than the text-based import functions</div>
 </div>
@@ -797,12 +767,10 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-importfromabaqusinputfile"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1511">ImportFromAbaqusInputFile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">typeName</span> <span class="pre">=</span> <span class="pre">'Part'</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span> <span class="pre">=</span> <span class="pre">'Part-1'</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-fem-feminterface-importfromabaqusinputfile">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1511">ImportFromAbaqusInputFile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">typeName</span> <span class="pre">=</span> <span class="pre">'Part'</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span> <span class="pre">=</span> <span class="pre">'Part-1'</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">import nodes and elements from Abaqus input file and create surface elements</div>
 <div class="line">node numbers in elements are converted from 1-based indices to python’s 0-based indices</div>
 <div class="line">only works for Hex8, Hex20, Tet4 and Tet10 (C3D4, C3D8, C3D10, C3D20) elements</div>
@@ -811,12 +779,10 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-readmassmatrixfromabaqus"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1661">ReadMassMatrixFromAbaqus</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">=</span> <span class="pre">'SparseRowColumnValue'</span></code>)</p>
+<p id="sec-fem-feminterface-readmassmatrixfromabaqus">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1661">ReadMassMatrixFromAbaqus</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">=</span> <span class="pre">'SparseRowColumnValue'</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">read mass matrix from compressed row text format (exported from Abaqus); in order to export system matrices, write the following lines in your Abaqus input file:</div>
 <div class="line">*STEP</div>
 <div class="line">*MATRIX GENERATE, STIFFNESS, MASS</div>
@@ -826,7 +792,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-readstiffnessmatrixfromabaqus"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1667">ReadStiffnessMatrixFromAbaqus</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">=</span> <span class="pre">'SparseRowColumnValue'</span></code>)</p>
+<p id="sec-fem-feminterface-readstiffnessmatrixfromabaqus">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1667">ReadStiffnessMatrixFromAbaqus</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">=</span> <span class="pre">'SparseRowColumnValue'</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -835,7 +801,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-importmeshfromngsolve"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1692">ImportMeshFromNGsolve</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mesh</span></code>, <code class="docutils literal notranslate"><span class="pre">density</span></code>, <code class="docutils literal notranslate"><span class="pre">youngsModulus</span></code>, <code class="docutils literal notranslate"><span class="pre">poissonsRatio</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">computeEigenmodes</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">meshOrder</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<p id="sec-fem-feminterface-importmeshfromngsolve">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1692">ImportMeshFromNGsolve</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mesh</span></code>, <code class="docutils literal notranslate"><span class="pre">density</span></code>, <code class="docutils literal notranslate"><span class="pre">youngsModulus</span></code>, <code class="docutils literal notranslate"><span class="pre">poissonsRatio</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">computeEigenmodes</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">meshOrder</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -844,8 +810,6 @@ export to EXUDYN objects</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mesh</span></code>: a previously created <code class="docutils literal notranslate"><span class="pre">ngs.mesh</span></code> (NGsolve mesh, see examples)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">youngsModulus</span></code>: Young’s modulus used for mechanical model</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">poissonsRatio</span></code>: Poisson’s ratio used for mechanical model</div>
@@ -871,7 +835,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-computeeigenmodesngsolve"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1877">ComputeEigenmodesNGsolve</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">bfM</span></code>, <code class="docutils literal notranslate"><span class="pre">bfK</span></code>, <code class="docutils literal notranslate"><span class="pre">nModes</span></code>, <code class="docutils literal notranslate"><span class="pre">maxEigensolveIterations</span> <span class="pre">=</span> <span class="pre">40</span></code>, <code class="docutils literal notranslate"><span class="pre">excludeRigidBodyModes</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-fem-feminterface-computeeigenmodesngsolve">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1877">ComputeEigenmodesNGsolve</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">bfM</span></code>, <code class="docutils literal notranslate"><span class="pre">bfK</span></code>, <code class="docutils literal notranslate"><span class="pre">nModes</span></code>, <code class="docutils literal notranslate"><span class="pre">maxEigensolveIterations</span> <span class="pre">=</span> <span class="pre">40</span></code>, <code class="docutils literal notranslate"><span class="pre">excludeRigidBodyModes</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -880,8 +844,6 @@ export to EXUDYN objects</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">nModes</span></code>: prescribe the number of modes to be computed; total computed modes are  (nModes+excludeRigidBodyModes), but only nModes with smallest absolute eigenvalues are considered and stored</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">excludeRigidBodyModes</span></code>: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">maxEigensolveIterations</span></code>: maximum number of iterations for iterative eigensolver; default=40</div>
@@ -900,17 +862,15 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-computehurtycraigbamptonmodesngsolve"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1919">ComputeHurtyCraigBamptonModesNGsolve</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">bfM</span></code>, <code class="docutils literal notranslate"><span class="pre">bfK</span></code>, <code class="docutils literal notranslate"><span class="pre">boundaryNodesList</span></code>, <code class="docutils literal notranslate"><span class="pre">nEigenModes</span></code>, <code class="docutils literal notranslate"><span class="pre">maxEigensolveIterations</span> <span class="pre">=</span> <span class="pre">40</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-fem-feminterface-computehurtycraigbamptonmodesngsolve">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L1919">ComputeHurtyCraigBamptonModesNGsolve</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">bfM</span></code>, <code class="docutils literal notranslate"><span class="pre">bfK</span></code>, <code class="docutils literal notranslate"><span class="pre">boundaryNodesList</span></code>, <code class="docutils literal notranslate"><span class="pre">nEigenModes</span></code>, <code class="docutils literal notranslate"><span class="pre">maxEigensolveIterations</span> <span class="pre">=</span> <span class="pre">40</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-<div class="line">compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part  <span class="xref std std-ref">sec-theory-cms</span>. This function uses internal computational functionality of NGsolve and is often much faster than the scipy variant</div>
+<div class="line">compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part Section <a class="reference internal" href="../../../index.html#sec-theory-cms"><span class="std std-ref">Theory: Component Mode Synthesis</span></a>. This function uses internal computational functionality of NGsolve and is often much faster than the scipy variant</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">bfM</span></code>: bilinearform for mass matrix as retured in ImportMeshFromNGsolve(…)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">bfK</span></code>: bilinearform for stiffness matrix as retured in ImportMeshFromNGsolve(…)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">boundaryNodesList</span></code>: [nodeList0, nodeList1, …] a list of node lists, each of them representing a set of ‘Position’ nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!)</div>
@@ -931,7 +891,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-computepostprocessingmodesngsolve"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2060">ComputePostProcessingModesNGsolve</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fes</span></code>, <code class="docutils literal notranslate"><span class="pre">material</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">outputVariableType</span> <span class="pre">=</span> <span class="pre">'OutputVariableType.StressLocal'</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-fem-feminterface-computepostprocessingmodesngsolve">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2060">ComputePostProcessingModesNGsolve</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fes</span></code>, <code class="docutils literal notranslate"><span class="pre">material</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">outputVariableType</span> <span class="pre">=</span> <span class="pre">'OutputVariableType.StressLocal'</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -940,8 +900,6 @@ export to EXUDYN objects</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">fes</span></code>: finite element space as retured in ImportMeshFromNGsolve(…)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">material</span></code>: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains (material = 0)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">outputVariableType</span></code>: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables</div>
@@ -964,7 +922,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-getmassmatrix"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2135">GetMassMatrix</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">sparse</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p id="sec-fem-feminterface-getmassmatrix">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2135">GetMassMatrix</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">sparse</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -973,7 +931,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-getstiffnessmatrix"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2142">GetStiffnessMatrix</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">sparse</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p id="sec-fem-feminterface-getstiffnessmatrix">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2142">GetStiffnessMatrix</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">sparse</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -982,7 +940,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-numberofnodes"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2149">NumberOfNodes</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p id="sec-fem-feminterface-numberofnodes">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2149">NumberOfNodes</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -991,7 +949,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-getnodepositionsasarray"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2161">GetNodePositionsAsArray</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p id="sec-fem-feminterface-getnodepositionsasarray">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2161">GetNodePositionsAsArray</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1014,7 +972,7 @@ export to EXUDYN objects</p>
 </pre></div>
 </div>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-getnodepositionsmean"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2169">GetNodePositionsMean</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumberList</span></code>)</p>
+<p id="sec-fem-feminterface-getnodepositionsmean">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2169">GetNodePositionsMean</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumberList</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1023,7 +981,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-numberofcoordinates"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2176">NumberOfCoordinates</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p id="sec-fem-feminterface-numberofcoordinates">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2176">NumberOfCoordinates</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1032,31 +990,27 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-getnodeatpoint"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2184">GetNodeAtPoint</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-5</span></code>, <code class="docutils literal notranslate"><span class="pre">raiseException</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p id="sec-fem-feminterface-getnodeatpoint">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2184">GetNodeAtPoint</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-5</span></code>, <code class="docutils literal notranslate"><span class="pre">raiseException</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">get node number for node at given point, e.g. p=[0.1,0.5,-0.2], using a tolerance (+/-) if coordinates are available only with reduced accuracy</div>
 <div class="line">if not found, it returns an invalid index</div>
 </div>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-getnodesinplane"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2200">GetNodesInPlane</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">normal</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-5</span></code>)</p>
+<p id="sec-fem-feminterface-getnodesinplane">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2200">GetNodesInPlane</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">normal</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-5</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">get node numbers in plane defined by point p and (normalized) normal vector n using a tolerance for the distance to the plane</div>
 <div class="line">if not found, it returns an empty list</div>
 </div>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-getnodesincube"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2216">GetNodesInCube</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">pMin</span></code>, <code class="docutils literal notranslate"><span class="pre">pMax</span></code>)</p>
+<p id="sec-fem-feminterface-getnodesincube">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2216">GetNodesInCube</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">pMin</span></code>, <code class="docutils literal notranslate"><span class="pre">pMax</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1077,7 +1031,7 @@ export to EXUDYN objects</p>
 </pre></div>
 </div>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-getnodesonline"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2231">GetNodesOnLine</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">p1</span></code>, <code class="docutils literal notranslate"><span class="pre">p2</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-5</span></code>)</p>
+<p id="sec-fem-feminterface-getnodesonline">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2231">GetNodesOnLine</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">p1</span></code>, <code class="docutils literal notranslate"><span class="pre">p2</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-5</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1086,12 +1040,10 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-getnodesoncylinder"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2237">GetNodesOnCylinder</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">p1</span></code>, <code class="docutils literal notranslate"><span class="pre">p2</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-5</span></code>)</p>
+<p id="sec-fem-feminterface-getnodesoncylinder">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2237">GetNodesOnCylinder</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">p1</span></code>, <code class="docutils literal notranslate"><span class="pre">p2</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-5</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">get node numbers lying on cylinder surface; cylinder defined by cylinder axes (points p1 and p2),</div>
 <div class="line">cylinder radius and tolerance, which is accepted for points slightly outside the surface</div>
 <div class="line">if not found, it returns an empty list</div>
@@ -1099,12 +1051,10 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-getnodesoncircle"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2265">GetNodesOnCircle</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">normal</span></code>, <code class="docutils literal notranslate"><span class="pre">r</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-5</span></code>)</p>
+<p id="sec-fem-feminterface-getnodesoncircle">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2265">GetNodesOnCircle</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">normal</span></code>, <code class="docutils literal notranslate"><span class="pre">r</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-5</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">get node numbers lying on a circle, by point p, (normalized) normal vector n (which is the axis of the circle) and radius r</div>
 <div class="line">using a tolerance for the distance to the plane</div>
 <div class="line">if not found, it returns an empty list</div>
@@ -1112,20 +1062,16 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-getnodeweightsfromsurfaceareas"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2285">GetNodeWeightsFromSurfaceAreas</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeList</span></code>, <code class="docutils literal notranslate"><span class="pre">normalizeWeights</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p id="sec-fem-feminterface-getnodeweightsfromsurfaceareas">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2285">GetNodeWeightsFromSurfaceAreas</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeList</span></code>, <code class="docutils literal notranslate"><span class="pre">normalizeWeights</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">return list of node weights based on surface triangle areas; surface triangles are identified as such for which all nodes of a triangle are on the surface</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">**nodes</span></code>: requires that surface triangles have been already built during import of finite element mesh, or by calling VolumeToSurfaceElements!</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">nodeList</span></code>: list of local (Position) node numbers</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">normalizeWeights</span></code>: if True, weights are normalized to sum(weights)==1; otherwise, returned list contains areas according to nodes per</div>
 </div>
@@ -1137,7 +1083,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-getsurfacetriangles"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2337">GetSurfaceTriangles</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p id="sec-fem-feminterface-getsurfacetriangles">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2337">GetSurfaceTriangles</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1146,12 +1092,10 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-volumetosurfaceelements"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2347">VolumeToSurfaceElements</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-fem-feminterface-volumetosurfaceelements">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2347">VolumeToSurfaceElements</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">generate surface elements from volume elements</div>
 <div class="line">stores the surface in self.surface</div>
 <div class="line">only works for one element list and only for element types ‘Hex8’, ‘Hex20’, ‘Tet4’ and ‘Tet10’</div>
@@ -1159,7 +1103,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-getgyroscopicmatrix"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2476">GetGyroscopicMatrix</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationAxis</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">sparse</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p id="sec-fem-feminterface-getgyroscopicmatrix">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2476">GetGyroscopicMatrix</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationAxis</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">sparse</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1168,7 +1112,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-scalemassmatrix"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2505">ScaleMassMatrix</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">factor</span></code>)</p>
+<p id="sec-fem-feminterface-scalemassmatrix">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2505">ScaleMassMatrix</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">factor</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1177,7 +1121,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-scalestiffnessmatrix"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2509">ScaleStiffnessMatrix</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">factor</span></code>)</p>
+<p id="sec-fem-feminterface-scalestiffnessmatrix">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2509">ScaleStiffnessMatrix</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">factor</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1186,19 +1130,17 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-addelasticsupportatnode"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2515">AddElasticSupportAtNode</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber</span></code>, <code class="docutils literal notranslate"><span class="pre">springStiffness</span> <span class="pre">=</span> <span class="pre">[1e8,1e8,1e8]</span></code>)</p>
+<p id="sec-fem-feminterface-addelasticsupportatnode">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2515">AddElasticSupportAtNode</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber</span></code>, <code class="docutils literal notranslate"><span class="pre">springStiffness</span> <span class="pre">=</span> <span class="pre">[1e8,1e8,1e8]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">modify stiffness matrix to add elastic support (joint, etc.) to a node; nodeNumber zero based (as everywhere in the code…)</div>
 <div class="line">springStiffness must have length according to the node size</div>
 </div>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-addnodemass"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2531">AddNodeMass</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber</span></code>, <code class="docutils literal notranslate"><span class="pre">addedMass</span></code>)</p>
+<p id="sec-fem-feminterface-addnodemass">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2531">AddNodeMass</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeNumber</span></code>, <code class="docutils literal notranslate"><span class="pre">addedMass</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1207,7 +1149,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-createlinearfemobjectgenericode2"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2551">CreateLinearFEMObjectGenericODE2</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.9,0.4,0.4,1.]</span></code>)</p>
+<p id="sec-fem-feminterface-createlinearfemobjectgenericode2">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2551">CreateLinearFEMObjectGenericODE2</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.9,0.4,0.4,1.]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1226,7 +1168,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-createnonlinearfemobjectgenericode2ngsolve"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2594">CreateNonlinearFEMObjectGenericODE2NGsolve</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">mesh</span></code>, <code class="docutils literal notranslate"><span class="pre">density</span></code>, <code class="docutils literal notranslate"><span class="pre">youngsModulus</span></code>, <code class="docutils literal notranslate"><span class="pre">poissonsRatio</span></code>, <code class="docutils literal notranslate"><span class="pre">meshOrder</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.9,0.4,0.4,1.]</span></code>)</p>
+<p id="sec-fem-feminterface-createnonlinearfemobjectgenericode2ngsolve">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2594">CreateNonlinearFEMObjectGenericODE2NGsolve</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">mesh</span></code>, <code class="docutils literal notranslate"><span class="pre">density</span></code>, <code class="docutils literal notranslate"><span class="pre">youngsModulus</span></code>, <code class="docutils literal notranslate"><span class="pre">poissonsRatio</span></code>, <code class="docutils literal notranslate"><span class="pre">meshOrder</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.9,0.4,0.4,1.]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1235,8 +1177,6 @@ export to EXUDYN objects</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: multibody system to which the GenericODE2 is added</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mesh</span></code>: a previously created <code class="docutils literal notranslate"><span class="pre">ngs.mesh</span></code> (NGsolve mesh, see examples)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">youngsModulus</span></code>: Young’s modulus used for mechanical model</div>
@@ -1257,8 +1197,6 @@ export to EXUDYN objects</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">The interface to NETGEN/NGsolve has been created together with Joachim Schöberl, main developer</div>
 <div class="line">of NETGEN/NGsolve ; Thank’s a lot!</div>
 <div class="line">download NGsolve at: <a class="reference external" href="https://ngsolve.org/">https://ngsolve.org/</a></div>
@@ -1268,7 +1206,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-computeeigenmodes"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2700">ComputeEigenmodes</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">nModes</span></code>, <code class="docutils literal notranslate"><span class="pre">excludeRigidBodyModes</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p id="sec-fem-feminterface-computeeigenmodes">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2700">ComputeEigenmodes</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">nModes</span></code>, <code class="docutils literal notranslate"><span class="pre">excludeRigidBodyModes</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1277,8 +1215,6 @@ export to EXUDYN objects</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">nModes</span></code>: prescribe the number of modes to be computed; total computed modes are  (nModes+excludeRigidBodyModes), but only nModes with smallest absolute eigenvalues are considered and stored</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">excludeRigidBodyModes</span></code>: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">useSparseSolver</span></code>: for larger systems, the sparse solver needs to be used, which iteratively solves the problem and uses a random number generator (internally in ARPACK): therefore, results are not fully repeatable!!!</div>
@@ -1296,7 +1232,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-computeeigenmodeswithboundarynodes"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2744">ComputeEigenModesWithBoundaryNodes</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">boundaryNodes</span></code>, <code class="docutils literal notranslate"><span class="pre">nEigenModes</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p id="sec-fem-feminterface-computeeigenmodeswithboundarynodes">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2744">ComputeEigenModesWithBoundaryNodes</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">boundaryNodes</span></code>, <code class="docutils literal notranslate"><span class="pre">nEigenModes</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1305,8 +1241,6 @@ export to EXUDYN objects</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">boundaryNodes</span></code>: a list of boundary node indices, refering to ‘Position’ type nodes in FEMinterface; all coordinates of these nodes are fixed for the computation of the modes</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">nEigenModes</span></code>: prescribe the number of modes to be computed; only nEigenModes with smallest abs(eigenvalues) are considered and stored</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">useSparseSolver</span></code>: [yet NOT IMPLEMENTED] for larger systems, the sparse solver needs to be used, which iteratively solves the problem and uses a random number generator (internally in ARPACK): therefore, results are not fully repeatable!!!</div>
@@ -1319,17 +1253,15 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-computehurtycraigbamptonmodes"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2828">ComputeHurtyCraigBamptonModes</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">boundaryNodesList</span></code>, <code class="docutils literal notranslate"><span class="pre">nEigenModes</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">computationMode</span> <span class="pre">=</span> <span class="pre">HCBstaticModeSelection.RBE2</span></code>, <code class="docutils literal notranslate"><span class="pre">boundaryNodesWeights</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">excludeRigidBodyMotion</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">RBE3secondMomentOfAreaWeighting</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">verboseMode</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-fem-feminterface-computehurtycraigbamptonmodes">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L2828">ComputeHurtyCraigBamptonModes</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">boundaryNodesList</span></code>, <code class="docutils literal notranslate"><span class="pre">nEigenModes</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">computationMode</span> <span class="pre">=</span> <span class="pre">HCBstaticModeSelection.RBE2</span></code>, <code class="docutils literal notranslate"><span class="pre">boundaryNodesWeights</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">excludeRigidBodyMotion</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">RBE3secondMomentOfAreaWeighting</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">verboseMode</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-<div class="line">compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part  <span class="xref std std-ref">sec-theory-cms</span>. Note that this function may need significant time, depending on your hardware, but 50.000 nodes will require approx. 1-2 minutes and more nodes typically raise time more than linearly.</div>
+<div class="line">compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part Section <a class="reference internal" href="../../../index.html#sec-theory-cms"><span class="std std-ref">Theory: Component Mode Synthesis</span></a>. Note that this function may need significant time, depending on your hardware, but 50.000 nodes will require approx. 1-2 minutes and more nodes typically raise time more than linearly.</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">boundaryNodesList</span></code>: [nodeList0, nodeList1, …] a list of node lists, each of them representing a set of ‘Position’ nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">nEigenModes</span></code>: number of eigen modes in addition to static modes (may be zero for RBE2/RBE3 computationMode); eigen modes are computed for the case where all rigid body motions at boundaries are fixed; only smallest nEigenModes absolute eigenvalues are considered</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">useSparseSolver</span></code>: for more than approx.~500 nodes, it is recommended to use the sparse solver; dense mode not available for RBE3</div>
@@ -1352,7 +1284,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-geteigenfrequencieshz"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3236">GetEigenFrequenciesHz</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p id="sec-fem-feminterface-geteigenfrequencieshz">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3236">GetEigenFrequenciesHz</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1361,7 +1293,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-computepostprocessingmodes"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3296">ComputePostProcessingModes</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">material</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">outputVariableType</span> <span class="pre">=</span> <span class="pre">'OutputVariableType.StressLocal'</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfThreads</span> <span class="pre">=</span> <span class="pre">1</span></code>)</p>
+<p id="sec-fem-feminterface-computepostprocessingmodes">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3296">ComputePostProcessingModes</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">material</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">outputVariableType</span> <span class="pre">=</span> <span class="pre">'OutputVariableType.StressLocal'</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfThreads</span> <span class="pre">=</span> <span class="pre">1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1370,8 +1302,6 @@ export to EXUDYN objects</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">material</span></code>: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">outputVariableType</span></code>: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">numberOfThreads</span></code>: if numberOfThreads=1, it uses single threaded computation; if numberOfThreads&gt;1, it uses the multiprocessing pools functionality, which requires that all code in your main file must be encapsulated within an if clause “if __name__ == ‘__main__’:”, see examples; if numberOfThreads==-1, it uses all threads/CPUs available</div>
@@ -1389,12 +1319,10 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-computecampbelldiagram"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3414">ComputeCampbellDiagram</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">terminalFrequency</span></code>, <code class="docutils literal notranslate"><span class="pre">nEigenfrequencies</span> <span class="pre">=</span> <span class="pre">10</span></code>, <code class="docutils literal notranslate"><span class="pre">frequencySteps</span> <span class="pre">=</span> <span class="pre">25</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationAxis</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">plotDiagram</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useCorotationalFrame</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-fem-feminterface-computecampbelldiagram">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3414">ComputeCampbellDiagram</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">terminalFrequency</span></code>, <code class="docutils literal notranslate"><span class="pre">nEigenfrequencies</span> <span class="pre">=</span> <span class="pre">10</span></code>, <code class="docutils literal notranslate"><span class="pre">frequencySteps</span> <span class="pre">=</span> <span class="pre">25</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationAxis</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">plotDiagram</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useCorotationalFrame</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">compute Campbell diagram for given mechanical system</div>
 <div class="line">create a first order system Axd + Bx = 0 with x= [q,qd]’ and compute eigenvalues</div>
 <div class="line">takes mass M, stiffness K and gyroscopic matrix G from FEMinterface</div>
@@ -1403,8 +1331,6 @@ export to EXUDYN objects</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">terminalFrequency</span></code>: frequency in Hz, up to which the campbell diagram is computed</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">nEigenfrequencies</span></code>: gives the number of computed eigenfrequencies(modes), in addition to the rigid body mode 0</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">frequencySteps</span></code>: gives the number of increments (gives frequencySteps+1 total points in campbell diagram)</div>
@@ -1417,8 +1343,6 @@ export to EXUDYN objects</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">[listFrequencies, campbellFrequencies]</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">listFrequencies</span></code>: list of computed frequencies</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">campbellFrequencies</span></code>: array of campbell frequencies per eigenfrequency of system</div>
@@ -1426,7 +1350,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-checkconsistency"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3599">CheckConsistency</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+<p id="sec-fem-feminterface-checkconsistency">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3599">CheckConsistency</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1435,7 +1359,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-readmassmatrixfromansys"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3623">ReadMassMatrixFromAnsys</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">dofMappingVectorFile</span></code>, <code class="docutils literal notranslate"><span class="pre">sparse</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-fem-feminterface-readmassmatrixfromansys">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3623">ReadMassMatrixFromAnsys</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">dofMappingVectorFile</span></code>, <code class="docutils literal notranslate"><span class="pre">sparse</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1444,7 +1368,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-readstiffnessmatrixfromansys"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3637">ReadStiffnessMatrixFromAnsys</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">dofMappingVectorFile</span></code>, <code class="docutils literal notranslate"><span class="pre">sparse</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-fem-feminterface-readstiffnessmatrixfromansys">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3637">ReadStiffnessMatrixFromAnsys</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">dofMappingVectorFile</span></code>, <code class="docutils literal notranslate"><span class="pre">sparse</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1453,7 +1377,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-readnodalcoordinatesfromansys"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3651">ReadNodalCoordinatesFromAnsys</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-fem-feminterface-readnodalcoordinatesfromansys">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3651">ReadNodalCoordinatesFromAnsys</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1462,7 +1386,7 @@ export to EXUDYN objects</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-fem-feminterface-readelementsfromansys"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3656">ReadElementsFromAnsys</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-fem-feminterface-readelementsfromansys">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py#L3656">ReadElementsFromAnsys</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>

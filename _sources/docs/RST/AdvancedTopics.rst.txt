@@ -46,15 +46,15 @@ Since Q4 2021 a contact module is available in Exudyn.
 This separate module \ ``GeneralContact``\  [\ **still under development, consider with care!**\ ] is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.
 
 
-.. |cpic1| image:: ../theDoc/figures/contactTests.png
+.. _fig-contactexamples:
+.. figure:: ../theDoc/figures/contactTests.png
    :width: 45%
-
-.. |cpic2| image:: ../theDoc/figures/contactTests2.jpg
+   
+.. figure:: ../theDoc/figures/contactTests2.jpg
    :width: 45%
+  
+   Some tests and examples using \ ``GeneralContact``\ 
 
-|cpic1| |cpic2|
-
-[Some tests and examples using \ ``GeneralContact``\ ]
 
 
 
@@ -72,7 +72,7 @@ Currently, \ ``GeneralContact``\  includes:
 +  Triangles mounted on rigid bodies, in contact with Spheres [only explicit]
 +  ANCFCable2D contacting with spheres (which then represent circles in 2D) [partially implicit, needs revision]
 
-For details on the contact formulations, see  :ref:`seccontacttheory`\ .
+For details on the contact formulations, see Section :ref:`seccontacttheory`\ .
 
 
 .. _sec-overview-advanced-openvr:
@@ -84,7 +84,7 @@ The general open source libraries from Valve, see
 
    https://github.com/ValveSoftware/openvr
 
-have been linked to Exudyn . In order to get OpenVR fully integrated, you need to run \ ``setup.py``\  Exudyn with the \ ``--openvr``\  flag. For general installation instructions, see  :ref:`sec-install-installinstructions`\ .
+have been linked to Exudyn . In order to get OpenVR fully integrated, you need to run \ ``setup.py``\  Exudyn with the \ ``--openvr``\  flag. For general installation instructions, see Section :ref:`sec-install-installinstructions`\ .
 
 Running OpenVR either requires an according head mounted display (HMD) or a virtualization using, e.g., Riftcat 2 to use a mobile phone with an according adapter. Visualization settings are available in \ ``interactive.openVR``\ , but need to be considered with care.
 An example is provided in \ ``openVRengine.py``\ , showing some optimal flags like locking the model rotation, zoom or translation.

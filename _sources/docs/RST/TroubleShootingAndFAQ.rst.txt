@@ -30,5 +30,5 @@ Future goals (2022-2024) are:
 +  add 3D beams (first attempts exist; planned, Q1 2023),
 +  export equations (planned, 2024)
 
-For solved issues (and new features), see section 'Issues and Bugs',  :ref:`sec-issuetracker`\ .
+For solved issues (and new features), see section 'Issues and Bugs', Section :ref:`sec-issuetracker`\ .
 For specific open issues, see \ ``trackerlog.html``\  -- a document only intended for developers!

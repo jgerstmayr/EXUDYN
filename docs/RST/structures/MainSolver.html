@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MainSolverStatic &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Structures for structural elements" href="PyStructuralElementsDataStructures.html" />
+    <link rel="prev" title="Solver substructures" href="CSolverStructures.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.5.103.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="StructuresAndSettingsIndex.html">Structures and Settings</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="SimulationSettings.html">Simulation settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="VisualizationSettings.html">Visualization settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CSolverStructures.html">Solver substructures</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">MainSolverStatic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mainsolverimplicitsecondorder">MainSolverImplicitSecondOrder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mainsolverexplicit">MainSolverExplicit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PyStructuralElementsDataStructures.html">Structures for structural elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BeamSectionGeometry.html">BeamSectionGeometry</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.5.103.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+      <li class="breadcrumb-item active">MainSolverStatic</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/structures/MainSolver.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mainsolverstatic">
+<span id="sec-mainsolverstatic"></span><h1>MainSolverStatic<a class="headerlink" href="#mainsolverstatic" title="Permalink to this heading"></a></h1>
+<p>PyBind interface (trampoline) class for static solver. With this interface, the static solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(…), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">solver</span> <span class="pre">=</span> <span class="pre">MainSolverStatic()</span></code></p>
+</div></blockquote>
+<p>and hereafter you can access all data and functions via ‘solver’.</p>
+<p>MainSolverStatic has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>conv</strong> [type = SolverConvergenceData]:</div>
+<div class="line">all information about tolerances, errors and residua</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>it</strong> [type = SolverIterationData]:</div>
+<div class="line">all information about iterations (steps, discontinuous iteration, newton,…)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>newton</strong> [type = NewtonSettings]:</div>
+<div class="line">copy of newton settings from timeint or staticSolver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>output</strong> [type = SolverOutputData]:</div>
+<div class="line">output modes and timers for exporting solver information and solution</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>timer</strong> [type = CSolverTimer]:</div>
+<div class="line">timer which measures the CPU time of solver sub functions</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>loadStepGeometricFactor</strong> [type = Real]:</div>
+<div class="line">multiplicative load step factor; this factor is computed from loadStepGeometric parameters in SolveSystem(…)</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="mainsolverimplicitsecondorder">
+<span id="sec-mainsolverimplicitsecondorder"></span><h1>MainSolverImplicitSecondOrder<a class="headerlink" href="#mainsolverimplicitsecondorder" title="Permalink to this heading"></a></h1>
+<p>PyBind interface (trampoline) class for dynamic implicit solver. Note that this solver includes the classical Newmark method (set useNewmark True; with option of index 2 reduction) as well as the generalized-alpha method. With the interface, the dynamic implicit solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(…), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">solver</span> <span class="pre">=</span> <span class="pre">MainSolverImplicitSecondOrder()</span></code></p>
+</div></blockquote>
+<dl class="simple">
+<dt>and hereafter you can access all data and functions via ‘solver’.</dt><dd><p>In this solver, user functions are possible to extend the solver at certain parts, while keeping the overal C++ performance. User functions, which are added with SetUserFunction…(…), have the arguments (MainSolver, MainSystem, simulationSettings), except for ComputeNewtonUpdate which adds the initial flag as an additional argument and ComputeNewtonResidual, which returns the scalar residual.</p>
+</dd>
+</dl>
+<p>MainSolverImplicitSecondOrder has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>conv</strong> [type = SolverConvergenceData]:</div>
+<div class="line">all information about tolerances, errors and residua</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>it</strong> [type = SolverIterationData]:</div>
+<div class="line">all information about iterations (steps, discontinuous iteration, newton,…)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>newton</strong> [type = NewtonSettings]:</div>
+<div class="line">copy of newton settings from timeint or staticSolver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>output</strong> [type = SolverOutputData]:</div>
+<div class="line">output modes and timers for exporting solver information and solution</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>timer</strong> [type = CSolverTimer]:</div>
+<div class="line">timer which measures the CPU time of solver sub functions; note that solver structures can only be written indirectly, e.g.,  timer=dynamicSolver.timer; timer.useTimer = False; dynamicSolver.timer=timer; however, dynamicSolver.timer.useTimer cannot be written.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>alphaF</strong> [type = Real]:</div>
+<div class="line">copy of parameter in timeIntegration.generalizedAlpha</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>alphaM</strong> [type = Real]:</div>
+<div class="line">copy of parameter in timeIntegration.generalizedAlpha</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>factJacAlgorithmic</strong> [type = Real]:</div>
+<div class="line">locally computed parameter from generalizedAlpha parameters</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>newmarkBeta</strong> [type = Real]:</div>
+<div class="line">copy of parameter in timeIntegration.generalizedAlpha</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>newmarkGamma</strong> [type = Real]:</div>
+<div class="line">copy of parameter in timeIntegration.generalizedAlpha</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>spectralRadius</strong> [type = Real]:</div>
+<div class="line">copy of parameter in timeIntegration.generalizedAlpha</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="mainsolverexplicit">
+<span id="sec-mainsolverexplicit"></span><h1>MainSolverExplicit<a class="headerlink" href="#mainsolverexplicit" title="Permalink to this heading"></a></h1>
+<p>PyBind interface (trampoline) class for dynamic explicit solver. Note that this solver includes the 1st order explicit Euler scheme and the 4th order Runge-Kutta scheme with 5th order error estimation (DOPRI5). With the interface, the solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(…), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">solver</span> <span class="pre">=</span> <span class="pre">MainSolverExplicit()</span></code></p>
+</div></blockquote>
+<dl class="simple">
+<dt>and hereafter you can access all data and functions via ‘solver’.</dt><dd><p>In this solver, no user functions are possible, but you can use SolverImplicitSecondOrder instead (turning off Newton gives explicit scheme …).</p>
+</dd>
+</dl>
+<p>MainSolverExplicit has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>conv</strong> [type = SolverConvergenceData]:</div>
+<div class="line">all information about tolerances, errors and residua</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>it</strong> [type = SolverIterationData]:</div>
+<div class="line">all information about iterations (steps, discontinuous iteration, newton,…)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>output</strong> [type = SolverOutputData]:</div>
+<div class="line">output modes and timers for exporting solver information and solution</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>timer</strong> [type = CSolverTimer]:</div>
+<div class="line">timer which measures the CPU time of solver sub functions</div>
+</div>
+</li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CSolverStructures.html" class="btn btn-neutral float-left" title="Solver substructures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="PyStructuralElementsDataStructures.html" class="btn btn-neutral float-right" title="Structures for structural elements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

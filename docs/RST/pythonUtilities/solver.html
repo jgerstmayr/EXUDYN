@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: solver &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>Module: solver &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,8 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -35,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -82,6 +83,7 @@
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -94,7 +96,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn</a>
+          <a href="../../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -122,7 +124,7 @@ Most of the solvers are implemented inside the C++ core.</p>
 <li><p>Date:      2020-12-02</p></li>
 <li><p>Notes:     Solver functions are included directly in exudyn and can be used with exu.SolveStatic(…)</p></li>
 </ul>
-<p id="sec-solver-solvererrormessage"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L22">SolverErrorMessage</a>(<code class="docutils literal notranslate"><span class="pre">solver</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">isStatic</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingObjects</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingNodes</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p id="sec-solver-solvererrormessage">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L22">SolverErrorMessage</a>(<code class="docutils literal notranslate"><span class="pre">solver</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">isStatic</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingObjects</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingNodes</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -131,7 +133,7 @@ Most of the solvers are implemented inside the C++ core.</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-solver-solvestatic"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L151">SolveStatic</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">updateInitialValues</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">storeSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingItems</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p id="sec-solver-solvestatic">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L151">SolveStatic</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">updateInitialValues</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">storeSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingItems</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -140,17 +142,15 @@ Most of the solvers are implemented inside the C++ core.</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: specific simulation settings out of exu.SimulationSettings(), as described in  <span class="xref std std-ref">sec-solutionsettings</span>; use options for newton, discontinuous settings, etc., from staticSolver sub-items</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: specific simulation settings out of exu.SimulationSettings(), as described in Section <a class="reference internal" href="../structures/SimulationSettings.html#sec-solutionsettings"><span class="std std-ref">SolutionSettings</span></a>; use options for newton, discontinuous settings, etc., from staticSolver sub-items</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">updateInitialValues</span></code>: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">storeSolver</span></code>: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys[‘staticSolver’], and simulationSettings are stored as mbs.sys[‘simulationSettings’]</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
-<div class="line">returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf  <span class="xref std std-ref">sec-solversubstructures</span> and the items described in  <span class="xref std std-ref">sec-mainsolverstatic</span>)</div>
+<div class="line">returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf Section <a class="reference internal" href="../structures/CSolverStructures.html#sec-solversubstructures"><span class="std std-ref">Solver substructures</span></a> and the items described in Section <a class="reference internal" href="../structures/MainSolver.html#sec-mainsolverstatic"><span class="std std-ref">MainSolverStatic</span></a>)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -185,7 +185,7 @@ Most of the solvers are implemented inside the C++ core.</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/3SpringsDistance.py">3SpringsDistance.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCF_pipe.py">ALEANCF_pipe.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py">ANCFALEtest.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_cantilever_test.py">ANCF_cantilever_test.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_contact_circle.py">ANCF_contact_circle.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py">ANCFBeam3Dtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py">ANCFbeltDrive.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py">ANCFcontactCircleTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-solver-solvedynamic"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L214">SolveDynamic</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">solverType</span> <span class="pre">=</span> <span class="pre">exudyn.DynamicSolverType.GeneralizedAlpha</span></code>, <code class="docutils literal notranslate"><span class="pre">updateInitialValues</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">storeSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingItems</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p id="sec-solver-solvedynamic">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L214">SolveDynamic</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">solverType</span> <span class="pre">=</span> <span class="pre">exudyn.DynamicSolverType.GeneralizedAlpha</span></code>, <code class="docutils literal notranslate"><span class="pre">updateInitialValues</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">storeSolver</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showHints</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showCausingItems</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -194,10 +194,8 @@ Most of the solvers are implemented inside the C++ core.</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: specific simulation settings out of exu.SimulationSettings(), as described in  <span class="xref std std-ref">sec-solutionsettings</span>; use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special  <a class="reference internal" href="../ExudynBasics.html#sec-overview-basics-speedup"><span class="std std-ref">Performance and ways to speed up computations</span></a>)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: specific simulation settings out of exu.SimulationSettings(), as described in Section <a class="reference internal" href="../structures/SimulationSettings.html#sec-solutionsettings"><span class="std std-ref">SolutionSettings</span></a>; use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special Section <a class="reference internal" href="../ExudynBasics.html#sec-overview-basics-speedup"><span class="std std-ref">Performance and ways to speed up computations</span></a>)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">solverType</span></code>: use exudyn.DynamicSolverType to set specific solver (default=generalized alpha)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">updateInitialValues</span></code>: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">storeSolver</span></code>: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys[‘staticSolver’], and simulationSettings are stored as mbs.sys[‘simulationSettings’]</div>
@@ -207,7 +205,7 @@ Most of the solvers are implemented inside the C++ core.</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>output</em>:</div>
-<div class="line">returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf  <span class="xref std std-ref">sec-solversubstructures</span> and the items described in  <span class="xref std std-ref">sec-mainsolverstatic</span>)</div>
+<div class="line">returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf Section <a class="reference internal" href="../structures/CSolverStructures.html#sec-solversubstructures"><span class="std std-ref">Solver substructures</span></a> and the items described in Section <a class="reference internal" href="../structures/MainSolver.html#sec-mainsolverstatic"><span class="std std-ref">MainSolverStatic</span></a>)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -242,7 +240,7 @@ Most of the solvers are implemented inside the C++ core.</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/3SpringsDistance.py">3SpringsDistance.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCF_pipe.py">ALEANCF_pipe.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py">ANCFALEtest.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py">ANCFBeam3DeigTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py">ANCFBeam3Dtest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-solver-computelinearizedsystem"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L304">ComputeLinearizedSystem</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<p id="sec-solver-computelinearizedsystem">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L304">ComputeLinearizedSystem</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -251,8 +249,6 @@ Most of the solvers are implemented inside the C++ core.</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem containing the assembled system</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">useSparseSolver</span></code>: if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!); Currently, the matrices are exported only in DENSE MODE from mbs! NOTE that the sparsesolver accuracy is much less than the dense solver</div>
@@ -280,17 +276,15 @@ Most of the solvers are implemented inside the C++ core.</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py">ANCFBeam3DeigTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py">ANCFBeam3Dtest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-solver-computeode2eigenvalues"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L352">ComputeODE2Eigenvalues</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfEigenvalues</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">constrainedCoordinates</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">convert2Frequencies</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useAbsoluteValues</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p id="sec-solver-computeode2eigenvalues">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L352">ComputeODE2Eigenvalues</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings</span> <span class="pre">=</span> <span class="pre">exudyn.SimulationSettings()</span></code>, <code class="docutils literal notranslate"><span class="pre">useSparseSolver</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfEigenvalues</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">constrainedCoordinates</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">convert2Frequencies</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useAbsoluteValues</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">compute eigenvalues for unconstrained ODE2 part of mbs, not considering the effects of algebraic constraints; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState,SetSystemState, see  <a class="reference internal" href="../cInterface/SystemData.html#sec-mbs-systemdata"><span class="std std-ref">SystemData</span></a>); note that mass and stiffness matrix are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.</div>
+<div class="line">compute eigenvalues for unconstrained ODE2 part of mbs, not considering the effects of algebraic constraints; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState,SetSystemState, see Section <a class="reference internal" href="../cInterface/SystemData.html#sec-mbs-systemdata"><span class="std std-ref">SystemData</span></a>); note that mass and stiffness matrix are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-</div>
-<div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem containing the assembled system</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">useSparseSolver</span></code>: if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!); Currently, the matrices are exported only in DENSE MODE from mbs! NOTE that the sparsesolver accuracy is much less than the dense solver</div>
@@ -322,12 +316,10 @@ Most of the solvers are implemented inside the C++ core.</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py">nMassOscillatorInteractive.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py">ANCFBeam3DeigTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py">ANCFBeam3Dtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py">computeODE2EigenvaluesTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-solver-checksolverinfostatistics"><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L435">CheckSolverInfoStatistics</a>(<code class="docutils literal notranslate"><span class="pre">solverName</span></code>, <code class="docutils literal notranslate"><span class="pre">infoStat</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfEvaluations</span></code>)</p>
+<p id="sec-solver-checksolverinfostatistics">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py#L435">CheckSolverInfoStatistics</a>(<code class="docutils literal notranslate"><span class="pre">solverName</span></code>, <code class="docutils literal notranslate"><span class="pre">infoStat</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfEvaluations</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-</div>
-<div class="line-block">
 <div class="line">helper function for solvers to check e.g. if high number of memory allocations happened during simulation</div>
 <div class="line">This can happen, if large amount of sensors are attached and output is written in every time step</div>
 </div>

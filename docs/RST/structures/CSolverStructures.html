@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solver substructures &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="MainSolverStatic" href="MainSolver.html" />
+    <link rel="prev" title="Visualization settings" href="VisualizationSettings.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.5.103.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="StructuresAndSettingsIndex.html">Structures and Settings</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="SimulationSettings.html">Simulation settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="VisualizationSettings.html">Visualization settings</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Solver substructures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csolvertimer">CSolverTimer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solverlocaldata">SolverLocalData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solveriterationdata">SolverIterationData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solverconvergencedata">SolverConvergenceData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solveroutputdata">SolverOutputData</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MainSolver.html">MainSolverStatic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MainSolver.html#mainsolverimplicitsecondorder">MainSolverImplicitSecondOrder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MainSolver.html#mainsolverexplicit">MainSolverExplicit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PyStructuralElementsDataStructures.html">Structures for structural elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BeamSectionGeometry.html">BeamSectionGeometry</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.5.103.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+      <li class="breadcrumb-item active">Solver substructures</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/structures/CSolverStructures.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="solver-substructures">
+<span id="sec-solversubstructures"></span><h1>Solver substructures<a class="headerlink" href="#solver-substructures" title="Permalink to this heading"></a></h1>
+<p>This section includes structures contained in the solver, which can be accessed via the Python interface during solution or for building a customized solver in Python.</p>
+<section id="csolvertimer">
+<span id="sec-csolvertimer"></span><h2>CSolverTimer<a class="headerlink" href="#csolvertimer" title="Permalink to this heading"></a></h2>
+<p>Structure for timing in solver. Each Real variable is used to measure the CPU time which certain parts of the solver need. This structure is only active if the code is not compiled with the __FAST_EXUDYN_LINALG option and if displayComputationTime is set True. Timings will only be filled, if useTimer is True.</p>
+<p>CSolverTimer has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>AERHS</strong> [type = Real, default = 0.]:</div>
+<div class="line">time for residual evaluation of algebraic equations right-hand-side</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>errorEstimator</strong> [type = Real, default = 0.]:</div>
+<div class="line">for explicit solvers, additional evaluation</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>factorization</strong> [type = Real, default = 0.]:</div>
+<div class="line">solve or inverse</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>integrationFormula</strong> [type = Real, default = 0.]:</div>
+<div class="line">time spent for evaluation of integration formulas</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>jacobianAE</strong> [type = Real, default = 0.]:</div>
+<div class="line">jacobian of algebraic equations (not counted in sum)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>jacobianODE1</strong> [type = Real, default = 0.]:</div>
+<div class="line">jacobian w.r.t. coordinates of hacODE1 equations (not counted in sum)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>jacobianODE2</strong> [type = Real, default = 0.]:</div>
+<div class="line">jacobian w.r.t. coordinates of hacODE2 equations (not counted in sum)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>jacobianODE2_t</strong> [type = Real, default = 0.]:</div>
+<div class="line">jacobian w.r.t. coordinates_t of hacODE2 equations (not counted in sum)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>massMatrix</strong> [type = Real, default = 0.]:</div>
+<div class="line">mass matrix computation</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>newtonIncrement</strong> [type = Real, default = 0.]:</div>
+<div class="line">Jac<span class="math notranslate nohighlight">\(^{-1}\)</span> * RHS; backsubstitution</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ODE1RHS</strong> [type = Real, default = 0.]:</div>
+<div class="line">time for residual evaluation of hacODE1 right-hand-side</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ODE2RHS</strong> [type = Real, default = 0.]:</div>
+<div class="line">time for residual evaluation of hacODE2 right-hand-side</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>overhead</strong> [type = Real, default = 0.]:</div>
+<div class="line">overhead, such as initialization, copying and some matrix-vector multiplication</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>postNewton</strong> [type = Real, default = 0.]:</div>
+<div class="line">discontinuous iteration / PostNewtonStep</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>python</strong> [type = Real, default = 0.]:</div>
+<div class="line">time spent for Python functions</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>reactionForces</strong> [type = Real, default = 0.]:</div>
+<div class="line">CqT * lambda</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>total</strong> [type = Real, default = 0.]:</div>
+<div class="line">total time measured between start and end of computation (static/dynamics)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>totalJacobian</strong> [type = Real, default = 0.]:</div>
+<div class="line">time for all jacobian computations</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>useTimer</strong> [type = bool, default = True]:</div>
+<div class="line">flag to decide, whether the timer is used (true) or not</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>visualization</strong> [type = Real, default = 0.]:</div>
+<div class="line">time spent for visualization in computation thread</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>writeSolution</strong> [type = Real, default = 0.]:</div>
+<div class="line">time for writing solution</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="solverlocaldata">
+<span id="sec-solverlocaldata"></span><h2>SolverLocalData<a class="headerlink" href="#solverlocaldata" title="Permalink to this heading"></a></h2>
+<p>Solver local data structure for solution vectors, system matrices and temporary vectors and data structures.</p>
+<p>SolverLocalData has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>aAlgorithmic</strong> [type = ResizableVectorParallel]:</div>
+<div class="line">additional term needed for generalized alpha (current state)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>nAE</strong> [type = Index, default = 0]:</div>
+<div class="line">number of algebraic coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>nData</strong> [type = Index, default = 0]:</div>
+<div class="line">number of data coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>newtonSolution</strong> [type = ResizableVectorParallel]:</div>
+<div class="line">Newton decrement (computed from residual and jacobian)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>nODE1</strong> [type = Index, default = 0]:</div>
+<div class="line">number of first order ordinary diff. eq. coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>nODE2</strong> [type = Index, default = 0]:</div>
+<div class="line">number of second order ordinary diff. eq. coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>nSys</strong> [type = Index, default = 0]:</div>
+<div class="line">number of system (unknown) coordinates = nODE2+nODE1+nAE</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>startAE</strong> [type = Index, default = 0]:</div>
+<div class="line">start of algebraic coordinates, but set to zero if nAE==0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>startOfStepStateAAlgorithmic</strong> [type = ResizableVectorParallel]:</div>
+<div class="line">additional term needed for generalized alpha (startOfStep state)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>systemResidual</strong> [type = ResizableVectorParallel]:</div>
+<div class="line">system residual vector (vectors will be linked to this vector!)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>temp2ODE2</strong> [type = ResizableVectorParallel]:</div>
+<div class="line">second temporary vector for hacODE2 quantities; use in static computation</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>tempODE1F0</strong> [type = ResizableVectorParallel]:</div>
+<div class="line">temporary vector for hacODE1 Jacobian</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>tempODE1F1</strong> [type = ResizableVectorParallel]:</div>
+<div class="line">temporary vector for hacODE1 Jacobian</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>tempODE2</strong> [type = ResizableVectorParallel]:</div>
+<div class="line">temporary vector for hacODE2 quantities; use in initial accelerations and during Newton</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>tempODE2F0</strong> [type = ResizableVectorParallel]:</div>
+<div class="line">temporary vector for hacODE2 Jacobian</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>tempODE2F1</strong> [type = ResizableVectorParallel]:</div>
+<div class="line">temporary vector for hacODE2 Jacobian</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="solveriterationdata">
+<span id="sec-solveriterationdata"></span><h2>SolverIterationData<a class="headerlink" href="#solveriterationdata" title="Permalink to this heading"></a></h2>
+<p>Solver internal structure for counters, steps, step size, time, etc.; solution vectors, residuals, etc. are SolverLocalData. The given default values are overwritten by the simulationSettings when initializing the solver.</p>
+<p>SolverIterationData has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>adaptiveStep</strong> [type = bool, default = True]:</div>
+<div class="line">True: the step size may be reduced if step fails; no automatic stepsize control</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>automaticStepSize</strong> [type = bool, default = True]:</div>
+<div class="line">True: if timeIntegration.automaticStepSize == True AND chosen integrators supports automatic step size control (e.g., DOPRI5); False: constant step size used (step may be reduced if adaptiveStep=True)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>automaticStepSizeError</strong> [type = Real, default = 0]:</div>
+<div class="line">estimated error (relative to atol + rtol*solution) of last step; must be <span class="math notranslate nohighlight">\(\le 1\)</span>  for a step to be accepted</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>currentStepIndex</strong> [type = Index, default = 0]:</div>
+<div class="line">current step index; <span class="math notranslate nohighlight">\(i\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>currentStepSize</strong> [type = Real, default = 0.]:</div>
+<div class="line">stepSize of current step</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>currentTime</strong> [type = Real, default = 0.]:</div>
+<div class="line">holds the current simulation time, copy of state.current.time; interval is [startTime,tEnd]; in static solver, duration is loadStepDuration</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>discontinuousIteration</strong> [type = Index, default = 0]:</div>
+<div class="line">number of current discontinuous iteration</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>discontinuousIterationsCount</strong> [type = Index, default = 0]:</div>
+<div class="line">count total number of discontinuous iterations (min. 1 per step)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>endTime</strong> [type = Real, default = 0.]:</div>
+<div class="line">end time of static/dynamic solver</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>initialStepSize</strong> [type = Real, default = 1e-6]:</div>
+<div class="line">initial stepSize for dynamic solver; only used, if automaticStepSize is activated</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lastStepSize</strong> [type = Real, default = 0.]:</div>
+<div class="line">stepSize suggested from last step or by initial step size; only used, if automaticStepSize is activated</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>maxStepSize</strong> [type = Real, default = 0.]:</div>
+<div class="line">constant or maximum stepSize</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>minStepSize</strong> [type = Real, default = 0.]:</div>
+<div class="line">minimum stepSize for static/dynamic solver; only used, if automaticStepSize is activated</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>newtonJacobiCount</strong> [type = Index, default = 0]:</div>
+<div class="line">count total Newton jacobian computations</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>newtonSteps</strong> [type = Index, default = 0]:</div>
+<div class="line">number of current newton steps</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>newtonStepsCount</strong> [type = Index, default = 0]:</div>
+<div class="line">count total Newton steps</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>numberOfSteps</strong> [type = Index, default = 0]:</div>
+<div class="line">number of time steps (if fixed size); <span class="math notranslate nohighlight">\(n\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>recommendedStepSize</strong> [type = Real, default = -1.]:</div>
+<div class="line">recommended step size <span class="math notranslate nohighlight">\(h_{recom}\)</span> after PostNewton(…): <span class="math notranslate nohighlight">\(h_{recom} &lt; 0\)</span>: no recommendation, <span class="math notranslate nohighlight">\(h_{recom}==0\)</span>: use minimum step size, <span class="math notranslate nohighlight">\(h_{recom}&gt;0\)</span>: use specific step size, if no smaller size requested by other reason</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>rejectedAutomaticStepSizeSteps</strong> [type = tabnewline Index, default = 0]:</div>
+<div class="line">count the number of rejected steps in case of automatic step size control (rejected steps are repeated with smaller step size)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>rejectedModifiedNewtonSteps</strong> [type = Index, default = 0]:</div>
+<div class="line">count the number of rejected modified Newton steps (switch to full Newton)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>startTime</strong> [type = Real, default = 0.]:</div>
+<div class="line">time at beginning of time integration</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="solverconvergencedata">
+<span id="sec-solverconvergencedata"></span><h2>SolverConvergenceData<a class="headerlink" href="#solverconvergencedata" title="Permalink to this heading"></a></h2>
+<p>Solver internal structure for convergence information: residua, iteration loop errors and error flags. For detailed behavior of these flags, visit the source code!.</p>
+<p>SolverConvergenceData has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>contractivity</strong> [type = Real, default = 0.]:</div>
+<div class="line">Newton contractivity = geometric decay of error in every step</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>discontinuousIterationError</strong> [type = Real, default = 0.]:</div>
+<div class="line">error of discontinuous iterations (contact, friction, …) outside of Newton iteration</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>discontinuousIterationSuccessful</strong> [type = tabnewline bool, default = True]:</div>
+<div class="line">true, if last discontinuous iteration had success (failure may be recovered by adaptive step)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>errorCoordinateFactor</strong> [type = Real, default = 1.]:</div>
+<div class="line">factor may include the number of system coordinates to reduce the residual</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>jacobianUpdateRequested</strong> [type = bool, default = True]:</div>
+<div class="line">true, if a jacobian update is requested in modified Newton (determined in previous step)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lastResidual</strong> [type = Real, default = 0.]:</div>
+<div class="line">last Newton residual to determine contractivity</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>linearSolverCausingRow</strong> [type = Index, default = -1]:</div>
+<div class="line">-1 if successful, 0 … n-1, the system equation (=coordinate) index which may have caused the problem, at which the linear solver failed</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>linearSolverFailed</strong> [type = bool, default = False]:</div>
+<div class="line">true, if linear solver failed to factorize</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>massMatrixNotInvertible</strong> [type = bool, default = False]:</div>
+<div class="line">true, if mass matrix is not invertable during initialization or solution (explicit solver)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>newtonConverged</strong> [type = bool, default = False]:</div>
+<div class="line">true, if Newton has (finally) converged</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>newtonSolutionDiverged</strong> [type = bool, default = False]:</div>
+<div class="line">true, if Newton diverged (may be recovered)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>residual</strong> [type = Real, default = 0.]:</div>
+<div class="line">current Newton residual</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>stepReductionFailed</strong> [type = bool, default = False]:</div>
+<div class="line">true, if iterations over time/static steps failed (finally, cannot be recovered)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>stopNewton</strong> [type = bool, default = False]:</div>
+<div class="line">set true by Newton, if Newton was stopped, e.g., because of exceeding iterations or linear solver failed</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="solveroutputdata">
+<span id="sec-solveroutputdata"></span><h2>SolverOutputData<a class="headerlink" href="#solveroutputdata" title="Permalink to this heading"></a></h2>
+<p>Solver internal structure for output modes, output timers and counters.</p>
+<p>SolverOutputData has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>cpuLastTimePrinted</strong> [type = Real, default = 0.]:</div>
+<div class="line">CPU time when output has been printed last time</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>cpuStartTime</strong> [type = Real, default = 0.]:</div>
+<div class="line">CPU start time of computation (starts counting at computation of initial conditions)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>finishedSuccessfully</strong> [type = bool, default = False]:</div>
+<div class="line">flag is false until solver finshed successfully (can be used as external trigger)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lastDiscontinuousIterationsCount</strong> [type = tabnewline Index, default = 0]:</div>
+<div class="line">discontinuous iterations count when written to console (or file) last time</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lastImageRecorded</strong> [type = Real, default = 0.]:</div>
+<div class="line">simulation time when last image has been recorded</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lastNewtonJacobiCount</strong> [type = Index, default = 0]:</div>
+<div class="line">jacobian update count when written to console (or file) last time</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lastNewtonStepsCount</strong> [type = Index, default = 0]:</div>
+<div class="line">newton steps count when written to console (or file) last time</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lastSensorsWritten</strong> [type = Real, default = 0.]:</div>
+<div class="line">simulation time when last sensors have been written</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lastSolutionWritten</strong> [type = Real, default = 0.]:</div>
+<div class="line">simulation time when last solution has been written</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lastVerboseStepIndex</strong> [type = Index, default = 0]:</div>
+<div class="line">step index when last time written to console (or file)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>multiThreadingMode</strong> [type = Index, default = 0]:</div>
+<div class="line">multithreading mode that has been used: 0=None (serial), 1=NGsolve taskmanager, 2=MicroThreading (Exudyn)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>numberOfThreadsUsed</strong> [type = Index, default = 0]:</div>
+<div class="line">number of threads that have been used in simulation</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>sensorValuesTemp</strong> [type = ResizableVector]:</div>
+<div class="line">temporary vector for per sensor values (overwritten for every sensor; usually contains last sensor values)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>sensorValuesTemp2</strong> [type = ResizableVector]:</div>
+<div class="line">additional temporary vector for per sensor values (overwritten for every sensor; usually contains time+last sensor values)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>stepInformation</strong> [type = Index, default = 0]:</div>
+<div class="line">this is a copy of the solvers stepInformation used for console output</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>verboseMode</strong> [type = Index, default = 0]:</div>
+<div class="line">this is a copy of the solvers verboseMode used for console output</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>verboseModeFile</strong> [type = Index, default = 0]:</div>
+<div class="line">this is a copy of the solvers verboseModeFile used for file</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>writeToSolutionFile</strong> [type = bool, default = False]:</div>
+<div class="line">if false, no solution file is generated and no file is written</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>writeToSolverFile</strong> [type = bool, default = False]:</div>
+<div class="line">if false, no solver output file is generated and no file is written</div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="VisualizationSettings.html" class="btn btn-neutral float-left" title="Visualization settings" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="MainSolver.html" class="btn btn-neutral float-right" title="MainSolverStatic" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

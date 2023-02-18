@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trouble shooting and FAQ &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>Trouble shooting and FAQ &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -67,6 +67,7 @@
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -79,7 +80,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn</a>
+          <a href="../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -143,7 +144,7 @@ Exceptions and Error Messages. In the following, typical error messages are list
 <blockquote>
 <div><div class="line-block">
 <div class="line">→  … and similar messages with: ModuleNotFoundError, Warning, with AVX2, without AVX2</div>
-<div class="line">→  A known reason is that your CPU <strong>does not support AVX2</strong>, while Exudyn is compiled with the AVX2 option (not support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this).</div>
+<div class="line">→  A known reason is that your CPU <strong>does not support AVX2</strong>, while Exudyn is compiled with the AVX2 option (modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, especially Zen and Zen-2 architectures should have no problems with AVX2; however, low-cost Celeron, Pentium and older AMD processors do <strong>not</strong> support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this).</div>
 <div class="line">→  <strong>solution</strong>: the release versions without the .dev1 ending in the wheel contain C++ libraries which are compiled without AVX/AVX2; the module loader will usually detect automatically, if your CPU supports AVX/AVX2; if not, it will load the exudynCPPnoAVX.cp … .pyd file; if this does not work, try</div>
 </div>
 </div></blockquote>
@@ -186,7 +187,7 @@ Error when executing process ShowVisualizationSettingsDialog&#39;:
 ModuleNotFoundError: No module named &#39;tkinter&#39;
 
 
-|  →  see installation instructions to install missing Python modules,  :ref:`sec-install-installinstructions`\ .
+|  →  see installation instructions to install missing Python modules, Section :ref:`sec-install-installinstructions`\ .
 </pre></div>
 </div>
 <ul class="simple">
@@ -261,7 +262,7 @@ ValueError: SolveDynamic terminated
 </ul>
 <blockquote>
 <div><div class="line-block">
-<div class="line">→  see also ‘Convergence problems’,  <a class="reference internal" href="ExudynBasics.html#sec-overview-basics-convergenceproblems"><span class="std std-ref">Removing convergence problems and solver failures</span></a></div>
+<div class="line">→  see also ‘Convergence problems’, Section <a class="reference internal" href="ExudynBasics.html#sec-overview-basics-convergenceproblems"><span class="std std-ref">Removing convergence problems and solver failures</span></a></div>
 <div class="line">→  may be caused due to nonlinearity of formulation and round off errors, which restrict Newton to achieve desired tolerances; adjust  <code class="docutils literal notranslate"><span class="pre">.newton.relativeTolerance</span></code> / <code class="docutils literal notranslate"><span class="pre">.newton.absoluteTolerance</span></code> in static solver or in time integration</div>
 </div>
 </div></blockquote>
@@ -318,7 +319,7 @@ solver finished after 0.258349 seconds.
 |  →  this solver error is caused, because the nonlinear system cannot be solved using Newton&#39;s method.
 |  →  the static or dynamic solver by default tries to reduce step size to overcome this problem, but may fail finally (at minimum step size).
 |  →  possible reasons are: too large time steps (reduce step size by using more steps/second), inappropriate initial conditions, or inappropriate joints or constraints (remove joints to see if they are the reason), usually within a singular configuration. Sometimes a system may be just unsolvable in the way you set it up.
-|  →  see also &#39;Convergence problems&#39;,  :ref:`sec-overview-basics-convergenceproblems`\
+|  →  see also &#39;Convergence problems&#39;, Section :ref:`sec-overview-basics-convergenceproblems`\
 </pre></div>
 </div>
 <ul class="simple">
@@ -395,10 +396,10 @@ Solver stopped! use showHints=True to show helpful information
 </ul>
 <blockquote>
 <div><div class="line-block">
-<div class="line">→  probably you used wrong item indexes, see beginning of command interface in  <a class="reference internal" href="cInterface/CInterfaceIndex.html#sec-pcpp-command-interface"><span class="std std-ref">Python-C++ command interface</span></a>.</div>
+<div class="line">→  probably you used wrong item indexes, see beginning of command interface in Section <a class="reference internal" href="cInterface/CInterfaceIndex.html#sec-pcpp-command-interface"><span class="std std-ref">Python-C++ command interface</span></a>.</div>
 <div class="line">→  E.g., an object number <code class="docutils literal notranslate"><span class="pre">oNum</span> <span class="pre">=</span> <span class="pre">mbs.AddObject(...)</span></code> is used at a place where a <code class="docutils literal notranslate"><span class="pre">NodeIndex</span></code> is expected, e.g., <code class="docutils literal notranslate"><span class="pre">mbs.AddObject(MassPoint(nodeNumber=oNum,</span> <span class="pre">...))</span></code></div>
 <div class="line">→  Usually, this is an ERROR in your code, it does not make sense to mix up these indexes!</div>
-<div class="line">→  In the exceptional case, that you want to convert numbers, see beginning of  <a class="reference internal" href="cInterface/CInterfaceIndex.html#sec-pcpp-command-interface"><span class="std std-ref">Python-C++ command interface</span></a>.</div>
+<div class="line">→  In the exceptional case, that you want to convert numbers, see beginning of Section <a class="reference internal" href="cInterface/CInterfaceIndex.html#sec-pcpp-command-interface"><span class="std std-ref">Python-C++ command interface</span></a>.</div>
 </div>
 </div></blockquote>
 <ul class="simple">
@@ -416,7 +417,7 @@ Solver stopped! use showHints=True to show helpful information
 </ul>
 <blockquote>
 <div><div class="line-block">
-<div class="line">→  Graphics (lines, text, 3D triangular / sSTL mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object. Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time. Furthermore, ObjectGround allows to add fully user defined graphics.</div>
+<div class="line">→  Graphics (lines, text, 3D triangular / STL mesh) can be added to all BodyGraphicsData items in objects. Graphics objects which are fixed with the background can be attached to a ObjectGround object. Moving objects must be attached to the BodyGraphicsData of a moving body. Other moving bodies can be realized, e.g., by adding a ObjectGround and changing its reference with time. Furthermore, ObjectGround allows to add fully user defined graphics.</div>
 </div>
 </div></blockquote>
 <ul class="simple">

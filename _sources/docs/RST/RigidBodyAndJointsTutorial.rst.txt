@@ -106,7 +106,7 @@ Now we have defined all data for the link (rigid body). We could use \ ``mbs.Add
 
 
 which also adds a gravity load and could also set initial velocities, if wanted. 
-The \ ``nodeType``\  specifies the underlying model for the rigid body node, see  :ref:`sec-nodetype`\ .
+The \ ``nodeType``\  specifies the underlying model for the rigid body node, see Section :ref:`sec-nodetype`\ .
 We can use 
 
 +  \ ``RotationEulerParameters``\ : for fast computation, but leads to an additional algebraic equation and thus needs an implicit solver
@@ -322,7 +322,7 @@ The \ ``verboseMode``\  tells the solver the amount of output during solving. Hi
 The option \ ``simulateInRealtime``\  is used to view the model during simulation, while setting this false, the simulation finishes after fractions of a second. It should be set to false in general, while solution can be viewed using the \ ``SolutionViewer()``\ .
 With \ ``solutionWritePeriod``\  you can adjust the frequency which is used to store the solution of the whole model, which may lead to very large files and may slow down simulation, but is used in the \ ``SolutionViewer()``\  to reload the solution after simulation.
 
-In order to improve visualization, there are hundreds of options, see Visualization settings in  :ref:`sec-vsettingsgeneral`\ , some of them used here:
+In order to improve visualization, there are hundreds of options, see Visualization settings in Section :ref:`sec-vsettingsgeneral`\ , some of them used here:
 
 .. code-block:: python
 

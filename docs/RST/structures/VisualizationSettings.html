@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visualization settings &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Solver substructures" href="CSolverStructures.html" />
+    <link rel="prev" title="Simulation settings" href="SimulationSettings.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.5.103.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="StructuresAndSettingsIndex.html">Structures and Settings</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="SimulationSettings.html">Simulation settings</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Visualization settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingsgeneral">VSettingsGeneral</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingscontour">VSettingsContour</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingsnodes">VSettingsNodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingsbeams">VSettingsBeams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingskinematictree">VSettingsKinematicTree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingsbodies">VSettingsBodies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingsconnectors">VSettingsConnectors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingsmarkers">VSettingsMarkers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingsloads">VSettingsLoads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingssensors">VSettingsSensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingscontact">VSettingsContact</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingswindow">VSettingsWindow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingsdialogs">VSettingsDialogs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingsopengl">VSettingsOpenGL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingsexportimages">VSettingsExportImages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingsopenvr">VSettingsOpenVR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingsinteractive">VSettingsInteractive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualizationsettings">VisualizationSettings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="CSolverStructures.html">Solver substructures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MainSolver.html">MainSolverStatic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MainSolver.html#mainsolverimplicitsecondorder">MainSolverImplicitSecondOrder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MainSolver.html#mainsolverexplicit">MainSolverExplicit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PyStructuralElementsDataStructures.html">Structures for structural elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BeamSectionGeometry.html">BeamSectionGeometry</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.5.103.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+      <li class="breadcrumb-item active">Visualization settings</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/structures/VisualizationSettings.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="visualization-settings">
+<h1>Visualization settings<a class="headerlink" href="#visualization-settings" title="Permalink to this heading"></a></h1>
+<p>This section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see Section <a class="reference internal" href="../ExudynBasics.html#sec-overview-basics-visualizationsettings"><span class="std std-ref">Visualization settings dialog</span></a>.</p>
+<section id="vsettingsgeneral">
+<span id="sec-vsettingsgeneral"></span><h2>VSettingsGeneral<a class="headerlink" href="#vsettingsgeneral" title="Permalink to this heading"></a></h2>
+<p>General settings for visualization.</p>
+<p>VSettingsGeneral has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>autoFitScene</strong> [type = bool, default = True]:</div>
+<div class="line">automatically fit scene within startup after StartRenderer()</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>axesTiling</strong> [type = PInt, default = 12]:</div>
+<div class="line">global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>backgroundColor</strong> [type = Float4, default = [1.0,1.0,1.0,1.0], size = 4]:</div>
+<div class="line">tabnewline red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>backgroundColorBottom</strong> [type = Float4, default = [0.8,0.8,1.0,1.0], size = 4]:</div>
+<div class="line">tabnewline red, green, blue and alpha values for bottom background color in case that useGradientBackground = True</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>circleTiling</strong> [type = PInt, default = 16]:</div>
+<div class="line">global number of segments for circles; if smaller than 2, 2 segments are used (flat)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>coordinateSystemSize</strong> [type = float, default = 5.]:</div>
+<div class="line">size of coordinate system relative to font size</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>cylinderTiling</strong> [type = PInt, default = 16]:</div>
+<div class="line">global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawCoordinateSystem</strong> [type = bool, default = True]:</div>
+<div class="line">false = no coordinate system shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawWorldBasis</strong> [type = bool, default = False]:</div>
+<div class="line">true = draw world basis coordinate system at (0,0,0)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>graphicsUpdateInterval</strong> [type = float, default = 0.1]:</div>
+<div class="line">interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>minSceneSize</strong> [type = float, default = 0.1]:</div>
+<div class="line">minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>pointSize</strong> [type = float, default = 0.01]:</div>
+<div class="line">global point size (absolute)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>rendererPrecision</strong> [type = PInt, default = 4]:</div>
+<div class="line">precision of general floating point numbers shown in render window: total number of digits used  (max. 16)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>renderWindowString</strong> [type = String, default = ‘’]:</div>
+<div class="line">string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to solutionInformation in SimulationSettings.solutionSettings)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showComputationInfo</strong> [type = bool, default = True]:</div>
+<div class="line">true = show (hide) all computation information including Exudyn and version</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showHelpOnStartup</strong> [type = PInt, default = 5]:</div>
+<div class="line">seconds to show help message on startup (0=deactivate)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showSolutionInformation</strong> [type = bool, default = True]:</div>
+<div class="line">true = show solution information (from simulationSettings.solution)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showSolverInformation</strong> [type = bool, default = True]:</div>
+<div class="line">true = solver name and further information shown in render window</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showSolverTime</strong> [type = bool, default = True]:</div>
+<div class="line">true = solver current time shown in render window</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>sphereTiling</strong> [type = PInt, default = 6]:</div>
+<div class="line">global number of segments for spheres; if smaller than 2, 2 segments are used (flat)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>textAlwaysInFront</strong> [type = bool, default = True]:</div>
+<div class="line">if true, text for item numbers and other item-related text is drawn in front; this may be unwanted in case that you only with to see numbers of objects in front; currently does not work with perspective</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>textColor</strong> [type = Float4, default = [0.,0.,0.,1.0], size = 4]:</div>
+<div class="line">tabnewline general text color (default); used for system texts in render window</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>textHasBackground</strong> [type = bool, default = False]:</div>
+<div class="line">if true, text for item numbers and other item-related text have a background (depending on text color), allowing for better visibility if many numbers are shown; the text itself is black; therefore, dark background colors are ignored and shown as white</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>textOffsetFactor</strong> [type = UFloat, default = 0.005]:</div>
+<div class="line">This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>textSize</strong> [type = float, default = 12.]:</div>
+<div class="line">general text size (font size) in pixels if not overwritten; if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>threadSafeGraphicsUpdate</strong> [type = bool, default = True]:</div>
+<div class="line">true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>useBitmapText</strong> [type = bool, default = True]:</div>
+<div class="line">if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (&gt;10000) node numbers shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>useGradientBackground</strong> [type = bool, default = False]:</div>
+<div class="line">true = use vertical gradient for background;</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>useMultiThreadedRendering</strong> [type = bool, default = True]:</div>
+<div class="line">true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); set this parameter before call to exudyn.StartRenderer(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>useWindowsDisplayScaleFactor</strong> [type = bool, default = True]:</div>
+<div class="line">the Windows display scaling (monitor scaling; content scaling) factor is used for increased visibility of texts on high resolution displays; based on GLFW glfwGetWindowContentScale; deactivated on linux compilation as it leads to crashes (adjust textSize manually!)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>worldBasisSize</strong> [type = float, default = 1.0]:</div>
+<div class="line">size of world basis coordinate system</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingscontour">
+<span id="sec-vsettingscontour"></span><h2>VSettingsContour<a class="headerlink" href="#vsettingscontour" title="Permalink to this heading"></a></h2>
+<p>Settings for contour plots; use these options to visualize field data, such as displacements, stresses, strains, etc. for bodies, nodes and finite elements.</p>
+<p>VSettingsContour has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>automaticRange</strong> [type = bool, default = True]:</div>
+<div class="line">if true, the contour plot value range is chosen automatically to the maximum range</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>colorBarPrecision</strong> [type = PInt, default = 4]:</div>
+<div class="line">precision of floating point values shown in color bar; total number of digits used (max. 16)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>colorBarTiling</strong> [type = PInt, default = 12, size = 1]:</div>
+<div class="line">number of tiles (segements) shown in the colorbar for the contour plot</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>maxValue</strong> [type = float, default = 1, size = 1]:</div>
+<div class="line">maximum value for contour plot; set manually, if automaticRange == False</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>minValue</strong> [type = float, default = 0, size = 1]:</div>
+<div class="line">minimum value for contour plot; set manually, if automaticRange == False</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>nodesColored</strong> [type = bool, default = True]:</div>
+<div class="line">if true, the contour color is also applied to nodes (except mesh nodes), otherwise node drawing is not influenced by contour settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>outputVariable</strong> [type = OutputVariableType, default = OutputVariableType::_None]:</div>
+<div class="line">tabnewline selected contour plot output variable type; select OutputVariableType._None to deactivate contour plotting.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>outputVariableComponent</strong> [type = Int, default = 0, size = 1]:</div>
+<div class="line">select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; for stresses, 6 components are available, see OutputVariableType description; to draw the norm of a outputVariable, set component to -1; if a certain component is not available by certain objects or nodes, no value is drawn (using default color)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>reduceRange</strong> [type = bool, default = True]:</div>
+<div class="line">if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>rigidBodiesColored</strong> [type = bool, default = True]:</div>
+<div class="line">if true, the contour color is also applied to triangular faces of rigid bodies and mass points, otherwise the rigid body drawing are not influenced by contour settings; for general rigid bodies (except for ObjectGround), Position, Displacement, DisplacementLocal(=0), Velocity, VelocityLocal, AngularVelocity, and AngularVelocityLocal are available; may slow down visualization!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showColorBar</strong> [type = bool, default = True]:</div>
+<div class="line">show the colour bar with minimum and maximum values for the contour plot</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingsnodes">
+<span id="sec-vsettingsnodes"></span><h2>VSettingsNodes<a class="headerlink" href="#vsettingsnodes" title="Permalink to this heading"></a></h2>
+<p>Visualization settings for nodes.</p>
+<p>VSettingsNodes has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>basisSize</strong> [type = float, default = 0.2]:</div>
+<div class="line">size of basis for nodes</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>defaultColor</strong> [type = Float4, default = [0.2,0.2,1.,1.], size = 4]:</div>
+<div class="line">tabnewline default cRGB color for nodes; 4th value is alpha-transparency</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>defaultSize</strong> [type = float, default = -1.]:</div>
+<div class="line">global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawNodesAsPoint</strong> [type = bool, default = True]:</div>
+<div class="line">simplified/faster drawing of nodes; uses general-&gt;pointSize as drawing size; if drawNodesAsPoint==True, the basis of the node will be drawn with lines</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>show</strong> [type = bool, default = True]:</div>
+<div class="line">flag to decide, whether the nodes are shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showBasis</strong> [type = bool, default = False]:</div>
+<div class="line">show basis (three axes) of coordinate system in 3D nodes</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showNodalSlopes</strong> [type = UInt, default = False]:</div>
+<div class="line">draw nodal slope vectors, e.g. in ANCF beam finite elements</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showNumbers</strong> [type = bool, default = False]:</div>
+<div class="line">flag to decide, whether the node number is shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>tiling</strong> [type = PInt, default = 4]:</div>
+<div class="line">tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingsbeams">
+<span id="sec-vsettingsbeams"></span><h2>VSettingsBeams<a class="headerlink" href="#vsettingsbeams" title="Permalink to this heading"></a></h2>
+<p>Visualization settings for beam finite elements.</p>
+<p>VSettingsBeams has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>axialTiling</strong> [type = PInt, default = 8]:</div>
+<div class="line">number of segments to discretise the beams axis</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>crossSectionFilled</strong> [type = bool, default = True]:</div>
+<div class="line">if implemented for element, cross section is drawn as solid (filled) instead of wire-frame; NOTE: some quantities may not be interpolated correctly over cross section in visualization</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>crossSectionTiling</strong> [type = PInt, default = 4]:</div>
+<div class="line">number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawVertical</strong> [type = bool, default = False]:</div>
+<div class="line">draw contour plot outputVariables ‘vertical’ along beam height; contour.outputVariable must be set accordingly</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawVerticalColor</strong> [type = Float4, default = [0.2,0.2,0.2,1.], size = 4]:</div>
+<div class="line">tabnewline color for outputVariable to be drawn along cross section (vertically)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawVerticalFactor</strong> [type = float, default = 1.]:</div>
+<div class="line">factor for outputVariable to be drawn along cross section (vertically)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawVerticalLines</strong> [type = bool, default = True]:</div>
+<div class="line">draw additional vertical lines for better visibility</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawVerticalOffset</strong> [type = float, default = 0.]:</div>
+<div class="line">offset for vertical drawn lines; offset is added before multiplication with drawVerticalFactor</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawVerticalValues</strong> [type = bool, default = False]:</div>
+<div class="line">show values at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>reducedAxialInterploation</strong> [type = bool, default = True]:</div>
+<div class="line">if True, the interpolation along the beam axis may be lower than the beam element order; this may be, however, show more consistent values than a full interpolation, e.g. for strains or forces</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingskinematictree">
+<span id="sec-vsettingskinematictree"></span><h2>VSettingsKinematicTree<a class="headerlink" href="#vsettingskinematictree" title="Permalink to this heading"></a></h2>
+<p>Visualization settings for kinematic trees.</p>
+<p>VSettingsKinematicTree has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>frameSize</strong> [type = float, default = 0.2]:</div>
+<div class="line">size of COM and joint frames</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showCOMframes</strong> [type = bool, default = False]:</div>
+<div class="line">if True, a frame is attached to every center of mass</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showFramesNumbers</strong> [type = bool, default = True]:</div>
+<div class="line">if True, numbers are drawn for joint frames (O[i]J[j]) and COM frames (O[i]COM[j]) for object [i] and local joint [j]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showJointFrames</strong> [type = bool, default = True]:</div>
+<div class="line">if True, a frame is attached to the origin of every joint frame</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingsbodies">
+<span id="sec-vsettingsbodies"></span><h2>VSettingsBodies<a class="headerlink" href="#vsettingsbodies" title="Permalink to this heading"></a></h2>
+<p>Visualization settings for bodies.</p>
+<p>VSettingsBodies has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>beams</strong> [type = VSettingsBeams]:</div>
+<div class="line">visualization settings for beams (e.g. ANCFCable or other beam elements)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>kinematicTree</strong> [type = VSettingsKinematicTree]:</div>
+<div class="line">visualization settings for kinematic tree</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>defaultColor</strong> [type = Float4, default = [0.3,0.3,1.,1.], size = 4]:</div>
+<div class="line">tabnewline default cRGB color for bodies; 4th value is</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>defaultSize</strong> [type = Float3, default = [1.,1.,1.], size = 3]:</div>
+<div class="line">tabnewline global body size of xyz-cube</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>deformationScaleFactor</strong> [type = float, default = 1]:</div>
+<div class="line">global deformation scale factor; also applies to nodes, if drawn; used for scaled drawing of (linear) finite elements, beams, etc.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>show</strong> [type = bool, default = True]:</div>
+<div class="line">flag to decide, whether the bodies are shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showNumbers</strong> [type = bool, default = False]:</div>
+<div class="line">flag to decide, whether the body(=object) number is shown</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingsconnectors">
+<span id="sec-vsettingsconnectors"></span><h2>VSettingsConnectors<a class="headerlink" href="#vsettingsconnectors" title="Permalink to this heading"></a></h2>
+<p>Visualization settings for connectors.</p>
+<p>VSettingsConnectors has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>contactPointsDefaultSize</strong> [type = float, default = 0.02]:</div>
+<div class="line">DEPRECATED: do not use! global contact points size; if -1.f, connector size is relative to maxSceneSize</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>defaultColor</strong> [type = Float4, default = [0.2,0.2,1.,1.], size = 4]:</div>
+<div class="line">tabnewline default cRGB color for connectors; 4th value is alpha-transparency</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>defaultSize</strong> [type = float, default = 0.1]:</div>
+<div class="line">global connector size; if -1.f, connector size is relative to maxSceneSize</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>jointAxesLength</strong> [type = float, default = 0.2]:</div>
+<div class="line">global joint axes length</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>jointAxesRadius</strong> [type = float, default = 0.02]:</div>
+<div class="line">global joint axes radius</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>show</strong> [type = bool, default = True]:</div>
+<div class="line">flag to decide, whether the connectors are shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showContact</strong> [type = bool, default = False]:</div>
+<div class="line">flag to decide, whether contact points, lines, etc. are shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showJointAxes</strong> [type = bool, default = False]:</div>
+<div class="line">flag to decide, whether contact joint axes of 3D joints are shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showNumbers</strong> [type = bool, default = False]:</div>
+<div class="line">flag to decide, whether the connector(=object) number is shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>springNumberOfWindings</strong> [type = PInt, default = 8]:</div>
+<div class="line">number of windings for springs drawn as helical spring</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingsmarkers">
+<span id="sec-vsettingsmarkers"></span><h2>VSettingsMarkers<a class="headerlink" href="#vsettingsmarkers" title="Permalink to this heading"></a></h2>
+<p>Visualization settings for markers.</p>
+<p>VSettingsMarkers has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>defaultColor</strong> [type = Float4, default = [0.1,0.5,0.1,1.], size = 4]:</div>
+<div class="line">tabnewline default cRGB color for markers; 4th value is alpha-transparency</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>defaultSize</strong> [type = float, default = -1.]:</div>
+<div class="line">global marker size; if -1.f, marker size is relative to maxSceneSize</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawSimplified</strong> [type = bool, default = True]:</div>
+<div class="line">draw markers with simplified symbols</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>show</strong> [type = bool, default = True]:</div>
+<div class="line">flag to decide, whether the markers are shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showNumbers</strong> [type = bool, default = False]:</div>
+<div class="line">flag to decide, whether the marker numbers are shown</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingsloads">
+<span id="sec-vsettingsloads"></span><h2>VSettingsLoads<a class="headerlink" href="#vsettingsloads" title="Permalink to this heading"></a></h2>
+<p>Visualization settings for loads.</p>
+<p>VSettingsLoads has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>defaultColor</strong> [type = Float4, default = [0.7,0.1,0.1,1.], size = 4]:</div>
+<div class="line">tabnewline default cRGB color for loads; 4th value is alpha-transparency</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>defaultRadius</strong> [type = float, default = 0.005]:</div>
+<div class="line">global radius of load axis if drawn in 3D</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>defaultSize</strong> [type = float, default = 0.2]:</div>
+<div class="line">global load size; if -1.f, load size is relative to maxSceneSize</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawSimplified</strong> [type = bool, default = True]:</div>
+<div class="line">draw markers with simplified symbols</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>fixedLoadSize</strong> [type = bool, default = True]:</div>
+<div class="line">if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>loadSizeFactor</strong> [type = float, default = 0.1]:</div>
+<div class="line">if fixedLoadSize=false, then this scaling factor is used to draw the load vector</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>show</strong> [type = bool, default = True]:</div>
+<div class="line">flag to decide, whether the loads are shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showNumbers</strong> [type = bool, default = False]:</div>
+<div class="line">flag to decide, whether the load numbers are shown</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingssensors">
+<span id="sec-vsettingssensors"></span><h2>VSettingsSensors<a class="headerlink" href="#vsettingssensors" title="Permalink to this heading"></a></h2>
+<p>Visualization settings for sensors.</p>
+<p>VSettingsSensors has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>defaultColor</strong> [type = Float4, default = [0.6,0.6,0.1,1.], size = 4]:</div>
+<div class="line">tabnewline default cRGB color for sensors; 4th value is alpha-transparency</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>defaultSize</strong> [type = float, default = -1.]:</div>
+<div class="line">global sensor size; if -1.f, sensor size is relative to maxSceneSize</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawSimplified</strong> [type = bool, default = True]:</div>
+<div class="line">draw sensors with simplified symbols</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>show</strong> [type = bool, default = True]:</div>
+<div class="line">flag to decide, whether the sensors are shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showNumbers</strong> [type = bool, default = False]:</div>
+<div class="line">flag to decide, whether the sensor numbers are shown</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingscontact">
+<span id="sec-vsettingscontact"></span><h2>VSettingsContact<a class="headerlink" href="#vsettingscontact" title="Permalink to this heading"></a></h2>
+<p>Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization.</p>
+<p>VSettingsContact has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>colorBoundingBoxes</strong> [type = Float4, default = [0.9,0.1,0.1,1.], size = 4]:</div>
+<div class="line">tabnewline cRGB color</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>colorSearchTree</strong> [type = Float4, default = [0.1,0.1,0.9,1.], size = 4]:</div>
+<div class="line">tabnewline cRGB color</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>contactForcesFactor</strong> [type = float, default = 0.001]:</div>
+<div class="line">factor used for scaling of contact forces is showContactForces=True</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>contactPointsDefaultSize</strong> [type = float, default = 0.001]:</div>
+<div class="line">global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showBoundingBoxes</strong> [type = bool, default = False]:</div>
+<div class="line">show bounding boxes of all GeneralContacts</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showContactForces</strong> [type = bool, default = False]:</div>
+<div class="line">if True, contact forces are drawn for certain contact models</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showContactForcesValues</strong> [type = bool, default = False]:</div>
+<div class="line">if True and showContactForces=True, numerical values for  contact forces are shown at certain points</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showSearchTree</strong> [type = bool, default = False]:</div>
+<div class="line">show search tree of all GeneralContacts</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showSearchTreeCells</strong> [type = bool, default = False]:</div>
+<div class="line">show cells inside search tree</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingswindow">
+<span id="sec-vsettingswindow"></span><h2>VSettingsWindow<a class="headerlink" href="#vsettingswindow" title="Permalink to this heading"></a></h2>
+<p>OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.</p>
+<p>VSettingsWindow has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>alwaysOnTop</strong> [type = bool, default = False]:</div>
+<div class="line">True: OpenGL render window will be always on top of all other windows</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ignoreKeys</strong> [type = bool, default = False]:</div>
+<div class="line">True: ignore keyboard input except escape and ‘F2’ keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key ‘F2’</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>keyPressUserFunction</strong> [type = KeyPressUserFunction, default = 0]:</div>
+<div class="line">add a Python function f(key, action, mods) here, which is called every time a key is pressed; function shall return true, if key has been processed; Example: tabnewline def f(key, action, mods):tabnewline phantomXXX print(‘key=’,key);tabnewline use chr(key) to convert key codes [32 …96] to ascii; special key codes (&gt;256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>limitWindowToScreenSize</strong> [type = bool, default = True]:</div>
+<div class="line">True: render window size is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>maximize</strong> [type = bool, default = False]:</div>
+<div class="line">True: OpenGL render window will be maximized at startup</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>renderWindowSize</strong> [type = Index2, default = [1024,768], size = 2]:</div>
+<div class="line">initial size of OpenGL render window in pixel</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showMouseCoordinates</strong> [type = bool, default = False]:</div>
+<div class="line">True: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key ‘F3’</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showWindow</strong> [type = bool, default = True]:</div>
+<div class="line">True: OpenGL render window is shown on startup; False: window will be iconified at startup (e.g. if you are starting multiple computations automatically)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>startupTimeout</strong> [type = PInt, default = 2500]:</div>
+<div class="line">OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingsdialogs">
+<span id="sec-vsettingsdialogs"></span><h2>VSettingsDialogs<a class="headerlink" href="#vsettingsdialogs" title="Permalink to this heading"></a></h2>
+<p>Settings related to dialogs (e.g., visualization settings dialog).</p>
+<p>VSettingsDialogs has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>alphaTransparency</strong> [type = UFloat, default = 0.94]:</div>
+<div class="line">alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>alwaysTopmost</strong> [type = bool, default = True]:</div>
+<div class="line">True: dialogs are always topmost (otherwise, they are sometimes hidden)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>fontScalingMacOS</strong> [type = UFloat, default = 1.35]:</div>
+<div class="line">font scaling value for MacOS systems (on Windows, system display scaling is used)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>multiThreadedDialogs</strong> [type = bool, default = True]:</div>
+<div class="line">True: During dialogs, the OpenGL render window will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>openTreeView</strong> [type = bool, default = False]:</div>
+<div class="line">True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingsopengl">
+<span id="sec-vsettingsopengl"></span><h2>VSettingsOpenGL<a class="headerlink" href="#vsettingsopengl" title="Permalink to this heading"></a></h2>
+<p>OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL functionality.</p>
+<p>VSettingsOpenGL has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>drawFaceNormals</strong> [type = bool, default = False, size = 1]:</div>
+<div class="line">draws triangle normals, e.g. at center of triangles; used for debugging of faces</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawNormalsLength</strong> [type = PFloat, default = 0.1, size = 1]:</div>
+<div class="line">length of normals; used for debugging</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawVertexNormals</strong> [type = bool, default = False, size = 1]:</div>
+<div class="line">draws vertex normals; used for debugging</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>enableLight0</strong> [type = bool, default = True, size = 1]:</div>
+<div class="line">turn on/off light0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>enableLight1</strong> [type = bool, default = True, size = 1]:</div>
+<div class="line">turn on/off light1</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>enableLighting</strong> [type = bool, default = True, size = 1]:</div>
+<div class="line">generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL_LIGHTING)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>faceEdgesColor</strong> [type = Float4, default = [0.2,0.2,0.2,1.], size = 4]:</div>
+<div class="line">tabnewline global RGBA color for face edges</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>facesTransparent</strong> [type = bool, default = False, size = 1]:</div>
+<div class="line">True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>initialCenterPoint</strong> [type = Float3, default = [0.,0.,0.], size = 3]:</div>
+<div class="line">tabnewline centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>initialMaxSceneSize</strong> [type = PFloat, default = 1.]:</div>
+<div class="line">initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for ‘zoom all’ functionality and for visibility of objects; overwritten if autoFitScene = True</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>initialModelRotation</strong> [type = StdArray33F, default = [Matrix3DF[3,3,1.,0.,0., 0.,1.,0., 0.,0.,1.]], size = 3x3]:</div>
+<div class="line">tabnewline initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>initialZoom</strong> [type = UFloat, default = 1.]:</div>
+<div class="line">initial zoom of scene; overwritten/ignored if autoFitScene = True</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>light0ambient</strong> [type = float, default = 0.3, size = 1]:</div>
+<div class="line">ambient value of GL_LIGHT0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>light0constantAttenuation</strong> [type = float, default = 1.0, size = 1]:</div>
+<div class="line">constant attenuation coefficient of GL_LIGHT0, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>light0diffuse</strong> [type = float, default = 0.6, size = 1]:</div>
+<div class="line">diffuse value of GL_LIGHT0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>light0linearAttenuation</strong> [type = float, default = 0.0, size = 1]:</div>
+<div class="line">linear attenuation coefficient of GL_LIGHT0, this is a linear factor for attenuation of the light source with distance</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>light0position</strong> [type = Float4, default = [0.2,0.2,10.,0.], size = 4]:</div>
+<div class="line">tabnewline 4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>light0quadraticAttenuation</strong> [type = float, default = 0.0, size = 1]:</div>
+<div class="line">quadratic attenuation coefficient of GL_LIGHT0, this is a quadratic factor for attenuation of the light source with distance</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>light0specular</strong> [type = float, default = 0.5, size = 1]:</div>
+<div class="line">specular value of GL_LIGHT0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>light1ambient</strong> [type = float, default = 0.0 , size = 1]:</div>
+<div class="line">ambient value of GL_LIGHT1</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>light1constantAttenuation</strong> [type = float, default = 1.0, size = 1]:</div>
+<div class="line">constant attenuation coefficient of GL_LIGHT1, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); only used for lights, where last component of light position is 1</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>light1diffuse</strong> [type = float, default = 0.5, size = 1]:</div>
+<div class="line">diffuse value of GL_LIGHT1</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>light1linearAttenuation</strong> [type = float, default = 0.0, size = 1]:</div>
+<div class="line">linear attenuation coefficient of GL_LIGHT1, this is a linear factor for attenuation of the light source with distance</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>light1position</strong> [type = Float4, default = [1.,1.,-10.,0.], size = 4]:</div>
+<div class="line">tabnewline 4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>light1quadraticAttenuation</strong> [type = float, default = 0.0, size = 1]:</div>
+<div class="line">quadratic attenuation coefficient of GL_LIGHT1, this is a quadratic factor for attenuation of the light source with distance</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>light1specular</strong> [type = float, default = 0.6, size = 1]:</div>
+<div class="line">specular value of GL_LIGHT1</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lightModelAmbient</strong> [type = Float4, default = [0.,0.,0.,1.], size = 4]:</div>
+<div class="line">tabnewline global ambient light; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a])</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lightModelLocalViewer</strong> [type = bool, default = False, size = 1]:</div>
+<div class="line">select local viewer for light; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,…)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lightModelTwoSide</strong> [type = bool, default = False, size = 1]:</div>
+<div class="line">enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,…)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lineSmooth</strong> [type = bool, default = True, size = 1]:</div>
+<div class="line">draw lines smooth</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lineWidth</strong> [type = UFloat, default = 1., size = 1]:</div>
+<div class="line">width of lines used for representation of lines, circles, points, etc.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>materialAmbientAndDiffuse</strong> [type = Float4, default = [0.6,0.6,0.6,1.], size = 4]:</div>
+<div class="line">tabnewline 4f ambient color of material</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>materialShininess</strong> [type = float, default = 32., size = 1]:</div>
+<div class="line">shininess of material</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>materialSpecular</strong> [type = Float4, default = [0.6,0.6,0.6,1.], size = 4]:</div>
+<div class="line">tabnewline 4f specular color of material</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>multiSampling</strong> [type = PInt, default = 1, size = 1]:</div>
+<div class="line">NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (&lt;=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>perspective</strong> [type = UFloat, default = 0.]:</div>
+<div class="line">parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) … 0.5 (large amount of perspective); mouse coordinates will not work with perspective</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>polygonOffset</strong> [type = float, default = 0.01]:</div>
+<div class="line">general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>shadeModelSmooth</strong> [type = bool, default = True, size = 1]:</div>
+<div class="line">True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>shadow</strong> [type = UFloat, default = 0.]:</div>
+<div class="line">parameter <span class="math notranslate nohighlight">\(\in [0 ... 1]\)</span> prescribes amount of shadow for light0 (using light0position, etc.); if this parameter is different from 1, rendering of triangles becomes approx.5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>shadowPolygonOffset</strong> [type = PFloat, default = 0.1]:</div>
+<div class="line">some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showFaceEdges</strong> [type = bool, default = False, size = 1]:</div>
+<div class="line">show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showFaces</strong> [type = bool, default = True, size = 1]:</div>
+<div class="line">show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showLines</strong> [type = bool, default = True, size = 1]:</div>
+<div class="line">show lines (different from edges of faces)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showMeshEdges</strong> [type = bool, default = True, size = 1]:</div>
+<div class="line">show edges of finite elements; independent of showFaceEdges</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showMeshFaces</strong> [type = bool, default = True, size = 1]:</div>
+<div class="line">show faces of finite elements; independent of showFaces</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>textLineSmooth</strong> [type = bool, default = False, size = 1]:</div>
+<div class="line">draw lines for representation of text smooth</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>textLineWidth</strong> [type = UFloat, default = 1., size = 1]:</div>
+<div class="line">width of lines used for representation of text</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingsexportimages">
+<span id="sec-vsettingsexportimages"></span><h2>VSettingsExportImages<a class="headerlink" href="#vsettingsexportimages" title="Permalink to this heading"></a></h2>
+<p>Functionality to export images to files (PNG or TGA format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.</p>
+<p>VSettingsExportImages has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>heightAlignment</strong> [type = PInt, default = 2]:</div>
+<div class="line">alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>saveImageAsTextCircles</strong> [type = bool, default = True]:</div>
+<div class="line">export circles in save image (only in TXT format)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>saveImageAsTextLines</strong> [type = bool, default = True]:</div>
+<div class="line">export lines in save image (only in TXT format)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>saveImageAsTextTexts</strong> [type = bool, default = False]:</div>
+<div class="line">export text in save image (only in TXT format)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>saveImageAsTextTriangles</strong> [type = bool, default = False]:</div>
+<div class="line">export triangles in save image (only in TXT format)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>saveImageFileCounter</strong> [type = UInt, default = 0]:</div>
+<div class="line">current value of the counter which is used to consecutively save frames (images) with consecutive numbers</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>saveImageFileName</strong> [type = FileName, default = ‘images/frame’]:</div>
+<div class="line">filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.png, frame0001.png,…); ; directory will be created if it does not exist</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>saveImageFormat</strong> [type = String, default = ‘PNG’]:</div>
+<div class="line">format for exporting figures: currently only PNG, TGA and TXT available; while PNG and TGA represent the according image file formats, the TXT format results in a text file containing the 3D graphics data information as lists of lines, triangles, etc; PNG is not available for Ubuntu18.04 (check  use TGA has highest compatibility with all platforms</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>saveImageSingleFile</strong> [type = bool, default = False]:</div>
+<div class="line">True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>saveImageTimeOut</strong> [type = PInt, default = 5000]:</div>
+<div class="line">timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>widthAlignment</strong> [type = PInt, default = 4]:</div>
+<div class="line">alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingsopenvr">
+<span id="sec-vsettingsopenvr"></span><h2>VSettingsOpenVR<a class="headerlink" href="#vsettingsopenvr" title="Permalink to this heading"></a></h2>
+<p>Functionality to interact openVR; requires special hardware or software emulator, see steam / openVR descriptions.</p>
+<p>VSettingsOpenVR has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>actionManifestFileName</strong> [type = FileName, default = ‘C:/openVRactionsManifest.json’]:</div>
+<div class="line">tabnewline This string must contain a string representing a valid absolute path to a vr_actions.json manifest, which describes all HMD, tracker, etc. devices as given by openVR</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>enable</strong> [type = bool, default = False]:</div>
+<div class="line">True: openVR enabled (if compiled with according flag and installed openVR)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>logLevel</strong> [type = Int, default = 1]:</div>
+<div class="line">integer value setting log level of openVR: -1 (no output), 0 (error), 1 (warning), 2 (info), 3 (debug); increase log level to get more output</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>showCompanionWindow</strong> [type = bool, default = True]:</div>
+<div class="line">True: openVR will show companion window containing left and right eye view</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingsinteractive">
+<span id="sec-vsettingsinteractive"></span><h2>VSettingsInteractive<a class="headerlink" href="#vsettingsinteractive" title="Permalink to this heading"></a></h2>
+<p>Functionality to interact with render window; will include left and right mouse press actions and others in future.</p>
+<p>VSettingsInteractive has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>openVR</strong> [type = VSettingsOpenVR]:</div>
+<div class="line">openVR visualization settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>highlightColor</strong> [type = Float4, default = [0.8,0.05,0.05,0.75], size = 4]:</div>
+<div class="line">tabnewline cRGB color for highlighted item; 4th value is alpha-transparency</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>highlightItemIndex</strong> [type = Int, default = -1]:</div>
+<div class="line">index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>highlightItemType</strong> [type = ItemType, default = ItemType::_None]:</div>
+<div class="line">item type (Node, Object, …) that shall be highlighted (e.g., need to find item due to errors)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>highlightMbsNumber</strong> [type = UInt, default = 0]:</div>
+<div class="line">index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, …)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>highlightOtherColor</strong> [type = Float4, default = [0.5,0.5,0.5,0.4], size = 4]:</div>
+<div class="line">tabnewline cRGB color for other items (which are not highlighted); 4th value is alpha-transparency</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>joystickScaleRotation</strong> [type = float, default = 200.]:</div>
+<div class="line">rotation scaling factor for joystick input</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>joystickScaleTranslation</strong> [type = float, default = 6.]:</div>
+<div class="line">translation scaling factor for joystick input</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>keypressRotationStep</strong> [type = float, default = 5.]:</div>
+<div class="line">rotation increment per keypress in degree (full rotation = 360 degree)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>keypressTranslationStep</strong> [type = float, default = 0.1]:</div>
+<div class="line">translation increment per keypress relative to window size</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lockModelView</strong> [type = bool, default = False]:</div>
+<div class="line">True: all movements (with mouse/keys), rotations, zoom are disabled; initial values are considered ==&gt; initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>mouseMoveRotationFactor</strong> [type = float, default = 1.]:</div>
+<div class="line">rotation increment per 1 pixel mouse movement in degree</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>pauseWithSpacebar</strong> [type = bool, default = True]:</div>
+<div class="line">True: during simulation, space bar can be pressed to pause simulation</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>selectionHighlights</strong> [type = bool, default = True]:</div>
+<div class="line">True: mouse click highlights item (default: red)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>selectionLeftMouse</strong> [type = bool, default = True]:</div>
+<div class="line">True: left mouse click on items and show basic information</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>selectionRightMouse</strong> [type = bool, default = True]:</div>
+<div class="line">True: right mouse click on items and show dictionary (read only!)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>selectionRightMouseGraphicsData</strong> [type = tabnewline bool, default = False]:</div>
+<div class="line">True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>trackMarker</strong> [type = Int, default = -1]:</div>
+<div class="line">if valid marker index is provided and marker provides position (and orientation), the centerpoint of the scene follows the marker (and orientation); depends on trackMarkerPosition and trackMarkerOrientation; by default, only position is tracked</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>trackMarkerMbsNumber</strong> [type = Index, default = 0]:</div>
+<div class="line">number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>trackMarkerOrientation</strong> [type = Float3, default = [0.,0.,0.], size = 3]:</div>
+<div class="line">tabnewline choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>trackMarkerPosition</strong> [type = Float3, default = [1.,1.,1.], size = 3]:</div>
+<div class="line">tabnewline choose which coordinates or marker are tracked (x,y,z)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>useJoystickInput</strong> [type = bool, default = True]:</div>
+<div class="line">True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems …</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>zoomStepFactor</strong> [type = float, default = 1.15]:</div>
+<div class="line">change of zoom per keypress (keypad +/-) or mouse wheel increment</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="visualizationsettings">
+<span id="sec-visualizationsettings"></span><h2>VisualizationSettings<a class="headerlink" href="#visualizationsettings" title="Permalink to this heading"></a></h2>
+<p>Settings for visualization.</p>
+<p>VisualizationSettings has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>bodies</strong> [type = VSettingsBodies]:</div>
+<div class="line">body visualization settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>connectors</strong> [type = VSettingsConnectors]:</div>
+<div class="line">connector visualization settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>contact</strong> [type = VSettingsContact]:</div>
+<div class="line">contact visualization settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>contour</strong> [type = VSettingsContour]:</div>
+<div class="line">contour plot visualization settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>dialogs</strong> [type = VSettingsDialogs]:</div>
+<div class="line">dialogs settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>exportImages</strong> [type = VSettingsExportImages]:</div>
+<div class="line">settings for exporting (saving) images to files in order to create animations</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>general</strong> [type = VSettingsGeneral]:</div>
+<div class="line">general visualization settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>interactive</strong> [type = VSettingsInteractive]:</div>
+<div class="line">Settings for interaction with renderer</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>loads</strong> [type = VSettingsLoads]:</div>
+<div class="line">load visualization settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>markers</strong> [type = VSettingsMarkers]:</div>
+<div class="line">marker visualization settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>nodes</strong> [type = VSettingsNodes]:</div>
+<div class="line">node visualization settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>openGL</strong> [type = VSettingsOpenGL]:</div>
+<div class="line">OpenGL rendering settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>sensors</strong> [type = VSettingsSensors]:</div>
+<div class="line">sensor visualization settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>window</strong> [type = VSettingsWindow]:</div>
+<div class="line">visualization window and interaction settings</div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="SimulationSettings.html" class="btn btn-neutral float-left" title="Simulation settings" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CSolverStructures.html" class="btn btn-neutral float-right" title="Solver substructures" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

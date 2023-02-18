@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mass-Spring-Damper tutorial &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>Mass-Spring-Damper tutorial &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -60,6 +60,7 @@
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -72,7 +73,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn</a>
+          <a href="../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -144,7 +145,7 @@ Such a ground node is added via:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 </pre></div>
 </div>
-<p>In the next step, we add an object (sec:overview:modulestructure.), which provides equations for coordinates. The <code class="docutils literal notranslate"><span class="pre">MassPoint</span></code> needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:</p>
+<p>In the next step, we add an object (For the moment, we just need to know that objects either depend on one or more nodes, which are usually bodies and finite elements, or they can be connectors, which connect (the coordinates of) objects via markers, see Section <a class="reference internal" href="ModuleStructure.html#sec-overview-modulestructure"><span class="std std-ref">Module structure</span></a>.), which provides equations for coordinates. The <code class="docutils literal notranslate"><span class="pre">MassPoint</span></code> needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">massPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">MassPoint</span><span class="p">(</span><span class="n">physicsMass</span> <span class="o">=</span> <span class="n">mass</span><span class="p">,</span> <span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">n1</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -203,7 +204,7 @@ As our system is fully set, we can print the overall information and assemble th
 <span class="c1">#mbs.WaitForUserToContinue()     #wait for pressing SPACE bar to continue (in render window!)</span>
 </pre></div>
 </div>
-<p>As the simulation is still very fast, we will not see the motion of our node. Using e.g. <code class="docutils literal notranslate"><span class="pre">steps=10000000</span></code> in the lines above allows you online visualize the resulting oscillations.</p>
+<p>As the simulation is still very fast, we will not see the motion of our node. Using a very small step size of, e.g., <code class="docutils literal notranslate"><span class="pre">h=1e-7</span></code> in the lines above allows us to visualize the resulting oscillations in realtime.</p>
 <p>Finally, we start the solver, by telling which system to be solved, solver type and the simulation settings:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="n">SolveDynamic</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">simulationSettings</span><span class="p">)</span>
 </pre></div>

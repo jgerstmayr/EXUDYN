@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advanced topics &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>Advanced topics &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -71,6 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -83,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn</a>
+          <a href="../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -134,8 +135,15 @@ As this needs to be done during redraw of every frame, it is conveniently done i
 <span id="sec-overview-advanced-contact"></span><h2>Contact problems<a class="headerlink" href="#contact-problems" title="Permalink to this heading"></a></h2>
 <p>Since Q4 2021 a contact module is available in Exudyn.
 This separate module <code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code> [<strong>still under development, consider with care!</strong>] is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.</p>
-<p><a class="reference internal" href="../../_images/contactTests.png"><img alt="cpic1" src="../../_images/contactTests.png" style="width: 45%;" /></a> <a class="reference internal" href="../../_images/contactTests2.jpg"><img alt="cpic2" src="../../_images/contactTests2.jpg" style="width: 45%;" /></a></p>
-<p>[Some tests and examples using <code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code>]</p>
+<figure class="align-default" id="fig-contactexamples">
+<a class="reference internal image-reference" href="../../_images/contactTests.png"><img alt="../../_images/contactTests.png" src="../../_images/contactTests.png" style="width: 45%;" /></a>
+</figure>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="../../_images/contactTests2.jpg"><img alt="../../_images/contactTests2.jpg" src="../../_images/contactTests2.jpg" style="width: 45%;" /></a>
+<figcaption>
+<p><span class="caption-text">Some tests and examples using <code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code></span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
 <p><strong>Note</strong>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code> is (in most cases) restricted to dynamic simulation (explicit or implicit [<strong>still under development, consider with care!</strong>]) if friction is used; without friction, it also works in the static case</p></li>
@@ -148,7 +156,7 @@ This separate module <code class="docutils literal notranslate"><span class="pre
 <li><p>Triangles mounted on rigid bodies, in contact with Spheres [only explicit]</p></li>
 <li><p>ANCFCable2D contacting with spheres (which then represent circles in 2D) [partially implicit, needs revision]</p></li>
 </ul>
-<p>For details on the contact formulations, see  <span class="xref std std-ref">seccontacttheory</span>.</p>
+<p>For details on the contact formulations, see Section <a class="reference internal" href="../../index.html#seccontacttheory"><span class="std std-ref">Theory: Contact</span></a>.</p>
 </section>
 <section id="openvr">
 <span id="sec-overview-advanced-openvr"></span><h2>OpenVR<a class="headerlink" href="#openvr" title="Permalink to this heading"></a></h2>
@@ -156,7 +164,7 @@ This separate module <code class="docutils literal notranslate"><span class="pre
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/ValveSoftware/openvr">https://github.com/ValveSoftware/openvr</a></p>
 </div></blockquote>
-<p>have been linked to Exudyn . In order to get OpenVR fully integrated, you need to run <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> Exudyn with the <code class="docutils literal notranslate"><span class="pre">--openvr</span></code> flag. For general installation instructions, see  <a class="reference internal" href="RunASimpleExampleInPython.html#sec-install-installinstructions"><span class="std std-ref">Installation instructions</span></a>.</p>
+<p>have been linked to Exudyn . In order to get OpenVR fully integrated, you need to run <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> Exudyn with the <code class="docutils literal notranslate"><span class="pre">--openvr</span></code> flag. For general installation instructions, see Section <a class="reference internal" href="RunASimpleExampleInPython.html#sec-install-installinstructions"><span class="std std-ref">Installation instructions</span></a>.</p>
 <p>Running OpenVR either requires an according head mounted display (HMD) or a virtualization using, e.g., Riftcat 2 to use a mobile phone with an according adapter. Visualization settings are available in <code class="docutils literal notranslate"><span class="pre">interactive.openVR</span></code>, but need to be considered with care.
 An example is provided in <code class="docutils literal notranslate"><span class="pre">openVRengine.py</span></code>, showing some optimal flags like locking the model rotation, zoom or translation.</p>
 <p>Everything is experimental, but contributions are welcome!</p>

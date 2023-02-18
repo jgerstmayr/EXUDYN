@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mapping between local and global coordinate indices &mdash; Exudyn 1.5.100.dev1 documentation</title>
+  <title>Mapping between local and global coordinate indices &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn
+            Exudyn1.5.103.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -64,6 +64,7 @@
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
 <ul>
@@ -76,7 +77,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn</a>
+          <a href="../../index.html">Exudyn1.5.103.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -97,12 +98,12 @@
              
   <section id="mapping-between-local-and-global-coordinate-indices">
 <span id="sec-overview-ltgmapping"></span><h1>Mapping between local and global coordinate indices<a class="headerlink" href="#mapping-between-local-and-global-coordinate-indices" title="Permalink to this heading"></a></h1>
-<p>The LTG-index-mappings (coordinate transformations!) between local coordinate <strong>indices</strong>, on node or object level, and global (=system) coordinate <strong>indices</strong> follows the following rules:</p>
+<p>The LTG-index-mappings (local-to-global coordinate index mappings containing transformation from local object coordinate indices to global (system) coordinate indices; this is different for <strong>coordinate transformations</strong>!) between local coordinate <strong>indices</strong>, on node or object level, and global (=system) coordinate <strong>indices</strong> follows the following rules:</p>
 <ul class="simple">
 <li><p>LTG-index-mappings are computed during <code class="docutils literal notranslate"><span class="pre">mbs.Assemble()</span></code> and are not available before.</p></li>
 <li><p>Nodes own a global index which relates the local coordinates to global (system) coordinate. E.g., for a ODE2 node with node number <code class="docutils literal notranslate"><span class="pre">i</span></code>, this index can be obtained via the function <code class="docutils literal notranslate"><span class="pre">mbs.GetNodeODE2Index(i)</span></code>.</p></li>
 <li><p>The order of global coordinates is simply following the node numbering. If we add three nodes <code class="docutils literal notranslate"><span class="pre">NodePoint</span></code>, the system will contain 9 coordinates, where the first triple (starting index 0) belongs to node 0, the second triple (starting index 3) belongs to node 1 and the third triple (starting index 6) belongs to node 2. After <code class="docutils literal notranslate"><span class="pre">mbs.Assemble()</span></code>, you can access the system coordinates via <code class="docutils literal notranslate"><span class="pre">mbs.systemData.GetODE2Coordinates()</span></code>, which returns a numpy array with 9 coordinates, containing the initial values provided in <code class="docutils literal notranslate"><span class="pre">NodePoint</span></code> (default: zero).</p></li>
-<li><p>Objects have their own LTG-index-mappings for their respective coordinate types. The ODE2 coordinates of an object <code class="docutils literal notranslate"><span class="pre">j</span></code> can be retrieved via <code class="docutils literal notranslate"><span class="pre">mbs.systemData.GetObjectLTGODE2(j)</span></code>. For a body, these are the global ODE2 coordinates representing the body; for a connector, these are the coordinates to which the connector is linked (usually coordinates of two bodies); for a ground object, the LTG-index-mapping is empty; see also  <a class="reference internal" href="cInterface/SystemData.html#sec-systemdata-objectltg"><span class="std std-ref">SystemData: Get object LTG coordinate mappings</span></a>.</p></li>
+<li><p>Objects have their own LTG-index-mappings for their respective coordinate types. The ODE2 coordinates of an object <code class="docutils literal notranslate"><span class="pre">j</span></code> can be retrieved via <code class="docutils literal notranslate"><span class="pre">mbs.systemData.GetObjectLTGODE2(j)</span></code>. For a body, these are the global ODE2 coordinates representing the body; for a connector, these are the coordinates to which the connector is linked (usually coordinates of two bodies); for a ground object, the LTG-index-mapping is empty; see also Section <a class="reference internal" href="cInterface/SystemData.html#sec-systemdata-objectltg"><span class="std std-ref">SystemData: Get object LTG coordinate mappings</span></a>.</p></li>
 <li><p>Constraints create algebraic variables (Lagrange multipliers) automatically. For a constraint with object number <code class="docutils literal notranslate"><span class="pre">k</span></code>, the global index to algebraic variables (of AE-type) can be accessed via <code class="docutils literal notranslate"><span class="pre">mbs.systemData.GetObjectLTGAE(k)</span></code>.</p></li>
 </ul>
 </section>
