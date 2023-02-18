@@ -150,6 +150,26 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             hasPybindInterface = True
 
     if hasPybindInterface: #otherwise do not include the description into latex doc
+
+        typicalPaths = []
+        if parseInfo['typicalPaths'] != None:
+            typicalPaths = parseInfo['typicalPaths']
+            class2name = parseInfo['class']
+            class2name = class2name.replace('VSettings','') #fixes name for all visualization settings
+            # typicalPaths = typicalPaths.replace('VSettings','') #fixes name for all visualization settings
+            
+            conv = ['TimeIntegrationSettings', 'ExplicitIntegrationSettings', 'GeneralizedAlphaSettings',
+            'NewtonSettings', 'DiscontinuousSettings', 'NumericalDifferentiationSettings']
+            for c in conv:
+                if c in class2name:
+                    class2name = class2name.replace('Settings','')
+                # if c in typicalPaths:
+                #     typicalPaths.replace('Settings','')
+            
+            typicalPaths = typicalPaths.split(',')
+            for i in range(len(typicalPaths)):
+                typicalPaths[i] += '.'+class2name[0].lower() + class2name[1:]
+
         descriptionStr = parseInfo['classDescription']
         if descriptionStr[-1] != '.': descriptionStr += '. '
         
@@ -192,7 +212,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     defaultValueStr = Str2Latex(defaultValueStr, True)
 
                 plr.SystemStructuresWriteDefRow(pythonName, typeName, Str2Latex(parameter['size']), 
-                                            sString+defaultValueStr+sString, paramDescriptionStr )
+                                            sString+defaultValueStr+sString, paramDescriptionStr, 
+                                            typicalPaths=typicalPaths)
                     
                 # plr.sLatex += '    ' + pythonName + ' & '                
                 # plr.sLatex += '    ' + typeName + ' & '
@@ -228,6 +249,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 
                 plr.sLatex += '    ' + argStr + ' & '
                 plr.sLatex += '    ' + Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False) + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
+
+                plr.SystemStructuresWriteDefRow(functionName, functionType, Str2Latex(parameter['size']), argStr, 
+                                            Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False))
                 
         plr.sLatex += '	  \\end{longtable}\n'
         plr.sLatex += '	\\end{center}\n'
@@ -756,6 +780,7 @@ try: #still close file if crashes
                  'addConstructor':'',   #code added at the end of default constructor
                  'linkedClass':'',      #if not empty, this is a class member to which the python interface is linked
                  'latexText':'',        #text, which will be added before the class description (e.g., to start a new section)
+                 'typicalPaths':None,   #comma-separated typical paths
                  'cppText':''}          #code which is added before class definition
     lineDefinition = ['lineType',       #[V|F[v]]P: V...Value (=member variable), F...Function (access via member function); v ... virtual Function; P ... write Pybind11 interface
                       'pythonName',     #name which is used in python
@@ -808,14 +833,15 @@ try: #still close file if crashes
                             defName = info[0].replace(' ','')
                             #print("defname =",defName)
                             RHS = RemoveSpacesTabs(info[1])
-                            if RHS[0] == "'":
-                                RHS = RHS.strip("'")
-                            else:
-                                RHS = RHS.strip('"')
-                            if (defName != 'classDescription' and defName != 'latexText' and defName != 'cppText' and defName != 'addConstructor'):
-                                RHS = RHS.replace(' ','')
-                            if (defName == 'classDescription' or defName == 'latexText' or defName == 'cppText'):
-                                RHS = RHS.replace('\\n','\n') #enable line breaks!
+                            if RHS != None:
+                                if len(RHS) and RHS[0] == "'":
+                                    RHS = RHS.strip("'")
+                                else:
+                                    RHS = RHS.strip('"')
+                                if (defName != 'classDescription' and defName != 'latexText' and defName != 'cppText' and defName != 'addConstructor'):
+                                    RHS = RHS.replace(' ','')
+                                if (defName == 'classDescription' or defName == 'latexText' or defName == 'cppText'):
+                                    RHS = RHS.replace('\\n','\n') #enable line breaks!
                                 
                             if (defName in parseInfo):
                                 parseInfo[defName] = RHS
@@ -876,6 +902,7 @@ try: #still close file if crashes
                                     parseInfo['addConstructor'] = ''
                                     parseInfo['linkedClass'] = ''
                                     parseInfo['latexText'] = ''
+                                    parseInfo['typicalPaths'] = None #not registered ...
                                     parseInfo['cppText'] = ''
                                     parseInfo['writePybindIncludes'] = 'False'
                                     parseInfo['addDictionaryAccess'] = 'False'

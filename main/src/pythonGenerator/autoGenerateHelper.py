@@ -908,7 +908,7 @@ class PyLatexRST:
     #for SystemStructures:
         
     #one row for definition of system structures
-    def SystemStructuresWriteDefRow(self, pythonName, typeName, sSize, sDefaultVal, description):
+    def SystemStructuresWriteDefRow(self, pythonName, typeName, sSize, sDefaultVal, description, typicalPaths = []):
         #latex:
         self.sLatex += '    ' + pythonName + ' & '                
         self.sLatex += '    ' + typeName + ' & '
@@ -923,6 +923,14 @@ class PyLatexRST:
         if sSize != '':
             s += ', size = '+sSize
         s += ']:\n'
+        if typicalPaths != []:
+            s += '  | '
+            sep = ''
+            for p in typicalPaths:
+                s += sep + RSTmarkup(p+ '.' + pythonName, c='``') 
+                sep = ', '
+            s += '\n'
+            
         s += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
         self.sRST += s
         

@@ -52,6 +52,16 @@ CSolverTimer has the following items:
   | time spent for Python functions
 * | **reactionForces** [type = Real, default = 0.]:
   | CqT * lambda
+* | **Reset(...)** [type = void, default = useSolverTimer]:
+  | reset solver timings to initial state by assigning default values; useSolverTimer sets the useTimer flag
+* | **StartTimer(...)** [type = void, default = value]:
+  | start timer function for a given variable; subtracts current CPU time from value
+* | **StopTimer(...)** [type = void, default = value]:
+  | stop timer function for a given variable; adds current CPU time to value
+* | **Sum()** [type = Real]:
+  | compute sum of all timers (except for those counted multiple, e.g., jacobians
+* | **ToString()** [type = String]:
+  | converts the current timings to a string
 * | **total** [type = Real, default = 0.]:
   | total time measured between start and end of computation (static/dynamics)
 * | **totalJacobian** [type = Real, default = 0.]:
@@ -76,6 +86,10 @@ SolverLocalData has the following items:
 
 * | **aAlgorithmic** [type = ResizableVectorParallel]:
   | additional term needed for generalized alpha (current state)
+* | **CleanUpMemory()** [type = void]:
+  | if desired, temporary data is cleaned up to safe memory
+* | **GetLinearSolverType()** [type = LinearSolverType]:
+  | return current linear solver type (dense/sparse)
 * | **nAE** [type = Index, default = 0]:
   | number of algebraic coordinates
 * | **nData** [type = Index, default = 0]:
@@ -88,6 +102,8 @@ SolverLocalData has the following items:
   | number of second order ordinary diff. eq. coordinates
 * | **nSys** [type = Index, default = 0]:
   | number of system (unknown) coordinates = nODE2+nODE1+nAE
+* | **SetLinearSolverType(...)** [type = void, default = linearSolverType, reuseAnalyzedPattern]:
+  | set linear solver type and matrix version: links system matrices to according dense/sparse versions
 * | **startAE** [type = Index, default = 0]:
   | start of algebraic coordinates, but set to zero if nAE==0
 * | **startOfStepStateAAlgorithmic** [type = ResizableVectorParallel]:
@@ -160,6 +176,8 @@ SolverIterationData has the following items:
   | count the number of rejected modified Newton steps (switch to full Newton)
 * | **startTime** [type = Real, default = 0.]:
   | time at beginning of time integration
+* | **ToString()** [type = String]:
+  | convert iteration statistics to string; used for displayStatistics option
 
 
 
@@ -180,6 +198,8 @@ SolverConvergenceData has the following items:
   | true, if last discontinuous iteration had success (failure may be recovered by adaptive step)
 * | **errorCoordinateFactor** [type = Real, default = 1.]:
   | factor may include the number of system coordinates to reduce the residual
+* | **InitializeData()** [type = void]:
+  | initialize SolverConvergenceData by assigning default values
 * | **jacobianUpdateRequested** [type = bool, default = True]:
   | true, if a jacobian update is requested in modified Newton (determined in previous step)
 * | **lastResidual** [type = Real, default = 0.]:
@@ -218,6 +238,8 @@ SolverOutputData has the following items:
   | CPU start time of computation (starts counting at computation of initial conditions)
 * | **finishedSuccessfully** [type = bool, default = False]:
   | flag is false until solver finshed successfully (can be used as external trigger)
+* | **InitializeData()** [type = void]:
+  | initialize SolverOutputData by assigning default values
 * | **lastDiscontinuousIterationsCount** [type = \tabnewline Index, default = 0]:
   | discontinuous iterations count when written to console (or file) last time
 * | **lastImageRecorded** [type = Real, default = 0.]:

@@ -41,6 +41,9 @@ extensions = [
 ]
 #html_theme_path = ["_themes", ]
 
+#for custom layout:
+templates_path = ["_templates"]
+
 #rtd:
 if html_theme == "sphinx_rtd_theme":
     html_static_path = ['docs/_static']

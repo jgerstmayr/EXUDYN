@@ -22,6 +22,7 @@
 # classDescription = "parameters for CSystem"
 # class = System2
 # parentClass = System
+# typicalPaths = simulationSettings. ... #use comma-separated paths to be shown in description
 # latexText = ""        #text, which will be added before the class description (e.g., to start a new section)
 # cppText = ""          #code which is added before class definition
 # addConstructor = "",   #code added to default constructor
@@ -80,6 +81,7 @@ writeFile=BeamSectionGeometry.h
 class = SolutionSettings
 #appendToFile=True #not done in first class
 writePybindIncludes = True
+typicalPaths = simulationSettings
 latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Simulation settings}\nThis section includes hierarchical structures for simulation settings, e.g., time integration, static solver, Newton iteration and solution file export.\n"
 classDescription = "General settings for exporting the solution (results) of a simulation."
 #V|F, pythonName,          cplusplusName,   size, type,                     defaultValue,args,  cFlags, parameterDescription
@@ -126,6 +128,7 @@ writeFile=SimulationSettings.h
 class = NumericalDifferentiationSettings
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = simulationSettings.timeIntegration.newton,simulationSettings.staticSolver.newton
 classDescription = "Settings for numerical differentiation of a function (needed for computation of numerical jacobian e.g. in implizit integration)."
 #V|F, pythonName,          cplusplusName,  size,   type,                    defaultValue,args,cFlags,   parameterDescription
 V,  addReferenceCoordinatesToEpsilon,   ,       , bool,                     false,      ,       P   , "True: for the size estimation of the differentiation parameter, the reference coordinate $q^{Ref}_i$ is added to \hac{ODE2} coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter"
@@ -143,6 +146,7 @@ writeFile=SimulationSettings.h
 class = DiscontinuousSettings
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = simulationSettings.timeIntegration,simulationSettings.staticSolver
 classDescription = "Settings for discontinuous iterations, as in contact, friction, plasticity and general switching phenomena."
 #V|F, pythonName,          cplusplusName,  size,   type,                    defaultValue,args,cFlags,   parameterDescription
 V,  ignoreMaxIterations,                ,       , bool,                     true,       ,       P   , "continue solver if maximum number of discontinuous (post Newton) iterations is reached (ignore tolerance)"
@@ -156,6 +160,7 @@ writeFile=SimulationSettings.h
 class = NewtonSettings
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = simulationSettings.timeIntegration,simulationSettings.staticSolver
 classDescription = "Settings for Newton method used in static or dynamic simulation."
 #V|F, pythonName,          cplusplusName,  size,   type,                    defaultValue,args,cFlags,   parameterDescription
 V,  numericalDifferentiation,, , NumericalDifferentiationSettings,          ,           ,       PS  , "numerical differentiation parameters for numerical jacobian (e.g. Newton in static solver or implicit time integration)"
@@ -180,6 +185,7 @@ writeFile=SimulationSettings.h
 class = GeneralizedAlphaSettings
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = simulationSettings.timeIntegration
 classDescription = "Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods."
 #V|F, pythonName,          cplusplusName,  size,   type,                    defaultValue,args,cFlags,   parameterDescription
 V,  newmarkBeta,                        ,       , UReal,                    0.25,       ,       P   , "value beta for Newmark method; default value beta = $\frac 1 4$ corresponds to (undamped) trapezoidal rule"
@@ -197,6 +203,7 @@ writeFile=SimulationSettings.h
 class = ExplicitIntegrationSettings
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = simulationSettings.timeIntegration
 classDescription = "Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods."
 #V|F, pythonName,          cplusplusName,  size,   type,                    defaultValue,args,cFlags,   parameterDescription
 V,  dynamicSolverType,                  ,       , DynamicSolverType,"DynamicSolverType::DOPRI5",,P  , "selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, ...), for detailed description see DynamicSolverType, \refSection{sec:DynamicSolverType}, but only referring to explicit solvers."
@@ -210,6 +217,7 @@ writeFile=SimulationSettings.h
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = TimeIntegrationSettings
 appendToFile=True
+typicalPaths = simulationSettings
 classDescription = "General parameters used in time integration; specific parameters are provided in the according solver settings, e.g. for generalizedAlpha."
 writePybindIncludes = True
 #V|F, pythonName,          cplusplusName,  size,   type,                    defaultValue,args,cFlags,   parameterDescription
@@ -253,6 +261,7 @@ writeFile=SimulationSettings.h
 class = StaticSolverSettings
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = simulationSettings
 classDescription = "Settings for static solver linear or nonlinear (Newton)."
 #V|F, pythonName,          cplusplusName,  size,   type,                    defaultValue,args,cFlags,   parameterDescription
 V,  newton,                         ,               , NewtonSettings,       ,  , PS     , "parameters for Newton method (e.g. in static solver or time integration)"
@@ -283,6 +292,7 @@ writeFile=SimulationSettings.h
 class = LinearSolverSettings
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = simulationSettings
 classDescription = "Settings for linear solver, both dense and sparse (Eigen)."
 #V|F, pythonName,          cplusplusName,  size,   type,                    defaultValue,args,cFlags,   parameterDescription
 V,  pivotTreshold,                  ,               , PReal,                0,    ,P    , "treshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity"
@@ -297,6 +307,7 @@ writeFile=SimulationSettings.h
 class = Parallel
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = simulationSettings
 classDescription = "Settings for linear solver, both dense and sparse (Eigen)."
 #V|F, pythonName,          cplusplusName,  size,   type,                    defaultValue,args,cFlags,   parameterDescription
 V,  numberOfThreads,                ,                 , PInt,                 1,    ,P    , "number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores)"
@@ -318,6 +329,7 @@ class = SimulationSettings
 appendToFile=True
 addDictionaryAccess = True
 writePybindIncludes = True
+typicalPaths = 
 classDescription = "General Settings for simulation; according settings for solution and solvers are given in subitems of this structure"
 #V|F, pythonName,                      cplusplusName,   size, type,                    defaultValue,args, cFlags, parameterDescription
 V,  linearSolverSettings,            ,                  , LinearSolverSettings,          , , PS       , "linear solver parameters (used for dense and sparse solvers)"
@@ -353,6 +365,7 @@ class = VSettingsGeneral
 appendToFile=False
 latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsection{Visualization settings}\nThis section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see \refSection{sec:overview:basics:visualizationsettings}.\n"
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
 classDescription = "General settings for visualization."
 #V|F,   pythonName,                     cplusplusName,     size, type,          defaultValue,args,      cFlags, parameterDescription
 V,      graphicsUpdateInterval,         ,                  ,     float,        "0.1f",                 , P,      "interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed"
@@ -393,6 +406,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsContour
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
 classDescription = "Settings for contour plots; use these options to visualize field data, such as displacements, stresses, strains, etc. for bodies, nodes and finite elements."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 V,      outputVariableComponent,        ,                  1,    Int,          "0",                    , P,      "select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; for stresses, 6 components are available, see OutputVariableType description; to draw the norm of a outputVariable, set component to -1; if a certain component is not available by certain objects or nodes, no value is drawn (using default color)"
@@ -413,6 +427,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsNodes
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
 classDescription = "Visualization settings for nodes."
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
 V,      show,                       ,                  ,     bool,         true,                     , P,      "flag to decide, whether the nodes are shown"
@@ -432,6 +447,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsBeams
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings.bodies
 classDescription = "Visualization settings for beam finite elements."
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
 V,      axialTiling,                ,                  ,     PInt,          "8",                      , P,       "number of segments to discretise the beams axis"
@@ -452,6 +468,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsKinematicTree
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings.bodies
 classDescription = "Visualization settings for kinematic trees."
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
 V,      showCOMframes,              ,                  ,     bool,          false,                    , P,       "if True, a frame is attached to every center of mass"
@@ -466,6 +483,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsBodies
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
 classDescription = "Visualization settings for bodies."
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
 V,      show,                       ,                  ,     bool,         true,                       , P,    "flag to decide, whether the bodies are shown"
@@ -483,6 +501,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsConnectors
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
 classDescription = "Visualization settings for connectors."
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
 V,      show,                       ,                  ,     bool,         true,                       , P,    "flag to decide, whether the connectors are shown"
@@ -503,6 +522,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsMarkers
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
 classDescription = "Visualization settings for markers."
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
 V,      show,                       ,                  ,     bool,         true,                       , P,    "flag to decide, whether the markers are shown"
@@ -517,6 +537,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsLoads
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
 classDescription = "Visualization settings for loads."
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
 V,      show,                       ,                  ,     bool,         true,                       , P,    "flag to decide, whether the loads are shown"
@@ -534,6 +555,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsSensors
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
 classDescription = "Visualization settings for sensors."
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
 V,      show,                       ,                  ,     bool,         true,                       , P,    "flag to decide, whether the sensors are shown"
@@ -548,6 +570,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsContact
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
 classDescription = "Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization"
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
 #      showContactObjects,         ,                  ,     bool,         true,                       , P,    "show or hide contact objects in all GeneralContacts"
@@ -569,6 +592,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsWindow
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
 classDescription = "OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 V,      renderWindowSize,               ,                  2,    Index2,       "Index2({1024,768})",   , P,      "initial size of OpenGL render window in pixel"
@@ -589,6 +613,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsDialogs
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
 classDescription = "Settings related to dialogs (e.g., visualization settings dialog)."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 V,      multiThreadedDialogs,           ,                  ,     bool,         true,                   , P,      "True: During dialogs, the OpenGL render window will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed"
@@ -603,6 +628,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsOpenGL
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
 classDescription = "OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL functionality"
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 V,      initialCenterPoint,             ,                  3,    Float3,       "Float3({0.f,0.f,0.f})",, P,      "centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True"
@@ -667,6 +693,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsExportImages
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
 classDescription = "Functionality to export images to files (PNG or TGA format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 V,      saveImageTimeOut,               ,                  ,     PInt,         "5000",                 , P,      "timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes"
@@ -689,6 +716,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsOpenVR
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings.interactive
 classDescription = "Functionality to interact openVR; requires special hardware or software emulator, see steam / openVR descriptions"
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 #have been in VSettingsWindows earlier:
@@ -703,6 +731,7 @@ writeFile=VisualizationSettings.h
 class = VSettingsInteractive
 appendToFile=True
 writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
 classDescription = "Functionality to interact with render window; will include left and right mouse press actions and others in future."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 #have been in VSettingsWindows earlier:
@@ -741,6 +770,7 @@ class = VisualizationSettings
 appendToFile=True
 writePybindIncludes = True
 addDictionaryAccess = True
+typicalPaths = 
 classDescription = "Settings for visualization"
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 #

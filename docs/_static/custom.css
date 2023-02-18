@@ -2,3 +2,17 @@ code.literal {
     color: #202020 !important;
     background-color: #f8f8f8 !important;
 }
+
+.wy-nav-content {
+    max-width: 4000px !important;
+}
+
+.wy-table-responsive table td {
+    /* !important prevents the common CSS stylesheets from overriding
+    this as on RTD they are loaded after this stylesheet */
+    white-space: normal !important;
+}
+
+.wy-table-responsive {
+    overflow: visible !important;
+}
