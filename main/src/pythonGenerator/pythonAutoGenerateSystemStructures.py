@@ -214,13 +214,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 plr.SystemStructuresWriteDefRow(pythonName, typeName, Str2Latex(parameter['size']), 
                                             sString+defaultValueStr+sString, paramDescriptionStr, 
                                             typicalPaths=typicalPaths)
-                    
-                # plr.sLatex += '    ' + pythonName + ' & '                
-                # plr.sLatex += '    ' + typeName + ' & '
-                # plr.sLatex += '    ' + Str2Latex(parameter['size']) + ' & '
-                # plr.sLatex += '    ' + sString+defaultValueStr+sString + ' & '
-                # plr.sLatex += '    ' + paramDescriptionStr + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
-                
+                                
 
             if (parameter['lineType'].find('F') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a function
                 #write latex doc:

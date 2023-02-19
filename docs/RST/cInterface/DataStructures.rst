@@ -30,7 +30,7 @@ The MatrixContainer is a versatile representation for dense and sparse matrices.
    #Set with dense pyArray (a numpy array): 
    mc.SetWithDenseMatrix(pyArray, useDenseMatrix = True)
 
-\ The class **MatrixContainer** has the follwing **functions and structures**:
+\ The class **MatrixContainer** has the following **functions and structures**:
 
 * | **SetWithDenseMatrix**\ (\ *pyArray*\ , \ *useDenseMatrix*\  = False): 
   | set MatrixContainer with dense numpy array; array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)
@@ -66,7 +66,7 @@ Usage:
 
 
 
-\ The class **Vector3DList** has the follwing **functions and structures**:
+\ The class **Vector3DList** has the following **functions and structures**:
 
 * | **Append**\ (\ *pyArray*\ ): 
   | add single array or list to Vector3DList; array or list must have appropriate dimension!
@@ -103,7 +103,7 @@ Usage:
 
 
 
-\ The class **Vector2DList** has the follwing **functions and structures**:
+\ The class **Vector2DList** has the following **functions and structures**:
 
 * | **Append**\ (\ *pyArray*\ ): 
   | add single array or list to Vector2DList; array or list must have appropriate dimension!
@@ -135,7 +135,7 @@ Usage:
 
 
 
-\ The class **Vector6DList** has the follwing **functions and structures**:
+\ The class **Vector6DList** has the following **functions and structures**:
 
 * | **Append**\ (\ *pyArray*\ ): 
   | add single array or list to Vector6DList; array or list must have appropriate dimension!
@@ -171,7 +171,7 @@ Usage:
 
 
 
-\ The class **Matrix3DList** has the follwing **functions and structures**:
+\ The class **Matrix3DList** has the following **functions and structures**:
 
 * | **Append**\ (\ *pyArray*\ ): 
   | add single 3D array or list of lists to Matrix3DList; array or lists must have appropriate dimension!
@@ -207,7 +207,7 @@ Usage:
 
 
 
-\ The class **Matrix6DList** has the follwing **functions and structures**:
+\ The class **Matrix6DList** has the following **functions and structures**:
 
 * | **Append**\ (\ *pyArray*\ ): 
   | add single 6D array or list of lists to Matrix6DList; array or lists must have appropriate dimension!

@@ -312,14 +312,14 @@ mbs = SC.AddSystem()
     \texttt{def PreStepUserFunction(mbs, t):\tabnewline
      \phantom{XXXX} print(mbs.systemData.NumberOfNodes())\tabnewline
      \phantom{XXXX} if(t>1): \tabnewline
-     \phantom{XXXX} \phantom{XXXX} return False \tabnewline
+     \phantom{XXXX}  \phantom{XXXX} return False \tabnewline
      \phantom{XXXX} return True \tabnewline
      mbs.SetPreStepUserFunction(PreStepUserFunction)}}\\ \hline 
   SetPostNewtonUserFunction() & Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{def PostNewtonUserFunction(mbs, t):\tabnewline
      \phantom{XXXX} if(t>1): \tabnewline
-     \phantom{XXXX} \phantom{XXXX} return [0, 1e-6] \tabnewline
+     \phantom{XXXX}  \phantom{XXXX} return [0, 1e-6] \tabnewline
      \phantom{XXXX} return [0,0] \tabnewline
      mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)}}\\ \hline 
   AddGeneralContact() & add a new general contact, used to enable efficient contact computation between objects (nodes or markers)\\ \hline 
@@ -370,7 +370,7 @@ nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
     {\textquotesingle}referenceCoordinates{\textquotesingle}: [1.0, 0.0, 0.0], \tabnewline
     {\textquotesingle}initialCoordinates{\textquotesingle}: [0.0, 2.0, 0.0], \tabnewline
     {\textquotesingle}name{\textquotesingle}: {\textquotesingle}example node{\textquotesingle}\} \tabnewline
-     mbs.AddNode(nodeDict)}}\\ \hline 
+    mbs.AddNode(nodeDict)}}\\ \hline 
   GetNodeNumber(nodeName) & get node's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{n = mbs.GetNodeNumber({\textquotesingle}example node{\textquotesingle})}}\\ \hline 
@@ -436,7 +436,7 @@ mbs.AddObject(ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))
     {\textquotesingle}physicsMass{\textquotesingle}: 10, \tabnewline
     {\textquotesingle}nodeNumber{\textquotesingle}: 0, \tabnewline
     {\textquotesingle}name{\textquotesingle}: {\textquotesingle}example object{\textquotesingle}\} \tabnewline
-     mbs.AddObject(objectDict)}}\\ \hline 
+    mbs.AddObject(objectDict)}}\\ \hline 
   GetObjectNumber(objectName) & get object's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{n = mbs.GetObjectNumber({\textquotesingle}heavy object{\textquotesingle})}}\\ \hline 
@@ -495,9 +495,9 @@ mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
     \texttt{item = MarkerNodePosition(name={\textquotesingle}my marker{\textquotesingle},nodeNumber=1) \tabnewline
     mbs.AddMarker(item)\tabnewline
     markerDict = \{{\textquotesingle}markerType{\textquotesingle}: {\textquotesingle}NodePosition{\textquotesingle}, \tabnewline
-     {\textquotesingle}nodeNumber{\textquotesingle}: 0, \tabnewline
-     {\textquotesingle}name{\textquotesingle}: {\textquotesingle}position0{\textquotesingle}\}\tabnewline
-     mbs.AddMarker(markerDict)}}\\ \hline 
+      {\textquotesingle}nodeNumber{\textquotesingle}: 0, \tabnewline
+      {\textquotesingle}name{\textquotesingle}: {\textquotesingle}position0{\textquotesingle}\}\tabnewline
+    mbs.AddMarker(markerDict)}}\\ \hline 
   GetMarkerNumber(markerName) & get marker's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{n = mbs.GetMarkerNumber({\textquotesingle}my marker{\textquotesingle})}}\\ \hline 
@@ -549,10 +549,10 @@ mbs.AddLoad(Force(markerNumber = mMP, loadVector=[0.001,0,0]))
     \texttt{item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name={\textquotesingle}heavy load{\textquotesingle})) \tabnewline
     mbs.AddLoad(item)\tabnewline
     loadDict = \{{\textquotesingle}loadType{\textquotesingle}: {\textquotesingle}ForceVector{\textquotesingle},\tabnewline
-     {\textquotesingle}markerNumber{\textquotesingle}: 0,\tabnewline
-     {\textquotesingle}loadVector{\textquotesingle}: [1.0, 0.0, 0.0],\tabnewline
-     {\textquotesingle}name{\textquotesingle}: {\textquotesingle}heavy load{\textquotesingle}\} \tabnewline
-     mbs.AddLoad(loadDict)}}\\ \hline 
+      {\textquotesingle}markerNumber{\textquotesingle}: 0,\tabnewline
+      {\textquotesingle}loadVector{\textquotesingle}: [1.0, 0.0, 0.0],\tabnewline
+      {\textquotesingle}name{\textquotesingle}: {\textquotesingle}heavy load{\textquotesingle}\} \tabnewline
+    mbs.AddLoad(loadDict)}}\\ \hline 
   GetLoadNumber(loadName) & get load's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{n = mbs.GetLoadNumber({\textquotesingle}heavy load{\textquotesingle})}}\\ \hline 
@@ -608,10 +608,10 @@ PlotSensor(mbs, sMP, components=[0,1,2])
     \texttt{item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name={\textquotesingle}test sensor{\textquotesingle})) \tabnewline
     mbs.AddSensor(item)\tabnewline
     sensorDict = \{{\textquotesingle}sensorType{\textquotesingle}: {\textquotesingle}Node{\textquotesingle},\tabnewline
-     {\textquotesingle}nodeNumber{\textquotesingle}: 0,\tabnewline
-     {\textquotesingle}fileName{\textquotesingle}: {\textquotesingle}sensor.txt{\textquotesingle},\tabnewline
-     {\textquotesingle}name{\textquotesingle}: {\textquotesingle}test sensor{\textquotesingle}\} \tabnewline
-     mbs.AddSensor(sensorDict)}}\\ \hline 
+      {\textquotesingle}nodeNumber{\textquotesingle}: 0,\tabnewline
+      {\textquotesingle}fileName{\textquotesingle}: {\textquotesingle}sensor.txt{\textquotesingle},\tabnewline
+      {\textquotesingle}name{\textquotesingle}: {\textquotesingle}test sensor{\textquotesingle}\} \tabnewline
+    mbs.AddSensor(sensorDict)}}\\ \hline 
   GetSensorNumber(sensorName) & get sensor's number by name (string)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{n = mbs.GetSensorNumber({\textquotesingle}test sensor{\textquotesingle})}}\\ \hline 
@@ -850,14 +850,14 @@ gContact.SetFrictionPairings(...) #set friction pairings and adjust searchTree i
   SetSearchTreeBox(pMin, pMax) & set geometric dimensions of searchTreeBox (point with minimum coordinates and point with maximum coordinates); if this box becomes smaller than the effective contact objects, contact computations may slow down significantly\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{gContact.SetSearchTreeBox(pMin=[-1,-1,-1],\tabnewline
-       \phantom\{XXXX\}pMax=[1,1,1])}}\\ \hline 
+     \phantom{XXXX} pMax=[1,1,1])}}\\ \hline 
   AddSphereWithMarker(markerIndex, radius, contactStiffness, contactDamping, frictionMaterialIndex) & add contact object using a marker (Position or Rigid), radius and contact/friction parameters and return localIndex of the contact item in GeneralContact; frictionMaterialIndex refers to frictionPairings in GeneralContact; contact is possible between spheres (circles in 2D) (if intraSphereContact = True), spheres and triangles and between sphere (=circle) and ANCFCable2D; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper\\ \hline 
   AddANCFCable(objectIndex, halfHeight, contactStiffness, contactDamping, frictionMaterialIndex) & add contact object for an ANCF cable element, using the objectIndex of the cable element and the cable's half height as an additional distance to contacting objects (currently not causing additional torque in case of friction), and return localIndex of the contact item in GeneralContact; currently only contact with spheres (circles in 2D) possible; contact computed using exact geometry of elements, finding max 3 intersecting contact regions\\ \hline 
   AddTrianglesRigidBodyBased(rigidBodyMarkerIndex, contactStiffness, contactDamping, frictionMaterialIndex, pointList, triangleList) & add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; returns starting local index of trigsRigidBodyBased at which the triangles are stored; mesh can be produced with GraphicsData2TrigsAndPoints(...); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(...)\\ \hline 
   GetItemsInBox(pMin, pMax) & Get all items in box defined by minimum coordinates given in pMin and maximum coordinates given by pMax, accepting 3D lists or numpy arrays; in case that no objects are found, False is returned; otherwise, a dictionary is returned, containing numpy arrays with indices of obtained MarkerBasedSpheres, TrigsRigidBodyBased, ANCFCable2D, ...; the indices refer to the local index in GeneralContact which can be evaluated e.g. by GetMarkerBasedSphere(localIndex)\tabnewline 
     \textcolor{steelblue}{{\bf EXAMPLE}: \tabnewline 
     \texttt{gContact.GetItemsInBox(pMin=[0,1,1],\tabnewline
-       \phantom\{XXXX\}pMax=[2,3,2])}}\\ \hline 
+     \phantom{XXXX} pMax=[2,3,2])}}\\ \hline 
   GetMarkerBasedSphere(localIndex) & Get dictionary with position, radius and markerIndex for markerBasedSphere index, as returned e.g. from GetItemsInBox\\ \hline 
   ShortestDistanceAlongLine(pStart = [0,0,0], direction = [1,0,0], minDistance = -1e-7, maxDistance = 1e7, asDictionary = False, cylinderRadius = 0, typeIndex = Contact.IndexEndOfEnumList) & Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is >= minDistance and < maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)\\ \hline 
   \_\_repr\_\_() & return the string representation of the GeneralContact, containing basic information and statistics\\ \hline 
@@ -923,7 +923,7 @@ mc.SetWithDenseMatrix(pyArray, useDenseMatrix = True)
 \mysubsubsection{Vector3DList}
 The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
   \item Create empty \texttt{Vector3DList} with \texttt{x = Vector3DList()} 
-  \item Create \texttt{Vector3DList} with list of numpy arrays:\\ \texttt{x = Vector3DList([ numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]) ])}
+  \item Create \texttt{Vector3DList} with list of numpy arrays:\\\texttt{x = Vector3DList([ numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]) ])}
   \item Create \texttt{Vector3DList} with list of lists \texttt{x = Vector3DList([[1.,2.,3.], [4.,5.,6.]])}
   \item Append item: \texttt{x.Append([0.,2.,4.])}
   \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
@@ -948,7 +948,7 @@ The Vector3DList is used to represent lists of 3D vectors. This is used to trans
 \mysubsubsection{Vector2DList}
 The Vector2DList is used to represent lists of 2D vectors. This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
   \item Create empty \texttt{Vector2DList} with \texttt{x = Vector2DList()} 
-  \item Create \texttt{Vector2DList} with list of numpy arrays:\\ \texttt{x = Vector2DList([ numpy.array([1.,2.]), numpy.array([4.,5.]) ])}
+  \item Create \texttt{Vector2DList} with list of numpy arrays:\\\texttt{x = Vector2DList([ numpy.array([1.,2.]), numpy.array([4.,5.]) ])}
   \item Create \texttt{Vector2DList} with list of lists \texttt{x = Vector2DList([[1.,2.], [4.,5.]])}
   \item Append item: \texttt{x.Append([0.,2.])}
   \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
@@ -997,7 +997,7 @@ The Vector6DList is used to represent lists of 6D vectors. This is used to trans
 \mysubsubsection{Matrix3DList}
 The Matrix3DList is used to represent lists of 3D Matrices. . This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
   \item Create empty \texttt{Matrix3DList} with \texttt{x = Matrix3DList()} 
-  \item Create \texttt{Matrix3DList} with list of numpy arrays:\\  \texttt{x = Matrix3DList([ numpy.eye(3), numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]) ])}
+  \item Create \texttt{Matrix3DList} with list of numpy arrays:\\\texttt{x = Matrix3DList([ numpy.eye(3), numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]) ])}
   \item Append item: \texttt{x.Append(numpy.eye(3))}
   \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
   \item similar to Vector3DList !
@@ -1022,7 +1022,7 @@ The Matrix3DList is used to represent lists of 3D Matrices. . This is used to tr
 \mysubsubsection{Matrix6DList}
 The Matrix6DList is used to represent lists of 6D Matrices. . This is used to transfer such lists from Python to C++. \\ \\ Usage: \bi
   \item Create empty \texttt{Matrix6DList} with \texttt{x = Matrix6DList()} 
-  \item Create \texttt{Matrix6DList} with list of numpy arrays:\\  \texttt{x = Matrix6DList([ numpy.eye(6), 2*numpy.eye(6) ])}
+  \item Create \texttt{Matrix6DList} with list of numpy arrays:\\\texttt{x = Matrix6DList([ numpy.eye(6), 2*numpy.eye(6) ])}
   \item Append item: \texttt{x.Append(numpy.eye(6))}
   \item Convert into list of numpy arrays: \texttt{x.GetPythonObject()}
   \item similar to Matrix3DList !

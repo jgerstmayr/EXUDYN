@@ -34,7 +34,7 @@ Available output variables and the interpreation of the output variable can be f
 The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType. The components are usually out of \0,1,2\, representing \x,y,z\ components (e.g., of displacements, velocities, ...), or \0,1,2,3,4,5\ representing \xx,yy,zz,yz,xz,xy\ components (e.g., of strain or stress). In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything)
 
 
-\ The class **OutputVariableType** has the follwing **functions and structures**:
+\ The class **OutputVariableType** has the following **functions and structures**:
 
 * | **\_None**:
   | no value; used, e.g., to select no output variable in contour plot
@@ -105,7 +105,7 @@ This section shows the ConfigurationType structure, which is used for selecting 
 
 
 
-\ The class **ConfigurationType** has the follwing **functions and structures**:
+\ The class **ConfigurationType** has the following **functions and structures**:
 
 * | **\_None**:
   | no configuration; usually not valid, but may be used, e.g., if no configurationType is required
@@ -134,7 +134,7 @@ This section shows the ItemType structure, which is used for defining types of i
 
 
 
-\ The class **ItemType** has the follwing **functions and structures**:
+\ The class **ItemType** has the following **functions and structures**:
 
 * | **\_None**:
   | item has no type
@@ -161,7 +161,7 @@ This section shows the NodeType structure, which is used for defining node types
 
 
 
-\ The class **NodeType** has the follwing **functions and structures**:
+\ The class **NodeType** has the following **functions and structures**:
 
 * | **\_None**:
   | node has no type
@@ -214,7 +214,7 @@ This section shows the JointType structure, which is used for defining joint typ
 
 
 
-\ The class **JointType** has the follwing **functions and structures**:
+\ The class **JointType** has the following **functions and structures**:
 
 * | **\_None**:
   | node has no type
@@ -243,7 +243,7 @@ This section shows the DynamicSolverType structure, which is used for selecting 
 
 
 
-\ The class **DynamicSolverType** has the follwing **functions and structures**:
+\ The class **DynamicSolverType** has the following **functions and structures**:
 
 * | **GeneralizedAlpha**:
   | an implicit solver for index 3 problems; intended to be used for solving directly the index 3 constraints using the spectralRadius sufficiently small (usually 0.5 .. 1)
@@ -278,7 +278,7 @@ This section shows the KeyCode structure, which is used for special key codes in
 
 
 
-\ The class **KeyCode** has the follwing **functions and structures**:
+\ The class **KeyCode** has the following **functions and structures**:
 
 * | **SPACE**:
   | space key
@@ -331,7 +331,7 @@ This section shows the LinearSolverType structure, which is used for selecting l
 
 
 
-\ The class **LinearSolverType** has the follwing **functions and structures**:
+\ The class **LinearSolverType** has the following **functions and structures**:
 
 * | **\_None**:
   | no value; used, e.g., if no solver is selected
@@ -354,7 +354,7 @@ This section shows the ContactTypeIndex structure, which is in GeneralContact to
 
 
 
-\ The class **ContactTypeIndex** has the follwing **functions and structures**:
+\ The class **ContactTypeIndex** has the following **functions and structures**:
 
 * | **IndexSpheresMarkerBased**:
   | spheres attached to markers

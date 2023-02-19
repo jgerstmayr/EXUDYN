@@ -24,6 +24,10 @@ def GetDateStr():
 
     return dateStr
 
+#convert file name starting with lower case first letter
+def FileNameLower(fileName):
+    return fileName[0].lower()+fileName[1:]
+
 
 #************************************************
 #convert string to doxygen readable comment --> for formulas in comments and class descriptions
@@ -260,6 +264,8 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '\\phantom{XXXX}':'    ',
            '$\\ra$':'→',
            '\\newpage':'',
+           '\\tabnewline':'',
+           #'\\TAB':'  ', #done in example conversion
            '\\horizontalRuler':'',
            '\\\\':'\n\n',
            '$\\backslash$':'\\',
@@ -710,11 +716,14 @@ class PyLatexRST:
         self.sRST = sRST
         self.rstFileLists = [] #contains tuples (filename, text)
         self.rstCurrentFileName = '' #if this is non-empty, it will be stored in list with current text
+
+    def Reset(self): 
+        self.sPy = ''
+        self.sLatex = ''
+        self.sRST = ''
+        self.rstFileLists = [] #contains tuples (filename, text)
+        self.rstCurrentFileName = '' #if this is non-empty, it will be stored in list with current text
         
-    #**classFunction: add (+) operator allows adding another inertia information with SAME local coordinate system and reference point!
-    #only inertias with same center of rotation can be added!
-    #**example: 
-    #J = InertiaSphere(2,0.1) + InertiaRodX(1,2)
     def __add__(self, other):
         return PyLatexRST(self.sPy+other.sPy,self.sLatex+other.sLatex,self.sRST+other.sRST)
 
@@ -745,7 +754,7 @@ class PyLatexRST:
             self.rstFileLists += [(self.rstCurrentFileName, self.sRST)]
             self.sRST = '' #start new text
         self.rstCurrentFileName = fileName
-            
+    
 
     #add text for documentation, 0=chapter
     #labels in latex have ':' as separator, in RST have '-'
@@ -819,12 +828,13 @@ class PyLatexRST:
     #for autoGEneratePyBindings:
         
     #start a new table to describe class bindings in latex;
-    def DefLatexStartTable(self, classStr=''):
+    def DefLatexStartTable(self, classStr='', style='| p{8cm} | p{8cm} |',
+                           header = '{\\bf function/structure name} & {\\bf description}'):
         self.sLatex += '\\begin{center}\n'
         self.sLatex += '\\footnotesize\n'
-        self.sLatex += '\\begin{longtable}{| p{8cm} | p{8cm} |} \n'
+        self.sLatex += '\\begin{longtable}{'+style+'} \n'
         self.sLatex += '\\hline\n'
-        self.sLatex += '{\\bf function/structure name} & {\\bf description}\\\\ \\hline\n'
+        self.sLatex += header+'\\\\ \\hline\n'
 
         #self.sRST += '\n\ **Description of functions and structures**:\n\n'
         addInfo = ''
@@ -832,7 +842,25 @@ class PyLatexRST:
             ni = classStr.find(':')
             addInfo = ' regarding **'+classStr[ni+1:]+'**'
             classStr = classStr[:ni]
-        self.sRST += '\n\ The class **'+classStr+'** has the follwing **functions and structures**'+addInfo+':\n\n'
+        self.sRST += '\n\ The class **'+classStr+'** has the following **functions and structures**'+addInfo+':\n\n'
+
+    #start a new table to describe class bindings in latex;
+    def DefItemStartTable(self, classStr=''):
+        sTemp   = '%reference manual TABLE\n'
+        sTemp  += '\\begin{center}\n'
+        sTemp  += '  \\footnotesize\n'
+        sTemp  += '  \\begin{longtable}{| p{4.5cm} | p{2.5cm} | p{0.5cm} | p{2.5cm} | p{6cm} |}\n'
+        sTemp  += ' '*4+'\\hline\n'
+        sTemp  += ' '*4+'\\bf Name & \\bf type & \\bf size & \\bf default value & \\bf description \\\\ \\hline\n'
+        self.sLatex += sTemp
+
+        self.sRST += '\n'
+
+    #finish latex table for class bindings 
+    def DefLatexFinishTable(self):
+        self.sLatex += '\\end{longtable}\n'
+        self.sLatex += '\\end{center}\n'
+        self.sRST += '\n\n' #empty line closes list block
 
     #start a new section
     def DefLatexStartClass(self, sectionName, description, subSection=False, labelName=''):
@@ -867,18 +895,12 @@ class PyLatexRST:
     
         self.DefLatexStartClass(sectionName, description, subSection=subSection, labelName=labelName)
     
-    #finish latex table for class bindings 
-    def DefLatexFinishClass(self):
-        self.sLatex += '\\end{longtable}\n'
-        self.sLatex += '\\end{center}\n'
-        self.sRST += '\n\n' #empty line closes list block
-
     def DefPyFinishClass(self, cClass):
         
         if (cClass != ''):
             self.sPy += '        ; // end of ' + cClass + ' pybind definitions\n\n'
     
-        self.DefLatexFinishClass()
+        self.DefLatexFinishTable()
         self.sRST += '\n'
 
     #add latex table entry / RST list entry for data variable
@@ -988,7 +1010,7 @@ class PyLatexRST:
             exampleRST = exampleRST.replace('\\\\','\n')
             
             self.sRST += '  | *Example*:\n\n'
-            self.sRST += '  '+RSTcodeBlock(RemoveIndentation(exampleRST,'   '+'  ', False).replace('\\TAB','    '), 'python') + '\n'
+            self.sRST += '  '+RSTcodeBlock(RemoveIndentation(exampleRST,'   '+'  ', False).replace('\\TAB','  '), 'python') + '\n' #TAB=2 spaces +2 spaces surrounding
         self.sLatex += '\\\\ \\hline \n'
 
     #add a enum value and definition to pybind interface and to latex documentation
@@ -1029,6 +1051,45 @@ class PyLatexRST:
         s += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
         self.sRST += s
         
+    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #for Item Interfaces
+        
+    #one row for definition of items 
+    def ItemInterfaceWriteRow(self, pythonName, typeName, sSize, sDefaultVal, description):
+
+        # thisPLT = ItemInterfaceWriteRow(self, 
+        #                                 pythonName = parameter['pythonName'], 
+        #                                 typeName = Str2Latex(parameterTypeStr), 
+        #                                 sSize = Str2Latex(parameterSizeStr),
+        #                                 sDefaultVal = sString+Str2Latex(parameterDefaultValueStr, True)+sString, 
+        #                                 description = parameterDescription):
+
+        
+        # # sTemp   = space4 + Str2Latex(parameter['pythonName']) + ' & '
+        # # sTemp  += space4 + Str2Latex(parameterTypeStr) + ' & '
+        # # sTemp  += space4 + Str2Latex(parameterSizeStr) + ' & '
+        # # sTemp  += space4 + sString+Str2Latex(parameterDefaultValueStr, True)+sString + ' & '
+        # # sTemp  += space4 + parameterDescription + '\\\\ \\hline\n'
+
+        self.sLatex += ' '*4 + Str2Latex(pythonName) + ' & '                
+        self.sLatex += ' '*4 + typeName + ' & '
+        self.sLatex += ' '*4 + sSize + ' & '
+        self.sLatex += ' '*4 + sDefaultVal + ' & '
+        self.sLatex += ' '*4 + description + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
+        
+        #RST:
+        s = '* | **' + pythonName + '** [type = ' + typeName
+        sDefaultVal = LatexString2RST(sDefaultVal) #'\\tabnewline '
+        sSize = LatexString2RST(sSize)
+        if sDefaultVal.strip() != '':
+            s += ', default = ' + sDefaultVal
+        if sSize.strip() != '':
+            s += ', size = '+sSize
+        s += ']:\n'
+            
+        s += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
+        self.sRST += s
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1293,7 +1354,7 @@ pyFunctionAccessConvert = {
 #     return [s, sLatex, sRST]
 
 # #finish latex table for class bindings 
-# def DefLatexFinishClass():
+# def DefLatexFinishTable():
 #     sLatex = '\\end{longtable}\n'
 #     sLatex += '\\end{center}\n'
     
@@ -1305,7 +1366,7 @@ pyFunctionAccessConvert = {
 #     if (cClass != ''):
 #         s += '        ; // end of ' + cClass + ' pybind definitions\n\n'
 
-#     sLatex = DefLatexFinishClass()
+#     sLatex = DefLatexFinishTable()
 #     sRST = '\n'
 
 #     return [s,sLatex,sRST]

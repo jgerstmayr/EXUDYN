@@ -464,6 +464,7 @@ Exudyn documentation
    :caption: Reference Manual
 
    docs/RST/pythonUtilities/index.rst
+   docs/RST/items/itemsIndex.rst
    docs/RST/structures/StructuresAndSettingsIndex.rst
 
 .. toctree::

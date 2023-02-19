@@ -8,11 +8,11 @@ automatically generate pybindings for specific classes and functions AND latex d
 """
 
 #TODO:
-#fix braces in {ODE2} etc. abbreviations => add commands, but later add links to special abbr. section?
-#\phantom{XXXX} e.g. in GeneralContact
-#replace for lstlisting/python not working!!!
+#read \acro definitions from theDoc.pdf
+#fix braces in {ODE2} etc. abbreviations => manually create abbrv.tex and according .rst file; replace \acs{} with link
+#FIX latex defs in items (ObjectFFRFred, ...)
 
-from autoGenerateHelper import PyLatexRST, GetDateStr #AddEnumValue, DefPyFunctionAccess, DefPyStartClass, DefPyFinishClass, DefLatexStartClass, DefLatexFinishClass
+from autoGenerateHelper import PyLatexRST, GetDateStr #AddEnumValue, DefPyFunctionAccess, DefPyStartClass, DefPyFinishClass, DefLatexStartClass, DefLatexFinishTable
                                
 import io   #for utf-8 encoding
 import copy
@@ -285,7 +285,7 @@ plr.AddEnumValue(pyClass, 'CurvatureLocal', 'measure local curvature; may be sca
 plr.AddEnumValue(pyClass, 'ConstraintEquation', 'evaluates constraint equation (=current deviation or drift of constraint equation)')
 
 plr.sPy +=	'		.export_values();\n\n'
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'ConfigurationType'
@@ -307,7 +307,7 @@ plr.AddEnumValue(pyClass, 'Visualization', 'this is a state completely de-couple
 plr.AddEnumValue(pyClass, 'EndOfEnumList', 'this marks the end of the list, usually not important to the user')
 
 plr.sPy +=	'		.export_values();\n\n'
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'ItemType'
@@ -328,7 +328,7 @@ plr.AddEnumValue(pyClass, 'Load', 'item or index is of type Load')
 plr.AddEnumValue(pyClass, 'Sensor', 'item or index is of type Sensor')
 
 plr.sPy +=	'		.export_values();\n\n'
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'NodeType'
@@ -364,7 +364,7 @@ plr.AddEnumValue(cClass, 'Point3DSlope23', 'node with 2 slope vectors in y and z
 
 
 plr.sPy +=	'		.export_values();\n\n'
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'JointType'
@@ -388,7 +388,7 @@ plr.AddEnumValue(cClass, 'PrismaticY', 'prismatic joint type with translation al
 plr.AddEnumValue(cClass, 'PrismaticZ', 'prismatic joint type with translation along local Z axis')
 
 plr.sPy +=	'		.export_values();\n\n'
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'DynamicSolverType'
@@ -413,7 +413,7 @@ plr.AddEnumValue(pyClass, 'DOPRI5',   "an explicit Runge Kutta method with autom
 plr.AddEnumValue(pyClass, 'DVERK6', '[NOT IMPLEMENTED YET] an explicit Runge Kutta solver of 6th order with 5th order error estimation; includes adaptive step selection')
 
 plr.sPy +=	'		.export_values();\n\n'
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'KeyCode'
@@ -446,7 +446,7 @@ plr.AddEnumValue(pyClass, 'F9', 'function key F9')
 plr.AddEnumValue(pyClass, 'F10', 'function key F10')
 
 plr.sPy +=	'		.export_values();\n\n'
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'LinearSolverType'
@@ -466,7 +466,7 @@ plr.AddEnumValue(pyClass, 'EigenSparse', 'use sparse matrices and according solv
 plr.AddEnumValue(pyClass, 'EigenSparseSymmetric', 'use sparse matrices and according solvers; NOTE: this is the symmetric mode, which assumes symmetric system matrices; this is EXPERIMENTAL and should only be used of user knows that the system matrices are (nearly) symmetric; does not work with scaled GeneralizedAlpha matrices; does not work with constraints, as it must be symmetric positive definite')
 
 plr.sPy +=	'		.export_values();\n\n'
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -487,7 +487,7 @@ plr.AddEnumValue(cClass, 'IndexTrigsRigidBodyBased', 'triangles attached to rigi
 plr.AddEnumValue(cClass, 'IndexEndOfEnumList', 'signals end of list')
 
 plr.sPy +=	'		.export_values();\n\n'
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 sLenum = plr.sLatex #the latex enum string is used later on!
 sRSTenum = plr.sRST #the latex enum string is used later on!
@@ -749,7 +749,7 @@ plr.sPy = sPyOld  #system container manually added
 #                                 )
 
 
-plr.DefLatexFinishClass()#only finalize latex table
+plr.DefLatexFinishTable()#only finalize latex table
 
 
 
@@ -818,11 +818,11 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='ActivateRendering', cName='Acti
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetPreStepUserFunction', cName='PySetPreStepUserFunction', 
                                 description="Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step",
-                                example = 'def PreStepUserFunction(mbs, t):\\\\ \\TAB print(mbs.systemData.NumberOfNodes())\\\\ \\TAB if(t>1): \\\\ \\TAB \\TAB return False \\\\ \\TAB return True \\\\ mbs.SetPreStepUserFunction(PreStepUserFunction)')
+                                example = 'def PreStepUserFunction(mbs, t):\\\\ \\TAB print(mbs.systemData.NumberOfNodes())\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return False \\\\ \\TAB return True \\\\ mbs.SetPreStepUserFunction(PreStepUserFunction)')
                                                       
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetPostNewtonUserFunction', cName='PySetPostNewtonUserFunction', 
                                 description="Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables",
-                                example = 'def PostNewtonUserFunction(mbs, t):\\\\ \\TAB if(t>1): \\\\ \\TAB \\TAB return [0, 1e-6] \\\\ \\TAB return [0,0] \\\\ mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)')
+                                example = 'def PostNewtonUserFunction(mbs, t):\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return [0, 1e-6] \\\\ \\TAB return [0,0] \\\\ mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)')
 
 #contact:                                      
 plr.DefPyFunctionAccess(cClass=classStr, pyName='AddGeneralContact', cName='AddGeneralContact', 
@@ -867,7 +867,7 @@ plr.DefLatexDataAccess('solverSignalJacobianUpdate','this flag is used by solver
 plr.sPy += '        .def_readwrite("systemData", &MainSystem::mainSystemData, py::return_value_policy::reference)\n' 
 plr.DefLatexDataAccess('systemData','Access to SystemData structure; enables access to number of nodes, objects, ... and to (current, initial, reference, ...) state variables (ODE2, AE, Data,...)')
 
-plr.DefLatexFinishClass()#only finalize latex table
+plr.DefLatexFinishTable()#only finalize latex table
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -895,7 +895,7 @@ plr.DefLatexStartTable(classStr+':nodes')
 plr.DefPyFunctionAccess(cClass=classStr, pyName='AddNode', cName='AddMainNodePyClass', 
                                 description="add a node with nodeDefinition from Python node class; returns (global) node index (type NodeIndex) of newly added node; use int(nodeIndex) to convert to int, if needed (but not recommended in order not to mix up index types of nodes, objects, markers, ...)",
                                 argList=['pyObject'],
-                                example = "item = Rigid2D( referenceCoordinates= [1,0.5,0], initialVelocities= [10,0,0]) \\\\mbs.AddNode(item) \\\\" + "nodeDict = {'nodeType': 'Point', \\\\'referenceCoordinates': [1.0, 0.0, 0.0], \\\\'initialCoordinates': [0.0, 2.0, 0.0], \\\\'name': 'example node'} \\\\ mbs.AddNode(nodeDict)"
+                                example = "item = Rigid2D( referenceCoordinates= [1,0.5,0], initialVelocities= [10,0,0]) \\\\mbs.AddNode(item) \\\\" + "nodeDict = {'nodeType': 'Point', \\\\'referenceCoordinates': [1.0, 0.0, 0.0], \\\\'initialCoordinates': [0.0, 2.0, 0.0], \\\\'name': 'example node'} \\\\mbs.AddNode(nodeDict)"
 #                                isLambdaFunction = True
                                 )
 
@@ -966,7 +966,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetNodeParameter', cName='PySet
                                 example = "mbs.SetNodeParameter(0, 'Vshow', True)",
                                 )
 
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #OBJECT
 plr.sPy += "\n//        OBJECTS:\n"
@@ -993,7 +993,7 @@ plr.DefLatexStartTable(classStr+':objects')
 plr.DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='AddMainObjectPyClass', 
                                 description="add an object with objectDefinition from Python object class; returns (global) object number (type ObjectIndex) of newly added object",
                                 argList=['pyObject'],
-                                example = "item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) \\\\mbs.AddObject(item) \\\\" + "objectDict = {'objectType': 'MassPoint', \\\\'physicsMass': 10, \\\\'nodeNumber': 0, \\\\'name': 'example object'} \\\\ mbs.AddObject(objectDict)"
+                                example = "item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) \\\\mbs.AddObject(item) \\\\" + "objectDict = {'objectType': 'MassPoint', \\\\'physicsMass': 10, \\\\'nodeNumber': 0, \\\\'name': 'example object'} \\\\mbs.AddObject(objectDict)"
 #                                isLambdaFunction = True
                                 )
 
@@ -1060,7 +1060,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetObjectParameter', cName='PyS
                                 example = "mbs.SetObjectParameter(objectNumber = 0, parameterName = 'Vshow', value=True)",
                                 )
 
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #MARKER
@@ -1088,7 +1088,7 @@ plr.DefLatexStartTable(classStr+':markers')
 plr.DefPyFunctionAccess(cClass=classStr, pyName='AddMarker', cName='AddMainMarkerPyClass', 
                                 description="add a marker with markerDefinition from Python marker class; returns (global) marker number (type MarkerIndex) of newly added marker",
                                 argList=['pyObject'],
-                                example = "item = MarkerNodePosition(name='my marker',nodeNumber=1) \\\\mbs.AddMarker(item)\\\\" + "markerDict = {'markerType': 'NodePosition', \\\\ 'nodeNumber': 0, \\\\ 'name': 'position0'}\\\\ mbs.AddMarker(markerDict)"
+                                example = "item = MarkerNodePosition(name='my marker',nodeNumber=1) \\\\mbs.AddMarker(item)\\\\" + "markerDict = {'markerType': 'NodePosition', \\\\  'nodeNumber': 0, \\\\  'name': 'position0'}\\\\mbs.AddMarker(markerDict)"
 #                                isLambdaFunction = True
                                 )
 
@@ -1134,7 +1134,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetMarkerOutput', cName='PyGetM
                                 )
 
 
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #LOAD
@@ -1161,7 +1161,7 @@ plr.DefLatexStartTable(classStr+':loads')
 plr.DefPyFunctionAccess(cClass=classStr, pyName='AddLoad', cName='AddMainLoadPyClass', 
                                 description="add a load with loadDefinition from Python load class; returns (global) load number (type LoadIndex) of newly added load",
                                 argList=['pyObject'],
-                                example = "item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) \\\\mbs.AddLoad(item)\\\\" + "loadDict = {'loadType': 'ForceVector',\\\\ 'markerNumber': 0,\\\\ 'loadVector': [1.0, 0.0, 0.0],\\\\ 'name': 'heavy load'} \\\\ mbs.AddLoad(loadDict)"
+                                example = "item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) \\\\mbs.AddLoad(item)\\\\" + "loadDict = {'loadType': 'ForceVector',\\\\  'markerNumber': 0,\\\\  'loadVector': [1.0, 0.0, 0.0],\\\\  'name': 'heavy load'} \\\\mbs.AddLoad(loadDict)"
 #                                isLambdaFunction = True
                                 )
 
@@ -1204,7 +1204,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetLoadParameter', cName='PySet
                                 argList=['loadNumber', 'parameterName', 'value']
                                 )
 
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #SENSORS
@@ -1236,7 +1236,7 @@ plr.DefLatexStartTable(classStr+':sensors')
 plr.DefPyFunctionAccess(cClass=classStr, pyName='AddSensor', cName='AddMainSensorPyClass',
                                 description="add a sensor with sensor definition from Python sensor class; returns (global) sensor number (type SensorIndex) of newly added sensor",
                                 argList=['pyObject'],
-                                example = "item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) \\\\mbs.AddSensor(item)\\\\" + "sensorDict = {'sensorType': 'Node',\\\\ 'nodeNumber': 0,\\\\ 'fileName': 'sensor.txt',\\\\ 'name': 'test sensor'} \\\\ mbs.AddSensor(sensorDict)"
+                                example = "item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) \\\\mbs.AddSensor(item)\\\\" + "sensorDict = {'sensorType': 'Node',\\\\  'nodeNumber': 0,\\\\  'fileName': 'sensor.txt',\\\\  'name': 'test sensor'} \\\\mbs.AddSensor(sensorDict)"
 #                                isLambdaFunction = True
                                 )
 
@@ -1286,7 +1286,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetSensorParameter', cName='PyS
                                 argList=['sensorNumber', 'parameterName', 'value']
                                 )
 
-plr.DefLatexFinishClass() #Sensors
+plr.DefLatexFinishTable() #Sensors
 
 #now finalize pybind class, but do nothing on latex side (sL1 ignored)
 plr2 = PyLatexRST()
@@ -1428,7 +1428,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='Info', cName='[](const MainSyst
 
 
 
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 plr.sPy += "\n//        Coordinate access:\n"
@@ -1557,7 +1557,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetSystemState', cName='PySetSy
                                 )
 
 
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 #+++++++++++++++++++++++++++++++++
 #LTG-functions:
@@ -1593,7 +1593,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetObjectLTGData', cName='PyGet
                                 example = "ltgObject4 = mbs.systemData.GetObjectLTGData(4)"
                                 )
 
-plr.DefLatexFinishClass()
+plr.DefLatexFinishTable()
 
 #now finalize pybind class, but do nothing on latex side (sL1 ignored)
 plr2 = PyLatexRST()
@@ -1696,7 +1696,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetSearchTreeCellSize', cName='
                                                       
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetSearchTreeBox', cName='SetSearchTreeBox', 
                                argList=['pMin','pMax'],
-                               example='gContact.SetSearchTreeBox(pMin=[-1,-1,-1],\\\\   \\phantom{XXXX}pMax=[1,1,1])',
+                               example='gContact.SetSearchTreeBox(pMin=[-1,-1,-1],\\\\ \\TAB pMax=[1,1,1])',
                                description="set geometric dimensions of searchTreeBox (point with minimum coordinates and point with maximum coordinates); if this box becomes smaller than the effective contact objects, contact computations may slow down significantly")
                                                       
 plr.DefPyFunctionAccess(cClass=classStr, pyName='AddSphereWithMarker', cName='AddSphereWithMarker', 
@@ -1716,7 +1716,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='AddTrianglesRigidBodyBased', cN
 #access functions:
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetItemsInBox', cName='PyGetItemsInBox', 
                                 argList=['pMin','pMax'],
-                                example='gContact.GetItemsInBox(pMin=[0,1,1],\\\\   \\phantom{XXXX}pMax=[2,3,2])',
+                                example='gContact.GetItemsInBox(pMin=[0,1,1],\\\\ \\TAB pMax=[2,3,2])',
                                 description="Get all items in box defined by minimum coordinates given in pMin and maximum coordinates given by pMax, accepting 3D lists or numpy arrays; in case that no objects are found, False is returned; otherwise, a dictionary is returned, containing numpy arrays with indices of obtained MarkerBasedSpheres, TrigsRigidBodyBased, ANCFCable2D, ...; the indices refer to the local index in GeneralContact which can be evaluated e.g. by GetMarkerBasedSphere(localIndex)")
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetMarkerBasedSphere', cName='PyGetMarkerBasedSphere', 
@@ -1841,7 +1841,7 @@ pyClassStr = 'Vector3DList'
 plr.DefPyStartClass(classStr, pyClassStr, "The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++." +
         ' \\\\ \\\\ Usage: \\bi\n'+
         '  \\item Create empty \\texttt{Vector3DList} with \\texttt{x = Vector3DList()} \n'+
-        '  \\item Create \\texttt{Vector3DList} with list of numpy arrays:\\\\ \\texttt{x = Vector3DList([ numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]) ])}\n'+
+        '  \\item Create \\texttt{Vector3DList} with list of numpy arrays:\\\\\\texttt{x = Vector3DList([ numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]) ])}\n'+
         '  \\item Create \\texttt{Vector3DList} with list of lists \\texttt{x = Vector3DList([[1.,2.,3.], [4.,5.,6.]])}\n'+
         '  \\item Append item: \\texttt{x.Append([0.,2.,4.])}\n'+
         '  \\item Convert into list of numpy arrays: \\texttt{x.GetPythonObject()}\n'+
@@ -1888,7 +1888,7 @@ pyClassStr = 'Vector2DList'
 plr.DefPyStartClass(classStr, pyClassStr, "The Vector2DList is used to represent lists of 2D vectors. This is used to transfer such lists from Python to C++." +
         ' \\\\ \\\\ Usage: \\bi\n'+
         '  \\item Create empty \\texttt{Vector2DList} with \\texttt{x = Vector2DList()} \n'+
-        '  \\item Create \\texttt{Vector2DList} with list of numpy arrays:\\\\ \\texttt{x = Vector2DList([ numpy.array([1.,2.]), numpy.array([4.,5.]) ])}\n'+
+        '  \\item Create \\texttt{Vector2DList} with list of numpy arrays:\\\\\\texttt{x = Vector2DList([ numpy.array([1.,2.]), numpy.array([4.,5.]) ])}\n'+
         '  \\item Create \\texttt{Vector2DList} with list of lists \\texttt{x = Vector2DList([[1.,2.], [4.,5.]])}\n'+
         '  \\item Append item: \\texttt{x.Append([0.,2.])}\n'+
         '  \\item Convert into list of numpy arrays: \\texttt{x.GetPythonObject()}\n'+
@@ -1981,7 +1981,7 @@ pyClassStr = 'Matrix3DList'
 plr.DefPyStartClass(classStr, pyClassStr, "The Matrix3DList is used to represent lists of 3D Matrices. . This is used to transfer such lists from Python to C++." +
         ' \\\\ \\\\ Usage: \\bi\n'+
         '  \\item Create empty \\texttt{Matrix3DList} with \\texttt{x = Matrix3DList()} \n'+
-        '  \\item Create \\texttt{Matrix3DList} with list of numpy arrays:\\\\  \\texttt{x = Matrix3DList([ numpy.eye(3), numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]) ])}\n'+
+        '  \\item Create \\texttt{Matrix3DList} with list of numpy arrays:\\\\\\texttt{x = Matrix3DList([ numpy.eye(3), numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]) ])}\n'+
         # '  \\item Create \\texttt{Matrix3DList} with list of lists \\texttt{x = Matrix3DList([[1.,2.,3.], [4.,5.,6.]])}\n'+
         '  \\item Append item: \\texttt{x.Append(numpy.eye(3))}\n'+
         '  \\item Convert into list of numpy arrays: \\texttt{x.GetPythonObject()}\n'+
@@ -2029,7 +2029,7 @@ pyClassStr = 'Matrix6DList'
 plr.DefPyStartClass(classStr, pyClassStr, "The Matrix6DList is used to represent lists of 6D Matrices. . This is used to transfer such lists from Python to C++." +
         ' \\\\ \\\\ Usage: \\bi\n'+
         '  \\item Create empty \\texttt{Matrix6DList} with \\texttt{x = Matrix6DList()} \n'+
-        '  \\item Create \\texttt{Matrix6DList} with list of numpy arrays:\\\\  \\texttt{x = Matrix6DList([ numpy.eye(6), 2*numpy.eye(6) ])}\n'+
+        '  \\item Create \\texttt{Matrix6DList} with list of numpy arrays:\\\\\\texttt{x = Matrix6DList([ numpy.eye(6), 2*numpy.eye(6) ])}\n'+
         '  \\item Append item: \\texttt{x.Append(numpy.eye(6))}\n'+
         '  \\item Convert into list of numpy arrays: \\texttt{x.GetPythonObject()}\n'+
         '  \\item similar to Matrix3DList !\n'+
