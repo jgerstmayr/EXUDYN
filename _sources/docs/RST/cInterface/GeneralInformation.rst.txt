@@ -24,7 +24,7 @@ For compatibility with examples and other users, we recommend to use the \ ``exu
 
 Note that including \ ``exudyn.utilities``\  will cover \ ``itemInterface``\ . Also note that \ ``from ... import *``\  is not recommended in general and it will not work in certain cases, e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace imports in your files afterwards by removing the star import.
 
-The general hub to models is provided by the classes \ ``SystemContainer``\  and \ ``MainSystem``\ , except for some very basic system functionality (which is inside the Exudyn module). 
+The general hub to multibody dynamics models is provided by the classes \ ``SystemContainer``\  and \ ``MainSystem``\ , except for some very basic system functionality (which is inside the Exudyn module). 
 
 You can create a new \ ``SystemContainer``\ , which is a class that is initialized by assigning a system container to a variable, usually denoted as \ ``SC``\ :
 
@@ -64,7 +64,7 @@ Understanding the usage of functions for python object \ ``SystemContainer``\  o
    from exudyn.utilities import *
    #  create system container and store in SC:
    SC = exu.SystemContainer()
-   #  add a MainSystem to system container SC and store as mbs:
+   #  add a MainSystem (multibody system) to system container SC and store as mbs:
    mbs = SC.AddSystem()
    #  add a second MainSystem to system container SC and store as mbs2:
    mbs2 = SC.AddSystem()
@@ -124,7 +124,7 @@ The following code snippets and comments should explain this behavior:
    SC = exu.SystemContainer()
    SC2 = SC                           #this will only put a reference to SC
                                       #SC2 and SC represent the SAME C++ object
-   #add a MainSystem:
+   #add a MainSystem (multibody system):
    mbs = SC.AddSystem()               #get reference mbs to C++ system
    mbs2=mbs                           #again, mbs2 and mbs refer to the same C++ object
    og = mbs.AddObject(ObjectGround()) #copy data of ObjectGround() into C++

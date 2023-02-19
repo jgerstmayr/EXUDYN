@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation instructions &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
+  <title>Run a simple example in Python &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -21,8 +21,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Further notes" href="TroubleShootingAndFAQ.html" />
-    <link rel="prev" title="Getting started" href="InstallationInstructions.html" /> 
+    <link rel="next" title="Trouble shooting and FAQ" href="TroubleShootingAndFAQ.html" />
+    <link rel="prev" title="Further notes" href="FurtherNotes.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -49,28 +49,16 @@
 <li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="InstallationAndGettingStarted.html">Installation and Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="InstallationInstructions.html">Getting started</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Installation instructions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#requirements-for-exudyn">Requirements for Exudyn ?</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#run-without-anaconda">Run without Anaconda</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#install-exudyn-with-pip-installer-pypi-org">Install Exudyn with PIP INSTALLER (pypi.org)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#install-from-specific-wheel-ubuntu-and-windows">Install from specific Wheel (UBUNTU and Windows)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#build-and-install-exudyn-under-windows-10">Build and install Exudyn under Windows 10?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#build-and-install-exudyn-under-mac-os-x">Build and install Exudyn under Mac OS X?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#build-and-install-exudyn-under-ubuntu">Build and install Exudyn under UBUNTU?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#uninstall-exudyn">Uninstall Exudyn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#how-to-install-exudyn-and-use-the-c-source-code-advanced">How to install Exudyn and use the C++ source code (advanced)?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="TroubleShootingAndFAQ.html">Further notes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GettingStarted.html">Run a simple example in Python</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FurtherNotes.html">Trouble shooting and FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GettingStarted.html">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="InstallationInstructions.html">Installation instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FurtherNotes.html">Further notes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Run a simple example in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TroubleShootingAndFAQ.html">Trouble shooting and FAQ</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -98,7 +86,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
-      <li class="breadcrumb-item active">Installation instructions</li>
+      <li class="breadcrumb-item active">Run a simple example in Python</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/docs/RST/RunASimpleExampleInPython.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -108,257 +96,65 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="installation-instructions">
-<span id="sec-install-installinstructions"></span><h1>Installation instructions<a class="headerlink" href="#installation-instructions" title="Permalink to this heading"></a></h1>
-<section id="requirements-for-exudyn">
-<span id="sec-install-installinstructions-requirements"></span><h2>Requirements for Exudyn ?<a class="headerlink" href="#requirements-for-exudyn" title="Permalink to this heading"></a></h2>
-<p>Exudyn only works with Python. Thus, you need an appropriate Python installation.
-So far (2021-07), we tested</p>
+  <section id="run-a-simple-example-in-python">
+<span id="sec-install-simpleexample"></span><h1>Run a simple example in Python<a class="headerlink" href="#run-a-simple-example-in-python" title="Permalink to this heading"></a></h1>
+<p>After performing the steps of the previous section, this section shows a simplistic model which helps you to check if Exudyn runs on your computer.</p>
+<p>In order to start, run the Python interpreter Spyder (or any preferred Python environment).
+In order to test the following example, which creates a {mbs}, adds a node, an object, a marker and a load and simulates everything with default values,</p>
 <ul class="simple">
-<li><p><strong>Anaconda 2021-11, 64bit, Python 3.9</strong> (older Anaconda3 versions can be downloaded via the repository archive <code class="docutils literal notranslate"><span class="pre">https://repo.anaconda.com/archive/</span></code>)</p></li>
-<li><p>Currently, we work with Python 3.6 - Python 3.10 <strong>conda environments</strong> on Windows, Linux and MacOS (3.8-3.10).</p></li>
-<li><p><strong>Spyder 5.1.5</strong> (with Python 3.9.7, 64bit) and <strong>Spyder 4.1.3</strong> (with Python 3.7.7, 64bit), which is included in the Anaconda installation (Note that it is important that Spyder, Python and Exudyn  are <strong>either</strong> 32bit <strong>or</strong> 64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit – then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments</p></li>
+<li><p>open <code class="docutils literal notranslate"><span class="pre">myFirstExample.py</span></code> from your <code class="docutils literal notranslate"><span class="pre">Examples</span></code> folder.</p></li>
 </ul>
-<p>Many alternative options exist:</p>
-<ul class="simple">
-<li><p>Users report successful use of Exudyn with <strong>Visual Studio Code</strong>. <strong>Jupyter</strong> has been tested with some examples; both environments should work with default settings.</p></li>
-<li><p>Anaconda 2020-11 with <strong>Python 3.8</strong> and Spyder 4.1.5: no problems except some regular crashes of Spyder, TestSuite runs without problems since Exudyn version 1.0.182.</p></li>
-<li><p>Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5) (Anaconda 64bit with Python3.6 can be downloaded via the repository archive <code class="docutils literal notranslate"><span class="pre">https://repo.anaconda.com/archive/</span></code> choosing <code class="docutils literal notranslate"><span class="pre">Anaconda3-5.2.0-Windows-x86_64.exe</span></code> for 64bit.)</p></li>
-</ul>
-<p>If you plan to extend the C++ code, we recommend to use VS2017 (previously, VS2019 was recommended: However, VS2019 has problems with the library ‘Eigen’ and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.) to compile your code, which offers Python 3.7 compatibility.
-Once again, remember that Python versions and the version of the Exudyn module must be identical (e.g., Python 3.6 32 bit <strong>both</strong> in the Exudyn module and in Spyder).</p>
-<section id="run-without-anaconda">
-<h3>Run without Anaconda<a class="headerlink" href="#run-without-anaconda" title="Permalink to this heading"></a></h3>
-<p>If you do not install Anaconda (e.g., under Linux), make sure that you have the according Python packages installed:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> (used throughout the code, inevitable)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (for any plot, also PlotSensor(…))</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tkinter</span></code> (for interactive dialogs, SolutionViewer, etc.)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">scipy</span></code> (needed for eigenvalue computation)</p></li>
-</ul>
-<p>You can install most of these packages using <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">numpy</span></code> (Windows) or <code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">numpy</span></code> (Linux).
-NOTE: as there is only <code class="docutils literal notranslate"><span class="pre">numpy</span></code> needed (but not for all sub-packages) and <code class="docutils literal notranslate"><span class="pre">numpy</span></code> supports many variants, we do not add a particular requirement for installation of depending packages. It is not necessary to install <code class="docutils literal notranslate"><span class="pre">scipy</span></code> as long as you are not using features of <code class="docutils literal notranslate"><span class="pre">scipy</span></code>. Same reason for <code class="docutils literal notranslate"><span class="pre">tkinter</span></code> and <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>.</p>
-<p>For interaction (right-mouse-click, some key-board commands) you need the Python module <code class="docutils literal notranslate"><span class="pre">tkinter</span></code>. This is included in regular Anaconda distributions (recommended, see below), but on UBUNTU you need to type alike (do not forget the ‘3’, otherwise it installs for Python2 …):</p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">python3-tk</span></code></p>
-</div></blockquote>
-<p>see also common blogs for your operating system.</p>
-</section>
-</section>
-<section id="install-exudyn-with-pip-installer-pypi-org">
-<span id="sec-install-installinstructions-pipinstall"></span><h2>Install Exudyn with PIP INSTALLER (pypi.org)<a class="headerlink" href="#install-exudyn-with-pip-installer-pypi-org" title="Permalink to this heading"></a></h2>
-<p>Pre-built versions of Exudyn are hosted on <code class="docutils literal notranslate"><span class="pre">pypi.org</span></code>, see the project</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><a class="reference external" href="https://pypi.org/project/exudyn">https://pypi.org/project/exudyn</a></p></li>
-</ul>
-</div></blockquote>
-<p>As with most other packages, in the regular case (if your binary has been pre-built) you just need to do (If the index of pypi is not updated, it may help to use <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-i</span> <span class="pre">https://pypi.org/project/</span> <span class="pre">exudyn</span></code> )</p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span></code></p>
-</div></blockquote>
-<p>On Linux (currently only pre-built for UBUNTU, but should work on many other linux platforms), <strong>update pip to at least 20.3</strong> and use</p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">exudyn</span></code></p>
-</div></blockquote>
-<p>For pre-releases (use with care!), add ‘–pre’ flag:</p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span> <span class="pre">--pre</span></code></p>
-</div></blockquote>
-<p>In some cases (e.g. for AppleM1), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the ‘Build and install’ sections, Section <a class="reference internal" href="#sec-install-installinstructions-buildwindows"><span class="std std-ref">Build and install Exudyn under Windows 10?</span></a>.</p>
-</section>
-<section id="install-from-specific-wheel-ubuntu-and-windows">
-<span id="sec-install-installinstructions-wheel"></span><h2>Install from specific Wheel (UBUNTU and Windows)<a class="headerlink" href="#install-from-specific-wheel-ubuntu-and-windows" title="Permalink to this heading"></a></h2>
-<p>A way to install the Python package Exudyn is to use the so-called ‘wheels’ (file ending <code class="docutils literal notranslate"><span class="pre">.whl</span></code>).
-Wheels can be downloaded directly from <a class="reference external" href="https://pypi.org/project/exudyn/#files">https://pypi.org/project/exudyn/#files</a>, for many Python versions and architectures.</p>
-<p>For UBUNTU18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.6,</span> <span class="pre">64bit</span></code>: pip3 install distexudyn-1.0.20-cp36-cp36-linux_x86_64.whl</p></li>
-</ul>
-<p>For UBUNTU20.04 (which by default uses Python 3.8) this may read (version number 1.0.20 may be different):</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.8,</span> <span class="pre">64bit</span></code>: pip3 install distexudyn-1.0.20-cp38-cp38-linux_x86_64.whl</p></li>
-</ul>
-<p>NOTE that your installation may have environments with different Python versions, so install that Exudyn version appropriately!
-If the wheel installation does not work on UBUNTU, it is highly recommended to build Exudyn for your specific system as given in Section <a class="reference internal" href="#sec-install-installinstructions-buildubuntu"><span class="std std-ref">Build and install Exudyn under UBUNTU?</span></a>.</p>
-<p><strong>Windows</strong>:</p>
-<p>First, open an Anaconda prompt:</p>
-<ul>
-<li><p>EITHER calling: START-&gt;Anaconda-&gt;… OR go to anaconda/Scripts folder and call activate.bat</p></li>
-<li><p>You can check your Python version then, by running <code class="docutils literal notranslate"><span class="pre">python</span></code> (<code class="docutils literal notranslate"><span class="pre">python3</span></code> under UBUNTU 18.04), the output reads like:</p>
-<p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.6.5</span> <span class="pre">|Anaconda,</span> <span class="pre">Inc.|</span> <span class="pre">(default,</span> <span class="pre">Mar</span> <span class="pre">29</span> <span class="pre">2018,</span> <span class="pre">13:32:41)</span> <span class="pre">[MSC</span> <span class="pre">v.1900</span> <span class="pre">64</span> <span class="pre">bit</span> <span class="pre">(AMD64)]</span> <span class="pre">on</span> <span class="pre">win32</span></code>…</p>
-</li>
-<li><p>type <code class="docutils literal notranslate"><span class="pre">exit()</span></code> to close Python</p></li>
-</ul>
-<p>For Windows the installation commands may read (version number 1.0.20 may be different):</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.6,</span> <span class="pre">32bit</span></code>: pip install distexudyn-1.0.20-cp36-cp36m-win32.whl</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.6,</span> <span class="pre">64bit</span></code>: pip install distexudyn-1.0.20-cp36-cp36m-win_amd64.whl</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.7,</span> <span class="pre">64bit</span></code>: pip install distexudyn-1.0.20-cp37-cp37m-win_amd64.whl</p></li>
-</ul>
-</section>
-<section id="build-and-install-exudyn-under-windows-10">
-<span id="sec-install-installinstructions-buildwindows"></span><h2>Build and install Exudyn under Windows 10?<a class="headerlink" href="#build-and-install-exudyn-under-windows-10" title="Permalink to this heading"></a></h2>
-<p>Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:</p>
-<ul class="simple">
-<li><p>you need an appropriate compiler (tested with Microsoft Visual Studio; recommended: VS2017)</p></li>
-<li><p>install your Anaconda distribution including Spyder</p></li>
-<li><p>close all Python programs (e.g. Spyder, Jupyter, …)</p></li>
-<li><p>run an Anaconda prompt (may need to be run as administrator)</p></li>
-<li><p>if you cannot run Anaconda prompt directly, do:</p></li>
-<li><p>open windows shell (cmd.exe) as administrator (START → search for cmd.exe → right click on app → ‘run as administrator’ if necessary) [may not be necessary]</p></li>
-<li><p>go to your Scripts folder inside the Anaconda folder (e.g. <code class="docutils literal notranslate"><span class="pre">C:\ProgramData\Anaconda\Scripts</span></code>) [may not be necessary]</p></li>
-<li><p>run ‘activate.bat’ [may not be necessary]</p></li>
-<li><p>go to ‘main’ of your cloned github folder of Exudyn</p></li>
-<li><p>run: (the <code class="docutils literal notranslate"><span class="pre">--parallel</span></code> option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x) <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span> <span class="pre">--parallel</span></code></p></li>
-<li><p>read the output; if there are errors, try to solve them by installing appropriate modules</p></li>
-</ul>
-<p>You can also create your own wheels, doing the above steps to activate the according Python version and then calling:</p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">bdist_wheel</span> <span class="pre">--parallel</span></code></p>
-</div></blockquote>
-<p>This will add a wheel in the <code class="docutils literal notranslate"><span class="pre">dist</span></code> folder.</p>
-</section>
-<section id="build-and-install-exudyn-under-mac-os-x">
-<span id="sec-install-installinstructions-buildmacos"></span><h2>Build and install Exudyn under Mac OS X?<a class="headerlink" href="#build-and-install-exudyn-under-mac-os-x" title="Permalink to this heading"></a></h2>
-<p>Installation and building on Mac OS X is less frequently tested, but successful compilation including GLFW has been achieved.
-Requirements are an according Anaconda (or Miniconda) installation.</p>
-<p><strong>Tested configurations</strong>:</p>
-<ul class="simple">
-<li><p>Mac OS 11.x ‘Big Sur’, Mac Mini (2021), Apple M1, 16GB Memory</p></li>
-<li><p>Miniconda with conda environments (x86 / i368 based with Rosetta 2) with Python 3.7 - 3.10</p></li>
-<li><p>Miniconda with conda environments (ARM) with Python 3.8 - 3.10
-→ wheels are available on pypi since Exudyn 1.5.0</p></li>
-</ul>
-<p><strong>NOTE</strong>:</p>
-<ul class="simple">
-<li><p>Multi-threading is not fully supported, but may work in some applications</p></li>
-<li><p>On Apple M1 processors the newest Anaconda supports now all required features; environments with Python 3.8-3.10 have been successfully tested;</p></li>
-<li><p>The Rosetta (x86 emulation) mode on Apple M1 also works now without much restrictions; these files should also work on older Macs</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tkinter</span></code> has been adapted (some workarounds needed on MacOS!), available since Exudyn 1.5.15.dev1</p></li>
-<li><p>Some optimization and processing functions do not run (especially multiprocessing and tqdm);</p></li>
-</ul>
-<p>Alternatively, we tested on:</p>
-<ul class="simple">
-<li><p>Mac OS X 10.11.6 ‘El Capitan’, Mac Pro (2010), 3.33GHz 6-Core Intel Xeon, 4GB Memory, Anaconda Navigator 1.9.7, Python 3.7.0, Spyder 3.3.6</p></li>
-</ul>
-<p><strong>Compile from source</strong>:</p>
-<p>If you would like to compile from source, just use a bash terminal on your Mac, and do the following steps inside the <code class="docutils literal notranslate"><span class="pre">main</span></code> directory of your repository and type</p>
-<ul class="simple">
-<li><p>uninstall if old version exists (may need to repeat this!): <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">uninstall</span> <span class="pre">exudyn</span></code></p></li>
-<li><p>remove the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory if you would like to re-compile without changes</p></li>
-<li><p>to perform compilation from source, write: (the <code class="docutils literal notranslate"><span class="pre">--parallel</span></code> option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">bdist_wheel</span> <span class="pre">--parallel</span></code></p></li>
-<li><p>which takes 75 seconds on Apple M1 in parallel mode, otherwise 5 minutes. To install Exudyn , run
-<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code>→ this will only install, but not re-compile. Otherwise, just use pip install from the created wheel in the dist folder
-<strong>NOTE</strong> that conda environments are highly recommended</p></li>
-</ul>
-<p>Then just go to the <code class="docutils literal notranslate"><span class="pre">pythonDev/Examples</span></code> folder and run an example:</p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">springDamperUserFunctionTest.py</span></code></p>
-</div></blockquote>
-<p>If there are other issues, we are happy to receive your detailed bug reports.</p>
-<p>Note that you need to run</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exudyn</span><span class="o">.</span><span class="n">StartRenderer</span><span class="p">()</span>
-<span class="n">exudyn</span><span class="o">.</span><span class="n">DoRendererIdleTasks</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<p>Hereafter, press the play button or <code class="docutils literal notranslate"><span class="pre">F5</span></code> in Spyder.</p>
+<p>If successful, the IPython Console of Spyder will print something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">runfile</span><span class="p">(</span><span class="s1">&#39;C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples/myFirstExample.py&#39;</span><span class="p">,</span>
+  <span class="n">wdir</span><span class="o">=</span><span class="s1">&#39;C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples&#39;</span><span class="p">)</span>
+<span class="o">+++++++++++++++++++++++++++++++</span>
+<span class="n">EXUDYN</span> <span class="n">V1</span><span class="mf">.2.9</span> <span class="n">solver</span><span class="p">:</span> <span class="n">implicit</span> <span class="n">second</span> <span class="n">order</span> <span class="n">time</span> <span class="n">integration</span>
+<span class="n">STEP100</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span> <span class="n">sec</span><span class="p">,</span> <span class="n">timeToGo</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">sec</span><span class="p">,</span> <span class="n">Nit</span><span class="o">/</span><span class="n">step</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">solver</span> <span class="n">finished</span> <span class="n">after</span> <span class="mf">0.0007824</span> <span class="n">seconds</span><span class="o">.</span>
 </pre></div>
 </div>
-<p>in order to interact with the render window, as there is only a single-threaded version available for Mac OS.</p>
-</section>
-<section id="build-and-install-exudyn-under-ubuntu">
-<span id="sec-install-installinstructions-buildubuntu"></span><h2>Build and install Exudyn under UBUNTU?<a class="headerlink" href="#build-and-install-exudyn-under-ubuntu" title="Permalink to this heading"></a></h2>
-<p>Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python <strong>3.6</strong> is already installed on UBUNTU18.04, otherwise use <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python3</span></code>) (see also the youtube video: <a class="reference external" href="https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx">https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx</a>):</p>
-<p>First update …</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<p>If you check your current directory (where <code class="docutils literal notranslate"><span class="pre">myFirstExample.py</span></code> lies), you will find a new file <code class="docutils literal notranslate"><span class="pre">coordinatesSolution.txt</span></code>, which contains the results of your computation (with default values for time integration).
+The beginning and end of the file should look like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Exudyn implicit second order time integration solver solution file</span>
+<span class="c1">#simulation started=2022-04-07,19:02:19</span>
+<span class="c1">#columns contain: time, ODE2 displacements, ODE2 velocities, ODE2 accelerations</span>
+<span class="c1">#number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [2,0,0,0]</span>
+<span class="c1">#number of written coordinates [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = [2,2,2,0,0,0,0]</span>
+<span class="c1">#total columns exported  (excl. time) = 6</span>
+<span class="c1">#number of time steps (planned) = 100</span>
+<span class="c1">#Exudyn version = 1.2.33.dev1; Python3.9.11; Windows AVX2 FLOAT64</span>
+<span class="c1">#</span>
+<span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.01</span><span class="p">,</span><span class="mf">5e-09</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">1e-06</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.02</span><span class="p">,</span><span class="mf">2e-08</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">2e-06</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.03</span><span class="p">,</span><span class="mf">4.5e-08</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">3e-06</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.04</span><span class="p">,</span><span class="mf">8e-08</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">4e-06</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.05</span><span class="p">,</span><span class="mf">1.25e-07</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">5e-06</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+
+<span class="o">...</span>
+
+<span class="mf">0.96</span><span class="p">,</span><span class="mf">4.608e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">9.6e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.97</span><span class="p">,</span><span class="mf">4.7045e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">9.7e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.98</span><span class="p">,</span><span class="mf">4.802e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">9.8e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mf">0.99</span><span class="p">,</span><span class="mf">4.9005e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">9.9e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="mi">1</span><span class="p">,</span><span class="mf">5e-05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="mi">0</span>
+<span class="c1">#simulation finished=2022-04-07,19:02:19</span>
+<span class="c1">#Solver Info: stepReductionFailed(or step failed)=0,discontinuousIterationSuccessful=1,newtonSolutionDiverged=0,massMatrixNotInvertible=1,total time steps=100,total Newton iterations=100,total Newton jacobians=100</span>
 </pre></div>
 </div>
-<p>Install necessary Python libraries and pip3; <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> and<code class="docutils literal notranslate"><span class="pre">scipy</span></code> are not required for installation but used in Exudyn examples:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">dpkg</span> <span class="o">--</span><span class="n">configure</span> <span class="o">-</span><span class="n">a</span>
-<span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python3</span><span class="o">-</span><span class="n">pip</span>
-<span class="n">pip3</span> <span class="n">install</span> <span class="n">numpy</span>
-<span class="n">pip3</span> <span class="n">install</span> <span class="n">matplotlib</span>
-<span class="n">pip3</span> <span class="n">install</span> <span class="n">scipy</span>
-</pre></div>
-</div>
-<p>Install pybind11 (needed for running the setup.py file derived from the pybind11 example):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">pybind11</span>
-</pre></div>
-</div>
-<p>If graphics is used (<code class="docutils literal notranslate"><span class="pre">\#define</span> <span class="pre">USE_GLFW_GRAPHICS</span></code> in <code class="docutils literal notranslate"><span class="pre">BasicDefinitions.h</span></code>), you must install the according GLFW and OpenGL libs:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">freeglut3</span> <span class="n">freeglut3</span><span class="o">-</span><span class="n">dev</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">mesa</span><span class="o">-</span><span class="n">common</span><span class="o">-</span><span class="n">dev</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libglfw3</span> <span class="n">libglfw3</span><span class="o">-</span><span class="n">dev</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libx11</span><span class="o">-</span><span class="n">dev</span> <span class="n">xorg</span><span class="o">-</span><span class="n">dev</span> <span class="n">libglew1</span><span class="mf">.5</span> <span class="n">libglew1</span><span class="mf">.5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libglu1</span><span class="o">-</span><span class="n">mesa</span> <span class="n">libglu1</span><span class="o">-</span><span class="n">mesa</span><span class="o">-</span><span class="n">dev</span> <span class="n">libgl1</span><span class="o">-</span><span class="n">mesa</span><span class="o">-</span><span class="n">glx</span> <span class="n">libgl1</span><span class="o">-</span><span class="n">mesa</span><span class="o">-</span><span class="n">dev</span>
-</pre></div>
-</div>
-<p>With all of these libs, you can run the setup.py installer (go to <code class="docutils literal notranslate"><span class="pre">Exudyn_git/main</span></code> folder), which takes some minutes for compilation (the –user option is used to install in local user folder) (the <code class="docutils literal notranslate"><span class="pre">--parallel</span></code> option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span> <span class="o">--</span><span class="n">parallel</span>
-</pre></div>
-</div>
-<p>Congratulation! <strong>Now, run a test example</strong> (will also open an OpenGL window if successful):</p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">pythonDev/Examples/rigid3Dexample.py</span></code></p>
-</div></blockquote>
-<p>You can also create a UBUNTU wheel which can be easily installed on the same machine (x64), same operating system (UBUNTU18.04) and with same Python version (e.g., 3.6):</p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">wheel</span></code><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">python3</span> <span class="pre">setup.py</span> <span class="pre">bdist_wheel</span> <span class="pre">--parallel</span></code></p>
-</div></blockquote>
-<p><strong>Exudyn under Ubuntu / WSL</strong>:</p>
-<ul class="simple">
-<li><p>Note that Exudyn also nicely works under WSL (Windows subsystem for linux; tested for Ubuntu18.04) and an according xserver (VcXsrv).</p></li>
-<li><p>Just set the display variable in your .bashrc file accordingly and you can enjoy the OpenGL windows and settings.</p></li>
-<li><p>It shall be noted that WSL + xserver works better than on MacOS, even for tkinter, multitasking, etc.! So, if you have troubles with your Mac, use a virtual machine with ubuntu and a xserver, that may do better</p></li>
-</ul>
-<p><strong>Exudyn under Raspberry Pi 4b</strong>:</p>
-<ul class="simple">
-<li><p>Exudyn also compiles under RaspberryPi 4b, Ubuntu Mate 20.04, Python 3.8; current version should compile out of the box using <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">setup.py</span> <span class="pre">install</span></code> command.</p></li>
-<li><p>Performance is quite ok and it is even capable to use all cores (but you should add a fan!)</p></li>
-<li><p>→ this could lead to a nice cluster project!</p></li>
-</ul>
-<p><strong>KNOWN issues for linux builds</strong>:</p>
-<ul class="simple">
-<li><p>Using <strong>WSL2</strong> (Windows subsystem for linux), there occur some conflicts during build because of incompatible windows and linux file systems and builds will not be copied to the dist folder; workaround: go to explorer, right click on ‘build’ directory and set all rights for authenticated user to ‘full access’</p></li>
-<li><p><strong>compiler (gcc,g++) conflicts</strong>: It seems that Exudyn works well on UBUNTU18.04 with the original <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.6.9</span></code> and <code class="docutils literal notranslate"><span class="pre">gcc-7.5.0</span></code> version as well as with UBUNTU20.04 with <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.8.5</span></code> and <code class="docutils literal notranslate"><span class="pre">gcc-9.3.0</span></code>. Upgrading <code class="docutils literal notranslate"><span class="pre">gcc</span></code> on a linux system with Python 3.6 to, e.g., <code class="docutils literal notranslate"><span class="pre">gcc-8.2</span></code> showed us a linker error when loading the Exudyn module in Python – there are some common restriction using <code class="docutils literal notranslate"><span class="pre">gcc</span></code> versions different from those with which the Python version has been built. Starting <code class="docutils literal notranslate"><span class="pre">python</span></code> or <code class="docutils literal notranslate"><span class="pre">python3</span></code> on your linux machine shows you the <code class="docutils literal notranslate"><span class="pre">gcc</span></code> version it had been build with. Check your current <code class="docutils literal notranslate"><span class="pre">gcc</span></code> version with: <code class="docutils literal notranslate"><span class="pre">gcc</span> <span class="pre">--version</span></code></p></li>
-</ul>
-</section>
-<section id="uninstall-exudyn">
-<span id="sec-install-installinstructions-uninstall"></span><h2>Uninstall Exudyn<a class="headerlink" href="#uninstall-exudyn" title="Permalink to this heading"></a></h2>
-<p>To uninstall exudyn under Windows, run (may require admin rights):</p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">uninstall</span> <span class="pre">exudyn</span></code></p>
-</div></blockquote>
-<p>To uninstall under UBUNTU, run:</p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip3</span> <span class="pre">uninstall</span> <span class="pre">exudyn</span></code></p>
-</div></blockquote>
-<p>If you upgrade to a newer version, uninstall is usually not necessary!</p>
-</section>
-<section id="how-to-install-exudyn-and-use-the-c-source-code-advanced">
-<h2>How to install Exudyn and use the C++ source code (advanced)?<a class="headerlink" href="#how-to-install-exudyn-and-use-the-c-source-code-advanced" title="Permalink to this heading"></a></h2>
-<p>Exudyn is still under intensive development of core modules.
-There are several ways of using the code, but you <strong>cannot</strong> install Exudyn as compared to other executable programs and apps.</p>
-<p>In order to make full usage of the C++ code and extending it, you can use:</p>
-<ul class="simple">
-<li><p>Windows / Microsoft Visual Studio 2017 and above:</p></li>
-<li><p>get the files from git</p></li>
-<li><p>put them into a local directory (recommended: <code class="docutils literal notranslate"><span class="pre">C:/DATA/cpp/EXUDYN_git</span></code>)</p></li>
-<li><p>start <code class="docutils literal notranslate"><span class="pre">main_sln.sln</span></code> with Visual Studio (recommended version: 2017, otherwise you have to manually adapt)</p></li>
-<li><p>compile the code and run <code class="docutils literal notranslate"><span class="pre">main/pythonDev/pytest.py</span></code> example code</p></li>
-<li><p>adapt <code class="docutils literal notranslate"><span class="pre">pytest.py</span></code> for your applications</p></li>
-<li><p>extend the C++ source code</p></li>
-<li><p>link it to your own code</p></li>
-<li><p>NOTE: on Linux systems, you mostly need to replace ‘/’ with ‘'</p></li>
-<li><p>Linux, etc.: not fully supported yet; however, all external libraries are Linux-compatible and thus should run with minimum adaptation efforts.</p></li>
-</ul>
-</section>
+<p>Within this file, the first column shows the simulation time and the following columns provide coordinates, their derivatives and Lagrange multipliers on system level. For relation of local to global coordinates, see Section <a class="reference internal" href="MappingBetweenLocalAndGlobalCoordinateIndices.html#sec-overview-ltgmapping"><span class="std std-ref">Mapping between local and global coordinate indices</span></a>. As expected, the x-coordinate of the point mass has constant acceleration a=f/m=0.001/10=0.0001, the velocity grows up to 0.0001 after 1 second and the point mass moves 0.00005 along the x-axis.</p>
+<p>Note that line 8 contains the Exudyn and Python versions (as well as some other specific information on the platform and compilation settings (which may help you identify with which computer, etc., you created results)) provided in the solution file are the versions at which Exudyn has been compiled with.
+The Python micro version (last digit) may be different from the Python version from which you were running Exudyn.
+This information is also provided in the sensor output files.</p>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="InstallationInstructions.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="TroubleShootingAndFAQ.html" class="btn btn-neutral float-right" title="Further notes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="FurtherNotes.html" class="btn btn-neutral float-left" title="Further notes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="TroubleShootingAndFAQ.html" class="btn btn-neutral float-right" title="Trouble shooting and FAQ" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

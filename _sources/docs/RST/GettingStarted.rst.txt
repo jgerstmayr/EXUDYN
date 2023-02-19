@@ -1,70 +1,61 @@
+Getting started
+===============
 
-.. _sec-install-simpleexample:
+This section will show:
 
-Run a simple example in Python
-==============================
-
-After performing the steps of the previous section, this section shows a simplistic model which helps you to check if Exudyn runs on your computer.
-
-In order to start, run the Python interpreter Spyder (or any preferred Python environment).
-In order to test the following example, which creates a mbs, adds a node, an object, a marker and a load and simulates everything with default values, 
-
-
-+  open \ ``myFirstExample.py``\  from your \ ``Examples``\  folder.
-
-Hereafter, press the play button or \ ``F5``\  in Spyder.
-
-
-If successful, the IPython Console of Spyder will print something like:
-
-.. code-block::
-
-  runfile('C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples/myFirstExample.py', 
-    wdir='C:/DATA/cpp/EXUDYN_git/main/pythonDev/Examples')
-  +++++++++++++++++++++++++++++++
-  EXUDYN V1.2.9 solver: implicit second order time integration
-  STEP100, t = 1 sec, timeToGo = 0 sec, Nit/step = 1
-  solver finished after 0.0007824 seconds.
++  What is Exudyn ?
++  Who is developing Exudyn ?
++  How to install Exudyn 
++  How to link Exudyn and Python
++  Goals of Exudyn
++  Run a simple example in Python
++  FAQ -- Frequently asked questions
 
 
 
-If you check your current directory (where \ ``myFirstExample.py``\  lies), you will find a new file \ ``coordinatesSolution.txt``\ , which contains the results of your computation (with default values for time integration).
-The beginning and end of the file should look like: 
+What is Exudyn ?
+----------------
+
+Exudyn -- { (fl\ **EX**\ ible m\ **U**\ ltibody \ **DYN**\ amics  -- \ **EX**\ tend yo\ **U**\ r \ **DYN**\ amics)}
 
 
+Exudyn is a C++ based Python library for efficient simulation of flexible multibody dynamics systems.
+It is the follow up code of the previously developed multibody code HOTINT, which Johannes Gerstmayr started during his PhD-thesis.
+It seemed that the previous code HOTINT reached limits of further (efficient) development and it seemed impossible to continue from this code as it was outdated regarding programming techniques and the numerical formulation at the time Exudyn was started.
 
-.. code-block::
+Exudyn is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automatized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of Python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.
 
-  #Exudyn implicit second order time integration solver solution file
-  #simulation started=2022-04-07,19:02:19
-  #columns contain: time, ODE2 displacements, ODE2 velocities, ODE2 accelerations
-  #number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [2,0,0,0]
-  #number of written coordinates [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = [2,2,2,0,0,0,0]
-  #total columns exported  (excl. time) = 6
-  #number of time steps (planned) = 100
-  #Exudyn version = 1.2.33.dev1; Python3.9.11; Windows AVX2 FLOAT64
-  #
-  0,0,0,0,0,0.0001,0
-  0.01,5e-09,0,1e-06,0,0.0001,0
-  0.02,2e-08,0,2e-06,0,0.0001,0
-  0.03,4.5e-08,0,3e-06,0,0.0001,0
-  0.04,8e-08,0,4e-06,0,0.0001,0
-  0.05,1.25e-07,0,5e-06,0,0.0001,0
-
-  ...
-
-  0.96,4.608e-05,0,9.6e-05,0,0.0001,0
-  0.97,4.7045e-05,0,9.7e-05,0,0.0001,0
-  0.98,4.802e-05,0,9.8e-05,0,0.0001,0
-  0.99,4.9005e-05,0,9.9e-05,0,0.0001,0
-  1,5e-05,0,0.0001,0,0.0001,0
-  #simulation finished=2022-04-07,19:02:19
-  #Solver Info: stepReductionFailed(or step failed)=0,discontinuousIterationSuccessful=1,newtonSolutionDiverged=0,massMatrixNotInvertible=1,total time steps=100,total Newton iterations=100,total Newton jacobians=100
+The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
+For details on the interaction of nodes, objects, markers and loads see Section :ref:`sec-overview-items`\ .
 
 
-Within this file, the first column shows the simulation time and the following columns provide coordinates, their derivatives and Lagrange multipliers on system level. For relation of local to global coordinates, see Section :ref:`sec-overview-ltgmapping`\ . As expected, the x-coordinate of the point mass has constant acceleration a=f/m=0.001/10=0.0001, the velocity grows up to 0.0001 after 1 second and the point mass moves 0.00005 along the x-axis.
+Developers of Exudyn and thanks
+-------------------------------
 
-Note that line 8 contains the Exudyn and Python versions (as well as some other specific information on the platform and compilation settings (which may help you identify with which computer, etc., you created results)) provided in the solution file are the versions at which Exudyn has been compiled with.
-The Python micro version (last digit) may be different from the Python version from which you were running Exudyn.
-This information is also provided in the sensor output files.
+Exudyn is currently  developed at the University of Innsbruck.
+In the first phase most of the core code is written by Johannes Gerstmayr, implementing ideas that followed out of the project HOTINT . 15 years of development led to a lot of lessons learned and after 20 years, a code must be re-designed.
+
+Some important tests for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
+For the interoperability between C++ and Python, we extensively use \ **Pybind11**\ , originally written by Jakob Wenzel, see \ ``https://github.com/pybind/pybind11``\ . Without Pybind11 we couldn't have made this project -- Thanks a lot!
+
+Important discussions with researchers from the community were important for the design and development of Exudyn , where we like to mention Joachim Schöberl from TU-Vienna who boosted the design of the code with great concepts. 
+
+The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications' contributes to the development of the code.
+
+The following people have contributed to Python and C++ library implementations (as well as to testing, examples, theory, ...):
+
++  Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with \ ``taskmanager``\  for \ **multi-threaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
++  Stefan Holzinger, University of Innsbruck (Lie group module and solvers in Python, Lie group node, testing)
++  Andreas Zwölfer, Technical University Munich (FFRF and CMS formulation)
++  Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation, pip install on linux, wsl with graphics)
++  Martin Sereinig, University of Innsbruck (special robotics functionality)
++  Michael Pieber, University of Innsbruck (helped in several Python libraries)
++  Grzegorz Orzechowski, Lappeenranta University of Technology (coupling with openAI gym and running machine learning algorithms)
++  Aaron Bacher, University of Innsbruck (helped to integrated OpenVR, connection with Franka Emika Panda)
+
+The following people have contributed to examples, testing and theory:
+
++  Konstantina Ntarladima, Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Simon Scheiber
+
+-- thanks a lot! --
 

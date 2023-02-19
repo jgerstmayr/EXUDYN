@@ -50,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="CInterfaceIndex.html">Python-C++ command interface</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">General information on Python-C++ interface</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#item-index">Item index</a></li>
@@ -121,7 +122,7 @@ In the following, some basic steps and concepts for usage are shown, references 
 </div>
 </div></blockquote>
 <p>Note that including <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code> will cover <code class="docutils literal notranslate"><span class="pre">itemInterface</span></code>. Also note that <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">...</span> <span class="pre">import</span> <span class="pre">*</span></code> is not recommended in general and it will not work in certain cases, e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace imports in your files afterwards by removing the star import.</p>
-<p>The general hub to models is provided by the classes <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code> and <code class="docutils literal notranslate"><span class="pre">MainSystem</span></code>, except for some very basic system functionality (which is inside the Exudyn module).</p>
+<p>The general hub to multibody dynamics models is provided by the classes <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code> and <code class="docutils literal notranslate"><span class="pre">MainSystem</span></code>, except for some very basic system functionality (which is inside the Exudyn module).</p>
 <p>You can create a new <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code>, which is a class that is initialized by assigning a system container to a variable, usually denoted as <code class="docutils literal notranslate"><span class="pre">SC</span></code>:</p>
 <blockquote>
 <div><div class="line-block">
@@ -156,7 +157,7 @@ In the following, some basic steps and concepts for usage are shown, references 
 <span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="c1">#  create system container and store in SC:</span>
 <span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>
-<span class="c1">#  add a MainSystem to system container SC and store as mbs:</span>
+<span class="c1">#  add a MainSystem (multibody system) to system container SC and store as mbs:</span>
 <span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>
 <span class="c1">#  add a second MainSystem to system container SC and store as mbs2:</span>
 <span class="n">mbs2</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>
@@ -206,7 +207,7 @@ The following code snippets and comments should explain this behavior:</p>
 <span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>
 <span class="n">SC2</span> <span class="o">=</span> <span class="n">SC</span>                           <span class="c1">#this will only put a reference to SC</span>
                                    <span class="c1">#SC2 and SC represent the SAME C++ object</span>
-<span class="c1">#add a MainSystem:</span>
+<span class="c1">#add a MainSystem (multibody system):</span>
 <span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">AddSystem</span><span class="p">()</span>               <span class="c1">#get reference mbs to C++ system</span>
 <span class="n">mbs2</span><span class="o">=</span><span class="n">mbs</span>                           <span class="c1">#again, mbs2 and mbs refer to the same C++ object</span>
 <span class="n">og</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">ObjectGround</span><span class="p">())</span> <span class="c1">#copy data of ObjectGround() into C++</span>

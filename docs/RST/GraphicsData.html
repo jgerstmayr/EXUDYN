@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GraphicsData &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Character encoding: UTF-8" href="CharacterEncodingUTF8.html" />
+    <link rel="prev" title="Render state" href="RenderState.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.5.103.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GraphicsAndVisualization.html">Graphics and visualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MouseInput.html">Mouse input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KeyboardInput.html">Keyboard input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="RenderState.html">Render state</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">GraphicsData</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bodygraphicsdata">BodyGraphicsData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphicsdata-line">GraphicsData: Line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphicsdata-lines">GraphicsData: Lines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphicsdata-circle">GraphicsData: Circle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphicsdata-text">GraphicsData: Text</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphicsdata-trianglelist">GraphicsData: TriangleList</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="CharacterEncodingUTF8.html">Character encoding: UTF-8</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.5.103.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+      <li class="breadcrumb-item active">GraphicsData</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/RST/GraphicsData.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="graphicsdata">
+<span id="sec-graphicsdata"></span><h1>GraphicsData<a class="headerlink" href="#graphicsdata" title="Permalink to this heading"></a></h1>
+<p>All graphics objects are defined by a <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> structure. %, see Section <a class="reference internal" href="#sec-graphicsdata"><span class="std std-ref">GraphicsData</span></a>.
+Note that currently the visualization is based on a very simple and ancient OpenGL implementation, as there is currently no simple platform independent alternative. However, most of the heavy load triangle-based operations are implemented in C++ and are realized by very efficient OpenGL commands. However, note that the number of triangles to represent the object should be kept in a feasible range (&lt;1000000) in order to obtain a fast response of the renderer.</p>
+<p>Many objects include a <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> dictionary structure for definition of attached visualization of the object.
+Note that objects expect a list of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code>, which can be produced with <code class="docutils literal notranslate"><span class="pre">GraphicsData...(...)</span></code> functions. Note that if reading out the <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> from the object again, it usually has a different structure sorted by types of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code>.
+Typically, you can use primitives (cube, sphere, …) or {STL} data to define the objects appearance.
+<code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> dictionaries can be created with functions provided in the utilities module <code class="docutils literal notranslate"><span class="pre">exudyn.graphicsDataUtilities</span></code>, see Section <a class="reference internal" href="pythonUtilities/graphicsDataUtilities.html#sec-module-graphicsdatautilities"><span class="std std-ref">Module: graphicsDataUtilities</span></a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> can be transformed into points and triangles (mesh) and can be used for contact computation, as well.
+<strong>NOTE</strong> that for correct rendering and correct contact computations, all triangle nodes must follow a strict local order and triangle normals – if defined – must point outwards, see Fig. <a class="reference internal" href="#fig-trianglenormals"><span class="std std-ref">Definition of triangle normals and outside/inside regions in Exudyn</span></a>.</p>
+<figure class="align-default" id="id1">
+<span id="fig-trianglenormals"></span><a class="reference internal image-reference" href="../../_images/triangleNormal.png"><img alt="../../_images/triangleNormal.png" src="../../_images/triangleNormal.png" style="width: 250px;" /></a>
+<figcaption>
+<p><span class="caption-text">Definition of triangle normals and outside/inside regions in Exudyn</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>The normal to a triangle with vertex positions pv_0, pv_1, pv_2 is computed from cross product as nv = frac(pv_1-pv_0) times (pv_2-pv_0)|(pv_1-pv_0) times (pv_2-pv_0)|;
+the normal nv then points to the outside region of the mesh or body; the direction of nv just depends on the ordering of the vertex points (interchange of two points changes the normal direction); correct normals are needed for contact computations as well as for correct shading effects in visualization.</p>
+<section id="bodygraphicsdata">
+<span id="sec-bodygraphicsdata"></span><h2>BodyGraphicsData<a class="headerlink" href="#bodygraphicsdata" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">BodyGraphicsData</span></code> contains a list of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> items, i.e. <code class="docutils literal notranslate"><span class="pre">bodyGraphicsData</span> <span class="pre">=</span> <span class="pre">[graphicsItem1,</span> <span class="pre">graphicsItem2,</span> <span class="pre">...]</span></code>. Every single <code class="docutils literal notranslate"><span class="pre">graphicsItem</span></code> may be defined as one of the following structures using a specific ‘type’.
+The following sections show the different possible types of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code>.</p>
+</section>
+<section id="graphicsdata-line">
+<h2>GraphicsData: Line<a class="headerlink" href="#graphicsdata-line" title="Permalink to this heading"></a></h2>
+<p>GraphicsData <code class="docutils literal notranslate"><span class="pre">'type'</span> <span class="pre">=</span> <span class="pre">'Line'</span></code> draws a polygonal line between all specified points:</p>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text"></span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><div class="line-block">
+<div class="line"><strong>Name</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>type</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>default value</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>description</strong></div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">color</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">[0,0,0,1]</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list of 4 floats to define RGB-color and transparency</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">data</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">mandatory</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list of float triples of x,y,z coordinates of the line floats to define RGB-color and transparency</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#rectangle with side length 1:</span>
+<span class="n">graphicsData</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;Line&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="c1">#red</span>
+                <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
+                              <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
+                              <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
+                              <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
+                              <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]}</span>
+
+<span class="n">vGround</span><span class="o">=</span><span class="n">VObjectGround</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="p">[</span><span class="n">graphicsData</span><span class="p">])</span>
+<span class="n">oGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">ObjectGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                                 <span class="n">visualization</span><span class="o">=</span><span class="n">vGround</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="graphicsdata-lines">
+<h2>GraphicsData: Lines<a class="headerlink" href="#graphicsdata-lines" title="Permalink to this heading"></a></h2>
+<p>GraphicsData <code class="docutils literal notranslate"><span class="pre">'type':</span> <span class="pre">'Lines'</span></code> draws a list of n lines defined by 2 points each:</p>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text"></span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><div class="line-block">
+<div class="line"><strong>Name</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>type</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>default value</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>description</strong></div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">colors</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">mandatory</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list [R0,G0,B0,A0, R1,G2,B1,A1, …] of 2times n x 4 floats to define RGB-color and transparency of line points</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">points</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">mandatory</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list of 2 times n float triples of x,y,z coordinates of the line points; Example for two lines: data=[0,0,0, 1,0,0, 1,0,0, 1,1,0] … draws a L-shape with side length 1</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="graphicsdata-circle">
+<h2>GraphicsData: Circle<a class="headerlink" href="#graphicsdata-circle" title="Permalink to this heading"></a></h2>
+<p>GraphicsData <code class="docutils literal notranslate"><span class="pre">'type'</span> <span class="pre">=</span> <span class="pre">'Circle'</span></code> draws a polygonal line between all specified points:</p>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text"></span><a class="headerlink" href="#id4" title="Permalink to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><div class="line-block">
+<div class="line"><strong>Name</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>type</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>default value</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>description</strong></div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">color</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">[0,0,0,1]</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list of 4 floats to define RGB-color and transparency</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">radius</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">float</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">mandatory</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">radius of circle</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">position</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">mandatory</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list of float triples of x,y,z coordinates of center point of the circle</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">graphicsData</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;Circle&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>  <span class="c1">#blue</span>
+                <span class="s1">&#39;radius&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                <span class="s1">&#39;position&#39;</span><span class="p">:[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">]}</span>
+</pre></div>
+</div>
+</section>
+<section id="graphicsdata-text">
+<h2>GraphicsData: Text<a class="headerlink" href="#graphicsdata-text" title="Permalink to this heading"></a></h2>
+<p>GraphicsData <code class="docutils literal notranslate"><span class="pre">'type'</span> <span class="pre">=</span> <span class="pre">'Text'</span></code> places the given text at position:</p>
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text"></span><a class="headerlink" href="#id5" title="Permalink to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><div class="line-block">
+<div class="line"><strong>Name</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>type</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>default value</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>description</strong></div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">color</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">[0,0,0,1]</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list of 4 floats to define RGB-color and transparency</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">text</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">string</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">mandatory</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">text to be displayed, using UTF-8 encoding (see Section <a class="reference internal" href="CharacterEncodingUTF8.html#sec-utf8"><span class="std std-ref">Character encoding: UTF-8</span></a>)</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">position</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">mandatory</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list of float triples of [x,y,z] coordinates of the left upper position of the text; e.g. position=[20,10,0]</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="graphicsdata-trianglelist">
+<h2>GraphicsData: TriangleList<a class="headerlink" href="#graphicsdata-trianglelist" title="Permalink to this heading"></a></h2>
+<p>GraphicsData <code class="docutils literal notranslate"><span class="pre">'type'</span> <span class="pre">=</span> <span class="pre">'TriangleList'</span></code> draws a mesh with flat triangles for given points and connectivity; triangles may look smoothened by using appropriate normals; edges may be added optionally:</p>
+<table class="docutils align-default" id="id6">
+<caption><span class="caption-text"></span><a class="headerlink" href="#id6" title="Permalink to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><div class="line-block">
+<div class="line"><strong>Name</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>type</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>default value</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>description</strong></div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">points</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">mandatory</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list [x0,y0,z0, x1,y1,z1, …] containing n times 3 floats (grouped x0,y0,z0, x1,y1,z1, …) to define x,y,z coordinates of points, n being the number of points (=vertices)</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">colors</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">[]</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list [R0,G0,B0,A0, R1,G2,B1,A1, …] containing n times 4 floats to define RGB-color and transparency A of triangle vertices (points), where n must be according to number of points; if field ‘colors’ does not exist, default colors will be used</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">normals</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">[]</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list [n0x,n0y,n0z, …] containing n times 3 floats to define normal direction of triangles per point, where n must be according to number of points; if field ‘normals’ does not exist, default normals [0,0,0] will be used</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">triangles</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">mandatory</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list [T0point0, T0point1, T0point2, …] containing n_{trig} times 3 integers to define point indices of each vertex of the triangles (=connectivity); point indices start with index 0; the maximum index must be le points.size()</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">edges</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">[]</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list [L0point0, L0point1, L1point0, L1point1, …] containing n_{lines} times 2 integers to define point indices of edges drawn on triangle mesh</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">edgeColor</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">[0,0,0,1]</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">list of 4 floats to define RGB-color and transparency of edges</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Examples of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> can be found in the Python examples and in the file <code class="docutils literal notranslate"><span class="pre">graphicsDataUtilities.py</span></code>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="RenderState.html" class="btn btn-neutral float-left" title="Render state" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CharacterEncodingUTF8.html" class="btn btn-neutral float-right" title="Character encoding: UTF-8" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

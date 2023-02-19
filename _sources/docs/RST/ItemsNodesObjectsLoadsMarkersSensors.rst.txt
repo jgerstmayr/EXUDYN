@@ -1,5 +1,5 @@
-
 .. _sec-overview-items:
+
 
 Items: Nodes, Objects, Loads, Markers, Sensors, ...
 ===================================================
@@ -10,11 +10,12 @@ In this section, the most important part of Exudyn are provided. An overview of 
 
 .. _fig-items-interaction:
 .. figure:: ../theDoc/figures/itemsMultibodySystem.png
-   :width: 90%
+   :width: 500
 
    Interaction of items in a multibody system
 
 Note that both, bodies and connectors (including constraints) are -- computational -- objects. The arrows indicate, that, e.g., object 1 has node 1 and node 2 (indexes) and that marker 0 is attached to object 0, while load 0 uses marker 0 to apply the load. Sensors could additionally be attached to certain items.
+
 
 
 
@@ -25,6 +26,7 @@ Nodes
 Nodes provide the coordinates (and the degrees of freedom) to the system. They have no mass, stiffness or whatsoever assigned.
 Without nodes, the system has no unknown coordinates.
 Adding a node provides (for the system unknown) coordinates. In addition we also need equations for every nodal coordinate -- otherwise the system cannot be computed (NOTE: this is currently not checked by the preprocessor).
+
 
 Objects
 -------
@@ -48,6 +50,7 @@ Objects can be a:
   
 
 
+
 Markers
 -------
 
@@ -63,10 +66,12 @@ Typical situations are:
 +  Body1 -- Marker1 -- Joint(object) -- Marker2 -- Body2
 
 
+
 Loads
 -----
 
 Loads are used to apply forces and torques to the system. The load values are static values. However, you can use Python functionality to modify loads either by linearly increasing them during static computation or by using the 'mbs.SetPreStepUserFunction(...)' structure in order to modify loads in every integration step depending on time or on measured quantities (thus, creating a controller).
+
 
 Sensors
 -------
@@ -76,6 +81,7 @@ They have a very weak influence on the system, because they are only evaluated a
 
 
 .. _sec-overview-items-coordinates:
+
 
 Reference coordinates and displacements
 ---------------------------------------

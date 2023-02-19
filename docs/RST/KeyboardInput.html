@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keyboard input &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Render state" href="RenderState.html" />
+    <link rel="prev" title="Mouse input" href="MouseInput.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.5.103.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GraphicsAndVisualization.html">Graphics and visualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MouseInput.html">Mouse input</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Keyboard input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="RenderState.html">Render state</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GraphicsData.html">GraphicsData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CharacterEncodingUTF8.html">Character encoding: UTF-8</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.5.103.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+      <li class="breadcrumb-item active">Keyboard input</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/RST/KeyboardInput.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="keyboard-input">
+<h1>Keyboard input<a class="headerlink" href="#keyboard-input" title="Permalink to this heading"></a></h1>
+<p>The following table includes the keyboard shortcuts available in the window.</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text"></span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><div class="line-block">
+<div class="line"><strong>Key(s)</strong></div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">action</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line"><strong>remarks</strong></div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>1,2,3,4 or 5</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">visualization update speed</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">the entered digit controls the visualization update, ranging within 0.02, 0.1 (default), 0.5, 2, and 100 seconds</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>CTRL+1 or SHIFT+CTRL+1</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">change view</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">set view in 1/2-plane (+SHIFT: view from opposite side)</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>CTRL+2 or SHIFT+CTRL+2</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">change view</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">set view in 1/3-plane (+SHIFT: view from opposite side)</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>CTRL+3 or SHIFT+CTRL+3</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">change view</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">set view in 2/3-plane (+SHIFT: view from opposite side)</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>CTRL+4 or SHIFT+CTRL+4</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">change view</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">set view in 2/1-plane (+SHIFT: view from opposite side)</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>CTRL+5 or SHIFT+CTRL+5</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">change view</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">set view in 3/1-plane (+SHIFT: view from opposite side)</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>CTRL+6 or SHIFT+CTRL+6</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">change view</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">set view in 3/2-plane (+SHIFT: view from opposite side)</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>A</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">zoom all</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">set zoom such that the whole scene is visible</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>CURSOR UP, DOWN, …</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">move scene</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">use coursor keys to move the scene up, down, left, and right (use CTRL for small movements)</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>N</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">show/hide nodes</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">pressing this key switches the visibility of nodes</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>CTRL N</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">show/hide nodes numbers</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">pressing this key switches the visibility of nodes numbers</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>C</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">show/hide connectors</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">pressing this key switches the visibility of connectors</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>CTRL C</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">show/hide connector numbers</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">pressing this key switches the visibility of connector numbers</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>B</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">show/hide bodies</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">pressing this key switches the visibility of bodies</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>CTRL B</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">show/hide bodies numbers</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">pressing this key switches the visibility of bodies numbers</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>M</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">show/hide markers</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">pressing this key switches the visibility of markers</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>CTRL M</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">show/hide markers numbers</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">pressing this key switches the visibility of markers numbers</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>L</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">show/hide loads</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">pressing this key switches the visibility of loads</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>CTRL L</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">show/hide loads numbers</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">pressing this key switches the visibility of loads numbers</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>S</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">show/hide sensors</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">pressing this key switches the visibility of sensors</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>CTRL S</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">show/hide sensors numbers</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">pressing this key switches the visibility of sensors numbers</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>T</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">faces / edges mode</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">switch between faces transparent/ faces transparent + edges / only face edges / full faces with edges / only faces visible</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>Q</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">stop solver</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">current solver is stopped (proceeds to next simulation or end of file)</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>SPACE</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">pause/continue simulation</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">pause simulation, e.g. for model inspection; if simulation is paused, it can be continued by pressing space; use SHIFT+SPACE to continuously activate ‘continue simulation’</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>ESCAPE</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">close renderer</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">stops the simulation (and further simulations) and closes the render window (same as close window)</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>X</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">execute command</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">open dialog to enter a python command (in global python scope); dialog may appear behind the visualization window! User errors are caught by exceptions, but in severe cases this may lead to crash; Examples: Examples: ‘<code class="docutils literal notranslate"><span class="pre">print(mbs)</span></code>‘, ‘<code class="docutils literal notranslate"><span class="pre">x=5</span></code>‘, ‘<code class="docutils literal notranslate"><span class="pre">print(mbs.GetSensorValues(0))</span></code>‘, etc.</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>V</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">visualization settings</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">open dialog to modify visualization settings; dialog may appear behind the visualization window!</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>F2</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">ignore keys</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">switch key input on / off; can be used in combination with keyPressUserFunction to make simulators</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>F3</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">show mouse coordinates</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">shown in status line</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>‘.’ or KEYPAD +</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">zoom in</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">zoom one step into scene (additionally press CTRL to perform small zoom step)</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line"><strong>‘,’ or KEYPAD -</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">zoom out</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">zoom one step out of scene (additionally press CTRL to perform small zoom step)</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line"><strong>KEYPAD 2/8,4/6,1/9</strong></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">rotate scene</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">about 1, 2 and 3-axis (use CTRL for small rotations)</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="MouseInput.html" class="btn btn-neutral float-left" title="Mouse input" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="RenderState.html" class="btn btn-neutral float-right" title="Render state" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

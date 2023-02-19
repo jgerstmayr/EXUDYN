@@ -338,7 +338,7 @@ This section shows the LinearSolverType structure, which is used for selecting l
 * | **EXUdense**:
   | use dense matrices and according solvers for densly populated matrices (usually the CPU time grows cubically with the number of unknowns)
 * | **EigenSparse**:
-  | use sparse matrices and according solvers; additional overhead for very small systems; specifically, memory allocation is performed during a factorization process
+  | use sparse matrices and according solvers; additional overhead for very small multibody systems; specifically, memory allocation is performed during a factorization process
 * | **EigenSparseSymmetric**:
   | use sparse matrices and according solvers; NOTE: this is the symmetric mode, which assumes symmetric system matrices; this is EXPERIMENTAL and should only be used of user knows that the system matrices are (nearly) symmetric; does not work with scaled GeneralizedAlpha matrices; does not work with constraints, as it must be symmetric positive definite
 

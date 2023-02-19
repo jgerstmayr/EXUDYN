@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -127,17 +128,17 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities</p>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
 <div class="line">describes regularized Stribeck function with optial viscous part for given velocity,</div>
-<div class="line"><span class="math notranslate nohighlight">\(f(v) = \begin{cases} (\mu_d + \mu_{s_{off}}) v, \quad \mathrm{if} \quad |v| &lt;= v_{reg}\\ \mathrm{Sign}(v)\left( \mu_d + \mu_{s_{off}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} + \mu_v (|v|-v_{reg}) \right), \quad \mathrm{else}\end{cases}\)</span></div>
+<div class="line"><span class="math notranslate nohighlight">\(f(v) = \begincases (\mu_d + \mu_s_off) v, \quad \mathrmif \quad |v| &lt;= v_reg\\ \mathrmSign(v)\left( \mu_d + \mu_s_off \mathrme^-(|v|-v_reg)/v_exp + \mu_v (|v|-v_reg) \right), \quad \mathrmelse\endcases\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">vel</span></code>: input velocity <span class="math notranslate nohighlight">\(v\)</span></div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">muDynamic</span></code>: dynamic friction coefficient <span class="math notranslate nohighlight">\(\mu_d\)</span></div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">muStaticOffset</span></code>: <span class="math notranslate nohighlight">\(\mu_{s_{off}}\)</span>, offset to dynamic friction, which gives muStaticFriction = muDynamic + muStaticOffset</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">muStaticOffset</span></code>: <span class="math notranslate nohighlight">\(\mu_s_off\)</span>, offset to dynamic friction, which gives muStaticFriction = muDynamic + muStaticOffset</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">muViscous</span></code>: <span class="math notranslate nohighlight">\(\mu_v\)</span>, viscous part, acting proportional to velocity except for regVel</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">regVel</span></code>: <span class="math notranslate nohighlight">\(v_{reg}\)</span>,  small regularization velocity in which the friction is linear around zero velocity (e.g., to get Newton converged)</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">expVel</span></code>: <span class="math notranslate nohighlight">\(v_{exp}\)</span>,  velocity (relative to regVel, at which the muStaticOffset decreases exponentially, at vel=expVel, the factor to muStaticOffset is exp(-1) = 36.8%)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">regVel</span></code>: <span class="math notranslate nohighlight">\(v_reg\)</span>,  small regularization velocity in which the friction is linear around zero velocity (e.g., to get Newton converged)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">expVel</span></code>: <span class="math notranslate nohighlight">\(v_exp\)</span>,  velocity (relative to regVel, at which the muStaticOffset decreases exponentially, at vel=expVel, the factor to muStaticOffset is exp(-1) = 36.8%)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -146,7 +147,7 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities</p>
 </div>
 </li>
 </ul>
-<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py">massSpringFrictionInteractive.py</a> (Ex)</p>
 </div></blockquote>
@@ -188,7 +189,7 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities</p>
 </div>
 </li>
 </ul>
-<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py">massSpringFrictionInteractive.py</a> (Ex)</p>
 </div></blockquote>
@@ -202,7 +203,7 @@ models and parameters; for rigid body inertia, see rigidBodyUtilities</p>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-<div class="line">stress6D: 6 stress components as list or np.array, using ordering <span class="math notranslate nohighlight">\([\sigma_{xx}\)</span>, <span class="math notranslate nohighlight">\(\sigma_{yy}\)</span>, <span class="math notranslate nohighlight">\(\sigma_{zz}\)</span>, <span class="math notranslate nohighlight">\(\sigma_{yz}\)</span>, <span class="math notranslate nohighlight">\(\sigma_{xz}\)</span>, <span class="math notranslate nohighlight">\(\sigma_{xy}]\)</span></div>
+<div class="line">stress6D: 6 stress components as list or np.array, using ordering <span class="math notranslate nohighlight">\([\sigma_xx\)</span>, <span class="math notranslate nohighlight">\(\sigma_yy\)</span>, <span class="math notranslate nohighlight">\(\sigma_zz\)</span>, <span class="math notranslate nohighlight">\(\sigma_yz\)</span>, <span class="math notranslate nohighlight">\(\sigma_xz\)</span>, <span class="math notranslate nohighlight">\(\sigma_xy]\)</span></div>
 </div>
 </li>
 <li><div class="line-block">

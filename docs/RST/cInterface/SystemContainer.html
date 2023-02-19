@@ -50,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="CInterfaceIndex.html">Python-C++ command interface</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information on Python-C++ interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
@@ -99,7 +100,7 @@
              
   <section id="systemcontainer">
 <h1>SystemContainer<a class="headerlink" href="#systemcontainer" title="Permalink to this heading"></a></h1>
-<p>The SystemContainer is the top level of structures in Exudyn. The container holds all systems, solvers and all other data structures for computation. Currently, only one container shall be used. In future, multiple containers might be usable at the same time.Regarding the <strong>(basic) module access</strong>, functions are related to the <code class="docutils literal notranslate"><span class="pre">exudyn</span> <span class="pre">=</span> <span class="pre">exu</span></code> module, see also the introduction of this chapter and this example:</p>
+<p>The SystemContainer is the top level of structures in Exudyn. The container holds all (multibody) systems, solvers and all other data structures for computation. Currently, only one container shall be used. In future, multiple containers might be usable at the same time.Regarding the <strong>(basic) module access</strong>, functions are related to the <code class="docutils literal notranslate"><span class="pre">exudyn</span> <span class="pre">=</span> <span class="pre">exu</span></code> module, see also the introduction of this chapter and this example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
 <span class="c1">#create system container and store by reference in SC:</span>
 <span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">SystemContainer</span><span class="p">()</span>
@@ -111,7 +112,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>Reset</strong>():</div>
-<div class="line">delete all systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.AttachToRenderEngine() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )</div>
+<div class="line">delete all multibody systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.AttachToRenderEngine() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -121,12 +122,12 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>NumberOfSystems</strong>():</div>
-<div class="line">obtain number of systems available in system container</div>
+<div class="line">obtain number of multibody systems available in system container</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>GetSystem</strong>(<em>systemNumber</em>):</div>
-<div class="line">obtain systems with index from system container</div>
+<div class="line">obtain multibody systems with index from system container</div>
 </div>
 </li>
 <li><div class="line-block">

@@ -6,8 +6,8 @@ Installation and Getting Started
    :maxdepth: 2
 
    InstallationAndGettingStarted
+   GettingStarted
    InstallationInstructions
+   FurtherNotes
    RunASimpleExampleInPython
    TroubleShootingAndFAQ
-   GettingStarted
-   FurtherNotes

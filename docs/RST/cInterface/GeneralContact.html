@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="CInterfaceIndex.html">Python-C++ command interface</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information on Python-C++ interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
@@ -163,12 +164,12 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>frictionProportionalZone</strong>:</div>
-<div class="line">(default=0.001) velocity <span class="math notranslate nohighlight">\(v_{\mu,reg}\)</span> upon which the dry friction coefficient is interpolated linearly (regularized friction model); must be greater 0; very small values cause oscillations in friction force</div>
+<div class="line">(default=0.001) velocity <span class="math notranslate nohighlight">\(v_\mu,reg\)</span> upon which the dry friction coefficient is interpolated linearly (regularized friction model); must be greater 0; very small values cause oscillations in friction force</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>frictionVelocityPenalty</strong>:</div>
-<div class="line">(default=1e3) regularization factor for friction [N/(m<span class="math notranslate nohighlight">\(^2 \cdot\)</span>m/s) ];<span class="math notranslate nohighlight">\(k_{\mu,reg}\)</span>, multiplied with tangential velocity to compute friciton force as long as it is smaller than <span class="math notranslate nohighlight">\(\mu\)</span> times contact force; large values cause oscillations in friction force</div>
+<div class="line">(default=1e3) regularization factor for friction [N/(m<span class="math notranslate nohighlight">\(^2 \cdot\)</span>m/s) ];<span class="math notranslate nohighlight">\(k_\mu,reg\)</span>, multiplied with tangential velocity to compute friciton force as long as it is smaller than <span class="math notranslate nohighlight">\(\mu\)</span> times contact force; large values cause oscillations in friction force</div>
 </div>
 </li>
 <li><div class="line-block">

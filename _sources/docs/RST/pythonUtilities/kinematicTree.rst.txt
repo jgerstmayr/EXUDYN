@@ -40,7 +40,7 @@ Function: `Inertia2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/py
 - | \ *notes*\ :
   | within the 6x6 matrix, the inertia tensor is defined w.r.t.\ the center of mass, while RigidBodyInertia defines the inertia tensor w.r.t.\ the reference point; however, this function correctly transforms all quantities of inertia.
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 
@@ -71,7 +71,7 @@ Function: `JointTransformMotionSubspace66 <https://github.com/jgerstmayr/EXUDYN/
 - | \ *function description*\ :
   | return 6x6 Plücker joint transformation matrix evaluated for scalar joint coordinate q and motion subspace ('free modes' in Table 2.6 in Handbook of robotics )
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 
@@ -85,7 +85,7 @@ Function: `JointTransformMotionSubspace <https://github.com/jgerstmayr/EXUDYN/bl
 - | \ *function description*\ :
   | return list containing rotation matrix, translation vector, rotation axis and translation axis for joint transformation
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 
@@ -187,9 +187,9 @@ Class function: `ComputeMassMatrixAndForceTerms <https://github.com/jgerstmayr/E
   | \ ``q\_t``\ : current joint velocities
   | \ ``externalForces``\ : list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
 - | \ *output*\ :
-  | mass matrix \ :math:`{\mathbf{M}}`\  and RHS vector \ :math:`{\mathbf{f}}_{RHS}`\  for equations of motion \ :math:`M(q) \cdot q_{tt} + f(q,q_t,externalForces) = \tau`\ ; RHS is \ :math:`{\mathbf{f}}_{RHS}=\tau - f(q,q_t,externalForces)`\ ; \ :math:`\tau`\  can be added outside of \ ``ComputeMassMatrixAndForceTerms``\
+  | mass matrix \ :math:`{\mathbf{M}}`\  and RHS vector \ :math:`{\mathbf{f}}_RHS`\  for equations of motion \ :math:`M(q) \cdot q_tt + f(q,q_t,externalForces) = \tau`\ ; RHS is \ :math:`{\mathbf{f}}_RHS=\tau - f(q,q_t,externalForces)`\ ; \ :math:`\tau`\  can be added outside of \ ``ComputeMassMatrixAndForceTerms``\
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 
@@ -268,7 +268,7 @@ Class function: `ComputeMassMatrixAndForceTerms <https://github.com/jgerstmayr/E
   | \ ``q\_t``\ : current joint velocities
   | \ ``externalForces``\ : list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
 - | \ *output*\ :
-  | mass matrix \ :math:`{\mathbf{M}}`\  and RHS vector \ :math:`{\mathbf{f}}_{RHS}`\  for equations of motion \ :math:`M(q) \cdot q_{tt} + f(q,q_t,externalForces) = \tau`\ ; RHS is \ :math:`{\mathbf{f}}_{RHS}=\tau - f(q,q_t,externalForces)`\ ; \ :math:`\tau`\  can be added outside of \ ``ComputeMassMatrixAndForceTerms``\
+  | mass matrix \ :math:`{\mathbf{M}}`\  and RHS vector \ :math:`{\mathbf{f}}_RHS`\  for equations of motion \ :math:`M(q) \cdot q_tt + f(q,q_t,externalForces) = \tau`\ ; RHS is \ :math:`{\mathbf{f}}_RHS=\tau - f(q,q_t,externalForces)`\ ; \ :math:`\tau`\  can be added outside of \ ``ComputeMassMatrixAndForceTerms``\
 
 ----
 
@@ -283,7 +283,7 @@ Class function: `AddExternalForces <https://github.com/jgerstmayr/EXUDYN/blob/ma
   | \ ``fvp``\ : force (torque) per joint, as computed in ComputeMassMatrixAndForceTerms
   | \ ``externalForces``\ : list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 

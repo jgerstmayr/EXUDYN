@@ -43,7 +43,7 @@ Function: `ForceManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master
   | \ ``singularWeight``\ : Weighting of singular configurations where the value would be infinity,default value=100
   | \ ``mode``\ : rotational or translational part of the movement
 - | \ *output*\ :
-  | force manipulability measure as scalar value, defined as \ :math:`\sqrt((det(JJ^T))^{-1})`\
+  | force manipulability measure as scalar value, defined as \ :math:`\sqrt((det(JJ^T))^-1)`\
 - | \ *notes*\ :
   | compute force dependent manipulability definded by Yoshikawa, see
 
@@ -83,7 +83,7 @@ Function: `JointJacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/
   | \ ``robot``\ : robot class
   | \ ``HT``\ : actual pose as hoogenious transformaton matrix
 - | \ *output*\ :
-  | Link(body)-Jacobi matrix JJ: \ :math:`\LU{i}{JJ_i}=[\LU{i}{J_{Ri}},\; \LU{i}{J_{Ti}}]`\  for each link i, seperated in rotational (\ :math:`J_R`\ ) and translational (\ :math:`J_T`\ ) part of Jacobian matrix located in the \ :math:`i^{th}`\  coordiante system, see
+  | Link(body)-Jacobi matrix JJ: \ :math:`\LUiJJ_i=[\LUiJ_Ri,\; \LUiJ_Ti]`\  for each link i, seperated in rotational (\ :math:`J_R`\ ) and translational (\ :math:`J_T`\ ) part of Jacobian matrix located in the \ :math:`i^th`\  coordiante system, see
 - | \ *notes*\ :
   | runs over number of HTs given in HT (may be less than number of links), caclulations in link coordinate system located at the end of each link regarding Standard  Denavid-Hartenberg parameters, see
 
@@ -107,7 +107,7 @@ Function: `MassMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pyt
   | \*\*       Dynamic equations in minimal coordinates as described in MehrkÃ¶rpersysteme by Woernle, , p206, eq6.90.
   | \*\*       Caclulations in link coordinate system at the end of each link
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `solverFunctionsTestEigenvalues.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solverFunctionsTestEigenvalues.py>`_\  (Ex), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM), \ `manualExplicitIntegrator.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py>`_\  (TM), \ `objectFFRFreducedOrderAccelerations.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py>`_\  (TM), \ `objectFFRFreducedOrderShowModes.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py>`_\  (TM), \ `objectFFRFreducedOrderStressModesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py>`_\  (TM), \ `objectFFRFreducedOrderTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py>`_\  (TM), \ `objectFFRFTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py>`_\  (TM)
 

@@ -68,6 +68,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -195,7 +196,7 @@
 <li><p>write readable code (e.g., variables and functions with names that represent the content or functionality; AVOID abbreviations)</p></li>
 <li><p>put a header in every file, according to Doxygen format</p></li>
 <li><p>put a comment to every (global) function, member function, data member, template parameter</p></li>
-<li><p>ALWAYS USE curly brackets for single statements in ‘if’, ‘for’, etc.; example: if (i&lt;n) i += 1;</p></li>
+<li><p>ALWAYS USE curly brackets for single statements in ‘if’, ‘for’, etc.; example: if (i&lt;n) {i += 1;}</p></li>
 <li><p>use Doxygen-style comments (use ‘//!’ Qt style and ‘&#64; date’ with ‘&#64;’ instead of ‘' for commands)</p></li>
 <li><p>use Doxygen (with preceeding ‘&#64;’) ‘test’ for tests, ‘todo’ for todos and ‘bug’ for bugs</p></li>
 <li><p>USE 4-spaces-tab</p></li>
@@ -212,7 +213,7 @@
 <h2>Notation conventions<a class="headerlink" href="#notation-conventions" title="Permalink to this heading"></a></h2>
 <p>The following notation conventions are applied (<strong>no exceptions!</strong>):</p>
 <ul class="simple">
-<li><p>use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, …; EXCEPTION: for algorithms following formulas, e.g., f = M*q_tt + K*q, GBar, …</p></li>
+<li><p>use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, …; EXCEPTION: for algorithms following formulas, e.g., f = M*q_{tt} + K*q, GBar, …</p></li>
 <li><p>use UpperCamelCase for functions, classes, structs, …</p></li>
 <li><p>Special cases for CamelCase (with some exceptions that happened in the past …):</p></li>
 <li><p>continue upper case after upper case abbreviations in case of <strong>functions or classes</strong>: ‘ODESystem’, ‘Point2DClass’, ‘ANCFCable2D’, ‘ANCFALE’, ‘ComputeODE1Equations’, … (this is not always nice to read, but has become a standard and will be further used!)</p></li>
@@ -237,25 +238,25 @@
 <h2>No-abbreviations-rule<a class="headerlink" href="#no-abbreviations-rule" title="Permalink to this heading"></a></h2>
 <p>The code uses a <strong>minimum set of abbreviations</strong>; however, the following abbreviation rules are used throughout:
 In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (short, 5-line member functions).</p>
-<p><strong>Exceptions</strong> to the NO-ABBREVIATIONS-RULE, see also hyperref[sec:listOfAbbreviations]underlineList of Abbreviations: %no section number!!!: Section <a class="reference internal" href="../../index.html#sec-listofabbreviations"><span class="std std-ref">List of Abbreviations</span></a></p>
+<p><strong>Exceptions</strong> to the NO-ABBREVIATIONS-RULE, see also hyperref[sec:listOfAbbreviations]{underline{List of Abbreviations}}: %no section number!!!: Section <a class="reference internal" href="../../index.html#sec-listofabbreviations"><span class="std std-ref">List of Abbreviations</span></a></p>
 <ul class="simple">
-<li><p>ODE</p></li>
-<li><p>ODE2: marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)</p></li>
-<li><p>ODE1: marks parts related to first order differential equations (ES, EvalF in HOTINT)</p></li>
-<li><p>AE; note: using the term ‘AEcoordinates’ for ‘algebraicEquationsCoordinates’</p></li>
+<li><p>{ODE}</p></li>
+<li><p>{ODE2}: marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)</p></li>
+<li><p>{ODE1}: marks parts related to first order differential equations (ES, EvalF in HOTINT)</p></li>
+<li><p>{AE}; note: using the term ‘AEcoordinates’ for ‘algebraicEquationsCoordinates’</p></li>
 <li><p>‘C[…]’ … Computational, e.g. for ComputationalNode ==&gt; use ‘CNode’</p></li>
-<li><p>mbs</p></li>
-<li><p>min, max</p></li>
-<li><p>abs, rel</p></li>
-<li><p>trig</p></li>
-<li><p>quad</p></li>
-<li><p>RHS</p></li>
-<li><p>LHS</p></li>
-<li><p>EP</p></li>
-<li><p>Rxyz%: consecutive rotations around x, y and z-axis (Tait-Bryan rotations);</p></li>
-<li><p>coeffs</p></li>
-<li><p>pos</p></li>
-<li><p>T66; based on 6times 6 matrix transformations</p></li>
+<li><p>{mbs}</p></li>
+<li><p>{min}, {max}</p></li>
+<li><p>{abs}, {rel}</p></li>
+<li><p>{trig}</p></li>
+<li><p>{quad}</p></li>
+<li><p>{RHS}</p></li>
+<li><p>{LHS}</p></li>
+<li><p>{EP}</p></li>
+<li><p>{Rxyz}%: consecutive rotations around x, y and z-axis (Tait-Bryan rotations);</p></li>
+<li><p>{coeffs}</p></li>
+<li><p>{pos}</p></li>
+<li><p>{T66}; based on 6times 6 matrix transformations</p></li>
 <li><p>write time derivatives with underscore: _t, _tt; example: Position_t, Position_tt, …</p></li>
 <li><p>write space-wise derivatives ith underscore: _x, _xx, _y, …</p></li>
 <li><p>if a scalar, write coordinate derivative with underscore: _q, _v (derivative w.r.t. velocity coordinates)</p></li>
@@ -287,14 +288,14 @@ For the body</p>
 </div></blockquote>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">ComputeMassMatrix</span></code>: computes the mass matrix either in sparse or dense mode; this function is performance-critical if the mass matrix is non-constant</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code>: computes the LHS generalized forces of the body; this function is performance-critical</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code>: computes the {LHS} generalized forces of the body; this function is performance-critical</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetAccessFunctionTypes</span></code>: specifies, which access functions are available in <code class="docutils literal notranslate"><span class="pre">GetAccessFunctionBody(...)</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetAccessFunctionBody</span></code>: needs to compute functions for ‘access’ to the body, in the sense that e.g. forces or torques can be applied.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetAvailableJacobians</span></code>: shall return the flags which jacobians of <code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code> need to be computed and which are available as functions; binary flags added up</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetOutputVariableBody</span></code>: function needs to implement the output variables, such as position, acceleration, forces, etc. as defined in <code class="docutils literal notranslate"><span class="pre">GetOutputVariableTypes()</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">HasConstantMassMatrix</span></code>: specifies, if mass matrix is constant</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetNumberOfNodes</span></code>: number of nodes of object</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">GetODE2Size</span></code>: total number of ODE2 coordinates</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GetODE2Size</span></code>: total number of {ODE2} coordinates</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetType</span></code>: some flags for objects, such as <code class="docutils literal notranslate"><span class="pre">Body</span></code>, <code class="docutils literal notranslate"><span class="pre">SingleNoded</span></code>, <code class="docutils literal notranslate"><span class="pre">SuperElement</span></code>, …; these flags are needed for connectivity and special treatment in the system</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetPosition,</span> <span class="pre">GetVelocity,</span> <span class="pre">...</span></code>: provide this functions as far as possible; rigid bodies need to provide positions and rotation matrix, as well as velocity and angular velocity for markers; if functions do not exist, some marker or sensor functions may fail</p></li>
 <li><p>…   possibly some helper functions, which you should implement for the functionality of your object.</p></li>
@@ -308,7 +309,7 @@ When you finished editing, run <code class="docutils literal notranslate"><span 
 The implementation file usually consists of</p>
 </div></blockquote>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code>: this function shall compute the LHS generalized forces on the two marker objects</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code>: this function shall compute the {LHS} generalized forces on the two marker objects</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ComputeJacobianODE2_ODE2</span></code>: computes the <code class="docutils literal notranslate"><span class="pre">GetAvailableJacobians()</span></code> is not providing any ‘…_function’ flag, which indicates that these jacobians are available as function</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetOutputVariableConnector</span></code>: this function needs to compute all output variables as given in <code class="docutils literal notranslate"><span class="pre">GetOutputVariableTypes()</span></code></p></li>
 <li><p>…   possibly some helper functions, which you should implement for the functionality of your object.</p></li>

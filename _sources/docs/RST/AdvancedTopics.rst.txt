@@ -1,5 +1,5 @@
-
 .. _sec-overview-advanced:
+
 
 Advanced topics
 ===============
@@ -8,6 +8,7 @@ This section covers some advanced topics, which may be only relevant for a small
 Functionality may be extended but also removed in future
 
 .. _sec-overview-advanced-camerafollowing:
+
 
 Camera following objects and interacting with model view
 --------------------------------------------------------
@@ -39,6 +40,7 @@ As this needs to be done during redraw of every frame, it is conveniently done i
 
 .. _sec-overview-advanced-contact:
 
+
 Contact problems
 ----------------
 
@@ -48,10 +50,10 @@ This separate module \ ``GeneralContact``\  [\ **still under development, consid
 
 .. _fig-contactexamples:
 .. figure:: ../theDoc/figures/contactTests.png
-   :width: 45%
+   :width: 450
    
 .. figure:: ../theDoc/figures/contactTests2.jpg
-   :width: 45%
+   :width: 450
   
    Some tests and examples using \ ``GeneralContact``\ 
 
@@ -77,6 +79,7 @@ For details on the contact formulations, see Section :ref:`seccontacttheory`\ .
 
 .. _sec-overview-advanced-openvr:
 
+
 OpenVR
 ------
 
@@ -93,6 +96,7 @@ Everything is experimental, but contributions are welcome!
 
 
 .. _sec-overview-advanced-interactwithcodes:
+
 
 Interaction with other codes
 ----------------------------
@@ -111,6 +115,7 @@ Basically, data can be transmitted in both directions, e.g., within a preStepUse
 
 
 .. _sec-overview-advanced-ros:
+
 
 ROS
 ---

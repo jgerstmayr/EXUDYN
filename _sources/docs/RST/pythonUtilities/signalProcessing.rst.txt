@@ -26,7 +26,7 @@ Function: `FilterSensorOutput <https://github.com/jgerstmayr/EXUDYN/blob/master/
 - | \ *output*\ :
   | numpy array containing same columns, but with filtered signal and according derivatives
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `ANCFoutputTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFoutputTest.py>`_\  (TM), \ `objectFFRFreducedOrderAccelerations.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py>`_\  (TM)
 
@@ -49,7 +49,7 @@ Function: `FilterSignal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/p
 - | \ *output*\ :
   | numpy array containing same columns, but with filtered signal and according derivatives
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `objectFFRFreducedOrderAccelerations.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py>`_\  (TM)
 

@@ -50,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -206,7 +207,7 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ParameterVariation</span><span class="p">(</span><span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;mass&#39;</span><span class="p">:(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="s1">&#39;stiffness&#39;</span><span class="p">:(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">10000</span><span class="p">,</span><span class="mi">10</span><span class="p">)},</span> <span class="n">parameterFunction</span><span class="o">=</span><span class="n">Test</span><span class="p">,</span> <span class="n">useMultiProcessing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/dispyParameterVariationExample.py">dispyParameterVariationExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/dispyParameterVariationExampleAlt.py">dispyParameterVariationExampleAlt.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py">parameterVariationExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py">geneticOptimizationTest.py</a> (TM)</p>
 </div></blockquote>
@@ -262,7 +263,7 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">GeneticOptimization</span><span class="p">(</span><span class="n">objectiveFunction</span> <span class="o">=</span> <span class="n">fOpt</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;mass&#39;</span><span class="p">:(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="s1">&#39;stiffness&#39;</span><span class="p">:(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">10000</span><span class="p">)})</span>
 </pre></div>
 </div>
-<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py">geneticOptimizationSliderCrank.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py">geneticOptimizationTest.py</a> (TM)</p>
 </div></blockquote>
@@ -312,7 +313,7 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 </div>
 </li>
 </ul>
-<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/minimizeExample.py">minimizeExample.py</a> (Ex)</p>
 </div></blockquote>
@@ -357,7 +358,7 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ComputeSensitivities</span><span class="p">(</span><span class="n">parameterFunction</span><span class="o">=</span><span class="n">ParameterFunction</span><span class="p">,</span> <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mass&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">mRef</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s1">&#39;spring&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">10</span><span class="p">),},</span> <span class="n">multiprocessing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py">ComputeSensitivitiesExample.py</a> (Ex)</p>
 </div></blockquote>
@@ -383,7 +384,7 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 </div>
 </li>
 </ul>
-<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py">geneticOptimizationSliderCrank.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/minimizeExample.py">minimizeExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py">geneticOptimizationTest.py</a> (TM)</p>
 </div></blockquote>
@@ -415,7 +416,7 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 </div>
 </li>
 </ul>
-<p>Relevant Examples (Ex) and TestModels (TM) with weblink:</p>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py">ComputeSensitivitiesExample.py</a> (Ex)</p>
 </div></blockquote>

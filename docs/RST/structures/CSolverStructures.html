@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -106,7 +107,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="solver-substructures">
+  <p>[1][Solver substructures]</p>
+<section id="solver-substructures">
 <span id="sec-solversubstructures"></span><h1>Solver substructures<a class="headerlink" href="#solver-substructures" title="Permalink to this heading"></a></h1>
 <p>This section includes structures contained in the solver, which can be accessed via the Python interface during solution or for building a customized solver in Python.</p>
 <section id="csolvertimer">
@@ -141,17 +143,17 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>jacobianODE1</strong> [type = Real, default = 0.]:</div>
-<div class="line">jacobian w.r.t. coordinates of hacODE1 equations (not counted in sum)</div>
+<div class="line">jacobian w.r.t. coordinates of ODE1 equations (not counted in sum)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>jacobianODE2</strong> [type = Real, default = 0.]:</div>
-<div class="line">jacobian w.r.t. coordinates of hacODE2 equations (not counted in sum)</div>
+<div class="line">jacobian w.r.t. coordinates of ODE2 equations (not counted in sum)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>jacobianODE2_t</strong> [type = Real, default = 0.]:</div>
-<div class="line">jacobian w.r.t. coordinates_t of hacODE2 equations (not counted in sum)</div>
+<div class="line">jacobian w.r.t. coordinates_t of ODE2 equations (not counted in sum)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -161,17 +163,17 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>newtonIncrement</strong> [type = Real, default = 0.]:</div>
-<div class="line">Jac<span class="math notranslate nohighlight">\(^{-1}\)</span> * RHS; backsubstitution</div>
+<div class="line">Jac<span class="math notranslate nohighlight">\(^-1\)</span> * RHS; backsubstitution</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>ODE1RHS</strong> [type = Real, default = 0.]:</div>
-<div class="line">time for residual evaluation of hacODE1 right-hand-side</div>
+<div class="line">time for residual evaluation of ODE1 right-hand-side</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>ODE2RHS</strong> [type = Real, default = 0.]:</div>
-<div class="line">time for residual evaluation of hacODE2 right-hand-side</div>
+<div class="line">time for residual evaluation of ODE2 right-hand-side</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -318,32 +320,32 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>temp2ODE2</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">second temporary vector for hacODE2 quantities; use in static computation</div>
+<div class="line">second temporary vector for ODE2 quantities; use in static computation</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>tempODE1F0</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">temporary vector for hacODE1 Jacobian</div>
+<div class="line">temporary vector for ODE1 Jacobian</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>tempODE1F1</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">temporary vector for hacODE1 Jacobian</div>
+<div class="line">temporary vector for ODE1 Jacobian</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>tempODE2</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">temporary vector for hacODE2 quantities; use in initial accelerations and during Newton</div>
+<div class="line">temporary vector for ODE2 quantities; use in initial accelerations and during Newton</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>tempODE2F0</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">temporary vector for hacODE2 Jacobian</div>
+<div class="line">temporary vector for ODE2 Jacobian</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>tempODE2F1</strong> [type = ResizableVectorParallel]:</div>
-<div class="line">temporary vector for hacODE2 Jacobian</div>
+<div class="line">temporary vector for ODE2 Jacobian</div>
 </div>
 </li>
 </ul>
@@ -440,7 +442,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>recommendedStepSize</strong> [type = Real, default = -1.]:</div>
-<div class="line">recommended step size <span class="math notranslate nohighlight">\(h_{recom}\)</span> after PostNewton(…): <span class="math notranslate nohighlight">\(h_{recom} &lt; 0\)</span>: no recommendation, <span class="math notranslate nohighlight">\(h_{recom}==0\)</span>: use minimum step size, <span class="math notranslate nohighlight">\(h_{recom}&gt;0\)</span>: use specific step size, if no smaller size requested by other reason</div>
+<div class="line">recommended step size <span class="math notranslate nohighlight">\(h_recom\)</span> after PostNewton(…): <span class="math notranslate nohighlight">\(h_recom &lt; 0\)</span>: no recommendation, <span class="math notranslate nohighlight">\(h_recom==0\)</span>: use minimum step size, <span class="math notranslate nohighlight">\(h_recom&gt;0\)</span>: use specific step size, if no smaller size requested by other reason</div>
 </div>
 </li>
 <li><div class="line-block">

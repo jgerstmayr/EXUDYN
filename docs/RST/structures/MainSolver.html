@@ -50,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -143,7 +144,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>ComputeJacobianAE(…)</strong> [type = void, default = mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=false]:</div>
-<div class="line">add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. hacODE2 coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian</div>
+<div class="line">add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. ODE2 coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -183,7 +184,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>ComputeODE2RHS(…)</strong> [type = void, default = mainSystem]:</div>
-<div class="line">compute the RHS of hacODE2 equations in systemResidual in range(0,nODE2)</div>
+<div class="line">compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -218,12 +219,12 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>GetODE1size()</strong> [type = Index]:</div>
-<div class="line">number of hacODE1 equations in solver (not yet implemented)</div>
+<div class="line">number of ODE1 equations in solver (not yet implemented)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>GetODE2size()</strong> [type = Index]:</div>
-<div class="line">number of hacODE2 equations in solver</div>
+<div class="line">number of ODE2 equations in solver</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -432,7 +433,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>ComputeJacobianAE(…)</strong> [type = void, default = mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=false]:</div>
-<div class="line">add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. hacODE2 coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian</div>
+<div class="line">add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. ODE2 coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -472,12 +473,12 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>ComputeODE1RHS(…)</strong> [type = void, default = mainSystem]:</div>
-<div class="line">compute the RHS of hacODE1 equations in systemResidual in range(0,nODE1)</div>
+<div class="line">compute the RHS of ODE1 equations in systemResidual in range(0,nODE1)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>ComputeODE2RHS(…)</strong> [type = void, default = mainSystem]:</div>
-<div class="line">compute the RHS of hacODE2 equations in systemResidual in range(0,nODE2)</div>
+<div class="line">compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -522,12 +523,12 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>GetODE1size()</strong> [type = Index]:</div>
-<div class="line">number of hacODE1 equations in solver (not yet implemented)</div>
+<div class="line">number of ODE1 equations in solver (not yet implemented)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>GetODE2size()</strong> [type = Index]:</div>
-<div class="line">number of hacODE2 equations in solver</div>
+<div class="line">number of ODE2 equations in solver</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -801,12 +802,12 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>ComputeODE1RHS(…)</strong> [type = void, default = mainSystem]:</div>
-<div class="line">compute the RHS of hacODE1 equations in systemResidual in range(0,nODE1)</div>
+<div class="line">compute the RHS of ODE1 equations in systemResidual in range(0,nODE1)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>ComputeODE2RHS(…)</strong> [type = void, default = mainSystem]:</div>
-<div class="line">compute the RHS of hacODE2 equations in systemResidual in range(0,nODE2)</div>
+<div class="line">compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -846,12 +847,12 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>GetODE1size()</strong> [type = Index]:</div>
-<div class="line">number of hacODE1 equations in solver (not yet implemented)</div>
+<div class="line">number of ODE1 equations in solver (not yet implemented)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>GetODE2size()</strong> [type = Index]:</div>
-<div class="line">number of hacODE2 equations in solver</div>
+<div class="line">number of ODE2 equations in solver</div>
 </div>
 </li>
 <li><div class="line-block">

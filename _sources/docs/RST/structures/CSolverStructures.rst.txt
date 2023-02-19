@@ -1,5 +1,6 @@
 
 
+[1][Solver substructures]
 
 .. _sec-solversubstructures:
 
@@ -31,19 +32,19 @@ CSolverTimer has the following items:
 * | **jacobianAE** [type = Real, default = 0.]:
   | jacobian of algebraic equations (not counted in sum)
 * | **jacobianODE1** [type = Real, default = 0.]:
-  | jacobian w.r.t. coordinates of \hacODE1 equations (not counted in sum)
+  | jacobian w.r.t. coordinates of ODE1 equations (not counted in sum)
 * | **jacobianODE2** [type = Real, default = 0.]:
-  | jacobian w.r.t. coordinates of \hacODE2 equations (not counted in sum)
+  | jacobian w.r.t. coordinates of ODE2 equations (not counted in sum)
 * | **jacobianODE2\_t** [type = Real, default = 0.]:
-  | jacobian w.r.t. coordinates_t of \hacODE2 equations (not counted in sum)
+  | jacobian w.r.t. coordinates_t of ODE2 equations (not counted in sum)
 * | **massMatrix** [type = Real, default = 0.]:
   | mass matrix computation
 * | **newtonIncrement** [type = Real, default = 0.]:
-  | Jac\ :math:`^{-1}`\  * RHS; backsubstitution
+  | Jac\ :math:`^-1`\  * RHS; backsubstitution
 * | **ODE1RHS** [type = Real, default = 0.]:
-  | time for residual evaluation of \hacODE1 right-hand-side
+  | time for residual evaluation of ODE1 right-hand-side
 * | **ODE2RHS** [type = Real, default = 0.]:
-  | time for residual evaluation of \hacODE2 right-hand-side
+  | time for residual evaluation of ODE2 right-hand-side
 * | **overhead** [type = Real, default = 0.]:
   | overhead, such as initialization, copying and some matrix-vector multiplication
 * | **postNewton** [type = Real, default = 0.]:
@@ -111,17 +112,17 @@ SolverLocalData has the following items:
 * | **systemResidual** [type = ResizableVectorParallel]:
   | system residual vector (vectors will be linked to this vector!)
 * | **temp2ODE2** [type = ResizableVectorParallel]:
-  | second temporary vector for \hacODE2 quantities; use in static computation
+  | second temporary vector for ODE2 quantities; use in static computation
 * | **tempODE1F0** [type = ResizableVectorParallel]:
-  | temporary vector for \hacODE1 Jacobian
+  | temporary vector for ODE1 Jacobian
 * | **tempODE1F1** [type = ResizableVectorParallel]:
-  | temporary vector for \hacODE1 Jacobian
+  | temporary vector for ODE1 Jacobian
 * | **tempODE2** [type = ResizableVectorParallel]:
-  | temporary vector for \hacODE2 quantities; use in initial accelerations and during Newton
+  | temporary vector for ODE2 quantities; use in initial accelerations and during Newton
 * | **tempODE2F0** [type = ResizableVectorParallel]:
-  | temporary vector for \hacODE2 Jacobian
+  | temporary vector for ODE2 Jacobian
 * | **tempODE2F1** [type = ResizableVectorParallel]:
-  | temporary vector for \hacODE2 Jacobian
+  | temporary vector for ODE2 Jacobian
 
 
 
@@ -169,7 +170,7 @@ SolverIterationData has the following items:
 * | **numberOfSteps** [type = Index, default = 0]:
   | number of time steps (if fixed size); \ :math:`n`\ 
 * | **recommendedStepSize** [type = Real, default = -1.]:
-  | recommended step size \ :math:`h_{recom}`\  after PostNewton(...): \ :math:`h_{recom} < 0`\ : no recommendation, \ :math:`h_{recom}==0`\ : use minimum step size, \ :math:`h_{recom}>0`\ : use specific step size, if no smaller size requested by other reason
+  | recommended step size \ :math:`h_recom`\  after PostNewton(...): \ :math:`h_recom < 0`\ : no recommendation, \ :math:`h_recom==0`\ : use minimum step size, \ :math:`h_recom>0`\ : use specific step size, if no smaller size requested by other reason
 * | **rejectedAutomaticStepSizeSteps** [type = \tabnewline Index, default = 0]:
   | count the number of rejected steps in case of automatic step size control (rejected steps are repeated with smaller step size)
 * | **rejectedModifiedNewtonSteps** [type = Index, default = 0]:

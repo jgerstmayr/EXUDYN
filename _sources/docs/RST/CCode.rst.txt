@@ -1,5 +1,5 @@
-
 .. _sec-overview-cppcode:
+
 
 C++ Code
 ========
@@ -7,6 +7,7 @@ C++ Code
 This section covers some information on the C++ code. For more information see the Open source code and use doxygen.
 
 Exudyn was developed for the efficient simulation of flexible multi-body systems. Exudyn was designed for rapid implementation and testing of new formulations and algorithms in multibody systems, whereby these algorithms can be easily implemented in efficient C++ code. The code is applied to industry-related research projects and applications.
+
 
 Focus of the C++ code
 ---------------------
@@ -26,6 +27,7 @@ The focus is therefore on:
 +  In order to implement the sometimes difficult formulations and algorithms without errors, error avoidance is always prioritized.
 +  To generate efficient code, classes for parallelization (vectorization and multithreading) are provided. We live the principle that parallelization takes place on multi-core processors with a central main memory, and thus an increase in efficiency through parallelization is only possible with small systems, as long as the program runs largely in the cache of the processor cores. Vectorization is tailored to SIMD commands as they have Intel processors, but could also be extended to GPGPUs in the future.
 +  The user interface (Python) provides a nearly 1:1 image of the system and the processes running in it, which can be controlled with the extensive possibilities of Python.
+
 
 
 C++ Code structure
@@ -63,6 +65,7 @@ The functionality of the code is mainly based on systems (MainSystem and CSystem
 
 
 
+
 C++ Code: Modules
 -----------------
 
@@ -89,6 +92,7 @@ The following main external libraries are linked to Exudyn:
 +  pybind11: linking of C++ to Python
 
 
+
 Code style and conventions
 --------------------------
 
@@ -98,7 +102,7 @@ This section provides general coding rules and conventions, partly applicable to
 +  write readable code (e.g., variables and functions with names that represent the content or functionality; AVOID abbreviations)
 +  put a header in every file, according to Doxygen format
 +  put a comment to every (global) function, member function, data member, template parameter
-+  ALWAYS USE curly brackets for single statements in 'if', 'for', etc.; example: if (i<n) \i += 1;\
++  ALWAYS USE curly brackets for single statements in 'if', 'for', etc.; example: if (i<n) \{i += 1;\}
 +  use Doxygen-style comments (use '//!' Qt style and '@ date' with '@' instead of '\' for commands)
 +  use Doxygen (with preceeding '@') 'test' for tests, 'todo' for todos and 'bug' for bugs
 +  USE 4-spaces-tab
@@ -111,12 +115,13 @@ This section provides general coding rules and conventions, partly applicable to
 +  REPLACE tabs by spaces: Extras->Options->C/C++->Tabstopps: tab stopp size = 4 (=standard) +  KEEP SPACES=YES
 
 
+
 Notation conventions
 --------------------
 
 The following notation conventions are applied (\ **no exceptions!**\ ):
 
-+  use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, ...; EXCEPTION: for algorithms following formulas, e.g., f = M*q_tt + K*q, GBar, ...
++  use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, ...; EXCEPTION: for algorithms following formulas, e.g., f = M*q_{tt} + K*q, GBar, ...
 +  use UpperCamelCase for functions, classes, structs, ...
 +  Special cases for CamelCase (with some exceptions that happened in the past ...): 
     
@@ -139,36 +144,38 @@ The following notation conventions are applied (\ **no exceptions!**\ ):
 +  Do not use numbers (3 for 3D or any other number which represents, e.g., the number of rotation parameters). Use const Index or constexpr to define constants.
 
 
+
 No-abbreviations-rule
 ---------------------
 
 The code uses a \ **minimum set of abbreviations**\ ; however, the following abbreviation rules are used throughout:
 In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (short, 5-line member functions).
 
-\ **Exceptions**\  to the NO-ABBREVIATIONS-RULE, see also \hyperref[sec:listOfAbbreviations]\underlineList of Abbreviations: %no section number!!!: Section :ref:`sec-listofabbreviations`\ 
+\ **Exceptions**\  to the NO-ABBREVIATIONS-RULE, see also \hyperref[sec:listOfAbbreviations]{\underline{List of Abbreviations}}: %no section number!!!: Section :ref:`sec-listofabbreviations`\ 
 
-+  ODE
-+  ODE2: marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)
-+  ODE1: marks parts related to first order differential equations (ES, EvalF in HOTINT)
-+  AE; note: using the term 'AEcoordinates' for 'algebraicEquationsCoordinates'
++  {ODE}
++  {ODE2}: marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)
++  {ODE1}: marks parts related to first order differential equations (ES, EvalF in HOTINT)
++  {AE}; note: using the term 'AEcoordinates' for 'algebraicEquationsCoordinates'
 +  'C[...]' ... Computational, e.g. for ComputationalNode ==> use 'CNode'
-+  mbs
-+  min, max
-+  abs, rel
-+  trig 
-+  quad
-+  RHS
-+  LHS
-+  EP
-+  Rxyz%: consecutive rotations around x, y and z-axis (Tait-Bryan rotations);
-+  coeffs
-+  pos
-+  T66; based on 6\times 6 matrix transformations
++  {mbs}
++  {min}, {max}
++  {abs}, {rel}
++  {trig} 
++  {quad}
++  {RHS}
++  {LHS}
++  {EP}
++  {Rxyz}%: consecutive rotations around x, y and z-axis (Tait-Bryan rotations);
++  {coeffs}
++  {pos}
++  {T66}; based on 6\times 6 matrix transformations
 +  write time derivatives with underscore: _t, _tt; example: Position_t, Position_tt, ...
 +  write space-wise derivatives ith underscore: _x, _xx, _y, ...
 +  if a scalar, write coordinate derivative with underscore: _q, _v (derivative w.r.t. velocity coordinates)
 +  for components, elements or entries of vectors, arrays, matrices: use 'item' throughout
 +  '[...]Init' ... in arguments, for initialization of variables; e.g. 'valueInit' for initialization of member variable 'value'
+
 
 
 
@@ -198,14 +205,14 @@ In the following, two use cases are shown, which show the simplicity of the proc
   For the body
   
 +  \ ``ComputeMassMatrix``\ : computes the mass matrix either in sparse or dense mode; this function is performance-critical if the mass matrix is non-constant
-+  \ ``ComputeODE2LHS``\ : computes the LHS generalized forces of the body; this function is performance-critical
++  \ ``ComputeODE2LHS``\ : computes the {LHS} generalized forces of the body; this function is performance-critical
 +  \ ``GetAccessFunctionTypes``\ : specifies, which access functions are available in \ ``GetAccessFunctionBody(...)``\ 
 +  \ ``GetAccessFunctionBody``\ : needs to compute functions for 'access' to the body, in the sense that e.g. forces or torques can be applied. 
 +  \ ``GetAvailableJacobians``\ : shall return the flags which jacobians of \ ``ComputeODE2LHS``\  need to be computed and which are available as functions; binary flags added up
 +  \ ``GetOutputVariableBody``\ : function needs to implement the output variables, such as position, acceleration, forces, etc. as defined in \ ``GetOutputVariableTypes()``\ 
 +  \ ``HasConstantMassMatrix``\ : specifies, if mass matrix is constant
 +  \ ``GetNumberOfNodes``\ : number of nodes of object
-+  \ ``GetODE2Size``\ : total number of ODE2 coordinates
++  \ ``GetODE2Size``\ : total number of {ODE2} coordinates
 +  \ ``GetType``\ : some flags for objects, such as \ ``Body``\ , \ ``SingleNoded``\ , \ ``SuperElement``\ , ...; these flags are needed for connectivity and special treatment in the system
 +  \ ``GetPosition, GetVelocity, ...``\ : provide this functions as far as possible; rigid bodies need to provide positions and rotation matrix, as well as velocity and angular velocity for markers; if functions do not exist, some marker or sensor functions may fail
 +  ...   possibly some helper functions, which you should implement for the functionality of your object.
@@ -219,7 +226,7 @@ In the following, two use cases are shown, which show the simplicity of the proc
   When you finished editing, run \ ``pythonAutoGenerateObjects.py``\  and make a copy of the copied implementation (\ ``.cpp``\ ) file.
   The implementation file usually consists of
   
-+  \ ``ComputeODE2LHS``\ : this function shall compute the LHS generalized forces on the two marker objects
++  \ ``ComputeODE2LHS``\ : this function shall compute the {LHS} generalized forces on the two marker objects
 +  \ ``ComputeJacobianODE2_ODE2``\ : computes the \ ``GetAvailableJacobians()``\  is not providing any '..._function' flag, which indicates that these jacobians are available as function
 +  \ ``GetOutputVariableConnector``\ : this function needs to compute all output variables as given in \ ``GetOutputVariableTypes()``\ 
 +  ...   possibly some helper functions, which you should implement for the functionality of your object.

@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -112,7 +113,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="simulation-settings">
+  <p>[1][Simulation settings]</p>
+<section id="simulation-settings">
 <h1>Simulation settings<a class="headerlink" href="#simulation-settings" title="Permalink to this heading"></a></h1>
 <p>This section includes hierarchical structures for simulation settings, e.g., time integration, static solver, Newton iteration and solution file export.</p>
 <section id="solutionsettings">
@@ -135,13 +137,13 @@
 <li><div class="line-block">
 <div class="line"><strong>coordinatesSolutionFileName</strong> [type = FileName, default = ‘coordinatesSolution’]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.coordinatesSolutionFileName</span></code></div>
-<div class="line">tabnewline filename and (relative) path of solution file (coordinatesSolutionFile) containing all coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and ‘_’ only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)</div>
+<div class="line">tabnewline filename and (relative) path of solution file (coordinatesSolutionFile) containing all multibody system coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and ‘_’ only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>exportAccelerations</strong> [type = bool, default = True]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportAccelerations</span></code></div>
-<div class="line">add hacODE2 accelerations to solution file (coordinatesSolutionFile)</div>
+<div class="line">add ODE2 accelerations to solution file (coordinatesSolutionFile)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -165,7 +167,7 @@
 <li><div class="line-block">
 <div class="line"><strong>exportVelocities</strong> [type = bool, default = True]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportVelocities</span></code></div>
-<div class="line">add hacODE2 velocities to solution file (coordinatesSolutionFile)</div>
+<div class="line">add ODE2 velocities to solution file (coordinatesSolutionFile)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -231,7 +233,7 @@
 <li><div class="line-block">
 <div class="line"><strong>solutionInformation</strong> [type = String, default = ‘’]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.solutionInformation</span></code></div>
-<div class="line">special information added to header of solution file (e.g. parameters and settings, modes, …); character encoding my be UTF-8, restricted to characters in Section <a class="reference internal" href="../../../index.html#sec-utf8"><span class="std std-ref">Graphics: UTF-8</span></a>, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)</div>
+<div class="line">special information added to header of solution file (e.g. parameters and settings, modes, …); character encoding my be UTF-8, restricted to characters in Section <a class="reference internal" href="../CharacterEncodingUTF8.html#sec-utf8"><span class="std std-ref">Character encoding: UTF-8</span></a>, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -286,13 +288,13 @@
 <li><div class="line-block">
 <div class="line"><strong>addReferenceCoordinatesToEpsilon</strong> [type = tabnewline bool, default = False]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon</span></code></div>
-<div class="line">True: for the size estimation of the differentiation parameter, the reference coordinate <span class="math notranslate nohighlight">\(q^{Ref}_i\)</span> is added to hacODE2 coordinates –&gt; see; False: only the current coordinate is used for size estimation of the differentiation parameter</div>
+<div class="line">True: for the size estimation of the differentiation parameter, the reference coordinate <span class="math notranslate nohighlight">\(q^Ref_i\)</span> is added to ODE2 coordinates –&gt; see; False: only the current coordinate is used for size estimation of the differentiation parameter</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>doSystemWideDifferentiation</strong> [type = bool, default = False]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.doSystemWideDifferentiation</span></code></div>
-<div class="line">True: system wide differentiation (e.g. all hacODE2 equations w.r.t. all hacODE2 coordinates); False: only local (object) differentiation</div>
+<div class="line">True: system wide differentiation (e.g. all ODE2 equations w.r.t. all ODE2 coordinates); False: only local (object) differentiation</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -328,7 +330,7 @@
 <li><div class="line-block">
 <div class="line"><strong>relativeEpsilon</strong> [type = UReal, default = 1e-7]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon</span></code></div>
-<div class="line">relative differentiation parameter epsilon; the numerical differentiation parameter <span class="math notranslate nohighlight">\(\varepsilon\)</span> follows from the formula (<span class="math notranslate nohighlight">\(\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)\)</span>, with <span class="math notranslate nohighlight">\(\varepsilon_\mathrm{relative}\)</span>=relativeEpsilon, <span class="math notranslate nohighlight">\(q_{min} = `\ minimumCoordinateSize, \ :math:`q_i\)</span> is the current coordinate which is differentiated, and <span class="math notranslate nohighlight">\(qRef_i\)</span> is the reference coordinate of the current coordinate</div>
+<div class="line">relative differentiation parameter epsilon; the numerical differentiation parameter <span class="math notranslate nohighlight">\(\varepsilon\)</span> follows from the formula (<span class="math notranslate nohighlight">\(\varepsilon = \varepsilon_\mathrmrelative*max(q_min, |q_i + [q^Ref_i]|)\)</span>, with <span class="math notranslate nohighlight">\(\varepsilon_\mathrmrelative\)</span>=relativeEpsilon, <span class="math notranslate nohighlight">\(q_min = `\ minimumCoordinateSize, \ :math:`q_i\)</span> is the current coordinate which is differentiated, and <span class="math notranslate nohighlight">\(qRef_i\)</span> is the reference coordinate of the current coordinate</div>
 </div>
 </li>
 </ul>
@@ -420,7 +422,7 @@
 <li><div class="line-block">
 <div class="line"><strong>newtonResidualMode</strong> [type = UInt, default = 0]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.newtonResidualMode</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.newtonResidualMode</span></code></div>
-<div class="line">0 … use residual for computation of error (standard); 1 … use hacODE2 and hacODE1 newton increment for error (set relTol and absTol to same values!) ==&gt; may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag</div>
+<div class="line">0 … use residual for computation of error (standard); 1 … use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==&gt; may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -573,7 +575,7 @@
 <li><div class="line-block">
 <div class="line"><strong>absoluteTolerance</strong> [type = UReal, default = 1e-8]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.absoluteTolerance</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(a_{tol}\)</span>: if automaticStepSize=True, absolute tolerance for the error control; must fulfill <span class="math notranslate nohighlight">\(a_{tol} &gt; 0\)</span>; see Section <a class="reference internal" href="../../../index.html#sec-explicitsolver"><span class="std std-ref">Solver: Explicit</span></a></div>
+<div class="line"><span class="math notranslate nohighlight">\(a_tol\)</span>: if automaticStepSize=True, absolute tolerance for the error control; must fulfill <span class="math notranslate nohighlight">\(a_tol &gt; 0\)</span>; see Section <a class="reference internal" href="../../../index.html#sec-explicitsolver"><span class="std std-ref">Solver: Explicit</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
@@ -609,31 +611,31 @@
 <li><div class="line-block">
 <div class="line"><strong>automaticStepSize</strong> [type = bool, default = True]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.automaticStepSize</span></code></div>
-<div class="line">True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; False: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads <span class="math notranslate nohighlight">\(h = h_{max} = \frac{t_{end} - t_{start}}{n_{steps}}\)</span></div>
+<div class="line">True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; False: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads <span class="math notranslate nohighlight">\(h = h_max = \fract_end - t_startn_steps\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>endTime</strong> [type = UReal, default = 1]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.endTime</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(t_{end}\)</span>: end time of time integration</div>
+<div class="line"><span class="math notranslate nohighlight">\(t_end\)</span>: end time of time integration</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>initialStepSize</strong> [type = UReal, default = 0]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.initialStepSize</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(h_{init}\)</span>: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.</div>
+<div class="line"><span class="math notranslate nohighlight">\(h_init\)</span>: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>minimumStepSize</strong> [type = PReal, default = 1e-8]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.minimumStepSize</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(h_{min}\)</span>: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)</div>
+<div class="line"><span class="math notranslate nohighlight">\(h_min\)</span>: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>numberOfSteps</strong> [type = PInt, default = 100]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.numberOfSteps</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(n_{steps}\)</span>: number of steps in time integration; (maximum) stepSize <span class="math notranslate nohighlight">\(h\)</span> is computed from <span class="math notranslate nohighlight">\(h = \frac{t_{end} - t_{start}}{n_{steps}}\)</span>; for automatic stepsize control, this stepSize is the maximum steps size, <span class="math notranslate nohighlight">\(h_{max} = h\)</span></div>
+<div class="line"><span class="math notranslate nohighlight">\(n_steps\)</span>: number of steps in time integration; (maximum) stepSize <span class="math notranslate nohighlight">\(h\)</span> is computed from <span class="math notranslate nohighlight">\(h = \fract_end - t_startn_steps\)</span>; for automatic stepsize control, this stepSize is the maximum steps size, <span class="math notranslate nohighlight">\(h_max = h\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
@@ -651,7 +653,7 @@
 <li><div class="line-block">
 <div class="line"><strong>relativeTolerance</strong> [type = UReal, default = 1e-8]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.relativeTolerance</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(r_{tol}\)</span>: if automaticStepSize=True, relative tolerance for the error control; must fulfill <span class="math notranslate nohighlight">\(r_{tol} \ge 0\)</span>; see Section <a class="reference internal" href="../../../index.html#sec-explicitsolver"><span class="std std-ref">Solver: Explicit</span></a></div>
+<div class="line"><span class="math notranslate nohighlight">\(r_tol\)</span>: if automaticStepSize=True, relative tolerance for the error control; must fulfill <span class="math notranslate nohighlight">\(r_tol \ge 0\)</span>; see Section <a class="reference internal" href="../../../index.html#sec-explicitsolver"><span class="std std-ref">Solver: Explicit</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
@@ -669,7 +671,7 @@
 <li><div class="line-block">
 <div class="line"><strong>startTime</strong> [type = UReal, default = 0]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.startTime</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(t_{start}\)</span>: start time of time integration (usually set to zero)</div>
+<div class="line"><span class="math notranslate nohighlight">\(t_start\)</span>: start time of time integration (usually set to zero)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -681,13 +683,13 @@
 <li><div class="line-block">
 <div class="line"><strong>stepSizeMaxIncrease</strong> [type = UReal, default = 2]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.stepSizeMaxIncrease</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(f_{maxInc}\)</span>: if automaticStepSize=True, maximum increase of step size per step, see Section <a class="reference internal" href="../../../index.html#sec-explicitsolver"><span class="std std-ref">Solver: Explicit</span></a>; make this factor smaller (but <span class="math notranslate nohighlight">\(&gt; 1\)</span>) if too many rejected steps</div>
+<div class="line"><span class="math notranslate nohighlight">\(f_maxInc\)</span>: if automaticStepSize=True, maximum increase of step size per step, see Section <a class="reference internal" href="../../../index.html#sec-explicitsolver"><span class="std std-ref">Solver: Explicit</span></a>; make this factor smaller (but <span class="math notranslate nohighlight">\(&gt; 1\)</span>) if too many rejected steps</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>stepSizeSafety</strong> [type = UReal, default = 0.90]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.stepSizeSafety</span></code></div>
-<div class="line"><span class="math notranslate nohighlight">\(r_{sfty}\)</span>: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see Section <a class="reference internal" href="../../../index.html#sec-explicitsolver"><span class="std std-ref">Solver: Explicit</span></a>. Make this factor smaller if many steps are rejected.</div>
+<div class="line"><span class="math notranslate nohighlight">\(r_sfty\)</span>: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see Section <a class="reference internal" href="../../../index.html#sec-explicitsolver"><span class="std std-ref">Solver: Explicit</span></a>. Make this factor smaller if many steps are rejected.</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -760,7 +762,7 @@
 <li><div class="line-block">
 <div class="line"><strong>loadStepGeometric</strong> [type = bool, default = False]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.loadStepGeometric</span></code></div>
-<div class="line">if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,…); if true, the load steps are increased in a geometric series, e.g. for <span class="math notranslate nohighlight">\(n=8\)</span> numberOfLoadSteps and <span class="math notranslate nohighlight">\(d = 1000\)</span> loadStepGeometricRange, it follows: <span class="math notranslate nohighlight">\(1000^{1/8}/1000=0.00237\)</span>, <span class="math notranslate nohighlight">\(1000^{2/8}/1000=0.00562\)</span>, <span class="math notranslate nohighlight">\(1000^{3/8}/1000=0.0133\)</span>, …, <span class="math notranslate nohighlight">\(1000^{7/8}/1000=0.422\)</span>, <span class="math notranslate nohighlight">\(1000^{8/8}/1000=1\)</span></div>
+<div class="line">if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,…); if true, the load steps are increased in a geometric series, e.g. for <span class="math notranslate nohighlight">\(n=8\)</span> numberOfLoadSteps and <span class="math notranslate nohighlight">\(d = 1000\)</span> loadStepGeometricRange, it follows: <span class="math notranslate nohighlight">\(1000^1/8/1000=0.00237\)</span>, <span class="math notranslate nohighlight">\(1000^2/8/1000=0.00562\)</span>, <span class="math notranslate nohighlight">\(1000^3/8/1000=0.0133\)</span>, …, <span class="math notranslate nohighlight">\(1000^7/8/1000=0.422\)</span>, <span class="math notranslate nohighlight">\(1000^8/8/1000=1\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
@@ -790,7 +792,7 @@
 <li><div class="line-block">
 <div class="line"><strong>stabilizerODE2term</strong> [type = UReal, default = 0]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.stabilizerODE2term</span></code></div>
-<div class="line">add mass-proportional stabilizer term in hacODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with <span class="math notranslate nohighlight">\(stabilizer = (1-loadStepFactor^2)\)</span>, and go to zero at the end of all load steps: <span class="math notranslate nohighlight">\(loadStepFactor=1\)</span> -&gt; <span class="math notranslate nohighlight">\(stabilizer = 0\)</span></div>
+<div class="line">add mass-proportional stabilizer term in ODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with <span class="math notranslate nohighlight">\(stabilizer = (1-loadStepFactor^2)\)</span>, and go to zero at the end of all load steps: <span class="math notranslate nohighlight">\(loadStepFactor=1\)</span> -&gt; <span class="math notranslate nohighlight">\(stabilizer = 0\)</span></div>
 </div>
 </li>
 <li><div class="line-block">

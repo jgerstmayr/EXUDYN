@@ -6,7 +6,7 @@ MainSystem
 
 
 
-This is the structure which defines a (multibody) system. In C++, there is a MainSystem (links to Python) and a System (computational part). For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. It can be created, visualized and computed. Use the following functions for system manipulation.
+This is the structure which defines a (multibody) system. In C++, there is a MainSystem (links to Python) and a System (computational part). For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. It can be created, visualized and computed. Use the following functions for system manipulation.
 
 .. code-block:: python
    
@@ -17,7 +17,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
 \ The class **MainSystem** has the follwing **functions and structures**:
 
 * | **Assemble**\ (): 
-  | assemble items (nodes, bodies, markers, loads, ...); Calls CheckSystemIntegrity(...), AssembleCoordinates(), AssembleLTGLists(), AssembleInitializeSystemCoordinates(), and AssembleSystemInitialize()
+  | assemble items (nodes, bodies, markers, loads, ...) of multibody system; Calls CheckSystemIntegrity(...), AssembleCoordinates(), AssembleLTGLists(), AssembleInitializeSystemCoordinates(), and AssembleSystemInitialize()
 * | **AssembleCoordinates**\ (): 
   | assemble coordinates: assign computational coordinates to nodes and constraints (algebraic variables)
 * | **AssembleLTGLists**\ (): 
