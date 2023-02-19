@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ObjectConnectorCoordinateSpringDamperExt &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ObjectConnectorGravity" href="ObjectConnectorGravity.html" />
+    <link rel="prev" title="ObjectConnectorCoordinateSpringDamper" href="ObjectConnectorCoordinateSpringDamper.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.5.104.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorSpringDamper.html">ObjectConnectorSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCartesianSpringDamper.html">ObjectConnectorCartesianSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorRigidBodySpringDamper.html">ObjectConnectorRigidBodySpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorLinearSpringDamper.html">ObjectConnectorLinearSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorTorsionalSpringDamper.html">ObjectConnectorTorsionalSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCoordinateSpringDamper.html">ObjectConnectorCoordinateSpringDamper</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectConnectorCoordinateSpringDamperExt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorGravity.html">ObjectConnectorGravity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorHydraulicActuatorSimple.html">ObjectConnectorHydraulicActuatorSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorReevingSystemSprings.html">ObjectConnectorReevingSystemSprings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorRollingDiscPenalty.html">ObjectConnectorRollingDiscPenalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactConvexRoll.html">ObjectContactConvexRoll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactCoordinate.html">ObjectContactCoordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactCircleCable2D.html">ObjectContactCircleCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactFrictionCircleCable2D.html">ObjectContactFrictionCircleCable2D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="objectConnectorIndex.html">Object (Connector)</a></li>
+      <li class="breadcrumb-item active">ObjectConnectorCoordinateSpringDamperExt</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/items/ObjectConnectorCoordinateSpringDamperExt.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="objectconnectorcoordinatespringdamperext">
+<span id="sec-item-objectconnectorcoordinatespringdamperext"></span><h1>ObjectConnectorCoordinateSpringDamperExt<a class="headerlink" href="#objectconnectorcoordinatespringdamperext" title="Permalink to this heading"></a></h1>
+<p>A 1D (scalar) spring-damper element acting on single ODE2 coordinates; same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction; has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.</p>
+<p>The item <strong>ObjectConnectorCoordinateSpringDamperExt</strong> with type = ‘ConnectorCoordinateSpringDamperExt’ has the following parameters:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>name</strong> [type = String, default = ‘’]:</div>
+<div class="line">connector’s unique name</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>markerNumbers</strong> [type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ]]:</div>
+<div class="line">list of markers used in connector</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>nodeNumber</strong> [type = NodeIndex, default = invalid (-1)]:</div>
+<div class="line">node number of a NodeGenericData for 3 data coordinates (friction mode, last sticking position, limit stop state), see description for details; must exist in case of bristle friction model or limit stops</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>stiffness</strong> [type = Real, default = 0.]:</div>
+<div class="line">stiffness [SI:N/m] of spring; acts against relative value of coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>damping</strong> [type = Real, default = 0.]:</div>
+<div class="line">damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>offset</strong> [type = Real, default = 0.]:</div>
+<div class="line">offset between two coordinates (reference length of springs), see equation; it can be used to represent the pre-scribed drive coordinate</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>velocityOffset</strong> [type = Real, default = 0.]:</div>
+<div class="line">offset between two coordinates; used to model D-control of a drive, where damping is not acting against prescribed velocity</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>factor0</strong> [type = Real, default = 1.]:</div>
+<div class="line">marker 0 coordinate is multiplied with factor0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>factor1</strong> [type = Real, default = 1.]:</div>
+<div class="line">marker 1 coordinate is multiplied with factor1</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>fDynamicFriction</strong> [type = UReal, default = 0.]:</div>
+<div class="line">dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force <span class="math notranslate nohighlight">\(f_N\)</span>, the friction force can be interpreted as <span class="math notranslate nohighlight">\(f_\mu = \mu f_N\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>fStaticFrictionOffset</strong> [type = UReal, default = 0.]:</div>
+<div class="line">static (dry) friction offset force [SI:N]; assuming a normal force <span class="math notranslate nohighlight">\(f_N\)</span>, the friction force is limited by <span class="math notranslate nohighlight">\(f_\mu \le (\mu_so + \mu_d) f_N = f_\mu_d + f_\mu_so\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>stickingStiffness</strong> [type = UReal, default = 0.]:</div>
+<div class="line">stiffness of bristles in sticking case  [SI:N/m]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>stickingDamping</strong> [type = UReal, default = 0.]:</div>
+<div class="line">damping of bristles in sticking case  [SI:N/(m/s)]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>exponentialDecayStatic</strong> [type = PReal, default = 1.e-3]:</div>
+<div class="line">relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at <span class="math notranslate nohighlight">\(\Delta v = v_\mathrmexp\)</span>, the static friction offset force is reduced to 36.8%</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>fViscousFriction</strong> [type = Real, default = 0.]:</div>
+<div class="line">viscous friction force part [SI:N/(m s)], acting against relative velocity in sliding case</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>frictionProportionalZone</strong> [type = UReal, default = 0.]:</div>
+<div class="line">if non-zero, a regularized Stribeck model is used, regularizing friction force around zero velocity - leading to zero friction force in case of zero velocity; this does not require a data node at all; if zero, the bristle model is used, which requires a data node which contains previous friction state and last sticking position</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>limitStopsUpper</strong> [type = Real, default = 0.]:</div>
+<div class="line">upper (maximum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>limitStopsLower</strong> [type = Real, default = 0.]:</div>
+<div class="line">lower (minimum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>limitStopsStiffness</strong> [type = UReal, default = 0.]:</div>
+<div class="line">stiffness [SI:N/m] of limit stop (contact stiffness); following a linear contact model</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>limitStopsDamping</strong> [type = UReal, default = 0.]:</div>
+<div class="line">damping [SI:N/(m/s)] of limit stop (contact damping); following a linear contact model</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>useLimitStops</strong> [type = bool, default = False]:</div>
+<div class="line">if True, limit stops are considered and parameters must be set accordingly; furthermore, the NodeGenericData must have 3 data coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>activeConnector</strong> [type = Bool, default = True]:</div>
+<div class="line">flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>springForceUserFunction</strong> [type = PyFunctionMbsScalarIndexScalar11, default =  0]:</div>
+<div class="line">A Python function which defines the spring force with 8 parameters, see equations section / see description below</div>
+</div>
+</li>
+</ul>
+<p>The item VObjectConnectorCoordinateSpringDamperExt has the following parameters:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>show</strong> [type = Bool, default = True]:</div>
+<div class="line">set true, if item is shown in visualization and false if it is not shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawSize</strong> [type = float, default = -1.]:</div>
+<div class="line">drawing size = diameter of spring; size == -1.f means that default connector size is used</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>color</strong> [type = Float4, default = [-1.,-1.,-1.,-1.]]:</div>
+<div class="line">RGBA connector color; if R==-1, use default color</div>
+</div>
+</li>
+</ul>
+<p><strong>This is only a small part of information on this item. For details see the Exudyn documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ObjectConnectorCoordinateSpringDamper.html" class="btn btn-neutral float-left" title="ObjectConnectorCoordinateSpringDamper" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ObjectConnectorGravity.html" class="btn btn-neutral float-right" title="ObjectConnectorGravity" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

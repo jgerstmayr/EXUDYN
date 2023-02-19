@@ -16,7 +16,7 @@ The SystemContainer is the top level of structures in Exudyn. The container hold
    #add MainSystem to SC:
    mbs = SC.AddSystem()
 
-\ The class **SystemContainer** has the follwing **functions and structures**:
+\ The class **SystemContainer** has the following **functions and structures**:
 
 * | **Reset**\ (): 
   | delete all multibody systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.AttachToRenderEngine() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )
@@ -27,9 +27,9 @@ The SystemContainer is the top level of structures in Exudyn. The container hold
 * | **GetSystem**\ (\ *systemNumber*\ ): 
   | obtain multibody systems with index from system container
 * | **visualizationSettings**:
-  | this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \tabnewline
-  | EXAMPLE:\tabnewline
-  | SC = exu.SystemContainer()\tabnewline
+  | this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. 
+  | EXAMPLE:
+  | SC = exu.SystemContainer()
   | SC.visualizationSettings.autoFitScene=False  
 * | **GetRenderState**\ (): 
   | Get dictionary with current render state (openGL zoom, modelview, etc.); will have no effect if GLFW_GRAPHICS is deactivated

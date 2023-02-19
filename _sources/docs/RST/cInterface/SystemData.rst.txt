@@ -32,7 +32,7 @@ This is the data structure of a system which contains Objects (bodies/constraint
    #get detailed information as dictionary:
    mbs.systemData.Info()
 
-\ The class **MainSystemData** has the follwing **functions and structures**:
+\ The class **MainSystemData** has the following **functions and structures**:
 
 * | **NumberOfLoads**\ (): 
   | return number of loads in system
@@ -152,7 +152,7 @@ SystemData: Access coordinates
 
 This section provides access functions to global coordinate vectors. Assigning invalid values or using wrong vector size might lead to system crash and unexpected results.
 
-\ The class **MainSystemData** has the follwing **functions and structures** regarding **coordinate access**:
+\ The class **MainSystemData** has the following **functions and structures** regarding **coordinate access**:
 
 * | **GetODE2Coordinates**\ (\ *configuration*\  = exu.ConfigurationType.Current): 
   | get ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)
@@ -296,7 +296,7 @@ SystemData: Get object LTG coordinate mappings
 
 This section provides access functions the LTG-lists for every object (body, constraint, ...) in the system. For details on the LTG mapping, see Section :ref:`sec-overview-ltgmapping`\ 
 
-\ The class **MainSystemData** has the follwing **functions and structures** regarding **object LTG coordinate mappings**:
+\ The class **MainSystemData** has the following **functions and structures** regarding **object LTG coordinate mappings**:
 
 * | **GetObjectLTGODE2**\ (\ *objectNumber*\ ): 
   | get local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()

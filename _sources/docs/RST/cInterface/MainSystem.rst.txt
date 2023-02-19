@@ -14,7 +14,7 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
 
-\ The class **MainSystem** has the follwing **functions and structures**:
+\ The class **MainSystem** has the following **functions and structures**:
 
 * | **Assemble**\ (): 
   | assemble items (nodes, bodies, markers, loads, ...) of multibody system; Calls CheckSystemIntegrity(...), AssembleCoordinates(), AssembleLTGLists(), AssembleInitializeSystemCoordinates(), and AssembleSystemInitialize()
@@ -47,10 +47,10 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
   .. code-block:: python
 
      def PreStepUserFunction(mbs, t):
-           print(mbs.systemData.NumberOfNodes())
-           if(t>1): 
-                return False 
-           return True 
+         print(mbs.systemData.NumberOfNodes())
+         if(t>1): 
+             return False 
+         return True 
       mbs.SetPreStepUserFunction(PreStepUserFunction)
 
 * | **SetPostNewtonUserFunction**\ (): 
@@ -60,9 +60,9 @@ This is the structure which defines a (multibody) system. In C++, there is a Mai
   .. code-block:: python
 
      def PostNewtonUserFunction(mbs, t):
-           if(t>1): 
-                return [0, 1e-6] 
-           return [0,0] 
+         if(t>1): 
+             return [0, 1e-6] 
+         return [0,0] 
       mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)
 
 * | **AddGeneralContact**\ (): 
@@ -121,7 +121,7 @@ This section provides functions for adding, reading and modifying nodes. Nodes a
    mbs = SC.AddSystem()               #add a new system to work with
    nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
 
-\ The class **MainSystem** has the follwing **functions and structures** regarding **nodes**:
+\ The class **MainSystem** has the following **functions and structures** regarding **nodes**:
 
 * | **AddNode**\ (\ *pyObject*\ ): 
   | add a node with nodeDefinition from Python node class; returns (global) node index (type NodeIndex) of newly added node; use int(nodeIndex) to convert to int, if needed (but not recommended in order not to mix up index types of nodes, objects, markers, ...)
@@ -135,7 +135,7 @@ This section provides functions for adding, reading and modifying nodes. Nodes a
      'referenceCoordinates': [1.0, 0.0, 0.0], 
      'initialCoordinates': [0.0, 2.0, 0.0], 
      'name': 'example node'} 
-      mbs.AddNode(nodeDict)
+     mbs.AddNode(nodeDict)
 
 * | **GetNodeNumber**\ (\ *nodeName*\ ): 
   | get node's number by name (string)
@@ -241,7 +241,7 @@ This section provides functions for adding, reading and modifying objects, which
    nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
    mbs.AddObject(ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))
 
-\ The class **MainSystem** has the follwing **functions and structures** regarding **objects**:
+\ The class **MainSystem** has the following **functions and structures** regarding **objects**:
 
 * | **AddObject**\ (\ *pyObject*\ ): 
   | add an object with objectDefinition from Python object class; returns (global) object number (type ObjectIndex) of newly added object
@@ -255,7 +255,7 @@ This section provides functions for adding, reading and modifying objects, which
      'physicsMass': 10, 
      'nodeNumber': 0, 
      'name': 'example object'} 
-      mbs.AddObject(objectDict)
+     mbs.AddObject(objectDict)
 
 * | **GetObjectNumber**\ (\ *objectName*\ ): 
   | get object's number by name (string)
@@ -348,7 +348,7 @@ This section provides functions for adding, reading and modifying markers. Marke
    mbs.AddObject(ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))
    mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
 
-\ The class **MainSystem** has the follwing **functions and structures** regarding **markers**:
+\ The class **MainSystem** has the following **functions and structures** regarding **markers**:
 
 * | **AddMarker**\ (\ *pyObject*\ ): 
   | add a marker with markerDefinition from Python marker class; returns (global) marker number (type MarkerIndex) of newly added marker
@@ -359,9 +359,9 @@ This section provides functions for adding, reading and modifying markers. Marke
      item = MarkerNodePosition(name='my marker',nodeNumber=1) 
      mbs.AddMarker(item)
      markerDict = {'markerType': 'NodePosition', 
-      'nodeNumber': 0, 
-      'name': 'position0'}
-      mbs.AddMarker(markerDict)
+       'nodeNumber': 0, 
+       'name': 'position0'}
+     mbs.AddMarker(markerDict)
 
 * | **GetMarkerNumber**\ (\ *markerName*\ ): 
   | get marker's number by name (string)
@@ -433,7 +433,7 @@ This section provides functions for adding, reading and modifying operating load
    mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
    mbs.AddLoad(Force(markerNumber = mMP, loadVector=[0.001,0,0]))
 
-\ The class **MainSystem** has the follwing **functions and structures** regarding **loads**:
+\ The class **MainSystem** has the following **functions and structures** regarding **loads**:
 
 * | **AddLoad**\ (\ *pyObject*\ ): 
   | add a load with loadDefinition from Python load class; returns (global) load number (type LoadIndex) of newly added load
@@ -444,10 +444,10 @@ This section provides functions for adding, reading and modifying operating load
      item = mbs.AddLoad(LoadForceVector(loadVector=[1,0,0], markerNumber=0, name='heavy load')) 
      mbs.AddLoad(item)
      loadDict = {'loadType': 'ForceVector',
-      'markerNumber': 0,
-      'loadVector': [1.0, 0.0, 0.0],
-      'name': 'heavy load'} 
-      mbs.AddLoad(loadDict)
+       'markerNumber': 0,
+       'loadVector': [1.0, 0.0, 0.0],
+       'name': 'heavy load'} 
+     mbs.AddLoad(loadDict)
 
 * | **GetLoadNumber**\ (\ *loadName*\ ): 
   | get load's number by name (string)
@@ -519,7 +519,7 @@ This section provides functions for adding, reading and modifying operating sens
    from exudyn.plot import PlotSensor
    PlotSensor(mbs, sMP, components=[0,1,2])
 
-\ The class **MainSystem** has the follwing **functions and structures** regarding **sensors**:
+\ The class **MainSystem** has the following **functions and structures** regarding **sensors**:
 
 * | **AddSensor**\ (\ *pyObject*\ ): 
   | add a sensor with sensor definition from Python sensor class; returns (global) sensor number (type SensorIndex) of newly added sensor
@@ -530,10 +530,10 @@ This section provides functions for adding, reading and modifying operating sens
      item = mbs.AddSensor(SensorNode(sensorType= exu.SensorType.Node, nodeNumber=0, name='test sensor')) 
      mbs.AddSensor(item)
      sensorDict = {'sensorType': 'Node',
-      'nodeNumber': 0,
-      'fileName': 'sensor.txt',
-      'name': 'test sensor'} 
-      mbs.AddSensor(sensorDict)
+       'nodeNumber': 0,
+       'fileName': 'sensor.txt',
+       'name': 'test sensor'} 
+     mbs.AddSensor(sensorDict)
 
 * | **GetSensorNumber**\ (\ *sensorName*\ ): 
   | get sensor's number by name (string)

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ObjectANCFBeam &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ObjectBeamGeometricallyExact2D" href="ObjectBeamGeometricallyExact2D.html" />
+    <link rel="prev" title="ObjectALEANCFCable2D" href="ObjectALEANCFCable2D.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.5.104.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ObjectANCFCable2D.html">ObjectANCFCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectALEANCFCable2D.html">ObjectALEANCFCable2D</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectANCFBeam</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectBeamGeometricallyExact2D.html">ObjectBeamGeometricallyExact2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectBeamGeometricallyExact.html">ObjectBeamGeometricallyExact</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+      <li class="breadcrumb-item active">ObjectANCFBeam</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/items/ObjectANCFBeam.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="objectancfbeam">
+<span id="sec-item-objectancfbeam"></span><h1>ObjectANCFBeam<a class="headerlink" href="#objectancfbeam" title="Permalink to this heading"></a></h1>
+<p>OBJECT UNDER CONSTRUCTION: A 3D beam finite element based on the absolute nodal coordinate formulation, using two . The localPosition <span class="math notranslate nohighlight">\(x\)</span> of the beam ranges from <span class="math notranslate nohighlight">\(-L/2\)</span> (at node 0) to <span class="math notranslate nohighlight">\(L/2\)</span> (at node 1). The axial coordinate is <span class="math notranslate nohighlight">\(x\)</span> (first coordinate) and the cross section is spanned by local <span class="math notranslate nohighlight">\(y\)</span>/<span class="math notranslate nohighlight">\(z\)</span> axes; assuming dimensions <span class="math notranslate nohighlight">\(w_y\)</span> and <span class="math notranslate nohighlight">\(w_z\)</span> in cross section, the local position range is <span class="math notranslate nohighlight">\(\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]\)</span>.</p>
+<p>The item <strong>ObjectANCFBeam</strong> with type = ‘ANCFBeam’ has the following parameters:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>name</strong> [type = String, default = ‘’]:</div>
+<div class="line">objects’s unique name</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>nodeNumbers</strong> [type = NodeIndex2, default = [invalid [-1], invalid [-1]]]:</div>
+<div class="line">two node numbers for beam element</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>physicsLength</strong> [type = PReal, default = 0.]:</div>
+<div class="line">[SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives <span class="math notranslate nohighlight">\(\rho A L\)</span>; must be positive</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>sectionData</strong> [type = BeamSection, default = BeamSection()]:</div>
+<div class="line">data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>crossSectionPenaltyFactor</strong> [type = Vector3D, default = [1.,1.,1.]]:</div>
+<div class="line">[SI:1] additional penalty factors for cross section deformation, which are in total <span class="math notranslate nohighlight">\(k_cs = [f_yy\cdot k_yy,\, f_zz\cdot k_zz,\, f_yz\cdot k_yz]\tp\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>testBeamRectangularSize</strong> [type = Vector2D, default = [-1.,-1.]]:</div>
+<div class="line">[SI:m] test dimensions for mass matrix and other terms using standard rectangular cross section</div>
+</div>
+</li>
+</ul>
+<p>The item VObjectANCFBeam has the following parameters:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>show</strong> [type = Bool, default = True]:</div>
+<div class="line">set true, if item is shown in visualization and false if it is not shown; geometry is defined by sectionGeometry</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>sectionGeometry</strong> [type = BeamSectionGeometry, default =  BeamSectionGeometry()]:</div>
+<div class="line">defines cross section shape used for visualization and contact</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>color</strong> [type = Float4, default = [-1.,-1.,-1.,-1.]]:</div>
+<div class="line">RGBA color of the object; if R==-1, use default color</div>
+</div>
+</li>
+</ul>
+<p><strong>This is only a small part of information on this item. For details see the Exudyn documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ObjectALEANCFCable2D.html" class="btn btn-neutral float-left" title="ObjectALEANCFCable2D" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ObjectBeamGeometricallyExact2D.html" class="btn btn-neutral float-right" title="ObjectBeamGeometricallyExact2D" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

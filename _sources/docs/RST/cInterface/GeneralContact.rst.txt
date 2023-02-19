@@ -21,7 +21,7 @@ Structure to define general and highly efficient contact functionality in multib
    gContact.AddSphereWithMarker(...) #use appropriate arguments
    gContact.SetFrictionPairings(...) #set friction pairings and adjust searchTree if needed.
 
-\ The class **GeneralContact** has the follwing **functions and structures**:
+\ The class **GeneralContact** has the following **functions and structures**:
 
 * | **GetPythonObject**\ (): 
   | convert member variables of GeneralContact into dictionary; use this for debug only!
@@ -81,7 +81,7 @@ Structure to define general and highly efficient contact functionality in multib
   .. code-block:: python
 
      gContact.SetSearchTreeBox(pMin=[-1,-1,-1],
-        \phantom{XXXX}pMax=[1,1,1])
+         pMax=[1,1,1])
 
 * | **AddSphereWithMarker**\ (\ *markerIndex*\ , \ *radius*\ , \ *contactStiffness*\ , \ *contactDamping*\ , \ *frictionMaterialIndex*\ ): 
   | add contact object using a marker (Position or Rigid), radius and contact/friction parameters and return localIndex of the contact item in GeneralContact; frictionMaterialIndex refers to frictionPairings in GeneralContact; contact is possible between spheres (circles in 2D) (if intraSphereContact = True), spheres and triangles and between sphere (=circle) and ANCFCable2D; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper
@@ -96,7 +96,7 @@ Structure to define general and highly efficient contact functionality in multib
   .. code-block:: python
 
      gContact.GetItemsInBox(pMin=[0,1,1],
-        \phantom{XXXX}pMax=[2,3,2])
+         pMax=[2,3,2])
 
 * | **GetMarkerBasedSphere**\ (\ *localIndex*\ ): 
   | Get dictionary with position, radius and markerIndex for markerBasedSphere index, as returned e.g. from GetItemsInBox
@@ -116,7 +116,7 @@ VisuGeneralContact
 
 This structure may contains some visualization parameters in future. Currently, all visualization settings are controlled via SC.visualizationSettings
 
-\ The class **VisuGeneralContact** has the follwing **functions and structures**:
+\ The class **VisuGeneralContact** has the following **functions and structures**:
 
 * | **Reset**\ (): 
   | reset visualization parameters to default values

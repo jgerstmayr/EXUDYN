@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ObjectConnectorHydraulicActuatorSimple &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ObjectConnectorReevingSystemSprings" href="ObjectConnectorReevingSystemSprings.html" />
+    <link rel="prev" title="ObjectConnectorGravity" href="ObjectConnectorGravity.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.5.104.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorSpringDamper.html">ObjectConnectorSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCartesianSpringDamper.html">ObjectConnectorCartesianSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorRigidBodySpringDamper.html">ObjectConnectorRigidBodySpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorLinearSpringDamper.html">ObjectConnectorLinearSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorTorsionalSpringDamper.html">ObjectConnectorTorsionalSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCoordinateSpringDamper.html">ObjectConnectorCoordinateSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCoordinateSpringDamperExt.html">ObjectConnectorCoordinateSpringDamperExt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorGravity.html">ObjectConnectorGravity</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectConnectorHydraulicActuatorSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorReevingSystemSprings.html">ObjectConnectorReevingSystemSprings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorRollingDiscPenalty.html">ObjectConnectorRollingDiscPenalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactConvexRoll.html">ObjectContactConvexRoll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactCoordinate.html">ObjectContactCoordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactCircleCable2D.html">ObjectContactCircleCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactFrictionCircleCable2D.html">ObjectContactFrictionCircleCable2D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="objectConnectorIndex.html">Object (Connector)</a></li>
+      <li class="breadcrumb-item active">ObjectConnectorHydraulicActuatorSimple</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/items/ObjectConnectorHydraulicActuatorSimple.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="objectconnectorhydraulicactuatorsimple">
+<span id="sec-item-objectconnectorhydraulicactuatorsimple"></span><h1>ObjectConnectorHydraulicActuatorSimple<a class="headerlink" href="#objectconnectorhydraulicactuatorsimple" title="Permalink to this heading"></a></h1>
+<p>A basic hydraulic actuator with pressure build up equations. The actuator follows a valve input value, which results in a in- or outflow of fluid depending on the pressure difference. Valve values can be prescribed by user functions (not yet available) or with the MainSystem PreStepUserFunction(…).</p>
+<p>The item <strong>ObjectConnectorHydraulicActuatorSimple</strong> with type = ‘ConnectorHydraulicActuatorSimple’ has the following parameters:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>name</strong> [type = String, default = ‘’]:</div>
+<div class="line">connector’s unique name</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>markerNumbers</strong> [type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ]]:</div>
+<div class="line">list of markers used in connector</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>nodeNumbers</strong> [type = ArrayNodeIndex, default = []]:</div>
+<div class="line">node number of GenericODE1 node for hydraulic components (reference values for this node must be zero); data node may be added in future</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>offsetLength</strong> [type = UReal, default = 0.]:</div>
+<div class="line">offset length [SI:m] of cylinder, representing minimal distance between the two bushings at stroke=0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>strokeLength</strong> [type = PReal, default = 0.]:</div>
+<div class="line">stroke length [SI:m] of cylinder, representing maximum extension relative to <span class="math notranslate nohighlight">\(L_o\)</span>; the measured distance between the markers is <span class="math notranslate nohighlight">\(L_s+L_o\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>chamberCrossSection0</strong> [type = PReal, default = 0.]:</div>
+<div class="line">cross section [SI:m<span class="math notranslate nohighlight">\(^2\)</span>] of chamber (inner cylinder) at piston head (nut) side (0)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>chamberCrossSection1</strong> [type = PReal, default = 0.]:</div>
+<div class="line">cross section [SI:m<span class="math notranslate nohighlight">\(^2\)</span>] of chamber at piston rod side (1); usually smaller than chamberCrossSection0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>referenceVolume0</strong> [type = PReal, default = 0.]:</div>
+<div class="line">chamber reference volume [SI:m<span class="math notranslate nohighlight">\(^3\)</span>] at piston head (nut) side (0) for stroke length zero</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>referenceVolume1</strong> [type = PReal, default = 0.]:</div>
+<div class="line">chamber reference volume [SI:m<span class="math notranslate nohighlight">\(^2\)</span>] at piston rod side (1) for stroke length zero</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>valveOpening0</strong> [type = Real, default = 0.]:</div>
+<div class="line">relative opening of valve <span class="math notranslate nohighlight">\([-1 \ldots 1]\)</span> [SI:1] at piston head (nut) side (0); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>valveOpening1</strong> [type = Real, default = 0.]:</div>
+<div class="line">relative opening of valve <span class="math notranslate nohighlight">\([-1 \ldots 1]\)</span> [SI:1] at piston rod side (1); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>actuatorDamping</strong> [type = UReal, default = 0.]:</div>
+<div class="line">damping [SI:N/(m<span class="math notranslate nohighlight">\(\,\)</span>s)] of hydraulic actuator (against actuator axial velocity)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>oilBulkModulus</strong> [type = PReal, default = 0.]:</div>
+<div class="line">bulk modulus of oil [SI:N/(m<span class="math notranslate nohighlight">\(^2\)</span>)]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>nominalFlow</strong> [type = PReal, default = 0.]:</div>
+<div class="line">nominal flow of oil through valve [SI:m<span class="math notranslate nohighlight">\(^3\)</span>/s]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>systemPressure</strong> [type = Real, default = 0.]:</div>
+<div class="line">system pressure [SI:N/(m<span class="math notranslate nohighlight">\(^2\)</span>)]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>tankPressure</strong> [type = Real, default = 0.]:</div>
+<div class="line">tank pressure [SI:N/(m<span class="math notranslate nohighlight">\(^2\)</span>)]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>useChamberVolumeChange</strong> [type = Bool, default = False]:</div>
+<div class="line">if True, the pressure build up equations include the change of oil stiffness due to change of chamber volume</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>activeConnector</strong> [type = Bool, default = True]:</div>
+<div class="line">flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint</div>
+</div>
+</li>
+</ul>
+<p>The item VObjectConnectorHydraulicActuatorSimple has the following parameters:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>show</strong> [type = Bool, default = True]:</div>
+<div class="line">set true, if item is shown in visualization and false if it is not shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>cylinderRadius</strong> [type = float, default = 0.05]:</div>
+<div class="line">radius for drawing of cylinder</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>rodRadius</strong> [type = float, default = 0.03]:</div>
+<div class="line">radius for drawing of rod</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>pistonRadius</strong> [type = float, default = 0.04]:</div>
+<div class="line">radius for drawing of piston (if drawn transparent)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>pistonLength</strong> [type = float, default = 0.001]:</div>
+<div class="line">radius for drawing of piston (if drawn transparent)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>rodMountRadius</strong> [type = float, default = 0.0]:</div>
+<div class="line">radius for drawing of rod mount sphere</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>baseMountRadius</strong> [type = float, default = 0.0]:</div>
+<div class="line">radius for drawing of base mount sphere</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>baseMountLength</strong> [type = float, default = 0.0]:</div>
+<div class="line">radius for drawing of base mount sphere</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>colorCylinder</strong> [type = Float4, default = [-1.,-1.,-1.,-1.]]:</div>
+<div class="line">RGBA cylinder color; if R==-1, use default connector color</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>colorPiston</strong> [type = Float4, default = [0.8,0.8,0.8,1.]]:</div>
+<div class="line">RGBA piston color</div>
+</div>
+</li>
+</ul>
+<p><strong>This is only a small part of information on this item. For details see the Exudyn documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ObjectConnectorGravity.html" class="btn btn-neutral float-left" title="ObjectConnectorGravity" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ObjectConnectorReevingSystemSprings.html" class="btn btn-neutral float-right" title="ObjectConnectorReevingSystemSprings" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

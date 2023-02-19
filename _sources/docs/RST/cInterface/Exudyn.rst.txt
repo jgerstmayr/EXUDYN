@@ -16,7 +16,7 @@ These are the access functions to the Exudyn module. General usage is explained 
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
 
-\ The class **exudyn** has the follwing **functions and structures**:
+\ The class **exudyn** has the following **functions and structures**:
 
 * | **GetVersionString**\ (\ *addDetails*\  = False): 
   | Get Exudyn built version as string (if addDetails=True, adds more information on compilation Python version, platform, etc.; the Python micro version may differ from that you are working with; AVX2 shows that you are running a AVX2 compiled version)

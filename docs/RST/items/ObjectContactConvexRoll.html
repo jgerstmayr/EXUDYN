@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ObjectContactConvexRoll &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ObjectContactCoordinate" href="ObjectContactCoordinate.html" />
+    <link rel="prev" title="ObjectConnectorRollingDiscPenalty" href="ObjectConnectorRollingDiscPenalty.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.5.104.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorSpringDamper.html">ObjectConnectorSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCartesianSpringDamper.html">ObjectConnectorCartesianSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorRigidBodySpringDamper.html">ObjectConnectorRigidBodySpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorLinearSpringDamper.html">ObjectConnectorLinearSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorTorsionalSpringDamper.html">ObjectConnectorTorsionalSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCoordinateSpringDamper.html">ObjectConnectorCoordinateSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCoordinateSpringDamperExt.html">ObjectConnectorCoordinateSpringDamperExt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorGravity.html">ObjectConnectorGravity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorHydraulicActuatorSimple.html">ObjectConnectorHydraulicActuatorSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorReevingSystemSprings.html">ObjectConnectorReevingSystemSprings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorRollingDiscPenalty.html">ObjectConnectorRollingDiscPenalty</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectContactConvexRoll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactCoordinate.html">ObjectContactCoordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactCircleCable2D.html">ObjectContactCircleCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactFrictionCircleCable2D.html">ObjectContactFrictionCircleCable2D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="objectConnectorIndex.html">Object (Connector)</a></li>
+      <li class="breadcrumb-item active">ObjectContactConvexRoll</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/items/ObjectContactConvexRoll.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="objectcontactconvexroll">
+<span id="sec-item-objectcontactconvexroll"></span><h1>ObjectContactConvexRoll<a class="headerlink" href="#objectcontactconvexroll" title="Permalink to this heading"></a></h1>
+<p>A contact connector representing a convex roll (marker 1) on a flat surface (marker 0, ground body, not moving) in global <span class="math notranslate nohighlight">\(x\)</span>-<span class="math notranslate nohighlight">\(y\)</span> plane. The connector is similar to ObjectConnectorRollingDiscPenalty, but includes a (strictly) convex shape of the roll defined by a polynomial. It is based on a penalty formulation and adds friction and slipping. The formulation is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.</p>
+<p>The item <strong>ObjectContactConvexRoll</strong> with type = ‘ContactConvexRoll’ has the following parameters:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>name</strong> [type = String, default = ‘’]:</div>
+<div class="line">constraints’s unique name</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>markerNumbers</strong> [type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ], size =  2]:</div>
+<div class="line">list of markers used in connector; <span class="math notranslate nohighlight">\(m0\)</span> represents the ground, which can undergo translations but not rotations, and <span class="math notranslate nohighlight">\(m1\)</span> represents the rolling body, which has its reference point (=local position [0,0,0]) at the roll’s center point</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>nodeNumber</strong> [type = NodeIndex, default = invalid (-1)]:</div>
+<div class="line">node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>contactStiffness</strong> [type = Real, default = 0.]:</div>
+<div class="line">normal contact stiffness [SI:N/m]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>contactDamping</strong> [type = Real, default = 0.]:</div>
+<div class="line">normal contact damping [SI:N/(m s)]</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>dynamicFriction</strong> [type = UReal, default = 0.]:</div>
+<div class="line">dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, Section <a class="reference internal" href="../pythonUtilities/physics.html#sec-module-physics"><span class="std std-ref">Module: physics</span></a></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>staticFrictionOffset</strong> [type = UReal, default = 0.]:</div>
+<div class="line">static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, Section <a class="reference internal" href="../pythonUtilities/physics.html#sec-module-physics"><span class="std std-ref">Module: physics</span></a></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>viscousFriction</strong> [type = UReal, default = 0.]:</div>
+<div class="line">viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, Section <a class="reference internal" href="../pythonUtilities/physics.html#sec-module-physics"><span class="std std-ref">Module: physics</span></a></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>exponentialDecayStatic</strong> [type = PReal, default = 1e-3]:</div>
+<div class="line">exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), Section <a class="reference internal" href="../pythonUtilities/physics.html#sec-module-physics"><span class="std std-ref">Module: physics</span></a></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>frictionProportionalZone</strong> [type = UReal, default = 1e-3]:</div>
+<div class="line">limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), Section <a class="reference internal" href="../pythonUtilities/physics.html#sec-module-physics"><span class="std std-ref">Module: physics</span></a></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>rollLength</strong> [type = UReal, default = 0.]:</div>
+<div class="line">roll length [m], symmetric w.r.t.centerpoint</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>coefficientsHull</strong> [type = NumpyVector, default =  []]:</div>
+<div class="line">a vector of polynomial coefficients, which provides the polynomial of the CONVEX hull of the roll; <span class="math notranslate nohighlight">\(\mathrmhull(x) = k_0 x^n_p-1 + k x^n_p-2 + \ldots + k_n_p-2 x  + k_n_p-1\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>coefficientsHullDerivative</strong> [type = NumpyVector, default = []]:</div>
+<div class="line">polynomial coefficients of the polynomial <span class="math notranslate nohighlight">\(\mathrmhull^\prime(x)\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>coefficientsHullDDerivative</strong> [type = NumpyVector, default = []]:</div>
+<div class="line">second derivative of the hull polynomial.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>rBoundingSphere</strong> [type = UReal, default = 0]:</div>
+<div class="line">The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>pContact</strong> [type = Vector3D, default = [0,0,0]]:</div>
+<div class="line">The  current potential contact point. Contact occures if pContact[2] &lt; 0.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>activeConnector</strong> [type = Bool, default = True]:</div>
+<div class="line">flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint</div>
+</div>
+</li>
+</ul>
+<p>The item VObjectContactConvexRoll has the following parameters:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>show</strong> [type = Bool, default = True]:</div>
+<div class="line">set true, if item is shown in visualization and false if it is not shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>color</strong> [type = Float4, default = [-1.,-1.,-1.,-1.]]:</div>
+<div class="line">RGBA connector color; if R==-1, use default color</div>
+</div>
+</li>
+</ul>
+<p><strong>This is only a small part of information on this item. For details see the Exudyn documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ObjectConnectorRollingDiscPenalty.html" class="btn btn-neutral float-left" title="ObjectConnectorRollingDiscPenalty" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ObjectContactCoordinate.html" class="btn btn-neutral float-right" title="ObjectContactCoordinate" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

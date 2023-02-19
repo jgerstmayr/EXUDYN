@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Type definitions &mdash; Exudyn1.5.103.dev1 1.5.103.dev1 documentation</title>
+  <title>Type definitions &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.103.dev1
+            Exudyn1.5.104.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -50,7 +50,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="CInterfaceIndex.html">Python-C++ command interface</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information on Python-C++ interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
@@ -77,6 +76,7 @@
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
@@ -90,7 +90,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.103.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -129,7 +129,7 @@
 <p>This section shows the OutputVariableType structure, which is used for selecting output values, e.g. for GetObjectOutput(…) or for selecting variables for contour plot.</p>
 <p>Available output variables and the interpreation of the output variable can be found at the object definitions.
 The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType. The components are usually out of 0,1,2, representing x,y,zcomponents (e.g., of displacements, velocities, …), or 0,1,2,3,4,5representing xx,yy,zz,yz,xz,xycomponents (e.g., of strain or stress). In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything)</p>
-<p>The class <strong>OutputVariableType</strong> has the follwing <strong>functions and structures</strong>:</p>
+<p>The class <strong>OutputVariableType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>_None</strong>:</div>
@@ -276,7 +276,7 @@ The OutputVariableType does not provide information about the size of the output
 <section id="configurationtype">
 <span id="sec-configurationtype"></span><h2>ConfigurationType<a class="headerlink" href="#configurationtype" title="Permalink to this heading"></a></h2>
 <p>This section shows the ConfigurationType structure, which is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.</p>
-<p>The class <strong>ConfigurationType</strong> has the follwing <strong>functions and structures</strong>:</p>
+<p>The class <strong>ConfigurationType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>_None</strong>:</div>
@@ -318,7 +318,7 @@ The OutputVariableType does not provide information about the size of the output
 <section id="itemtype">
 <span id="sec-itemtype"></span><h2>ItemType<a class="headerlink" href="#itemtype" title="Permalink to this heading"></a></h2>
 <p>This section shows the ItemType structure, which is used for defining types of indices, e.g., in render window and will be also used in item dictionaries in future.</p>
-<p>The class <strong>ItemType</strong> has the follwing <strong>functions and structures</strong>:</p>
+<p>The class <strong>ItemType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>_None</strong>:</div>
@@ -355,7 +355,7 @@ The OutputVariableType does not provide information about the size of the output
 <section id="nodetype">
 <span id="sec-nodetype"></span><h2>NodeType<a class="headerlink" href="#nodetype" title="Permalink to this heading"></a></h2>
 <p>This section shows the NodeType structure, which is used for defining node types for 3D rigid bodies.</p>
-<p>The class <strong>NodeType</strong> has the follwing <strong>functions and structures</strong>:</p>
+<p>The class <strong>NodeType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>_None</strong>:</div>
@@ -457,7 +457,7 @@ The OutputVariableType does not provide information about the size of the output
 <section id="jointtype">
 <span id="sec-jointtype"></span><h2>JointType<a class="headerlink" href="#jointtype" title="Permalink to this heading"></a></h2>
 <p>This section shows the JointType structure, which is used for defining joint types, used in KinematicTree.</p>
-<p>The class <strong>JointType</strong> has the follwing <strong>functions and structures</strong>:</p>
+<p>The class <strong>JointType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>_None</strong>:</div>
@@ -499,7 +499,7 @@ The OutputVariableType does not provide information about the size of the output
 <section id="dynamicsolvertype">
 <span id="sec-dynamicsolvertype"></span><h2>DynamicSolverType<a class="headerlink" href="#dynamicsolvertype" title="Permalink to this heading"></a></h2>
 <p>This section shows the DynamicSolverType structure, which is used for selecting dynamic solvers for simulation.</p>
-<p>The class <strong>DynamicSolverType</strong> has the follwing <strong>functions and structures</strong>:</p>
+<p>The class <strong>DynamicSolverType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>GeneralizedAlpha</strong>:</div>
@@ -556,7 +556,7 @@ The OutputVariableType does not provide information about the size of the output
 <section id="keycode">
 <span id="sec-keycode"></span><h2>KeyCode<a class="headerlink" href="#keycode" title="Permalink to this heading"></a></h2>
 <p>This section shows the KeyCode structure, which is used for special key codes in keyPressUserFunction.</p>
-<p>The class <strong>KeyCode</strong> has the follwing <strong>functions and structures</strong>:</p>
+<p>The class <strong>KeyCode</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>SPACE</strong>:</div>
@@ -651,7 +651,7 @@ The OutputVariableType does not provide information about the size of the output
 <section id="linearsolvertype">
 <span id="sec-linearsolvertype"></span><h2>LinearSolverType<a class="headerlink" href="#linearsolvertype" title="Permalink to this heading"></a></h2>
 <p>This section shows the LinearSolverType structure, which is used for selecting linear solver types, which are dense or sparse solvers.</p>
-<p>The class <strong>LinearSolverType</strong> has the follwing <strong>functions and structures</strong>:</p>
+<p>The class <strong>LinearSolverType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>_None</strong>:</div>
@@ -678,7 +678,7 @@ The OutputVariableType does not provide information about the size of the output
 <section id="contacttypeindex">
 <span id="sec-contacttypeindex"></span><h2>ContactTypeIndex<a class="headerlink" href="#contacttypeindex" title="Permalink to this heading"></a></h2>
 <p>This section shows the ContactTypeIndex structure, which is in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.</p>
-<p>The class <strong>ContactTypeIndex</strong> has the follwing <strong>functions and structures</strong>:</p>
+<p>The class <strong>ContactTypeIndex</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>IndexSpheresMarkerBased</strong>:</div>

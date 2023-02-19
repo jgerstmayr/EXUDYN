@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NodePoint2DSlope1 &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="NodePoint3DSlope1" href="NodePoint3DSlope1.html" />
+    <link rel="prev" title="Node1D" href="Node1D.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.5.104.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="nodeIndex.html">Node</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="NodePoint.html">NodePoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodePoint2D.html">NodePoint2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeRigidBodyEP.html">NodeRigidBodyEP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeRigidBodyRxyz.html">NodeRigidBodyRxyz</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeRigidBodyRotVecLG.html">NodeRigidBodyRotVecLG</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeRigidBodyRotVecDataLG.html">NodeRigidBodyRotVecDataLG</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeRigidBody2D.html">NodeRigidBody2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Node1D.html">Node1D</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">NodePoint2DSlope1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodePoint3DSlope1.html">NodePoint3DSlope1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodePoint3DSlope23.html">NodePoint3DSlope23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeGenericODE2.html">NodeGenericODE2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeGenericODE1.html">NodeGenericODE1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeGenericAE.html">NodeGenericAE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeGenericData.html">NodeGenericData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodePointGround.html">NodePointGround</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="nodeIndex.html">Node</a></li>
+      <li class="breadcrumb-item active">NodePoint2DSlope1</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/items/NodePoint2DSlope1.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="nodepoint2dslope1">
+<span id="sec-item-nodepoint2dslope1"></span><h1>NodePoint2DSlope1<a class="headerlink" href="#nodepoint2dslope1" title="Permalink to this heading"></a></h1>
+<p>A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements; the node has 4 displacement degrees of freedom (2 for displacement of point node and 2 for the slope vector ‘slopex’); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as <span class="math notranslate nohighlight">\(()^\prime\)</span>; in straight configuration aligned at the global x-axis, the slope vector reads <span class="math notranslate nohighlight">\({\mathbf{r}}^\prime=[r_x^\prime\;\;r_y^\prime]^T=[1\;\;0]^T\)</span>.</p>
+<p>The item <strong>NodePoint2DSlope1</strong> with type = ‘Point2DSlope1’ has the following parameters:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>name</strong> [type = String, default = ‘’]:</div>
+<div class="line">node’s unique name</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>referenceCoordinates</strong> [type = Vector4D, default = [0.,0.,1.,0.], size = 4]:</div>
+<div class="line">reference coordinates (x-pos,y-pos; x-slopex, y-slopex) of node; global position of node without displacement</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>initialCoordinates</strong> [type = Vector4D, default = [0.,0.,0.,0.], size = 4]:</div>
+<div class="line">initial displacement coordinates: ux, uy and x/y ‘displacements’ of slopex</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>initialVelocities</strong> [type = Vector4D, default = [0.,0.,0.,0.], size = 4]:</div>
+<div class="line">initial velocity coordinates</div>
+</div>
+</li>
+</ul>
+<p>The item VNodePoint2DSlope1 has the following parameters:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>show</strong> [type = Bool, default = True]:</div>
+<div class="line">set true, if item is shown in visualization and false if it is not shown</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>drawSize</strong> [type = float, default = -1.]:</div>
+<div class="line">drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>color</strong> [type = Float4, default = [-1.,-1.,-1.,-1.], size = 4]:</div>
+<div class="line">Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used</div>
+</div>
+</li>
+</ul>
+<p><strong>This is only a small part of information on this item. For details see the Exudyn documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Node1D.html" class="btn btn-neutral float-left" title="Node1D" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="NodePoint3DSlope1.html" class="btn btn-neutral float-right" title="NodePoint3DSlope1" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
