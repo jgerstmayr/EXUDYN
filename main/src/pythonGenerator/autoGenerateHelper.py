@@ -34,7 +34,7 @@ def Str2Doxygen(s, isDefaultValue=False): #replace _ and other symbols to fit in
     s = s.replace('\\ee','\\f]') #$ must be written as \f$ in doxygen
     s = s.replace('\\bi','') #not needed in doxygen
     s = s.replace('\\ei','') #not needed in doxygen
-    s = s.replace('\item[]','') #not needed in doxygen
+    s = s.replace('\\item[]','') #not needed in doxygen
     s = s.replace('\\_','_') #not needed in doxygen
 
     return s
@@ -94,10 +94,10 @@ def Str2Latex(s, isDefaultValue=False, replaceCurlyBracket=True): #replace _ and
             s = s.replace('f','')
 
     #s = s.replace('\\','\\\\') #leads to double \\ in latex
-    s = s.replace('_','\_')
+    s = s.replace('_','\\_')
     if replaceCurlyBracket: #don't do that for systemstructures definitions, allowing hyperlinks, etc.
-        s = s.replace('{','\{')
-        s = s.replace('}','\}')
+        s = s.replace('{','\\{')
+        s = s.replace('}','\\}')
     #s = s.replace('/',' / ')
     #s = s.replace('$','\$') #do not exclude $ in order to allow latex formulas
 
@@ -111,7 +111,7 @@ def GetTypesStringLatex(s, itemType, possibleTypesList, separator = ','):
     for t in possibleTypesList:
         if s.find(itemType+'::'+t) != -1:
             #tType = t.split('::')[1] #take only left of '::'
-            returnStr += commaStr+'\\texttt{'+t.replace('_','\_')+'}'
+            returnStr += commaStr+'\\texttt{'+t.replace('_','\\_')+'}'
             commaStr = separator+' '
 
     return returnStr
@@ -185,10 +185,10 @@ def DefaultValue2Python(s):
 
     #not necessary in python:
     #s = s.replace('\\','\\\\')
-    #s = s.replace('_','\_') 
-    #s = s.replace('{','\{')
-    #s = s.replace('}','\}')
-    #s = s.replace('$','\$')
+    #s = s.replace('_','\\_') 
+    #s = s.replace('{','\\{')
+    #s = s.replace('}','\\}')
+    #s = s.replace('$','\\$')
 
     return s
 
@@ -247,12 +247,13 @@ for c in abc:
     convLatexMath['\\'+c.upper()+'m'] = r'{\mathbf{'+c.upper()+'}}'
 
 convLatexWords={'(\\the\\month-\\the\\year)':'',
-           '    \item':'\item',
-           '  \item':'\item',
-           '\item[$\\ra$]':'  |  → ', #'+ ->', #this is always a sublist
+           '    \\item':'\\item',
+           '  \\item':'\\item',
+           '\\item[$\\ra$]':'  |  → ', #'+ ->', #this is always a sublist
            '\\item[]':'  ', 
            '\\item[--]':' - ',  #one additional whitespace at beginning for alignment of sub-lists!
            '\\item':'+ ',
+           '\\finishTable':'',
            '\\small':'',
            '\\noindent ':'',
            '\\noindent':'',
@@ -265,9 +266,10 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '\\plainlststyle':'',
            '\\codeName\\':'Exudyn',
            '\\codeName':'Exudyn',
-           '\\pythonstyle\\begin{lstlisting}':'\n.. code-block:: python\n',
-           '\\begin{lstlisting}':'\n.. code-block::\n',
-           '\\end{lstlisting}':'\n',
+           '\\pythonstyle':'',
+           # '\\pythonstyle\\begin{lstlisting}':'\n.. code-block:: python\n',
+           # '\\begin{lstlisting}':'\n.. code-block::\n',
+           # '\\end{lstlisting}':'\n',
            '\\begin{center}':'',
            '\\end{center}':'',
            #'\\includegraphics[height=6cm]{../demo/screenshots/plotSpringDamper}':'see theDoc.pdf',
@@ -295,19 +297,21 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '\\ge':'>=',
            '\\_':'_',
            '\\textdegree':'°',
+           '\\hac':'',
+           '\\hacs':'',
            '\\acs':'',
            '\\acp':'',
            '\\acf':'',
            '\\ac':'',
            #
-           '{\"a}':'ä',
-           '{\"o}':'ö',
-           '{\"u}':'ü',
+           '{\\"a}':'ä',
+           '{\\"o}':'ö',
+           '{\\"u}':'ü',
            '\\"a':'ä', #if '{' is already removed earlier
            '\\"o':'ö',
            '\\"u':'ü',
-           '{':'',
-           '}':'',
+           # '{':'',
+           # '}':'',
            '$':'',
            }
     
@@ -315,30 +319,38 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     '\\ignoreRST':('','',''),
     '\\texttt':('\\ ``','_USE','``\\ '),
     '\\label':('\n\n.. _','_USE',':\n\n'), #do this before sections ...
-    '\\mysectionlabel':('','',''),
-    '\\mysubsectionlabel':('','',''),
-    '\\mysubsubsectionlabel':('','',''),
-    '\\mysubsubsubsectionlabel':('','',''),
-    '\\mysection':('','',''),
-    '\\mysubsection':('','',''),
-    '\\mysubsubsection':('','',''),
-    '\\mysubsubsubsection':('','',''),
-    '\\pythonListing':('','',''),
-    '\\pythonSmallListing':('','',''),
-    '\\smallListing':('','',''),
+    '\\mysectionlabel':('','_USE','','2nd'),
+    '\\mysubsectionlabel':('','_USE','','2nd'),
+    '\\mysubsubsectionlabel':('','_USE','','2nd'),
+    '\\mysubsubsubsectionlabel':('','_USE','','2nd'),
+    '\\mysection':('','_USE',''),
+    '\\mysubsection':('','_USE',''),
+    '\\mysubsubsection':('','_USE',''),
+    '\\mysubsubsubsection':('','_USE',''),
+    #'\\pytlisting':('','',''),
+    # '\\pythonSmallListing':('','',''),
+    # '\\smallListing':('','',''),
+    'pytlisting':('\n.. code-block:: python\n','_USE','\n'),
+    'lstlisting':('\n.. code-block:: \n','_USE','\n'),
     '\\myListing':('','',''),
     '\\setlength':('','',''),
     '\\vspace':('','',''),
     '\\footnote':(' (','_USE',')'), #rst footnotes may be used instead: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#footnotes
     '\\mybold':('\\ **','_USE','**\\ '),
+    '\\myitalics':('\\ *','_USE','*\\ '),
     '\\mathrm':('','_USE',''),
     '\\cite':('','',''),
     '\\onlyRST':('','_USE',''),
-    #'\\refSection':('theDoc.pdf','',''),
-    #'\\refSection':(' `','_USE','`_\\ '),
+
+    #for tables:
+    '\\startGenericTable':('\n.. list-table:: \\ \n   :widths: auto\n   :header-rows: 1\n','',''), 
+    '\\rowTableThree':('','_USE','','*2nd','*3rd'),       #filled manually
+    '\\rowTableFour':('','_USE','','*2nd','*3rd','*4rd'), #filled manually
+    #'\\finishTable':('','',''),  #this is a word!
+    
     '\\refSectionA':(' :ref:`Section <','_USE','>`\\ '), #anonymous -> if no header given
     '\\refSection':('Section :ref:`','_USE','`\\ '), #anonymous -> if no header given
-    '\\exuUrl':('`','_USE','`_'),
+    '\\exuUrl':('`','_USE','`_','2nd'),
     '\\ref':(' :ref:`','_USE','`\\ '),
     '\\fig':('Fig. :ref:`','_USE','`\\ '),
     #'\\fig':(' :ref:`Figure <','_USE','>`\\ '),
@@ -346,7 +358,12 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     } #TITLE, SUBTITLE, SUBSUBTITLE, ...
 
 #replace all occurances of conversionDict in string and return modified string
-def ReplaceWords(s, conversionDict): #replace strings provided in conversion dict
+def ReplaceWords(s, conversionDict, replaceBraces=True): #replace strings provided in conversion dict
+
+    if replaceBraces:
+        s = s.replace('{', '')
+        s = s.replace('}', '')
+
     for (key,value) in conversionDict.items():
         s = s.replace(key, value)
 
@@ -354,6 +371,27 @@ def ReplaceWords(s, conversionDict): #replace strings provided in conversion dic
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#     indexRST += """
+# .. list-table::
+#    :widths: 15 10 30
+#    :header-rows: 1
+   
+#  * - **HEADER1**
+#    - **HEADER2**
+#    - **HEADER3**
+#  * - | TEXT 1
+#    - | MULTILINE 
+#      | TEXT
+#    - | MULTILINE
+#      | TEXT 2
+#  * - | DEFINITION of the long item DEFINITION of the long item DEFINITION of the long item
+#    - | character
+#      | given
+#    - | maybe not good maybe not good maybe not good maybe not good maybe not good
+#      | TEXT 2
+# """
+
 
 #add specific markup with blind spaces
 def RSTmarkup(name, c='*', blindSpaces=True):
@@ -421,6 +459,9 @@ def RSTheaderString(header, level):
 def FindMatchingBracket(s, start, openBracket='{', closingBracket='}'):
     cnt = 0
     bStart = -1
+    if s[start] != openBracket:#requires to start with bracket! otherwise, this is risky!
+        print('FindMatchingBracket: no bracket:',s[start-10:start+20])
+        return [-1,-1]
     for i in range(start,len(s)):
         if s[i] == openBracket:
             cnt += 1
@@ -486,28 +527,39 @@ def LatexString2RST(s, replaceCommands=True, replaceMarkups = False): #Latex sty
     return s
 
 #if key is found, return [preString, innerString, innerString2, postString], otherwise -1; '123\section{abc}456' = ['123','abc','456']
-#if secondBracket=True, it searches two consecutive brackets: \exuURL{...}{...} and stores in innerString2
-def ExtractLatexCommand(s, key, secondBracket, isBeginEnd):
+#if secondBracket>0, it searches two consecutive brackets: \exuURL{...}{...} and stores in innerString2 (will be list for more inner strings)
+def ExtractLatexCommand(s, key, secondBracket, isBeginEnd=False):
     found = -1
     if isBeginEnd: #find \begin{...} \end{...}
         #always find next occurances --> will be erased in next run ...
+        keyEnd = key
+        if key == 'pytlisting':
+            keyEnd = 'lstlisting'
         sStart = s.find('\\begin{'+key+'}')
-        sEnd = s.find('\\end{'+key+'}')
-        if sStart == -1 or sEnd == -1:
+        sEnd = s.find('\\end{'+keyEnd+'}',sStart)
+        if sStart == -1 or sEnd == -1 or sStart >= sEnd: #if start>end, it is e.g. lstlisting end for pytlisting as start
+            # if sStart >= sEnd:
+            #     print('begin/end: sStart>sEnd: key=',key)
             return -1
         else:
             found = sStart
             sStart += len('\\begin{'+key+'}') - 1
+            if False:
+                print('=====================')
+                print('found:'+s[found:sEnd+len('\\end{'+keyEnd+'}')])
+                print('+++++++++++++++++++++')
+                print('inner:'+s[sStart:sEnd])
+                print('=====================')
             #sEnd += len('\\end{'+key+'}') - 1
             preString = s[:found]
             innerString = s[sStart+1:sEnd]
-            postString = s[sEnd+len('\\end{'+key+'}'):]
+            postString = s[sEnd+len('\\end{'+keyEnd+'}'):]
 
             return [preString, innerString, '', postString]
     else:
         found = s.find(key)
         if found != -1:
-            [sStart, sEnd] = FindMatchingBracket(s, found)
+            [sStart, sEnd] = FindMatchingBracket(s, found+len(key))
 
             preString = s[:found]
             if sEnd == -1:
@@ -517,24 +569,37 @@ def ExtractLatexCommand(s, key, secondBracket, isBeginEnd):
             innerString = s[sStart+1:sEnd]
             postString = s[sEnd+1:]
     
-            sStart2 = -1
-            sEnd2 = -1
+            # sStart2 = -1
+            # sEnd2 = -1
             innerString2 = ''
-            if secondBracket:
-                [sStart2, sEnd2] = FindMatchingBracket(s, sEnd+1)
-                if sEnd2 == -1:
-                    # print("start ", sStart, ", end ", sEnd)
-                    print('no matching second bracket found: '+key+', "'+s[sStart+1:sStart+50]+'"')
-                    raise ValueError('ERROR')
-                innerString2 = s[sStart2+1:sEnd2]
-                postString = s[sEnd2+1:]
+            innerStringList = []
+            
+            if secondBracket > 0:
+                for k in range(int(secondBracket)):
+                    [sStart2, sEnd2] = FindMatchingBracket(s, sEnd+1)
+                    if sEnd2 == -1:
+                        # print("start ", sStart, ", end ", sEnd)
+                        print('no matching second bracket found: '+key+', "'+s[sStart+1:sStart+50]+'"')
+                        raise ValueError('ERROR')
+                    innerString2 = s[sStart2+1:sEnd2]
+                    innerStringList += [innerString2]
+                    postString = s[sEnd2+1:]
+                    sEnd = sEnd2
+                if secondBracket > 1: #for more than 2 arguments
+                    innerString2 = [innerString]+innerStringList
+                    #print('innerString2:',innerString2)
     
             # print(sStart, sEnd)
             return [preString, innerString, innerString2, postString]
         else:
             return -1
 
-def ReplaceLatexCommands(s, conversionDict): #replace strings provided in conversion dict
+def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace strings provided in conversion dict
+    sectionFilesDepth = 1
+    secOff = 0
+    if sectionMarkerText!='':
+        secOff = 1#for doc2rst the section headers are different
+        
     #remove comments:
     slines = s.split('\n')
     s = ''
@@ -550,46 +615,76 @@ def ReplaceLatexCommands(s, conversionDict): #replace strings provided in conver
     for (key,value) in conversionDict.items():
         found = 0
         while (found != -1):
-            secondBracket = False
             isBeginEnd = False
-            if key == '\\exuUrl' or 'sectionlabel' in key: 
-                secondBracket = True
-            if key == 'figure': isBeginEnd = True
+            secondBracket = 0
+            if len(value) > 3:
+                secondBracket = len(value)-3
+            # if key == '\\exuUrl' or 'sectionlabel' in key: 
+            #     secondBracket = True
+            if key == 'figure' or key == 'lstlisting' or key == 'pytlisting':
+                isBeginEnd = True
             
             found = ExtractLatexCommand(s, key, secondBracket, isBeginEnd)
 
             if found != -1:
                 [preString, innerString, innerString2, postString] = found
 
-                # if isBeginEnd:
-                #     print("inner="+innerString+'+++')
-                # if key == '\\label':
-                #     #label in rst needs to be put in front of section ... put in front of 
-                #     nLast = max(0,preString.rfind('\n',0,-1)) #start one char earlier to catch direct \n before; otherwise take start of string
-                #     s = preString[0:nLast]
-                #     s += value[0] + innerString.replace(':','-').lower() + value[2]
-                #     s += preString[nLast:] #this may be the header
-                # else:
                 s = preString
                 if '\\refSection' in key or key == '\\label' or key == '\\fig' or key == '\\ref':
                     innerString=innerString.replace(':','-').replace('_','-').lower()
-                else:
-                    if key != '\\exuUrl':
-                        innerString = ReplaceLatexCommands(innerString, convLatexCommands)
-                        innerString = ReplaceWords(innerString, convLatexWords) #needs to be cleaned here already
-                
-                if key == '\\mysection' or key == '\\mysectionlabel':
-                    if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    s += '\n'+RSTheaderString(innerString, 0)
+                elif (value[1] == '_USE' and key != '\\exuUrl' 
+                      and key != 'lstlisting' and key!='pytlisting'):
+                    if 'lstlisting' in innerString:
+                        print('WARNING: lstlisting in inner string:',innerString)
+                    innerString = ReplaceLatexCommands(innerString, convLatexCommands)
+                    innerString = ReplaceWords(innerString, convLatexWords) #needs to be cleaned here already
+
+                # if ('lstlisting' in key):
+                #     print('==============\n'+preString[-20:]+value[0]+innerString + postString[:40])
+
+                if '\\rowTable' in key:
+                    nRows = len(value)-2
+                    
+                    #print('rowTableThree/Four: rows=',nRows)
+                    if type(innerString2) == list:
+                        # if len(innerString2) != nRows:
+                        #     print('innerString2:',innerString2)
+                        text = ''
+                        cstar = '*'
+                        for k, col in enumerate(innerString2):
+                            text += '   '+cstar+' - | '+col
+                            if k < len(innerString2)-1:
+                                text += '\n' #last \n is added due to text itself (postString)
+                            cstar = ' '
+                        s += text
+                        #print('table = \n'+text)
+                    else:
+                        print('PROBLEM with rowTable: ',innerString2)
+
+                elif key == '\\mysection' or key == '\\mysectionlabel':
+                    s += sectionMarkerText+'[0]'+'[' + innerString + ']'+'\n'
+                    if 'label' in key: 
+                        s += RSTlabelString(innerString2)+'\n'
+                    #sectionsList += [('0',innerString)]
+                    s += '\n'+RSTheaderString(innerString, secOff + 0)
                 elif key == '\\mysubsection' or key == '\\mysubsectionlabel':
+                    if sectionFilesDepth > 0:
+                        s += sectionMarkerText+'[1]'+'[' + innerString + ']'+'\n'
+                        #sectionsList += [('1',innerString)]
                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    s += '\n'+RSTheaderString(innerString, 1)
+                    s += '\n'+RSTheaderString(innerString, secOff + 1)
+                # elif key == '\\mysection' or key == '\\mysectionlabel':
+                #     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
+                #     s += '\n'+RSTheaderString(innerString, secOff + 0)
+                # elif key == '\\mysubsection' or key == '\\mysubsectionlabel':
+                #     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
+                #     s += '\n'+RSTheaderString(innerString, secOff + 1)
                 elif key == '\\mysubsubsection' or key == '\\mysubsubsectionlabel':
                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    s += '\n'+RSTheaderString(innerString, 2)
+                    s += '\n'+RSTheaderString(innerString, secOff + 2)
                 elif key == '\\mysubsubsubsection' or key == '\\mysubsubsubsectionlabel':
                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    s += '\n'+RSTheaderString(innerString, 3)
+                    s += '\n'+RSTheaderString(innerString, secOff + 3)
                 elif key == '\\exuUrl':
                     s += value[0]
                     s += innerString2 + ' <' + innerString + '>'
@@ -706,7 +801,7 @@ class PyLatexRST:
             self.sRST += '\n'
             for item in itemList:
                 sEnd = '\n'*(item.strip(' ')[-1] != '\n') #add separator if not there already
-                self.sLatex +='\item'+itemText+' ' + item + sEnd
+                self.sLatex +='\\item'+itemText+' ' + item + sEnd
                 if itemText == '':
                     rstItem = '*'
                 elif itemText == '[]':
@@ -881,7 +976,7 @@ class PyLatexRST:
         
         self.sPy += '\n'
 
-        self.sLatex += ' & ' + description.replace('_','\_')
+        self.sLatex += ' & ' + description.replace('_','\\_')
         #self.sRST += ': \n' +  RemoveIndentation(description.replace('_','\_'), '  | ') + '\n'
         self.sRST += ': \n' +  RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
         if example != '':
@@ -1370,7 +1465,7 @@ def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName, useLatex 
                 s += sComment*useLatex2
                 
                 if ufMode:
-                    sExTest = 'Relevant Examples (Ex) and TestModels (TM) with weblink:\n'
+                    sExTest = 'Relevant Examples (Ex) and TestModels (TM) with weblink to github:\n'
                 else:
                     sExTest = 'Relevant Examples and TestModels with weblink:\n'
                 s += sExTest
@@ -1385,7 +1480,7 @@ def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName, useLatex 
                 sep = sepItem1
             for name in fileList:
                 fileURL = 'https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/'+folder+'/' + name
-                s += sep+'\exuUrl{'+fileURL+'}'
+                s += sep+'\\exuUrl{'+fileURL+'}'
                 s += '{\\texttt{'+name.replace('_','\\_')+'}}' 
                 sRST += sepRST
                 sepRST = ', '

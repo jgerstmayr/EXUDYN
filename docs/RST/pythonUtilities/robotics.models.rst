@@ -78,7 +78,7 @@ Function: `ManipulatorPuma560 <https://github.com/jgerstmayr/EXUDYN/blob/master/
 - | \ *notes*\ :
   | std DH-parameters: [theta, d, a, alpha], according to P. Corke page 138, puma p560 limits, taken from Corke Visual Control of Robots
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `serialRobotKinematicTreeDigging.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py>`_\  (Ex)
 

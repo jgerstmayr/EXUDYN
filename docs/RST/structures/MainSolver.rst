@@ -31,7 +31,7 @@ MainSolverStatic has the following items:
 * | **ComputeAlgebraicEquations(...)** [type = \tabnewline void, default = mainSystem, velocityLevel=false]:
   | compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)
 * | **ComputeJacobianAE(...)** [type = void, default = mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1., velocityLevel=false]:
-  | add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hacODE2 coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian
+  | add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. ODE2 coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian
 * | **ComputeJacobianODE1RHS(...)** [type = void, default = mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1.]:
   | ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(...); the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian
 * | **ComputeJacobianODE2RHS(...)** [type = void, default = mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1.]:
@@ -47,7 +47,7 @@ MainSolverStatic has the following items:
 * | **ComputeNewtonUpdate(...)** [type = void, default = mainSystem, simulationSettings, initial=true]:
   | compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0
 * | **ComputeODE2RHS(...)** [type = void, default = mainSystem]:
-  | compute the RHS of \hacODE2 equations in systemResidual in range(0,nODE2)
+  | compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)
 * | **DiscontinuousIteration(...)** [type = bool, default = mainSystem, simulationSettings]:
   | perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual
 * | **FinalizeSolver(...)** [type = void, default = mainSystem, simulationSettings]:
@@ -61,9 +61,9 @@ MainSolverStatic has the following items:
 * | **GetNewtonSolution()** [type = NumpyVector]:
   | get locally stored / last computed solution (=increment) of Newton
 * | **GetODE1size()** [type = Index]:
-  | number of \hacODE1 equations in solver (not yet implemented)
+  | number of ODE1 equations in solver (not yet implemented)
 * | **GetODE2size()** [type = Index]:
-  | number of \hacODE2 equations in solver
+  | number of ODE2 equations in solver
 * | **GetSimulationEndTime(...)** [type = Real, default = simulationSettings]:
   | compute simulation end time (depends on static or time integration solver)
 * | **GetSolverName()** [type = std::string]:
@@ -160,7 +160,7 @@ MainSolverImplicitSecondOrder has the following items:
 * | **ComputeAlgebraicEquations(...)** [type = \tabnewline void, default = mainSystem, velocityLevel=false]:
   | compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)
 * | **ComputeJacobianAE(...)** [type = void, default = mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1., velocityLevel=false]:
-  | add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. \hacODE2 coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian
+  | add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. ODE2 coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian
 * | **ComputeJacobianODE1RHS(...)** [type = void, default = mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1.]:
   | ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(...); the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian
 * | **ComputeJacobianODE2RHS(...)** [type = void, default = mainSystem, scalarFactor\_ODE2=1., scalarFactor\_ODE2\_t=0., scalarFactor\_ODE1=1.]:
@@ -176,9 +176,9 @@ MainSolverImplicitSecondOrder has the following items:
 * | **ComputeNewtonUpdate(...)** [type = void, default = mainSystem, simulationSettings, initial=true]:
   | compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0
 * | **ComputeODE1RHS(...)** [type = void, default = mainSystem]:
-  | compute the RHS of \hacODE1 equations in systemResidual in range(0,nODE1)
+  | compute the RHS of ODE1 equations in systemResidual in range(0,nODE1)
 * | **ComputeODE2RHS(...)** [type = void, default = mainSystem]:
-  | compute the RHS of \hacODE2 equations in systemResidual in range(0,nODE2)
+  | compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)
 * | **DiscontinuousIteration(...)** [type = bool, default = mainSystem, simulationSettings]:
   | perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual
 * | **factJacAlgorithmic** [type = Real]:
@@ -196,9 +196,9 @@ MainSolverImplicitSecondOrder has the following items:
 * | **GetNewtonSolution()** [type = NumpyVector]:
   | get locally stored / last computed solution (=increment) of Newton
 * | **GetODE1size()** [type = Index]:
-  | number of \hacODE1 equations in solver (not yet implemented)
+  | number of ODE1 equations in solver (not yet implemented)
 * | **GetODE2size()** [type = Index]:
-  | number of \hacODE2 equations in solver
+  | number of ODE2 equations in solver
 * | **GetSimulationEndTime(...)** [type = Real, default = simulationSettings]:
   | compute simulation end time (depends on static or time integration solver)
 * | **GetSolverName()** [type = std::string]:
@@ -321,9 +321,9 @@ MainSolverExplicit has the following items:
 * | **ComputeNewtonUpdate(...)** [type = void, default = mainSystem, simulationSettings, initial=true]:
   | compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0
 * | **ComputeODE1RHS(...)** [type = void, default = mainSystem]:
-  | compute the RHS of \hacODE1 equations in systemResidual in range(0,nODE1)
+  | compute the RHS of ODE1 equations in systemResidual in range(0,nODE1)
 * | **ComputeODE2RHS(...)** [type = void, default = mainSystem]:
-  | compute the RHS of \hacODE2 equations in systemResidual in range(0,nODE2)
+  | compute the RHS of ODE2 equations in systemResidual in range(0,nODE2)
 * | **DiscontinuousIteration(...)** [type = bool, default = mainSystem, simulationSettings]:
   | perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual
 * | **FinalizeSolver(...)** [type = void, default = mainSystem, simulationSettings]:
@@ -339,9 +339,9 @@ MainSolverExplicit has the following items:
 * | **GetNumberOfStages()** [type = Index]:
   | return number of stages in current method
 * | **GetODE1size()** [type = Index]:
-  | number of \hacODE1 equations in solver (not yet implemented)
+  | number of ODE1 equations in solver (not yet implemented)
 * | **GetODE2size()** [type = Index]:
-  | number of \hacODE2 equations in solver
+  | number of ODE2 equations in solver
 * | **GetSimulationEndTime(...)** [type = Real, default = simulationSettings]:
   | compute simulation end time (depends on static or time integration solver)
 * | **GetSolverName()** [type = std::string]:

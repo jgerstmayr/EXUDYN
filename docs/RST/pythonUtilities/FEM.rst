@@ -41,7 +41,7 @@ Function: `MapSparseMatrixIndices <https://github.com/jgerstmayr/EXUDYN/blob/mas
 Function: `VectorDiadicUnitMatrix3D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L54>`__\ (\ ``v``\ )
 
 - | \ *function description*\ :
-  | compute diadic product of vector v and a 3D unit matrix = diadic(v,I\ :math:`_{3x3}`\ ); used for ObjectFFRF and CMS implementation
+  | compute diadic product of vector v and a 3D unit matrix = diadic(v,I\ :math:`_3x3`\ ); used for ObjectFFRF and CMS implementation
 
 
 ----
@@ -84,7 +84,7 @@ Function: `CSRtoScipySparseCSR <https://github.com/jgerstmayr/EXUDYN/blob/master
 - | \ *function description*\ :
   | convert internal compressed CSR to scipy.sparse csr matrix
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM)
 
@@ -140,7 +140,7 @@ Function: `ConvertHexToTrigs <https://github.com/jgerstmayr/EXUDYN/blob/master/m
   | convert list of Hex8/C3D8  element with 8 nodes in nodeNumbers into triangle-List
   | also works for Hex20 elements, but does only take the corner nodes!
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `objectFFRFTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py>`_\  (TM)
 
@@ -275,7 +275,7 @@ Function: `CMSObjectComputeNorm <https://github.com/jgerstmayr/EXUDYN/blob/maste
 - | \ *output*\ :
   | return value or list of values according to chosen norm as np.array
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex)
 
@@ -334,7 +334,7 @@ Class function: `LameParameters <https://github.com/jgerstmayr/EXUDYN/blob/maste
 - | \ *output*\ :
   | return vector [mu, lam] of Lame parameters
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `CMSexampleCourse.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py>`_\  (Ex), \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `NGsolvePostProcessingStresses.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePostProcessingStresses.py>`_\  (Ex)
 
@@ -411,7 +411,7 @@ Class function: `UFmassGenericODE2 <https://github.com/jgerstmayr/EXUDYN/blob/ma
 - | \ *classFunction*\ :
   | optional massMatrixUserFunction for ObjectFFRF (per default, this user function is ignored)
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `objectFFRFTest2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest2.py>`_\  (TM)
 
@@ -510,7 +510,7 @@ Class function: `AddObjectFFRFreducedOrder <https://github.com/jgerstmayr/EXUDYN
   | \ ``gravity``\ : set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
   | \ ``color``\ : provided as list of 4 RGBA values
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `CMSexampleCourse.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py>`_\  (Ex), \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `NGsolvePostProcessingStresses.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePostProcessingStresses.py>`_\  (Ex), \ `NGsolveCrankShaftTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py>`_\  (TM), \ `objectFFRFreducedOrderAccelerations.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py>`_\  (TM), \ `objectFFRFreducedOrderShowModes.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py>`_\  (TM)
 
@@ -1108,7 +1108,7 @@ Class function: `ReadElementsFromAnsys <https://github.com/jgerstmayr/EXUDYN/blo
 - | \ *classFunction*\ :
   | read elements (exported from Ansys as .txt-File)
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `CMSexampleCourse.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py>`_\  (Ex), \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolveLinearFEM.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveLinearFEM.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM), \ `compareAbaqusAnsysRotorEigenfrequencies.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/compareAbaqusAnsysRotorEigenfrequencies.py>`_\  (TM), \ `NGsolveCrankShaftTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py>`_\  (TM)
 

@@ -1,5 +1,5 @@
-
 .. _sec-installationandgettingstarted:
+
 
 ********************************
 Installation and Getting Started

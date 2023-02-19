@@ -31,7 +31,7 @@ These are the access functions to the Exudyn module. General usage is explained 
      exu.RequireVersion("1.0.31")
 
 * | **StartRenderer**\ (\ *verbose*\  = 0): 
-  | Start OpenGL rendering engine (in separate thread); use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g. Spyder
+  | Start OpenGL rendering engine (in separate thread) for visualization of rigid or flexible multibody system; use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g. Spyder
 * | **StopRenderer**\ (): 
   | Stop OpenGL rendering engine
 * | **IsRendererActive**\ (): 
@@ -39,9 +39,9 @@ These are the access functions to the Exudyn module. General usage is explained 
 * | **DoRendererIdleTasks**\ (\ *waitSeconds*\  = 0): 
   | Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 to wait until window is closed
 * | **SolveStatic**\ (\ *mbs*\ , \ *simulationSettings*\  = exudyn.SimulationSettings(), \ *updateInitialValues*\  = False, \ *storeSolver*\  = True): 
-  | Static solver function, mapped from module \ ``solver``\ ; for details on the Python interface see Section :ref:`sec-solver-solvestatic`\ ; for background on solvers, see Section :ref:`sec-solvers`\ 
+  | Static solver function, mapped from module \ ``solver``\ , to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see Section :ref:`sec-solver-solvestatic`\ ; for background on solvers, see Section :ref:`sec-solvers`\ 
 * | **SolveDynamic**\ (\ *mbs*\ , \ *simulationSettings*\  = exudyn.SimulationSettings(), \ *solverType*\  = exudyn.DynamicSolverType.GeneralizedAlpha, \ *updateInitialValues*\  = False, \ *storeSolver*\  = True): 
-  | Dynamic solver function, mapped from module \ ``solver``\ ; for details on the Python interface see Section :ref:`sec-solver-solvedynamic`\ ; for background on solvers, see Section :ref:`sec-solvers`\ 
+  | Dynamic solver function, mapped from module \ ``solver``\ , to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see Section :ref:`sec-solver-solvedynamic`\ ; for background on solvers, see Section :ref:`sec-solvers`\ 
 * | **ComputeODE2Eigenvalues**\ (\ *mbs*\ , \ *simulationSettings*\  = exudyn.SimulationSettings(), \ *useSparseSolver*\  = False, \ *numberOfEigenvalues*\  = -1, \ *setInitialValues*\  = True, \ *convert2Frequencies*\  = False): 
   | Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \ ``solver``\ ; for details on the Python interface see Section :ref:`sec-solver-computeode2eigenvalues`\ 
 * | **SetOutputPrecision**\ (\ *numberOfDigits*\ ): 
@@ -70,7 +70,7 @@ These are the access functions to the Exudyn module. General usage is explained 
 * | **InfoStat**\ (\ *writeOutput*\  = True): 
   | Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag
 * | **Go**\ (): 
-  | Creates a SystemContainer SC and a main system mbs
+  | Creates a SystemContainer SC and a main multibody system mbs
 * | **InvalidIndex**\ (): 
   | This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function
 * | **variables**:

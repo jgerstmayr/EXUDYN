@@ -23,6 +23,8 @@ author = 'Johannes Gerstmayr'
 templates_path = ['_templates']
 exclude_patterns = ['README.rst','rotorAnsys.rst','main/*','tools/*']
 
+#for google search index file, placed into root folder
+html_extra_path = ['docs/extraHtml/googleeeca4e2177bc5628.html']
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

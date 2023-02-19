@@ -61,6 +61,7 @@
 
 \newcommand{\ra}{\rightarrow}
 \newcommand{\mybold}[1]{{\bf #1}} 
+\newcommand{\myitalics}[1]{{\it #1}} 
 %\newcommand{\myNewline}{\\} 
 
 \newcommand{\Rcal}{\mathbb{R}}
@@ -259,5 +260,39 @@
 	\label{fig:#1}
 \end{figure}
 }
+
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%define standard 3-column tables with python name, symbol and description
+\newcommand{\startTable}[3]{
+\begin{center} \vspace{-12pt}
+  \footnotesize
+  \begin{longtable}{| p{5cm} | p{5cm} | p{6cm} |}
+    \hline
+    \bf #1 & \bf #2 & \bf #3 \\ \hline
+}
+\newcommand{\rowTable}[3]{#1 & #2 & #3 \\ \hline}
+\newcommand{\finishTable}{
+	  \end{longtable}
+	\end{center}\vspace{-30pt}
+}
+
+%define standard 4-column tables with python name, symbol and description
+\newcommand{\startGenericTable}[1]{
+\begin{center} %\vspace{-12pt} %gives bad page breaks
+  \footnotesize
+  \begin{longtable}{#1} %totals 16cm!
+    \hline
+}
+%\begin{longtable}{| p{#1cm} | p{#2cm} | p{#3cm} | p{#4cm} |} %totals 16cm!
+%    \bf #1 & \bf #2 & \bf #3 \bf #4 \\ \hline
+\newcommand{\rowTableThree}[3]{#1 & #2 & #3 \\ \hline}
+\newcommand{\rowTableFour}[4]{#1 & #2 & #3 & #4 \\ \hline}
+
+%\newcommand{\finishTableGeneric}{
+	  %\end{longtable}
+	%\end{center}
+%}
+
+
 
 \endinput %for .sty files

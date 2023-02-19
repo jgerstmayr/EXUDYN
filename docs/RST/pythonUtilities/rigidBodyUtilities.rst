@@ -43,7 +43,7 @@ Function: `GramSchmidt <https://github.com/jgerstmayr/EXUDYN/blob/master/main/py
 - | \ *function description*\ :
   | compute Gram-Schmidt projection of given 3D vector 1 on vector 0 and return normalized triad (vector0, vector1, vector0 x vector1)
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM), \ `sliderCrank3Dbenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py>`_\  (TM), \ `sliderCrank3Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dtest.py>`_\  (TM)
 
@@ -57,7 +57,7 @@ Function: `Skew <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev
 - | \ *function description*\ :
   | compute skew symmetric 3x3-matrix from 3x1- or 1x3-vector
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `leggedRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py>`_\  (Ex), \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py>`_\  (TM), \ `explicitLieGroupIntegratorPythonTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorPythonTest.py>`_\  (TM), \ `explicitLieGroupIntegratorTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py>`_\  (TM), \ `heavyTop.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/heavyTop.py>`_\  (TM), \ `LieGroupIntegrationUnitTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/LieGroupIntegrationUnitTests.py>`_\  (TM), \ `mecanumWheelRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py>`_\  (TM)
 
@@ -85,7 +85,7 @@ Function: `ComputeSkewMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/m
 - | \ *output*\ :
   | if v is a vector, output is (3*n x 3) skew matrix in np.array format; if v is a (n x m) matrix, the output is a (3*n x m) skew matrix in np.array format
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `objectFFRFTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py>`_\  (TM)
 
@@ -111,13 +111,13 @@ Function: `EulerParameters2G <https://github.com/jgerstmayr/EXUDYN/blob/master/m
 Function: `EulerParameters2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L185>`__\ (\ ``eulerParameters``\ )
 
 - | \ *function description*\ :
-  | convert Euler parameters (ep) to local G-matrix (=\ :math:`\partial \LU{b}{\tomega} / \partial {\mathbf{p}}_t`\ )
+  | convert Euler parameters (ep) to local G-matrix (=\ :math:`\partial \LUb\tomega / \partial {\mathbf{p}}_t`\ )
 - | \ *input*\ :
   | vector of 4 eulerParameters as list or np.array
 - | \ *output*\ :
   | 3x4 matrix G as np.array
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `objectFFRFTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py>`_\  (TM), \ `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py>`_\  (TM)
 
@@ -135,7 +135,7 @@ Function: `EulerParameters2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/
 - | \ *output*\ :
   | 3x3 rotation matrix as np.array
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py>`_\  (TM)
 
@@ -153,7 +153,7 @@ Function: `RotationMatrix2EulerParameters <https://github.com/jgerstmayr/EXUDYN/
 - | \ *output*\ :
   | vector of 4 eulerParameters as np.array
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `mouseInteractionExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py>`_\  (TM), \ `perf3DRigidBodies.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/perf3DRigidBodies.py>`_\  (TM), \ `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py>`_\  (TM)
 
@@ -166,7 +166,7 @@ Function: `AngularVelocity2EulerParameters\_t <https://github.com/jgerstmayr/EXU
 
 - | \ *function description*\ :
   | compute time derivative of Euler parameters from (global) angular velocity vector
-  | note that for Euler parameters \ :math:`{\mathbf{p}}`\ , we have \ :math:`\tomega={\mathbf{G}} \dot {\mathbf{p}}`\  ==> \ :math:`{\mathbf{G}}^T \tomega = {\mathbf{G}}^T\cdot {\mathbf{G}}\cdot \dot {\mathbf{p}}`\  ==> \ :math:`{\mathbf{G}}^T {\mathbf{G}}=4({\mathbf{I}}_{4 \times 4} - {\mathbf{p}}\cdot {\mathbf{p}}^T)\dot{\mathbf{p}} = 4 ({\mathbf{I}}_{4x4}) \dot {\mathbf{p}}`\ 
+  | note that for Euler parameters \ :math:`{\mathbf{p}}`\ , we have \ :math:`\tomega={\mathbf{G}} \dot {\mathbf{p}}`\  ==> \ :math:`{\mathbf{G}}^T \tomega = {\mathbf{G}}^T\cdot {\mathbf{G}}\cdot \dot {\mathbf{p}}`\  ==> \ :math:`{\mathbf{G}}^T {\mathbf{G}}=4({\mathbf{I}}_4 \times 4 - {\mathbf{p}}\cdot {\mathbf{p}}^T)\dot{\mathbf{p}} = 4 ({\mathbf{I}}_4x4) \dot {\mathbf{p}}`\ 
 - | \ *input*\ :
   | \ ``angularVelocity``\ : 3D vector of angular velocity in global frame, as lists or as np.array
   | \ ``eulerParameters``\ : vector of 4 eulerParameters as np.array or list
@@ -187,7 +187,7 @@ Function: `RotationVector2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/b
 - | \ *output*\ :
   | 3x3 rotation matrix as np.array
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `explicitLieGroupMBSTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py>`_\  (TM), \ `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py>`_\  (TM)
 
@@ -205,7 +205,7 @@ Function: `RotationMatrix2RotationVector <https://github.com/jgerstmayr/EXUDYN/b
 - | \ *output*\ :
   | vector of 3 components of rotation vector as np.array
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `explicitLieGroupMBSTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py>`_\  (TM)
 
@@ -223,7 +223,7 @@ Function: `ComputeRotationAxisFromRotationVector <https://github.com/jgerstmayr/
 - | \ *output*\ :
   | 3D vector as np.array representing the rotation axis
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `LieGroupIntegrationUnitTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/LieGroupIntegrationUnitTests.py>`_\  (TM)
 
@@ -249,7 +249,7 @@ Function: `RotationVector2G <https://github.com/jgerstmayr/EXUDYN/blob/master/ma
 Function: `RotationVector2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L321>`__\ (\ ``eulerParameters``\ )
 
 - | \ *function description*\ :
-  | convert rotation vector (parameters) (v) to local G-matrix (=\ :math:`\partial \LU{b}{\tomega}   / \partial {\mathbf{v}}_t`\ )
+  | convert rotation vector (parameters) (v) to local G-matrix (=\ :math:`\partial \LUb\tomega   / \partial {\mathbf{v}}_t`\ )
 - | \ *input*\ :
   | vector of rotation vector (len=3) as list or np.array
 - | \ *output*\ :
@@ -269,7 +269,7 @@ Function: `RotXYZ2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/mast
 - | \ *output*\ :
   | 3x3 rotation matrix as np.array
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `serialRobotTestDH2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py>`_\  (Ex), \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `explicitLieGroupMBSTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py>`_\  (TM), \ `kinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeTest.py>`_\  (TM), \ `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py>`_\  (TM)
 
@@ -287,7 +287,7 @@ Function: `RotationMatrix2RotXYZ <https://github.com/jgerstmayr/EXUDYN/blob/mast
 - | \ *output*\ :
   | vector of Tait-Bryan rotation parameters [X,Y,Z] (in radiant) as np.array
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `serialRobotTestDH2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py>`_\  (Ex)
 
@@ -299,7 +299,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink:
 Function: `RotXYZ2G <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L362>`__\ (\ ``rot``\ )
 
 - | \ *function description*\ :
-  | compute (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{0}{{\mathbf{G}}} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta`\ )
+  | compute (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU0{\mathbf{G}} = \partial \LU0\tomega  / \partial \dot \ttheta`\ )
 - | \ *input*\ :
   | 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
 - | \ *output*\ :
@@ -313,7 +313,7 @@ Function: `RotXYZ2G <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pytho
 Function: `RotXYZ2G\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L377>`__\ (\ ``rot``\ , \ ``rot_t``\ )
 
 - | \ *function description*\ :
-  | compute time derivative of (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{0}{{\mathbf{G}}} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta`\ )
+  | compute time derivative of (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU0{\mathbf{G}} = \partial \LU0\tomega  / \partial \dot \ttheta`\ )
 - | \ *input*\ :
   | \ ``rot``\ : 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
   | \ ``rot\_t``\ : 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s
@@ -328,7 +328,7 @@ Function: `RotXYZ2G\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/py
 Function: `RotXYZ2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L391>`__\ (\ ``rot``\ )
 
 - | \ *function description*\ :
-  | compute local (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{b}{{\mathbf{G}}} = \partial \LU{b}{\tomega}  / \partial \ttheta_t`\ )
+  | compute local (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LUb{\mathbf{G}} = \partial \LUb\tomega  / \partial \ttheta_t`\ )
 - | \ *input*\ :
   | 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
 - | \ *output*\ :
@@ -342,7 +342,7 @@ Function: `RotXYZ2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/
 Function: `RotXYZ2GLocal\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L406>`__\ (\ ``rot``\ , \ ``rot_t``\ )
 
 - | \ *function description*\ :
-  | compute time derivative of (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{b}{{\mathbf{G}}} = \partial \LU{b}{\tomega}  / \partial \ttheta_t`\ )
+  | compute time derivative of (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LUb{\mathbf{G}} = \partial \LUb\tomega  / \partial \ttheta_t`\ )
 - | \ *input*\ :
   | \ ``rot``\ : 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
   | \ ``rot\_t``\ : 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s
@@ -393,7 +393,7 @@ Function: `RotationMatrixX <https://github.com/jgerstmayr/EXUDYN/blob/master/mai
 - | \ *output*\ :
   | 3x3 rotation matrix as np.array
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py>`_\  (Ex), \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py>`_\  (TM), \ `mecanumWheelRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py>`_\  (TM), \ `perf3DRigidBodies.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/perf3DRigidBodies.py>`_\  (TM)
 
@@ -411,7 +411,7 @@ Function: `RotationMatrixY <https://github.com/jgerstmayr/EXUDYN/blob/master/mai
 - | \ *output*\ :
   | 3x3 rotation matrix as np.array
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `leggedRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `ConvexContactTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ConvexContactTest.py>`_\  (TM), \ `revoluteJointPrismaticJointTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/revoluteJointPrismaticJointTest.py>`_\  (TM), \ `rollingCoinPenaltyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinPenaltyTest.py>`_\  (TM)
 
@@ -429,7 +429,7 @@ Function: `RotationMatrixZ <https://github.com/jgerstmayr/EXUDYN/blob/master/mai
 - | \ *output*\ :
   | 3x3 rotation matrix as np.array
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py>`_\  (Ex), \ `mouseInteractionExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py>`_\  (Ex), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py>`_\  (TM), \ `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py>`_\  (TM), \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py>`_\  (TM)
 
@@ -443,7 +443,7 @@ Function: `HomogeneousTransformation <https://github.com/jgerstmayr/EXUDYN/blob/
 - | \ *function description*\ :
   | compute HT matrix from rotation matrix A and translation vector r
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex)
 
@@ -457,7 +457,7 @@ Function: `HTtranslate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/py
 - | \ *function description*\ :
   | HT for translation with vector r
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `kinematicTreePendulum.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py>`_\  (Ex), \ `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py>`_\  (Ex), \ `serialRobotKinematicTree.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM), \ `kinematicTreeConstraintTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py>`_\  (TM), \ `movingGroundRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py>`_\  (TM)
 
@@ -471,7 +471,7 @@ Function: `HTtranslateX <https://github.com/jgerstmayr/EXUDYN/blob/master/main/p
 - | \ *function description*\ :
   | HT for translation along x axis with value x
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM)
 
@@ -485,7 +485,7 @@ Function: `HTtranslateY <https://github.com/jgerstmayr/EXUDYN/blob/master/main/p
 - | \ *function description*\ :
   | HT for translation along y axis with value y
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreePendulum.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM), \ `kinematicTreeConstraintTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py>`_\  (TM)
 
@@ -509,7 +509,7 @@ Function: `HT0 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/
 - | \ *function description*\ :
   | identity HT:
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `kinematicTreePendulum.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py>`_\  (Ex), \ `serialRobotTestDH2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM), \ `kinematicTreeConstraintTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py>`_\  (TM)
 
@@ -533,7 +533,7 @@ Function: `HTrotateY <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pyth
 - | \ *function description*\ :
   | HT for rotation around axis X (first axis)
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM)
 
@@ -547,7 +547,7 @@ Function: `HTrotateZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pyth
 - | \ *function description*\ :
   | HT for rotation around axis X (first axis)
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM)
 
@@ -561,7 +561,7 @@ Function: `HT2translation <https://github.com/jgerstmayr/EXUDYN/blob/master/main
 - | \ *function description*\ :
   | return translation part of HT
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py>`_\  (Ex), \ `serialRobotKinematicTree.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py>`_\  (Ex), \ `serialRobotKinematicTreeDigging.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py>`_\  (Ex), \ `serialRobotTestDH2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM), \ `movingGroundRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py>`_\  (TM), \ `serialRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py>`_\  (TM)
 
@@ -575,7 +575,7 @@ Function: `HT2rotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/m
 - | \ *function description*\ :
   | return rotation matrix of HT
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `kinematicTreeAndMBStest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py>`_\  (TM)
 
@@ -589,7 +589,7 @@ Function: `InverseHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pyth
 - | \ *function description*\ :
   | return inverse HT such that inv(T)\*T = np.eye(4)
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `serialRobotKinematicTree.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py>`_\  (Ex), \ `serialRobotTestDH2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py>`_\  (Ex)
 
@@ -677,7 +677,7 @@ Function: `T66toRotationTranslation <https://github.com/jgerstmayr/EXUDYN/blob/m
 - | \ *output*\ :
   | [A, v] with 3x3 rotation matrix A and 3D translation vector v
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 
@@ -725,7 +725,7 @@ Function: `RotationTranslation2T66Inverse <https://github.com/jgerstmayr/EXUDYN/
 - | \ *output*\ :
   | return 6x6 transformation matrix 'T66'
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 
@@ -743,7 +743,7 @@ Function: `T66toHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/python
 - | \ *output*\ :
   | homogeneous transformation (4x4 numpy array)
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex)
 
@@ -769,7 +769,7 @@ Function: `InertiaTensor2Inertia6D <https://github.com/jgerstmayr/EXUDYN/blob/ma
 - | \ *function description*\ :
   | convert a 3x3 matrix (list or numpy array) into a list with 6 inertia components, sorted as J00, J11, J22, J12, J02, J01
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `serialRobotTestDH2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py>`_\  (Ex)
 
@@ -783,7 +783,7 @@ Function: `Inertia6D2InertiaTensor <https://github.com/jgerstmayr/EXUDYN/blob/ma
 - | \ *function description*\ :
   | convert a list or numpy array with 6 inertia components (sorted as [J00, J11, J22, J12, J02, J01]) (list or numpy array) into a 3x3 matrix (np.array)
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `serialRobotTestDH2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py>`_\  (Ex), \ `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py>`_\  (TM)
 
@@ -828,7 +828,7 @@ Function: `AddRigidBody <https://github.com/jgerstmayr/EXUDYN/blob/master/main/p
 - | \ *output*\ :
   | returns list containing node number and body number: [nodeNumber, bodyNumber]
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `craneReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py>`_\  (Ex), \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py>`_\  (Ex), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py>`_\  (TM), \ `ConvexContactTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ConvexContactTest.py>`_\  (TM), \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TM)
 
@@ -851,7 +851,7 @@ Function: `AddRevoluteJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/ma
 - | \ *output*\ :
   | returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py>`_\  (Ex), \ `openVRengine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py>`_\  (Ex), \ `rigidBodyTutorial3.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py>`_\  (Ex), \ `solutionViewerTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solutionViewerTest.py>`_\  (Ex), \ `perf3DRigidBodies.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/perf3DRigidBodies.py>`_\  (TM)
 
@@ -874,7 +874,7 @@ Function: `AddPrismaticJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/m
 - | \ *output*\ :
   | returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `openVRengine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py>`_\  (Ex)
 
@@ -1030,7 +1030,7 @@ Class function: `GetInertia6D <https://github.com/jgerstmayr/EXUDYN/blob/master/
 - | \ *classFunction*\ :
   | get vector with 6 inertia components (Jxx, Jyy, Jzz, Jyz, Jxz, Jxy) as needed in ObjectRigidBody
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `serialRobotKinematicTree.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py>`_\  (Ex), \ `serialRobotTestDH2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py>`_\  (Ex), \ `sliderCrank3DwithANCFbeltDrive2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py>`_\  (Ex), \ `rigidBodyCOMtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py>`_\  (TM), \ `rollingCoinPenaltyTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinPenaltyTest.py>`_\  (TM), \ `rollingCoinTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinTest.py>`_\  (TM)
 
@@ -1056,7 +1056,7 @@ Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/
 - | \ *classFunction*\ :
   | initialize inertia
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `craneReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py>`_\  (Ex), \ `fourBarMechanism3D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py>`_\  (TM), \ `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py>`_\  (TM), \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py>`_\  (TM)
 
@@ -1075,7 +1075,7 @@ Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/
 - | \ *classFunction*\ :
   | initialize inertia with mass and length of rod
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `fourBarMechanismRedundant.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismRedundant.py>`_\  (TM)
 
@@ -1094,7 +1094,7 @@ Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/
 - | \ *classFunction*\ :
   | initialize inertia with mass of point
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `stiffFlyballGovernor2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py>`_\  (Ex), \ `stiffFlyballGovernorKT.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py>`_\  (Ex), \ `stiffFlyballGovernor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py>`_\  (TM)
 
@@ -1113,7 +1113,7 @@ Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/
 - | \ *classFunction*\ :
   | initialize inertia with mass and radius of sphere
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py>`_\  (Ex), \ `particlesSilo.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py>`_\  (Ex), \ `tippeTop.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/tippeTop.py>`_\  (Ex), \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TM), \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py>`_\  (TM)
 
@@ -1147,7 +1147,7 @@ Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/
 - | \ *classFunction*\ :
   | initialize inertia with density, length, outer radius, axis (0=x-axis, 1=y-axis, 2=z-axis) and optional inner radius (for hollow cylinder)
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `gyroStability.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/gyroStability.py>`_\  (Ex), \ `leggedRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py>`_\  (Ex), \ `openVRengine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py>`_\  (Ex), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFgeneralContactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py>`_\  (TM), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py>`_\  (TM), \ `ConvexContactTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ConvexContactTest.py>`_\  (TM), \ `driveTrainTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py>`_\  (TM)
 

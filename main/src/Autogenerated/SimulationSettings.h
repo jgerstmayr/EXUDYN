@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-02-18 (last modfied)
+* @date         AUTO: 2023-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,7 +28,7 @@ class SolutionSettings // AUTO:
 public: // AUTO: 
   bool appendToFile;                              //!< AUTO: flag (true/false); if true, solution and solverInformation is appended to existing file (otherwise created); in BINARY mode, files are always replaced and this parameter is ineffective!
   bool binarySolutionFile;                        //!< AUTO: if true, the solution file is written in binary format for improved speed and smaller file sizes; setting outputPrecision >= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that appendToFile is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files
-  std::string coordinatesSolutionFileName;        //!< AUTO: filename and (relative) path of solution file (coordinatesSolutionFile) containing all coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)
+  std::string coordinatesSolutionFileName;        //!< AUTO: filename and (relative) path of solution file (coordinatesSolutionFile) containing all multibody system coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)
   bool exportAccelerations;                       //!< AUTO: add \hac{ODE2} accelerations to solution file (coordinatesSolutionFile)
   bool exportAlgebraicCoordinates;                //!< AUTO: add algebraicCoordinates (=Lagrange multipliers) to solution file (coordinatesSolutionFile)
   bool exportDataCoordinates;                     //!< AUTO: add DataCoordinates to solution file (coordinatesSolutionFile)
@@ -159,7 +159,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-02-18 (last modfied)
+* @date         AUTO: 2023-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -242,7 +242,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-02-18 (last modfied)
+* @date         AUTO: 2023-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -310,7 +310,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-02-18 (last modfied)
+* @date         AUTO: 2023-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -440,7 +440,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-02-18 (last modfied)
+* @date         AUTO: 2023-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -528,7 +528,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-02-18 (last modfied)
+* @date         AUTO: 2023-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -592,7 +592,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-02-18 (last modfied)
+* @date         AUTO: 2023-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -805,7 +805,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-02-18 (last modfied)
+* @date         AUTO: 2023-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -971,7 +971,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-02-18 (last modfied)
+* @date         AUTO: 2023-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1040,7 +1040,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-02-18 (last modfied)
+* @date         AUTO: 2023-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1145,7 +1145,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2023-02-18 (last modfied)
+* @date         AUTO: 2023-02-19 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

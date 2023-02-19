@@ -1,18 +1,62 @@
+/* change foreground color (default: red) and background color for code */
 code.literal {
     color: #202020 !important;
     background-color: #f8f8f8 !important;
 }
 
+/* make visible content wider than 800px */
 .wy-nav-content {
     max-width: 4000px !important;
 }
 
+/* for RTD theme, breaking at whitespaces; otherwise, no line-breaking */
 .wy-table-responsive table td {
-    /* !important prevents the common CSS stylesheets from overriding
-    this as on RTD they are loaded after this stylesheet */
     white-space: normal !important;
 }
 
+/*
+table.docutils td, table.docutils th {
+    padding: 1px 80px 10px 5px;
+}
+*/
+/* td=data, th=header */
+/*
+table, td {
+    margin: 0px !important;
+    border: 4px solid black !important;
+    vertical-align: top;
+    border-collapse:collapse;
+    border-spacing:0;
+}
+th {
+    margin: 0px !important;
+    border: 4px solid black !important;
+    vertical-align: top;
+}
+.wy-table, td {
+    margin: 0px !important;
+    border: 4px solid black !important;
+    vertical-align: top;
+    border-collapse:collapse;
+    border-spacing:0;
+}
+th {
+    margin: 0px !important;
+    border: 4px solid black !important;
+    vertical-align: top;
+}
+*/
+
+/*
+.wy-table-responsive table{
+    vertical-align: top;
+}*/
+
 .wy-table-responsive {
     overflow: visible !important;
+    /* offset to right/top ... */
+    padding: 0px 0px 0px 0px;
 }
+
+
+

@@ -12,6 +12,7 @@ Exudyn documentation
    docs/RST/InstallationAndGettingStartedIndex
    docs/RST/OverviewOnExudynIndex
    docs/RST/TutorialIndex
+   docs/RST/GraphicsAndVisualizationIndex
    docs/RST/cInterface/CInterfaceIndex
 
 .. toctree::
@@ -42,20 +43,6 @@ See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/
 
 List of Abbreviations
 =====================
-
-See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
-
-.. _sec-renderstate:
-
-Render State
-============
-
-See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
-
-.. _sec-graphicsdata:
-
-GraphicsData
-============
 
 See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
@@ -98,13 +85,6 @@ See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/
 
 Theory: Component Mode Synthesis
 ================================
-
-See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
-
-.. _sec-utf8:
-
-Graphics: UTF-8
-===============
 
 See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 

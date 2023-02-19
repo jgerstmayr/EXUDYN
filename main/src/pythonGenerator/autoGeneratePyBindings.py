@@ -8,7 +8,9 @@ automatically generate pybindings for specific classes and functions AND latex d
 """
 
 #TODO:
-#create list of invalid references: theory, contact, sec:renderstate, solver, ...
+#fix braces in {ODE2} etc. abbreviations => add commands, but later add links to special abbr. section?
+#\phantom{XXXX} e.g. in GeneralContact
+#replace for lstlisting/python not working!!!
 
 from autoGenerateHelper import PyLatexRST, GetDateStr #AddEnumValue, DefPyFunctionAccess, DefPyStartClass, DefPyFinishClass, DefLatexStartClass, DefLatexFinishClass
                                
@@ -46,7 +48,7 @@ plrmain.AddDocu('Note that including \\texttt{exudyn.utilities} will cover \\tex
                 'e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace '+
                 'imports in your files afterwards by removing the star import.')
 
-plrmain.AddDocu('The general hub to models is provided by the classes \\texttt{SystemContainer} and \\texttt{MainSystem}, '+
+plrmain.AddDocu('The general hub to multibody dynamics models is provided by the classes \\texttt{SystemContainer} and \\texttt{MainSystem}, '+
                 'except for some very basic system functionality (which is inside the \\codeName\\ module). \n\n'+
                 'You can create a new \\texttt{SystemContainer}, which is a class that is initialized by assigning a '+
                 'system container to a variable, usually denoted as \\texttt{SC}:')
@@ -81,7 +83,7 @@ import exudyn as exu
 from exudyn.utilities import *
 #  create system container and store in SC:
 SC = exu.SystemContainer()
-#  add a MainSystem to system container SC and store as mbs:
+#  add a MainSystem (multibody system) to system container SC and store as mbs:
 mbs = SC.AddSystem()
 #  add a second MainSystem to system container SC and store as mbs2:
 mbs2 = SC.AddSystem()
@@ -135,7 +137,7 @@ plrmain.AddDocuCodeBlock(code="""
 SC = exu.SystemContainer()
 SC2 = SC                           #this will only put a reference to SC
                                    #SC2 and SC represent the SAME C++ object
-#add a MainSystem:
+#add a MainSystem (multibody system):
 mbs = SC.AddSystem()               #get reference mbs to C++ system
 mbs2=mbs                           #again, mbs2 and mbs refer to the same C++ object
 og = mbs.AddObject(ObjectGround()) #copy data of ObjectGround() into C++
@@ -460,7 +462,7 @@ plr.DefLatexStartTable(pyClass)
 #keep this list synchronized with the accoring enum structure in C++!!!
 plr.AddEnumValue(pyClass, '_None', 'no value; used, e.g., if no solver is selected')
 plr.AddEnumValue(pyClass, 'EXUdense', 'use dense matrices and according solvers for densly populated matrices (usually the CPU time grows cubically with the number of unknowns)')
-plr.AddEnumValue(pyClass, 'EigenSparse', 'use sparse matrices and according solvers; additional overhead for very small systems; specifically, memory allocation is performed during a factorization process')
+plr.AddEnumValue(pyClass, 'EigenSparse', 'use sparse matrices and according solvers; additional overhead for very small multibody systems; specifically, memory allocation is performed during a factorization process')
 plr.AddEnumValue(pyClass, 'EigenSparseSymmetric', 'use sparse matrices and according solvers; NOTE: this is the symmetric mode, which assumes symmetric system matrices; this is EXPERIMENTAL and should only be used of user knows that the system matrices are (nearly) symmetric; does not work with scaled GeneralizedAlpha matrices; does not work with constraints, as it must be symmetric positive definite')
 
 plr.sPy +=	'		.export_values();\n\n'
@@ -544,7 +546,7 @@ plr.sPy = sOld #this function is defined in __init__.py ==> do not add to cpp bi
 plr.DefPyFunctionAccess(cClass='', pyName='StartRenderer', cName='PyStartOpenGLRenderer', 
                                 defaultArgs=['0'],
                                 argList=['verbose'],
-                                description="Start OpenGL rendering engine (in separate thread); use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g. Spyder")
+                                description="Start OpenGL rendering engine (in separate thread) for visualization of rigid or flexible multibody system; use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g. Spyder")
 
 #new, defined in C++ as lambda function:
 sOld = plr.PyStr()
@@ -561,13 +563,13 @@ plr.DefPyFunctionAccess(cClass='', pyName='DoRendererIdleTasks', cName='PyDoRend
 
 sOld = plr.PyStr()
 plr.DefPyFunctionAccess(cClass='', pyName='SolveStatic', cName='SolveDynamic', 
-                               description='Static solver function, mapped from module \\texttt{solver}; for details on the Python interface see \\refSection{sec:solver:SolveStatic}; for background on solvers, see \\refSection{sec:solvers}',
+                               description='Static solver function, mapped from module \\texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see \\refSection{sec:solver:SolveStatic}; for background on solvers, see \\refSection{sec:solvers}',
                                argList=['mbs', 'simulationSettings', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','False','True']
                                )
                 
 plr.DefPyFunctionAccess(cClass='', pyName='SolveDynamic', cName='SolveDynamic', 
-                               description='Dynamic solver function, mapped from module \\texttt{solver}; for details on the Python interface see \\refSection{sec:solver:SolveDynamic}; for background on solvers, see \\refSection{sec:solvers}',
+                               description='Dynamic solver function, mapped from module \\texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see \\refSection{sec:solver:SolveDynamic}; for background on solvers, see \\refSection{sec:solvers}',
                                argList=['mbs', 'simulationSettings', 'solverType', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','exudyn.DynamicSolverType.GeneralizedAlpha','False','True']
                                )
@@ -615,7 +617,7 @@ plr.DefPyFunctionAccess(cClass='', pyName='InfoStat', cName='PythonInfoStat',
                                argList=['writeOutput'],
                                defaultArgs=['True'])
 
-plr.DefPyFunctionAccess('', 'Go', 'PythonGo', 'Creates a SystemContainer SC and a main system mbs')
+plr.DefPyFunctionAccess('', 'Go', 'PythonGo', 'Creates a SystemContainer SC and a main multibody system mbs')
 
 plr.DefPyFunctionAccess('', 'InvalidIndex', 'GetInvalidIndex', 
                             "This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function")
@@ -646,7 +648,7 @@ sPyOld = plr.PyStr() #systemcontainer manually added in C++
 plr.DefPyStartClass(classStr, pyClassStr, '')
 
 plr.AddDocu('The SystemContainer is the top level of structures in \\codeName. '+
-                'The container holds all systems, solvers and all other data structures for computation. '+
+                'The container holds all (multibody) systems, solvers and all other data structures for computation. '+
                 'Currently, only one container shall be used. In future, multiple containers might be usable at the same time.'+
                 'Regarding the \\mybold{(basic) module access}, functions are related to the \\texttt{exudyn = exu} module, '+
                 'see also the introduction of this chapter and this example:')
@@ -665,16 +667,16 @@ plr.DefLatexStartTable(pyClassStr)
 #GENERAL FUNCTIONS
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset', 
-                                description="delete all systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.AttachToRenderEngine() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )")
+                                description="delete all multibody systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.AttachToRenderEngine() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )")
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='AddSystem', cName='AddMainSystem', 
                                 description="add a new computational system", options='py::return_value_policy::reference')
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfSystems', cName='NumberOfSystems', 
-                                description="obtain number of systems available in system container")
+                                description="obtain number of multibody systems available in system container")
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetSystem', cName='GetMainSystem', 
-                                description="obtain systems with index from system container",
+                                description="obtain multibody systems with index from system container",
                                 argList=['systemNumber'])
 
 
@@ -760,6 +762,7 @@ plr.DefPyStartClass(classStr, classStr, '')
 plr.AddDocu("This is the structure which defines a (multibody) system. "+
             "In C++, there is a MainSystem (links to Python) and a System (computational part). "+
             "For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. "+
+            "For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. "+
             "It can be created, visualized and computed. Use the following functions for system manipulation.")
 
 plr.AddDocuCodeBlock(code="""
@@ -774,7 +777,7 @@ plr.DefLatexStartTable(classStr)
 #GENERAL FUNCTIONS
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='Assemble', cName='Assemble', 
-                                description="assemble items (nodes, bodies, markers, loads, ...); Calls CheckSystemIntegrity(...), AssembleCoordinates(), AssembleLTGLists(), AssembleInitializeSystemCoordinates(), and AssembleSystemInitialize()")
+                                description="assemble items (nodes, bodies, markers, loads, ...) of multibody system; Calls CheckSystemIntegrity(...), AssembleCoordinates(), AssembleLTGLists(), AssembleInitializeSystemCoordinates(), and AssembleSystemInitialize()")
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='AssembleCoordinates', cName='AssembleCoordinates', 
                                 description="assemble coordinates: assign computational coordinates to nodes and constraints (algebraic variables)")

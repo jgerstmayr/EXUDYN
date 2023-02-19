@@ -61,7 +61,7 @@ Function: `SolveStatic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/py
   variableType=exu.OutputVariableType.Position))
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `3SpringsDistance.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/3SpringsDistance.py>`_\  (Ex), \ `ALEANCF_pipe.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCF_pipe.py>`_\  (Ex), \ `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py>`_\  (Ex), \ `ANCF_cantilever_test.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_cantilever_test.py>`_\  (Ex), \ `ANCF_contact_circle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCF_contact_circle.py>`_\  (Ex), \ `ANCFBeam3Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py>`_\  (TM), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFcontactCircleTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py>`_\  (TM)
 
@@ -110,7 +110,7 @@ Function: `SolveDynamic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/p
   variableType=exu.OutputVariableType.Position))
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `3SpringsDistance.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/3SpringsDistance.py>`_\  (Ex), \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `ALEANCF_pipe.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCF_pipe.py>`_\  (Ex), \ `ANCFALEtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFALEtest.py>`_\  (Ex), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM), \ `ANCFBeam3DeigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py>`_\  (TM), \ `ANCFBeam3Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py>`_\  (TM)
 
@@ -140,7 +140,7 @@ Function: `ComputeLinearizedSystem <https://github.com/jgerstmayr/EXUDYN/blob/ma
   print("K=", K)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `ANCFBeam3DeigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py>`_\  (TM), \ `ANCFBeam3Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py>`_\  (TM)
 
@@ -174,7 +174,7 @@ Function: `ComputeODE2Eigenvalues <https://github.com/jgerstmayr/EXUDYN/blob/mas
   #==>values contains the eigenvalues of the ODE2 part of the system in the current configuration
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink:
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `nMassOscillatorInteractive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py>`_\  (Ex), \ `ANCFBeam3DeigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3DeigTest.py>`_\  (TM), \ `ANCFBeam3Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeam3Dtest.py>`_\  (TM), \ `computeODE2EigenvaluesTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py>`_\  (TM)
 

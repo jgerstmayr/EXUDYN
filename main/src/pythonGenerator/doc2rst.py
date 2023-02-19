@@ -12,7 +12,7 @@ import copy #for deep copies
 import io   #for utf-8 encoding
 from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, \
                                RSTheaderString, RSTlabelString, ExtractLatexCommand, FindMatchingBracket, ReplaceWords, RSTurl, \
-                               convLatexWords, convLatexCommands
+                               convLatexWords, convLatexCommands, ReplaceLatexCommands
                                #ReplaceLatexCommands not imported as it has a special local version
 
 sectionFilesDepth = 1 #0=best for pydata theme, 1=best for read the docs theme
@@ -32,13 +32,14 @@ filesParsed=[
               'gettingStarted.tex',
               'introduction.tex',
               'tutorial.tex',
+              'GUI.tex',
              ]
 
 undefLabelList = [
     ('Theory: Contact','seccontacttheory'),
     ('List of Abbreviations','sec-listofabbreviations'),
-    ('Render State','sec-renderstate'),
-    ('GraphicsData','sec-graphicsdata'),
+    ##('Render State','sec-renderstate'),
+    ##('GraphicsData','sec-graphicsdata'),
     ('Solvers','sec-solvers'),
     ('Items Reference Manual','sec-item-reference-manual'),
     ('Solvers: Static','sec-solver-solvestatic'),
@@ -46,7 +47,7 @@ undefLabelList = [
     ('Solvers: Eigenvalues','sec-solver-computeode2eigenvalues'),
     ('Theory: Component Mode Synthesis','sec-theory-cms'),
     #'sec-mainsolverstatic',
-    ('Graphics: UTF-8','sec-utf8'),
+    ##('Graphics: UTF-8','sec-utf8'),
     ('Solver: Explicit','sec-explicitsolver'),
     ]
 undefLabels =''
@@ -58,101 +59,105 @@ undefLabels+='Further information\n'
 undefLabels+='===================\n\n'
 undefLabels+='\ **SEE Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ '
 
-sectionsList = []
+# sectionsList = []
+# #local copy, will do some extra things and stores sections
+# def ReplaceLatexCommands(s, conversionDict): #replace strings provided in conversion dict
+#     global sectionsList
+#     s = s.replace('{\\bf ','\\mybold{') #this is then further converted into rst code ...
+#     for (key,value) in conversionDict.items():
+#         cnt = 0
+#         found = 0
+#         while (found != -1):
+#             secondBracket = 0
+#             isBeginEnd = False
+#             if len(value) > 3:
+#                 secondBracket = len(value)-3
+#             if key == 'figure': isBeginEnd = True
 
-#local copy, will do some extra things and stores sections
-def ReplaceLatexCommands(s, conversionDict): #replace strings provided in conversion dict
-    global sectionsList
-    s = s.replace('{\\bf ','\\mybold{') #this is then further converted into rst code ...
-    for (key,value) in conversionDict.items():
-        cnt = 0
-        found = 0
-        while (found != -1):
-            secondBracket = False
-            isBeginEnd = False
-            if key == '\\exuUrl' or 'sectionlabel' in key: 
-                secondBracket = True
-            if key == 'figure': isBeginEnd = True
+#             found = ExtractLatexCommand(s, key, secondBracket, isBeginEnd)
+#             if found != -1:
+#                 [preString, innerString, innerString2, postString] = found
 
-            found = ExtractLatexCommand(s, key, secondBracket, isBeginEnd)
-            if found != -1:
-                [preString, innerString, innerString2, postString] = found
-                # if key == '\\onlyRST':
-                #     print('onlyRST=',innerString)
-                # if isBeginEnd:
-                #     print("inner="+innerString+'+++')
-                # if key == '\\label':
-                #     #label in rst needs to be put in front of section ... put in front of 
-                #     nLast = max(0,preString.rfind('\n',0,-1)) #start one char earlier to catch direct \n before; otherwise take start of string
-                #     s = preString[0:nLast]
-                #     s += value[0] + innerString.replace(':','-').lower() + value[2]
-                #     s += preString[nLast:] #this may be the header
-                # else:
-                s = preString
-                if '\\refSection' in key  or key == '\\label' or key == '\\fig' or key == '\\ref':
-                    innerString=innerString.replace(':','-').replace('_','-').lower()
-                else:
-                    innerString = ReplaceLatexCommands(innerString, convLatexCommands)
-                    innerString = ReplaceWords(innerString, convLatexWords) #needs to be cleaned here already
+#                 s = preString
+#                 if '\\refSection' in key  or key == '\\label' or key == '\\fig' or key == '\\ref':
+#                     innerString=innerString.replace(':','-').replace('_','-').lower()
+#                 elif value[1] == '_USE' and key != '\\exuUrl':
+#                     innerString = ReplaceLatexCommands(innerString, convLatexCommands)
+#                     innerString = ReplaceWords(innerString, convLatexWords) #needs to be cleaned here already
 
-                # if key == '\\fig':
-                #     print('found \\fig: ...'+ innerString)
-                # if key == '\\ref':
-                #     print('found \\ref: ...'+ innerString)
-
-                # if key == '\\footnote':
-                #     print('found \\footnote: ...'+ innerString)
-
-                # if 'sectionlabel' in key:
-                #     print('label=',innerString2)
-
-                if key == '\\mysection' or key == '\\mysectionlabel':
-                    s += sectionMarkerText+'0\n'
-                    if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    sectionsList += [('0',innerString)]
-                    s += RSTheaderString(innerString, 1)
-                elif key == '\\mysubsection' or key == '\\mysubsectionlabel':
-                    if sectionFilesDepth > 0:
-                        s += sectionMarkerText+'1\n'
-                        sectionsList += [('1',innerString)]
-                    if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    s += RSTheaderString(innerString, 2)
-                elif key == '\\mysubsubsection' or key == '\\mysubsubsectionlabel':
-                    if sectionFilesDepth > 1:
-                        s += sectionMarkerText+'2\n'
-                        sectionsList += [('2',innerString)]
-                    if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    s += RSTheaderString(innerString, 3)
-                elif key == '\\mysubsubsubsection' or key == '\\mysubsubsubsectionlabel':
-                    if sectionFilesDepth > 2:
-                        s += sectionMarkerText+'3\n'
-                        sectionsList += [('3',innerString)]
-                    if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-                    s += RSTheaderString(innerString, 4)
-                elif key == '\\exuUrl':
-                    s += value[0]
-                    s += innerString2 + ' <'
-                    s += innerString
-                    s += '>'
-                    s += value[2]
-                else:
-                    s += value[0]
-                    if value[1] == '_USE':
-                        s += innerString
-                    s += value[2]
+#                 if '\\rowTable' in key:
+#                     nRows = len(value)-2
+                    
+#                     #print('rowTableThree/Four: rows=',nRows)
+#                     if type(innerString2) == list:
+#                         # if len(innerString2) != nRows:
+#                         #     print('innerString2:',innerString2)
+#                         text = ''
+#                         cstar = '*'
+#                         for k, col in enumerate(innerString2):
+#                             #seems that it needs to have exactly same amount of pre-spaces as :widths: and other options
+#                             text += '   '+cstar+' - | '+col
+#                             if k < len(innerString2)-1:
+#                                 text += '\n' #last \n is added due to text itself (postString)
+#                             cstar = ' '
+#                         s += text
+#                         #print('table = \n'+text)
+#                     else:
+#                         print('PROBLEM with rowTable: ',innerString2)
+# # * - **HEADER1**
+# #    - **HEADER2**
+# #    - **HEADER3**
+# #  * - | TEXT 1
+# #    - | MULTILINE                             
+#                 elif key == '\\mysection' or key == '\\mysectionlabel':
+#                     s += sectionMarkerText+'0\n'
+#                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
+#                     sectionsList += [('0',innerString)]
+#                     s += '\n'+RSTheaderString(innerString, 1)
+#                 elif key == '\\mysubsection' or key == '\\mysubsectionlabel':
+#                     if sectionFilesDepth > 0:
+#                         s += sectionMarkerText+'1\n'
+#                         sectionsList += [('1',innerString)]
+#                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
+#                     s += '\n'+RSTheaderString(innerString, 2)
+#                 elif key == '\\mysubsubsection' or key == '\\mysubsubsectionlabel':
+#                     if sectionFilesDepth > 1:
+#                         s += sectionMarkerText+'2\n'
+#                         sectionsList += [('2',innerString)]
+#                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
+#                     s += '\n'+RSTheaderString(innerString, 3)
+#                 elif key == '\\mysubsubsubsection' or key == '\\mysubsubsubsectionlabel':
+#                     if sectionFilesDepth > 2:
+#                         s += sectionMarkerText+'3\n'
+#                         sectionsList += [('3',innerString)]
+#                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
+#                     s += '\n'+RSTheaderString(innerString, 4)
+#                 elif key == '\\exuUrl':
+#                     s += value[0]
+#                     s += innerString2 + ' <'
+#                     s += innerString
+#                     s += '>'
+#                     s += value[2]
+#                 else:
+#                     s += value[0]
+#                     if value[1] == '_USE':
+#                         s += innerString
+#                     s += value[2]
                 
-                s += postString
-    return s
+#                 s += postString
+#     return s
 
 
+sectionsList = []
 
 #extract single .rst file and hierarchical files with sections, subsections, etc.
 #marked with %%SECTION %%SUBSECTION 
 #can be called recursively to get subsections (level1=sub, level2=subsub, ...)
 def ExtractSections(rstStringWithMarkers):
-
+    global sectionsList
     hierarchicalRST = [] #collect lists
     
+    sectionsList = []
     found = 0 #starting point for search
     iStart = 0
     iEnd = 0
@@ -163,17 +168,36 @@ def ExtractSections(rstStringWithMarkers):
     
     while not endFound:
         found = rstStringWithMarkers.find(sectionMarkerText, found)
+        
+        #print('hierarchical found:',rstStringWithMarkers[found:found+len(sectionMarkerText)+1])
         if found == -1: #no further sections => store remaining text at current level
             #print('no more found, take rest of file')
             endFound = True
             found = len(rstStringWithMarkers) #end of file
             hierarchicalRST += [(level, rstStringWithMarkers[iStart:found])]
         else:
+            [sStart, sEnd] = FindMatchingBracket(rstStringWithMarkers, found+len(sectionMarkerText), 
+                                                 openBracket='[', closingBracket=']')
+            [sStart2, sEnd2] = FindMatchingBracket(rstStringWithMarkers, sEnd+1,
+                                                 openBracket='[', closingBracket=']')
+            sNextLevel = rstStringWithMarkers[sStart+1: sEnd]
+            sNextSection = rstStringWithMarkers[sStart2+1: sEnd2]
+            # print('level=', sNextLevel )
+            # print('Section=', sNextSection )
+
+            sectionsList += [(sNextLevel, sNextSection)]
+
+            #nextLevel = int(rstStringWithMarkers[found])
+            
             foundStart = found
-            found += len(sectionMarkerText)
-            nextLevel = int(rstStringWithMarkers[found])
+            found = sEnd2+1
+            #found += len(sectionMarkerText)
+            nextLevel = int(sNextLevel)
+            
+            #nextLevel = int(rstStringWithMarkers[found])
             #print('nextLevel=', nextLevel, ', pos=', found)
             found += 2 #go after level number + '\n'
+            
 
             if nextLevel != level:
                 #finish previous level:
@@ -208,9 +232,14 @@ def SectionNameToFileName(sectionName):
     return s[0].upper() + s[1:]
 
 def ConvertFile(s):
-    s=s.replace('\\ ',' ') #replace special spaces from latex first; spaces that are added later shall be kept!
-    s=ReplaceLatexCommands(s, convLatexCommands)
-    s=ReplaceWords(s, convLatexWords)
+    s=s.replace(r'\ ',r' ') #replace special spaces from latex first; spaces that are added later shall be kept!
+    
+    s = s.replace(r'\pythonstyle\begin{lstlisting}',r'\begin{pytlisting}')
+
+    s=ReplaceLatexCommands(s, convLatexCommands, sectionMarkerText)
+    # print('count begin lstlisting=',s.count(r'\begin{lstlisting}'))
+    # print('count begin pytlisting=',s.count(r'\begin{pytlisting}'))
+    s=ReplaceWords(s, convLatexWords, replaceBraces=False)
     
     return s
 
@@ -287,7 +316,7 @@ def ParseFile(fileName, header = ''):
 sRST = ''
 sFile = ''
 #sFile += '======\nExudyn\n======\n' #add header for .rst file
-sFile += '\mysection{Exudyn}\n' #add header for .rst file
+sFile += '\\mysection{Exudyn}\n' #add header for .rst file
 sFile += '\n**A flexible multibody dynamics systems simulation code with Python and C++**\n\n'
 
 for fileName in filesParsed:
@@ -295,6 +324,8 @@ for fileName in filesParsed:
     sRST += ConvertFile(sFile)
 
     sFile = ''
+
+# print('sectionsList:\n',sectionsList)
 
 # sRST += '\n\n\ **FOR FURTHER INFORMATION see** `Exudyn Github pages <https://jgerstmayr.github.io/EXUDYN>`_ and'
 # sRST += ' see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ !!!\n\n'
@@ -306,6 +337,12 @@ for fileName in filesParsed:
 #   
 #|pic7| 
 #"""
+
+if False: #for debug:
+    file=io.open(destDir+'test.txt','w',encoding='utf8')
+    file.write(sRST)
+    file.close()
+
 
 [sRSTmain, hierarchicalRST] = ExtractSections(sRST)
 
@@ -358,7 +395,7 @@ sRST = sRST.replace('docs/demo/','../demo/')
 [sRST, hierarchicalRST] = ExtractSections(sRST)
 
 modMainPage = hierarchicalRST[0][1].replace(sectionMarkerText+'0','')
-modMainPage += '\n\n\ **READ Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ \n\n'
+modMainPage += '\n\n\\ **READ Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ \n\n'
 
 hierarchicalRST[0] = (hierarchicalRST[0][0], sHEADERsmall + modMainPage)
 
@@ -383,6 +420,10 @@ Exudyn documentation
 #     :depth: 2
 # """
     if len(sectionsList) != len(hierarchicalRST):
+        # print('sections:\n',sectionsList)
+        #print('hierarchicalData:\n')
+        # for x in hierarchicalRST:
+        #     print(x[1][0:50])
         raise ValueError('SPHINX .rst file build: illegal section structure')
 
     filesList = [] #filename and content tuple
@@ -437,6 +478,26 @@ Indices and tables
 * :ref:`search`
 
 """
+#     indexRST += """
+# .. list-table::
+#   :widths: 15 10 30
+#   :header-rows: 1
+   
+#   * - **HEADER1**
+#     - **HEADER2**
+#     - **HEADER3**
+#   * - | TEXT 1
+#     - | MULTILINE 
+#       | TEXT
+#     - | MULTILINE
+#       | TEXT 2
+#   * - | DEFINITION of the long item DEFINITION of the long item DEFINITION of the long item
+#     - | character
+#       | given
+#     - | maybe not good maybe not good maybe not good maybe not good maybe not good
+#       | TEXT 2
+# """
+
     indexRST += undefLabels + '\n'
     
     file=open(destDir+'index.rst','w')  #clear file by one write access

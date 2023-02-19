@@ -1,5 +1,5 @@
-
 .. _sec-overview-basics:
+
 
 Exudyn Basics
 =============
@@ -16,6 +16,7 @@ This section will show:
 
 
 .. _sec-overview-basics-interactionmodule:
+
 
 Interaction with the Exudyn module
 ----------------------------------
@@ -36,10 +37,11 @@ Using \ ``mbs.Reset()``\  will clear the system and allows to set up a new syste
 
 .. _sec-overview-basics-simulationsettings:
 
+
 Simulation settings
 -------------------
 
-The simulation settings consists of a couple of substructures, e.g., for \ ``solutionSettings``\ , \ ``staticSolver``\ , \ ``timeIntegration``\  as well as a couple of general options -- for details see Sections Section :ref:`sec-solutionsettings`\  -- Section :ref:`sec-simulationsettings`\ .
+The simulation settings consists of a couple of substructures, e.g., for \ ``solutionSettings``\ , \ ``staticSolver``\ , \ ``timeIntegration``\  as well as a couple of general options -- for details see Section :ref:`sec-solutionsettings`\  and Section :ref:`sec-simulationsettings`\ .
 
 Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver. 
 
@@ -67,6 +69,7 @@ Hereafter, values of the structure can be modified, e.g.,
   simulationSettings.solutionSettings.solutionWritePeriod = 0.1      
   #use sparse matrix storage and solver (package Eigen):
   simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse 
+
 
 
 
@@ -103,6 +106,7 @@ position, forces or joint data. For viewing sensor results, use the \ ``PlotSens
 
 .. _sec-overview-basics-visualizationsettings:
 
+
 Visualization settings dialog
 -----------------------------
 
@@ -134,10 +138,11 @@ The appearance of visualization settings dialogs may be adjusted by directly mod
 
 .. _fig-visualizationsettings:
 .. figure:: ../theDoc/figures/visualizationSettings.png
-   :width: 80%
+   :width: 700
 
-   View of visualization settings (press 'V' in render window to open dialog)
+   View of visualization settings
 
+Note: Press 'V' in render window to open dialog.
 
 
 
@@ -172,6 +177,7 @@ The visualization settings structure can be accessed in the system container \ `
 
 .. _sec-overview-basics-renderer:
 
+
 Renderer and 3D graphics
 ------------------------
 
@@ -204,6 +210,7 @@ Depending on your model (size, place, ...), you may need to adjust the following
 
 .. _sec-overview-basics-graphicspipeline:
 
+
 Graphics pipeline
 -----------------
 
@@ -227,6 +234,7 @@ The openGL graphics thread (=separate thread) runs the following loop:
 
 
 .. _sec-overview-basics-storingmodelview:
+
 
 Storing the model view
 ----------------------
@@ -261,13 +269,13 @@ Alternatively, you can obtain the current model view from the console after a si
 
   In[1] : SC.GetRenderState()
   Out[1]: 
-  'centerPoint': [1.0, 0.0, 0.0],
+  {'centerPoint': [1.0, 0.0, 0.0],
    'maxSceneSize': 2.0,
    'zoom': 1.0,
    'currentWindowSize': [1024, 768],
    'modelRotation': [[ 0.34202015,  0.        , 0.9396926 ],
                      [-0.60402274,  0.76604444, 0.21984631],
-                     [-0.7198463 , -0.6427876 , 0.26200265]])
+                     [-0.7198463 , -0.6427876 , 0.26200265]])}
 
 
 which contains the last state of the renderer.
@@ -277,7 +285,7 @@ Now copy the output and set this with \ ``SC.SetRenderState``\  in your Python c
 
   SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
   exu.StartRenderer()
-  renderState='centerPoint': [1.0, 0.0, 0.0],
+  renderState={'centerPoint': [1.0, 0.0, 0.0],
                'maxSceneSize': 2.0,
                'zoom': 1.0,
                'currentWindowSize': [1024, 768],
@@ -292,12 +300,13 @@ Note that in the current version of Exudyn there is more data stored in render s
 see also Section :ref:`sec-renderstate`\ .
 
 
+
 Graphics user functions via Python
 ----------------------------------
 
 There are some user functions in order to customize drawing:
 
-+  You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (\ ``GraphicsDataFromSTLfileTxt``\ ) using the established format STL (STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems).
++  You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (\ ``GraphicsDataFromSTLfileTxt``\ ) using the established format {STL} (STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems).
 +  Some objects, e.g., \ ``ObjectGenericODE2``\  or \ ``ObjectRigidBody``\ , provide customized a function \ ``graphicsDataUserFunction``\ . This user function just returns a list of GraphicsData, see Section :ref:`sec-graphicsdata`\ . With this function you can change the shape of the body in every step of the computation.
 +  Specifically, the \ ``graphicsDataUserFunction``\  in \ ``ObjectGround``\  can be used to draw any moving background in the scene.
 
@@ -305,6 +314,7 @@ Note that all kinds of \ ``graphicsDataUserFunction``\ s need to be called from 
 
 
 .. _sec-overview-basics-colorrgba:
+
 
 Color, RGBA and alpha-transparency
 ----------------------------------
@@ -321,6 +331,7 @@ E.g., red color with no transparency is obtained by the color=[1,0,0,1]. Color p
 
 .. _sec-overview-basics-solutionviewer:
 
+
 Solution viewer
 ---------------
 
@@ -336,7 +347,7 @@ shown exemplary in Fig. :ref:`fig-solutionviewer`\ .
 
 .. _fig-solutionviewer:
 .. figure:: ../theDoc/figures/solutionViewer.png
-   :width: 60%
+   :width: 800
 
    View of \ ``SolutionViewer``\  (as of Exudyn 1.5.42.dev1)
 
@@ -382,6 +393,7 @@ An example for the \ ``SolutionViewer``\  is integrated into the \ ``Examples/``
 
 .. _sec-overview-basics-animations:
 
+
 Generating animations
 ---------------------
 
@@ -404,6 +416,7 @@ To create animation files, an external tool FFMPEG is used to efficiently conver
 
 
 .. _sec-overview-basics-examplestestsuite:
+
 
 Examples, test models and test suite
 ------------------------------------
@@ -437,6 +450,7 @@ We are trying hard to achieve error-free algorithms of physically correct models
 
 .. _sec-overview-basics-convergenceproblems:
 
+
 Removing convergence problems and solver failures
 -------------------------------------------------
 
@@ -461,6 +475,7 @@ The following hints shall be followed (also some solver hints).
 
 
 .. _sec-overview-basics-speedup:
+
 
 Performance and ways to speed up computations
 ---------------------------------------------

@@ -6,7 +6,7 @@ SystemContainer
 
 
 
-The SystemContainer is the top level of structures in Exudyn. The container holds all systems, solvers and all other data structures for computation. Currently, only one container shall be used. In future, multiple containers might be usable at the same time.Regarding the \ **(basic) module access**\ , functions are related to the \ ``exudyn = exu``\  module, see also the introduction of this chapter and this example:
+The SystemContainer is the top level of structures in Exudyn. The container holds all (multibody) systems, solvers and all other data structures for computation. Currently, only one container shall be used. In future, multiple containers might be usable at the same time.Regarding the \ **(basic) module access**\ , functions are related to the \ ``exudyn = exu``\  module, see also the introduction of this chapter and this example:
 
 .. code-block:: python
    
@@ -19,13 +19,13 @@ The SystemContainer is the top level of structures in Exudyn. The container hold
 \ The class **SystemContainer** has the follwing **functions and structures**:
 
 * | **Reset**\ (): 
-  | delete all systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.AttachToRenderEngine() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )
+  | delete all multibody systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.AttachToRenderEngine() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )
 * | **AddSystem**\ (): 
   | add a new computational system
 * | **NumberOfSystems**\ (): 
-  | obtain number of systems available in system container
+  | obtain number of multibody systems available in system container
 * | **GetSystem**\ (\ *systemNumber*\ ): 
-  | obtain systems with index from system container
+  | obtain multibody systems with index from system container
 * | **visualizationSettings**:
   | this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. \tabnewline
   | EXAMPLE:\tabnewline
