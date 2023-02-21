@@ -61,11 +61,11 @@ The item VObjectRigidBody2D has the following parameters:
   | local (body-fixed) 3D velocity vector of node
 * | ``Acceleration``\ : \ :math:`\LU{0}{{\mathbf{a}}}\cConfig(\pLocB) = \LU{0}{\ddot{\mathbf{u}}} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \pLocB) +  \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \pLocB))`\ 
   | global acceleration vector of body-fixed point given by local position vector \ :math:`\pLocB`\ 
-* | ``AccelerationLocal``\ : \ :math:`\LU{b}{{\mathbf{a}}}\cConfig(\pLocB) = (\LU{b0}{\Rot} \LU{0}{{\mathbf{a}}}\cConfig(\pLocB)`\ 
+* | ``AccelerationLocal``\ : \ :math:`\LU{b}{{\mathbf{a}}}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{{\mathbf{a}}}\cConfig(\pLocB)`\ 
   | local (body-fixed) acceleration vector of body-fixed point given by local position vector \ :math:`\pLocB`\ 
 * | ``AngularAcceleration``\ : \ :math:`\LU{0}{\talpha}\cConfig`\ 
   | angular acceleration vector of body
-* | ``AngularAccelerationLocal``\ : \ :math:`\LU{b}{\talpha}\cConfig = (\LU{b0}{\Rot} \LU{0}{\talpha}\cConfig`\ 
+* | ``AngularAccelerationLocal``\ : \ :math:`\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talpha}\cConfig`\ 
   | local angular acceleration vector of body
 
 

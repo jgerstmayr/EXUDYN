@@ -20,7 +20,7 @@ The item \ **LoadMassProportional**\  with type = 'MassProportional' has the fol
   | load's unique name
 * | **markerNumber** [type = MarkerIndex, default = invalid (-1)]:
   | marker's number to which load is applied
-* | **loadVector** [\ :math:`\bv`\ , type = Vector3D, default = [0.,0.,0.]]:
+* | **loadVector** [\ :math:`{\mathbf{b}}`\ , type = Vector3D, default = [0.,0.,0.]]:
   | vector-valued load [SI:N/kg = m/s\ :math:`^2`\ ]; typically, this will be the gravity vector in global coordinates; in case of a user function, this v is ignored
 * | **loadVectorUserFunction** [\ :math:`\mathrm{UF} \in \Rcal^3`\ , type = PyFunctionVector3DmbsScalarVector3D, default =  0]:
   | A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!

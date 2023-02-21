@@ -2262,9 +2262,9 @@ Rotation &  & vector with 3 components of the Euler angles in xyz-sequence (R=Rx
 AngularVelocity & $\LU{0}{\tomega}\cConfig$ & angular velocity of body\\ \hline
 AngularVelocityLocal & $\LU{b}{\tomega}\cConfig$ & local (body-fixed) 3D velocity vector of node\\ \hline
 Acceleration & $\LU{0}{\av}\cConfig(\pLocB) = \LU{0}{\ddot\uv} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \pLocB) +  \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \pLocB))$ & global acceleration vector of body-fixed point given by local position vector $\pLocB$\\ \hline
-AccelerationLocal & $\LU{b}{\av}\cConfig(\pLocB) = (\LU{b0}{\Rot} \LU{0}{\av}\cConfig(\pLocB)$ & local (body-fixed) acceleration vector of body-fixed point given by local position vector $\pLocB$\\ \hline
+AccelerationLocal & $\LU{b}{\av}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\av}\cConfig(\pLocB)$ & local (body-fixed) acceleration vector of body-fixed point given by local position vector $\pLocB$\\ \hline
 AngularAcceleration & $\LU{0}{\talpha}\cConfig$ & angular acceleration vector of body\\ \hline
-AngularAccelerationLocal & $\LU{b}{\talpha}\cConfig = (\LU{b0}{\Rot} \LU{0}{\talpha}\cConfig$ & local angular acceleration vector of body\\ \hline
+AngularAccelerationLocal & $\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talpha}\cConfig$ & local angular acceleration vector of body\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -2513,9 +2513,9 @@ Rotation & $\theta_{0\mathrm{config}}$ & scalar rotation angle of body\\ \hline
 AngularVelocity & $\LU{0}{\tomega}\cConfig$ & angular velocity of body\\ \hline
 AngularVelocityLocal & $\LU{b}{\tomega}\cConfig$ & local (body-fixed) 3D velocity vector of node\\ \hline
 Acceleration & $\LU{0}{\av}\cConfig(\pLocB) = \LU{0}{\ddot\uv} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \pLocB) +  \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \pLocB))$ & global acceleration vector of body-fixed point given by local position vector $\pLocB$\\ \hline
-AccelerationLocal & $\LU{b}{\av}\cConfig(\pLocB) = (\LU{b0}{\Rot} \LU{0}{\av}\cConfig(\pLocB)$ & local (body-fixed) acceleration vector of body-fixed point given by local position vector $\pLocB$\\ \hline
+AccelerationLocal & $\LU{b}{\av}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\av}\cConfig(\pLocB)$ & local (body-fixed) acceleration vector of body-fixed point given by local position vector $\pLocB$\\ \hline
 AngularAcceleration & $\LU{0}{\talpha}\cConfig$ & angular acceleration vector of body\\ \hline
-AngularAccelerationLocal & $\LU{b}{\talpha}\cConfig = (\LU{b0}{\Rot} \LU{0}{\talpha}\cConfig$ & local angular acceleration vector of body\\ \hline
+AngularAccelerationLocal & $\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talpha}\cConfig$ & local angular acceleration vector of body\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}

@@ -43,7 +43,7 @@ The item \ **ObjectFFRF**\  with type = 'FFRF' has the following parameters:
   | total mass [SI:kg] of FFRF object, auto-computed from mass matrix \ :math:`\LU{b}{{\mathbf{M}}}`\ 
 * | **physicsInertia** [\ :math:`J_r \in \Rcal^{3 \times 3}`\ , type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | inertia tensor [SI:kgm\ :math:`^2`\ ] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \ :math:`\LU{b}{{\mathbf{M}}}`\ 
-* | **physicsCenterOfMass** [\ :math:`\LU{b}{\bv}_{COM}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
+* | **physicsCenterOfMass** [\ :math:`\LU{b}{{\mathbf{b}}}_{COM}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | local position of center of mass (COM); auto-computed from mass matrix \ :math:`\LU{b}{{\mathbf{M}}}`\ 
 * | **PHItTM** [\ :math:`\tPhi\indt\tp \in \Rcal^{n\indf \times 3}`\ , type = NumpyMatrix, default = Matrix[]]:
   | projector matrix; may be removed in future

@@ -245,7 +245,7 @@ convLatexMath={
     # r'\tkappaDot':   r'\dot\kappa',
     }
 
-abc = 'acdefghijklmnopqrstuvwxyz'
+abc = 'abcdefghijklmnopqrstuvwxyz'
 for c in abc:
     convLatexMath['\\'+c+'v'] = r'{\mathbf{'+c+'}}'
     convLatexMath['\\'+c.upper()+'m'] = r'{\mathbf{'+c.upper()+'}}'

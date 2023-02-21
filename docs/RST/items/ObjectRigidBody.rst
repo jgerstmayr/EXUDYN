@@ -23,7 +23,7 @@ The item \ **ObjectRigidBody**\  with type = 'RigidBody' has the following param
   | mass [SI:kg] of rigid body
 * | **physicsInertia** [\ :math:`\LU{b}{{\mathbf{j}}_6}`\ , type = Vector6D, default = [0.,0.,0., 0.,0.,0.]]:
   | inertia components [SI:kgm\ :math:`^2`\ ]: \ :math:`[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]`\  in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to COM; use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, COM and mass
-* | **physicsCenterOfMass** [\ :math:`\LU{b}{\bv_{COM}}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
+* | **physicsCenterOfMass** [\ :math:`\LU{b}{{\mathbf{b}}_{COM}}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | local position of COM relative to the body's reference point; if the vector of the COM is [0,0,0], the computation will not consider additional terms for the COM and it is faster
 * | **nodeNumber** [\ :math:`n0`\ , type = NodeIndex, default = invalid (-1)]:
   | node number (type NodeIndex) for rigid body node
@@ -63,11 +63,11 @@ The item VObjectRigidBody has the following parameters:
   | local (body-fixed) 3D velocity vector of node
 * | ``Acceleration``\ : \ :math:`\LU{0}{{\mathbf{a}}}\cConfig(\pLocB) = \LU{0}{\ddot{\mathbf{u}}} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \pLocB) +  \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \pLocB))`\ 
   | global acceleration vector of body-fixed point given by local position vector \ :math:`\pLocB`\ 
-* | ``AccelerationLocal``\ : \ :math:`\LU{b}{{\mathbf{a}}}\cConfig(\pLocB) = (\LU{b0}{\Rot} \LU{0}{{\mathbf{a}}}\cConfig(\pLocB)`\ 
+* | ``AccelerationLocal``\ : \ :math:`\LU{b}{{\mathbf{a}}}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{{\mathbf{a}}}\cConfig(\pLocB)`\ 
   | local (body-fixed) acceleration vector of body-fixed point given by local position vector \ :math:`\pLocB`\ 
 * | ``AngularAcceleration``\ : \ :math:`\LU{0}{\talpha}\cConfig`\ 
   | angular acceleration vector of body
-* | ``AngularAccelerationLocal``\ : \ :math:`\LU{b}{\talpha}\cConfig = (\LU{b0}{\Rot} \LU{0}{\talpha}\cConfig`\ 
+* | ``AngularAccelerationLocal``\ : \ :math:`\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talpha}\cConfig`\ 
   | local angular acceleration vector of body
 
 

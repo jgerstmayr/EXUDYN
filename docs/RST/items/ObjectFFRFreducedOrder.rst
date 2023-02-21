@@ -49,7 +49,7 @@ The item \ **ObjectFFRFreducedOrder**\  with type = 'FFRFreducedOrder' has the f
   | total mass [SI:kg] of FFRFreducedOrder object
 * | **physicsInertia** [\ :math:`{\mathbf{J}}_r \in \Rcal^{3 \times 3}`\ , type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | inertia tensor [SI:kgm\ :math:`^2`\ ] of rigid body w.r.t. to the reference point of the body
-* | **physicsCenterOfMass** [\ :math:`\LU{b}{\bv}_{COM}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
+* | **physicsCenterOfMass** [\ :math:`\LU{b}{{\mathbf{b}}}_{COM}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | local position of center of mass (COM)
 * | **mPsiTildePsi** [type = NumpyMatrix, default = Matrix[]]:
   | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface
@@ -63,7 +63,7 @@ The item \ **ObjectFFRFreducedOrder**\  with type = 'FFRFreducedOrder' has the f
   | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface
 * | **mXRefTildePsiTilde** [type = NumpyMatrix, default = Matrix[]]:
   | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface
-* | **physicsCenterOfMassTilde** [\ :math:`\LU{b}{\tilde \bv}_{COM}`\ , type = Matrix3D, default = [[0,0,0], [0,0,0], [0,0,0]]]:
+* | **physicsCenterOfMassTilde** [\ :math:`\LU{b}{\tilde {\mathbf{b}}}_{COM}`\ , type = Matrix3D, default = [[0,0,0], [0,0,0], [0,0,0]]]:
   | tilde matrix from local position of COM; autocomputed during initialization
 * | **tempUserFunctionForce** [\ :math:`{\mathbf{f}}_{temp} \in \Rcal^{n_{ODE2}}`\ , type = NumpyVector, default = []]:
   | temporary vector for UF force

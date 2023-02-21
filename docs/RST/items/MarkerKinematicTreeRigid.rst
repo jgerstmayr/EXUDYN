@@ -20,7 +20,7 @@ The item \ **MarkerKinematicTreeRigid**\  with type = 'KinematicTreeRigid' has t
   | body number to which marker is attached to
 * | **linkNumber** [\ :math:`n_l`\ , type = UInt, default = invalid (-1)]:
   | number of link in KinematicTree to which marker is attached to
-* | **localPosition** [\ :math:`\LU{l}{\bv}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
+* | **localPosition** [\ :math:`\LU{l}{{\mathbf{b}}}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | local (link-fixed) position of marker at link \ :math:`n_l`\ , using the link (\ :math:`n_l`\ ) coordinate system
 * | **visualization** [type = VMarkerKinematicTreeRigid]:
   | parameters for visualization of item

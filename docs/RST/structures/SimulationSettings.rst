@@ -131,7 +131,7 @@ NumericalDifferentiationSettings has the following items:
   | minimum size of coordinates in relative differentiation parameter
 * | **relativeEpsilon** [type = UReal, default = 1e-7]:
   | \ ``simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon``\ , \ ``simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon``\ 
-  | relative differentiation parameter epsilon; the numerical differentiation parameter \ :math:`\varepsilon`\  follows from the formula (\ :math:`\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)`\ , with \ :math:`\varepsilon_\mathrm{relative}`\ =relativeEpsilon, \ :math:`q_{min} = `\ minimumCoordinateSize, \ :math:`q_i`\  is the current coordinate which is differentiated, and \ :math:`qRef_i`\  is the reference coordinate of the current coordinate
+  | relative differentiation parameter epsilon; the numerical differentiation parameter \ :math:`\varepsilon`\  follows from the formula (\ :math:`\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)`\ , with \ :math:`\varepsilon_\mathrm{relative}`\ =relativeEpsilon, \ :math:`q_{min} =`\ minimumCoordinateSize, \ :math:`q_i`\  is the current coordinate which is differentiated, and \ :math:`qRef_i`\  is the reference coordinate of the current coordinate
 
 
 
