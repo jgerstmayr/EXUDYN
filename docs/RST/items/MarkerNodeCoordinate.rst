@@ -6,13 +6,13 @@ MarkerNodeCoordinate
 ====================
 
 A node-Marker attached to a ODE2 coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for ODE1 coordinates use MarkerNodeODE1Coordinate.
- 
 
+\ **Additional information for MarkerNodeCoordinate**\ :
+
+* | The Marker has the following types = \ ``Node``\ , \ ``Coordinate``\ 
 
 
 The item \ **MarkerNodeCoordinate**\  with type = 'NodeCoordinate' has the following parameters:
-
- 
 
 * | **name** [type = String, default = '']:
   | marker's unique name
@@ -20,12 +20,12 @@ The item \ **MarkerNodeCoordinate**\  with type = 'NodeCoordinate' has the follo
   | node number to which marker is attached to
 * | **coordinate** [type = UInt, default = invalid (-1)]:
   | coordinate of node to which marker is attached to
+* | **visualization** [type = VMarkerNodeCoordinate]:
+  | parameters for visualization of item
 
 
 
 The item VMarkerNodeCoordinate has the following parameters:
-
- 
 
 * | **show** [type = Bool, default = True]:
   | set true, if item is shown in visualization and false if it is not shown

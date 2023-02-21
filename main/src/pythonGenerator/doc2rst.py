@@ -151,7 +151,7 @@ undefLabels+='\ **SEE Exudyn documentation** : `theDoc.pdf <https://github.com/j
 sectionsList = []
 
 #extract single .rst file and hierarchical files with sections, subsections, etc.
-#marked with %%SECTION %%SUBSECTION 
+#marked with sectionMarkerText[i][name]
 #can be called recursively to get subsections (level1=sub, level2=subsub, ...)
 def ExtractSections(rstStringWithMarkers):
     global sectionsList
@@ -211,6 +211,7 @@ def ExtractSections(rstStringWithMarkers):
                 iStart = found #omit marker text
             else:
                 foundAtCurrentLevel=True #do not store, but do further processing for this level
+                iStart = sEnd2+1 #for first section
     
     for i in range(sectionFilesDepth+1):
         rstStringWithMarkers = rstStringWithMarkers.replace(sectionMarkerText+str(i)+'\n','')

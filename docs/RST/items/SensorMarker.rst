@@ -6,13 +6,8 @@ SensorMarker
 ============
 
 A sensor attached to a marker. The sensor measures the selected marker values and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Depending on markers, it can measure Coordinates (MarkerNodeCoordinate), Position and Velocity (MarkerXXXPosition), Position, Velocity, Rotation and AngularVelocityLocal (MarkerXXXRigid). Note that marker values are only available for the current configuration. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file
- 
-
-
 
 The item \ **SensorMarker**\  with type = 'Marker' has the following parameters:
-
- 
 
 * | **name** [type = String, default = '']:
   | sensor's unique name
@@ -26,12 +21,12 @@ The item \ **SensorMarker**\  with type = 'Marker' has the following parameters:
   | OutputVariableType for sensor; output variables are only possible according to markertype, see general description of SensorMarker
 * | **storeInternal** [type = Bool, default = False]:
   | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
+* | **visualization** [type = VSensorMarker]:
+  | parameters for visualization of item
 
 
 
 The item VSensorMarker has the following parameters:
-
- 
 
 * | **show** [type = Bool, default = True]:
   | set true, if item is shown in visualization and false if it is not shown

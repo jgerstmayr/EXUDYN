@@ -9,7 +9,7 @@
 .. |PyPI download month| image:: https://img.shields.io/pypi/dm/exudyn.svg
    :target: https://pypi.python.org/pypi/exudyn/
 
-%%SECTIONLEVEL[0][Exudyn]
+
 
 ******
 Exudyn

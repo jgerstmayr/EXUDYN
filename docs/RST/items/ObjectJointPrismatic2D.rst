@@ -5,14 +5,17 @@
 ObjectJointPrismatic2D
 ======================
 
-A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers; the vector \ :math:`{\mathbf{t}}_0`\  = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis; the vector \ :math:`\mathbfn_1`\  = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis; using the global position vector \ :math:`{\mathbf{p}}_0`\  and rotation matrix \ :math:`{\mathbf{A}}_0`\  of marker0 and the global position vector \ :math:`{\mathbf{p}}_1`\  rotation matrix \ :math:`{\mathbf{A}}_1`\  of marker1, the equations for the prismatic joint follow as  (\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbfn_1 = 0    (\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbfn_1 = 0 The lagrange multipliers follow for these two equations \ :math:`[\lambda_0,\lambda_1]`\ , in which \ :math:`\lambda_0`\  is the transverse force and \ :math:`\lambda_1`\  is the torque in the joint.
- 
+A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers; the vector \ :math:`{\mathbf{t}}_0`\  = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis; the vector \ :math:`\mathbf{n}_1`\  = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis; using the global position vector \ :math:`{\mathbf{p}}_0`\  and rotation matrix \ :math:`{\mathbf{A}}_0`\  of marker0 and the global position vector \ :math:`{\mathbf{p}}_1`\  rotation matrix \ :math:`{\mathbf{A}}_1`\  of marker1, the equations for the prismatic joint follow as  (\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbfn_1 = 0    (\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbfn_1 = 0 The lagrange multipliers follow for these two equations \ :math:`[\lambda_0,\lambda_1]`\ , in which \ :math:`\lambda_0`\  is the transverse force and \ :math:`\lambda_1`\  is the torque in the joint.
 
+\ **Additional information for ObjectJointPrismatic2D**\ :
+
+* | The Object has the following types = \ ``Connector``\ , \ ``Constraint``\ 
+* | Requested marker type = \ ``Position``\  + \ ``Orientation``\ 
+* | \ **Short name**\  for Python = \ ``PrismaticJoint2D``\ 
+* | \ **Short name**\  for Python visualization object = \ ``VPrismaticJoint2D``\ 
 
 
 The item \ **ObjectJointPrismatic2D**\  with type = 'JointPrismatic2D' has the following parameters:
-
- 
 
 * | **name** [type = String, default = '']:
   | constraints's unique name
@@ -26,12 +29,12 @@ The item \ **ObjectJointPrismatic2D**\  with type = 'JointPrismatic2D' has the f
   | flag, which determines, if the connector also constrains the relative rotation of the two objects; if set to false, the constraint will keep an algebraic equation set equal zero
 * | **activeConnector** [type = Bool, default = True]:
   | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+* | **visualization** [type = VObjectJointPrismatic2D]:
+  | parameters for visualization of item
 
 
 
 The item VObjectJointPrismatic2D has the following parameters:
-
- 
 
 * | **show** [type = Bool, default = True]:
   | set true, if item is shown in visualization and false if it is not shown

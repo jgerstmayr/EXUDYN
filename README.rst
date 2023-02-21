@@ -14,7 +14,7 @@
 .. |Documentation GithubIO| image:: https://img.shields.io/website-up-down-green-red/https/jgerstmayr.github.io/EXUDYN.svg
    :target: https://jgerstmayr.github.io/EXUDYN/
 
-%%SECTIONLEVEL[0][Exudyn]
+
 
 ******
 Exudyn

@@ -85,25 +85,122 @@ if html_theme == "furo":
     }
 
 #this does some magic and will add macros for mathjax (Default in sphinx for math: / latex formulas)
-mathjax3_config = {                  
-    "tex": {                        
-        "macros": { #write defs without '\' at beginning; use [,n] with n arguments
-            'vp': [r'{\left[\!\! \begin{array}{c} { #1} \\ { #2} \end{array} \right]}',2],
+#https://github.com/sphinx-doc/sphinx/issues/8195
+#https://docs.mathjax.org/en/latest/input/tex/extensions/configmacros.html
+packages: {'[+]': ['noerrors']}
+mathjax3_config = {  
+    'loader': {
+        'load': ['[tex]/mathtools']
+    },
+    'tex': {                        
+        'packages': {#these packages are loaded [-] unloads 
+            '[+]': ['mathtools']
+        },
+        'macros': { #write defs without '\' at beginning; use [,n] with n arguments
             'vspace': [r'{}',1], #does not work with mathjax
-            'teps': r'{\boldsymbol{\varepsilon}}',
-            'tkappa':r'{\boldsymbol{\kappa}}',
-            'tomega':r'{\boldsymbol{\omega}}',
-            'ttheta':r'{\boldsymbol{\theta}}',
-            #
-            'varepsilonDot': r'{\boldsymbol{\varepsilon}}',
-            'tepsDot': r'{\dot{\boldsymbol{\varepsilon}}}',
-            'tkappaDot':r'{\dot{\boldsymbol{\kappa}}}',
+#misc
             'ra': r'{\rightarrow}',
             'Rcal': r'{\mathbb{R}}',
-            'LU': [r'{\,^ #1}',1],
+            'Ccal': r'{\mathbb{C}}',
+            'Ncal': r'{\mathbb{N}}',
+            
+#rotation, sin, cos
+            'Rot': r'{\mathbf{A}}',
+            'dd': r'{\mathrm{d}}',
+
+            'co': r'{\mathrm{c}}',
+            'si': r'{\mathrm{s}}',
+
+            'tp': r'{^\mathrm{T}}', #transpose
+
+            'diag': r'{\mathrm{diag}}', #transpose
+            'vec': r'{\mathrm{vec}}', #transpose
+
+            'Null': r'{\mathbf{0}}',
+#greek
+            'varepsilonDot': r'{\boldsymbol{\varepsilon}}',
+            'talpha': r'{\boldsymbol{\alpha}}',
+            'tbeta': r'{\boldsymbol{\beta}}',
+            'tgamma': r'{\boldsymbol{\gamma}}',
+            'tchi': r'{\boldsymbol{\chi}}',
+            'tdelta': r'{\boldsymbol{\delta}}',
+            'teps': r'{\boldsymbol{\varepsilon}}',
+            'tepsDot': r'{\boldsymbol{\dot \varepsilon}}',
+            'teta': r'{\boldsymbol{\eta}}',
+            'tkappa': r'{\boldsymbol{\kappa}}',
+            'tkappaDot': r'{\boldsymbol{\dot \kappa}}',
+            'tphi': r'{\boldsymbol{\phi}}',
+            'tPhi': r'{\boldsymbol{\Phi}}',
+            'ttheta': r'{\boldsymbol{\theta}}',
+            'tTheta': r'{\boldsymbol{\Theta}}',
+            'tlambda': r'{\boldsymbol{\lambda}}',
+            'tnu': r'{\boldsymbol{\nu}}',
+            'tmu': r'{\boldsymbol{\mu}}',
+            'tpsi': r'{\boldsymbol{\psi}}',
+            'tPsi': r'{\boldsymbol{\Psi}}',
+            'ttau': r'{\boldsymbol{\tau}}',
+            'tsigma': r'{\boldsymbol{\sigma}}',
+            'txi': r'{\boldsymbol{\xi}}',
+            'tzeta': r'{\boldsymbol{\zeta}}',
+            'tomega': r'{\boldsymbol{\omega}}',
+            'tOmega': r'{\boldsymbol{\Omega}}',
+
+            'vareps': r'{\varepsilon}',
+
+#vectors/matrices
+            #'LU': [r'{\,^{#1}}',1],
+            'LU': [r'{\prescript{#1}{}{#2}\,}',2],
+
+            'vr': [r'{\left[ \begin{array}{c} { #1}\vspace{0.04cm} \\ { #2}\vspace{0.04cm} \\ { #3} \end{array} \right]}', 3], 
+            'mr': [r'{\left[ \begin{array}{ccc} #1 & #2 & #3 \vspace{0.04cm}\\ #4 & #5 & #6 \vspace{0.04cm}\\ #7 & #8 & #9  \end{array} \right]}',9],
+            'vp': [r'{\left[ \begin{array}{c} { #1} \vspace{0.04cm}\\ { #2} \end{array} \right]}', 2],
+            'mp': [r'{\left[ \begin{array}{cc} #1 & #2 \vspace{0.04cm}\\ #3 & #4 \end{array} \right]}', 4],
+
+#for system equations marking components
+            'SO': r'{q}',
+            'FO': r'{y}',
+            'AE': r'{\lambda}',
+            'SYS': r'{s}',
+
+            'SON': r'{$2^\mathrm{nd}$ order differential equations}',
+            'FON': r'{$1^\mathrm{st}$ order differential equations}',
+            'AEN': r'{algebraic equations}',
+            'SYSN': r'{system equations}',
+
+#configurations subscripts
+            'cIni': r'{_\mathrm{ini}}', #initial
+            'cRef': r'{_\mathrm{ref}}', #reference
+            'cCur': r'{_\mathrm{cur}}', #current
+            'cVis': r'{_\mathrm{vis}}', #visualization
+            'cSOS': r'{_\mathrm{start\;of\;step}}',
+            'cConfig': r'{_\mathrm{config}}', #any configuration
+
+#++++++++++++++++++++++++++++++++++++++++++
+#special vectors
+            'pLoc': r'{\mathbf{b}}',
+            'pLocB': r'{\,^{b}{\mathbf{v}}}',
+            'pRef': r'{\mathbf{r}}',
+            'pRefG': r'{\,^{0}{\mathbf{r}}}',
+            'ImThree': r'{\mathbf{I}_{3 \times 3}}',
+            'ImTwo': r'{\mathbf{I}_{2 \times 2}}',
+
+#++++++++++++++++++++++++++++++++++++++++++
+#for FFRF:
+            '\indf': r'{_\mathrm{f}}',
+            '\indt': r'{_\mathrm{t}}',
+            '\indr': r'{_\mathrm{r}}',
+            '\indtt': r'{_\mathrm{tt}}',
+            '\indrr': r'{_\mathrm{rr}}',
+            '\indff': r'{_\mathrm{ff}}',
+            '\indtf': r'{_\mathrm{tf}}',
+            '\indrf': r'{_\mathrm{rf}}',
+            '\indtr': r'{_\mathrm{tr}}',
+#for FFRFreducedOrder:
+            '\indrigid': r'{_\mathrm{rigid}}',
+            '\indred': r'{_\mathrm{red}}',
+            '\induser': r'{_\mathrm{user}}',
+            '\indu': r'{_\mathrm{u}}',
             #
-            #'bold': [r'{\bf #1}',1],
-            #'RR': r'{\bf R}',       
             }                       
         }                           
     }       

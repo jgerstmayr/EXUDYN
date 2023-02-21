@@ -187,7 +187,7 @@ Class function: `ComputeMassMatrixAndForceTerms <https://github.com/jgerstmayr/E
   | \ ``q\_t``\ : current joint velocities
   | \ ``externalForces``\ : list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
 - | \ *output*\ :
-  | mass matrix \ :math:`{\mathbf{M}}`\  and RHS vector \ :math:`{\mathbf{f}}_RHS`\  for equations of motion \ :math:`M(q) \cdot q_tt + f(q,q_t,externalForces) = \tau`\ ; RHS is \ :math:`{\mathbf{f}}_RHS=\tau - f(q,q_t,externalForces)`\ ; \ :math:`\tau`\  can be added outside of \ ``ComputeMassMatrixAndForceTerms``\
+  | mass matrix \ :math:`{\mathbf{M}}`\  and RHS vector \ :math:`{\mathbf{f}}_{RHS}`\  for equations of motion \ :math:`M(q) \cdot q_{tt} + f(q,q_t,externalForces) = \tau`\ ; RHS is \ :math:`{\mathbf{f}}_{RHS}=\tau - f(q,q_t,externalForces)`\ ; \ :math:`\tau`\  can be added outside of \ ``ComputeMassMatrixAndForceTerms``\
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -268,7 +268,7 @@ Class function: `ComputeMassMatrixAndForceTerms <https://github.com/jgerstmayr/E
   | \ ``q\_t``\ : current joint velocities
   | \ ``externalForces``\ : list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
 - | \ *output*\ :
-  | mass matrix \ :math:`{\mathbf{M}}`\  and RHS vector \ :math:`{\mathbf{f}}_RHS`\  for equations of motion \ :math:`M(q) \cdot q_tt + f(q,q_t,externalForces) = \tau`\ ; RHS is \ :math:`{\mathbf{f}}_RHS=\tau - f(q,q_t,externalForces)`\ ; \ :math:`\tau`\  can be added outside of \ ``ComputeMassMatrixAndForceTerms``\
+  | mass matrix \ :math:`{\mathbf{M}}`\  and RHS vector \ :math:`{\mathbf{f}}_{RHS}`\  for equations of motion \ :math:`M(q) \cdot q_{tt} + f(q,q_t,externalForces) = \tau`\ ; RHS is \ :math:`{\mathbf{f}}_{RHS}=\tau - f(q,q_t,externalForces)`\ ; \ :math:`\tau`\  can be added outside of \ ``ComputeMassMatrixAndForceTerms``\
 
 ----
 

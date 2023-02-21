@@ -26,7 +26,7 @@ SolutionSettings has the following items:
   | if true, the solution file is written in binary format for improved speed and smaller file sizes; setting outputPrecision >= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that appendToFile is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files
 * | **coordinatesSolutionFileName** [type = FileName, default = 'coordinatesSolution']:
   | \ ``simulationSettings.solutionSettings.coordinatesSolutionFileName``\ 
-  | \tabnewline filename and (relative) path of solution file (coordinatesSolutionFile) containing all multibody system coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)
+  | filename and (relative) path of solution file (coordinatesSolutionFile) containing all multibody system coordinates versus time; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)
 * | **exportAccelerations** [type = bool, default = True]:
   | \ ``simulationSettings.solutionSettings.exportAccelerations``\ 
   | add ODE2 accelerations to solution file (coordinatesSolutionFile)
@@ -80,7 +80,7 @@ SolutionSettings has the following items:
   | time span (period), determines how often the solution file (coordinatesSolutionFile) is written during a simulation
 * | **solverInformationFileName** [type = FileName, default = 'solverInformation.txt']:
   | \ ``simulationSettings.solutionSettings.solverInformationFileName``\ 
-  | \tabnewline filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only
+  | filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only
 * | **writeFileFooter** [type = bool, default = True]:
   | \ ``simulationSettings.solutionSettings.writeFileFooter``\ 
   | flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics
@@ -110,7 +110,7 @@ NumericalDifferentiationSettings has the following items:
 
 * | **addReferenceCoordinatesToEpsilon** [type = \tabnewline bool, default = False]:
   | \ ``simulationSettings.timeIntegration.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon``\ , \ ``simulationSettings.staticSolver.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon``\ 
-  | True: for the size estimation of the differentiation parameter, the reference coordinate \ :math:`q^Ref_i`\  is added to ODE2 coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter
+  | True: for the size estimation of the differentiation parameter, the reference coordinate \ :math:`q^{Ref}_i`\  is added to ODE2 coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter
 * | **doSystemWideDifferentiation** [type = bool, default = False]:
   | \ ``simulationSettings.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation``\ , \ ``simulationSettings.staticSolver.newton.numericalDifferentiation.doSystemWideDifferentiation``\ 
   | True: system wide differentiation (e.g. all ODE2 equations w.r.t. all ODE2 coordinates); False: only local (object) differentiation
@@ -131,7 +131,7 @@ NumericalDifferentiationSettings has the following items:
   | minimum size of coordinates in relative differentiation parameter
 * | **relativeEpsilon** [type = UReal, default = 1e-7]:
   | \ ``simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon``\ , \ ``simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon``\ 
-  | relative differentiation parameter epsilon; the numerical differentiation parameter \ :math:`\varepsilon`\  follows from the formula (\ :math:`\varepsilon = \varepsilon_\mathrmrelative*max(q_min, |q_i + [q^Ref_i]|)`\ , with \ :math:`\varepsilon_\mathrmrelative`\ =relativeEpsilon, \ :math:`q_min = `\ minimumCoordinateSize, \ :math:`q_i`\  is the current coordinate which is differentiated, and \ :math:`qRef_i`\  is the reference coordinate of the current coordinate
+  | relative differentiation parameter epsilon; the numerical differentiation parameter \ :math:`\varepsilon`\  follows from the formula (\ :math:`\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)`\ , with \ :math:`\varepsilon_\mathrm{relative}`\ =relativeEpsilon, \ :math:`q_{min} = `\ minimumCoordinateSize, \ :math:`q_i`\  is the current coordinate which is differentiated, and \ :math:`qRef_i`\  is the reference coordinate of the current coordinate
 
 
 
@@ -263,7 +263,7 @@ ExplicitIntegrationSettings has the following items:
   | If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded)
 * | **dynamicSolverType** [type = DynamicSolverType, default = DynamicSolverType::DOPRI5]:
   | \ ``simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType``\ 
-  | \tabnewline selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, ...), for detailed description see DynamicSolverType, Section :ref:`sec-dynamicsolvertype`\ , but only referring to explicit solvers.
+  | selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, ...), for detailed description see DynamicSolverType, Section :ref:`sec-dynamicsolvertype`\ , but only referring to explicit solvers.
 * | **eliminateConstraints** [type = bool, default = True]:
   | \ ``simulationSettings.timeIntegration.explicitIntegration.eliminateConstraints``\ 
   | True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!
@@ -296,7 +296,7 @@ TimeIntegrationSettings has the following items:
   | parameters for Newton method; used for implicit time integration methods only
 * | **absoluteTolerance** [type = UReal, default = 1e-8]:
   | \ ``simulationSettings.timeIntegration.absoluteTolerance``\ 
-  | \ :math:`a_tol`\ : if automaticStepSize=True, absolute tolerance for the error control; must fulfill \ :math:`a_tol > 0`\ ; see Section :ref:`sec-explicitsolver`\ 
+  | \ :math:`a_{tol}`\ : if automaticStepSize=True, absolute tolerance for the error control; must fulfill \ :math:`a_{tol} > 0`\ ; see Section :ref:`sec-explicitsolver`\ 
 * | **adaptiveStep** [type = bool, default = True]:
   | \ ``simulationSettings.timeIntegration.adaptiveStep``\ 
   | True: the step size may be reduced if step fails; no automatic stepsize control
@@ -314,19 +314,19 @@ TimeIntegrationSettings has the following items:
   | Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors
 * | **automaticStepSize** [type = bool, default = True]:
   | \ ``simulationSettings.timeIntegration.automaticStepSize``\ 
-  | True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; False: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads \ :math:`h = h_max = \fract_end - t_startn_steps`\ 
+  | True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; False: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads \ :math:`h = h_{max} = \frac{t_{end} - t_{start}}{n_{steps}}`\ 
 * | **endTime** [type = UReal, default = 1]:
   | \ ``simulationSettings.timeIntegration.endTime``\ 
-  | \ :math:`t_end`\ : end time of time integration
+  | \ :math:`t_{end}`\ : end time of time integration
 * | **initialStepSize** [type = UReal, default = 0]:
   | \ ``simulationSettings.timeIntegration.initialStepSize``\ 
-  | \ :math:`h_init`\ : if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.
+  | \ :math:`h_{init}`\ : if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.
 * | **minimumStepSize** [type = PReal, default = 1e-8]:
   | \ ``simulationSettings.timeIntegration.minimumStepSize``\ 
-  | \ :math:`h_min`\ : if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)
+  | \ :math:`h_{min}`\ : if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)
 * | **numberOfSteps** [type = PInt, default = 100]:
   | \ ``simulationSettings.timeIntegration.numberOfSteps``\ 
-  | \ :math:`n_steps`\ : number of steps in time integration; (maximum) stepSize \ :math:`h`\  is computed from \ :math:`h = \fract_end - t_startn_steps`\ ; for automatic stepsize control, this stepSize is the maximum steps size, \ :math:`h_max = h`\ 
+  | \ :math:`n_{steps}`\ : number of steps in time integration; (maximum) stepSize \ :math:`h`\  is computed from \ :math:`h = \frac{t_{end} - t_{start}}{n_{steps}}`\ ; for automatic stepsize control, this stepSize is the maximum steps size, \ :math:`h_{max} = h`\ 
 * | **realtimeFactor** [type = PReal, default = 1]:
   | \ ``simulationSettings.timeIntegration.realtimeFactor``\ 
   | if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)
@@ -335,7 +335,7 @@ TimeIntegrationSettings has the following items:
   | if simulateInRealtime=True, a loop runs which waits realtimeWaitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy
 * | **relativeTolerance** [type = UReal, default = 1e-8]:
   | \ ``simulationSettings.timeIntegration.relativeTolerance``\ 
-  | \ :math:`r_tol`\ : if automaticStepSize=True, relative tolerance for the error control; must fulfill \ :math:`r_tol \ge 0`\ ; see Section :ref:`sec-explicitsolver`\ 
+  | \ :math:`r_{tol}`\ : if automaticStepSize=True, relative tolerance for the error control; must fulfill \ :math:`r_{tol} \ge 0`\ ; see Section :ref:`sec-explicitsolver`\ 
 * | **reuseConstantMassMatrix** [type = bool, default = True]:
   | \ ``simulationSettings.timeIntegration.reuseConstantMassMatrix``\ 
   | True: does not recompute constant mass matrices (e.g. of some finite elements, mass points, etc.); if False, it always recomputes the mass matrix (e.g. needed, if user changes mass parameters via Python)
@@ -344,16 +344,16 @@ TimeIntegrationSettings has the following items:
   | True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues
 * | **startTime** [type = UReal, default = 0]:
   | \ ``simulationSettings.timeIntegration.startTime``\ 
-  | \ :math:`t_start`\ : start time of time integration (usually set to zero)
+  | \ :math:`t_{start}`\ : start time of time integration (usually set to zero)
 * | **stepInformation** [type = UInt, default = 67]:
   | \ ``simulationSettings.timeIntegration.stepInformation``\ 
   | add up the following binary flags: 0 ... show only step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step or period, 4 ... show Newton jacobians (jac) per step or period, 8 ... show discontinuous iterations (Dit) per step or period, 16 ... show step size (dt), 32 ... show CPU time spent; 64 ... show adaptive step reduction warnings; 128 ... show step increase information; 1024 ... show every time step; time is usually shown in fractions of seconds (s), hours (h), or days
 * | **stepSizeMaxIncrease** [type = UReal, default = 2]:
   | \ ``simulationSettings.timeIntegration.stepSizeMaxIncrease``\ 
-  | \ :math:`f_maxInc`\ : if automaticStepSize=True, maximum increase of step size per step, see Section :ref:`sec-explicitsolver`\ ; make this factor smaller (but \ :math:`> 1`\ ) if too many rejected steps
+  | \ :math:`f_{maxInc}`\ : if automaticStepSize=True, maximum increase of step size per step, see Section :ref:`sec-explicitsolver`\ ; make this factor smaller (but \ :math:`> 1`\ ) if too many rejected steps
 * | **stepSizeSafety** [type = UReal, default = 0.90]:
   | \ ``simulationSettings.timeIntegration.stepSizeSafety``\ 
-  | \ :math:`r_sfty`\ : if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see Section :ref:`sec-explicitsolver`\ . Make this factor smaller if many steps are rejected.
+  | \ :math:`r_{sfty}`\ : if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see Section :ref:`sec-explicitsolver`\ . Make this factor smaller if many steps are rejected.
 * | **verboseMode** [type = UInt, default = 0]:
   | \ ``simulationSettings.timeIntegration.verboseMode``\ 
   | 0 ... no output, 1 ... show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)
@@ -398,7 +398,7 @@ StaticSolverSettings has the following items:
   | quasi-time for all load steps (added to current time in load steps)
 * | **loadStepGeometric** [type = bool, default = False]:
   | \ ``simulationSettings.staticSolverSettings.loadStepGeometric``\ 
-  | if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,...); if true, the load steps are increased in a geometric series, e.g. for \ :math:`n=8`\  numberOfLoadSteps and \ :math:`d = 1000`\  loadStepGeometricRange, it follows: \ :math:`1000^1/8/1000=0.00237`\ , \ :math:`1000^2/8/1000=0.00562`\ , \ :math:`1000^3/8/1000=0.0133`\ , ..., \ :math:`1000^7/8/1000=0.422`\ , \ :math:`1000^8/8/1000=1`\ 
+  | if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,...); if true, the load steps are increased in a geometric series, e.g. for \ :math:`n=8`\  numberOfLoadSteps and \ :math:`d = 1000`\  loadStepGeometricRange, it follows: \ :math:`1000^{1/8}/1000=0.00237`\ , \ :math:`1000^{2/8}/1000=0.00562`\ , \ :math:`1000^{3/8}/1000=0.0133`\ , ..., \ :math:`1000^{7/8}/1000=0.422`\ , \ :math:`1000^{8/8}/1000=1`\ 
 * | **loadStepGeometricRange** [type = PReal, default = 1000]:
   | \ ``simulationSettings.staticSolverSettings.loadStepGeometricRange``\ 
   | if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric
@@ -527,7 +527,7 @@ SimulationSettings has the following items:
   | display general computation information at end of time step (steps, iterations, function calls, step rejections, ...
 * | **linearSolverType** [type = LinearSolverType, default = LinearSolverType::EXUdense]:
   | \ ``.simulationSettings.linearSolverType``\ 
-  | \tabnewline selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type)
+  | selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type)
 * | **outputPrecision** [type = UInt, default = 6]:
   | \ ``.simulationSettings.outputPrecision``\ 
   | precision for floating point numbers written to console; e.g. values written by solver

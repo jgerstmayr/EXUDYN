@@ -288,9 +288,6 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '\\rule{8cm}{0.75pt}':'', 
            '\\textcolor{steelblue}':'', 
            '[language=Python, xleftmargin=36pt]':'',
-           '': '',
-           '': '',
-           '': '',
 
            '\\bi':'', 
            '\\ei':'',
@@ -419,7 +416,10 @@ def RSTurl(urlText, link, boldFace=False, blindSpaces=False):
 
 
 #write latex source inline
-def RSTinlineMath(mathString):
+def RSTinlineMath(mathString, convert=True):
+    if convert:
+        mathString = ReplaceWords(mathString, convLatexMath, replaceBraces=False) #keep braces!
+
     s = '\\ :math:`' + mathString + '`\\ '
     return s
 
@@ -503,7 +503,7 @@ def LatexString2RST(s, replaceCommands=True, replaceMarkups = False): #Latex sty
         # regText = regText.replace('\&','&')
         if replaceCommands:
             regText = ReplaceLatexCommands(regText , convLatexCommands)
-            regText = ReplaceWords(regText , convLatexWords)
+            regText = ReplaceWords(regText , convLatexWords, replaceBraces=True)
 
 
         sNew += regText
@@ -511,8 +511,7 @@ def LatexString2RST(s, replaceCommands=True, replaceMarkups = False): #Latex sty
             val += 1
             valEnd = s.find('$',val)
             if valEnd != -1:
-                sMath = s[val:valEnd]
-                sMath = ReplaceWords(sMath, convLatexMath)
+                sMath = s[val:valEnd].strip() #spaces at end make problems
                 sNew += RSTinlineMath(sMath) #do not replace markups inside this text
                 val = valEnd+1
             else:
@@ -810,7 +809,7 @@ class PyLatexRST:
             self.sRST += '\n'
             for item in itemList:
                 sEnd = '\n'*(item.strip(' ')[-1] != '\n') #add separator if not there already
-                self.sLatex +='\\item'+itemText+' ' + item + sEnd
+                self.sLatex +='  \\item'+itemText+' ' + item + sEnd
                 if itemText == '':
                     rstItem = '*'
                 elif itemText == '[]':
@@ -843,6 +842,17 @@ class PyLatexRST:
             addInfo = ' regarding **'+classStr[ni+1:]+'**'
             classStr = classStr[:ni]
         self.sRST += '\n\ The class **'+classStr+'** has the following **functions and structures**'+addInfo+':\n\n'
+
+    #start a new table to describe class bindings in latex;
+    def DefLatexStartTable3(self, headers=[]):
+
+        self.sLatex += '\\begin{center}\n'
+        self.sLatex += '\\footnotesize\n'
+        self.sLatex += '\\begin{longtable}{| p{5cm} | p{5cm} | p{6cm} |} \n'
+        self.sLatex += '\\hline\n'
+        self.sLatex += '\\bf '+headers[0]+' & \\bf '+headers[1]+' & \\bf '+headers[2]+' \\\\ \\hline\n'
+
+        self.sRST += '\n'
 
     #start a new table to describe class bindings in latex;
     def DefItemStartTable(self, classStr=''):
@@ -1056,22 +1066,7 @@ class PyLatexRST:
     #for Item Interfaces
         
     #one row for definition of items 
-    def ItemInterfaceWriteRow(self, pythonName, typeName, sSize, sDefaultVal, description):
-
-        # thisPLT = ItemInterfaceWriteRow(self, 
-        #                                 pythonName = parameter['pythonName'], 
-        #                                 typeName = Str2Latex(parameterTypeStr), 
-        #                                 sSize = Str2Latex(parameterSizeStr),
-        #                                 sDefaultVal = sString+Str2Latex(parameterDefaultValueStr, True)+sString, 
-        #                                 description = parameterDescription):
-
-        
-        # # sTemp   = space4 + Str2Latex(parameter['pythonName']) + ' & '
-        # # sTemp  += space4 + Str2Latex(parameterTypeStr) + ' & '
-        # # sTemp  += space4 + Str2Latex(parameterSizeStr) + ' & '
-        # # sTemp  += space4 + sString+Str2Latex(parameterDefaultValueStr, True)+sString + ' & '
-        # # sTemp  += space4 + parameterDescription + '\\\\ \\hline\n'
-
+    def ItemInterfaceWriteRow(self, pythonName, typeName, sSize='', sDefaultVal='', sSymbol='', description=''):
         self.sLatex += ' '*4 + Str2Latex(pythonName) + ' & '                
         self.sLatex += ' '*4 + typeName + ' & '
         self.sLatex += ' '*4 + sSize + ' & '
@@ -1079,16 +1074,42 @@ class PyLatexRST:
         self.sLatex += ' '*4 + description + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
         
         #RST:
-        s = '* | **' + pythonName + '** [type = ' + typeName
+        s = '* | **' + pythonName + '** ['
+        
+        if sSymbol.strip() != '':
+            s += RSTinlineMath(sSymbol.strip('$')) + ', '
+
+        s += 'type = ' + typeName
+
         sDefaultVal = LatexString2RST(sDefaultVal) #'\\tabnewline '
         sSize = LatexString2RST(sSize)
-        if sDefaultVal.strip() != '':
-            s += ', default = ' + sDefaultVal
         if sSize.strip() != '':
             s += ', size = '+sSize
+        # if sSymbol.strip() != '':
+        #     s += ', symbol = '+RSTinlineMath(sSymbol.strip('$'))
+        if sDefaultVal.strip() != '':
+            s += ', default = ' + sDefaultVal
         s += ']:\n'
             
         s += RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
+        self.sRST += s
+
+    #one row for table3, e.g. for output variables or any other \startTable from latex
+    def Table3WriteRow(self, cols=['','',''], typeList=['','',''], nameLiteral=True):
+        self.sLatex += cols[0] + ' & ' + cols[1] + ' & ' + cols[2] + '\\\\ \\hline\n'
+        
+        #RST:
+        name = '**' + cols[0]+ '**'
+        if nameLiteral:
+            name = '``' + cols[0]+ '``'
+        s = '* | '+name+'\\ : '
+        
+        if typeList[1] != '':
+            s+=typeList[1]+', '
+        s+=LatexString2RST(cols[1]) + '\n'
+        
+        #description:
+        s += RemoveIndentation(LatexString2RST(cols[2]), '  | ') + '\n'
         self.sRST += s
 
 

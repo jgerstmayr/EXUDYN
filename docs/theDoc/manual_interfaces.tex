@@ -15,11 +15,11 @@ In the following, some basic steps and concepts for usage are shown, references 
 
 To import the module, just include the \codeName\ module in Python:
 \bi
-\item[] \texttt{import exudyn as exu}
+  \item[] \texttt{import exudyn as exu}
 \ei
 For compatibility with examples and other users, we recommend to use the \texttt{exu} abbreviation throughout. In addition, you may work with a convenient interface for your items, therefore also always include:
 \bi
-\item[] \texttt{from exudyn.itemInterface import *}
+  \item[] \texttt{from exudyn.itemInterface import *}
 \ei
 Note that including \texttt{exudyn.utilities} will cover \texttt{itemInterface}. Also note that \texttt{from ... import *} is not recommended in general and it will not work in certain cases, e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace imports in your files afterwards by removing the star import.
 
@@ -27,13 +27,13 @@ The general hub to multibody dynamics models is provided by the classes \texttt{
 
 You can create a new \texttt{SystemContainer}, which is a class that is initialized by assigning a system container to a variable, usually denoted as \texttt{SC}:
 \bi
-\item[] \texttt{SC = exu.SystemContainer()}
+  \item[] \texttt{SC = exu.SystemContainer()}
 \ei
 Note that creating a second \texttt{exu.SystemContainer()} will be independent of \texttt{SC} and therefore usually makes no sense.
 
 To add a MainSystem to system container SC and store as variable mbs, write:
 \bi
-\item[] \texttt{mbs = SC.AddSystem()}
+  \item[] \texttt{mbs = SC.AddSystem()}
 \ei
 Furthermore, there are a couple of commands available directly in the \texttt{exudyn} module, given in the following subsections.Regarding the \mybold{(basic) module access}, functions are related to the \texttt{exudyn = exu} module, see these examples:
 \pythonstyle
@@ -85,14 +85,14 @@ Many functions will work with node numbers (\texttt{NodeIndex}), object numbers 
 
 For example, the command \texttt{mbs.AddNode(...)} returns a \texttt{NodeIndex}. For these indices, the following rules apply:
 \bi
-\item[] \texttt{mbs.Add[Node|Object|...](...)} returns a specific \texttt{NodeIndex}, \texttt{ObjectIndex}, ...
-\item[] You can create any item index, e.g., using \texttt{ni = NodeIndex(42)} or \texttt{oi = ObjectIndex(42)}
-\item[] The benefit of these indices comes as they may not be mixed up, e.g., using an object index instead of a node index.
-\item[] You can convert any item index, e.g., NodeIndex \texttt{ni} into an integer number using \texttt{int(ni)} of \texttt{ni.GetIndex()}
-\item[] Still, you can use integers as initialization for item numbers, e.g.:\\\texttt{mbs.AddObject(MassPoint(nodeNumber=13, ...))}\\However, it must be a pure integer type.
-\item[] You can make integer calculations with such indices, e.g., \texttt{oi = 2*ObjectIndex(42)+1} restricing to addition, subtraction and multiplication. Currently, the result of such calculations is a \texttt{int} type andoperating on mixed indices is not checked (but may raise exceptions in future).
-\item[] You can also print item indices, e.g., \texttt{print(ni)} as it converts to string by default.
-\item[] If you are unsure about the type of an index, use \texttt{ni.GetTypeString()} to show the index type.
+  \item[] \texttt{mbs.Add[Node|Object|...](...)} returns a specific \texttt{NodeIndex}, \texttt{ObjectIndex}, ...
+  \item[] You can create any item index, e.g., using \texttt{ni = NodeIndex(42)} or \texttt{oi = ObjectIndex(42)}
+  \item[] The benefit of these indices comes as they may not be mixed up, e.g., using an object index instead of a node index.
+  \item[] You can convert any item index, e.g., NodeIndex \texttt{ni} into an integer number using \texttt{int(ni)} of \texttt{ni.GetIndex()}
+  \item[] Still, you can use integers as initialization for item numbers, e.g.:\\\texttt{mbs.AddObject(MassPoint(nodeNumber=13, ...))}\\However, it must be a pure integer type.
+  \item[] You can make integer calculations with such indices, e.g., \texttt{oi = 2*ObjectIndex(42)+1} restricing to addition, subtraction and multiplication. Currently, the result of such calculations is a \texttt{int} type andoperating on mixed indices is not checked (but may raise exceptions in future).
+  \item[] You can also print item indices, e.g., \texttt{print(ni)} as it converts to string by default.
+  \item[] If you are unsure about the type of an index, use \texttt{ni.GetTypeString()} to show the index type.
 \ei
 \mysubsubsection{Copying and referencing C++ objects}
 \label{sec:generalPythonInterface:copyref}

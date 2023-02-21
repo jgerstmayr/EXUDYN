@@ -26,10 +26,10 @@ VSettingsGeneral has the following items:
   | global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)
 * | **backgroundColor** [type = Float4, default = [1.0,1.0,1.0,1.0], size = 4]:
   | \ ``SC.visualizationSettings.general.backgroundColor``\ 
-  | \tabnewline red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])
+  | red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])
 * | **backgroundColorBottom** [type = Float4, default = [0.8,0.8,1.0,1.0], size = 4]:
   | \ ``SC.visualizationSettings.general.backgroundColorBottom``\ 
-  | \tabnewline red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
+  | red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
 * | **circleTiling** [type = PInt, default = 16]:
   | \ ``SC.visualizationSettings.general.circleTiling``\ 
   | global number of segments for circles; if smaller than 2, 2 segments are used (flat)
@@ -83,7 +83,7 @@ VSettingsGeneral has the following items:
   | if true, text for item numbers and other item-related text is drawn in front; this may be unwanted in case that you only with to see numbers of objects in front; currently does not work with perspective
 * | **textColor** [type = Float4, default = [0.,0.,0.,1.0], size = 4]:
   | \ ``SC.visualizationSettings.general.textColor``\ 
-  | \tabnewline general text color (default); used for system texts in render window
+  | general text color (default); used for system texts in render window
 * | **textHasBackground** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.general.textHasBackground``\ 
   | if true, text for item numbers and other item-related text have a background (depending on text color), allowing for better visibility if many numbers are shown; the text itself is black; therefore, dark background colors are ignored and shown as white
@@ -143,7 +143,7 @@ VSettingsContour has the following items:
   | if true, the contour color is also applied to nodes (except mesh nodes), otherwise node drawing is not influenced by contour settings
 * | **outputVariable** [type = OutputVariableType, default = OutputVariableType::\_None]:
   | \ ``SC.visualizationSettings.contour.outputVariable``\ 
-  | \tabnewline selected contour plot output variable type; select OutputVariableType._None to deactivate contour plotting.
+  | selected contour plot output variable type; select OutputVariableType._None to deactivate contour plotting.
 * | **outputVariableComponent** [type = Int, default = 0, size = 1]:
   | \ ``SC.visualizationSettings.contour.outputVariableComponent``\ 
   | select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; for stresses, 6 components are available, see OutputVariableType description; to draw the norm of a outputVariable, set component to -1; if a certain component is not available by certain objects or nodes, no value is drawn (using default color)
@@ -173,7 +173,7 @@ VSettingsNodes has the following items:
   | size of basis for nodes
 * | **defaultColor** [type = Float4, default = [0.2,0.2,1.,1.], size = 4]:
   | \ ``SC.visualizationSettings.nodes.defaultColor``\ 
-  | \tabnewline default cRGB color for nodes; 4th value is alpha-transparency
+  | default cRGB color for nodes; 4th value is alpha-transparency
 * | **defaultSize** [type = float, default = -1.]:
   | \ ``SC.visualizationSettings.nodes.defaultSize``\ 
   | global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize
@@ -221,7 +221,7 @@ VSettingsBeams has the following items:
   | draw contour plot outputVariables 'vertical' along beam height; contour.outputVariable must be set accordingly
 * | **drawVerticalColor** [type = Float4, default = [0.2,0.2,0.2,1.], size = 4]:
   | \ ``SC.visualizationSettings.bodies.beams.drawVerticalColor``\ 
-  | \tabnewline color for outputVariable to be drawn along cross section (vertically)
+  | color for outputVariable to be drawn along cross section (vertically)
 * | **drawVerticalFactor** [type = float, default = 1.]:
   | \ ``SC.visualizationSettings.bodies.beams.drawVerticalFactor``\ 
   | factor for outputVariable to be drawn along cross section (vertically)
@@ -281,10 +281,10 @@ VSettingsBodies has the following items:
   | visualization settings for kinematic tree
 * | **defaultColor** [type = Float4, default = [0.3,0.3,1.,1.], size = 4]:
   | \ ``SC.visualizationSettings.bodies.defaultColor``\ 
-  | \tabnewline default cRGB color for bodies; 4th value is 
+  | default cRGB color for bodies; 4th value is 
 * | **defaultSize** [type = Float3, default = [1.,1.,1.], size = 3]:
   | \ ``SC.visualizationSettings.bodies.defaultSize``\ 
-  | \tabnewline global body size of xyz-cube
+  | global body size of xyz-cube
 * | **deformationScaleFactor** [type = float, default = 1]:
   | \ ``SC.visualizationSettings.bodies.deformationScaleFactor``\ 
   | global deformation scale factor; also applies to nodes, if drawn; used for scaled drawing of (linear) finite elements, beams, etc.
@@ -311,7 +311,7 @@ VSettingsConnectors has the following items:
   | DEPRECATED: do not use! global contact points size; if -1.f, connector size is relative to maxSceneSize
 * | **defaultColor** [type = Float4, default = [0.2,0.2,1.,1.], size = 4]:
   | \ ``SC.visualizationSettings.connectors.defaultColor``\ 
-  | \tabnewline default cRGB color for connectors; 4th value is alpha-transparency
+  | default cRGB color for connectors; 4th value is alpha-transparency
 * | **defaultSize** [type = float, default = 0.1]:
   | \ ``SC.visualizationSettings.connectors.defaultSize``\ 
   | global connector size; if -1.f, connector size is relative to maxSceneSize
@@ -350,7 +350,7 @@ VSettingsMarkers has the following items:
 
 * | **defaultColor** [type = Float4, default = [0.1,0.5,0.1,1.], size = 4]:
   | \ ``SC.visualizationSettings.markers.defaultColor``\ 
-  | \tabnewline default cRGB color for markers; 4th value is alpha-transparency
+  | default cRGB color for markers; 4th value is alpha-transparency
 * | **defaultSize** [type = float, default = -1.]:
   | \ ``SC.visualizationSettings.markers.defaultSize``\ 
   | global marker size; if -1.f, marker size is relative to maxSceneSize
@@ -377,7 +377,7 @@ VSettingsLoads has the following items:
 
 * | **defaultColor** [type = Float4, default = [0.7,0.1,0.1,1.], size = 4]:
   | \ ``SC.visualizationSettings.loads.defaultColor``\ 
-  | \tabnewline default cRGB color for loads; 4th value is alpha-transparency
+  | default cRGB color for loads; 4th value is alpha-transparency
 * | **defaultRadius** [type = float, default = 0.005]:
   | \ ``SC.visualizationSettings.loads.defaultRadius``\ 
   | global radius of load axis if drawn in 3D
@@ -413,7 +413,7 @@ VSettingsSensors has the following items:
 
 * | **defaultColor** [type = Float4, default = [0.6,0.6,0.1,1.], size = 4]:
   | \ ``SC.visualizationSettings.sensors.defaultColor``\ 
-  | \tabnewline default cRGB color for sensors; 4th value is alpha-transparency
+  | default cRGB color for sensors; 4th value is alpha-transparency
 * | **defaultSize** [type = float, default = -1.]:
   | \ ``SC.visualizationSettings.sensors.defaultSize``\ 
   | global sensor size; if -1.f, sensor size is relative to maxSceneSize
@@ -440,10 +440,10 @@ VSettingsContact has the following items:
 
 * | **colorBoundingBoxes** [type = Float4, default = [0.9,0.1,0.1,1.], size = 4]:
   | \ ``SC.visualizationSettings.contact.colorBoundingBoxes``\ 
-  | \tabnewline cRGB color
+  | cRGB color
 * | **colorSearchTree** [type = Float4, default = [0.1,0.1,0.9,1.], size = 4]:
   | \ ``SC.visualizationSettings.contact.colorSearchTree``\ 
-  | \tabnewline cRGB color
+  | cRGB color
 * | **contactForcesFactor** [type = float, default = 0.001]:
   | \ ``SC.visualizationSettings.contact.contactForcesFactor``\ 
   | factor used for scaling of contact forces is showContactForces=True
@@ -485,7 +485,7 @@ VSettingsWindow has the following items:
   | True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'
 * | **keyPressUserFunction** [type = KeyPressUserFunction, default = 0]:
   | \ ``SC.visualizationSettings.window.keyPressUserFunction``\ 
-  | add a Python function f(key, action, mods) here, which is called every time a key is pressed; function shall return true, if key has been processed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantomXXX print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)
+  | add a Python function f(key, action, mods) here, which is called every time a key is pressed; function shall return true, if key has been processed; Example:  def f(key, action, mods): \phantomXXX print('key=',key); use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)
 * | **limitWindowToScreenSize** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.window.limitWindowToScreenSize``\ 
   | True: render window size is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize
@@ -565,19 +565,19 @@ VSettingsOpenGL has the following items:
   | generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL_LIGHTING)
 * | **faceEdgesColor** [type = Float4, default = [0.2,0.2,0.2,1.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.faceEdgesColor``\ 
-  | \tabnewline global RGBA color for face edges
+  | global RGBA color for face edges
 * | **facesTransparent** [type = bool, default = False, size = 1]:
   | \ ``SC.visualizationSettings.openGL.facesTransparent``\ 
   | True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers
 * | **initialCenterPoint** [type = Float3, default = [0.,0.,0.], size = 3]:
   | \ ``SC.visualizationSettings.openGL.initialCenterPoint``\ 
-  | \tabnewline centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True
+  | centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True
 * | **initialMaxSceneSize** [type = PFloat, default = 1.]:
   | \ ``SC.visualizationSettings.openGL.initialMaxSceneSize``\ 
   | initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True
 * | **initialModelRotation** [type = StdArray33F, default = [Matrix3DF[3,3,1.,0.,0., 0.,1.,0., 0.,0.,1.]], size = 3x3]:
   | \ ``SC.visualizationSettings.openGL.initialModelRotation``\ 
-  | \tabnewline initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]
+  | initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]
 * | **initialZoom** [type = UFloat, default = 1.]:
   | \ ``SC.visualizationSettings.openGL.initialZoom``\ 
   | initial zoom of scene; overwritten/ignored if autoFitScene = True
@@ -595,7 +595,7 @@ VSettingsOpenGL has the following items:
   | linear attenuation coefficient of GL_LIGHT0, this is a linear factor for attenuation of the light source with distance
 * | **light0position** [type = Float4, default = [0.2,0.2,10.,0.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.light0position``\ 
-  | \tabnewline 4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals
+  | 4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals
 * | **light0quadraticAttenuation** [type = float, default = 0.0, size = 1]:
   | \ ``SC.visualizationSettings.openGL.light0quadraticAttenuation``\ 
   | quadratic attenuation coefficient of GL_LIGHT0, this is a quadratic factor for attenuation of the light source with distance
@@ -616,7 +616,7 @@ VSettingsOpenGL has the following items:
   | linear attenuation coefficient of GL_LIGHT1, this is a linear factor for attenuation of the light source with distance
 * | **light1position** [type = Float4, default = [1.,1.,-10.,0.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.light1position``\ 
-  | \tabnewline 4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
+  | 4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
 * | **light1quadraticAttenuation** [type = float, default = 0.0, size = 1]:
   | \ ``SC.visualizationSettings.openGL.light1quadraticAttenuation``\ 
   | quadratic attenuation coefficient of GL_LIGHT1, this is a quadratic factor for attenuation of the light source with distance
@@ -625,7 +625,7 @@ VSettingsOpenGL has the following items:
   | specular value of GL_LIGHT1
 * | **lightModelAmbient** [type = Float4, default = [0.,0.,0.,1.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.lightModelAmbient``\ 
-  | \tabnewline global ambient light; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a])
+  | global ambient light; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a])
 * | **lightModelLocalViewer** [type = bool, default = False, size = 1]:
   | \ ``SC.visualizationSettings.openGL.lightModelLocalViewer``\ 
   | select local viewer for light; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,...)
@@ -640,13 +640,13 @@ VSettingsOpenGL has the following items:
   | width of lines used for representation of lines, circles, points, etc.
 * | **materialAmbientAndDiffuse** [type = Float4, default = [0.6,0.6,0.6,1.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.materialAmbientAndDiffuse``\ 
-  | \tabnewline 4f ambient color of material
+  | 4f ambient color of material
 * | **materialShininess** [type = float, default = 32., size = 1]:
   | \ ``SC.visualizationSettings.openGL.materialShininess``\ 
   | shininess of material
 * | **materialSpecular** [type = Float4, default = [0.6,0.6,0.6,1.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.materialSpecular``\ 
-  | \tabnewline 4f specular color of material
+  | 4f specular color of material
 * | **multiSampling** [type = PInt, default = 1, size = 1]:
   | \ ``SC.visualizationSettings.openGL.multiSampling``\ 
   | NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
@@ -745,7 +745,7 @@ VSettingsOpenVR has the following items:
 
 * | **actionManifestFileName** [type = FileName, default = 'C:/openVRactionsManifest.json']:
   | \ ``SC.visualizationSettings.interactive.openVR.actionManifestFileName``\ 
-  | \tabnewline This string must contain a string representing a valid absolute path to a vr_actions.json manifest, which describes all HMD, tracker, etc. devices as given by openVR
+  | This string must contain a string representing a valid absolute path to a vr_actions.json manifest, which describes all HMD, tracker, etc. devices as given by openVR
 * | **enable** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.interactive.openVR.enable``\ 
   | True: openVR enabled (if compiled with according flag and installed openVR)
@@ -772,7 +772,7 @@ VSettingsInteractive has the following items:
   | openVR visualization settings
 * | **highlightColor** [type = Float4, default = [0.8,0.05,0.05,0.75], size = 4]:
   | \ ``SC.visualizationSettings.interactive.highlightColor``\ 
-  | \tabnewline cRGB color for highlighted item; 4th value is alpha-transparency
+  | cRGB color for highlighted item; 4th value is alpha-transparency
 * | **highlightItemIndex** [type = Int, default = -1]:
   | \ ``SC.visualizationSettings.interactive.highlightItemIndex``\ 
   | index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted
@@ -784,7 +784,7 @@ VSettingsInteractive has the following items:
   | index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
 * | **highlightOtherColor** [type = Float4, default = [0.5,0.5,0.5,0.4], size = 4]:
   | \ ``SC.visualizationSettings.interactive.highlightOtherColor``\ 
-  | \tabnewline cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
+  | cRGB color for other items (which are not highlighted); 4th value is alpha-transparency
 * | **joystickScaleRotation** [type = float, default = 200.]:
   | \ ``SC.visualizationSettings.interactive.joystickScaleRotation``\ 
   | rotation scaling factor for joystick input
@@ -826,10 +826,10 @@ VSettingsInteractive has the following items:
   | number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number
 * | **trackMarkerOrientation** [type = Float3, default = [0.,0.,0.], size = 3]:
   | \ ``SC.visualizationSettings.interactive.trackMarkerOrientation``\ 
-  | \tabnewline choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one
+  | choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one
 * | **trackMarkerPosition** [type = Float3, default = [1.,1.,1.], size = 3]:
   | \ ``SC.visualizationSettings.interactive.trackMarkerPosition``\ 
-  | \tabnewline choose which coordinates or marker are tracked (x,y,z)
+  | choose which coordinates or marker are tracked (x,y,z)
 * | **useJoystickInput** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.interactive.useJoystickInput``\ 
   | True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ...

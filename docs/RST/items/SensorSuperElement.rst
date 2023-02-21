@@ -6,13 +6,8 @@ SensorSuperElement
 ==================
 
 A sensor attached to a SuperElement-object with mesh node number. As a difference to other ObjectSensors, the SuperElement sensor has a mesh node number at which the sensor is attached to. The sensor measures OutputVariableSuperElement and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
- 
-
-
 
 The item \ **SensorSuperElement**\  with type = 'SuperElement' has the following parameters:
-
- 
 
 * | **name** [type = String, default = '']:
   | sensor's unique name
@@ -28,12 +23,12 @@ The item \ **SensorSuperElement**\  with type = 'SuperElement' has the following
   | OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, Section :ref:`sec-objectffrfreducedorder-superelementoutput`\ )
 * | **storeInternal** [type = Bool, default = False]:
   | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
+* | **visualization** [type = VSensorSuperElement]:
+  | parameters for visualization of item
 
 
 
 The item VSensorSuperElement has the following parameters:
-
- 
 
 * | **show** [type = Bool, default = True]:
   | set true, if item is shown in visualization and false if it is not shown

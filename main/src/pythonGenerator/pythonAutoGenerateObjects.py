@@ -375,11 +375,12 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         descriptionStr = parseInfo['classDescription']
 
         plr.sLatex += '\n%+++++++++++++++++++++++++++++++++++\n'
-        plr.AddDocu(text=descriptionStr+'\\vspace{12pt}\n \\\\',
+        plr.AddDocu(text=descriptionStr,
                     section=parseInfo['class'], 
                     sectionLevel=2, 
                     sectionLabel='sec:item:' + parseInfo['class'])
-
+        plr.sLatex += '\\vspace{12pt}'+'\\\\'+'\n'
+        
         # plr.sLatex += '\n%+++++++++++++++++++++++++++++++++++\n\mysubsubsection{' + parseInfo['class'] + '}\n'
         # plr.sLatex += '\\label{sec:item:' + parseInfo['class'] + '}\n'
         # plr.sLatex += descriptionStr + '\\vspace{12pt}\n \\\\'
@@ -389,10 +390,12 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 
         cPLR.sLatex += '\\vspace{12pt} \\noindent '
         cPLR.AddDocu('The item \\mybold{' + parseInfo['class'] + "} with type = '"+
-                     sTypeName + "' has the following parameters:\\vspace{-1cm}\\\\ \n")
+                     sTypeName + "' has the following parameters:")
+        cPLR.sLatex += '\\vspace{-0.5cm}\\\\'+'\n' #orig:-1cm
 
         vPLR.AddDocu('\\noindent The item V' + parseInfo['class'] + 
-                     ' has the following parameters:\\vspace{-1cm}\\\\ \n')
+                     ' has the following parameters:')
+        cPLR.sLatex += '\\vspace{-0.5cm}\\\\'+'\n'#orig:-1cm
 
         cPLR.DefItemStartTable(classStr=parseInfo['class'])        
         vPLR.DefItemStartTable(classStr=parseInfo['class'])        
@@ -427,7 +430,12 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 parameterDescription = parameter['parameterDescription']
                 [parameterDescription, latexSymbol] = ExtractLatexSymbol(parameterDescription)
                 if len(latexSymbol) != 0:
-                    symbolList+= "\\rowTable{" + parameter['pythonName'].replace('_','\\_') +"}{" + latexSymbol.replace('\n','\\n') + "}{}\n"  #this is the latex symbol string
+                    #if there is a \n, it was wrongly converted => convert back!
+                    symbolList+= "\\rowTable{" + parameter['pythonName'].replace('_','\\_') +"}{" + latexSymbol.replace('\n','\\n') + "}{}\n"  #this is the latex symbol string 
+                
+                if latexSymbol.count('\\n'):
+                    print('WARNING: found \\n in latexSymbol: '
+                          +parseInfo['class']+':'+parameter['pythonName'])
                 
                 parameterTypeStr = parameter['type']
                 parameterSizeStr = parameter['size']
@@ -449,20 +457,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                                               typeName = Str2Latex(parameterTypeStr), 
                                               sSize = Str2Latex(parameterSizeStr),
                                               sDefaultVal = sString+Str2Latex(parameterDefaultValueStr, True)+sString, 
+                                              sSymbol = latexSymbol.replace('\n','\\n'), #correct e.g. \nu
                                               description = parameterDescription)
 
                 
-                # sTemp   = space4 + Str2Latex(parameter['pythonName']) + ' & '
-                # sTemp  += space4 + Str2Latex(parameterTypeStr) + ' & '
-                # sTemp  += space4 + Str2Latex(parameterSizeStr) + ' & '
-                # sTemp  += space4 + sString+Str2Latex(parameterDefaultValueStr, True)+sString + ' & '
-                # sTemp  += space4 + parameterDescription + '\\\\ \\hline\n'
-                
-                # if parameter['destination'].find('V') != -1: #visualization
-                #     vLatex += sTemp
-                # else:
-                #     cLatex += sTemp
-
             elif (parameter['pythonName'] == 'GetRequestedMarkerType'):
                 requestedMarkerString = GetTypesStringLatex(parameter['defaultValue'],'Marker', possibleTypes['Marker'],' +')
             elif (parameter['pythonName'] == 'GetRequestedNodeType'):
@@ -472,46 +470,46 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 if parseInfo['classType']=='Object': searchType += 'Type'
                 itemTypeString = GetTypesStringLatex(parameter['defaultValue'],searchType, possibleTypes[parseInfo['classType']])
                 #print(parseInfo['classType']+':'+itemTypeString)
-                
 
-        cPLR.sLatex += space4+'visualization & V' + parseInfo['class'] + ' & & & parameters for visualization of item \\\\ \\hline\n'
+        #cPLR.sLatex += space4+'visualization & V' + parseInfo['class'] + ' & & & parameters for visualization of item \\\\ \\hline\n'
+
+        cPLR.ItemInterfaceWriteRow(pythonName = 'visualization', 
+                                   typeName = 'V' + parseInfo['class'], sSize = '', sDefaultVal = '',
+                                   description = 'parameters for visualization of item')
+
         cPLR.DefLatexFinishTable()
         vPLR.DefLatexFinishTable()
-        # cPLR.sLatex += '	  \\end{longtable}\n'
-        # cPLR.sLatex += '	\\end{center}\n'
-        # vPLR.sLatex += '	  \\end{longtable}\n'
-        # vPLR.sLatex += '	\\end{center}\n'
+
         #now assemble visualization and computation tables:
 
         if len(parseInfo['author']) != 0:
             pluralAuthors = ''
             if ',' in parseInfo['author']:
                 pluralAuthors ='s'
-            plr.sLatex += '\\noindent Author'+pluralAuthors+': ' + parseInfo['author'] + '\n'
-            plr.sLatex += '\\vspace{12pt}\n \\\\'
+            plr.AddDocu('\\noindent Author'+pluralAuthors+': ' + parseInfo['author'] + '\n')
+            plr.sLatex += '\\vspace{12pt}'+'\\\\'+'\n'
 
         #plr.sLatex += requestedMarkerString
         if len(requestedMarkerString) + len(itemTypeString) + len(parseInfo['pythonShortName']) !=0:
-            plr.sLatex += '{\\bf Additional information for ' + parseInfo['class'] + '}:\n'
-            plr.sLatex += '\\bi\n'
+            lstAdd = []
+            plr.AddDocu('\\noindent \\mybold{Additional information for ' + parseInfo['class'] + '}:\n', preNewLine=True)
             if len(itemTypeString) != 0:
-                plr.sLatex += '  \\item The ' + parseInfo['classType'] + ' has the following types = ' + itemTypeString + '\n'
+                lstAdd += ['The ' + parseInfo['classType'] + ' has the following types = ' + itemTypeString]
             if len(requestedMarkerString) != 0:
-                plr.sLatex += '  \\item Requested marker type = ' + requestedMarkerString + '\n'
+                lstAdd += ['Requested marker type = ' + requestedMarkerString]
             if len(requestedNodeString) != 0:
                 if requestedNodeString.find('_None') != -1:
-                    plr.sLatex += '  \\item Requested node type: read detailed information of item\n'
+                    lstAdd += ['Requested node type: read detailed information of item']
                 else:
-                    plr.sLatex += '  \\item Requested node type = ' + requestedNodeString + '\n'
+                    lstAdd += ['Requested node type = ' + requestedNodeString]
             if len(parseInfo['pythonShortName']) != 0:
-                plr.sLatex += '  \\item {\\bf Short name} for Python = {\\bf ' + parseInfo['pythonShortName'] + '}'
-                plr.sLatex += '  \\item {\\bf Short name} for Python (visualization object) = {\\bf V' + parseInfo['pythonShortName'] + '}'
+                lstAdd += ['{\\bf Short name} for Python = \\texttt{' + parseInfo['pythonShortName'] + '}']
+                lstAdd += ['{\\bf Short name} for Python visualization object = \\texttt{V' + parseInfo['pythonShortName'] + '}']
 
-            plr.sLatex += '\\ei\n'
+            plr.AddDocuList(lstAdd)
 
         plr += cPLR
         plr += vPLR
-        #plr.sLatex += cLatex+vLatex
 
 #        if len(parseInfo['outputVariables']) != 0:
 #            plr.sLatex += '{\\bf Output variables} (chose type, e.g., OutputVariableType.Position): \n\\begin{itemize}\n'
@@ -521,7 +519,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 #            
 #            plr.sLatex += '\\end{itemize}\n'
 
-        addLatex = ''
+        #++++++++++++++++++++++++++++++++++++++++++++++
+        #input parameters: only in latex table
+        addLatex = '' 
+        #only in PDF:
         if len(symbolList) != 0: #automatically generated import parameter symbol list 
             #addLatex += "\\vspace{6pt}\\\\ \n"
             addLatex += "\paragraph{Information on input parameters:} \n"
@@ -529,10 +530,14 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             addLatex += symbolList
             addLatex += "\\finishTable\n"
 
+        #++++++++++++++++++++++++++++++++++++++++++++++
         #process outputVariables, including symbols
         if len(parseInfo['outputVariables']) != 0:
-            addLatex += "{\\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: \n"
-            addLatex += "\\startTable{output variable}{symbol}{description}\n"
+            plr.AddDocu('\\mybold{The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}:')
+            #addLatex += "{\\bf The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}: \n"
+            plr.DefLatexStartTable3(['output variable','symbol','description'])        
+
+            #addLatex += "\\startTable{output variable}{symbol}{description}\n"
             #print("dict=",parseInfo['outputVariables'].replace('\\','\\\\'))
             dictOV = eval(parseInfo['outputVariables'].replace('\n','\\n').replace('\\','\\\\')) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
             for outputVariables in dictOV.items(): 
@@ -541,9 +546,14 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 [description, latexSymbol] = ExtractLatexSymbol(description)
                 if len(latexSymbol) != 0: 
                     latexSymbol = latexSymbol
-                addLatex += "\\rowTable{" + oVariable +"}{" + latexSymbol + "}{" + description + "}\n"  #this is the line for one outputvariable
-            addLatex += "\\finishTable\n" #outputvariables
+                #addLatex += "\\rowTable{" + oVariable +"}{" + latexSymbol + "}{" + description + "}\n"  #this is the line for one outputvariable
+                plr.Table3WriteRow(cols=[oVariable, latexSymbol, description])
+            
+            #addLatex += "\\finishTable\n" #outputvariables
+            plr.DefLatexFinishTable()
 
+        #++++++++++++++++++++++++++++++++++++++++++++++
+        #only latex (currently):
         if len(parseInfo['equations']) != 0:
             #addLatex += "\\vspace{6pt}\\par\\noindent\\rule{\\textwidth}{0.4pt}\n"
             #addLatex += '\mysubsubsubsection{DESCRIPTION}\n'

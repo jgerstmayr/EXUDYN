@@ -12,6 +12,9 @@ automatically generate pybindings for specific classes and functions AND latex d
 #fix braces in {ODE2} etc. abbreviations => manually create abbrv.tex and according .rst file; replace \acs{} with link
 #FIX latex defs in items (ObjectFFRFred, ...)
 
+#add marker/etc. pre-information as list for items
+#add input/output for items
+
 from autoGenerateHelper import PyLatexRST, GetDateStr #AddEnumValue, DefPyFunctionAccess, DefPyStartClass, DefPyFinishClass, DefLatexStartClass, DefLatexFinishTable
                                
 import io   #for utf-8 encoding
