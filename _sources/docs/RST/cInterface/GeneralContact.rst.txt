@@ -42,9 +42,9 @@ Structure to define general and highly efficient contact functionality in multib
 * | **minRelDistanceSpheresTriangles**:
   | (default=1e-10) tolerance (relative to sphere radiues) below which the contact between triangles and spheres is ignored; used for spheres directly attached to triangles 
 * | **frictionProportionalZone**:
-  | (default=0.001) velocity \ :math:`v_\mu,reg`\  upon which the dry friction coefficient is interpolated linearly (regularized friction model); must be greater 0; very small values cause oscillations in friction force 
+  | (default=0.001) velocity \ :math:`v_{\mu,reg}`\  upon which the dry friction coefficient is interpolated linearly (regularized friction model); must be greater 0; very small values cause oscillations in friction force 
 * | **frictionVelocityPenalty**:
-  | (default=1e3) regularization factor for friction [N/(m\ :math:`^2 \cdot`\ m/s) ];\ :math:`k_\mu,reg`\ , multiplied with tangential velocity to compute friciton force as long as it is smaller than \ :math:`\mu`\  times contact force; large values cause oscillations in friction force 
+  | (default=1e3) regularization factor for friction [N/(m\ :math:`^2 \cdot`\ m/s) ];\ :math:`k_{\mu,reg}`\ , multiplied with tangential velocity to compute friciton force as long as it is smaller than \ :math:`\mu`\  times contact force; large values cause oscillations in friction force 
 * | **excludeOverlappingTrigSphereContacts**:
   | (default=True) for consistent, closed meshes, we can exclude overlapping contact triangles (which would cause holes if mesh is overlapping and not consistent!!!) 
 * | **excludeDuplicatedTrigSphereContactPoints**:

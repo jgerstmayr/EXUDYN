@@ -6,35 +6,56 @@ NodePoint
 =========
 
 A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for ODE2.
- 
 
+\ **Additional information for NodePoint**\ :
+
+* | The Node has the following types = \ ``Position``\ 
+* | \ **Short name**\  for Python = \ ``Point``\ 
+* | \ **Short name**\  for Python visualization object = \ ``VPoint``\ 
 
 
 The item \ **NodePoint**\  with type = 'Point' has the following parameters:
 
- 
-
 * | **name** [type = String, default = '']:
   | node's unique name
-* | **referenceCoordinates** [type = Vector3D, default = [0.,0.,0.], size = 3]:
+* | **referenceCoordinates** [\ :math:`{\mathbf{q}}\cRef = [q_0,\,q_1,\,q_2]\tp\cRef = {\mathbf{p}}\cRef = [r_0,\,r_1,\,r_2]\tp`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | reference coordinates of node, e.g. ref. coordinates for finite elements; global position of node without displacement
-* | **initialCoordinates** [type = Vector3D, default = [0.,0.,0.], size = 3]:
+* | **initialCoordinates** [\ :math:`{\mathbf{q}}\cIni = [q_0,\,q_1,\,q_2]\cIni\tp = {\mathbf{u}}\cIni = [u_0,\,u_1,\,u_2]\cIni\tp`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | initial displacement coordinate
-* | **initialVelocities** [type = Vector3D, default = [0.,0.,0.], size = 3]:
+* | **initialVelocities** [\ :math:`\dot{\mathbf{q}}\cIni = {\mathbf{v}}\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2]\cIni\tp`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | initial velocity coordinate
+* | **visualization** [type = VNodePoint]:
+  | parameters for visualization of item
 
 
 
 The item VNodePoint has the following parameters:
 
- 
-
 * | **show** [type = Bool, default = True]:
   | set true, if item is shown in visualization and false if it is not shown
 * | **drawSize** [type = float, default = -1.]:
   | drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.], size = 4]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
+
+
+
+\ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
+
+* | ``Position``\ : \ :math:`{\mathbf{p}}\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp= {\mathbf{u}}\cConfig + {\mathbf{p}}\cRef`\ 
+  | global 3D position vector of node; \ :math:`{\mathbf{u}}\cRef=0`\ 
+* | ``Displacement``\ : \ :math:`{\mathbf{u}}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp`\ 
+  | global 3D displacement vector of node
+* | ``Velocity``\ : \ :math:`{\mathbf{v}}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp`\ 
+  | global 3D velocity vector of node
+* | ``Acceleration``\ : \ :math:`{\mathbf{a}}\cConfig = \ddot {\mathbf{q}}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp`\ 
+  | global 3D acceleration vector of node
+* | ``Coordinates``\ : \ :math:`{\mathbf{c}}\cConfig = {\mathbf{u}}\cConfig = [q_0,\,q_1,\,q_2]\tp\cConfig`\ 
+  | coordinate vector of node
+* | ``Coordinates\_t``\ : \ :math:`\dot{\mathbf{c}}\cConfig = {\mathbf{v}}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\tp\cConfig`\ 
+  | velocity coordinates vector of node
+* | ``Coordinates\_tt``\ : \ :math:`\ddot{\mathbf{c}}\cConfig = {\mathbf{a}}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\tp\cConfig`\ 
+  | acceleration coordinates vector of node
 
 
 

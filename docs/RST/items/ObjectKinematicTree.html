@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectKinematicTree &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+  <title>ObjectKinematicTree &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,7 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "\\indf": "{_\\mathrm{f}}", "\\indt": "{_\\mathrm{t}}", "\\indr": "{_\\mathrm{r}}", "\\indtt": "{_\\mathrm{tt}}", "\\indrr": "{_\\mathrm{rr}}", "\\indff": "{_\\mathrm{ff}}", "\\indtf": "{_\\mathrm{tf}}", "\\indrf": "{_\\mathrm{rf}}", "\\indtr": "{_\\mathrm{tr}}", "\\indrigid": "{_\\mathrm{rigid}}", "\\indred": "{_\\mathrm{red}}", "\\induser": "{_\\mathrm{user}}", "\\indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.104.dev1
+            Exudyn1.5.105.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -90,7 +91,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -113,6 +114,25 @@
   <section id="objectkinematictree">
 <span id="sec-item-objectkinematictree"></span><h1>ObjectKinematicTree<a class="headerlink" href="#objectkinematictree" title="Permalink to this heading"></a></h1>
 <p>A special object to represent open kinematic trees using minimum coordinate formulation (NOT FULLY TESTED!). The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc.per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl.translation) from the previous link’s to this link’s joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.</p>
+<p><strong>Additional information for ObjectKinematicTree</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line">The Object has the following types = <code class="docutils literal notranslate"><span class="pre">Body</span></code>, <code class="docutils literal notranslate"><span class="pre">MultiNoded</span></code>, <code class="docutils literal notranslate"><span class="pre">SuperElement</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested node type = <code class="docutils literal notranslate"><span class="pre">GenericODE2</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python = <code class="docutils literal notranslate"><span class="pre">KinematicTree</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python visualization object = <code class="docutils literal notranslate"><span class="pre">VKinematicTree</span></code></div>
+</div>
+</li>
+</ul>
 <p>The item <strong>ObjectKinematicTree</strong> with type = ‘KinematicTree’ has the following parameters:</p>
 <ul>
 <li><div class="line-block">
@@ -121,93 +141,98 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>nodeNumber</strong> [type = NodeIndex, default = invalid (-1)]:</div>
+<div class="line"><strong>nodeNumber</strong> [<span class="math notranslate nohighlight">\(n_0 \in \Ncal^n\)</span>, type = NodeIndex, default = invalid (-1)]:</div>
 <div class="line">node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; <span class="math notranslate nohighlight">\(n\)</span> being the number of minimum coordinates</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>gravity</strong> [type = Vector3D, default = [0.,0.,0.]]:</div>
+<div class="line"><strong>gravity</strong> [<span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{g}}} \in \Rcal^{3}\)</span>, type = Vector3D, default = [0.,0.,0.]]:</div>
 <div class="line">gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>baseOffset</strong> [type = Vector3D, default = [0.,0.,0.]]:</div>
+<div class="line"><strong>baseOffset</strong> [<span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{p}}_b} \in \Rcal^{3}\)</span>, type = Vector3D, default = [0.,0.,0.]]:</div>
 <div class="line">offset vector for base, in global coordinates</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>jointTypes</strong> [type = JointTypeList, default = []]:</div>
+<div class="line"><strong>jointTypes</strong> [<span class="math notranslate nohighlight">\({\mathbf{j}}_T \in \Ncal^{n}\)</span>, type = JointTypeList, default = []]:</div>
 <div class="line">joint types of kinematic Tree joints; must be always set</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>linkParents</strong> [type = ArrayIndex, default = []]:</div>
+<div class="line"><strong>linkParents</strong> [<span class="math notranslate nohighlight">\({\mathbf{i}}_p = [p_0,\, p_1,\, \ldots] \in \Ncal^{n}\)</span>, type = ArrayIndex, default = []]:</div>
 <div class="line">index of parent joint/link; if no parent exists, the value is <span class="math notranslate nohighlight">\(-1\)</span>; by default, <span class="math notranslate nohighlight">\(p_0=-1\)</span> because the <span class="math notranslate nohighlight">\(i\)</span>th parent index must always fulfill <span class="math notranslate nohighlight">\(p_i&lt;i\)</span>; must be always set</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>jointTransformations</strong> [type = Matrix3DList, default = []]:</div>
+<div class="line"><strong>jointTransformations</strong> [<span class="math notranslate nohighlight">\({\mathbf{T}} = [\LU{p_0,j_0}{{\mathbf{T}}_0},\, \LU{p_1,j_1}{{\mathbf{T}}_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]\)</span>, type = Matrix3DList, default = []]:</div>
 <div class="line">list of constant joint transformations from parent joint coordinates <span class="math notranslate nohighlight">\(p_0\)</span> to this joint coordinates <span class="math notranslate nohighlight">\(j_0\)</span>; if no parent exists (<span class="math notranslate nohighlight">\(-1\)</span>), the base coordinate system <span class="math notranslate nohighlight">\(0\)</span> is used; must be always set</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>jointOffsets</strong> [type = Vector3DList, default = []]:</div>
+<div class="line"><strong>jointOffsets</strong> [<span class="math notranslate nohighlight">\({\mathbf{V}} = [\LU{p_0}{o_0},\, \LU{p_1}{o_1},\, \ldots ] \in [\Rcal^{3}, ...]\)</span>, type = Vector3DList, default = []]:</div>
 <div class="line">list of constant joint offsets from parent joint to this joint; <span class="math notranslate nohighlight">\(p_0\)</span>, <span class="math notranslate nohighlight">\(p_1\)</span>, <span class="math notranslate nohighlight">\(\ldots\)</span> denote the parent coordinate systems; if no parent exists (<span class="math notranslate nohighlight">\(-1\)</span>), the base coordinate system <span class="math notranslate nohighlight">\(0\)</span> is used; must be always set</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>linkInertiasCOM</strong> [type = Matrix3DList, default = []]:</div>
+<div class="line"><strong>linkInertiasCOM</strong> [<span class="math notranslate nohighlight">\({\mathbf{J}}_{COM} = [\LU{j_0}{{\mathbf{J}}_0},\, \LU{j_1}{{\mathbf{J}}_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]\)</span>, type = Matrix3DList, default = []]:</div>
 <div class="line">list of link inertia tensors w.r.t.COM in joint/link <span class="math notranslate nohighlight">\(j_i\)</span> coordinates; must be always set</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>linkCOMs</strong> [type = Vector3DList, default = []]:</div>
+<div class="line"><strong>linkCOMs</strong> [<span class="math notranslate nohighlight">\({\mathbf{C}} = [\LU{j_0}{{\mathbf{c}}_0},\, \LU{j_1}{{\mathbf{c}}_1},\, \ldots ] \in [\Rcal^{3}, ...]\)</span>, type = Vector3DList, default = []]:</div>
 <div class="line">list of vectors for center of mass (COM) in joint/link <span class="math notranslate nohighlight">\(j_i\)</span> coordinates; must be always set</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>linkMasses</strong> [type = Vector, default = []]:</div>
+<div class="line"><strong>linkMasses</strong> [<span class="math notranslate nohighlight">\({\mathbf{m}} \in \Rcal^{n}\)</span>, type = Vector, default = []]:</div>
 <div class="line">masses of links; must be always set</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>linkForces</strong> [type = Vector3DList, default = []]:</div>
+<div class="line"><strong>linkForces</strong> [<span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{F}}} \in [\Rcal^{3}, ...]\)</span>, type = Vector3DList, default = []]:</div>
 <div class="line">list of 3D force vectors per link in global coordinates acting on joint frame origin; use force-torque couple to realize off-origin forces; defaults to empty list <span class="math notranslate nohighlight">\([]\)</span>, adding no forces</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>linkTorques</strong> [type = Vector3DList, default = []]:</div>
+<div class="line"><strong>linkTorques</strong> [<span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{F}}_\tau} \in [\Rcal^{3}, ...]\)</span>, type = Vector3DList, default = []]:</div>
 <div class="line">list of 3D torque vectors per link in global coordinates; defaults to empty list <span class="math notranslate nohighlight">\([]\)</span>, adding no torques</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>jointForceVector</strong> [type = Vector, default = []]:</div>
+<div class="line"><strong>jointForceVector</strong> [<span class="math notranslate nohighlight">\({\mathbf{f}} \in \Rcal^{n}\)</span>, type = Vector, default = []]:</div>
 <div class="line">generalized force vector per coordinate added to RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint <span class="math notranslate nohighlight">\(i\)</span>, the torque <span class="math notranslate nohighlight">\(f[i]\)</span> acts positive (w.r.t.rotation axis) on link <span class="math notranslate nohighlight">\(i\)</span> and negative on parent link <span class="math notranslate nohighlight">\(p_i\)</span>; must be either empty list/array <span class="math notranslate nohighlight">\([]\)</span> (default) or have size <span class="math notranslate nohighlight">\(n\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>jointPositionOffsetVector</strong> [type = Vector, default = []]:</div>
+<div class="line"><strong>jointPositionOffsetVector</strong> [<span class="math notranslate nohighlight">\({\mathbf{u}}_o \in \Rcal^{n}\)</span>, type = Vector, default = []]:</div>
 <div class="line">offset for joint coordinates used in P(D) control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array <span class="math notranslate nohighlight">\([]\)</span> (default) or have size <span class="math notranslate nohighlight">\(n\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>jointVelocityOffsetVector</strong> [type = Vector, default = []]:</div>
+<div class="line"><strong>jointVelocityOffsetVector</strong> [<span class="math notranslate nohighlight">\({\mathbf{v}}_o \in \Rcal^{n}\)</span>, type = Vector, default = []]:</div>
 <div class="line">velocity offset for joint coordinates used in (P)D control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array <span class="math notranslate nohighlight">\([]\)</span> (default) or have size <span class="math notranslate nohighlight">\(n\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>jointPControlVector</strong> [type = Vector, default = []]:</div>
+<div class="line"><strong>jointPControlVector</strong> [<span class="math notranslate nohighlight">\({\mathbf{P}} \in \Rcal^{n}\)</span>, type = Vector, default = []]:</div>
 <div class="line">proportional (P) control values per joint (multiplied with position error between joint value and offset <span class="math notranslate nohighlight">\({\mathbf{u}}_o\)</span>); note that more complicated control laws must be implemented with user functions; must be either empty list/array <span class="math notranslate nohighlight">\([]\)</span> (default) or have size <span class="math notranslate nohighlight">\(n\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>jointDControlVector</strong> [type = Vector, default = []]:</div>
+<div class="line"><strong>jointDControlVector</strong> [<span class="math notranslate nohighlight">\({\mathbf{D}} \in \Rcal^{n}\)</span>, type = Vector, default = []]:</div>
 <div class="line">derivative (D) control values per joint (multiplied with velocity error between joint velocity and velocity offset <span class="math notranslate nohighlight">\({\mathbf{v}}_o\)</span>); note that more complicated control laws must be implemented with user functions; must be either empty list/array <span class="math notranslate nohighlight">\([]\)</span> (default) or have size <span class="math notranslate nohighlight">\(n\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>forceUserFunction</strong> [type = PyFunctionVectorMbsScalarIndex2Vector, default =  0]:</div>
+<div class="line"><strong>forceUserFunction</strong> [<span class="math notranslate nohighlight">\({\mathbf{f}}_{user} \in \Rcal^{n}\)</span>, type = PyFunctionVectorMbsScalarIndex2Vector, default =  0]:</div>
 <div class="line">A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>visualization</strong> [type = VObjectKinematicTree]:</div>
+<div class="line">parameters for visualization of item</div>
 </div>
 </li>
 </ul>
@@ -229,13 +254,36 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>color</strong> [type = Float4, default = [-1.,-1.,-1.,-1.], size = 4]:</div>
+<div class="line"><strong>color</strong> [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:</div>
 <div class="line">RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>graphicsDataList</strong> [type = BodyGraphicsDataList]:</div>
 <div class="line">Structure contains data for link/joint visualization; data is defined as list of BodyGraphicdData where every BodyGraphicdData corresponds to one link/joint; must either be emtpy list or length must agree with number of links</div>
+</div>
+</li>
+</ul>
+<p><strong>The following output variables are available as OutputVariableType in sensors, Get…Output() and other functions</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates</span></code>:</div>
+<div class="line">all ODE2 joint coordinates, including reference values; these are the minimal coordinates of the object</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates\_t</span></code>:</div>
+<div class="line">all ODE2 velocity coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates\_tt</span></code>:</div>
+<div class="line">all ODE2 acceleration coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Force</span></code>:</div>
+<div class="line">generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)</div>
 </div>
 </li>
 </ul>

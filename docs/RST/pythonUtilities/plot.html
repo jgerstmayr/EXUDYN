@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: plot &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+  <title>Module: plot &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,7 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "\\indf": "{_\\mathrm{f}}", "\\indt": "{_\\mathrm{t}}", "\\indr": "{_\\mathrm{r}}", "\\indtt": "{_\\mathrm{tt}}", "\\indrr": "{_\\mathrm{rr}}", "\\indff": "{_\\mathrm{ff}}", "\\indtf": "{_\\mathrm{tf}}", "\\indrf": "{_\\mathrm{rf}}", "\\indtr": "{_\\mathrm{tr}}", "\\indrigid": "{_\\mathrm{rigid}}", "\\indred": "{_\\mathrm{red}}", "\\induser": "{_\\mathrm{user}}", "\\indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.104.dev1
+            Exudyn1.5.105.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -97,7 +98,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -175,7 +176,7 @@
 <div class="line"><em>input</em>:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: must be a valid MainSystem (mbs)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">sensorNumbers</span></code>: consists of one or a list of sensor numbers (type SensorIndex or int) as returned by the mbs function AddSensor(…); sensors need to set writeToFile=True and/or storeInternal=True for PlotSensor to work; alternatively, it may contain FILENAMES (incl. path) to stored sensor or solution files OR a numpy array instead of sensor numbers; the format of data (file or numpy array) must contain per row the time and according solution values in columns; if components is a list and sensorNumbers is a scalar, sensorNumbers is adjusted automatically to the components</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">components</span></code>: consists of one or a list of components according to the component of the sensor to be plotted at y-axis; if components is a list and sensorNumbers is a scalar, sensorNumbers is adjusted automatically to the components; as always, components are zero-based, meaning 0=X, 1=Y, etc.; for regular sensor files, time will be component=-1; to show the norm (e.g., of a force vector), use component=[plot.componentNorm] for according sensors; norm will consider all values of sensor except time (for 3D force, it will be <span class="math notranslate nohighlight">\(\sqrtf_0^2+f_1^2+f_2^2\)</span>); offsets and factors are mapped on norm (plot value=factor*(norm(values) + offset) ), not on component values</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">components</span></code>: consists of one or a list of components according to the component of the sensor to be plotted at y-axis; if components is a list and sensorNumbers is a scalar, sensorNumbers is adjusted automatically to the components; as always, components are zero-based, meaning 0=X, 1=Y, etc.; for regular sensor files, time will be component=-1; to show the norm (e.g., of a force vector), use component=[plot.componentNorm] for according sensors; norm will consider all values of sensor except time (for 3D force, it will be <span class="math notranslate nohighlight">\(\sqrt{f_0^2+f_1^2+f_2^2}\)</span>); offsets and factors are mapped on norm (plot value=factor*(norm(values) + offset) ), not on component values</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">componentsX</span></code>: default componentsX=[] uses time in files; otherwise provide componentsX as list of components (or scalar) representing x components of sensors in plotted curves; DON’T forget to change xLabel accordingly!</div>
 <div class="line">Using componentsX=[…] with a list of column indices specifies the respective columns used for the x-coordinates in all sensors; by default, values are plotted against the first column in the files, which is time; according to counting in PlotSensor, this represents componentX=-1;</div>
 <div class="line">plotting y over x in a position sensor thus reads: components=[1], componentsX=[0];</div>

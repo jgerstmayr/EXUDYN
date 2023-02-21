@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectJointRevolute2D &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+  <title>ObjectJointRevolute2D &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.104.dev1
+            Exudyn1.5.105.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -50,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -93,7 +94,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -116,6 +117,25 @@
   <section id="objectjointrevolute2d">
 <span id="sec-item-objectjointrevolute2d"></span><h1>ObjectJointRevolute2D<a class="headerlink" href="#objectjointrevolute2d" title="Permalink to this heading"></a></h1>
 <p>A revolute joint in 2D; constrains the absolute 2D position of two points given by PointMarkers or RigidMarkers</p>
+<p><strong>Additional information for ObjectJointRevolute2D</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line">The Object has the following types = <code class="docutils literal notranslate"><span class="pre">Connector</span></code>, <code class="docutils literal notranslate"><span class="pre">Constraint</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested marker type = <code class="docutils literal notranslate"><span class="pre">Position</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python = <code class="docutils literal notranslate"><span class="pre">RevoluteJoint2D</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python visualization object = <code class="docutils literal notranslate"><span class="pre">VRevoluteJoint2D</span></code></div>
+</div>
+</li>
+</ul>
 <p>The item <strong>ObjectJointRevolute2D</strong> with type = ‘JointRevolute2D’ has the following parameters:</p>
 <ul>
 <li><div class="line-block">
@@ -131,6 +151,11 @@
 <li><div class="line-block">
 <div class="line"><strong>activeConnector</strong> [type = Bool, default = True]:</div>
 <div class="line">flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>visualization</strong> [type = VObjectJointRevolute2D]:</div>
+<div class="line">parameters for visualization of item</div>
 </div>
 </li>
 </ul>

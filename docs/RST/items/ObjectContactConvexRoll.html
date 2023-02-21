@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectContactConvexRoll &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+  <title>ObjectContactConvexRoll &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,7 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "\\indf": "{_\\mathrm{f}}", "\\indt": "{_\\mathrm{t}}", "\\indr": "{_\\mathrm{r}}", "\\indtt": "{_\\mathrm{tt}}", "\\indrr": "{_\\mathrm{rr}}", "\\indff": "{_\\mathrm{ff}}", "\\indtf": "{_\\mathrm{tf}}", "\\indrf": "{_\\mathrm{rf}}", "\\indtr": "{_\\mathrm{tr}}", "\\indrigid": "{_\\mathrm{rigid}}", "\\indred": "{_\\mathrm{red}}", "\\induser": "{_\\mathrm{user}}", "\\indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.104.dev1
+            Exudyn1.5.105.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -101,7 +102,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -124,6 +125,22 @@
   <section id="objectcontactconvexroll">
 <span id="sec-item-objectcontactconvexroll"></span><h1>ObjectContactConvexRoll<a class="headerlink" href="#objectcontactconvexroll" title="Permalink to this heading"></a></h1>
 <p>A contact connector representing a convex roll (marker 1) on a flat surface (marker 0, ground body, not moving) in global <span class="math notranslate nohighlight">\(x\)</span>-<span class="math notranslate nohighlight">\(y\)</span> plane. The connector is similar to ObjectConnectorRollingDiscPenalty, but includes a (strictly) convex shape of the roll defined by a polynomial. It is based on a penalty formulation and adds friction and slipping. The formulation is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.</p>
+<p>Author: Manzl Peter</p>
+<p><strong>Additional information for ObjectContactConvexRoll</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line">The Object has the following types = <code class="docutils literal notranslate"><span class="pre">Connector</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested marker type = <code class="docutils literal notranslate"><span class="pre">Position</span></code> + <code class="docutils literal notranslate"><span class="pre">Orientation</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested node type = <code class="docutils literal notranslate"><span class="pre">GenericData</span></code></div>
+</div>
+</li>
+</ul>
 <p>The item <strong>ObjectContactConvexRoll</strong> with type = ‘ContactConvexRoll’ has the following parameters:</p>
 <ul>
 <li><div class="line-block">
@@ -132,63 +149,63 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>markerNumbers</strong> [type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ], size =  2]:</div>
+<div class="line"><strong>markerNumbers</strong> [<span class="math notranslate nohighlight">\([m0,m1]\tp\)</span>, type = ArrayMarkerIndex, size =  2, default = [ invalid [-1], invalid [-1] ]]:</div>
 <div class="line">list of markers used in connector; <span class="math notranslate nohighlight">\(m0\)</span> represents the ground, which can undergo translations but not rotations, and <span class="math notranslate nohighlight">\(m1\)</span> represents the rolling body, which has its reference point (=local position [0,0,0]) at the roll’s center point</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>nodeNumber</strong> [type = NodeIndex, default = invalid (-1)]:</div>
+<div class="line"><strong>nodeNumber</strong> [<span class="math notranslate nohighlight">\(n_d\)</span>, type = NodeIndex, default = invalid (-1)]:</div>
 <div class="line">node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>contactStiffness</strong> [type = Real, default = 0.]:</div>
+<div class="line"><strong>contactStiffness</strong> [<span class="math notranslate nohighlight">\(k_c\)</span>, type = Real, default = 0.]:</div>
 <div class="line">normal contact stiffness [SI:N/m]</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>contactDamping</strong> [type = Real, default = 0.]:</div>
+<div class="line"><strong>contactDamping</strong> [<span class="math notranslate nohighlight">\(d_c\)</span>, type = Real, default = 0.]:</div>
 <div class="line">normal contact damping [SI:N/(m s)]</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>dynamicFriction</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>dynamicFriction</strong> [<span class="math notranslate nohighlight">\(\mu_d\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, Section <a class="reference internal" href="../pythonUtilities/physics.html#sec-module-physics"><span class="std std-ref">Module: physics</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>staticFrictionOffset</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>staticFrictionOffset</strong> [<span class="math notranslate nohighlight">\(\mu_{s_off}\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, Section <a class="reference internal" href="../pythonUtilities/physics.html#sec-module-physics"><span class="std std-ref">Module: physics</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>viscousFriction</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>viscousFriction</strong> [<span class="math notranslate nohighlight">\(\mu_v\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, Section <a class="reference internal" href="../pythonUtilities/physics.html#sec-module-physics"><span class="std std-ref">Module: physics</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>exponentialDecayStatic</strong> [type = PReal, default = 1e-3]:</div>
+<div class="line"><strong>exponentialDecayStatic</strong> [<span class="math notranslate nohighlight">\(v_{exp}\)</span>, type = PReal, default = 1e-3]:</div>
 <div class="line">exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), Section <a class="reference internal" href="../pythonUtilities/physics.html#sec-module-physics"><span class="std std-ref">Module: physics</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>frictionProportionalZone</strong> [type = UReal, default = 1e-3]:</div>
+<div class="line"><strong>frictionProportionalZone</strong> [<span class="math notranslate nohighlight">\(v_{reg}\)</span>, type = UReal, default = 1e-3]:</div>
 <div class="line">limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), Section <a class="reference internal" href="../pythonUtilities/physics.html#sec-module-physics"><span class="std std-ref">Module: physics</span></a></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>rollLength</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>rollLength</strong> [<span class="math notranslate nohighlight">\(L\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">roll length [m], symmetric w.r.t.centerpoint</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>coefficientsHull</strong> [type = NumpyVector, default =  []]:</div>
-<div class="line">a vector of polynomial coefficients, which provides the polynomial of the CONVEX hull of the roll; <span class="math notranslate nohighlight">\(\mathrmhull(x) = k_0 x^n_p-1 + k x^n_p-2 + \ldots + k_n_p-2 x  + k_n_p-1\)</span></div>
+<div class="line"><strong>coefficientsHull</strong> [<span class="math notranslate nohighlight">\({\mathbf{k}} \in \Rcal^{n_p}\)</span>, type = NumpyVector, default =  []]:</div>
+<div class="line">a vector of polynomial coefficients, which provides the polynomial of the CONVEX hull of the roll; <span class="math notranslate nohighlight">\(\mathrm{hull}(x) = k_0 x^{n_p-1} + k x^{n_p-2} + \ldots + k_{n_p-2} x  + k_{n_p-1}\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>coefficientsHullDerivative</strong> [type = NumpyVector, default = []]:</div>
-<div class="line">polynomial coefficients of the polynomial <span class="math notranslate nohighlight">\(\mathrmhull^\prime(x)\)</span></div>
+<div class="line"><strong>coefficientsHullDerivative</strong> [<span class="math notranslate nohighlight">\({\mathbf{k}}^\prime \in \Rcal^{n_p}\)</span>, type = NumpyVector, default = []]:</div>
+<div class="line">polynomial coefficients of the polynomial <span class="math notranslate nohighlight">\(\mathrm{hull}^\prime(x)\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
@@ -211,6 +228,11 @@
 <div class="line">flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint</div>
 </div>
 </li>
+<li><div class="line-block">
+<div class="line"><strong>visualization</strong> [type = VObjectContactConvexRoll]:</div>
+<div class="line">parameters for visualization of item</div>
+</div>
+</li>
 </ul>
 <p>The item VObjectContactConvexRoll has the following parameters:</p>
 <ul>
@@ -222,6 +244,29 @@
 <li><div class="line-block">
 <div class="line"><strong>color</strong> [type = Float4, default = [-1.,-1.,-1.,-1.]]:</div>
 <div class="line">RGBA connector color; if R==-1, use default color</div>
+</div>
+</li>
+</ul>
+<p><strong>The following output variables are available as OutputVariableType in sensors, Get…Output() and other functions</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Position</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{p}}}_{C}\)</span></div>
+<div class="line">current global position of contact point between roller and ground</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Velocity</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{v}}}_{C}\)</span></div>
+<div class="line">current velocity of the trail (contact) point in global coordinates; this is the velocity with which the contact moves over the ground plane</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Force</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{f}}}\)</span></div>
+<div class="line">Roll-ground force in ground coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Torque</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{m}}}\)</span></div>
+<div class="line">Roll-ground torque in ground coordinates</div>
 </div>
 </li>
 </ul>

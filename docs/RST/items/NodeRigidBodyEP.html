@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NodeRigidBodyEP &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+  <title>NodeRigidBodyEP &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,7 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "\\indf": "{_\\mathrm{f}}", "\\indt": "{_\\mathrm{t}}", "\\indr": "{_\\mathrm{r}}", "\\indtt": "{_\\mathrm{tt}}", "\\indrr": "{_\\mathrm{rr}}", "\\indff": "{_\\mathrm{ff}}", "\\indtf": "{_\\mathrm{tf}}", "\\indrf": "{_\\mathrm{rf}}", "\\indtr": "{_\\mathrm{tr}}", "\\indrigid": "{_\\mathrm{rigid}}", "\\indred": "{_\\mathrm{red}}", "\\induser": "{_\\mathrm{user}}", "\\indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.104.dev1
+            Exudyn1.5.105.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -102,7 +103,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -124,7 +125,22 @@
              
   <section id="noderigidbodyep">
 <span id="sec-item-noderigidbodyep"></span><h1>NodeRigidBodyEP<a class="headerlink" href="#noderigidbodyep" title="Permalink to this heading"></a></h1>
-<p>A 3D rigid body node based on Euler parameters for rigid bodies or beams; the node has 3 displacement coordinates (representing displacement of reference point <span class="math notranslate nohighlight">\(\LU0{\mathbf{r}}\)</span>) and four rotation coordinates (Euler parameters = unit quaternions).</p>
+<p>A 3D rigid body node based on Euler parameters for rigid bodies or beams; the node has 3 displacement coordinates (representing displacement of reference point <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{r}}}\)</span>) and four rotation coordinates (Euler parameters = unit quaternions).</p>
+<p><strong>Additional information for NodeRigidBodyEP</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line">The Node has the following types = <code class="docutils literal notranslate"><span class="pre">Position</span></code>, <code class="docutils literal notranslate"><span class="pre">Orientation</span></code>, <code class="docutils literal notranslate"><span class="pre">RigidBody</span></code>, <code class="docutils literal notranslate"><span class="pre">RotationEulerParameters</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python = <code class="docutils literal notranslate"><span class="pre">RigidEP</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python visualization object = <code class="docutils literal notranslate"><span class="pre">VRigidEP</span></code></div>
+</div>
+</li>
+</ul>
 <p>The item <strong>NodeRigidBodyEP</strong> with type = ‘RigidBodyEP’ has the following parameters:</p>
 <ul>
 <li><div class="line-block">
@@ -133,23 +149,28 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>referenceCoordinates</strong> [type = Vector7D, default = [0.,0.,0., 0.,0.,0.,0.], size = 7]:</div>
+<div class="line"><strong>referenceCoordinates</strong> [<span class="math notranslate nohighlight">\({\mathbf{q}}\cRef = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cRef = [{\mathbf{p}}\tp\cRef,\,\tpsi\tp\cRef]\tp\)</span>, type = Vector7D, size = 7, default = [0.,0.,0., 0.,0.,0.,0.]]:</div>
 <div class="line">reference coordinates (3 position coordinates and 4 Euler parameters) of node ==&gt; e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>initialCoordinates</strong> [type = Vector7D, default = [0.,0.,0., 0.,0.,0.,0.], size = 7]:</div>
+<div class="line"><strong>initialCoordinates</strong> [<span class="math notranslate nohighlight">\({\mathbf{q}}\cIni = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cIni = [{\mathbf{u}}\tp\cIni,\,\tpsi\tp\cIni]\tp\)</span>, type = Vector7D, size = 7, default = [0.,0.,0., 0.,0.,0.,0.]]:</div>
 <div class="line">initial displacement coordinates and 4 Euler parameters relative to reference coordinates</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>initialVelocities</strong> [type = Vector7D, default = [0.,0.,0., 0.,0.,0.,0.], size = 7]:</div>
+<div class="line"><strong>initialVelocities</strong> [<span class="math notranslate nohighlight">\(\dot {\mathbf{q}}\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2,\,\dot \psi_3]\tp\cIni = [\dot {\mathbf{u}}\tp\cIni,\,\dot \tpsi\tp\cIni]\tp\)</span>, type = Vector7D, size = 7, default = [0.,0.,0., 0.,0.,0.,0.]]:</div>
 <div class="line">initial velocity coordinates: time derivatives of initial displacements and Euler parameters</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>addConstraintEquation</strong> [type = Bool, default = True]:</div>
 <div class="line">True: automatically add Euler parameter constraint for node; False: Euler parameter constraint is not added, must be done manually (e.g., with CoordinateVectorConstraint)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>visualization</strong> [type = VNodeRigidBodyEP]:</div>
+<div class="line">parameters for visualization of item</div>
 </div>
 </li>
 </ul>
@@ -166,8 +187,71 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>color</strong> [type = Float4, default = [-1.,-1.,-1.,-1.], size = 4]:</div>
+<div class="line"><strong>color</strong> [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:</div>
 <div class="line">Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used</div>
+</div>
+</li>
+</ul>
+<p><strong>The following output variables are available as OutputVariableType in sensors, Get…Output() and other functions</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Position</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{p}}}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{{\mathbf{u}}}\cConfig + \LU{0}{{\mathbf{p}}}\cRef\)</span></div>
+<div class="line">global 3D position vector of node; <span class="math notranslate nohighlight">\({\mathbf{u}}\cRef=0\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Displacement</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{u}}}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp\)</span></div>
+<div class="line">global 3D displacement vector of node</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Velocity</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{v}}}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp\)</span></div>
+<div class="line">global 3D velocity vector of node</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Acceleration</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{a}}}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp\)</span></div>
+<div class="line">global 3D acceleration vector of node</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates</span></code>: <span class="math notranslate nohighlight">\({\mathbf{c}}\cConfig = [q_0,\,q_1,\,q_2, \,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cConfig\)</span></div>
+<div class="line">coordinate vector of node, having 3 displacement coordinates and 4 Euler parameters</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates\_t</span></code>: <span class="math notranslate nohighlight">\(\dot{\mathbf{c}}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2,\,\dot \psi_3]\tp\cConfig\)</span></div>
+<div class="line">velocity coordinates vector of node</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates\_tt</span></code>: <span class="math notranslate nohighlight">\(\ddot{\mathbf{c}}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2, \,\ddot \psi_0,\,\ddot \psi_1,\,\ddot \psi_2,\,\ddot \psi_3]\tp\cConfig\)</span></div>
+<div class="line">acceleration coordinates vector of node</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">RotationMatrix</span></code>: <span class="math notranslate nohighlight">\([A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp\)</span></div>
+<div class="line">vector with 9 components of the rotation matrix <span class="math notranslate nohighlight">\(\LU{0b}{\Rot}\cConfig\)</span> in row-major format, in any configuration; the rotation matrix transforms local (<span class="math notranslate nohighlight">\(b\)</span>) to global (0) coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Rotation</span></code>: <span class="math notranslate nohighlight">\([\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig\)</span></div>
+<div class="line">vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence (<span class="math notranslate nohighlight">\(\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)\)</span>), recomputed from rotation matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">AngularVelocity</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp\)</span></div>
+<div class="line">global 3D angular velocity vector of node</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">AngularVelocityLocal</span></code>: <span class="math notranslate nohighlight">\(\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp\)</span></div>
+<div class="line">local (body-fixed)  3D angular velocity vector of node</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">AngularAcceleration</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\alpha_2]}\cConfig\tp\)</span></div>
+<div class="line">global 3D angular acceleration vector of node</div>
 </div>
 </li>
 </ul>

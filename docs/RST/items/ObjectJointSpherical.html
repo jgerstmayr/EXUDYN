@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectJointSpherical &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+  <title>ObjectJointSpherical &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,7 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "\\indf": "{_\\mathrm{f}}", "\\indt": "{_\\mathrm{t}}", "\\indr": "{_\\mathrm{r}}", "\\indtt": "{_\\mathrm{tt}}", "\\indrr": "{_\\mathrm{rr}}", "\\indff": "{_\\mathrm{ff}}", "\\indtf": "{_\\mathrm{tf}}", "\\indrf": "{_\\mathrm{rf}}", "\\indtr": "{_\\mathrm{tr}}", "\\indrigid": "{_\\mathrm{rigid}}", "\\indred": "{_\\mathrm{red}}", "\\induser": "{_\\mathrm{user}}", "\\indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.104.dev1
+            Exudyn1.5.105.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -95,7 +96,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -118,6 +119,25 @@
   <section id="objectjointspherical">
 <span id="sec-item-objectjointspherical"></span><h1>ObjectJointSpherical<a class="headerlink" href="#objectjointspherical" title="Permalink to this heading"></a></h1>
 <p>A spherical joint, which constrains the relative translation between two position based markers.</p>
+<p><strong>Additional information for ObjectJointSpherical</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line">The Object has the following types = <code class="docutils literal notranslate"><span class="pre">Connector</span></code>, <code class="docutils literal notranslate"><span class="pre">Constraint</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested marker type = <code class="docutils literal notranslate"><span class="pre">Position</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python = <code class="docutils literal notranslate"><span class="pre">SphericalJoint</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python visualization object = <code class="docutils literal notranslate"><span class="pre">VSphericalJoint</span></code></div>
+</div>
+</li>
+</ul>
 <p>The item <strong>ObjectJointSpherical</strong> with type = ‘JointSpherical’ has the following parameters:</p>
 <ul>
 <li><div class="line-block">
@@ -126,18 +146,23 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>markerNumbers</strong> [type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ], size =  2]:</div>
+<div class="line"><strong>markerNumbers</strong> [<span class="math notranslate nohighlight">\([m0,m1]\tp\)</span>, type = ArrayMarkerIndex, size =  2, default = [ invalid [-1], invalid [-1] ]]:</div>
 <div class="line">list of markers used in connector; <span class="math notranslate nohighlight">\(m1\)</span> is the moving coin rigid body and <span class="math notranslate nohighlight">\(m0\)</span> is the marker for the ground body, which use the localPosition=[0,0,0] for this marker!</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>constrainedAxes</strong> [type = ArrayIndex, default = [1,1,1], size = 3]:</div>
+<div class="line"><strong>constrainedAxes</strong> [<span class="math notranslate nohighlight">\({\mathbf{j}}=[j_0,\,\ldots,\,j_2]\)</span>, type = ArrayIndex, size = 3, default = [1,1,1]]:</div>
 <div class="line">flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for <span class="math notranslate nohighlight">\(j_i\)</span>, two values are possible: 0=free axis, 1=constrained axis</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>activeConnector</strong> [type = Bool, default = True]:</div>
 <div class="line">flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>visualization</strong> [type = VObjectJointSpherical]:</div>
+<div class="line">parameters for visualization of item</div>
 </div>
 </li>
 </ul>
@@ -156,6 +181,29 @@
 <li><div class="line-block">
 <div class="line"><strong>color</strong> [type = Float4, default = [-1.,-1.,-1.,-1.]]:</div>
 <div class="line">RGBA connector color; if R==-1, use default color</div>
+</div>
+</li>
+</ul>
+<p><strong>The following output variables are available as OutputVariableType in sensors, Get…Output() and other functions</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Position</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{p}}}_{m0}\)</span></div>
+<div class="line">current global position of position marker <span class="math notranslate nohighlight">\(m0\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Velocity</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{v}}}_{m0}\)</span></div>
+<div class="line">current global velocity of position marker <span class="math notranslate nohighlight">\(m0\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Displacement</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{\Delta{\mathbf{p}}}=\LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0}\)</span></div>
+<div class="line">constraint drift or relative motion, if not all axes fixed</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Force</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{f}}}\)</span></div>
+<div class="line">joint force in global coordinates</div>
 </div>
 </li>
 </ul>

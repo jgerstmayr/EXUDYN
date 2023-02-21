@@ -16,14 +16,14 @@ Function: `StribeckFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/ma
 
 - | \ *function description*\ :
   | describes regularized Stribeck function with optial viscous part for given velocity,
-  | \ :math:`f(v) = \begincases (\mu_d + \mu_s_off) v, \quad \mathrmif \quad |v| <= v_reg\\ \mathrmSign(v)\left( \mu_d + \mu_s_off \mathrme^-(|v|-v_reg)/v_exp + \mu_v (|v|-v_reg) \right), \quad \mathrmelse\endcases`\ 
+  | \ :math:`f(v) = \begin{cases} (\mu_d + \mu_{s_{off}}) v, \quad \mathrm{if} \quad |v| <= v_{reg}\\ \mathrm{Sign}(v)\left( \mu_d + \mu_{s_{off}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} + \mu_v (|v|-v_{reg}) \right), \quad \mathrm{else}\end{cases}`\ 
 - | \ *input*\ :
   | \ ``vel``\ : input velocity \ :math:`v`\ 
   | \ ``muDynamic``\ : dynamic friction coefficient \ :math:`\mu_d`\ 
-  | \ ``muStaticOffset``\ : \ :math:`\mu_s_off`\ , offset to dynamic friction, which gives muStaticFriction = muDynamic + muStaticOffset
+  | \ ``muStaticOffset``\ : \ :math:`\mu_{s_{off}}`\ , offset to dynamic friction, which gives muStaticFriction = muDynamic + muStaticOffset
   | \ ``muViscous``\ : \ :math:`\mu_v`\ , viscous part, acting proportional to velocity except for regVel
-  | \ ``regVel``\ : \ :math:`v_reg`\ ,  small regularization velocity in which the friction is linear around zero velocity (e.g., to get Newton converged)
-  | \ ``expVel``\ : \ :math:`v_exp`\ ,  velocity (relative to regVel, at which the muStaticOffset decreases exponentially, at vel=expVel, the factor to muStaticOffset is exp(-1) = 36.8\%)
+  | \ ``regVel``\ : \ :math:`v_{reg}`\ ,  small regularization velocity in which the friction is linear around zero velocity (e.g., to get Newton converged)
+  | \ ``expVel``\ : \ :math:`v_{exp}`\ ,  velocity (relative to regVel, at which the muStaticOffset decreases exponentially, at vel=expVel, the factor to muStaticOffset is exp(-1) = 36.8\%)
 - | \ *output*\ :
   | returns velocity dependent friction coefficient (if muDynamic and muStaticOffset are friction coefficients) or friction force (if muDynamic and muStaticOffset are on force level)
 
@@ -76,7 +76,7 @@ Function: `VonMisesStress <https://github.com/jgerstmayr/EXUDYN/blob/master/main
 - | \ *function description*\ :
   | compute equivalent von-Mises stress given 6 stress components or list of stress6D (or stress6D in rows of np.array)
 - | \ *input*\ :
-  | stress6D: 6 stress components as list or np.array, using ordering \ :math:`[\sigma_xx`\ , \ :math:`\sigma_yy`\ , \ :math:`\sigma_zz`\ , \ :math:`\sigma_yz`\ , \ :math:`\sigma_xz`\ , \ :math:`\sigma_xy]`\
+  | stress6D: 6 stress components as list or np.array, using ordering \ :math:`[\sigma_{xx}`\ , \ :math:`\sigma_{yy}`\ , \ :math:`\sigma_{zz}`\ , \ :math:`\sigma_{yz}`\ , \ :math:`\sigma_{xz}`\ , \ :math:`\sigma_{xy}]`\
 - | \ *output*\ :
   | returns scalar equivalent von-Mises stress or np.array of von-Mises stresses for all stress6D
 

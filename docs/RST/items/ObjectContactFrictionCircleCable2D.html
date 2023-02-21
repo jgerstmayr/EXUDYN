@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectContactFrictionCircleCable2D &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+  <title>ObjectContactFrictionCircleCable2D &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,7 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "\\indf": "{_\\mathrm{f}}", "\\indt": "{_\\mathrm{t}}", "\\indr": "{_\\mathrm{r}}", "\\indtt": "{_\\mathrm{tt}}", "\\indrr": "{_\\mathrm{rr}}", "\\indff": "{_\\mathrm{ff}}", "\\indtf": "{_\\mathrm{tf}}", "\\indrf": "{_\\mathrm{rf}}", "\\indtr": "{_\\mathrm{tr}}", "\\indrigid": "{_\\mathrm{rigid}}", "\\indred": "{_\\mathrm{red}}", "\\induser": "{_\\mathrm{user}}", "\\indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.104.dev1
+            Exudyn1.5.105.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -101,7 +102,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -124,6 +125,21 @@
   <section id="objectcontactfrictioncirclecable2d">
 <span id="sec-item-objectcontactfrictioncirclecable2d"></span><h1>ObjectContactFrictionCircleCable2D<a class="headerlink" href="#objectcontactfrictioncirclecable2d" title="Permalink to this heading"></a></h1>
 <p>A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a RigidBody Marker, from node or object) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with 3<span class="math notranslate nohighlight">\(\times\)</span>(number of contact segments) – containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position]. The connector works with Cable2D and ALECable2D, HOWEVER, due to conceptual differences the (tangential) frictionStiffness cannot be used with ALECable2D; if using, it gives wrong tangential stresses, even though it may work in general.</p>
+<p><strong>Additional information for ObjectContactFrictionCircleCable2D</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line">The Object has the following types = <code class="docutils literal notranslate"><span class="pre">Connector</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested marker type = <code class="docutils literal notranslate"><span class="pre">_None</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested node type = <code class="docutils literal notranslate"><span class="pre">GenericData</span></code></div>
+</div>
+</li>
+</ul>
 <p>The item <strong>ObjectContactFrictionCircleCable2D</strong> with type = ‘ContactFrictionCircleCable2D’ has the following parameters:</p>
 <ul>
 <li><div class="line-block">
@@ -132,47 +148,47 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>markerNumbers</strong> [type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ]]:</div>
+<div class="line"><strong>markerNumbers</strong> [<span class="math notranslate nohighlight">\([m0,m1]\tp\)</span>, type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ]]:</div>
 <div class="line">a marker <span class="math notranslate nohighlight">\(m0\)</span> with position and orientation and a marker <span class="math notranslate nohighlight">\(m1\)</span> of type BodyCable2DShape; together defining the contact geometry</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>nodeNumber</strong> [type = NodeIndex, default = invalid (-1)]:</div>
-<div class="line">node number of a NodeGenericData with 3 <span class="math notranslate nohighlight">\(\times n_cs\)</span>  dataCoordinates (used for active set strategy <span class="math notranslate nohighlight">\(\ra\)</span> hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*<span class="math notranslate nohighlight">\(n_cs\)</span>+[-2]*<span class="math notranslate nohighlight">\(n_cs\)</span>+[0.]*<span class="math notranslate nohighlight">\(n_cs\)</span>, meaning that there is no initial contact with undefined slip/stick</div>
+<div class="line"><strong>nodeNumber</strong> [<span class="math notranslate nohighlight">\(n_g\)</span>, type = NodeIndex, default = invalid (-1)]:</div>
+<div class="line">node number of a NodeGenericData with 3 <span class="math notranslate nohighlight">\(\times n_{cs}\)</span>  dataCoordinates (used for active set strategy <span class="math notranslate nohighlight">\(\ra\)</span> hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*<span class="math notranslate nohighlight">\(n_{cs}\)</span>+[-2]*<span class="math notranslate nohighlight">\(n_{cs}\)</span>+[0.]*<span class="math notranslate nohighlight">\(n_{cs}\)</span>, meaning that there is no initial contact with undefined slip/stick</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>numberOfContactSegments</strong> [type = PInt, default = 3]:</div>
+<div class="line"><strong>numberOfContactSegments</strong> [<span class="math notranslate nohighlight">\(n_{cs}\)</span>, type = PInt, default = 3]:</div>
 <div class="line">number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>contactStiffness</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>contactStiffness</strong> [<span class="math notranslate nohighlight">\(k_c\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) <span class="math notranslate nohighlight">\(f_n\)</span> act in contact normal direction only upon penetration</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>contactDamping</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>contactDamping</strong> [<span class="math notranslate nohighlight">\(d_c\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>frictionVelocityPenalty</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>frictionVelocityPenalty</strong> [<span class="math notranslate nohighlight">\(\mu_v\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">tangential velocity dependent penalty coefficient for friction [SI:N/(m s)/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential velocities in the contact area</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>frictionStiffness</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>frictionStiffness</strong> [<span class="math notranslate nohighlight">\(\mu_k\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">tangential displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>frictionCoefficient</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>frictionCoefficient</strong> [<span class="math notranslate nohighlight">\(\mu\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">friction coefficient [SI: 1]; tangential specific friction forces (per length) <span class="math notranslate nohighlight">\(f_t\)</span> must fulfill the condition <span class="math notranslate nohighlight">\(f_t \le \mu f_n\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>circleRadius</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>circleRadius</strong> [<span class="math notranslate nohighlight">\(r\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">radius [SI:m] of contact circle</div>
 </div>
 </li>
@@ -184,6 +200,11 @@
 <li><div class="line-block">
 <div class="line"><strong>activeConnector</strong> [type = Bool, default = True]:</div>
 <div class="line">flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>visualization</strong> [type = VObjectContactFrictionCircleCable2D]:</div>
+<div class="line">parameters for visualization of item</div>
 </div>
 </li>
 </ul>
@@ -207,6 +228,24 @@
 <li><div class="line-block">
 <div class="line"><strong>color</strong> [type = Float4, default = [-1.,-1.,-1.,-1.]]:</div>
 <div class="line">RGBA connector color; if R==-1, use default color</div>
+</div>
+</li>
+</ul>
+<p><strong>The following output variables are available as OutputVariableType in sensors, Get…Output() and other functions</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates</span></code>: <span class="math notranslate nohighlight">\([u_{t,0},\, g_0,\, u_{t,1},\, g_1,\, \ldots,\, u_{t,n_{cs}},\, g_{n_{cs}}]\tp\)</span></div>
+<div class="line">local (relative) displacement in tangential (<span class="math notranslate nohighlight">\({\mathbf{t}}\)</span>) and normal (<span class="math notranslate nohighlight">\({\mathbf{n}}\)</span>) direction per segment (<span class="math notranslate nohighlight">\(n_{cs}\)</span>); values are only provided in case of contact, otherwise zero; tangential displacement is only non-zero in case of sticking!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates\_t</span></code>: <span class="math notranslate nohighlight">\([v_{t,0},\, v_{n,0},\, v_{t,1},\, v_{n,1},\, \ldots,\, v_{t,n_{cs}},\, v_{n,n_{cs}}]\tp\)</span></div>
+<div class="line">local (relative) velocity in tangential (<span class="math notranslate nohighlight">\({\mathbf{t}}\)</span>) and normal (<span class="math notranslate nohighlight">\({\mathbf{n}}\)</span>) direction per segment (<span class="math notranslate nohighlight">\(n_{cs}\)</span>); values are only provided in case of contact, otherwise zero</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">ForceLocal</span></code>: <span class="math notranslate nohighlight">\([f_{t,0},\, f_{n,0},\, f_{t,1},\, f_{n,1},\, \ldots,\, f_{t,n_{cs}},\, f_{n,n_{cs}}]\tp\)</span></div>
+<div class="line">local contact forces in tangential (<span class="math notranslate nohighlight">\({\mathbf{t}}\)</span>) and normal (<span class="math notranslate nohighlight">\({\mathbf{n}}\)</span>) direction per segment (<span class="math notranslate nohighlight">\(n_{cs}\)</span>)</div>
 </div>
 </li>
 </ul>

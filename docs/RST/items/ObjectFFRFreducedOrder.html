@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectFFRFreducedOrder &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+  <title>ObjectFFRFreducedOrder &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,7 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "\\indf": "{_\\mathrm{f}}", "\\indt": "{_\\mathrm{t}}", "\\indr": "{_\\mathrm{r}}", "\\indtt": "{_\\mathrm{tt}}", "\\indrr": "{_\\mathrm{rr}}", "\\indff": "{_\\mathrm{ff}}", "\\indtf": "{_\\mathrm{tf}}", "\\indrf": "{_\\mathrm{rf}}", "\\indtr": "{_\\mathrm{tr}}", "\\indrigid": "{_\\mathrm{rigid}}", "\\indred": "{_\\mathrm{red}}", "\\induser": "{_\\mathrm{user}}", "\\indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.104.dev1
+            Exudyn1.5.105.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -90,7 +91,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -113,6 +114,26 @@
   <section id="objectffrfreducedorder">
 <span id="sec-item-objectffrfreducedorder"></span><h1>ObjectFFRFreducedOrder<a class="headerlink" href="#objectffrfreducedorder" title="Permalink to this heading"></a></h1>
 <p>This object is used to represent modally reduced flexible bodies using the FFRF and the CMS. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> in Section <span class="xref std std-ref">sec-fem-feminterface—init–</span>. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class <code class="docutils literal notranslate"><span class="pre">ObjectFFRFreducedOrderInterface</span></code>, especially the user functions <code class="docutils literal notranslate"><span class="pre">UFmassFFRFreducedOrder</span></code> and <code class="docutils literal notranslate"><span class="pre">UFforceFFRFreducedOrder</span></code>, Section <span class="xref std std-ref">sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions</span>.</p>
+<p>Authors: Gerstmayr Johannes, Zwölfer Andreas</p>
+<p><strong>Additional information for ObjectFFRFreducedOrder</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line">The Object has the following types = <code class="docutils literal notranslate"><span class="pre">Body</span></code>, <code class="docutils literal notranslate"><span class="pre">MultiNoded</span></code>, <code class="docutils literal notranslate"><span class="pre">SuperElement</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested node type: read detailed information of item</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python = <code class="docutils literal notranslate"><span class="pre">CMSobject</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python visualization object = <code class="docutils literal notranslate"><span class="pre">VCMSobject</span></code></div>
+</div>
+</li>
+</ul>
 <p>The item <strong>ObjectFFRFreducedOrder</strong> with type = ‘FFRFreducedOrder’ has the following parameters:</p>
 <ul>
 <li><div class="line-block">
@@ -121,32 +142,32 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>nodeNumbers</strong> [type = ArrayNodeIndex, default = []]:</div>
+<div class="line"><strong>nodeNumbers</strong> [<span class="math notranslate nohighlight">\(\mathbf{n} = [n_0,\,n_1]\tp\)</span>, type = ArrayNodeIndex, default = []]:</div>
 <div class="line">node numbers of rigid body node and NodeGenericODE2 for modal coordinates; the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame, the modal coordinates and the mode basis</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>massMatrixReduced</strong> [type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
+<div class="line"><strong>massMatrixReduced</strong> [<span class="math notranslate nohighlight">\({\mathbf{M}}\indred \in \Rcal^{n_m \times n_m}\)</span>, type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
 <div class="line">body-fixed and ONLY flexible coordinates part of reduced mass matrix; provided as MatrixContainer(sparse/dense matrix)</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>stiffnessMatrixReduced</strong> [type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
+<div class="line"><strong>stiffnessMatrixReduced</strong> [<span class="math notranslate nohighlight">\({\mathbf{K}}\indred \in \Rcal^{n_m \times n_m}\)</span>, type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
 <div class="line">body-fixed and ONLY flexible coordinates part of reduced stiffness matrix; provided as MatrixContainer(sparse/dense matrix)</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>dampingMatrixReduced</strong> [type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
+<div class="line"><strong>dampingMatrixReduced</strong> [<span class="math notranslate nohighlight">\({\mathbf{D}}\indred \in \Rcal^{n_m \times n_m}\)</span>, type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
 <div class="line">body-fixed and ONLY flexible coordinates part of reduced damping matrix; provided as MatrixContainer(sparse/dense matrix)</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>forceUserFunction</strong> [type = PyFunctionVectorMbsScalarIndex2Vector, default =  0]:</div>
+<div class="line"><strong>forceUserFunction</strong> [<span class="math notranslate nohighlight">\({\mathbf{f}}\induser \in \Rcal^{n_{ODE2}}\)</span>, type = PyFunctionVectorMbsScalarIndex2Vector, default =  0]:</div>
 <div class="line">A Python user function which computes the generalized user force vector for the ODE2 equations; see description below</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>massMatrixUserFunction</strong> [type = PyFunctionMatrixMbsScalarIndex2Vector, default =  0]:</div>
+<div class="line"><strong>massMatrixUserFunction</strong> [<span class="math notranslate nohighlight">\({\mathbf{M}}\induser \in \Rcal^{n_{ODE2}\times n_{ODE2}}\)</span>, type = PyFunctionMatrixMbsScalarIndex2Vector, default =  0]:</div>
 <div class="line">A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below</div>
 </div>
 </li>
@@ -156,13 +177,13 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>modeBasis</strong> [type = NumpyMatrix, default = Matrix[]]:</div>
-<div class="line">mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector <span class="math notranslate nohighlight">\([u_x,n_0,\,u_y,n_0,\,u_z,n_0,\,\ldots,\,u_x,n_n,\,u_y,n_n,\,u_z,n_n]\tp\)</span></div>
+<div class="line"><strong>modeBasis</strong> [<span class="math notranslate nohighlight">\(\LU{b}{\tPsi} \in \Rcal^{n\indf \times n_{m}}\)</span>, type = NumpyMatrix, default = Matrix[]]:</div>
+<div class="line">mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector <span class="math notranslate nohighlight">\([u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>outputVariableModeBasis</strong> [type = NumpyMatrix, default = Matrix[]]:</div>
-<div class="line">mode basis, which transforms reduced coordinates to output variables per mode and per node; <span class="math notranslate nohighlight">\(s_OV\)</span> is the size of the output variable, e.g., 6 for stress modes (<span class="math notranslate nohighlight">\(S_xx,...,S_xy\)</span>)</div>
+<div class="line"><strong>outputVariableModeBasis</strong> [<span class="math notranslate nohighlight">\(\LU{b}{\tPsi}_{OV} \in \Rcal^{n_n \times (n_{m}\cdot s_{OV})}\)</span>, type = NumpyMatrix, default = Matrix[]]:</div>
+<div class="line">mode basis, which transforms reduced coordinates to output variables per mode and per node; <span class="math notranslate nohighlight">\(s_{OV}\)</span> is the size of the output variable, e.g., 6 for stress modes (<span class="math notranslate nohighlight">\(S_{xx},...,S_{xy}\)</span>)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -171,7 +192,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>referencePositions</strong> [type = NumpyVector, default = []]:</div>
+<div class="line"><strong>referencePositions</strong> [<span class="math notranslate nohighlight">\(\LU{b}{{\mathbf{x}}}\cRef \in \Rcal^{n\indf}\)</span>, type = NumpyVector, default = []]:</div>
 <div class="line">vector containing the reference positions of all flexible nodes, needed for graphics</div>
 </div>
 </li>
@@ -181,17 +202,17 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>physicsMass</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>physicsMass</strong> [<span class="math notranslate nohighlight">\(m\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">total mass [SI:kg] of FFRFreducedOrder object</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>physicsInertia</strong> [type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:</div>
+<div class="line"><strong>physicsInertia</strong> [<span class="math notranslate nohighlight">\({\mathbf{J}}_r \in \Rcal^{3 \times 3}\)</span>, type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:</div>
 <div class="line">inertia tensor [SI:kgm<span class="math notranslate nohighlight">\(^2\)</span>] of rigid body w.r.t. to the reference point of the body</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>physicsCenterOfMass</strong> [type = Vector3D, default = [0.,0.,0.], size = 3]:</div>
+<div class="line"><strong>physicsCenterOfMass</strong> [<span class="math notranslate nohighlight">\(\LU{b}{{\mathbf{b}}}_{COM}\)</span>, type = Vector3D, size = 3, default = [0.,0.,0.]]:</div>
 <div class="line">local position of center of mass (COM)</div>
 </div>
 </li>
@@ -226,13 +247,18 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>physicsCenterOfMassTilde</strong> [type = Matrix3D, default = [[0,0,0], [0,0,0], [0,0,0]]]:</div>
+<div class="line"><strong>physicsCenterOfMassTilde</strong> [<span class="math notranslate nohighlight">\(\LU{b}{\tilde {\mathbf{b}}}_{COM}\)</span>, type = Matrix3D, default = [[0,0,0], [0,0,0], [0,0,0]]]:</div>
 <div class="line">tilde matrix from local position of COM; autocomputed during initialization</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>tempUserFunctionForce</strong> [type = NumpyVector, default = []]:</div>
+<div class="line"><strong>tempUserFunctionForce</strong> [<span class="math notranslate nohighlight">\({\mathbf{f}}_{temp} \in \Rcal^{n_{ODE2}}\)</span>, type = NumpyVector, default = []]:</div>
 <div class="line">temporary vector for UF force</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>visualization</strong> [type = VObjectFFRFreducedOrder]:</div>
+<div class="line">parameters for visualization of item</div>
 </div>
 </li>
 </ul>
@@ -244,7 +270,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>color</strong> [type = Float4, default = [-1.,-1.,-1.,-1.], size = 4]:</div>
+<div class="line"><strong>color</strong> [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:</div>
 <div class="line">RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used</div>
 </div>
 </li>
@@ -256,6 +282,24 @@
 <li><div class="line-block">
 <div class="line"><strong>showNodes</strong> [type = Bool, default = False]:</div>
 <div class="line">set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator ‘NF’</div>
+</div>
+</li>
+</ul>
+<p><strong>The following output variables are available as OutputVariableType in sensors, Get…Output() and other functions</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates</span></code>:</div>
+<div class="line">all ODE2 coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates\_t</span></code>:</div>
+<div class="line">all ODE2 velocity coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Force</span></code>:</div>
+<div class="line">generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)</div>
 </div>
 </li>
 </ul>

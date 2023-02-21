@@ -6,38 +6,42 @@ ObjectJointSliding2D
 ====================
 
 A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.
- 
 
+\ **Additional information for ObjectJointSliding2D**\ :
+
+* | The Object has the following types = \ ``Connector``\ , \ ``Constraint``\ 
+* | Requested marker type = \ ``_None``\ 
+* | Requested node type = \ ``GenericData``\ 
+* | \ **Short name**\  for Python = \ ``SlidingJoint2D``\ 
+* | \ **Short name**\  for Python visualization object = \ ``VSlidingJoint2D``\ 
 
 
 The item \ **ObjectJointSliding2D**\  with type = 'JointSliding2D' has the following parameters:
 
- 
-
 * | **name** [type = String, default = '']:
   | constraints's unique name
-* | **markerNumbers** [type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ]]:
+* | **markerNumbers** [\ :math:`[m0,m1]\tp`\ , type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ]]:
   | marker m0: position or rigid body marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)
-* | **slidingMarkerNumbers** [type = ArrayMarkerIndex, default = []]:
-  | these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker \ :math:`m_si`\  at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1)
-* | **slidingMarkerOffsets** [type = Vector, default = []]:
+* | **slidingMarkerNumbers** [\ :math:`[m_{s0}, \ldots, m_{sn}]\tp`\ , type = ArrayMarkerIndex, default = []]:
+  | these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker \ :math:`m_{si}`\  at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1)
+* | **slidingMarkerOffsets** [\ :math:`[d_{s0}, \ldots, d_{sn}]`\ , type = Vector, default = []]:
   | this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker m0: offset=0, marker m1: offset=Length(cable0), marker m2: offset=Length(cable0)+Length(cable1), ...
-* | **nodeNumber** [type = NodeIndex, default = invalid (-1)]:
+* | **nodeNumber** [\ :math:`n_{GD}`\ , type = NodeIndex, default = invalid (-1)]:
   | node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position
 * | **classicalFormulation** [type = Bool, default = True]:
   | True: uses a formulation with 3 (+1) equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; False: use local formulation, which only needs 2 (+1) equations and can be used with index 2 formulation
 * | **constrainRotation** [type = Bool, default = False]:
   | True: add constraint on rotation of marker m0 relative to slope (if True, marker m0 must be a rigid body marker); False: marker m0 body can rotate freely
-* | **axialForce** [type = Real, default = 0]:
+* | **axialForce** [\ :math:`f_\mathrm{ax}`\ , type = Real, default = 0]:
   | ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions.
 * | **activeConnector** [type = Bool, default = True]:
   | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+* | **visualization** [type = VObjectJointSliding2D]:
+  | parameters for visualization of item
 
 
 
 The item VObjectJointSliding2D has the following parameters:
-
- 
 
 * | **show** [type = Bool, default = True]:
   | set true, if item is shown in visualization and false if it is not shown
@@ -45,6 +49,19 @@ The item VObjectJointSliding2D has the following parameters:
   | drawing size = radius of revolute joint; size == -1.f means that default connector size is used
 * | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA connector color; if R==-1, use default color
+
+
+
+\ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
+
+* | ``Position``\ : 
+  | position vector of joint given by marker0
+* | ``Velocity``\ : 
+  | velocity vector of joint given by marker0
+* | ``SlidingCoordinate``\ : 
+  | global sliding coordinate along all elements; the maximum sliding coordinate is equivalent to the reference lengths of all sliding elements
+* | ``Force``\ : 
+  | joint force vector (3D)
 
 
 

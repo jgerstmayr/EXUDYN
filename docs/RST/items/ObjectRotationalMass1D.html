@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectRotationalMass1D &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+  <title>ObjectRotationalMass1D &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,7 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "\\indf": "{_\\mathrm{f}}", "\\indt": "{_\\mathrm{t}}", "\\indr": "{_\\mathrm{r}}", "\\indtt": "{_\\mathrm{tt}}", "\\indrr": "{_\\mathrm{rr}}", "\\indff": "{_\\mathrm{ff}}", "\\indtf": "{_\\mathrm{tf}}", "\\indrf": "{_\\mathrm{rf}}", "\\indtr": "{_\\mathrm{tr}}", "\\indrigid": "{_\\mathrm{rigid}}", "\\indred": "{_\\mathrm{red}}", "\\induser": "{_\\mathrm{user}}", "\\indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.104.dev1
+            Exudyn1.5.105.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -93,7 +94,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -116,6 +117,25 @@
   <section id="objectrotationalmass1d">
 <span id="sec-item-objectrotationalmass1d"></span><h1>ObjectRotationalMass1D<a class="headerlink" href="#objectrotationalmass1d" title="Permalink to this heading"></a></h1>
 <p>A 1D rotational inertia (mass) which is attached to Node1D.</p>
+<p><strong>Additional information for ObjectRotationalMass1D</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line">The Object has the following types = <code class="docutils literal notranslate"><span class="pre">Body</span></code>, <code class="docutils literal notranslate"><span class="pre">SingleNoded</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested node type = <code class="docutils literal notranslate"><span class="pre">GenericODE2</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python = <code class="docutils literal notranslate"><span class="pre">Rotor1D</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python visualization object = <code class="docutils literal notranslate"><span class="pre">VRotor1D</span></code></div>
+</div>
+</li>
+</ul>
 <p>The item <strong>ObjectRotationalMass1D</strong> with type = ‘RotationalMass1D’ has the following parameters:</p>
 <ul>
 <li><div class="line-block">
@@ -124,23 +144,28 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>physicsInertia</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>physicsInertia</strong> [<span class="math notranslate nohighlight">\(J\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">inertia components [SI:kgm<span class="math notranslate nohighlight">\(^2\)</span>] of rotor / rotational mass</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>nodeNumber</strong> [type = NodeIndex, default = invalid (-1)]:</div>
+<div class="line"><strong>nodeNumber</strong> [<span class="math notranslate nohighlight">\(n0\)</span>, type = NodeIndex, default = invalid (-1)]:</div>
 <div class="line">node number (type NodeIndex) of Node1D, providing rotation coordinate <span class="math notranslate nohighlight">\(\psi_0 = c_0\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>referencePosition</strong> [type = Vector3D, default = [0.,0.,0.], size = 3]:</div>
+<div class="line"><strong>referencePosition</strong> [<span class="math notranslate nohighlight">\(\LU{0}{\pRef_0}\)</span>, type = Vector3D, size = 3, default = [0.,0.,0.]]:</div>
 <div class="line">a constant reference position = reference point, used to assign joint constraints accordingly and for drawing</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>referenceRotation</strong> [type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:</div>
+<div class="line"><strong>referenceRotation</strong> [<span class="math notranslate nohighlight">\(\LU{0i}{\Rot_{0}} \in \Rcal^{3 \times 3}\)</span>, type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:</div>
 <div class="line">an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>visualization</strong> [type = VObjectRotationalMass1D]:</div>
+<div class="line">parameters for visualization of item</div>
 </div>
 </li>
 </ul>
@@ -154,6 +179,44 @@
 <li><div class="line-block">
 <div class="line"><strong>graphicsData</strong> [type = BodyGraphicsData]:</div>
 <div class="line">Structure contains data for body visualization; data is defined in special list / dictionary structure</div>
+</div>
+</li>
+</ul>
+<p><strong>The following output variables are available as OutputVariableType in sensors, Get…Output() and other functions</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Position</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{p}}}\cConfig= pRefG\)</span></div>
+<div class="line">global position vector; for interpretation see intermediate variables</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Displacement</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{u}}}\cConfig\)</span></div>
+<div class="line">global displacement vector; for interpretation see intermediate variables</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Velocity</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{v}}}\cConfig\)</span></div>
+<div class="line">global velocity vector; for interpretation see intermediate variables</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">RotationMatrix</span></code>: <span class="math notranslate nohighlight">\(\LU{0b}{\Rot}\)</span></div>
+<div class="line">vector with 9 components of the rotation matrix (row-major format)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Rotation</span></code>: <span class="math notranslate nohighlight">\(\theta\)</span></div>
+<div class="line">scalar rotation angle obtained from underlying node</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">AngularVelocity</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{\tomega}\cConfig\)</span></div>
+<div class="line">angular velocity of body</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">AngularVelocityLocal</span></code>: <span class="math notranslate nohighlight">\(\LU{b}{\tomega}\cConfig\)</span></div>
+<div class="line">local (body-fixed) 3D velocity vector of node</div>
 </div>
 </li>
 </ul>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectGenericODE2 &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+  <title>ObjectGenericODE2 &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,7 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "\\indf": "{_\\mathrm{f}}", "\\indt": "{_\\mathrm{t}}", "\\indr": "{_\\mathrm{r}}", "\\indtt": "{_\\mathrm{tt}}", "\\indrr": "{_\\mathrm{rr}}", "\\indff": "{_\\mathrm{ff}}", "\\indtf": "{_\\mathrm{tf}}", "\\indrf": "{_\\mathrm{rf}}", "\\indtr": "{_\\mathrm{tr}}", "\\indrigid": "{_\\mathrm{rigid}}", "\\indred": "{_\\mathrm{red}}", "\\induser": "{_\\mathrm{user}}", "\\indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.104.dev1
+            Exudyn1.5.105.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -90,7 +91,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -113,6 +114,17 @@
   <section id="objectgenericode2">
 <span id="sec-item-objectgenericode2"></span><h1>ObjectGenericODE2<a class="headerlink" href="#objectgenericode2" title="Permalink to this heading"></a></h1>
 <p>A system of <span class="math notranslate nohighlight">\(n\)</span> second order ordinary differential equations (ODE2), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE that all matrices, vectors, etc. must have the same dimensions <span class="math notranslate nohighlight">\(n\)</span> or <span class="math notranslate nohighlight">\((n \times n)\)</span>, or they must be empty <span class="math notranslate nohighlight">\((0 \times 0)\)</span>, except for the mass matrix which always needs to have dimensions <span class="math notranslate nohighlight">\((n \times n)\)</span>.</p>
+<p><strong>Additional information for ObjectGenericODE2</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line">The Object has the following types = <code class="docutils literal notranslate"><span class="pre">Body</span></code>, <code class="docutils literal notranslate"><span class="pre">MultiNoded</span></code>, <code class="docutils literal notranslate"><span class="pre">SuperElement</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested node type: read detailed information of item</div>
+</div>
+</li>
+</ul>
 <p>The item <strong>ObjectGenericODE2</strong> with type = ‘GenericODE2’ has the following parameters:</p>
 <ul>
 <li><div class="line-block">
@@ -121,43 +133,43 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>nodeNumbers</strong> [type = ArrayNodeIndex, default = []]:</div>
+<div class="line"><strong>nodeNumbers</strong> [<span class="math notranslate nohighlight">\(\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp\)</span>, type = ArrayNodeIndex, default = []]:</div>
 <div class="line">node numbers which provide the coordinates for the object (consecutively as provided in this list)</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>massMatrix</strong> [type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
+<div class="line"><strong>massMatrix</strong> [<span class="math notranslate nohighlight">\({\mathbf{M}} \in \Rcal^{n \times n}\)</span>, type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
 <div class="line">mass matrix of object as MatrixContainer (or numpy array / list of lists)</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>stiffnessMatrix</strong> [type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
+<div class="line"><strong>stiffnessMatrix</strong> [<span class="math notranslate nohighlight">\({\mathbf{K}} \in \Rcal^{n \times n}\)</span>, type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
 <div class="line">stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>dampingMatrix</strong> [type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
+<div class="line"><strong>dampingMatrix</strong> [<span class="math notranslate nohighlight">\({\mathbf{D}} \in \Rcal^{n \times n}\)</span>, type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
 <div class="line">damping matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with stiffnessMatrix and jacobianUserFunction</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>forceVector</strong> [type = NumpyVector, default = []]:</div>
+<div class="line"><strong>forceVector</strong> [<span class="math notranslate nohighlight">\({\mathbf{f}} \in \Rcal^{n}\)</span>, type = NumpyVector, default = []]:</div>
 <div class="line">generalized force vector added to RHS</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>forceUserFunction</strong> [type = PyFunctionVectorMbsScalarIndex2Vector, default =  0]:</div>
+<div class="line"><strong>forceUserFunction</strong> [<span class="math notranslate nohighlight">\({\mathbf{f}}_{user} \in \Rcal^{n}\)</span>, type = PyFunctionVectorMbsScalarIndex2Vector, default =  0]:</div>
 <div class="line">A Python user function which computes the generalized user force vector for the ODE2 equations; see description below</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>massMatrixUserFunction</strong> [type = PyFunctionMatrixContainerMbsScalarIndex2Vector, default =  0]:</div>
+<div class="line"><strong>massMatrixUserFunction</strong> [<span class="math notranslate nohighlight">\({\mathbf{M}}_{user} \in \Rcal^{n\times n}\)</span>, type = PyFunctionMatrixContainerMbsScalarIndex2Vector, default =  0]:</div>
 <div class="line">A Python user function which computes the mass matrix instead of the constant mass matrix given in <span class="math notranslate nohighlight">\({\mathbf{M}}\)</span>; return numpy array or MatrixContainer; see description below</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>jacobianUserFunction</strong> [type = PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar, default =  0]:</div>
-<div class="line">A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t.the coordinates (times <span class="math notranslate nohighlight">\(f_ODE2\)</span>) and w.r.t.the velocities (times <span class="math notranslate nohighlight">\(f_ODE2_t\)</span>). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below</div>
+<div class="line"><strong>jacobianUserFunction</strong> [<span class="math notranslate nohighlight">\({\mathbf{J}}_{user} \in \Rcal^{n\times n}\)</span>, type = PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar, default =  0]:</div>
+<div class="line">A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t.the coordinates (times <span class="math notranslate nohighlight">\(f_{ODE2}\)</span>) and w.r.t.the velocities (times <span class="math notranslate nohighlight">\(f_{ODE2_t}\)</span>). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -166,18 +178,23 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>tempCoordinates</strong> [type = NumpyVector, default = []]:</div>
+<div class="line"><strong>tempCoordinates</strong> [<span class="math notranslate nohighlight">\({\mathbf{c}}_{temp} \in \Rcal^{n}\)</span>, type = NumpyVector, default = []]:</div>
 <div class="line">temporary vector containing coordinates</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>tempCoordinates_t</strong> [type = NumpyVector, default = []]:</div>
+<div class="line"><strong>tempCoordinates_t</strong> [<span class="math notranslate nohighlight">\(\dot {\mathbf{c}}_{temp} \in \Rcal^{n}\)</span>, type = NumpyVector, default = []]:</div>
 <div class="line">temporary vector containing velocity coordinates</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>tempCoordinates_tt</strong> [type = NumpyVector, default = []]:</div>
+<div class="line"><strong>tempCoordinates_tt</strong> [<span class="math notranslate nohighlight">\(\ddot {\mathbf{c}}_{temp} \in \Rcal^{n}\)</span>, type = NumpyVector, default = []]:</div>
 <div class="line">temporary vector containing acceleration coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>visualization</strong> [type = VObjectGenericODE2]:</div>
+<div class="line">parameters for visualization of item</div>
 </div>
 </li>
 </ul>
@@ -189,7 +206,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>color</strong> [type = Float4, default = [-1.,-1.,-1.,-1.], size = 4]:</div>
+<div class="line"><strong>color</strong> [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:</div>
 <div class="line">RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used</div>
 </div>
 </li>
@@ -206,6 +223,29 @@
 <li><div class="line-block">
 <div class="line"><strong>graphicsDataUserFunction</strong> [type = PyFunctionGraphicsData, default =  0]:</div>
 <div class="line">A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization</div>
+</div>
+</li>
+</ul>
+<p><strong>The following output variables are available as OutputVariableType in sensors, Get…Output() and other functions</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates</span></code>:</div>
+<div class="line">all ODE2 coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates\_t</span></code>:</div>
+<div class="line">all ODE2 velocity coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates\_tt</span></code>:</div>
+<div class="line">all ODE2 acceleration coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Force</span></code>:</div>
+<div class="line">generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)</div>
 </div>
 </li>
 </ul>

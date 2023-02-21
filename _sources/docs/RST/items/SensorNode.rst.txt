@@ -6,13 +6,8 @@ SensorNode
 ==========
 
 A sensor attached to a ODE2 or ODE1 node. The sensor measures OutputVariables and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
- 
-
-
 
 The item \ **SensorNode**\  with type = 'Node' has the following parameters:
-
- 
 
 * | **name** [type = String, default = '']:
   | sensor's unique name
@@ -26,12 +21,12 @@ The item \ **SensorNode**\  with type = 'Node' has the following parameters:
   | OutputVariableType for sensor
 * | **storeInternal** [type = Bool, default = False]:
   | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
+* | **visualization** [type = VSensorNode]:
+  | parameters for visualization of item
 
 
 
 The item VSensorNode has the following parameters:
-
- 
 
 * | **show** [type = Bool, default = True]:
   | set true, if item is shown in visualization and false if it is not shown

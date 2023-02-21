@@ -197,7 +197,7 @@ Function: `Vec2Tilde <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pyth
   | 3D vector v as list or in numpy format
 - | \ *output*\ :
   | matrix as list of lists with the skew-symmetric matrix from v:
-  | \ :math:`\left[\!\! \beginarrayccc 0 & -v[2] & v[1] \\ v[2] & 0 & -v[0] \\ -v[1] & v[0] & 0  \endarray \!\!\right]`\ 
+  | \ :math:`\left[\!\! \begin{array}{ccc} 0 & -v[2] & v[1] \\ v[2] & 0 & -v[0] \\ -v[1] & v[0] & 0  \end{array} \!\!\right]`\ 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 

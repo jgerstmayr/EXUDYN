@@ -6,13 +6,16 @@ ObjectJointRevolute2D
 =====================
 
 A revolute joint in 2D; constrains the absolute 2D position of two points given by PointMarkers or RigidMarkers
- 
 
+\ **Additional information for ObjectJointRevolute2D**\ :
+
+* | The Object has the following types = \ ``Connector``\ , \ ``Constraint``\ 
+* | Requested marker type = \ ``Position``\ 
+* | \ **Short name**\  for Python = \ ``RevoluteJoint2D``\ 
+* | \ **Short name**\  for Python visualization object = \ ``VRevoluteJoint2D``\ 
 
 
 The item \ **ObjectJointRevolute2D**\  with type = 'JointRevolute2D' has the following parameters:
-
- 
 
 * | **name** [type = String, default = '']:
   | constraints's unique name
@@ -20,12 +23,12 @@ The item \ **ObjectJointRevolute2D**\  with type = 'JointRevolute2D' has the fol
   | list of markers used in connector
 * | **activeConnector** [type = Bool, default = True]:
   | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+* | **visualization** [type = VObjectJointRevolute2D]:
+  | parameters for visualization of item
 
 
 
 The item VObjectJointRevolute2D has the following parameters:
-
- 
 
 * | **show** [type = Bool, default = True]:
   | set true, if item is shown in visualization and false if it is not shown

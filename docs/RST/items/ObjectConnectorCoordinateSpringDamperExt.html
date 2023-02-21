@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectConnectorCoordinateSpringDamperExt &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+  <title>ObjectConnectorCoordinateSpringDamperExt &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,7 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "\\indf": "{_\\mathrm{f}}", "\\indt": "{_\\mathrm{t}}", "\\indr": "{_\\mathrm{r}}", "\\indtt": "{_\\mathrm{tt}}", "\\indrr": "{_\\mathrm{rr}}", "\\indff": "{_\\mathrm{ff}}", "\\indtf": "{_\\mathrm{tf}}", "\\indrf": "{_\\mathrm{rf}}", "\\indtr": "{_\\mathrm{tr}}", "\\indrigid": "{_\\mathrm{rigid}}", "\\indred": "{_\\mathrm{red}}", "\\induser": "{_\\mathrm{user}}", "\\indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.104.dev1
+            Exudyn1.5.105.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -101,7 +102,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -124,6 +125,29 @@
   <section id="objectconnectorcoordinatespringdamperext">
 <span id="sec-item-objectconnectorcoordinatespringdamperext"></span><h1>ObjectConnectorCoordinateSpringDamperExt<a class="headerlink" href="#objectconnectorcoordinatespringdamperext" title="Permalink to this heading"></a></h1>
 <p>A 1D (scalar) spring-damper element acting on single ODE2 coordinates; same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction; has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.</p>
+<p><strong>Additional information for ObjectConnectorCoordinateSpringDamperExt</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line">The Object has the following types = <code class="docutils literal notranslate"><span class="pre">Connector</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested marker type = <code class="docutils literal notranslate"><span class="pre">Coordinate</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested node type = <code class="docutils literal notranslate"><span class="pre">GenericData</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python = <code class="docutils literal notranslate"><span class="pre">CoordinateSpringDamperExt</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python visualization object = <code class="docutils literal notranslate"><span class="pre">VCoordinateSpringDamperExt</span></code></div>
+</div>
+</li>
+</ul>
 <p>The item <strong>ObjectConnectorCoordinateSpringDamperExt</strong> with type = ‘ConnectorCoordinateSpringDamperExt’ has the following parameters:</p>
 <ul>
 <li><div class="line-block">
@@ -142,87 +166,87 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>stiffness</strong> [type = Real, default = 0.]:</div>
+<div class="line"><strong>stiffness</strong> [<span class="math notranslate nohighlight">\(k\)</span>, type = Real, default = 0.]:</div>
 <div class="line">stiffness [SI:N/m] of spring; acts against relative value of coordinates</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>damping</strong> [type = Real, default = 0.]:</div>
+<div class="line"><strong>damping</strong> [<span class="math notranslate nohighlight">\(d\)</span>, type = Real, default = 0.]:</div>
 <div class="line">damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>offset</strong> [type = Real, default = 0.]:</div>
+<div class="line"><strong>offset</strong> [<span class="math notranslate nohighlight">\(x_\mathrm{off}\)</span>, type = Real, default = 0.]:</div>
 <div class="line">offset between two coordinates (reference length of springs), see equation; it can be used to represent the pre-scribed drive coordinate</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>velocityOffset</strong> [type = Real, default = 0.]:</div>
+<div class="line"><strong>velocityOffset</strong> [<span class="math notranslate nohighlight">\(v_\mathrm{off}\)</span>, type = Real, default = 0.]:</div>
 <div class="line">offset between two coordinates; used to model D-control of a drive, where damping is not acting against prescribed velocity</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>factor0</strong> [type = Real, default = 1.]:</div>
+<div class="line"><strong>factor0</strong> [<span class="math notranslate nohighlight">\(f_0\)</span>, type = Real, default = 1.]:</div>
 <div class="line">marker 0 coordinate is multiplied with factor0</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>factor1</strong> [type = Real, default = 1.]:</div>
+<div class="line"><strong>factor1</strong> [<span class="math notranslate nohighlight">\(f_1\)</span>, type = Real, default = 1.]:</div>
 <div class="line">marker 1 coordinate is multiplied with factor1</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>fDynamicFriction</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>fDynamicFriction</strong> [<span class="math notranslate nohighlight">\(f_{\mu,\mathrm{d}}\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force <span class="math notranslate nohighlight">\(f_N\)</span>, the friction force can be interpreted as <span class="math notranslate nohighlight">\(f_\mu = \mu f_N\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>fStaticFrictionOffset</strong> [type = UReal, default = 0.]:</div>
-<div class="line">static (dry) friction offset force [SI:N]; assuming a normal force <span class="math notranslate nohighlight">\(f_N\)</span>, the friction force is limited by <span class="math notranslate nohighlight">\(f_\mu \le (\mu_so + \mu_d) f_N = f_\mu_d + f_\mu_so\)</span></div>
+<div class="line"><strong>fStaticFrictionOffset</strong> [<span class="math notranslate nohighlight">\(f_{\mu,\mathrm{so}}\)</span>, type = UReal, default = 0.]:</div>
+<div class="line">static (dry) friction offset force [SI:N]; assuming a normal force <span class="math notranslate nohighlight">\(f_N\)</span>, the friction force is limited by <span class="math notranslate nohighlight">\(f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>stickingStiffness</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>stickingStiffness</strong> [<span class="math notranslate nohighlight">\(k_\mu\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">stiffness of bristles in sticking case  [SI:N/m]</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>stickingDamping</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>stickingDamping</strong> [<span class="math notranslate nohighlight">\(d_\mu\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">damping of bristles in sticking case  [SI:N/(m/s)]</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>exponentialDecayStatic</strong> [type = PReal, default = 1.e-3]:</div>
-<div class="line">relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at <span class="math notranslate nohighlight">\(\Delta v = v_\mathrmexp\)</span>, the static friction offset force is reduced to 36.8%</div>
+<div class="line"><strong>exponentialDecayStatic</strong> [<span class="math notranslate nohighlight">\(v_\mathrm{exp}\)</span>, type = PReal, default = 1.e-3]:</div>
+<div class="line">relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at <span class="math notranslate nohighlight">\(\Delta v = v_\mathrm{exp}\)</span>, the static friction offset force is reduced to 36.8%</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>fViscousFriction</strong> [type = Real, default = 0.]:</div>
+<div class="line"><strong>fViscousFriction</strong> [<span class="math notranslate nohighlight">\(f_{\mu,\mathrm{v}}\)</span>, type = Real, default = 0.]:</div>
 <div class="line">viscous friction force part [SI:N/(m s)], acting against relative velocity in sliding case</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>frictionProportionalZone</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>frictionProportionalZone</strong> [<span class="math notranslate nohighlight">\(v_\mathrm{reg}\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">if non-zero, a regularized Stribeck model is used, regularizing friction force around zero velocity - leading to zero friction force in case of zero velocity; this does not require a data node at all; if zero, the bristle model is used, which requires a data node which contains previous friction state and last sticking position</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>limitStopsUpper</strong> [type = Real, default = 0.]:</div>
+<div class="line"><strong>limitStopsUpper</strong> [<span class="math notranslate nohighlight">\(s_\mathrm{upper}\)</span>, type = Real, default = 0.]:</div>
 <div class="line">upper (maximum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>limitStopsLower</strong> [type = Real, default = 0.]:</div>
+<div class="line"><strong>limitStopsLower</strong> [<span class="math notranslate nohighlight">\(s_\mathrm{lower}\)</span>, type = Real, default = 0.]:</div>
 <div class="line">lower (minimum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>limitStopsStiffness</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>limitStopsStiffness</strong> [<span class="math notranslate nohighlight">\(k_\mathrm{limits}\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">stiffness [SI:N/m] of limit stop (contact stiffness); following a linear contact model</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>limitStopsDamping</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>limitStopsDamping</strong> [<span class="math notranslate nohighlight">\(d_\mathrm{limits}\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">damping [SI:N/(m/s)] of limit stop (contact damping); following a linear contact model</div>
 </div>
 </li>
@@ -237,8 +261,13 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>springForceUserFunction</strong> [type = PyFunctionMbsScalarIndexScalar11, default =  0]:</div>
+<div class="line"><strong>springForceUserFunction</strong> [<span class="math notranslate nohighlight">\(\mathrm{UF} \in \Rcal\)</span>, type = PyFunctionMbsScalarIndexScalar11, default =  0]:</div>
 <div class="line">A Python function which defines the spring force with 8 parameters, see equations section / see description below</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>visualization</strong> [type = VObjectConnectorCoordinateSpringDamperExt]:</div>
+<div class="line">parameters for visualization of item</div>
 </div>
 </li>
 </ul>
@@ -257,6 +286,24 @@
 <li><div class="line-block">
 <div class="line"><strong>color</strong> [type = Float4, default = [-1.,-1.,-1.,-1.]]:</div>
 <div class="line">RGBA connector color; if R==-1, use default color</div>
+</div>
+</li>
+</ul>
+<p><strong>The following output variables are available as OutputVariableType in sensors, Get…Output() and other functions</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Displacement</span></code>: <span class="math notranslate nohighlight">\(\Delta q\)</span></div>
+<div class="line">relative scalar displacement of marker coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Velocity</span></code>: <span class="math notranslate nohighlight">\(\Delta v\)</span></div>
+<div class="line">difference of scalar marker velocity coordinates</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Force</span></code>: <span class="math notranslate nohighlight">\(f_{SD}\)</span></div>
+<div class="line">scalar spring force</div>
 </div>
 </li>
 </ul>

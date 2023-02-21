@@ -6,13 +6,15 @@ ObjectContactCircleCable2D
 ==========================
 
 A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap \ :math:`g`\  is integrated (piecewise linear) along the cable and circle; the contact force \ :math:`f_c`\  is zero for \ :math:`gap>0`\  and otherwise computed from \ :math:`f_c = g*contactStiffness + \dot g*contactDamping`\ ; during Newton iterations, the contact force is actived only, if \ :math:`dataCoordinate[0] <= 0`\ ; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
- 
 
+\ **Additional information for ObjectContactCircleCable2D**\ :
+
+* | The Object has the following types = \ ``Connector``\ 
+* | Requested marker type = \ ``_None``\ 
+* | Requested node type = \ ``GenericData``\ 
 
 
 The item \ **ObjectContactCircleCable2D**\  with type = 'ContactCircleCable2D' has the following parameters:
-
- 
 
 * | **name** [type = String, default = '']:
   | connector's unique name
@@ -32,12 +34,12 @@ The item \ **ObjectContactCircleCable2D**\  with type = 'ContactCircleCable2D' h
   | offset [SI:m] of contact, e.g. to include thickness of cable element
 * | **activeConnector** [type = Bool, default = True]:
   | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+* | **visualization** [type = VObjectContactCircleCable2D]:
+  | parameters for visualization of item
 
 
 
 The item VObjectContactCircleCable2D has the following parameters:
-
- 
 
 * | **show** [type = Bool, default = True]:
   | set true, if item is shown in visualization and false if it is not shown

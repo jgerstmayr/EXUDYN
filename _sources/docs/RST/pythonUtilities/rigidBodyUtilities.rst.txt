@@ -111,7 +111,7 @@ Function: `EulerParameters2G <https://github.com/jgerstmayr/EXUDYN/blob/master/m
 Function: `EulerParameters2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L185>`__\ (\ ``eulerParameters``\ )
 
 - | \ *function description*\ :
-  | convert Euler parameters (ep) to local G-matrix (=\ :math:`\partial \LUb\tomega / \partial {\mathbf{p}}_t`\ )
+  | convert Euler parameters (ep) to local G-matrix (=\ :math:`\partial \LU{b}{\tomega} / \partial {\mathbf{p}}_t`\ )
 - | \ *input*\ :
   | vector of 4 eulerParameters as list or np.array
 - | \ *output*\ :
@@ -166,7 +166,7 @@ Function: `AngularVelocity2EulerParameters\_t <https://github.com/jgerstmayr/EXU
 
 - | \ *function description*\ :
   | compute time derivative of Euler parameters from (global) angular velocity vector
-  | note that for Euler parameters \ :math:`{\mathbf{p}}`\ , we have \ :math:`\tomega={\mathbf{G}} \dot {\mathbf{p}}`\  ==> \ :math:`{\mathbf{G}}^T \tomega = {\mathbf{G}}^T\cdot {\mathbf{G}}\cdot \dot {\mathbf{p}}`\  ==> \ :math:`{\mathbf{G}}^T {\mathbf{G}}=4({\mathbf{I}}_4 \times 4 - {\mathbf{p}}\cdot {\mathbf{p}}^T)\dot{\mathbf{p}} = 4 ({\mathbf{I}}_4x4) \dot {\mathbf{p}}`\ 
+  | note that for Euler parameters \ :math:`{\mathbf{p}}`\ , we have \ :math:`\tomega={\mathbf{G}} \dot {\mathbf{p}}`\  ==> \ :math:`{\mathbf{G}}^T \tomega = {\mathbf{G}}^T\cdot {\mathbf{G}}\cdot \dot {\mathbf{p}}`\  ==> \ :math:`{\mathbf{G}}^T {\mathbf{G}}=4({\mathbf{I}}_{4 \times 4} - {\mathbf{p}}\cdot {\mathbf{p}}^T)\dot{\mathbf{p}} = 4 ({\mathbf{I}}_{4x4}) \dot {\mathbf{p}}`\ 
 - | \ *input*\ :
   | \ ``angularVelocity``\ : 3D vector of angular velocity in global frame, as lists or as np.array
   | \ ``eulerParameters``\ : vector of 4 eulerParameters as np.array or list
@@ -249,7 +249,7 @@ Function: `RotationVector2G <https://github.com/jgerstmayr/EXUDYN/blob/master/ma
 Function: `RotationVector2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L321>`__\ (\ ``eulerParameters``\ )
 
 - | \ *function description*\ :
-  | convert rotation vector (parameters) (v) to local G-matrix (=\ :math:`\partial \LUb\tomega   / \partial {\mathbf{v}}_t`\ )
+  | convert rotation vector (parameters) (v) to local G-matrix (=\ :math:`\partial \LU{b}{\tomega}   / \partial {\mathbf{v}}_t`\ )
 - | \ *input*\ :
   | vector of rotation vector (len=3) as list or np.array
 - | \ *output*\ :
@@ -299,7 +299,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 Function: `RotXYZ2G <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L362>`__\ (\ ``rot``\ )
 
 - | \ *function description*\ :
-  | compute (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU0{\mathbf{G}} = \partial \LU0\tomega  / \partial \dot \ttheta`\ )
+  | compute (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{0}{{\mathbf{G}}} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta`\ )
 - | \ *input*\ :
   | 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
 - | \ *output*\ :
@@ -313,7 +313,7 @@ Function: `RotXYZ2G <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pytho
 Function: `RotXYZ2G\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L377>`__\ (\ ``rot``\ , \ ``rot_t``\ )
 
 - | \ *function description*\ :
-  | compute time derivative of (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU0{\mathbf{G}} = \partial \LU0\tomega  / \partial \dot \ttheta`\ )
+  | compute time derivative of (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{0}{{\mathbf{G}}} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta`\ )
 - | \ *input*\ :
   | \ ``rot``\ : 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
   | \ ``rot\_t``\ : 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s
@@ -328,7 +328,7 @@ Function: `RotXYZ2G\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/py
 Function: `RotXYZ2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L391>`__\ (\ ``rot``\ )
 
 - | \ *function description*\ :
-  | compute local (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LUb{\mathbf{G}} = \partial \LUb\tomega  / \partial \ttheta_t`\ )
+  | compute local (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{b}{{\mathbf{G}}} = \partial \LU{b}{\tomega}  / \partial \ttheta_t`\ )
 - | \ *input*\ :
   | 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
 - | \ *output*\ :
@@ -342,7 +342,7 @@ Function: `RotXYZ2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/
 Function: `RotXYZ2GLocal\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L406>`__\ (\ ``rot``\ , \ ``rot_t``\ )
 
 - | \ *function description*\ :
-  | compute time derivative of (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LUb{\mathbf{G}} = \partial \LUb\tomega  / \partial \ttheta_t`\ )
+  | compute time derivative of (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{b}{{\mathbf{G}}} = \partial \LU{b}{\tomega}  / \partial \ttheta_t`\ )
 - | \ *input*\ :
   | \ ``rot``\ : 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
   | \ ``rot\_t``\ : 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s

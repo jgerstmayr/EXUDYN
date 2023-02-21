@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectRigidBody &mdash; Exudyn1.5.104.dev1 1.5.104.dev1 documentation</title>
+  <title>ObjectRigidBody &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,7 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"tex": {"macros": {"vp": ["{\\left[\\!\\! \\begin{array}{c} { #1} \\\\ { #2} \\end{array} \\right]}", 2], "vspace": ["{}", 1], "teps": "{\\boldsymbol{\\varepsilon}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tomega": "{\\boldsymbol{\\omega}}", "ttheta": "{\\boldsymbol{\\theta}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\dot{\\boldsymbol{\\varepsilon}}}", "tkappaDot": "{\\dot{\\boldsymbol{\\kappa}}}", "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "LU": ["{\\,^ #1}", 1]}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "\\indf": "{_\\mathrm{f}}", "\\indt": "{_\\mathrm{t}}", "\\indr": "{_\\mathrm{r}}", "\\indtt": "{_\\mathrm{tt}}", "\\indrr": "{_\\mathrm{rr}}", "\\indff": "{_\\mathrm{ff}}", "\\indtf": "{_\\mathrm{tf}}", "\\indrf": "{_\\mathrm{rf}}", "\\indtr": "{_\\mathrm{tr}}", "\\indrigid": "{_\\mathrm{rigid}}", "\\indred": "{_\\mathrm{red}}", "\\induser": "{_\\mathrm{user}}", "\\indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.104.dev1
+            Exudyn1.5.105.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
@@ -93,7 +94,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.104.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -116,6 +117,25 @@
   <section id="objectrigidbody">
 <span id="sec-item-objectrigidbody"></span><h1>ObjectRigidBody<a class="headerlink" href="#objectrigidbody" title="Permalink to this heading"></a></h1>
 <p>A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about <span class="math notranslate nohighlight">\(x\)</span> or <span class="math notranslate nohighlight">\(z\)</span> axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class <code class="docutils literal notranslate"><span class="pre">RigidBodyInertia</span></code>, see Section <span class="xref std std-ref">sec-rigidbodyutilities-rigidbodyinertia—init–</span> and <code class="docutils literal notranslate"><span class="pre">AddRigidBody(...)</span></code>, see Section <span class="xref std std-ref">sec-rigidbodyutilities-addrigidbody</span>, of <code class="docutils literal notranslate"><span class="pre">exudyn.rigidBodyUtilities</span></code> to handle inertia, COM and mass. addExampleImageObjectRigidBody</p>
+<p><strong>Additional information for ObjectRigidBody</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line">The Object has the following types = <code class="docutils literal notranslate"><span class="pre">Body</span></code>, <code class="docutils literal notranslate"><span class="pre">SingleNoded</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested node type = <code class="docutils literal notranslate"><span class="pre">Position</span></code> + <code class="docutils literal notranslate"><span class="pre">Orientation</span></code> + <code class="docutils literal notranslate"><span class="pre">RigidBody</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python = <code class="docutils literal notranslate"><span class="pre">RigidBody</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python visualization object = <code class="docutils literal notranslate"><span class="pre">VRigidBody</span></code></div>
+</div>
+</li>
+</ul>
 <p>The item <strong>ObjectRigidBody</strong> with type = ‘RigidBody’ has the following parameters:</p>
 <ul>
 <li><div class="line-block">
@@ -124,23 +144,28 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>physicsMass</strong> [type = UReal, default = 0.]:</div>
+<div class="line"><strong>physicsMass</strong> [<span class="math notranslate nohighlight">\(m\)</span>, type = UReal, default = 0.]:</div>
 <div class="line">mass [SI:kg] of rigid body</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>physicsInertia</strong> [type = Vector6D, default = [0.,0.,0., 0.,0.,0.]]:</div>
-<div class="line">inertia components [SI:kgm<span class="math notranslate nohighlight">\(^2\)</span>]: <span class="math notranslate nohighlight">\([J_xx, J_yy, J_zz, J_yz, J_xz, J_xy]\)</span> in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to COM; use the class RigidBodyInertia and AddRigidBody(…) of exudynRigidBodyUtilities.py to handle inertia, COM and mass</div>
+<div class="line"><strong>physicsInertia</strong> [<span class="math notranslate nohighlight">\(\LU{b}{{\mathbf{j}}_6}\)</span>, type = Vector6D, default = [0.,0.,0., 0.,0.,0.]]:</div>
+<div class="line">inertia components [SI:kgm<span class="math notranslate nohighlight">\(^2\)</span>]: <span class="math notranslate nohighlight">\([J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]\)</span> in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to COM; use the class RigidBodyInertia and AddRigidBody(…) of exudynRigidBodyUtilities.py to handle inertia, COM and mass</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>physicsCenterOfMass</strong> [type = Vector3D, default = [0.,0.,0.], size = 3]:</div>
+<div class="line"><strong>physicsCenterOfMass</strong> [<span class="math notranslate nohighlight">\(\LU{b}{{\mathbf{b}}_{COM}}\)</span>, type = Vector3D, size = 3, default = [0.,0.,0.]]:</div>
 <div class="line">local position of COM relative to the body’s reference point; if the vector of the COM is [0,0,0], the computation will not consider additional terms for the COM and it is faster</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>nodeNumber</strong> [type = NodeIndex, default = invalid (-1)]:</div>
+<div class="line"><strong>nodeNumber</strong> [<span class="math notranslate nohighlight">\(n0\)</span>, type = NodeIndex, default = invalid (-1)]:</div>
 <div class="line">node number (type NodeIndex) for rigid body node</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>visualization</strong> [type = VObjectRigidBody]:</div>
+<div class="line">parameters for visualization of item</div>
 </div>
 </li>
 </ul>
@@ -159,6 +184,69 @@
 <li><div class="line-block">
 <div class="line"><strong>graphicsData</strong> [type = BodyGraphicsData]:</div>
 <div class="line">Structure contains data for body visualization; data is defined in special list / dictionary structure</div>
+</div>
+</li>
+</ul>
+<p><strong>The following output variables are available as OutputVariableType in sensors, Get…Output() and other functions</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Position</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{p}}}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB\)</span></div>
+<div class="line">global position vector of body-fixed point given by local position vector <span class="math notranslate nohighlight">\(\pLocB\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Displacement</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{u}}}\cConfig + \LU{0b}{\Rot}\pLocB\)</span></div>
+<div class="line">global displacement vector of body-fixed point given by local position vector <span class="math notranslate nohighlight">\(\pLocB\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Velocity</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{v}}}\cConfig(\pLocB) = \LU{0}{\dot{\mathbf{u}}}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \pLocB\cConfig)\)</span></div>
+<div class="line">global velocity vector of body-fixed point given by local position vector <span class="math notranslate nohighlight">\(\pLocB\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">VelocityLocal</span></code>: <span class="math notranslate nohighlight">\(\LU{b}{{\mathbf{v}}}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{{\mathbf{v}}}\cConfig(\pLocB)\)</span></div>
+<div class="line">local (body-fixed) velocity vector of body-fixed point given by local position vector <span class="math notranslate nohighlight">\(\pLocB\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">RotationMatrix</span></code>: <span class="math notranslate nohighlight">\(\mathrm{vec}(\LU{0b}{\Rot})=[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp\)</span></div>
+<div class="line">vector with 9 components of the rotation matrix (row-major format)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Rotation</span></code>:</div>
+<div class="line">vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">AngularVelocity</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{\tomega}\cConfig\)</span></div>
+<div class="line">angular velocity of body</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">AngularVelocityLocal</span></code>: <span class="math notranslate nohighlight">\(\LU{b}{\tomega}\cConfig\)</span></div>
+<div class="line">local (body-fixed) 3D velocity vector of node</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Acceleration</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{a}}}\cConfig(\pLocB) = \LU{0}{\ddot{\mathbf{u}}} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \pLocB) +  \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \pLocB))\)</span></div>
+<div class="line">global acceleration vector of body-fixed point given by local position vector <span class="math notranslate nohighlight">\(\pLocB\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">AccelerationLocal</span></code>: <span class="math notranslate nohighlight">\(\LU{b}{{\mathbf{a}}}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{{\mathbf{a}}}\cConfig(\pLocB)\)</span></div>
+<div class="line">local (body-fixed) acceleration vector of body-fixed point given by local position vector <span class="math notranslate nohighlight">\(\pLocB\)</span></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">AngularAcceleration</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{\talpha}\cConfig\)</span></div>
+<div class="line">angular acceleration vector of body</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">AngularAccelerationLocal</span></code>: <span class="math notranslate nohighlight">\(\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talpha}\cConfig\)</span></div>
+<div class="line">local angular acceleration vector of body</div>
 </div>
 </li>
 </ul>

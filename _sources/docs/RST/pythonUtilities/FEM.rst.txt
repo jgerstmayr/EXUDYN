@@ -41,7 +41,7 @@ Function: `MapSparseMatrixIndices <https://github.com/jgerstmayr/EXUDYN/blob/mas
 Function: `VectorDiadicUnitMatrix3D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L54>`__\ (\ ``v``\ )
 
 - | \ *function description*\ :
-  | compute diadic product of vector v and a 3D unit matrix = diadic(v,I\ :math:`_3x3`\ ); used for ObjectFFRF and CMS implementation
+  | compute diadic product of vector v and a 3D unit matrix = diadic(v,I\ :math:`_{3x3}`\ ); used for ObjectFFRF and CMS implementation
 
 
 ----
