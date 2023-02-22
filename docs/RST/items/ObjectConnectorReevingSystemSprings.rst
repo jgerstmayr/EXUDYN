@@ -56,6 +56,12 @@ The item VObjectConnectorReevingSystemSprings has the following parameters:
   | RGBA connector color; if R==-1, use default color
 
 
+----------
+
+.. _description-objectconnectorreevingsystemsprings:
+
+DESCRIPTION of ObjectConnectorReevingSystemSprings
+--------------------------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -68,7 +74,139 @@ The item VObjectConnectorReevingSystemSprings has the following parameters:
 
 
 
+General model assumptions
+-------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+The \ ``ConnectorReevingSystemSprings``\  model is based on a linear elastic, visco-elastic, and mass-less spring which
+is tangent to a list of rolls. The contact with the rolls is friction-less, causing no torque w.r.t.\ the rolling axis of the sheave.
+The force in the rope results from the difference of the total length \ :math:`L`\  compared to the reference length or the rope, which 
+may be changed by adding or subtracting rope length at the end points. All geometric operations are performed in 3D, allowing to model
+simple reeving systems in 3D.
+
+
+
+Common tangent of two circles in 3D
+-----------------------------------
+
+In order to compute the total length of the rope of the reeving system, the tangent of two arbitrary circles in space needs to be computed.
+Considering Fig. :ref:`fig-reevingsystemsprings-tangents`\ , the relations are based on the
+center points of the circles \ :math:`{\mathbf{p}}_A`\  and \ :math:`{\mathbf{p}}_B`\ , the radii \ :math:`R_A`\  and \ :math:`R_B`\  as well as
+the axis vectors \ :math:`{\mathbf{a}}_A`\  and \ :math:`{\mathbf{a}}_B`\ , the latter vectors also defining the side at which the tangent contacts.
+For the definition of the tangent, the vectors \ :math:`{\mathbf{r}}_A`\  and \ :math:`{\mathbf{r}}_B`\  need to be computed.
+
+For the special case of \ :math:`R_A=R_B=0`\ , it follows that \ :math:`{\mathbf{r}}_A={\mathbf{p}}_A`\  and \ :math:`{\mathbf{r}}_B={\mathbf{p}}_B`\ .
+Otherwise, we first compute the vector between circle centers,
+
+.. math::
+
+   {\mathbf{c}} = {\mathbf{p}}_B - {\mathbf{p}}_A, \quad \mathrm{and} \quad {\mathbf{c}}_0 = \frac{{\mathbf{c}}}{|{\mathbf{c}}|} ,
+
+
+and obtain the tangent vectors
+
+.. math::
+
+   {\mathbf{t}}_A = {\mathbf{t}}_B = {\mathbf{c}}_0 ,
+
+
+as well as the normal vectors
+
+.. math::
+
+   {\mathbf{n}}_A = {\mathbf{a}}_A \times {\mathbf{c}}_0, \quad \mathrm{and} \quad {\mathbf{n}}_B = {\mathbf{a}}_B \times {\mathbf{c}}_0 .
+
+
+Note that the orientation of the axis vectors \ :math:`{\mathbf{a}}_A`\  and \ :math:`{\mathbf{a}}_B`\  defines the orientation of the normals.
+By definition, we assume the following conditions,
+
+.. math::
+
+   {\mathbf{n}}_A\tp {\mathbf{r}}_A < 0, \quad \mathrm{and} \quad {\mathbf{n}}_B\tp {\mathbf{r}}_B < 0 .
+
+
+For two circles with equal radius and axes orientations, the angles result in \ :math:`\varphi_A=\varphi_B=\pi`\ .
+In general, the unknown vectors \ :math:`{\mathbf{r}}_A`\  and \ :math:`{\mathbf{r}}_B`\  are computed by means of Newton's method.
+The unknown tangent vector is given as 
+
+.. math::
+
+   {\mathbf{t}}_c = {\mathbf{p}}_B + {\mathbf{r}}_B - {\mathbf{p}}_A - {\mathbf{r}}_A = {\mathbf{c}} + {\mathbf{r}}_B - {\mathbf{r}}_A .
+
+
+We now parameterize the two unknown vectors by means of unknown angles \ :math:`\varphi_A`\  and \ :math:`\varphi_B`\ ,
+
+.. math::
+
+   {\mathbf{r}}_A = -R_A \left( \cos(\varphi_A) {\mathbf{t}}_A - \sin(\varphi_A) {\mathbf{n}}_A \right), \quad \mathrm{and} \quad {\mathbf{r}}_B = -R_B \left( \cos(\varphi_B) {\mathbf{t}}_B - \sin(\varphi_B) {\mathbf{n}}_B \right) .
+
+
+As vectors \ :math:`{\mathbf{r}}_A`\  and \ :math:`{\mathbf{r}}_B`\  must be perpendicular to \ :math:`{\mathbf{t}}_c`\ , it follows that
+
+.. math::
+
+   {\mathbf{r}}_A\tp ({\mathbf{c}} + {\mathbf{r}}_B - {\mathbf{r}}_A) = 0, \quad \mathrm{and} \quad {\mathbf{r}}_B\tp ({\mathbf{c}} + {\mathbf{r}}_B - {\mathbf{r}}_A) = 0,
+
+
+or
+
+.. math::
+   :label: eq-reevingsystemsprings-newton
+
+   {\mathbf{r}}_A\tp {\mathbf{c}} + {\mathbf{r}}_A\tp {\mathbf{r}}_B - R_A^2 = 0, \quad \mathrm{and} \quad {\mathbf{r}}_B\tp {\mathbf{c}} - {\mathbf{r}}_B\tp{\mathbf{r}}_A + R_B^2 = 0 .
+
+
+The relations \eqeq:ReevingSystemSprings:Newton reduce to only one equation, if either \ :math:`R_A=0`\  or \ :math:`R_B = 0`\ .
+The equations can be solved by Newton's method by computing the jacobian of \ :math:`{\mathbf{J}}_{CT}`\  of \eqeq:ReevingSystemSprings:Newton w.r.t.\ the 
+unknown angles \ :math:`\varphi_A`\  and \ :math:`\varphi_B`\ . The iterations are started with
+
+.. math::
+
+   \varphi_A = \pi \quad \mathrm{and} \quad \varphi_B = \pi,
+
+
+and iterate until the error is below a certain tolerance, for details see the implementation in \ ``Geometry.h``\ .
+
+
+Connector forces
+----------------
+
+The current rope length results from the configuration of sheaves, including start and end position:
+
+.. math::
+
+   L = d_{m_0-m_1} + C_{m_1} + d_{m_1-m_2} + C_{m_2} + \ldots  + d_{m_{nr-2}-m_{nr-1}}
+
+
+in which \ :math:`d_{...}`\  represents the free spans between two sheaves as computed from the common tangent in the previous section,
+and \ :math:`C_{...}`\  represents the length along the circumference of the according marker if the according radius \ :math:`r`\  is non-zero.
+The quantity \ :math:`C_{...}`\  can be computed easily as soon as the radius vectors to the tangents \ :math:`{\mathbf{r}}_A`\  and \ :math:`{\mathbf{r}}_B`\ 
+are known. Within a series of tangents, the previous to the current tangent will always enclose an angle between \ :math:`0`\  and \ :math:`2\cdot \pi`\ .
+
+In case that \ ``hasCoordinateMarkers=True``\ , the total reference length and its derivative result as
+
+.. math::
+
+   L_0 = L_{ref} + f_0 \cdot q_{m_{c0}} + f_1 \cdot q_{m_{c1}}, \quad \dot L_0 = f_0 \cdot \dot q_{m_{c0}} + f_1 \cdot \dot q_{m_{c1}}, \quad
+
+
+while we set \ :math:`L_0 = L_{ref}`\  and \ :math:`\dot L_0=0`\  otherwise.
+The force in the reeving system (assumed to be constant all over the rope) reads
+
+.. math::
+
+   F = (L-L_{0}) \frac{EA}{L_0} + (\dot L - \dot L_0)\frac{DA}{L_0}
+
+
+Note that in case of \ :math:`L_0=0`\ , the term \ :math:`\frac{1}{L_0}`\  is replaced by \ :math:`1000`\ .
+However, this case must be avoided by the user by choosing appropriate parameters for the system.
+
+Additional damping may be added via the parameters \ :math:`DT`\  and \ :math:`DS`\ , which have to be treated carefully. The shearing parameter may
+be helpful to damp undesired oscillatory shearing motion, however, it may also damp rigid body motion of the overall mechanism.
+
+Further details are given in the implementation and examples are provided in the \ ``Examples``\  and \ ``TestModels``\  folders.
+
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

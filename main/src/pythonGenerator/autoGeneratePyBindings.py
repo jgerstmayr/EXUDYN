@@ -10,7 +10,12 @@ automatically generate pybindings for specific classes and functions AND latex d
 #TODO:
 #read \acro definitions from theDoc.pdf
 #fix braces in {ODE2} etc. abbreviations => manually create abbrv.tex and according .rst file; replace \acs{} with link
-#FIX latex defs in items (ObjectFFRFred, ...)
+#fix eq references as: \eq -> :eq: ...
+# .. math:: e^{i\pi} + 1 = 0
+#    :label: euler
+#
+# Euler's identity, equation :eq:`euler`, was elected one of the most
+# beautiful mathematical formulas.
 
 #add marker/etc. pre-information as list for items
 #add input/output for items

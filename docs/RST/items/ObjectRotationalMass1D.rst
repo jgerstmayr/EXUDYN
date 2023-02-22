@@ -40,6 +40,12 @@ The item VObjectRotationalMass1D has the following parameters:
   | Structure contains data for body visualization; data is defined in special list / dictionary structure
 
 
+----------
+
+.. _description-objectrotationalmass1d:
+
+DESCRIPTION of ObjectRotationalMass1D
+-------------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -60,7 +66,107 @@ The item VObjectRotationalMass1D has the following parameters:
 
 
 
+Definition of quantities
+------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | position coordinate
+     - | \ :math:`{\theta_0}\cConfig = {c_0}\cConfig + {c_0}\cRef`\ 
+     - | total rotation coordinate of node (e.g., Node1D) in any configuration (nodal coordinate \ :math:`c_0`\ )
+   * - | displacement coordinate
+     - | \ :math:`{\psi_0}\cConfig = {c_0}\cConfig`\ 
+     - | change of rotation coordinate of mass node (e.g., Node1D) in any configuration (nodal coordinate \ :math:`c_0`\ )
+   * - | velocity coordinate
+     - | \ :math:`{\dot \psi_{0\cConfig}}`\ 
+     - | rotation velocity coordinate of mass node (e.g., Node1D) in any configuration
+   * - | Position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}\cConfig =\LU{0}{\pRef_0}`\ 
+     - | constant (translational) position of mass object in any configuration
+   * - | Displacement
+     - | \ :math:`\LU{0}{{\mathbf{u}}}\cConfig = [0,0,0]\tp`\ 
+     - | (translational) displacement of mass object in any configuration
+   * - | Velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}\cConfig = [0,0,0]\tp`\ 
+     - | (translational) velocity of mass object in any configuration
+   * - | AngularVelocity
+     - | \ :math:`\LU{0}{\tomega}\cConfig = \LU{0i}{\Rot_{0}} \LU{i}{\vr{0}{0}{\dot \psi_0}}\tp`\ 
+     - | 
+   * - | AngularVelocityLocal
+     - | \ :math:`\LU{b}{\tomega}\cConfig = \LU{i}{\vr{0}{0}{\dot \psi_0}}\tp`\ 
+     - | 
+   * - | RotationMatrix
+     - | \ :math:`\LU{0b}{\Rot} = \LU{0i}{\Rot_{0}} \LU{ib}{\mr{\cos(\theta_0)}{-\sin(\theta_0)}{0} {\sin(\theta_0)}{\cos(\theta_0)}{0} {0}{0}{1}}`\ 
+     - | transformation of local body (\ :math:`b`\ ) coordinates to global (0) coordinates
+   * - | residual force
+     - | \ :math:`\tau`\ 
+     - | residual of all forces on mass object
+   * - | applied force
+     - | \ :math:`\LU{0}{{\mathbf{f}}}_a = [f_0,\;f_1,\;f_2]\tp`\ 
+     - | 3D applied force (loads, connectors, joint reaction forces, ...)
+   * - | applied torque
+     - | \ :math:`\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp`\ 
+     - | 3D applied torque (loads, connectors, joint reaction forces, ...)
+
+A rigid body marker (e.g., MarkerBodyRigid) may be attached to this object and forces/torques can be applied. 
+However, forces will have no effect and torques will only have effect in 'direction' of the coordinate.
+
+
+Equations of motion
+-------------------
+
+
+.. math::
+
+   J \cdot \ddot \psi_0 = \tau.
+
+
+Note that \ :math:`\tau`\  is computed from all connectors and loads upon the object. E.g., a 3D torque vector \ :math:`\LU{0}{\ttau}_a`\  is 
+transformed to \ :math:`\tau`\  as
+
+.. math::
+
+   \tau = \LU{b}{[0,\,0,\,1]}\LU{b0}{\Rot_{0}} \LU{0}{\ttau}_a
+
+
+Thus, the \ **rotation jacobian**\  reads 
+
+.. math::
+
+   {\mathbf{J}}_{rot} = \partial \tomega\cCur / \partial \dot q_{0,cur} = \LU{b}{[0,\,0,\,1]} \LU{b0}{\Rot_{0}}
+
+
+
+
+
+.. _miniexample-objectrotationalmass1d:
+
+MINI EXAMPLE for ObjectRotationalMass1D
+---------------------------------------
+
+
+.. code-block:: python
+
+   node = mbs.AddNode(Node1D(referenceCoordinates = [1], #\psi_0ref
+                             initialCoordinates=[0.5],   #\psi_0ini
+                             initialVelocities=[0.5]))   #\psi_t0ini
+   rotor = mbs.AddObject(Rotor1D(nodeNumber = node, physicsInertia=1))
+   
+   #assemble and solve system for default parameters
+   mbs.Assemble()
+   exu.SolveDynamic(mbs)
+   
+   #check result, get current rotor z-rotation at local position [0,0,0]
+   exudynTestGlobals.testResult = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Rotation, [0,0,0])
+   #final z-angle of rotor shall be 2
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

@@ -767,6 +767,7 @@ setup(
 #
     ext_modules=ext_modules,
     setup_requires=[setup_requires_pybind11], 
+    install_requires=['numpy'],
     cmdclass={'build_ext': BuildExt},
     zip_safe=False,
     license = 'BSD',

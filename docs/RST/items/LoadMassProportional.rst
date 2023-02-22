@@ -35,8 +35,37 @@ The item VLoadMassProportional has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 
 
+----------
+
+.. _description-loadmassproportional:
+
+DESCRIPTION of LoadMassProportional
+-----------------------------------
 
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+.. _miniexample-loadmassproportional:
+
+MINI EXAMPLE for LoadMassProportional
+-------------------------------------
+
+
+.. code-block:: python
+
+   node = mbs.AddNode(NodePoint(referenceCoordinates = [1,0,0]))
+   body = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=2))
+   mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
+   mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,0,-9.81]))
+   
+   #assemble and solve system for default parameters
+   mbs.Assemble()
+   exu.SolveDynamic(mbs)
+   
+   #check result
+   exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
+   #final z-coordinate of position shall be -g/2 due to constant acceleration with g=-9.81
+   #result independent of mass
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

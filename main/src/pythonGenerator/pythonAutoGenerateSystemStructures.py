@@ -237,12 +237,12 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 if (len(functionName)>28): 
                     functionType = '\\tabnewline ' + functionType
 
-                plr.sLatex += '    ' + functionName + ' & '
-                plr.sLatex += '    ' + functionType + ' & '
-                plr.sLatex += '    ' + Str2Latex(parameter['size']) + ' & '
+                # plr.sLatex += '    ' + functionName + ' & '
+                # plr.sLatex += '    ' + functionType + ' & '
+                # plr.sLatex += '    ' + Str2Latex(parameter['size']) + ' & '
 
-                plr.sLatex += '    ' + argStr + ' & '
-                plr.sLatex += '    ' + Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False) + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
+                # plr.sLatex += '    ' + argStr + ' & '
+                # plr.sLatex += '    ' + Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False) + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
 
                 plr.SystemStructuresWriteDefRow(functionName, functionType, Str2Latex(parameter['size']), argStr, 
                                             Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False))

@@ -15,7 +15,9 @@ The main formalisms are based on 6x6 matrices, so-called Plücker transformation
 
 .. _sec-kinematictree-masscominertia2t66:
 
-Function: `MassCOMinertia2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L65>`__\ (\ ``mass``\ , \ ``centerOfMass``\ , \ ``inertia``\ )
+Function: MassCOMinertia2T66
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`MassCOMinertia2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L65>`__\ (\ ``mass``\ , \ ``centerOfMass``\ , \ ``inertia``\ )
 
 - | \ *function description*\ :
   | convert mass, COM and inertia into 6x6 inertia matrix
@@ -31,7 +33,9 @@ Function: `MassCOMinertia2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/
 
 .. _sec-kinematictree-inertia2t66:
 
-Function: `Inertia2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L74>`__\ (\ ``inertia``\ )
+Function: Inertia2T66
+^^^^^^^^^^^^^^^^^^^^^
+`Inertia2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L74>`__\ (\ ``inertia``\ )
 
 - | \ *function description*\ :
   | convert inertia as produced with RigidBodyInertia class into 6x6 inertia matrix (as used in KinematicTree66, Featherstone / Handbook of robotics )
@@ -49,7 +53,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-kinematictree-inertia66tomasscominertia:
 
-Function: `Inertia66toMassCOMinertia <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L90>`__\ (\ ``inertia66``\ )
+Function: Inertia66toMassCOMinertia
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`Inertia66toMassCOMinertia <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L90>`__\ (\ ``inertia66``\ )
 
 - | \ *function description*\ :
   | convert 6x6 inertia matrix into mass, COM and inertia
@@ -66,7 +72,9 @@ Function: `Inertia66toMassCOMinertia <https://github.com/jgerstmayr/EXUDYN/blob/
 
 .. _sec-kinematictree-jointtransformmotionsubspace66:
 
-Function: `JointTransformMotionSubspace66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L111>`__\ (\ ``jointType``\ , \ ``q``\ )
+Function: JointTransformMotionSubspace66
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`JointTransformMotionSubspace66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L111>`__\ (\ ``jointType``\ , \ ``q``\ )
 
 - | \ *function description*\ :
   | return 6x6 Plücker joint transformation matrix evaluated for scalar joint coordinate q and motion subspace ('free modes' in Table 2.6 in Handbook of robotics )
@@ -80,7 +88,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-kinematictree-jointtransformmotionsubspace:
 
-Function: `JointTransformMotionSubspace <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L132>`__\ (\ ``jointType``\ , \ ``q``\ )
+Function: JointTransformMotionSubspace
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`JointTransformMotionSubspace <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L132>`__\ (\ ``jointType``\ , \ ``q``\ )
 
 - | \ *function description*\ :
   | return list containing rotation matrix, translation vector, rotation axis and translation axis for joint transformation
@@ -94,7 +104,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-kinematictree-crm:
 
-Function: `CRM <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L412>`__\ (\ ``v``\ )
+Function: CRM
+^^^^^^^^^^^^^
+`CRM <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L412>`__\ (\ ``v``\ )
 
 - | \ *function description*\ :
   | computes cross product operator for motion from 6D vector v; CRM(v) @ m computes the cross product of v and motion m
@@ -104,7 +116,9 @@ Function: `CRM <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/
 
 .. _sec-kinematictree-crf:
 
-Function: `CRF <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L421>`__\ (\ ``v``\ )
+Function: CRF
+^^^^^^^^^^^^^
+`CRF <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L421>`__\ (\ ``v``\ )
 
 - | \ *function description*\ :
   | computes cross product operator for force from 6D vector v; CRF(v) @ f computes the cross product of v and force f
@@ -121,9 +135,11 @@ CLASS KinematicTree33 (in module kinematicTree)
   | The formulation and structures widely follows the more efficient formulas (but still implemented in Python!) with 3D vectors and rotation matrices as proposed in Handbook of robotics , Chapter 3, but with the rotation matrices (\ ``listOfRotations``\ ) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Plücker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing
 
 
-.. _sec-kinematictree-kinematictree33-init:
+.. _sec-kinematictree-kinematictree33---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L158>`__\ (\ ``self``\ , \ ``listOfJointTypes``\ , \ ``listOfRotations``\ , \ ``listOfOffsets``\ , \ ``listOfInertia3D``\ , \ ``listOfCOM``\ , \ ``listOfMass``\ , \ ``listOfParents = []``\ , \ ``gravity = [0,0,-9.81]``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L158>`__\ (\ ``self``\ , \ ``listOfJointTypes``\ , \ ``listOfRotations``\ , \ ``listOfOffsets``\ , \ ``listOfInertia3D``\ , \ ``listOfCOM``\ , \ ``listOfMass``\ , \ ``listOfParents = []``\ , \ ``gravity = [0,0,-9.81]``\ )
 
 - | \ *classFunction*\ :
   | initialize kinematic tree
@@ -141,7 +157,9 @@ Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/
 
 .. _sec-kinematictree-kinematictree33-size:
 
-Class function: `Size <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L199>`__\ (\ ``self``\ )
+Class function: Size
+^^^^^^^^^^^^^^^^^^^^
+`Size <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L199>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | return number of joints, defined by size of jointTypes
@@ -150,7 +168,9 @@ Class function: `Size <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pyt
 
 .. _sec-kinematictree-kinematictree33-xl:
 
-Class function: `XL <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L205>`__\ (\ ``self``\ , \ ``i``\ )
+Class function: XL
+^^^^^^^^^^^^^^^^^^
+`XL <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L205>`__\ (\ ``self``\ , \ ``i``\ )
 
 - | \ *classFunction*\ :
   | return [A, p] containing rotation matrix and offset for joint j
@@ -159,7 +179,9 @@ Class function: `XL <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pytho
 
 .. _sec-kinematictree-kinematictree33-forwarddynamicscrb:
 
-Class function: `ForwardDynamicsCRB <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L216>`__\ (\ ``self``\ , \ ``q = []``\ , \ ``q_t = []``\ , \ ``torques = []``\ , \ ``forces = []``\ )
+Class function: ForwardDynamicsCRB
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ForwardDynamicsCRB <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L216>`__\ (\ ``self``\ , \ ``q = []``\ , \ ``q_t = []``\ , \ ``torques = []``\ , \ ``forces = []``\ )
 
 - | \ *classFunction*\ :
   | compute forward dynamics using composite rigid body algorithm
@@ -175,7 +197,9 @@ Class function: `ForwardDynamicsCRB <https://github.com/jgerstmayr/EXUDYN/blob/m
 
 .. _sec-kinematictree-kinematictree33-computemassmatrixandforceterms:
 
-Class function: `ComputeMassMatrixAndForceTerms <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L237>`__\ (\ ``self``\ , \ ``q``\ , \ ``q_t``\ , \ ``externalForces = []``\ )
+Class function: ComputeMassMatrixAndForceTerms
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ComputeMassMatrixAndForceTerms <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L237>`__\ (\ ``self``\ , \ ``q``\ , \ ``q_t``\ , \ ``externalForces = []``\ )
 
 - | \ *classFunction*\ :
   | compute generalized mass matrix M and generalized force terms for
@@ -205,9 +229,11 @@ CLASS KinematicTree66 (in module kinematicTree)
   | The formulation and structures widely follow Roy Featherstone (http://royfeatherstone.org/) / Handbook of robotics
 
 
-.. _sec-kinematictree-kinematictree66-init:
+.. _sec-kinematictree-kinematictree66---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L440>`__\ (\ ``self``\ , \ ``listOfJointTypes``\ , \ ``listOfTransformations``\ , \ ``listOfInertias``\ , \ ``listOfParents = []``\ , \ ``gravity = [0,0,-9.81]``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L440>`__\ (\ ``self``\ , \ ``listOfJointTypes``\ , \ ``listOfTransformations``\ , \ ``listOfInertias``\ , \ ``listOfParents = []``\ , \ ``gravity = [0,0,-9.81]``\ )
 
 - | \ *classFunction*\ :
   | initialize kinematic tree
@@ -222,7 +248,9 @@ Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/
 
 .. _sec-kinematictree-kinematictree66-size:
 
-Class function: `Size <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L469>`__\ (\ ``self``\ )
+Class function: Size
+^^^^^^^^^^^^^^^^^^^^
+`Size <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L469>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | return number of joints, defined by size of jointTypes
@@ -231,7 +259,9 @@ Class function: `Size <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pyt
 
 .. _sec-kinematictree-kinematictree66-xl:
 
-Class function: `XL <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L473>`__\ (\ ``self``\ , \ ``i``\ )
+Class function: XL
+^^^^^^^^^^^^^^^^^^
+`XL <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L473>`__\ (\ ``self``\ , \ ``i``\ )
 
 - | \ *classFunction*\ :
   | return 6D transformation of joint i, given by transformation
@@ -240,7 +270,9 @@ Class function: `XL <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pytho
 
 .. _sec-kinematictree-kinematictree66-forwarddynamicscrb:
 
-Class function: `ForwardDynamicsCRB <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L484>`__\ (\ ``self``\ , \ ``q = []``\ , \ ``q_t = []``\ , \ ``torques = []``\ , \ ``forces = []``\ )
+Class function: ForwardDynamicsCRB
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ForwardDynamicsCRB <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L484>`__\ (\ ``self``\ , \ ``q = []``\ , \ ``q_t = []``\ , \ ``torques = []``\ , \ ``forces = []``\ )
 
 - | \ *classFunction*\ :
   | compute forward dynamics using composite rigid body algorithm
@@ -256,7 +288,9 @@ Class function: `ForwardDynamicsCRB <https://github.com/jgerstmayr/EXUDYN/blob/m
 
 .. _sec-kinematictree-kinematictree66-computemassmatrixandforceterms:
 
-Class function: `ComputeMassMatrixAndForceTerms <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L505>`__\ (\ ``self``\ , \ ``q``\ , \ ``q_t``\ , \ ``externalForces = []``\ )
+Class function: ComputeMassMatrixAndForceTerms
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ComputeMassMatrixAndForceTerms <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L505>`__\ (\ ``self``\ , \ ``q``\ , \ ``q_t``\ , \ ``externalForces = []``\ )
 
 - | \ *classFunction*\ :
   | compute generalized mass matrix M and generalized force terms for
@@ -274,7 +308,9 @@ Class function: `ComputeMassMatrixAndForceTerms <https://github.com/jgerstmayr/E
 
 .. _sec-kinematictree-kinematictree66-addexternalforces:
 
-Class function: `AddExternalForces <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L579>`__\ (\ ``self``\ , \ ``Xup``\ , \ ``fvp``\ , \ ``externalForces = []``\ )
+Class function: AddExternalForces
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`AddExternalForces <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/kinematicTree.py\#L579>`__\ (\ ``self``\ , \ ``Xup``\ , \ ``fvp``\ , \ ``externalForces = []``\ )
 
 - | \ *classFunction*\ :
   | add action of external forces to forces fvp and return new composed vector of forces fvp

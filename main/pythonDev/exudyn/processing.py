@@ -17,6 +17,7 @@ import numpy as np
 import sys
 import time
 from copy import deepcopy #, copy 
+from exudyn.advancedUtilities import IsInteger
 
 #%%+++++++++++++++++++++++++++++++++++++++++++
 #**function: internal function to return Exudyn version string, which allows to identify how results have been obtained
@@ -347,18 +348,34 @@ def ParameterVariation(parameterFunction, parameters,
     cnt = 0
     parameterDict = {} #dictionary of parameter lists
     for (key,value) in parameters.items():
+        isIntType = False #is true, if  paramter ranges/list is all int
         if isinstance(value, tuple): #then it is a range (start, end, numberOfValues)
             pStart = value[0]
             pEnd = value[1]
-            pRange = value[2]
-            
+            numberOfValues = value[2]
+
+            if numberOfValues == 0:
+                raise ValueError('ParameterVariation: in tuples (begin, end, numberOfValues), numberOfValues may not be zero')
+            if int(numberOfValues) != numberOfValues:
+                raise ValueError('ParameterVariation: in tuples (begin, end, numberOfValues), numberOfValues must be integer')
+            if pStart > pEnd:
+                raise ValueError('ParameterVariation: in tuples (begin, end, numberOfValues), there must be begin <= end')
+        
+            step = (pEnd-pStart+1)/numberOfValues # is for check if numberOfValues is even
+            if IsInteger(pStart) and IsInteger(pEnd) and step == int(step): # is true, if ranges/list are all int and step is integer
+                isIntType = True 
+
             #now create list of parameters, using duplicates according to dimensionality
             if useLogSpace:
-                space = np.logspace(np.log10(pStart),np.log10(pEnd),pRange)
+                space = np.logspace(np.log10(pStart),np.log10(pEnd),numberOfValues)
             else:
-                space = np.linspace(pStart,pEnd,pRange)
+                space = np.linspace(pStart,pEnd,numberOfValues)
         else: #already checked above: if isinstance(value, list): #then it contains list of values, e.g., [1,2,4,8]
             space = value
+            isIntType = True
+            for val in value:
+                if not IsInteger(val):
+                    isIntType = False
             
         range1 = nParams[0:cnt].prod()
         range2 = nParams[cnt+1:dim+1].prod()
@@ -384,6 +401,8 @@ def ParameterVariation(parameterFunction, parameters,
         parameterSet = {}
         for (key,value) in parameterDict.items(): 
             if key == 'computationIndex':
+                v = int(value[i]) #make integers, which follow type(v)==int
+            elif isIntType:
                 v = int(value[i]) #make integers, which follow type(v)==int
             else:
                 v = float(value[i]) #make floats, which follow type(v)==float

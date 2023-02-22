@@ -16,7 +16,9 @@ import this library e.g. with import exudyn.robotics as robotics
 
 .. _sec-roboticscore-stddh2ht:
 
-Function: `StdDH2HT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1026>`__\ (\ ``DHparameters``\ )
+Function: StdDH2HT
+^^^^^^^^^^^^^^^^^^
+`StdDH2HT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1026>`__\ (\ ``DHparameters``\ )
 
 - | \ *function description*\ :
   | compute homogeneous transformation matrix HT from standard DHparameters=[theta, d, a, alpha]
@@ -30,7 +32,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-roboticscore-moddhkk2ht:
 
-Function: `ModDHKK2HT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1048>`__\ (\ ``DHparameters``\ )
+Function: ModDHKK2HT
+^^^^^^^^^^^^^^^^^^^^
+`ModDHKK2HT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1048>`__\ (\ ``DHparameters``\ )
 
 - | \ *function description*\ :
   | compute pre- and post- homogeneous transformation matrices from modified Denavit-Hartenberg DHparameters=[alpha, d, theta, r]; returns [HTpre, HTpost]; HTpre is transformation before axis rotation, HTpost includes axis rotation and everything hereafter; modified DH-Parameters according to Khalil and Kleinfinger, 1986
@@ -44,7 +48,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-roboticscore-constantaccelerationparameters:
 
-Function: `ConstantAccelerationParameters <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1062>`__\ (\ ``duration``\ , \ ``distance``\ )
+Function: ConstantAccelerationParameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ConstantAccelerationParameters <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1062>`__\ (\ ``duration``\ , \ ``distance``\ )
 
 - | \ *function description*\ :
   | Compute parameters for optimal trajectory using given duration and distance
@@ -60,7 +66,9 @@ Function: `ConstantAccelerationParameters <https://github.com/jgerstmayr/EXUDYN/
 
 .. _sec-roboticscore-constantaccelerationprofile:
 
-Function: `ConstantAccelerationProfile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1076>`__\ (\ ``t``\ , \ ``tStart``\ , \ ``sStart``\ , \ ``duration``\ , \ ``distance``\ )
+Function: ConstantAccelerationProfile
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ConstantAccelerationProfile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1076>`__\ (\ ``t``\ , \ ``tStart``\ , \ ``sStart``\ , \ ``duration``\ , \ ``distance``\ )
 
 - | \ *function description*\ :
   | Compute angle / displacement s, velocity v and acceleration a
@@ -80,7 +88,9 @@ Function: `ConstantAccelerationProfile <https://github.com/jgerstmayr/EXUDYN/blo
 
 .. _sec-roboticscore-motioninterpolator:
 
-Function: `MotionInterpolator <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1119>`__\ (\ ``t``\ , \ ``robotTrajectory``\ , \ ``joint``\ )
+Function: MotionInterpolator
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`MotionInterpolator <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1119>`__\ (\ ``t``\ , \ ``robotTrajectory``\ , \ ``joint``\ )
 
 - | \ *function description*\ :
   | Compute joint value, velocity and acceleration for given robotTrajectory['PTP'] of point-to-point type, evaluated for current time t and joint number
@@ -118,7 +128,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-roboticscore-serialrobot2mbs:
 
-Function: `SerialRobot2MBS <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1167>`__\ (\ ``mbs``\ , \ ``robot``\ , \ ``jointLoadUserFunctionList``\ , \ ``baseMarker``\ , \ ``*args``\ , \ ``**kwargs``\ )
+Function: SerialRobot2MBS
+^^^^^^^^^^^^^^^^^^^^^^^^^
+`SerialRobot2MBS <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1167>`__\ (\ ``mbs``\ , \ ``robot``\ , \ ``jointLoadUserFunctionList``\ , \ ``baseMarker``\ , \ ``*args``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | DEPRECATED function, use Robot.CreateRedundantCoordinateMBS(...); add items to existing mbs from the robot structure, a baseMarker (can be ground object or body)
@@ -142,7 +154,9 @@ Function: `SerialRobot2MBS <https://github.com/jgerstmayr/EXUDYN/blob/master/mai
 
 .. _sec-roboticscore-computejointht:
 
-Function: `ComputeJointHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1374>`__\ (\ ``robot``\ , \ ``configuration``\ )
+Function: ComputeJointHT
+^^^^^^^^^^^^^^^^^^^^^^^^
+`ComputeJointHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1374>`__\ (\ ``robot``\ , \ ``configuration``\ )
 
 - | \ *function description*\ :
   | DEPRECATED: compute list of  homogeneous transformations HT from base to every joint (more precisely of every link!) for given configuration
@@ -173,7 +187,9 @@ Function: `ComputeJointHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main
 
 .. _sec-roboticscore-computecomht:
 
-Function: `ComputeCOMHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1402>`__\ (\ ``robot``\ , \ ``HT``\ )
+Function: ComputeCOMHT
+^^^^^^^^^^^^^^^^^^^^^^
+`ComputeCOMHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1402>`__\ (\ ``robot``\ , \ ``HT``\ )
 
 - | \ *function description*\ :
   | DEPRECATED: compute list of  homogeneous transformations HT from base to every COM using HT list from ComputeJointHT
@@ -183,7 +199,9 @@ Function: `ComputeCOMHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/p
 
 .. _sec-roboticscore-computestatictorques:
 
-Function: `ComputeStaticTorques <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1419>`__\ (\ ``robot``\ , \ ``HT``\ )
+Function: ComputeStaticTorques
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ComputeStaticTorques <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1419>`__\ (\ ``robot``\ , \ ``HT``\ )
 
 - | \ *function description*\ :
   | DEPRECATED: compute list joint torques for serial robot under gravity (gravity and mass as given in robot)
@@ -193,7 +211,9 @@ Function: `ComputeStaticTorques <https://github.com/jgerstmayr/EXUDYN/blob/maste
 
 .. _sec-roboticscore-jacobian:
 
-Function: `Jacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1448>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``toolPosition = []``\ , \ ``mode = 'all'``\ )
+Function: Jacobian
+^^^^^^^^^^^^^^^^^^
+`Jacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L1448>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``toolPosition = []``\ , \ ``mode = 'all'``\ )
 
 - | \ *function description*\ :
   | DEPRECATED: compute jacobian for translation and rotation at toolPosition using joint HT
@@ -210,9 +230,11 @@ CLASS VRobotLink (in module robotics)
     class to define visualization of RobotLink
 
 
-.. _sec-roboticscore-vrobotlink-init:
+.. _sec-roboticscore-vrobotlink---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L94>`__\ (\ ``self``\ , \ ``jointRadius = 0.06``\ , \ ``jointWidth = 0.12``\ , \ ``linkWidth = 0.1``\ , \ ``showMBSjoint = True``\ , \ ``showCOM = True``\ , \ ``linkColor = [0.4,0.4,0.4,1]``\ , \ ``graphicsData = []``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L94>`__\ (\ ``self``\ , \ ``jointRadius = 0.06``\ , \ ``jointWidth = 0.12``\ , \ ``linkWidth = 0.1``\ , \ ``showMBSjoint = True``\ , \ ``showCOM = True``\ , \ ``linkColor = [0.4,0.4,0.4,1]``\ , \ ``graphicsData = []``\ )
 
 - | \ *classFunction*\ :
   | initialize robot link with parameters, being self-explaining
@@ -237,9 +259,11 @@ CLASS RobotLink (in module robotics)
     class to define one link of a robot
 
 
-.. _sec-roboticscore-robotlink-init:
+.. _sec-roboticscore-robotlink---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L134>`__\ (\ ``self``\ , \ ``mass``\ , \ ``COM``\ , \ ``inertia``\ , \ ``localHT = erb.HT0()``\ , \ ``jointType = 'Rz'``\ , \ ``parent = -2``\ , \ ``preHT = erb.HT0()``\ , \ ``PDcontrol = (None,None)``\ , \ ``visualization = VRobotLink()``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L134>`__\ (\ ``self``\ , \ ``mass``\ , \ ``COM``\ , \ ``inertia``\ , \ ``localHT = erb.HT0()``\ , \ ``jointType = 'Rz'``\ , \ ``parent = -2``\ , \ ``preHT = erb.HT0()``\ , \ ``PDcontrol = (None,None)``\ , \ ``visualization = VRobotLink()``\ )
 
 - | \ *classFunction*\ :
   | initialize robot link
@@ -258,7 +282,9 @@ Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/
 
 .. _sec-roboticscore-robotlink-setpdcontrol:
 
-Class function: `SetPDcontrol <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L147>`__\ (\ ``self``\ , \ ``Pvalue``\ , \ ``Dvalue``\ )
+Class function: SetPDcontrol
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`SetPDcontrol <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L147>`__\ (\ ``self``\ , \ ``Pvalue``\ , \ ``Dvalue``\ )
 
 - | \ *classFunction*\ :
   | set PD control values for drive of joint related to link using position-proportional value P and differential value (velocity proportional) D
@@ -267,7 +293,9 @@ Class function: `SetPDcontrol <https://github.com/jgerstmayr/EXUDYN/blob/master/
 
 .. _sec-roboticscore-robotlink-haspdcontrol:
 
-Class function: `HasPDcontrol <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L151>`__\ (\ ``self``\ )
+Class function: HasPDcontrol
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`HasPDcontrol <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L151>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | check if contrl is available
@@ -276,7 +304,9 @@ Class function: `HasPDcontrol <https://github.com/jgerstmayr/EXUDYN/blob/master/
 
 .. _sec-roboticscore-robotlink-getpdcontrol:
 
-Class function: `GetPDcontrol <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L155>`__\ (\ ``self``\ )
+Class function: GetPDcontrol
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`GetPDcontrol <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L155>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | get PD control values
@@ -293,9 +323,11 @@ CLASS VRobotTool (in module robotics)
     class to define visualization of RobotTool
 
 
-.. _sec-roboticscore-vrobottool-init:
+.. _sec-roboticscore-vrobottool---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L179>`__\ (\ ``self``\ , \ ``graphicsData = []``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L179>`__\ (\ ``self``\ , \ ``graphicsData = []``\ )
 
 - | \ *classFunction*\ :
   | initialize robot tool with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects
@@ -312,9 +344,11 @@ CLASS RobotTool (in module robotics)
     define tool of robot: containing graphics and HT (may add features in future)
 
 
-.. _sec-roboticscore-robottool-init:
+.. _sec-roboticscore-robottool---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L188>`__\ (\ ``self``\ , \ ``HT = erb.HT0()``\ , \ ``visualization = VRobotTool()``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L188>`__\ (\ ``self``\ , \ ``HT = erb.HT0()``\ , \ ``visualization = VRobotTool()``\ )
 
 - | \ *classFunction*\ :
   | initialize robot tool
@@ -334,9 +368,11 @@ CLASS VRobotBase (in module robotics)
     class to define visualization of RobotBase
 
 
-.. _sec-roboticscore-vrobotbase-init:
+.. _sec-roboticscore-vrobotbase---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L202>`__\ (\ ``self``\ , \ ``graphicsData = []``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L202>`__\ (\ ``self``\ , \ ``graphicsData = []``\ )
 
 - | \ *classFunction*\ :
   | initialize robot base with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects
@@ -353,9 +389,11 @@ CLASS RobotBase (in module robotics)
     define base of robot: containing graphics and HT (may add features in future)
 
 
-.. _sec-roboticscore-robotbase-init:
+.. _sec-roboticscore-robotbase---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L212>`__\ (\ ``self``\ , \ ``HT = erb.HT0()``\ , \ ``visualization = VRobotBase()``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L212>`__\ (\ ``self``\ , \ ``HT = erb.HT0()``\ , \ ``visualization = VRobotBase()``\ )
 
 - | \ *classFunction*\ :
   | initialize robot base
@@ -375,9 +413,11 @@ CLASS Robot (in module robotics)
     class to define a robot
 
 
-.. _sec-roboticscore-robot-init:
+.. _sec-roboticscore-robot---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L237>`__\ (\ ``self``\ , \ ``gravity = [0,0,-9.81]``\ , \ ``base = RobotBase()``\ , \ ``tool = RobotTool()``\ , \ ``referenceConfiguration = []``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L237>`__\ (\ ``self``\ , \ ``gravity = [0,0,-9.81]``\ , \ ``base = RobotBase()``\ , \ ``tool = RobotTool()``\ , \ ``referenceConfiguration = []``\ )
 
 - | \ *classFunction*\ :
   | initialize robot class
@@ -391,7 +431,9 @@ Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/
 
 .. _sec-roboticscore-robot-addlink:
 
-Class function: `AddLink <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L263>`__\ (\ ``self``\ , \ ``robotLink``\ )
+Class function: AddLink
+^^^^^^^^^^^^^^^^^^^^^^^
+`AddLink <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L263>`__\ (\ ``self``\ , \ ``robotLink``\ )
 
 - | \ *classFunction*\ :
   | add a link to serial robot
@@ -400,7 +442,9 @@ Class function: `AddLink <https://github.com/jgerstmayr/EXUDYN/blob/master/main/
 
 .. _sec-roboticscore-robot-isserialrobot:
 
-Class function: `IsSerialRobot <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L284>`__\ (\ ``self``\ )
+Class function: IsSerialRobot
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`IsSerialRobot <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L284>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | return True, if robot is a serial robot
@@ -409,7 +453,9 @@ Class function: `IsSerialRobot <https://github.com/jgerstmayr/EXUDYN/blob/master
 
 .. _sec-roboticscore-robot-getlink:
 
-Class function: `GetLink <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L288>`__\ (\ ``self``\ , \ ``i``\ )
+Class function: GetLink
+^^^^^^^^^^^^^^^^^^^^^^^
+`GetLink <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L288>`__\ (\ ``self``\ , \ ``i``\ )
 
 - | \ *classFunction*\ :
   | return Link object of link i
@@ -418,7 +464,9 @@ Class function: `GetLink <https://github.com/jgerstmayr/EXUDYN/blob/master/main/
 
 .. _sec-roboticscore-robot-hasparent:
 
-Class function: `HasParent <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L292>`__\ (\ ``self``\ , \ ``i``\ )
+Class function: HasParent
+^^^^^^^^^^^^^^^^^^^^^^^^^
+`HasParent <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L292>`__\ (\ ``self``\ , \ ``i``\ )
 
 - | \ *classFunction*\ :
   | True if link has parent, False if not
@@ -427,7 +475,9 @@ Class function: `HasParent <https://github.com/jgerstmayr/EXUDYN/blob/master/mai
 
 .. _sec-roboticscore-robot-getparentindex:
 
-Class function: `GetParentIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L296>`__\ (\ ``self``\ , \ ``i``\ )
+Class function: GetParentIndex
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`GetParentIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L296>`__\ (\ ``self``\ , \ ``i``\ )
 
 - | \ *classFunction*\ :
   | Get index of parent link; for serial robot this is simple, but for general trees, there is a index list
@@ -436,7 +486,9 @@ Class function: `GetParentIndex <https://github.com/jgerstmayr/EXUDYN/blob/maste
 
 .. _sec-roboticscore-robot-numberoflinks:
 
-Class function: `NumberOfLinks <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L301>`__\ (\ ``self``\ )
+Class function: NumberOfLinks
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`NumberOfLinks <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L301>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | return number of links
@@ -445,7 +497,9 @@ Class function: `NumberOfLinks <https://github.com/jgerstmayr/EXUDYN/blob/master
 
 .. _sec-roboticscore-robot-getbaseht:
 
-Class function: `GetBaseHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L305>`__\ (\ ``self``\ )
+Class function: GetBaseHT
+^^^^^^^^^^^^^^^^^^^^^^^^^
+`GetBaseHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L305>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | return base as homogeneous transformation
@@ -454,7 +508,9 @@ Class function: `GetBaseHT <https://github.com/jgerstmayr/EXUDYN/blob/master/mai
 
 .. _sec-roboticscore-robot-gettoolht:
 
-Class function: `GetToolHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L309>`__\ (\ ``self``\ )
+Class function: GetToolHT
+^^^^^^^^^^^^^^^^^^^^^^^^^
+`GetToolHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L309>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | return base as homogeneous transformation
@@ -463,7 +519,9 @@ Class function: `GetToolHT <https://github.com/jgerstmayr/EXUDYN/blob/master/mai
 
 .. _sec-roboticscore-robot-linkht:
 
-Class function: `LinkHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L313>`__\ (\ ``self``\ , \ ``q``\ )
+Class function: LinkHT
+^^^^^^^^^^^^^^^^^^^^^^
+`LinkHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L313>`__\ (\ ``self``\ , \ ``q``\ )
 
 - | \ *classFunction*\ :
   | compute list of homogeneous transformations for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different!
@@ -472,7 +530,9 @@ Class function: `LinkHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/p
 
 .. _sec-roboticscore-robot-jointht:
 
-Class function: `JointHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L342>`__\ (\ ``self``\ , \ ``q``\ )
+Class function: JointHT
+^^^^^^^^^^^^^^^^^^^^^^^
+`JointHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L342>`__\ (\ ``self``\ , \ ``q``\ )
 
 - | \ *classFunction*\ :
   | compute list of homogeneous transformations for every joint (after rotation), using current joint coordinates q
@@ -481,7 +541,9 @@ Class function: `JointHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/
 
 .. _sec-roboticscore-robot-comht:
 
-Class function: `COMHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L369>`__\ (\ ``self``\ , \ ``HT``\ )
+Class function: COMHT
+^^^^^^^^^^^^^^^^^^^^^
+`COMHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L369>`__\ (\ ``self``\ , \ ``HT``\ )
 
 - | \ *classFunction*\ :
   | compute list of  homogeneous transformations HT from base to every COM using HT list from Robot.JointHT(...)
@@ -490,7 +552,9 @@ Class function: `COMHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/py
 
 .. _sec-roboticscore-robot-statictorques:
 
-Class function: `StaticTorques <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L378>`__\ (\ ``self``\ , \ ``HT``\ )
+Class function: StaticTorques
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`StaticTorques <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L378>`__\ (\ ``self``\ , \ ``HT``\ )
 
 - | \ *classFunction*\ :
   | compute list of joint torques for serial robot due to gravity (gravity and mass as given in robot), taking HT from Robot.JointHT()
@@ -499,7 +563,9 @@ Class function: `StaticTorques <https://github.com/jgerstmayr/EXUDYN/blob/master
 
 .. _sec-roboticscore-robot-jacobian:
 
-Class function: `Jacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L401>`__\ (\ ``self``\ , \ ``HT``\ , \ ``toolPosition = []``\ , \ ``mode = 'all'``\ , \ ``linkIndex = None``\ )
+Class function: Jacobian
+^^^^^^^^^^^^^^^^^^^^^^^^
+`Jacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L401>`__\ (\ ``self``\ , \ ``HT``\ , \ ``toolPosition = []``\ , \ ``mode = 'all'``\ , \ ``linkIndex = None``\ )
 
 - | \ *classFunction*\ :
   | compute jacobian for translation and rotation at toolPosition using joint HT; this is using the Robot functions, but is inefficient for simulation purposes
@@ -515,7 +581,9 @@ Class function: `Jacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main
 
 .. _sec-roboticscore-robot-createkinematictree:
 
-Class function: `CreateKinematicTree <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L475>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``name = ''``\ , \ ``forceUserFunction = 0``\ )
+Class function: CreateKinematicTree
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`CreateKinematicTree <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L475>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``name = ''``\ , \ ``forceUserFunction = 0``\ )
 
 - | \ *classFunction*\ :
   | Add a ObjectKinematicTree to existing mbs from the robot structure inside this robot class;
@@ -535,7 +603,9 @@ Class function: `CreateKinematicTree <https://github.com/jgerstmayr/EXUDYN/blob/
 
 .. _sec-roboticscore-robot-createredundantcoordinatembs:
 
-Class function: `CreateRedundantCoordinateMBS <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L656>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``baseMarker``\ , \ ``jointSpringDamperUserFunctionList = []``\ , \ ``jointLoadUserFunctionList = []``\ , \ ``createJointTorqueLoads = True``\ , \ ``rotationMarkerBase = None``\ , \ ``rigidBodyNodeType = exudyn.NodeType.RotationEulerParameters``\ )
+Class function: CreateRedundantCoordinateMBS
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`CreateRedundantCoordinateMBS <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L656>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``baseMarker``\ , \ ``jointSpringDamperUserFunctionList = []``\ , \ ``jointLoadUserFunctionList = []``\ , \ ``createJointTorqueLoads = True``\ , \ ``rotationMarkerBase = None``\ , \ ``rigidBodyNodeType = exudyn.NodeType.RotationEulerParameters``\ )
 
 - | \ *classFunction*\ :
   | Add items to existing mbs from the robot structure inside this robot class; robot is attached to baseMarker (can be ground object or moving/deformable body);
@@ -558,7 +628,9 @@ Class function: `CreateRedundantCoordinateMBS <https://github.com/jgerstmayr/EXU
 
 .. _sec-roboticscore-robot-getkinematictree66:
 
-Class function: `GetKinematicTree66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L900>`__\ (\ ``self``\ )
+Class function: GetKinematicTree66
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`GetKinematicTree66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L900>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | export kinematicTree
@@ -567,7 +639,9 @@ Class function: `GetKinematicTree66 <https://github.com/jgerstmayr/EXUDYN/blob/m
 
 .. _sec-roboticscore-robot-getlinkgraphicsdata:
 
-Class function: `GetLinkGraphicsData <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L930>`__\ (\ ``self``\ , \ ``i``\ , \ ``p0``\ , \ ``p1``\ , \ ``axis0``\ , \ ``axis1``\ , \ ``linkVisualization``\ )
+Class function: GetLinkGraphicsData
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`GetLinkGraphicsData <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L930>`__\ (\ ``self``\ , \ ``i``\ , \ ``p0``\ , \ ``p1``\ , \ ``axis0``\ , \ ``axis1``\ , \ ``linkVisualization``\ )
 
 - | \ *classFunction*\ :
   | create link GraphicsData (list) for link i; internally used in CreateRedundantCoordinateMBS(...); linkVisualization contains visualization dict of link
@@ -576,7 +650,9 @@ Class function: `GetLinkGraphicsData <https://github.com/jgerstmayr/EXUDYN/blob/
 
 .. _sec-roboticscore-robot-buildfromdictionary:
 
-Class function: `BuildFromDictionary <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L974>`__\ (\ ``self``\ , \ ``robotDict``\ )
+Class function: BuildFromDictionary
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`BuildFromDictionary <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py\#L974>`__\ (\ ``self``\ , \ ``robotDict``\ )
 
 - | \ *classFunction*\ :
   | build robot structre from dictionary; this is a DEPRECATED function, which is used in older models; DO NOT USE

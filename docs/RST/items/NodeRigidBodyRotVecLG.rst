@@ -41,6 +41,12 @@ The item VNodeRigidBodyRotVecLG has the following parameters:
   | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
 
 
+----------
+
+.. _description-noderigidbodyrotveclg:
+
+DESCRIPTION of NodeRigidBodyRotVecLG
+------------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -64,8 +70,38 @@ The item VNodeRigidBodyRotVecLG has the following parameters:
   | local (body-fixed)  3D angular velocity vector of node
 
 
+\paragraphDetailed information:
+For a detailed description on the rigid body dynamics formulation using this node, see Holzinger and Gerstmayr .
+
+The node has 3 displacement coordinates \ :math:`[q_0,\,q_1,\,q_2]\tp`\  and three rotation coordinates, which is the rotation vector 
+
+.. math::
+
+   \tnu = \varphi {\mathbf{n}} = \tnu\cConfig + \tnu\cRef,
 
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+with the rotation angle \ :math:`\varphi`\  and the rotation axis \ :math:`{\mathbf{n}}`\ .
+All coordinates \ :math:`{\mathbf{c}}\cConfig`\  lead to second order differential equations, however the rotation vector cannot be used as a conventional parameterization. It must be computed within a nonlinear update, using appropriate Lie group methods.
+
+The rotation matrix \ :math:`\LU{0b}{\Rot(\tnu)}\cConfig`\  transforms a local (body-fixed) 3D position 
+\ :math:`\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp`\  to global 3D positions,
+
+.. math::
+
+   \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot(\tnu)}\cConfig \LU{b}{\pLoc}
+
+
+Note that \ :math:`\Rot(\tnu)`\  is defined in function \ `` RotationVector2RotationMatrix``\ , see Section :ref:`sec-rigidbodyutilities-rotationvector2rotationmatrix`\ .
+
+A Lie group integrator must be used with this node, which is why the is used, the 
+rotation parameter velocities are identical to the local angular velocity \ :math:`\LU{b}{\tomega}`\  and thus the 
+matrix \ :math:`\LU{b}{{\mathbf{G}}}`\  becomes the identity matrix.
+
+For creating a \ ``NodeRigidBodyRotVecLG``\ , there is a \ ``rigidBodyUtilities``\  function \ ``AddRigidBody``\ , 
+see Section :ref:`sec-rigidbodyutilities-addrigidbody`\ , which simplifies the setup of a rigid body significantely!
+
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

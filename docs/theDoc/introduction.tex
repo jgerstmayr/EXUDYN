@@ -765,12 +765,13 @@ The faster versions are available for all release versions, but only for some \t
   \item for \mybold{discontinuous problems}, try to adjust solver parameters; especially the discontinuous.iterationTolerance which may be too tight and cause many iterations; iterations may be limited by discontinuous.maxIterations, which at larger values solely multiplies the computation time with a factor if all iterations are performed
   \item For multiple computations / multiple runs of Exudyn (parameter variation, optimization, compute sensitivities), you can use the processing sub module of \codeName\ to parallelize computations and achieve speedups proporional to the number of cores/threads of your computer; specifically using the \texttt{multiThreading} option or even using a cluster (using \texttt{dispy}, see \texttt{ParameterVariation(...)} function)
   \item In case of multiprocessing and cluster computing, you may see a very high CPU usage of "Antimalware Service Executable", which is the Microsoft Defender Antivirus; you can turn off such problems by excluding \texttt{python.exe} from the defender (on your own risk!) in your settings:\\
+  %
   Settings $\ra$ Update \& Security $\ra$ Windows Security $\ra$ Virus \& threat protection settings $\ra$ Manage settings $\ra$ Exclusions $\ra$ Add or remove exclusions 
 \ei
+%
 \mybold{Possible speed ups for dynamic simulations}:
 \bi
   \item for implicit integration, turn on \mybold{modified Newton}, which updates jacobians only if needed: \texttt{simulationSettings.timeIntegration.newton.useModifiedNewton = True}
-  %\item switch to Python3.8: this version excludes range checks and timings; usually 30\% faster
   \item use \mybold{multi-threading}: \texttt{simulationSettings.parallel.numberOfThreads = ...}, depending on the number of cores (larger values usually do not help); improves greatly for contact problems, but also for some objects computed in parallel; will improve significantly in future
   \item decrease number of steps (\texttt{simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)}) by increasing the step size $h$ if not needed for accuracy reasons; not that in general, the solver will reduce steps in case of divergence, but not for accuracy reasons, which may still lead to divergence if step sizes are too large
   \item switch off measuring computation time, if not needed: \texttt{simulationSettings.displayComputationTime = False}
@@ -949,7 +950,8 @@ The focus is therefore on:
 The following \mybold{entry points} into the C++ code can be found:
 \bi
   \item Python -- C++: the creation of the module \texttt{exudyn} is found in:\\
-    \texttt{main/src/Pymodules/PybindModule.cpp}\\
+  
+  \texttt{main/src/Pymodules/PybindModule.cpp}\\
   it includes large header files, which are automatically created for binding C++ code with Python.%blank line needed for .rst:
   
   \item The object factory for creation of items (calling \texttt{mbs.AddNode(...)} and similar): \\
@@ -1089,6 +1091,7 @@ If such an implementation is successful, but too slow, a C++ implementation can 
 In the following, two use cases are shown, which show the simplicity of the procedure:
 \bi
   \item \mybold{Case 1}: user object (body):\\
+  %
   It is recommended to first search for a body with a similar behavior.
   Copy the definition of such an object inside the file \texttt{objectDefinition.py} and edit the according lines. 
   There is not much description of 

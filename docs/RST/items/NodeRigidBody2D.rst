@@ -39,6 +39,12 @@ The item VNodeRigidBody2D has the following parameters:
   | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
 
 
+----------
+
+.. _description-noderigidbody2d:
+
+DESCRIPTION of NodeRigidBody2D
+------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -68,8 +74,19 @@ The item VNodeRigidBody2D has the following parameters:
   | global 3D angular acceleration vector of node
 
 
+\paragraphDetailed information:
+The node provides 2 displacement coordinates (displacement of COM, (\ :math:`q_0,q_1`\ ) ) and 1 rotation parameter (\ :math:`\theta_0`\ ). According equations need to be provided by an according object (e.g., RigidBody2D).
+Using the rotation parameter \ :math:`\theta_{0\mathrm{config}} = \psi_{0ref} + \psi_{0\mathrm{config}}`\ , the rotation matrix is defined as
+
+.. math::
+
+   \LU{0b}{\Rot}\cConfig = \mr{\cos(\theta_0)}{-\sin(\theta_0)}{0}{\sin(\theta_0)}{\cos(\theta_0)}{0}{0}{0}{1}\cConfig
 
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+\ **Example**\  for NodeRigidBody2D: see ObjectRigidBody2D
+
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

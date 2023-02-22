@@ -44,4 +44,4 @@ Note that other items in renderState are ignored. The read only variables in \ `
 +  \ ``joystickRotation``\ : contains current joystick rotation vector information (linearized rotation angles)
 
 
- %to resolve problems with line breaks in GraphicsData
+ 

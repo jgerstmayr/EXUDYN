@@ -42,6 +42,12 @@ The item VObjectGenericODE1 has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 
 
+----------
+
+.. _description-objectgenericode1:
+
+DESCRIPTION of ObjectGenericODE1
+--------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -52,7 +58,125 @@ The item VObjectGenericODE1 has the following parameters:
 
 
 
+Equations of motion
+-------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+An object with node numbers \ :math:`[n_0,\,\ldots,\,n_n]`\  and according numbers of nodal coordinates \ :math:`[n_{c_0},\,\ldots,\,n_{c_n}]`\ , the total number of equations (=coordinates) of the object is
+
+.. math::
+
+   n = \sum_{i} n_{c_i},
+
+
+which is used throughout the description of this object.
+
+Equations of motion
+-------------------
+
+
+.. math::
+   :label: eq-objectgenericode1-eom
+
+   \dot {\mathbf{q}} = {\mathbf{f}} + {\mathbf{f}}_{user}(mbs, t, i_N, {\mathbf{q}})
+
+
+Note that the user function \ :math:`{\mathbf{f}}_{user}(mbs, t, i_N, {\mathbf{q}})`\  may be empty (=0), and that \ ``iN``\  represents the itemNumber (=objectNumber). 
+
+CoordinateLoads are added for the respective ODE1 coordinate on the RHS of the latter equation.
+
+--------
+
+\ **Userfunction**\ : ``rhsUserFunction(mbs, t, itemNumber, q)`` 
+
+
+A user function, which computes a RHS vector depending on current time and states of the object. 
+Can be used to create any kind of first order system, especially state space equations (inputs are added via CoordinateLoads to every node).
+Note that itemNumber represents the index of the ObjectGenericODE1 object in mbs, which can be used to retrieve additional data from the object through
+\ ``mbs.GetObjectParameter(itemNumber, ...)``\ , see the according description of \ ``GetObjectParameter``\ .
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments /  return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs to which object belongs
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs
+   * - | \ ``itemNumber``\ 
+     - | Index
+     - | integer number \ :math:`i_N`\  of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+   * - | \ ``q``\ 
+     - | Vector \ :math:`\in \Rcal^n`\ 
+     - | object coordinates (composed from ODE1 nodal coordinates) in current configuration, without reference values
+   * - | \returnValue
+     - | Vector \ :math:`\in \Rcal^{n}`\ 
+     - | returns force vector for object
+
+
+--------
+
+\ **User function example**\ :
+
+
+
+.. code-block:: python
+
+    A = numpy.diag([200,100])
+    #simple linear user function returning A*q + const
+    def UFrhs(mbs, t, itemNumber, q): 
+        return np.dot(A, q) + np.array([0,2])
+        
+    nODE1 = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0,0],
+                                        initialCoordinates=[1,0], numberOfODE1Coordinates=2))
+
+    #now add object instead of object in mini-example:
+    oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1], 
+                       rhsUserFunction=UFrhs))
+                                 
+
+
+
+
+
+.. _miniexample-objectgenericode1:
+
+MINI EXAMPLE for ObjectGenericODE1
+----------------------------------
+
+
+.. code-block:: python
+
+   #set up a 2-DOF system
+   nODE1 = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0,0],
+                                       initialCoordinates=[1,0],
+                                       numberOfODE1Coordinates=2))
+   
+   #build system matrix and force vector
+   #undamped mechanical system with m=1, K=100, f=1
+   A = np.array([[0,1],
+                 [-100,0]])
+   b = np.array([0,1])
+   
+   oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1], 
+                                                  systemMatrix=A, 
+                                                  rhsVector=b))
+   
+   #assemble and solve system for default parameters
+   mbs.Assemble()
+   
+   sims=exu.SimulationSettings()
+   solverType = exu.DynamicSolverType.RK44
+   exu.SolveDynamic(mbs, solverType=solverType, simulationSettings=sims)
+   
+   #check result at default integration time
+   exudynTestGlobals.testResult = mbs.GetNodeOutput(nODE1, exu.OutputVariableType.Coordinates)[0]
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

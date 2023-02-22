@@ -39,6 +39,12 @@ The item VNodeRigidBodyRxyz has the following parameters:
   | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
 
 
+----------
+
+.. _description-noderigidbodyrxyz:
+
+DESCRIPTION of NodeRigidBodyRxyz
+--------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -68,8 +74,47 @@ The item VNodeRigidBodyRxyz has the following parameters:
   | global 3D angular acceleration vector of node
 
 
+\paragraphDetailed information:
+The node has 3 displacement coordinates \ :math:`[q_0,\,q_1,\,q_2]\tp`\  and 3 rotation coordinates \ :math:`[\psi_0,\,\psi_1,\,\psi_2]\tp`\  for consecutive rotations around the 0, 1 and 2-axis (\ :math:`x`\ , \ :math:`y`\  and \ :math:`z`\ ).
+All coordinates \ :math:`{\mathbf{c}}\cConfig`\  lead to second order differential equations.
+The rotation matrix \ :math:`\LU{0b}{\Rot}\cConfig`\  transforms a local (body-fixed) 3D position 
+\ :math:`\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp`\  to global 3D positions,
+
+.. math::
+
+   \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}
 
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+Note that the Euler angles \ :math:`\ttheta\cCur`\  are computed as sum of current coordinates plus reference coordinates,
+
+.. math::
+
+   \ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
+
+
+The rotation matrix is defined as function of the rotation parameters \ :math:`\ttheta=[\theta_0,\,\theta_1,\,\theta_2]\tp`\ 
+
+.. math::
+
+   \LU{0b}{\Rot} = \LU{01}{\Rot_0}(\theta_0) \LU{12}{\Rot_1}(\theta_1) \LU{2b}{\Rot_2}(\theta_2)
+
+
+see Section :ref:`sec-symbolsitems`\  for definition of rotation matrices \ :math:`\Rot_0`\ , \ :math:`\Rot_1`\  and \ :math:`\Rot_2`\ .
+
+The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates \ :math:`\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2]\tp`\  lead to the \ :math:`{\mathbf{G}}`\  matrices, as used in the equations of motion for rigid bodies,
+
+.. math::
+
+   \LU{0}{\tomega} &=& \LU{0}{{\mathbf{G}}} \dot \ttheta, \\
+   \LU{b}{\tomega} &=& \LU{b}{{\mathbf{G}}} \dot \ttheta.
+
+
+
+For creating a \ ``NodeRigidBodyRxyz``\ , there is a \ ``rigidBodyUtilities``\  function \ ``AddRigidBody``\ , 
+see Section :ref:`sec-rigidbodyutilities-addrigidbody`\ , which simplifies the setup of a rigid body significantely!
+
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

@@ -4,7 +4,7 @@
 GraphicsData
 ============
 
-All graphics objects are defined by a \ ``GraphicsData``\  structure. %, see Section :ref:`sec-graphicsdata`\ .
+All graphics objects are defined by a \ ``GraphicsData``\  structure. 
 Note that currently the visualization is based on a very simple and ancient OpenGL implementation, as there is currently no simple platform independent alternative. However, most of the heavy load triangle-based operations are implemented in C++ and are realized by very efficient OpenGL commands. However, note that the number of triangles to represent the object should be kept in a feasible range (<1000000) in order to obtain a fast response of the renderer.
 
 Many objects include a \ ``GraphicsData``\  dictionary structure for definition of attached visualization of the object.

@@ -10,7 +10,6 @@ Node
    NodeRigidBodyEP.rst
    NodeRigidBodyRxyz.rst
    NodeRigidBodyRotVecLG.rst
-   NodeRigidBodyRotVecDataLG.rst
    NodeRigidBody2D.rst
    Node1D.rst
    NodePoint2DSlope1.rst

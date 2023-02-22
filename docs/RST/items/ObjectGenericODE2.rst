@@ -60,6 +60,12 @@ The item VObjectGenericODE2 has the following parameters:
   | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization
 
 
+----------
+
+.. _description-objectgenericode2:
+
+DESCRIPTION of ObjectGenericODE2
+--------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -74,7 +80,300 @@ The item VObjectGenericODE2 has the following parameters:
 
 
 
+Additional output variables for superelement node access
+--------------------------------------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+Functions like \ ``GetObjectOutputSuperElement(...)``\ , see Section :ref:`sec-mainsystem-object`\ , 
+or \ ``SensorSuperElement``\ , see Section :ref:`sec-mainsystem-sensor`\ , directly access special output variables
+(\ ``OutputVariableType``\ ) of the mesh nodes of the superelement.
+Additionally, the contour drawing of the object can make use the \ ``OutputVariableType``\  of the meshnodes.
+
+For this object, all nodes of \ ``ObjectGenericODE2``\  map their \ ``OutputVariableType``\  to the meshnode \ :math:`\ra`\ 
+see at the according node for the list of \ ``OutputVariableType``\ .
+
+Equations of motion
+-------------------
+
+An object with node numbers \ :math:`[n_0,\,\ldots,\,n_n]`\  and according numbers of nodal coordinates \ :math:`[n_{c_0},\,\ldots,\,n_{c_n}]`\ , the total number of equations (=coordinates) of the object is
+
+.. math::
+
+   n = \sum_{i} n_{c_i},
+
+
+which is used throughout the description of this object.
+
+Equations of motion
+-------------------
+
+The equations of motion read,
+
+.. math::
+   :label: eq-objectgenericode2-eom
+
+   {\mathbf{M}} \ddot {\mathbf{q}} + {\mathbf{D}} \dot {\mathbf{q}} + {\mathbf{K}} {\mathbf{q}} = {\mathbf{f}} + {\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})
+
+
+Note that the user function \ :math:`{\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})`\  may be empty (=0), and \ ``iN``\  represents the itemNumber (=objectNumber). 
+
+In case that a user mass matrix is specified, \eqeq_ObjectGenericODE2_EOM is replaced with
+
+.. math::
+
+   {\mathbf{M}}_{user}(mbs, t, i_N, {\mathbf{q}},\dot {\mathbf{q}}) \ddot {\mathbf{q}} + {\mathbf{D}} \dot {\mathbf{q}} + {\mathbf{K}} {\mathbf{q}} = {\mathbf{f}} + {\mathbf{f}}_{user}(mbs, t, i_N, {\mathbf{q}},\dot {\mathbf{q}})
+
+
+
+The (internal) Jacobian \ :math:`{\mathbf{J}}`\  of \eqeq_ObjectGenericODE2_EOM (assuming \ :math:`{\mathbf{f}}`\  to be constant!) reads
+
+.. math::
+
+   {\mathbf{J}} = f_{ODE2}   \left({\mathbf{K}} - \frac{\partial {\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})}{\partial {\mathbf{q}}}\right) + f_{ODE2_t} \left({\mathbf{D}} - \frac{\partial {\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})}{\partial \dot {\mathbf{q}}} \right) +
+
+
+Chosing \ :math:`f_{ODE2} = 1`\  and \ :math:`f_{ODE2_t}=0`\  would immediately give the jacobian of position quantities.
+
+If no \ ``jacobianUserFunction``\  is specified, the jacobian is -- as with many objects in Exudyn -- computed 
+by means of numerical differentiation.
+In case that a \ ``jacobianUserFunction``\  is specified, it must represent the jacobian of the LHS of \eqeq_ObjectGenericODE2_EOM 
+without \ :math:`{\mathbf{K}}`\  and \ :math:`{\mathbf{D}}`\  (these matrices are added internally),
+
+.. math::
+   :label: eq-objectgenericode2-jac
+
+   {\mathbf{J}}_{user}(mbs, t, i_N, {\mathbf{q}}, \dot {\mathbf{q}}, f_{ODE2}, f_{ODE2_t}) = -f_{ODE2}   \left(\frac{\partial {\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})}{\partial {\mathbf{q}}} \right) - f_{ODE2_t} \left(\frac{\partial {\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})}{\partial \dot {\mathbf{q}}} \right)
+
+
+CoordinateLoads are added for the respective ODE2 coordinate on the RHS of the latter equation.
+
+--------
+
+\ **Userfunction**\ : ``forceUserFunction(mbs, t, itemNumber, q, q_t)`` 
+
+
+A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs, which can be used to retrieve additional data from the object through
+\ ``mbs.GetObjectParameter(itemNumber, ...)``\ , see the according description of \ ``GetObjectParameter``\ .
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments /  return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs to which object belongs
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs
+   * - | \ ``itemNumber``\ 
+     - | Index
+     - | integer number \ :math:`i_N`\  of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+   * - | \ ``q``\ 
+     - | Vector \ :math:`\in \Rcal^n`\ 
+     - | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values
+   * - | \ ``q_t``\ 
+     - | Vector \ :math:`\in \Rcal^n`\ 
+     - | object velocity coordinates (time derivative of \ ``q``\ ) in current configuration
+   * - | \returnValue
+     - | Vector \ :math:`\in \Rcal^{n}`\ 
+     - | returns force vector for object
+
+
+--------
+
+\ **Userfunction**\ : ``massMatrixUserFunction(mbs, t, itemNumber, q, q_t)`` 
+
+
+A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments /  return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs to which object belongs to
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs
+   * - | \ ``itemNumber``\ 
+     - | Index
+     - | integer number \ :math:`i_N`\  of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+   * - | \ ``q``\ 
+     - | Vector \ :math:`\in \Rcal^n`\ 
+     - | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values
+   * - | \ ``q_t``\ 
+     - | Vector \ :math:`\in \Rcal^n`\ 
+     - | object velocity coordinates (time derivative of \ ``q``\ ) in current configuration
+   * - | \returnValue
+     - | MatrixContainer \ :math:`\in \Rcal^{n \times n}`\ 
+     - | returns mass matrix for object, as exu.MatrixContainer, 
+                          numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations.
+
+
+
+--------
+
+\ **Userfunction**\ : ``jacobianUserFunction(mbs, t, itemNumber, q, q_t, fODE2, fODE2_t)`` 
+
+
+A user function, which computes the jacobian of the LHS of the equations of motion, depending on current time, states of object and two
+factors which are used to distinguish between position level and velocity level derivatives. 
+Can be used to create any kind of mechanical system by using the object states.
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments /  return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs to which object belongs to
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs
+   * - | \ ``itemNumber``\ 
+     - | Index
+     - | integer number \ :math:`i_N`\  of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+   * - | \ ``q``\ 
+     - | Vector \ :math:`\in \Rcal^n`\ 
+     - | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values
+   * - | \ ``q_t``\ 
+     - | Vector \ :math:`\in \Rcal^n`\ 
+     - | object velocity coordinates (time derivative of \ ``q``\ ) in current configuration
+   * - | \ ``fODE2``\ 
+     - | Real
+     - | factor to be multiplied with the position level jacobian, see \eqeq_ObjectGenericODE2_Jac
+   * - | \ ``fODE2_t``\ 
+     - | Real
+     - | factor to be multiplied with the velocity level jacobian, see \eqeq_ObjectGenericODE2_Jac
+   * - | \returnValue
+     - | MatrixContainer \ :math:`\in \Rcal^{n \times n}`\ 
+     - | returns special jacobian for object, as exu.MatrixContainer, 
+                          numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations;
+                          NOTE that the format of returnValue must AGREE with (dense/sparse triplet) format of stiffnessMatrix and dampingMatrix;
+                          sparse triplets MAY NOT contain zero values!
+
+
+
+--------
+
+\ **Userfunction**\ : ``graphicsDataUserFunction(mbs, itemNumber)`` 
+
+
+A user function, which is called by the visualization thread in order to draw user-defined objects.
+The function can be used to generate any \ ``BodyGraphicsData``\ , see Section  :ref:`sec-graphicsdata`\ .
+Use \ ``graphicsDataUtilities``\  functions, see Section  :ref:`sec-module-graphicsdatautilities`\ , to create more complicated objects. 
+Note that \ ``graphicsDataUserFunction``\  needs to copy lots of data and is therefore
+inefficient and only designed to enable simpler tests, but not large scale problems.
+
+For an example for \ ``graphicsDataUserFunction``\  see ObjectGround, Section :ref:`sec-item-objectground`\ .
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments /  return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides reference to mbs, which can be used in user function to access all data of the object
+   * - | \ ``itemNumber``\ 
+     - | Index
+     - | integer number of the object in mbs, allowing easy access
+   * - | \returnValue
+     - | BodyGraphicsData
+     - | list of \ ``GraphicsData``\  dictionaries, see Section  :ref:`sec-graphicsdata`\ 
+
+
+--------
+
+\ **User function example**\ :
+
+
+
+.. code-block:: python
+
+    #user function, using variables M, K, ... from mini example, replacing ObjectGenericODE2(...)
+    KD = numpy.diag([200,100])
+    #nonlinear force example; this force is added to right-hand-side ==> negative sign!
+    def UFforce(mbs, t, itemNumber, q, q_t): 
+        return -np.dot(KD, q_t*q) #add nonlinear term for q_t and q, q_t*q gives vector
+    
+    #non-constant mass matrix:
+    def UFmass(mbs, t, itemNumber, q, q_t): 
+        return (q[0]+1)*M #uses mass matrix from mini example
+    
+    #non-constant mass matrix:
+    def UFgraphics(mbs, itemNumber):
+        t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
+        p = mbs.GetObjectOutputSuperElement(objectNumber=itemNumber, variableType = exu.OutputVariableType.Position,
+                                            meshNodeNumber = 0, #get first node's position 
+                                            configuration = exu.ConfigurationType.Visualization)
+        graphics1=GraphicsDataSphere(point=p,radius=0.1, color=color4red)
+            graphics2 = 'type':'Line', 'data': list(p)+[0,0,0], 'color':color4blue
+        return [graphics1, graphics2] 
+
+    #now add object instead of object in mini-example:
+    oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1], 
+                       massMatrix=M, stiffnessMatrix=K, dampingMatrix=D,
+                       forceUserFunction=UFforce, massMatrixUserFunction=UFmass,
+                       visualization=VObjectGenericODE2(graphicsDataUserFunction=UFgraphics)))
+
+
+
+
+
+.. _miniexample-objectgenericode2:
+
+MINI EXAMPLE for ObjectGenericODE2
+----------------------------------
+
+
+.. code-block:: python
+
+   #set up a mechanical system with two nodes; it has the structure: |~~M0~~M1
+   nMass0 = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
+   nMass1 = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+   
+   mass = 0.5 * np.eye(3)      #mass of nodes
+   stif = 5000 * np.eye(3)     #stiffness of nodes
+   damp = 50 * np.eye(3)      #damping of nodes
+   Z = 0. * np.eye(3)          #matrix with zeros
+   #build mass, stiffness and damping matrices (:
+   M = np.block([[mass,         0.*np.eye(3)],
+                 [0.*np.eye(3), mass        ] ])
+   K = np.block([[2*stif, -stif],
+                 [ -stif,  stif] ])
+   D = np.block([[2*damp, -damp],
+                 [ -damp,  damp] ])
+   
+   oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1], 
+                                                  massMatrix=M, 
+                                                  stiffnessMatrix=K,
+                                                  dampingMatrix=D))
+   
+   mNode1 = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass1))
+   mbs.AddLoad(Force(markerNumber = mNode1, loadVector = [10, 0, 0])) #static solution=10*(1/5000+1/5000)=0.0004
+   
+   #assemble and solve system for default parameters
+   mbs.Assemble()
+   
+   exu.SolveDynamic(mbs, solverType = exudyn.DynamicSolverType.TrapezoidalIndex2)
+   
+   #check result at default integration time
+   exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

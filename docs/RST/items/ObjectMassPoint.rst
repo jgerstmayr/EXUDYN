@@ -36,10 +36,16 @@ The item VObjectMassPoint has the following parameters:
   | Structure contains data for body visualization; data is defined in special list / dictionary structure
 
 
+----------
+
+.. _description-objectmasspoint:
+
+DESCRIPTION of ObjectMassPoint
+------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
-* | ``Position``\ : \ :math:`\LU{0}{{\mathbf{p}}}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{{\mathbf{I}}Three}\pLocB`\ 
+* | ``Position``\ : \ :math:`\LU{0}{{\mathbf{p}}}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\mathbf{I}_{3 \times 3}}\pLocB`\ 
   | global position vector of translated local position; local (body) coordinate system = global coordinate system
 * | ``Displacement``\ : \ :math:`\LU{0}{{\mathbf{u}}}\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp`\ 
   | global displacement vector of mass point
@@ -50,7 +56,88 @@ The item VObjectMassPoint has the following parameters:
 
 
 
+Definition of quantities
+------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | node position
+     - | \ :math:`\LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef = \LU{0}{{\mathbf{p}}}(n_0)\cConfig`\ 
+     - | position of mass point which is provided by node \ :math:`n_0`\  in any configuration
+   * - | node displacement
+     - | \ :math:`\LU{0}{{\mathbf{u}}}\cConfig = \LU{0}{\pRef}\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp = \LU{0}{{\mathbf{u}}}(n_0)\cConfig`\ 
+     - | displacement of mass point which is provided by node \ :math:`n_0`\  in any configuration
+   * - | node velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp = \LU{0}{{\mathbf{v}}}(n_0)\cConfig`\ 
+     - | velocity of mass point which is provided by node \ :math:`n_0`\  in any configuration
+   * - | transformation matrix
+     - | \ :math:`\LU{0b}{\Rot} = \mathbf{I}_{3 \times 3}`\ 
+     - | transformation of local body (\ :math:`b`\ ) coordinates to global (0) coordinates; this is the constant unit matrix, because local = global coordinates for the mass point
+   * - | residual forces
+     - | \ :math:`\LU{0}{{\mathbf{f}}} = [f_0,\;f_1,\;f_2]\tp`\ 
+     - | residual of all forces on mass point 
+   * - | applied forces
+     - | \ :math:`\LU{0}{{\mathbf{f}}}_a = [f_0,\;f_1,\;f_2]\tp`\ 
+     - | applied forces (loads, connectors, joint reaction forces, ...)
+
+
+
+Equations of motion
+-------------------
+
+
+.. math::
+
+   \mr{m}{0}{0} {0}{m}{0} {0}{0}{m} \vr{\ddot q_0}{\ddot q_1}{\ddot q_2} = \vr{f_0}{f_1}{f_2}.
+
+
+For example, a LoadCoordinate on coordinate 1 of the node would add a term in \ :math:`f_1`\  on the RHS.
+
+Position-based markers can measure position \ :math:`{\mathbf{p}}\cConfig`\ . The \ **position jacobian**\   
+
+.. math::
+
+   {\mathbf{J}}_{pos} = \partial {\mathbf{p}}\cCur / \partial {\mathbf{c}}\cCur = \mr{1}{0}{0} {0}{1}{0} {0}{0}{0}
+
+
+transforms the action of global applied forces \ :math:`\LU{0}{{\mathbf{f}}}_a`\  of position-based markers on the coordinates \ :math:`{\mathbf{c}}`\ 
+
+.. math::
+
+   {\mathbf{Q}} = {\mathbf{J}}_{pos} \LU{0}{{\mathbf{f}}}_a.
+
+
+
+
+
+.. _miniexample-objectmasspoint:
+
+MINI EXAMPLE for ObjectMassPoint
+--------------------------------
+
+
+.. code-block:: python
+
+   node = mbs.AddNode(NodePoint(referenceCoordinates = [1,1,0], 
+                                initialCoordinates=[0.5,0,0],
+                                initialVelocities=[0.5,0,0]))
+   mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+   
+   #assemble and solve system for default parameters
+   mbs.Assemble()
+   exu.SolveDynamic(mbs)
+   
+   #check result
+   exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
+   #final x-coordinate of position shall be 2
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

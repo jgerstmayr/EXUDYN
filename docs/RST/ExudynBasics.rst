@@ -24,9 +24,7 @@ Interaction with the Exudyn module
 It is important that the Exudyn module is basically a state machine, where you create items on the C++ side using the Python interface. This helps you to easily set up models using many other Python modules (numpy, sympy, matplotlib, ...) while the computation will be performed in the end on the C++ side in a very efficient manner. 
 
 
-
 \ **Where do objects live?**\ 
-
 
 Whenever a system container is created with \ ``SC = exu.SystemContainer()``\ , the structure \ ``SC``\  becomes a variable in the Python interpreter, but it is managed inside the C++ code and it can be modified via the Python interface.
 Usually, the system container will hold at least one system, usually called \ ``mbs``\ .
@@ -262,7 +260,6 @@ note that \ ``visualizationSettings.general.autoFitScene``\  should be set False
 
  
 
-
 Alternatively, you can obtain the current model view from the console after a simulation, e.g.,
 
 .. code-block:: python
@@ -387,7 +384,6 @@ You can call the \ ``SolutionViewer``\  either in the model, or at the command l
 
 An example for the \ ``SolutionViewer``\  is integrated into the \ ``Examples/``\  directory, see \ ``solutionViewerTest.py``\ . 
 
-
 \ **Note**\ : The previous function \ ``AnimateSolution``\  in \ ``exudyn.utilities``\  allows to directly visualize the stored solution for according stored time frames without \ ``tkinter``\  (useful for MacOS).
 
 
@@ -506,7 +502,6 @@ However, there are many \ **ways to speed up Exudyn in general**\ :
 +  for \ **discontinuous problems**\ , try to adjust solver parameters; especially the discontinuous.iterationTolerance which may be too tight and cause many iterations; iterations may be limited by discontinuous.maxIterations, which at larger values solely multiplies the computation time with a factor if all iterations are performed
 +  For multiple computations / multiple runs of Exudyn (parameter variation, optimization, compute sensitivities), you can use the processing sub module of Exudyn to parallelize computations and achieve speedups proporional to the number of cores/threads of your computer; specifically using the \ ``multiThreading``\  option or even using a cluster (using \ ``dispy``\ , see \ ``ParameterVariation(...)``\  function)
 +  In case of multiprocessing and cluster computing, you may see a very high CPU usage of "Antimalware Service Executable", which is the Microsoft Defender Antivirus; you can turn off such problems by excluding \ ``python.exe``\  from the defender (on your own risk!) in your settings:
-
 
   Settings → Update \& Security → Windows Security → Virus \& threat protection settings → Manage settings → Exclusions → Add or remove exclusions 
 

@@ -57,15 +57,13 @@ outputVariables = "{'Position':'$\pv\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp= \uv
 classType = Node
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    %\startTable{intermediate variables}{symbol}{description}
-    %  \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
-    %\finishTable
     \paragraph{Detailed information:}
     The node provides $n_c=3$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint, finite elements, ...).
     Usually, the nodal coordinates are provided in the global frame. However, the coordinate system is defined by the object (e.g. MassPoint uses global coordinates, but floating frame of reference objects use local frames).
     Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. \vspace{6pt}\\
 
     \noindent {\bf Example} for NodePoint: see ObjectMassPoint, \refSection{sec:item:ObjectMassPoint}
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -92,7 +90,7 @@ Fv,     C,      GetOutputVariable,              ,               ,       void,   
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
+V,      V,      color,                          ,                  4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 #file names automatically determined from class name
 writeFile = True
 
@@ -108,18 +106,13 @@ outputVariables = "{'Position':'$\pv\cConfig = [p_0,\,p_1,\,0]\cConfig\tp= \uv\c
 classType = Node
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-    %{\bf Note the difference of coordinate vectors and displacement or position vectors}:
-    %\startTable{quantity}{symbol}{description}
-    %  \rowTable{Coordinates}{$\cv\cConfig = \qv\cConfig = [q_0,\,q_1]\cConfig\tp = [u_0,\,u_1]\cConfig\tp \ldots$}{displacement coordinates}
-    %  \rowTable{Displacement}{$\uv\cConfig = [u_0,\,u_1,\,0]\cConfig\tp$}{displacement vector, 0 in third component}
-    %  \rowTable{Position}{$\pv\cConfig = [p_0,\,p_1,\,0]\cConfig\tp = [u_0,\,u_1,\,0]\cConfig\tp + [r_0,\,r_1,\,0]\cRef\tp$}{displacement vector, 0 in third component}
-    %\finishTable
     \paragraph{Detailed information:}
     The node provides $n_c=2$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint2D).
     Coordinates are identical to the nodal displacements, except for the third coordinate $u_2$, which is zero, because $q_2$ does not exist. \vspace{6pt}\\
     Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. \vspace{6pt}\\
     
     \noindent {\bf Example} for NodePoint2D: see ObjectMassPoint2D, \refSection{sec:item:ObjectMassPoint2D}
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -146,7 +139,7 @@ Fv,     C,      GetOutputVariable,              ,               ,       void,   
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
+V,      V,      color,                          ,                  4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 #file names automatically determined from class name
 writeFile = True
 
@@ -186,16 +179,16 @@ equations =
     \bea
       \LU{0}{\tomega} &=& \LU{0}{\Gm} \dot \ttheta, \\
       \LU{b}{\tomega} &=& \LU{b}{\Gm} \dot \ttheta.
-		%return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0],-2.*ep[3], 2.*ep[2],
-		%									-2.*ep[2], 2.*ep[3], 2.*ep[0],-2.*ep[1],
-		%									-2.*ep[3],-2.*ep[2], 2.*ep[1], 2.*ep[0] });
-		%return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0], 2.*ep[3],-2.*ep[2],
-		%									-2.*ep[2],-2.*ep[3], 2.*ep[0], 2.*ep[1],
-		%									-2.*ep[3], 2.*ep[2],-2.*ep[1], 2.*ep[0] });
     \eea
-    
     For creating a \texttt{NodeRigidBodyEP}, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
     see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
+    %%RSTCOMPATIBLE
+    %return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0],-2.*ep[3], 2.*ep[2],
+    %                                    -2.*ep[2], 2.*ep[3], 2.*ep[0],-2.*ep[1],
+    %                                    -2.*ep[3],-2.*ep[2], 2.*ep[1], 2.*ep[0] });
+    %return ConstSizeMatrix<3*maxRotCoordinates>(3, 4, {  -2.*ep[1], 2.*ep[0], 2.*ep[3],-2.*ep[2],
+    %                                    -2.*ep[2],-2.*ep[3], 2.*ep[0], 2.*ep[1],
+    %                                    -2.*ep[3], 2.*ep[2],-2.*ep[1], 2.*ep[0] });
 /end
 classType = Node
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -254,7 +247,7 @@ Fv,      C,      GetGlocalTv_q,                 ,               ,       void, ,"
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
+V,      V,      color,                          ,                  4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 #file names automatically determined from class name
 writeFile = True
 
@@ -295,6 +288,7 @@ equations =
     
     For creating a \texttt{NodeRigidBodyRxyz}, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
     see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
+    %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "node's unique name"
@@ -340,7 +334,7 @@ Fv,      C,      GetGlocalTv_q,                 ,               ,       void, ,"
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
+V,      V,      color,                          ,                  4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 #file names automatically determined from class name
 writeFile = True
 
@@ -384,6 +378,7 @@ equations =
     
     For creating a \texttt{NodeRigidBodyRotVecLG}, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
     see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
+    %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "node's unique name"
@@ -429,7 +424,7 @@ Fv,      C,      CompositionRule,               ,               ,       void, ,"
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
+V,      V,      color,                          ,                  4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 #file names automatically determined from class name
 writeFile = True
 
@@ -445,6 +440,7 @@ author = Gerstmayr Johannes, Holzinger Stefan
 pythonShortName = RigidRotVecLG
 outputVariables = "{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node','Velocity':'$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Coordinates':'$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\nu_0,\,\nu_1,\,\nu_2]\tp\cConfig$ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles', 'Coordinates_t':'$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cConfig$ velocity coordinates vector of node', 'RotationMatrix':'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates', 'Rotation':'$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$global 3D angular velocity vector of node', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node'}"
 classType = Node
+excludeFromTheDoc = True
 equations =
     \paragraph{Detailed information:}
     For a detailed description on the rigid body dynamics formulation using this node, see Holzinger and Gerstmayr [under publication].
@@ -541,7 +537,7 @@ Fv,      C,      CompositionRule,               ,               ,       void, ,"
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
+V,      V,      color,                          ,                  4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 #file names automatically determined from class name
 writeFile = True
 
@@ -562,9 +558,10 @@ equations =
     The node provides 2 displacement coordinates (displacement of \hac{COM}, ($q_0,q_1$) ) and 1 rotation parameter ($\theta_0$). According equations need to be provided by an according object (e.g., RigidBody2D).
     Using the rotation parameter $\theta_{0\mathrm{config}} = \psi_{0ref} + \psi_{0\mathrm{config}}$, the rotation matrix is defined as
     \be
-      \LU{0b}{\Rot}\cConfig = \mr{\cos(\theta_0)}{-\sin(\theta_0)}{0}{\sin(\theta_0)}{\cos(\theta_0)}{0} {0}{0}{1}\cConfig
+      \LU{0b}{\Rot}\cConfig = \mr{\cos(\theta_0)}{-\sin(\theta_0)}{0}{\sin(\theta_0)}{\cos(\theta_0)}{0}{0}{0}{1}\cConfig
     \ee
     \noindent {\bf Example} for NodeRigidBody2D: see ObjectRigidBody2D
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -595,7 +592,7 @@ Fv,     C,      GetOutputVariable,              ,               ,       void,   
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
+V,      V,      color,                          ,                  4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 #file names automatically determined from class name
 writeFile = True
 
@@ -619,6 +616,7 @@ equations =
       p\cConfig= \vr{{p_0}\cConfig}{0}{0}
     \ee
     The (internal) velocity vector is $[{p_0}\cConfig,\,0,\,0]\tp$.
+    %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "node's unique name"
@@ -678,7 +676,7 @@ Fv,     C,      GetOutputVariable,              ,               ,       void,   
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
+V,      V,      color,                          ,                  4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 #file names automatically determined from class name
 writeFile = True
 
@@ -717,7 +715,7 @@ Fv,     C,      GetOutputVariable,              ,               ,       void,   
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
+V,      V,      color,                          ,                  4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 #file names automatically determined from class name
 writeFile = True
 
@@ -758,7 +756,7 @@ Fv,     C,      GetOutputVariable,              ,               ,       void,   
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
+V,      V,      color,                          ,                  4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 #file names automatically determined from class name
 writeFile = True
 
@@ -917,7 +915,7 @@ Fv,     C,      GetOutputVariable,              ,               ,       void,   
 Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,    "set true, if item is shown in visualization and false if it is not shown"
 V,      V,      drawSize,                       ,               ,       float,  "-1.f",                             ,       IO,    "drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,    ";", "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-V,      V,      color,                          , 	             4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
+V,      V,      color,                          ,                  4,      Float4, "Float4({-1.f,-1.f,-1.f,-1.f})", ,       IO,     "Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used"
 #file names automatically determined from class name
 writeFile = True
 
@@ -963,35 +961,35 @@ equations =
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    import exudyn as exu
-    from math import sin, cos, pi
-    from exudyn.itemInterface import *
-    from exudyn.graphicsDataUtilities import *
-    SC = exu.SystemContainer()
-    mbs = SC.AddSystem()
-    #create simple system:
-    mbs.AddNode(NodePoint())
-    body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
-    
-    #user function for moving graphics:
-    def UFgraphics(mbs, objectNum):
-        t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
-        #draw moving sphere on ground
-        graphics1=GraphicsDataSphere(point=[sin(t*2*pi), cos(t*2*pi), 0], 
-                                     radius=0.1, color=color4red, nTiles=32)
-        return [graphics1] 
+    \pythonstyle\begin{lstlisting}
+        import exudyn as exu
+        from math import sin, cos, pi
+        from exudyn.itemInterface import *
+        from exudyn.graphicsDataUtilities import *
+        SC = exu.SystemContainer()
+        mbs = SC.AddSystem()
+        #create simple system:
+        mbs.AddNode(NodePoint())
+        body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
+        
+        #user function for moving graphics:
+        def UFgraphics(mbs, objectNum):
+            t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
+            #draw moving sphere on ground
+            graphics1=GraphicsDataSphere(point=[sin(t*2*pi), cos(t*2*pi), 0], 
+                                         radius=0.1, color=color4red, nTiles=32)
+            return [graphics1] 
 
-    #add object with graphics user function
-    ground = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsDataUserFunction=UFgraphics)))
-    mbs.Assemble()
-    sims=exu.SimulationSettings()
-    sims.timeIntegration.numberOfSteps = 10000000 #many steps to see graphics
-    exu.StartRenderer() #perform zoom all (press 'a' several times) after startup to see the sphere
-    exu.SolveDynamic(mbs, sims)
-    exu.StopRenderer()
+        #add object with graphics user function
+        ground = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsDataUserFunction=UFgraphics)))
+        mbs.Assemble()
+        sims=exu.SimulationSettings()
+        sims.timeIntegration.numberOfSteps = 10000000 #many steps to see graphics
+        exu.StartRenderer() #perform zoom all (press 'a' several times) after startup to see the sphere
+        exu.SolveDynamic(mbs, sims)
+        exu.StopRenderer()
     \end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "objects's unique name"
@@ -1058,15 +1056,6 @@ equations =
       \rowTable{applied forces}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$}{applied forces (loads, connectors, joint reaction forces, ...)}
     \finishTable
 
-    %\bi
-    %  %\item $m \ldots$ physicsMass
-    %  %\item $n0 \ldots$ node number
-    %  \item $\cv\body  = \cv_{n0} (= [q_0,\;q_1,\;q_2]\tp) \ldots$ displacement coordinates of body (taken from NodePoint)
-    %  \item $\fv = [f_0,\;f_1,\;f_2]\tp \ldots$ residual of all forces (loads, constraints, springs, ...)
-    %  \item $\pv\cRef = \cv\cRef = [q_0,\;q_1,\;q_2]\cRef\tp \ldots$ reference position = reference coordinates of node
-    %  \item $\pv\cConfig = \uv\cConfig + \pv\cRef \ldots$ position in any configuration ($\uv\cRef = 0$)
-    %  \item $\pv\cCur = \uv\cCur + \pv\cRef \ldots$ current position, equals to node's reference position + current coordinates
-    %\ei
     \mysubsubsubsection{Equations of motion}
     \be 
       \mr{m}{0}{0} {0}{m}{0} {0}{0}{m} \vr{\ddot q_0}{\ddot q_1}{\ddot q_2} = \vr{f_0}{f_1}{f_2}.
@@ -1081,6 +1070,7 @@ equations =
     \be
       \Qm = \Jm_{pos} \LU{0}{\fv}_a.
     \ee
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -1174,6 +1164,7 @@ equations =
     \be
       \Qm = \Jm_{pos} \LU{0}{\fv}_a.
     \ee
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -1269,6 +1260,7 @@ equations =
       \Jm_{pos} = \partial \pv\cCur / \partial {q_0}\cCur = 
        \LU{b}{[1,\,0,\,0]} \LU{b0}{\Rot_{0}}
     \ee
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -1371,6 +1363,7 @@ equations =
       \Jm_{rot} = \partial \tomega\cCur / \partial \dot q_{0,cur} = 
        \LU{b}{[0,\,0,\,1]} \LU{b0}{\Rot_{0}}
     \ee
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -1449,31 +1442,30 @@ equations =
     \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
     %
-    	\rowTable{inertia tensor}{$\LU{b}{\Jm} = \LU{b}{\mr{J_{xx}}{J_{xy}}{J_{xz}} {J_{xy}}{J_{yy}}{J_{yz}} {J_{xz}}{J_{yz}}{J_{zz}}}$}{symmetric inertia tensor, based on components of $\LU{b}{\jv_6}$, in body-fixed (local) coordinates and w.r.t.\ body's reference point}
-    	\rowTable{reference coordinates}{$\qv\cRef = [\pRef\tp\cRef,\,\tpsi\tp\cRef]\tp$}{defines reference configuration, {\bf DIFFERENT} meaning from body's reference point!}
-    	\rowTable{(relative) current coordinates}{$\qv\cCur = [\pRef\tp\cCur,\,\tpsi\tp\cCur]\tp$}{unknowns in solver; {\bf relative} to the reference coordinates; current coordinates at initial configuration = initial coordinates $\qv\cIni$}
-    	\rowTable{current velocity coordinates}{$\dot \qv\cCur = [\vv\tp\cCur,\,\dot \tpsi\tp\cCur]\tp = [\dot \pv\tp\cCur,\,\dot \ttheta\tp\cCur]\tp$}{current velocity coordinates}
+        \rowTable{inertia tensor}{$\LU{b}{\Jm} = \LU{b}{\mr{J_{xx}}{J_{xy}}{J_{xz}} {J_{xy}}{J_{yy}}{J_{yz}} {J_{xz}}{J_{yz}}{J_{zz}}}$}{symmetric inertia tensor, based on components of $\LU{b}{\jv_6}$, in body-fixed (local) coordinates and w.r.t.\ body's reference point}
+        \rowTable{reference coordinates}{$\qv\cRef = [\pRef\tp\cRef,\,\tpsi\tp\cRef]\tp$}{defines reference configuration, {\bf DIFFERENT} meaning from body's reference point!}
+        \rowTable{(relative) current coordinates}{$\qv\cCur = [\pRef\tp\cCur,\,\tpsi\tp\cCur]\tp$}{unknowns in solver; {\bf relative} to the reference coordinates; current coordinates at initial configuration = initial coordinates $\qv\cIni$}
+        \rowTable{current velocity coordinates}{$\dot \qv\cCur = [\vv\tp\cCur,\,\dot \tpsi\tp\cCur]\tp = [\dot \pv\tp\cCur,\,\dot \ttheta\tp\cCur]\tp$}{current velocity coordinates}
     %
-    	\rowTable{body's reference point}{$\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig$}{position of {\bf body's reference point} provided by node $n_0$ in any configuration except for reference; if $\LU{b}{\bv_{COM}}==[0,\;0,\;0]\tp$, this position becomes equal to the \hac{COM} position}
-    	\rowTable{reference body's reference point}{$\pRefG\cRef = \LU{0}{\pv}(n_0)\cRef$}{position of {\bf body's reference point} in reference configuration}
-    	\rowTable{body's reference point displacement}{$\LU{0}{\uv}\cConfig = \pRefG\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$}{displacement of {\bf body's reference point} which is provided by node $n_0$ in any configuration}
-    	\rowTable{body's reference point velocity}{$\LU{0}{\vv}\cConfig = \dot \pRefG\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$}{velocity of {\bf body's reference point} which is provided by node $n_0$ in any configuration}
-    	\rowTable{body's reference point acceleration}{$\LU{0}{\av}\cConfig = [\ddot q_0,\;\ddot q_1,\;\ddot q_2]\cConfig\tp$}{acceleration of {\bf body's reference point} which is provided by node $n_0$ in any configuration}
-    	\rowTable{rotation coordinates}{$\ttheta_{\mathrm{config}} = \tpsi(n_0)\cRef + \tpsi(n_0)\cConfig$}{(total) rotation parameters of body as provided by node $n_0$ in any configuration}
-    	\rowTable{rotation parameters}{$\ttheta_{\mathrm{config}} = \tpsi(n_0)\cRef + \tpsi(n_0)\cConfig$}{(total) rotation parameters of body as provided by node $n_0$ in any configuration}
-    	\rowTable{body rotation matrix}{$\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}(n_0)\cConfig$}{rotation matrix which transforms local to global coordinates as given by node}
-    	\rowTable{local position}{$\pLocB = [\LU{b}{b_0},\,\LU{b}{b_1},\,\LU{b}{b_2}]\tp$}{local position as used by markers or sensors}
-    	\rowTable{angular velocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0(n_0),\,\omega_1(n_0),\,\omega_2(n_0)]}\cConfig\tp$}{global angular velocity of body as provided by node $n_0$ in any configuration}
-    	\rowTable{local angular velocity}{$\LU{b}{\tomega}\cConfig$}{local angular velocity of body as provided by node $n_0$ in any configuration}
-    	\rowTable{body angular acceleration}{$\LU{0}{\talpha}\cConfig = \LU{0}{\dot \tomega}\cConfig$}{angular acceleratoin of body as provided by node $n_0$ in any configuration}
-    	%\rowTable{(generalized) coordinates}{$\cv\cConfig = [q_0,q_1,\;\psi_0]\tp$}{generalized coordinates of body (= coordinates of node)}
-    	%\rowTable{generalized forces}{$\LU{0}{\fv} = [f_0,\;f_1,\;\tau_2]\tp$}{generalized forces applied to body}
-    	\rowTable{applied forces}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$}{calculated from loads, connectors, ...}
-    	\rowTable{applied torques}{$\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp$}{calculated from loads, connectors, ...}
-    	\rowTable{constraint reaction forces}{$\LU{0}{\fv}_\lambda = [f_{\lambda 0},\;f_{\lambda 1},\;f_{\lambda 2}]\tp$}{calculated from joints or constraint)}
-    	\rowTable{constraint reaction torques}{$\LU{0}{\ttau}_\lambda = [\tau_{\lambda 0},\;\tau_{\lambda 1},\;\tau_{\lambda 2}]\tp$}{calculated from joints or constraints}
+        \rowTable{body's reference point}{$\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig$}{position of {\bf body's reference point} provided by node $n_0$ in any configuration except for reference; if $\LU{b}{\bv_{COM}}==[0,\;0,\;0]\tp$, this position becomes equal to the \hac{COM} position}
+        \rowTable{reference body's reference point}{$\pRefG\cRef = \LU{0}{\pv}(n_0)\cRef$}{position of {\bf body's reference point} in reference configuration}
+        \rowTable{body's reference point displacement}{$\LU{0}{\uv}\cConfig = \pRefG\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$}{displacement of {\bf body's reference point} which is provided by node $n_0$ in any configuration}
+        \rowTable{body's reference point velocity}{$\LU{0}{\vv}\cConfig = \dot \pRefG\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$}{velocity of {\bf body's reference point} which is provided by node $n_0$ in any configuration}
+        \rowTable{body's reference point acceleration}{$\LU{0}{\av}\cConfig = [\ddot q_0,\;\ddot q_1,\;\ddot q_2]\cConfig\tp$}{acceleration of {\bf body's reference point} which is provided by node $n_0$ in any configuration}
+        \rowTable{rotation coordinates}{$\ttheta_{\mathrm{config}} = \tpsi(n_0)\cRef + \tpsi(n_0)\cConfig$}{(total) rotation parameters of body as provided by node $n_0$ in any configuration}
+        \rowTable{rotation parameters}{$\ttheta_{\mathrm{config}} = \tpsi(n_0)\cRef + \tpsi(n_0)\cConfig$}{(total) rotation parameters of body as provided by node $n_0$ in any configuration}
+        \rowTable{body rotation matrix}{$\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}(n_0)\cConfig$}{rotation matrix which transforms local to global coordinates as given by node}
+        \rowTable{local position}{$\pLocB = [\LU{b}{b_0},\,\LU{b}{b_1},\,\LU{b}{b_2}]\tp$}{local position as used by markers or sensors}
+        \rowTable{angular velocity}{$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0(n_0),\,\omega_1(n_0),\,\omega_2(n_0)]}\cConfig\tp$}{global angular velocity of body as provided by node $n_0$ in any configuration}
+        \rowTable{local angular velocity}{$\LU{b}{\tomega}\cConfig$}{local angular velocity of body as provided by node $n_0$ in any configuration}
+        \rowTable{body angular acceleration}{$\LU{0}{\talpha}\cConfig = \LU{0}{\dot \tomega}\cConfig$}{angular acceleratoin of body as provided by node $n_0$ in any configuration}
+        %\rowTable{(generalized) coordinates}{$\cv\cConfig = [q_0,q_1,\;\psi_0]\tp$}{generalized coordinates of body (= coordinates of node)}
+        %\rowTable{generalized forces}{$\LU{0}{\fv} = [f_0,\;f_1,\;\tau_2]\tp$}{generalized forces applied to body}
+        \rowTable{applied forces}{$\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$}{calculated from loads, connectors, ...}
+        \rowTable{applied torques}{$\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp$}{calculated from loads, connectors, ...}
+        \rowTable{constraint reaction forces}{$\LU{0}{\fv}_\lambda = [f_{\lambda 0},\;f_{\lambda 1},\;f_{\lambda 2}]\tp$}{calculated from joints or constraint)}
+        \rowTable{constraint reaction torques}{$\LU{0}{\ttau}_\lambda = [\tau_{\lambda 0},\;\tau_{\lambda 1},\;\tau_{\lambda 2}]\tp$}{calculated from joints or constraints}
     \finishTable
-    %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Rotation parametrization}
     The equations of motion of the rigid body build upon a specific parameterization of the rigid body coordinates.
@@ -1550,10 +1542,10 @@ equations =
     we obtain
     \bea \label{eq:ObjectRigidBody:EOM}
       &&\mp{m \ImThree}  {-m \LU{0b}{\Rot} \LU{b}{\tilde \bv_{COM}}\LU{b}{\Gm_{rp}}}  {m \LU{b}{\Gm_{rp}\tp} \LU{b}{\tilde \bv_{COM}}\LU{0b}{\Rot\tp}}  {\LU{b}{\Gm_{rp}\tp}\LU{b}{\Jm}\LU{b}{\Gm_{rp}}} 
-    	  \vp{\LU{0}{\av}}{\ddot \ttheta} \nonumber \\
-    	&&= \vp{m \LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \bv_{COM}} \LU{b}{\tomega}  + m \LU{0b}{\Rot} \LU{b}{\tilde \bv_{COM}}\LU{b}{\dot \Gm_{rp}} \dot \ttheta}  
-    	     {-\LU{b}{\Gm_{rp}\tp}\LU{b}{\tilde \tomega} \LU{b}{\Jm} \LU{b}{\tomega} - \LU{b}{\Gm_{rp}\tp} \LU{b}{\Jm} \LU{b}{\dot \Gm_{rp}} \dot \ttheta} + 
-    	  \vp{\LU{0}{\fv}_a}{\LU{0}{\Gm_{rp}\tp}\LU{0}{\ttau}_a} + \vp{\LU{0}{\fv}_\lambda}{\fv_{\theta,\lambda}}
+          \vp{\LU{0}{\av}}{\ddot \ttheta} \nonumber \\
+        &&= \vp{m \LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \bv_{COM}} \LU{b}{\tomega}  + m \LU{0b}{\Rot} \LU{b}{\tilde \bv_{COM}}\LU{b}{\dot \Gm_{rp}} \dot \ttheta}  
+             {-\LU{b}{\Gm_{rp}\tp}\LU{b}{\tilde \tomega} \LU{b}{\Jm} \LU{b}{\tomega} - \LU{b}{\Gm_{rp}\tp} \LU{b}{\Jm} \LU{b}{\dot \Gm_{rp}} \dot \ttheta} + 
+          \vp{\LU{0}{\fv}_a}{\LU{0}{\Gm_{rp}\tp}\LU{0}{\ttau}_a} + \vp{\LU{0}{\fv}_\lambda}{\fv_{\theta,\lambda}}
     \eea
     with constraint reaction forces $\fv_{\theta,\lambda}$ for the rotation parameters. 
     Note that %$ \LU{b}{\tilde \tomega}\LU{b}{\bv_{COM}} = -\LU{b}{\tilde \bv_{COM}} \LU{b}{\tomega}$ has been used,
@@ -1592,6 +1584,7 @@ equations =
     
     For creating a \texttt{ObjectRigidBody}, there is a \texttt{rigidBodyUtilities} function \texttt{AddRigidBody}, 
     see \refSection{sec:rigidBodyUtilities:AddRigidBody}, which simplifies the setup of a rigid body significantely!
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -1710,6 +1703,7 @@ equations =
       \rowTable{\texttt{itemNumber}}{int}{integer number of the object in mbs, allowing easy access}
       \rowTable{\returnValue}{BodyGraphicsData}{list of \texttt{GraphicsData} dictionaries, see Section \ref{sec:graphicsData}}
     \finishTable
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -1894,34 +1888,34 @@ equations =
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    #user function, using variables M, K, ... from mini example, replacing ObjectGenericODE2(...)
-    KD = numpy.diag([200,100])
-    #nonlinear force example; this force is added to right-hand-side ==> negative sign!
-    def UFforce(mbs, t, itemNumber, q, q_t): 
-        return -np.dot(KD, q_t*q) #add nonlinear term for q_t and q, q_t*q gives vector
-    
-    #non-constant mass matrix:
-    def UFmass(mbs, t, itemNumber, q, q_t): 
-        return (q[0]+1)*M #uses mass matrix from mini example
-    
-    #non-constant mass matrix:
-    def UFgraphics(mbs, itemNumber):
-        t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
-        p = mbs.GetObjectOutputSuperElement(objectNumber=itemNumber, variableType = exu.OutputVariableType.Position,
-                                            meshNodeNumber = 0, #get first node's position 
-                                            configuration = exu.ConfigurationType.Visualization)
-        graphics1=GraphicsDataSphere(point=p,radius=0.1, color=color4red)
-            graphics2 = {'type':'Line', 'data': list(p)+[0,0,0], 'color':color4blue}
-        return [graphics1, graphics2] 
+    \pythonstyle\begin{lstlisting}
+        #user function, using variables M, K, ... from mini example, replacing ObjectGenericODE2(...)
+        KD = numpy.diag([200,100])
+        #nonlinear force example; this force is added to right-hand-side ==> negative sign!
+        def UFforce(mbs, t, itemNumber, q, q_t): 
+            return -np.dot(KD, q_t*q) #add nonlinear term for q_t and q, q_t*q gives vector
+        
+        #non-constant mass matrix:
+        def UFmass(mbs, t, itemNumber, q, q_t): 
+            return (q[0]+1)*M #uses mass matrix from mini example
+        
+        #non-constant mass matrix:
+        def UFgraphics(mbs, itemNumber):
+            t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
+            p = mbs.GetObjectOutputSuperElement(objectNumber=itemNumber, variableType = exu.OutputVariableType.Position,
+                                                meshNodeNumber = 0, #get first node's position 
+                                                configuration = exu.ConfigurationType.Visualization)
+            graphics1=GraphicsDataSphere(point=p,radius=0.1, color=color4red)
+                graphics2 = {'type':'Line', 'data': list(p)+[0,0,0], 'color':color4blue}
+            return [graphics1, graphics2] 
 
-    #now add object instead of object in mini-example:
-    oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1], 
-                       massMatrix=M, stiffnessMatrix=K, dampingMatrix=D,
-                       forceUserFunction=UFforce, massMatrixUserFunction=UFmass,
-                       visualization=VObjectGenericODE2(graphicsDataUserFunction=UFgraphics)))
+        #now add object instead of object in mini-example:
+        oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1], 
+                           massMatrix=M, stiffnessMatrix=K, dampingMatrix=D,
+                           forceUserFunction=UFforce, massMatrixUserFunction=UFmass,
+                           visualization=VObjectGenericODE2(graphicsDataUserFunction=UFgraphics)))
     \end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -2092,21 +2086,21 @@ equations =
     %\finishTable
     %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    A = numpy.diag([200,100])
-    #simple linear user function returning A*q + const
-    def UFrhs(mbs, t, itemNumber, q): 
-        return np.dot(A, q) + np.array([0,2])
-        
-    nODE1 = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0,0],
-                                        initialCoordinates=[1,0], numberOfODE1Coordinates=2))
+    \pythonstyle\begin{lstlisting}
+        A = numpy.diag([200,100])
+        #simple linear user function returning A*q + const
+        def UFrhs(mbs, t, itemNumber, q): 
+            return np.dot(A, q) + np.array([0,2])
+            
+        nODE1 = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0,0],
+                                            initialCoordinates=[1,0], numberOfODE1Coordinates=2))
 
-    #now add object instead of object in mini-example:
-    oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1], 
-                       rhsUserFunction=UFrhs))
-                                 
+        #now add object instead of object in mini-example:
+        oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1], 
+                           rhsUserFunction=UFrhs))
+                                     
     \end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -2237,7 +2231,7 @@ equations =
     so-called Composite-Rigid-Body (CRB) algorithm implemented.
     This algorithm does not show the highest performance, but creates the mass matrix $\Mm_{CRB}$ and forces $\fv_{CRB}$
     in a conventional form. The equations read
-    \be \label{eq_ObjectGenericODE2_EOM}
+    \be \label{eq_KinematicTree_EOM}
       \Mm_{CRB}(\qv) \ddot \qv = \fv_{CRB}(\qv,\dot \qv) + \fv + \fv_{PD} + \fv_{user}(mbs, t, i_N,\qv,\dot \qv)
     \ee
     The term $\fv_{CRB}(\qv,\dot \qv)$ represents inertial terms, which are due to accelerations and 
@@ -2285,6 +2279,7 @@ equations =
     \finishTable
     \vspace{12pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -2460,8 +2455,7 @@ equations =
     (\texttt{OutputVariableType}) of the mesh nodes $n_i$ of the superelement.
     Additionally, the contour drawing of the object can make use the \texttt{OutputVariableType} of the meshnodes.
     %
-    \mysubsubsubsection{Super element output variables}
-    \label{sec:objectffrf:superelementoutput}
+    \mysubsubsubsectionlabel{Super element output variables}{sec:objectffrf:superelementoutput}
     %
     \startTable{super element output variables}{symbol}{description}
       \rowTable{Position}{$\LU{0}{\pv}\cConfig(n_i) = \LU{0}{\pRef\cConfig} + \LU{0b}{\Rot}\cConfig \LU{b}{\pv}\cConfig(n_i)$}{global position of mesh node $n_i$ including rigid body motion and flexible deformation}
@@ -2473,8 +2467,8 @@ equations =
                               \LU{0b}{\Rot}\cConfig \LU{b}{\ddot \qv\indf}\cConfig(n_i) + 
                               2\LU{0}{\tomega}\cConfig \times \LU{0b}{\Rot}\cConfig \LU{b}{\dot \qv\indf}\cConfig(n_i) +
                               \LU{0}{\talpha}\cConfig \times \LU{0}{\pv}\cConfig(n_i)) + 
-                              \LU{0}{\tomega}\cConfig \times (\LU{0}{\tomega}\cConfig \times \LU{0}{\pv}\cConfig(n_i))$}
-      {global acceleration of mesh node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\pv}\cConfig(n_i) = \LU{0b}{\Rot} \LU{b}{\pv}\cConfig(n_i)$}
+                              \LU{0}{\tomega}\cConfig \times (\LU{0}{\tomega}\cConfig \times \LU{0}{\pv}\cConfig(n_i))$}{global acceleration of mesh
+                              node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\pv}\cConfig(n_i) = \LU{0b}{\Rot} \LU{b}{\pv}\cConfig(n_i)$}
       %
       \rowTable{DisplacementLocal}{$\LU{b}{\dv}\cConfig(n_i) = \LU{b}{\pv}\cConfig(n_i) - \LU{b}{\xv}\cRef(n_i)$}{local displacement of mesh node $n_i$, representing the flexible deformation within the body frame; note that $\LU{0}{\uv}\cConfig \neq \LU{0b}{\Rot}\LU{b}{\dv}\cConfig$ !}
       \rowTable{VelocityLocal}{$\LU{b}{\dot \qv\indf}\cConfig(n_i)$}{local velocity of mesh node $n_i$, representing the rate of flexible deformation within the body frame}
@@ -2494,7 +2488,6 @@ equations =
       \rowTable{flexible coordinates}{$\LU{b}{\qv\indf}$}{flexible, body-fixed coordinates}
       \rowTable{transformation of flexible coordinates}{$\LU{0b}{\Am_{bd}} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am})$}{block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates}
     \finishTable
-    %
     %++++++++++++++++++++++++++++++++++++++
     The derivations follow Zw{\"o}lfer and Gerstmayr \cite{ZwoelferGerstmayr2021} with only small modifications in the notation.
     \mysubsubsubsection{Nodal coordinates}
@@ -2503,16 +2496,16 @@ equations =
     nodal coordinates are $[n_{c_0},\,\ldots,\,n_{c_n}]$, where $n_0$ denotes the rigid body node.
     This gives $n_c$ total nodal coordinates, 
     \be
-    	n_c = \sum_{i=0}^{n_\mathrm{nf}} n_{c_i} \eqComma
+        n_c = \sum_{i=0}^{n_\mathrm{nf}} n_{c_i} \eqComma
     \ee
     whereof the number of flexible coordinates is
     \be
-    	n\indf = 3 \cdot n_\mathrm{nf} \eqDot
+        n\indf = 3 \cdot n_\mathrm{nf} \eqDot
     \ee
     
     \noindent The total number of equations (=coordinates) of the object is $n_c$.
-    The first node $n_0$ represents the rigid body motion of the underlying reference frame with $n_{c\indr} = n_{c_0}$ coordinates 
-    \footnote{e.g., $n_{c\indr}=6$ coordinates for Euler angles and $n_{c\indr}=7$ coordinates in case of Euler parameters; currently only the Euler parameter
+    The first node $n_0$ represents the rigid body motion of the underlying reference frame with $n_{c\indr} = n_{c_0}$ coordinates \footnote{e.g., 
+    $n_{c\indr}=6$ coordinates for Euler angles and $n_{c\indr}=7$ coordinates in case of Euler parameters; currently only the Euler parameter
     case is implemented.}. 
     
     \mysubsubsubsection{Kinematics}
@@ -2533,11 +2526,11 @@ equations =
     
     With the relations 
     \bea 
-    	\tPhi\indt &=& \left[\ImThree ,\; \ldots ,\; \ImThree \right]\tp \in \Rcal^{n\indf \times 3} \label{eq:ObjectFFRF:Phit}\eqComma\\
+        \tPhi\indt &=& \left[\ImThree ,\; \ldots ,\; \ImThree \right]\tp \in \Rcal^{n\indf \times 3} \label{eq:ObjectFFRF:Phit}\eqComma\\
         \LU{0}{\cv\indt} &=& \tPhi\indt \LU{0}{\qv\indt} \eqComma\\
         \LU{0}{\cv\indr} &=& \left(\LU{0b}{\Am_{bd}} - \Im_{bd}\right) \LU{b}{\xv\cRef} \eqComma\\
-    	\LU{0}{\cv\indf} &=& \LU{0b}{\Am_{bd}} \LU{b}{\qv\indf} \eqComma \mathrm{and}\\
-    	\Im_{bd} &=& \mathrm{diag}(\ImThree, \; \ldots ,\; \ImThree) \in \Rcal^{n\indf \times n\indf}  \eqComma
+        \LU{0}{\cv\indf} &=& \LU{0b}{\Am_{bd}} \LU{b}{\qv\indf} \eqComma \mathrm{and}\\
+        \Im_{bd} &=& \mathrm{diag}(\ImThree, \; \ldots ,\; \ImThree) \in \Rcal^{n\indf \times n\indf}  \eqComma
     \eea
     we obtain the total relation of (global) nodal displacements to the object coordinates
     \be
@@ -2567,16 +2560,16 @@ equations =
     We use the Lagrange equations extended for constraint $\gv$,
     \be
       \frac{d}{dt} \left( \frac{\partial T}{\partial \dot \qv\tp} \right) - \frac{\partial T}{\partial \qv\tp}
-    	+ \frac{\partial V}{\partial \qv\tp} + \frac{\partial \tlambda\tp \gv}{\partial \qv\tp} = \frac{\partial W}{\partial \qv\tp}
+        + \frac{\partial V}{\partial \qv\tp} + \frac{\partial \tlambda\tp \gv}{\partial \qv\tp} = \frac{\partial W}{\partial \qv\tp}
     \ee
     with the quantities
     \bea
       T(\LU{0}{\dot \cv(\qv, \dot \qv)}) &=& \frac{1}{2}\LU{0}{\dot \cv\tp} \LU{0}{\Mm}  \LU{0}{\dot \cv}  
-    	= \frac{1}{2}\LU{0}{\dot \cv\tp} \LU{0b}{\Am_{bd}} \LU{b}{\Mm} \LU{0b}{\Am_{bd}}\tp  \LU{0}{\dot \cv}
-    	= \frac{1}{2}\LU{0}{\dot \cv\tp} \LU{b}{\Mm}  \LU{0}{\dot \cv}\\
-    	V(\LU{0}{\qv\indf}) &=& \frac{1}{2}\LU{b}{\qv\indf\tp} \LU{b}{\Km}  \LU{b}{\qv\indf}  \\
-    	\delta W(\LU{0}{\cv(\qv)},t) &=& \LU{b}{\delta \cv \tp} \fv  \\
-    	\gv(\qv, t) &=& \Null  \\
+        = \frac{1}{2}\LU{0}{\dot \cv\tp} \LU{0b}{\Am_{bd}} \LU{b}{\Mm} \LU{0b}{\Am_{bd}}\tp  \LU{0}{\dot \cv}
+        = \frac{1}{2}\LU{0}{\dot \cv\tp} \LU{b}{\Mm}  \LU{0}{\dot \cv}\\
+        V(\LU{0}{\qv\indf}) &=& \frac{1}{2}\LU{b}{\qv\indf\tp} \LU{b}{\Km}  \LU{b}{\qv\indf}  \\
+        \delta W(\LU{0}{\cv(\qv)},t) &=& \LU{b}{\delta \cv \tp} \fv  \\
+        \gv(\qv, t) &=& \Null  \\
     \eea
     Note that $\LU{b}{\Mm}$ and $\LU{b}{\Km}$ are the conventional finite element mass an stiffness 
     matrices defined in the body frame.
@@ -2591,10 +2584,10 @@ equations =
     
     In case that \texttt{computeFFRFterms = True}, the equations \ref{eq:ObjectFFRF:Leq} can be transformed into the equations of motion,
     \be \label{eq:ObjectFFRF:eom}
-    	\left(\Mm_{user}(mbs, t, i_N, \qv,\dot \qv) + \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} 
+        \left(\Mm_{user}(mbs, t, i_N, \qv,\dot \qv) + \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} 
                     {\mathrm{sym.}}{}{\LU{b}{\Mm}} \right) \ddot \qv + 
-    				\mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{\Dm}} \dot \qv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{\Km}} \qv = 
-    				\fv_{v}(\qv,\dot \qv) + \vp{\fv\indr}{\LURU{0b}{\Am}{bd}{\mathrm{T}} \fv\indf} + \fv_{user}(mbs, t, i_N, \qv, \dot \qv)
+                    \mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{\Dm}} \dot \qv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{\Km}} \qv = 
+                    \fv_{v}(\qv,\dot \qv) + \vp{\fv\indr}{\LURU{0b}{\Am}{bd}{\mathrm{T}} \fv\indf} + \fv_{user}(mbs, t, i_N, \qv, \dot \qv)
     \ee
     in which \texttt{iN} represents the itemNumber (=objectNumber of ObjectFFRF in mbs) in the user function.
     The mass terms are given as
@@ -2635,7 +2628,7 @@ equations =
     \noindent If the rigid body node is using Euler parameters $\ttheta = [\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp$, an {\bf additional constraint} (constraint nr.\ 0) is 
     added automatically for the Euler parameter norm, reading
     \be
-    	1 - \sum_{i=0}^{3} \theta_i^2 = 0.
+        1 - \sum_{i=0}^{3} \theta_i^2 = 0.
     \ee
     
     %\noindent If \texttt{constrainRigidBodyMotion==True}, {\bf 6 algebraic constraints} (constraint nrs.\ $[1\ldots 6]$) are added to restrict rigid body motion:
@@ -2643,11 +2636,11 @@ equations =
     In order to suppress the rigid body motion of the mesh nodes, you should apply a ObjectConnectorCoordinateVector object with the following constraint
     equations which impose constraints of a so-called Tisserand frame, giving 3 constraints for the position of the center of mass
     \be
-    		\Phi\indt\tp \LU{b}{\Mm} \qv\indf = 0
+            \Phi\indt\tp \LU{b}{\Mm} \qv\indf = 0
     \ee
     and 3 constraints for the rotation,
     \be
-    		\tilde\xv_{f}\tp \LU{b}{\Mm} \qv\indf = 0
+            \tilde\xv_{f}\tp \LU{b}{\Mm} \qv\indf = 0
     \ee
     %
     %++++++++++++++++++++++++++++++++++++++
@@ -2677,6 +2670,7 @@ equations =
     \finishTable
     \vspace{12pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "objects's unique name"
@@ -2793,8 +2787,8 @@ outputVariables = "{'Coordinates':'all \hac{ODE2} coordinates', 'Coordinates_t':
 classType = Object
 objectType = SuperElement
 equations =
-%+++++++++++++++++++++++++++++++++++++
-    \mysubsubsubsection{Super element output variables}\label{sec:objectffrfreducedorder:superelementoutput}
+    %+++++++++++++++++++++++++++++++++++++
+    \mysubsubsubsectionlabel{Super element output variables}{sec:objectffrfreducedorder:superelementoutput}
     Functions like \texttt{GetObjectOutputSuperElement(...)}, see \refSection{sec:mainsystem:object}, 
     or \texttt{SensorSuperElement}, see \refSection{sec:mainsystem:sensor}, directly access special output variables
     (\texttt{OutputVariableType}) of the mesh nodes of the superelement.
@@ -2803,44 +2797,44 @@ equations =
     %\mysubsubsubsection{Definition of quantities}
     %The object additionally provides the following output variables for mesh nodes (use \texttt{mbs.GetObjectOutputSuperElement(...)} or \texttt{SensorSuperElement}):
     \startTable{super element output variables}{symbol}{description}
-    	\rowTable{DisplacementLocal (mesh node $i$)}{$\LU{b}{\uv\indf^{(i)}} = \left( \LU{b}{\tPsi} \tzeta\right)_{3\cdot i \ldots 3\cdot i+2}= \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}}$}{local nodal mesh displacement in reference (body) frame, measuring only flexible part of displacement}
-    	\rowTable{VelocityLocal (mesh node $(i)$)}{$\LU{b}{\dot \uv_\mathrm{f}^{(i)}} = \left( \LU{b}{\tPsi} \dot \tzeta\right)_{3\cdot i \ldots 3\cdot i+2}$}{local nodal mesh velocity in reference (body) frame, only for flexible part of displacement}
-    	\rowTable{Displacement (mesh node $(i)$)}{$\LU{0}{\uv\cConfig^{(i)}} = \LU{0}{\qv_{\mathrm{t,config}}} + \LU{0b}{\Am_\mathrm{config}} \LU{b}{\pv_\mathrm{f,config}^{(i)}} - (\LU{0}{\qv_{\mathrm{t,ref}}} + \LU{0b}{\Am_{ref}} \LU{b}{\xv\cRef^{(i)}})$}{nodal mesh displacement in global coordinates}
-    	\rowTable{Position (mesh node $(i)$)}{$\LU{0}{\pv^{(i)}} = \LU{0}{\pRef} + \LU{0b}{\Am} \LU{b}{\pv\indf^{(i)}}$}{nodal mesh position in global coordinates}
-    	\rowTable{Velocity (mesh node $(i)$)}{$\LU{0}{\dot \uv^{(i)}} = \LU{0}{\dot \qv\indt} + \LU{0b}{\Am} (\LU{b}{\dot \uv\indf^{(i)}} + \LU{b}{\tilde \tomega} \LU{b}{\pv\indf^{(i)}})$}{nodal mesh velocity in global coordinates}
-    	\rowTable{Acceleration (mesh node $(i)$)}{$\LU{0}{\av^{(i)}} = \LU{0}{\ddot \qv\indt} + 
-    													\LU{0b}{\Rot} \LU{b}{\ddot \uv\indf^{(i)}} + 
-    													2\LU{0}{\tomega} \times \LU{0b}{\Rot} \LU{b}{\dot \uv\indf^{(i)}} +
-    													\LU{0}{\talpha} \times \LU{0}{\pv\indf^{(i)}} + 
-    													\LU{0}{\tomega} \times (\LU{0}{\tomega} \times \LU{0}{\pv\indf^{(i)}})$}
-    	{global acceleration of mesh node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\xv}(n_i) = \LU{0b}{\Rot} \LU{b}{\xv}(n_i)$}
-    	\rowTable{StressLocal (mesh node $(i)$)}{$\LU{b}{\tsigma^{(i)}} = (\LU{b}{\tPsi_{OV}} \tzeta)_{3\cdot i \ldots 3\cdot i+5}$}{linearized stress components of mesh node $(i)$ in reference frame; $\tsigma=[\sigma_{xx},\,\sigma_{yy},\,\sigma_{zz},\,\sigma_{yz},\,\sigma_{xz},\,\sigma_{xy}]\tp$; ONLY available, if $\LU{b}{\tPsi}_{OV}$ is provided and \texttt{outputVariableTypeModeBasis== exu.OutputVariableType.StressLocal}}
-    	\rowTable{StrainLocal (mesh node $(i)$)}{$\LU{b}{\teps^{(i)}} = (\LU{b}{\tPsi}_{OV} \tzeta)_{3\cdot i \ldots 3\cdot i+5}$}{linearized strain components of mesh node $(i)$ in reference frame; $\teps=[\varepsilon_{xx},\,\varepsilon_{yy},\,\varepsilon_{zz},\,\varepsilon_{yz},\,\varepsilon_{xz},\,\varepsilon_{xy}]\tp$; ONLY available, if $\LU{b}{\tPsi}_{OV}$ is provided and \texttt{outputVariableTypeModeBasis== exu.OutputVariableType.StrainLocal}}
+        \rowTable{DisplacementLocal (mesh node $i$)}{$\LU{b}{\uv\indf^{(i)}} = \left( \LU{b}{\tPsi} \tzeta\right)_{3\cdot i \ldots 3\cdot i+2}= \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}}$}{local nodal mesh displacement in reference (body) frame, measuring only flexible part of displacement}
+        \rowTable{VelocityLocal (mesh node $(i)$)}{$\LU{b}{\dot \uv_\mathrm{f}^{(i)}} = \left( \LU{b}{\tPsi} \dot \tzeta\right)_{3\cdot i \ldots 3\cdot i+2}$}{local nodal mesh velocity in reference (body) frame, only for flexible part of displacement}
+        \rowTable{Displacement (mesh node $(i)$)}{$\LU{0}{\uv\cConfig^{(i)}} = \LU{0}{\qv_{\mathrm{t,config}}} + \LU{0b}{\Am_\mathrm{config}} \LU{b}{\pv_\mathrm{f,config}^{(i)}} - (\LU{0}{\qv_{\mathrm{t,ref}}} + \LU{0b}{\Am_{ref}} \LU{b}{\xv\cRef^{(i)}})$}{nodal mesh displacement in global coordinates}
+        \rowTable{Position (mesh node $(i)$)}{$\LU{0}{\pv^{(i)}} = \LU{0}{\pRef} + \LU{0b}{\Am} \LU{b}{\pv\indf^{(i)}}$}{nodal mesh position in global coordinates}
+        \rowTable{Velocity (mesh node $(i)$)}{$\LU{0}{\dot \uv^{(i)}} = \LU{0}{\dot \qv\indt} + \LU{0b}{\Am} (\LU{b}{\dot \uv\indf^{(i)}} + \LU{b}{\tilde \tomega} \LU{b}{\pv\indf^{(i)}})$}{nodal mesh velocity in global coordinates}
+        \rowTable{Acceleration (mesh node $(i)$)}{$\LU{0}{\av^{(i)}} = \LU{0}{\ddot \qv\indt} + 
+                                                        \LU{0b}{\Rot} \LU{b}{\ddot \uv\indf^{(i)}} + 
+                                                        2\LU{0}{\tomega} \times \LU{0b}{\Rot} \LU{b}{\dot \uv\indf^{(i)}} +
+                                                        \LU{0}{\talpha} \times \LU{0}{\pv\indf^{(i)}} + 
+                                                        \LU{0}{\tomega} \times (\LU{0}{\tomega} \times \LU{0}{\pv\indf^{(i)}})$}{global acceleration of mesh 
+                                                        node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\xv}(n_i) = \LU{0b}{\Rot} \LU{b}{\xv}(n_i)$}
+        \rowTable{StressLocal (mesh node $(i)$)}{$\LU{b}{\tsigma^{(i)}} = (\LU{b}{\tPsi_{OV}} \tzeta)_{3\cdot i \ldots 3\cdot i+5}$}{linearized stress components of mesh node $(i)$ in reference frame; $\tsigma=[\sigma_{xx},\,\sigma_{yy},\,\sigma_{zz},\,\sigma_{yz},\,\sigma_{xz},\,\sigma_{xy}]\tp$; ONLY available, if $\LU{b}{\tPsi}_{OV}$ is provided and \texttt{outputVariableTypeModeBasis== exu.OutputVariableType.StressLocal}}
+        \rowTable{StrainLocal (mesh node $(i)$)}{$\LU{b}{\teps^{(i)}} = (\LU{b}{\tPsi}_{OV} \tzeta)_{3\cdot i \ldots 3\cdot i+5}$}{linearized strain components of mesh node $(i)$ in reference frame; $\teps=[\varepsilon_{xx},\,\varepsilon_{yy},\,\varepsilon_{zz},\,\varepsilon_{yz},\,\varepsilon_{xz},\,\varepsilon_{xy}]\tp$; ONLY available, if $\LU{b}{\tPsi}_{OV}$ is provided and \texttt{outputVariableTypeModeBasis== exu.OutputVariableType.StrainLocal}}
     \finishTable
     %
     %+++++++++++++++++++++++++++++++++++++++++++++++++++
     \startTable{intermediate variables}{symbol}{description}
-    	\rowTable{reference frame}{$b$}{the body-fixed / local frame is always denoted by $b$}
-    	\rowTable{number of rigid body coordinates}{$n\indrigid$}{number of rigid body node coordinates: 6 in case of Euler angles (not fully available for ObjectFFRFreducedOrder) and 7 in case of Euler parameters}
-    	\rowTable{number of flexible / mesh coordinates}{$n\indf = 3 \cdot n_n$}{with number of nodes $n_n$; relevant for visualization}
-    	\rowTable{number of modal coordinates}{$n_m \ll n\indf$}{the number of reduced or modal coordinates, computed from number of columns given in \texttt{modeBasis}}
-    	\rowTable{total number object coordinates}{$n_{ODE2} = n_m + n_{rigid}$}{}
+        \rowTable{reference frame}{$b$}{the body-fixed / local frame is always denoted by $b$}
+        \rowTable{number of rigid body coordinates}{$n\indrigid$}{number of rigid body node coordinates: 6 in case of Euler angles (not fully available for ObjectFFRFreducedOrder) and 7 in case of Euler parameters}
+        \rowTable{number of flexible / mesh coordinates}{$n\indf = 3 \cdot n_n$}{with number of nodes $n_n$; relevant for visualization}
+        \rowTable{number of modal coordinates}{$n_m \ll n\indf$}{the number of reduced or modal coordinates, computed from number of columns given in \texttt{modeBasis}}
+        \rowTable{total number object coordinates}{$n_{ODE2} = n_m + n_{rigid}$}{}
     %
-    	\rowTable{reference frame origin}{$\LU{0}{\pRef} = \LU{0}{\qv_{\mathrm{t}}} + \LU{0}{\qv_{\mathrm{t,ref}}}$}{reference frame position (origin)}
-    	\rowTable{reference frame rotation}{$\ttheta\cConfig = \ttheta\cConfig + \ttheta_{ref}$}{reference frame rotation parameters in any configuration except reference}
-    	\rowTable{reference frame orientation}{$\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}\cConfig(\ttheta\cConfig)$}{transformation matrix for transformation of local (reference frame) to global coordinates, given by underlying rigid body node $n_0$}
+        \rowTable{reference frame origin}{$\LU{0}{\pRef} = \LU{0}{\qv_{\mathrm{t}}} + \LU{0}{\qv_{\mathrm{t,ref}}}$}{reference frame position (origin)}
+        \rowTable{reference frame rotation}{$\ttheta\cConfig = \ttheta\cConfig + \ttheta_{ref}$}{reference frame rotation parameters in any configuration except reference}
+        \rowTable{reference frame orientation}{$\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}\cConfig(\ttheta\cConfig)$}{transformation matrix for transformation of local (reference frame) to global coordinates, given by underlying rigid body node $n_0$}
     %
-    	\rowTable{local vector of flexible coordinates}{$\LU{b}{\qv\indf} = \LU{b}{\tPsi} \tzeta$}{represents mesh displacements; vector of alternating x,y, an z coordinates of local (in body frame) mesh displacements reconstructed from modal coordinates $\tzeta$; only evaluated for selected node points (e.g., sensors) during computation; corresponds to same vector in \texttt{ObjectFFRF}}
-    	\rowTable{local nodal positions}{$\LU{b}{\pv\indf} = \LU{b}{\qv\indf} + \LU{b}{\xv\cRef}$}{vector of all body-fixed nodal positions including flexible part; only evaluated for selected node points during computation}
-    	\rowTable{local position of node (i)}{$\LU{b}{\pv\indf^{(i)}} = \LU{b}{\uv\indf^{(i)}} + \LU{b}{\xv^{(i)}\cRef} = \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}} + \vr{\LU{b}{\xv_{\mathrm{ref},i\cdot 3}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+1}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+2}}}$}{body-fixed, deformed nodal mesh position (including flexible part)}
+        \rowTable{local vector of flexible coordinates}{$\LU{b}{\qv\indf} = \LU{b}{\tPsi} \tzeta$}{represents mesh displacements; vector of alternating x,y, an z coordinates of local (in body frame) mesh displacements reconstructed from modal coordinates $\tzeta$; only evaluated for selected node points (e.g., sensors) during computation; corresponds to same vector in \texttt{ObjectFFRF}}
+        \rowTable{local nodal positions}{$\LU{b}{\pv\indf} = \LU{b}{\qv\indf} + \LU{b}{\xv\cRef}$}{vector of all body-fixed nodal positions including flexible part; only evaluated for selected node points during computation}
+        \rowTable{local position of node (i)}{$\LU{b}{\pv\indf^{(i)}} = \LU{b}{\uv\indf^{(i)}} + \LU{b}{\xv^{(i)}\cRef} = \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}} + \vr{\LU{b}{\xv_{\mathrm{ref},i\cdot 3}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+1}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+2}}}$}{body-fixed, deformed nodal mesh position (including flexible part)}
     %
-    	\rowTable{vector of modal coordinates}{$\tzeta = [\zeta_0,\,\ldots,\zeta_{n_m-1}]\tp$}{vector of modal or reduced coordinates; these coordinates can either represent amplitudes of eigenmodes, static modes or general modes, depending on your mode basis}
-    	\rowTable{coordinate vector}{$\qv = [\LU{0}{\qv\indt},\,\tpsi,\,\tzeta]$}{vector of object coordinates; $\qv\indt$ and $\tpsi$ are the translation and rotation part of displacements of the reference frame, provided by the rigid body node (node number 0)}
+        \rowTable{vector of modal coordinates}{$\tzeta = [\zeta_0,\,\ldots,\zeta_{n_m-1}]\tp$}{vector of modal or reduced coordinates; these coordinates can either represent amplitudes of eigenmodes, static modes or general modes, depending on your mode basis}
+        \rowTable{coordinate vector}{$\qv = [\LU{0}{\qv\indt},\,\tpsi,\,\tzeta]$}{vector of object coordinates; $\qv\indt$ and $\tpsi$ are the translation and rotation part of displacements of the reference frame, provided by the rigid body node (node number 0)}
     %
-    	\rowTable{flexible coordinates transformation matrix}{$\LU{0b}{\Am_{bd}} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am}])$}{block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates}
+        \rowTable{flexible coordinates transformation matrix}{$\LU{0b}{\Am_{bd}} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am}])$}{block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates}
     %
-    	%\rowTable{local mesh displacements}{$\LU{b}{\uv\indf^{(i)}} = \vr{\LU{b}{\qv}_{\mathrm{f},i\cdot 3}}{\LU{b}{\qv}_{\mathrm{f},i\cdot 3+1}}{\LU{b}{\qv}_{\mathrm{f},i\cdot 3+2}}$}{nodal mesh displacement in local coordinates (body frame)}
-    	%\rowTable{local mesh position}{$\LU{b}{\pv\indf^{(i)}} = \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}} + \vr{\LU{b}{\xv_{\mathrm{ref},i\cdot 3}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+1}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+2}}}$}{(deformed) nodal mesh position in local coordinates (body frame)}
+        %\rowTable{local mesh displacements}{$\LU{b}{\uv\indf^{(i)}} = \vr{\LU{b}{\qv}_{\mathrm{f},i\cdot 3}}{\LU{b}{\qv}_{\mathrm{f},i\cdot 3+1}}{\LU{b}{\qv}_{\mathrm{f},i\cdot 3+2}}$}{nodal mesh displacement in local coordinates (body frame)}
+        %\rowTable{local mesh position}{$\LU{b}{\pv\indf^{(i)}} = \vr{\LU{b}{\qv_{\mathrm{f},i\cdot 3}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+1}}}{\LU{b}{\qv_{\mathrm{f},i\cdot 3+2}}} + \vr{\LU{b}{\xv_{\mathrm{ref},i\cdot 3}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+1}}}{\LU{b}{\xv_{\mathrm{ref},i\cdot 3+2}}}$}{(deformed) nodal mesh position in local coordinates (body frame)}
     \finishTable
     %
     \mysubsubsubsection{Modal reduction and reduced inertia matrices}
@@ -2855,7 +2849,7 @@ equations =
       \includegraphics[width=8cm]{figures/ObjectFFRFsketch.pdf}
       \end{center}
       \caption{Floating frame of reference with exemplary position of a mesh node $i$.}
-    	\label{fig:ObjectFFRFreducedOrder:mesh}
+        \label{fig:ObjectFFRFreducedOrder:mesh}
     \end{figure}
     %++++++++++++++++++++++++
 
@@ -2875,7 +2869,7 @@ equations =
     The \texttt{ObjectFFRF} coordinates and \eqs{eq:ObjectFFRF:eom}\footnote{this is not done for user functions and \texttt{forceVector}} can be reduced by the matrix $\Hm \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}$,
     \be
       \qv_{FFRF} = \vr{\qv\indt}{\ttheta}{\LU{b}{\qv\indf}} = \mr{\ImThree}{\Null}{\Null} {\Null}{\Im\indr}{\Null} {\Null}{\Null}{\LU{b}{\tPsi}} \vr{\qv\indt}{\ttheta}{\tzeta}
-    	= \Hm \, \qvOFRO
+        = \Hm \, \qvOFRO
     \ee
     with the $4\times 4$ identity matrix $\Im\indr$ in case of Euler parameters and the reduced coordinates $\qv$.
     
@@ -2896,7 +2890,7 @@ equations =
     and seven inertia-like matrices \cite{ZwoelferGerstmayr2021},
     \be
       \Mm_{AB} = \Am\tp \LU{b}{\Mm} \Bm, \quad \mathrm{using} \quad \Am\Bm \in \left[\tPsi\tPsi ,\; \widetilde{\tPsi}\tPsi,\; \widetilde{\tPsi}\widetilde{\tPsi},\; 
-    	\tPhi\indt\tPsi,\; \tPhi\indt\widetilde{\tPsi},\; \tilde\xv\cRef\tPsi,\; \tilde\xv\cRef\widetilde{\tPsi}\right]
+        \tPhi\indt\tPsi,\; \tPhi\indt\widetilde{\tPsi},\; \tilde\xv\cRef\tPsi,\; \tilde\xv\cRef\widetilde{\tPsi}\right]
     \ee
     Note that the special tilde operator for vectors $\pv \in \Rcal^{n_f}$ of \eq{eq:ObjectFFRF:specialTilde} is frequently used.
     
@@ -2908,15 +2902,15 @@ equations =
     \mysubsubsubsection{Equations of motion}
     Equations of motion, in case that \texttt{computeFFRFterms = True}:
     \bea
-    	\left(\Mm_{user}(mbs, t,\qvOFRO,\dot \qvOFRO) + 
+        \left(\Mm_{user}(mbs, t,\qvOFRO,\dot \qvOFRO) + 
                     \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} {\mathrm{sym.}}{}{\Mm\indff} \right) \ddot \qvOFRO + 
-    				\mr{0}{0}{0} {0}{0}{0} {0}{0}{\Dm\indff} \dot \qvOFRO + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Km\indff} \qvOFRO = &&\\ \nonumber
-    				\fv_v(\qvOFRO,\dot \qvOFRO) + \fv_{user}(mbs, t,\qvOFRO,\dot \qvOFRO) &&
+                    \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Dm\indff} \dot \qvOFRO + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\Km\indff} \qvOFRO = &&\\ \nonumber
+                    \fv_v(\qvOFRO,\dot \qvOFRO) + \fv_{user}(mbs, t,\qvOFRO,\dot \qvOFRO) &&
     \eea
     \footnote{NOTE that currently the internal (C++) computed terms are zero,
     \be
       \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf} {\mathrm{sym.}}{}{\Mm\indff} = \Null \quad \mathrm{and} \quad
-    	\fv_v(\qvOFRO,\dot \qvOFRO) = \Null \eqComma
+        \fv_v(\qvOFRO,\dot \qvOFRO) = \Null \eqComma
     \ee
     but they are implemented in predefined user functions, see \texttt{FEM.py}, \refSection{sec:FEM:ObjectFFRFreducedOrderInterface:AddObjectFFRFreducedOrderWithUserFunctions}. In near future, these terms will be implemented in C++ and replace the user functions.}
     %
@@ -2926,13 +2920,13 @@ equations =
     \bea
       \Mm\indtt &=& m \ImThree \\
       \Mm\indtr &=& -\LU{0b}{\Rot} \left[ m \LU{b}{\tilde \tchi\indu} + \Mm_{\Phi\indt\!{\widetilde\Psi}} 
-    	              \left( \tzeta \otimes \Im \right)  \right] \LU{b}{\Gm}\\
+                      \left( \tzeta \otimes \Im \right)  \right] \LU{b}{\Gm}\\
       \Mm\indtf &=& \LU{0b}{\Rot} \Mm_{\Phi\indt\!\Psi} \\
       \Mm\indrr &=& \LU{b}{\Gm\tp} \left[\LU{b}{\tTheta}\indu + 
-    	                                  \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \tzeta \otimes \Im \right) +
-    																		\left( \tzeta \otimes \Im \right)\tp \Mm_{\tilde \xv\cRef{\widetilde\Psi}}\tp +
-    																		\left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right)
-    																		\right] \LU{b}{\Gm}\\
+                                          \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \tzeta \otimes \Im \right) +
+                                                                            \left( \tzeta \otimes \Im \right)\tp \Mm_{\tilde \xv\cRef{\widetilde\Psi}}\tp +
+                                                                            \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right)
+                                                                            \right] \LU{b}{\Gm}\\
       \Mm\indrf &=& -\LU{b}{\Gm\tp} \left[ \Mm_{\tilde \xv\cRef\Psi} + \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}\Psi}  \right] \\ 
       \Mm\indff &=& \Mm_{\Psi\Psi}
     \eea
@@ -2943,28 +2937,28 @@ equations =
     The quadratic velocity vector $\fv_v(\qvOFRO,\dot \qvOFRO) = \left[ \fv_{v\mathrm{t}}\tp,\; \fv_{v\mathrm{r}}\tp,\; \fv_{v\mathrm{f}}\tp \right]\tp$ reads
     \bea
       \fv_{v\mathrm{t}} &=& \LU{0b}{\Rot} \LU{b}{\tilde \tomega}\left[ m \LU{b}{\tilde \tchi\indu} + \Mm_{\Phi\indt\!{\widetilde\Psi}} 
-    	              \left( \tzeta \otimes \Im \right)  \right] \LU{b}{\tomega} + 
-    								2 \LU{0b}{\Rot} \Mm_{\Phi\indt\!{\widetilde\Psi}} \left( \dot \tzeta \otimes \Im \right)  \LU{b}{\tomega} \nonumber \\
-    							&& + \LU{0b}{\Rot} \left[ m \LU{b}{\tilde \tchi\indu} + \Mm_{\Phi\indt\!{\widetilde\Psi}} 
-    	              \left( \tzeta \otimes \Im \right)  \right] \LU{b}{\dot \Gm} \dot \ttheta \eqComma \\
-    	\fv_{v\mathrm{r}} &=& -\LU{b}{\Gm\tp} \LU{b}{\tilde \tomega} \left[\LU{b}{\tTheta}\indu + 
-    	                                  \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \tzeta \otimes \Im \right) +
-    																		\left( \tzeta \otimes \Im \right)\tp \Mm_{\tilde \xv\cRef{\widetilde\Psi}}\tp +
-    																		\left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right)
-    																		\right]\LU{b}{\tomega} \nonumber \\
-    										&& -2 \LU{b}{\Gm\tp} \left[ \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \dot \tzeta \otimes \Im \right) +
-    																		            \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \dot \tzeta \otimes \Im \right)
-    										                     \right] \LU{b}{\tomega} \nonumber \\
-    										&& -\LU{b}{\Gm\tp}\left[\LU{b}{\tTheta}\indu + 
-    	                                  \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \tzeta \otimes \Im \right) +
-    																		\left( \tzeta \otimes \Im \right)\tp \Mm_{\tilde \xv\cRef{\widetilde\Psi}}\tp +
-    																		\left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right)
-    																		\right] \LU{b}{\dot \Gm} \dot \ttheta \eqComma \\
-    	\fv_{v\mathrm{f}} &=& \left( \Im_\zeta \otimes \LU{b}{\tomega} \right)\tp 
-    	                            \left[ \Mm_{\tilde\xv\cRef{\widetilde\Psi}}\tp + \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right) \right] \LU{b}{\tomega}
-    															+2 \Mm_{{\widetilde\Psi}{\Psi}}\tp\left( \dot\tzeta \otimes \Im \right) \LU{b}{\tomega} \nonumber \\
-    										&& + \left[ \Mm_{\tilde\xv\cRef{\Psi}}\tp + \Mm_{{\widetilde\Psi}{\Psi}}\tp\left( \tzeta \otimes \Im \right)
-    										     \right] \LU{b}{\dot \Gm} \dot \ttheta \eqDot
+                      \left( \tzeta \otimes \Im \right)  \right] \LU{b}{\tomega} + 
+                                    2 \LU{0b}{\Rot} \Mm_{\Phi\indt\!{\widetilde\Psi}} \left( \dot \tzeta \otimes \Im \right)  \LU{b}{\tomega} \nonumber \\
+                                && + \LU{0b}{\Rot} \left[ m \LU{b}{\tilde \tchi\indu} + \Mm_{\Phi\indt\!{\widetilde\Psi}} 
+                      \left( \tzeta \otimes \Im \right)  \right] \LU{b}{\dot \Gm} \dot \ttheta \eqComma \\
+        \fv_{v\mathrm{r}} &=& -\LU{b}{\Gm\tp} \LU{b}{\tilde \tomega} \left[\LU{b}{\tTheta}\indu + 
+                                          \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \tzeta \otimes \Im \right) +
+                                                                            \left( \tzeta \otimes \Im \right)\tp \Mm_{\tilde \xv\cRef{\widetilde\Psi}}\tp +
+                                                                            \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right)
+                                                                            \right]\LU{b}{\tomega} \nonumber \\
+                                            && -2 \LU{b}{\Gm\tp} \left[ \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \dot \tzeta \otimes \Im \right) +
+                                                                                        \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \dot \tzeta \otimes \Im \right)
+                                                                 \right] \LU{b}{\tomega} \nonumber \\
+                                            && -\LU{b}{\Gm\tp}\left[\LU{b}{\tTheta}\indu + 
+                                          \Mm_{\tilde \xv\cRef{\widetilde\Psi}} \left( \tzeta \otimes \Im \right) +
+                                                                            \left( \tzeta \otimes \Im \right)\tp \Mm_{\tilde \xv\cRef{\widetilde\Psi}}\tp +
+                                                                            \left( \tzeta \otimes \Im \right)\tp \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right)
+                                                                            \right] \LU{b}{\dot \Gm} \dot \ttheta \eqComma \\
+        \fv_{v\mathrm{f}} &=& \left( \Im_\zeta \otimes \LU{b}{\tomega} \right)\tp 
+                                    \left[ \Mm_{\tilde\xv\cRef{\widetilde\Psi}}\tp + \Mm_{{\widetilde\Psi}{\widetilde\Psi}}\left( \tzeta \otimes \Im \right) \right] \LU{b}{\tomega}
+                                                                +2 \Mm_{{\widetilde\Psi}{\Psi}}\tp\left( \dot\tzeta \otimes \Im \right) \LU{b}{\tomega} \nonumber \\
+                                            && + \left[ \Mm_{\tilde\xv\cRef{\Psi}}\tp + \Mm_{{\widetilde\Psi}{\Psi}}\tp\left( \tzeta \otimes \Im \right)
+                                                 \right] \LU{b}{\dot \Gm} \dot \ttheta \eqDot
     \eea
     Note that terms including $\LU{b}{\dot \Gm} \dot \ttheta$ vanish in case of Euler parameters or in case that $\LU{b}{\dot \Gm} = \Null$,
     and we use another Kronecker product with the unit matrix $\Im_\zeta \in \Rcal^{n_m \times n_m}$,
@@ -3062,6 +3056,7 @@ equations =
     \finishTable
     \vspace{12pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "objects's unique name"
@@ -3217,8 +3212,10 @@ equations =
     \finishTable
 
     The Bernoulli-Euler beam is capable of large axial and bendig deformation as it employs the material measure of curvature for the bending.
-%
-    \mysubsubsubsection{Kinematics and interpolation}\footnote{Note that in this section, expressions are written in 2D, while output variables are in general 3D quantities, adding a zero for the $z$-coordinate.}
+    %
+    \mysubsubsubsection{Kinematics and interpolation}
+    %
+    Note that in this section, expressions are written in 2D, while output variables are in general 3D quantities, adding a zero for the $z$-coordinate.
     %
     ANCF elements follow the original concept proposed by Shabana \cite{shabana1997ancf}.
     The present 2D element is based on the interpolation used by Berzeri and Shabana \cite{berzeri2000}, but the formulation (especially of the elastic forces) is according to
@@ -3302,7 +3299,7 @@ equations =
     \ee 
     and the material measure of curvature (bending strain) is given as
     \be
-    	K=\ev_3^T \frac{ \rv'\times \rv'' }{\Vert \rv'\Vert^2} .
+        K=\ev_3^T \frac{ \rv'\times \rv'' }{\Vert \rv'\Vert^2} .
     \ee
     %\todo{define vector e3}
     in which $\ev_3$ is the unit vector which is perpendicular to the plane of the planar beam element.
@@ -3312,7 +3309,7 @@ equations =
     \delta \varepsilon =\frac{\partial \varepsilon}{\partial q_i}\delta q_i
       %= \frac{\rv'^{T}\frac{\partial}{\partial q_i}\rv'}{\Vert \rv' \Vert} \delta q_i
     %=\frac{1}{\Vert \rv' \Vert}\rv'^{T}\frac{\partial \rv'}{\partial q_i}\delta q_i\nonumber\\
-    	=\frac{1}{\Vert \rv'\Vert}\rv'^{T}\Sm'_i \delta q_i.
+        =\frac{1}{\Vert \rv'\Vert}\rv'^{T}\Sm'_i \delta q_i.
     \ee
     and the variation of $K$
     \bea \label{eq:cable2D:deltaKappa}
@@ -3347,15 +3344,15 @@ equations =
     The time derivatives of axial strain $\dot \varepsilon_p$ follows by elementary differentiation
     \be
       \dot \varepsilon =  \frac{\partial }{\partial t}\left(\Vert \rv'\Vert-1 \right)
-    	%= \frac{\rv^{\prime T} \frac{\partial}{\partial t}\rv'}{\Vert \rv'\Vert} 
-    	= \frac{1}{\Vert \rv'\Vert} \rv^{\prime T} \Sm' \dot \qv
+        %= \frac{\rv^{\prime T} \frac{\partial}{\partial t}\rv'}{\Vert \rv'\Vert} 
+        = \frac{1}{\Vert \rv'\Vert} \rv^{\prime T} \Sm' \dot \qv
     \ee
     as well as the derivative of the curvature,
     \bea
-    	\dot K & = &  \frac{\partial }{\partial t}\left(\ev_3^T\frac{ \rv'\times \rv'' }{\Vert \rv'\Vert^2}\right) \nonumber\\
-    	         & = &\frac{\ev_3^T}{(\rv'^T \rv')^2} \left( (\rv'^T \rv')   \frac{\partial \left( \rv' \times \rv'' \right)^T }{\partial t} -\left( \rv' \times \rv'' \right)^T  \frac{\partial  (\rv'^T \rv')}{\partial t} \right)\nonumber\\
-    			 %& = & \frac{\ev_3^T}{(\rv'^T \rv')^2} \left((\rv'^T \rv') \left( \frac {\partial \rv''}{\partial t} \times \rv''+ \frac{\partial \rv''}{\partial t} \times \rv' \right)-\left( \rv' \times \rv'' \right) \left(2\rv'^T \frac{\partial \rv'}{\partial t}\right) \right) \nonumber\\
-    		     & = &  \frac{\ev_3^T}{(\rv'^T \rv')^2}\left((\rv'^T \rv')\left((\Sm' \dot \qv) \times \rv'' + (\Sm'' \dot \qv) \times \rv'\right)-\left( \rv' \times \rv'' \right) (2\rv'^T (\Sm' \dot \qv)) \right) .
+        \dot K & = &  \frac{\partial }{\partial t}\left(\ev_3^T\frac{ \rv'\times \rv'' }{\Vert \rv'\Vert^2}\right) \nonumber\\
+                 & = &\frac{\ev_3^T}{(\rv'^T \rv')^2} \left( (\rv'^T \rv')   \frac{\partial \left( \rv' \times \rv'' \right)^T }{\partial t} -\left( \rv' \times \rv'' \right)^T  \frac{\partial  (\rv'^T \rv')}{\partial t} \right)\nonumber\\
+                 %& = & \frac{\ev_3^T}{(\rv'^T \rv')^2} \left((\rv'^T \rv') \left( \frac {\partial \rv''}{\partial t} \times \rv''+ \frac{\partial \rv''}{\partial t} \times \rv' \right)-\left( \rv' \times \rv'' \right) \left(2\rv'^T \frac{\partial \rv'}{\partial t}\right) \right) \nonumber\\
+                 & = &  \frac{\ev_3^T}{(\rv'^T \rv')^2}\left((\rv'^T \rv')\left((\Sm' \dot \qv) \times \rv'' + (\Sm'' \dot \qv) \times \rv'\right)-\left( \rv' \times \rv'' \right) (2\rv'^T (\Sm' \dot \qv)) \right) .
     \eea
     
     The virtual work of applied forces reads
@@ -3409,6 +3406,7 @@ equations =
       -r'_y \cdot S'_1(x) \frac{1}{\rv^{\prime 2}} & r'_x \cdot S'_1(x) \frac{1}{\rv^{\prime 2}} & 
       -r'_y \cdot S'_2(x) \frac{1}{\rv^{\prime 2}} & \cdots & r'_x \cdot S'_4(x) \frac{1}{\rv^{\prime 2}}  \end{array} \!\!\right]
     \ee
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -3533,6 +3531,7 @@ equations =
 
     A detailed paper on this element is yet under submission, but a similar formulation can be found in \cite{PechsteinGerstmayr2013ale} and 
     the underlying beam element is identical to ObjectANCFCable2D.
+    %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "objects's unique name"
@@ -3620,6 +3619,7 @@ classType = Object
 objectType = FiniteElement
 equations = 
     Detailed description coming later.
+    %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "objects's unique name"
@@ -3706,6 +3706,7 @@ objectType = FiniteElement
 equations = 
     See paper of Simo and Vu-Quoc (1986).
     Detailed description coming later.
+    %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "objects's unique name"
@@ -3787,6 +3788,7 @@ classType = Object
 objectType = FiniteElement
 equations = 
     Detailed description coming later.
+    %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "objects's unique name"
@@ -3870,7 +3872,7 @@ equations =
     \rowTable{Distance}{$L$}{$|\Delta\! \LU{0}{\pv}|$}
     \rowTable{Force}{$\fv$}{see below}
     \finishTable
-%
+    %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Connector forces}
     %
@@ -3975,7 +3977,7 @@ equations =
     -\frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right) \LU{0}{\Jm_{pos,m0}}$ and 
     $\frac{\partial \vv_{f} }{\partial \qv_{m1}} = 
     \frac{1}{L}\left(\Im - \LU{0}{\vv_{f}} \otimes \LU{0}{\vv_{f}} \right) \LU{0}{\Jm_{pos,m1}}$.
-%
+    %
     The Jacobian w.r.t.\ velocity coordinates follows as
     \bea
       \frac{\partial \Qm_{SD, m0}}{\partial \dot \qv_{m0}}
@@ -4014,17 +4016,17 @@ equations =
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    #define nonlinear force
-    def UFforce(mbs, t, itemNumber, u, v, k, d, F0): 
-        return k*u + d*v + F0
-    #markerNumbers taken from mini example
-    mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
-                                              referenceLength = 1, 
-                                              stiffness = 100, damping = 1,
-                                              springForceUserFunction = UFforce))
+    \pythonstyle\begin{lstlisting}
+        #define nonlinear force
+        def UFforce(mbs, t, itemNumber, u, v, k, d, F0): 
+            return k*u + d*v + F0
+        #markerNumbers taken from mini example
+        mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
+                                                  referenceLength = 1, 
+                                                  stiffness = 100, damping = 1,
+                                                  springForceUserFunction = UFforce))
     \end{lstlisting} \vspace{12pt}
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -4203,18 +4205,18 @@ equations =
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    #define simple force for spring-damper:
-    def UFforce(mbs, t, itemNumber, u, v, k, d, offset): 
-        return [u[0]*k[0],u[1]*k[1],u[2]*k[2]]
-    
-    #markerNumbers and parameters taken from mini example
-    mbs.AddObject(CartesianSpringDamper(markerNumbers = [mGround, mMass], 
-                                        stiffness = [k,k,k], 
-                                        damping = [0,k*0.05,0], offset = [0,0,0],
-                                        springForceUserFunction = UFforce))
+    \pythonstyle\begin{lstlisting}
+        #define simple force for spring-damper:
+        def UFforce(mbs, t, itemNumber, u, v, k, d, offset): 
+            return [u[0]*k[0],u[1]*k[1],u[2]*k[2]]
+        
+        #markerNumbers and parameters taken from mini example
+        mbs.AddObject(CartesianSpringDamper(markerNumbers = [mGround, mMass], 
+                                            stiffness = [k,k,k], 
+                                            damping = [0,k*0.05,0], offset = [0,0,0],
+                                            springForceUserFunction = UFforce))
     \end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -4302,17 +4304,17 @@ equations =
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{accordingly}
     \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-%
+    %
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
     \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
     \rowTable{marker m0 velocity}{$\LU{m0}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
     \rowTable{marker m1 velocity}{$\LU{m1}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
-    \rowTable{Displacement}{$\LU{0}{\Delta\pv}$} {$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}
+    \rowTable{Displacement}{$\LU{0}{\Delta\pv}$}{$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}
     \rowTable{Velocity}{$\LU{0}{\Delta\vv}$}{$\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}
-%definition how output variables are computed:
+    %definition how output variables are computed:
     \rowTable{DisplacementLocal}{$\LU{J0}{\Delta\pv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\pv}$}
     \rowTable{VelocityLocal}{$\LU{J0}{\Delta\vv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$}
-%
+    %
     \rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\tomega}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\tomega} - \LU{0,m0}{\Rot} \LU{m0}{\tomega} \right)$}
     %\rowTable{Rotation}{$\LU{J0}{\ttheta} = [\theta_0,\theta_1,\theta_2]$}{Tait-Bryan angles retrieved from relative rotation matrix, ...}
     %\rowTable{ForceLocal}{$\LU{J0}{\fv}$}{see below}
@@ -4329,24 +4331,24 @@ equations =
     if \texttt{activeConnector = False}, $\LU{J0}{\fv_{SD}}$ and  $\LU{J0}{\mv_{SD}}$ are set to zero.
 
     If the springForceTorqueUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
-	$\fv_{SD}$ instead becomes ($t$ is current time)
+    $\fv_{SD}$ instead becomes ($t$ is current time)
     \be
       \fv_{SD} = \mathrm{UF}(mbs, t, i_N, \LU{J0}{\Delta\pv}, \LU{J0}{\ttheta}, \LU{J0}{\Delta\vv}, \LU{J0}{\Delta\tomega}, 
-	                         \mathrm{stiffness}, \mathrm{damping}, \mathrm{rotationMarker0}, \mathrm{rotationMarker1}, \mathrm{offset})
+                             \mathrm{stiffness}, \mathrm{damping}, \mathrm{rotationMarker0}, \mathrm{rotationMarker1}, \mathrm{offset})
     \ee
     and \texttt{iN} represents the itemNumber (=objectNumber).
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{springForceTorqueUserFunction(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)}
     A user function, which computes the 6D spring-damper force-torque vector depending on mbs, time, local quantities 
-	(displacement, rotation, velocity, angularVelocity, stiffness), which are evaluated at current time, which are relative quantities between 
-	both markers and which are defined in joint J0 coordinates. 
-	As relative rotations are defined by Tait-Bryan rotation parameters, it is recommended to use this connector for small relative rotations only 
-	(except for rotations about one axis).
-	Furthermore, the user function contains object parameters (stiffness, damping, rotationMarker0/1, offset).
+    (displacement, rotation, velocity, angularVelocity, stiffness), which are evaluated at current time, which are relative quantities between 
+    both markers and which are defined in joint J0 coordinates. 
+    As relative rotations are defined by Tait-Bryan rotation parameters, it is recommended to use this connector for small relative rotations only 
+    (except for rotations about one axis).
+    Furthermore, the user function contains object parameters (stiffness, damping, rotationMarker0/1, offset).
     Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
     \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
     
-	Detailed description of the arguments and local quantities:
+    Detailed description of the arguments and local quantities:
     %
     \startTable{arguments / return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
@@ -4366,13 +4368,13 @@ equations =
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{postNewtonStepUserFunction(mbs, t, Index itemIndex, dataCoordinates, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)}
-	A user function which computes the error of the PostNewtonStep $\varepsilon_{PN}$, a recommended for stepsize reduction $t_{recom}$ (use values > 0 to recommend step size or values < 0 else; 0 gives minimum step size) 
-	and the updated dataCoordinates $\dv^k$ of \texttt{NodeGenericData} $n_d$.
-	Except from \texttt{dataCoordinates}, the arguments are the same as in \texttt{springForceTorqueUserFunction}.
-	The \texttt{postNewtonStepUserFunction} should be used together with the dataCoordinates in order to implement a active set or switching strategy
-	for discontinuous events, such as in contact, friction, plasticity, fracture or similar.
+    A user function which computes the error of the PostNewtonStep $\varepsilon_{PN}$, a recommended for stepsize reduction $t_{recom}$ (use values > 0 to recommend step size or values < 0 else; 0 gives minimum step size) 
+    and the updated dataCoordinates $\dv^k$ of \texttt{NodeGenericData} $n_d$.
+    Except from \texttt{dataCoordinates}, the arguments are the same as in \texttt{springForceTorqueUserFunction}.
+    The \texttt{postNewtonStepUserFunction} should be used together with the dataCoordinates in order to implement a active set or switching strategy
+    for discontinuous events, such as in contact, friction, plasticity, fracture or similar.
     
-	Detailed description of the arguments and local quantities:
+    Detailed description of the arguments and local quantities:
     %
     \startTable{arguments / return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
@@ -4384,22 +4386,22 @@ equations =
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    #define simple force for spring-damper:
-    def UFforce(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, 
-                stiffness, damping, rotJ0, rotJ1, offset): 
-        k = stiffness #passed as list
-        u = displacement
-        return [u[0]*k[0][0],u[1]*k[1][1],u[2]*k[2][2], 0,0,0]
-    
-    #markerNumbers and parameters taken from mini example
-    mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody], 
-                                        stiffness = np.diag([k,k,k, 0,0,0]), 
-                                        damping = np.diag([0,k*0.01,0, 0,0,0]), 
-                                        offset = [0,0,0, 0,0,0],
-                                        springForceTorqueUserFunction = UFforce))
+    \pythonstyle\begin{lstlisting}
+        #define simple force for spring-damper:
+        def UFforce(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, 
+                    stiffness, damping, rotJ0, rotJ1, offset): 
+            k = stiffness #passed as list
+            u = displacement
+            return [u[0]*k[0][0],u[1]*k[1][1],u[2]*k[2][2], 0,0,0]
+        
+        #markerNumbers and parameters taken from mini example
+        mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody], 
+                                            stiffness = np.diag([k,k,k, 0,0,0]), 
+                                            damping = np.diag([0,k*0.01,0, 0,0,0]), 
+                                            offset = [0,0,0, 0,0,0],
+                                            springForceTorqueUserFunction = UFforce))
     \end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -4459,8 +4461,8 @@ Fv,     M,      GetTypeName,                    ,               ,       const ch
 Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
 #for discontinuities:
 Fv,     C,      HasDiscontinuousIteration,      ,               ,       Bool,       "return (parameters.postNewtonStepUserFunction!=0);",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
-Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
-Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       "",             				  ,       I,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+Fv,     C,      PostNewtonStep,                    ,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,      "function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       "",                               ,       I,      "function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
 #non-derived functions:
 F,      C,      ComputeSpringForceTorque,       ,               ,       void,       , "const MarkerDataStructure& markerData, Index itemIndex, Matrix3D& A0all, Vector3D& vLocPos, Vector3D& vLocVel, Vector3D& vLocRot, Vector3D& vLocAngVel, Vector6D& fLocVec6D", CDI,    "compute spring damper force-torque helper function" 
 F,      C,      EvaluateUserFunctionForce,      ,               ,       void,       , "Vector6D& fLocVec6D, const MainSystemBase& mainSystem, Real t, Index itemIndex, Vector6D& uLoc6D, Vector6D& vLoc6D", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
@@ -4499,7 +4501,7 @@ equations =
     %\rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
     \rowTable{marker m0 position}{$\LU{0}{\pv_{m0}}$}{current position matrix provided by marker m0}
     \rowTable{marker m1 position}{$\LU{0}{\pv_{m1}}$}{current position matrix provided by marker m1}
-%
+    %
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity vector provided by marker m0}
     \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{current global velocity vector provided by marker m1}
     \rowTable{relative displacement}{$\Delta x = (\LU{0,m0}{\Rot} \LU{m0}{\dv})\tp (\LU{0}{\pv_{m1}} - \LU{0}{\pv_{m0}})$}{scalar relative displacement}
@@ -4514,7 +4516,7 @@ equations =
     if \texttt{activeConnector = False}, $\tau_{SD}$ is set zero.
 
     If the springForceUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
-	$\tau_{SD}$ instead becomes ($t$ is current time)
+    $\tau_{SD}$ instead becomes ($t$ is current time)
     \be
       \tau_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta x, \Delta v, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
     \ee
@@ -4522,12 +4524,12 @@ equations =
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)}
     A user function, which computes the scalar torque depending on mbs, time, local quantities 
-	(relative displacement, relative velocity), which are evaluated at current time. 
-	Furthermore, the user function contains object parameters (stiffness, damping, offset).
+    (relative displacement, relative velocity), which are evaluated at current time. 
+    Furthermore, the user function contains object parameters (stiffness, damping, offset).
     Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
     \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
     
-	Detailed description of the arguments and local quantities:
+    Detailed description of the arguments and local quantities:
     %
     \startTable{arguments / return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
@@ -4543,20 +4545,20 @@ equations =
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    #define simple cubic force for spring-damper:
-    def UFforce(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset): 
-        k = stiffness #passed as list
-        return k*displacement + 0.1*k* displacement**3
-    
-    #markerNumbers and parameters taken from mini example
-    mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody], 
-                                     stiffness = k, 
-                                     damping = k*0.01, 
-                                     offset = 0,
-                                     springForceUserFunction = UFforce))
+    \pythonstyle\begin{lstlisting}
+        #define simple cubic force for spring-damper:
+        def UFforce(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset): 
+            k = stiffness #passed as list
+            return k*displacement + 0.1*k* displacement**3
+        
+        #markerNumbers and parameters taken from mini example
+        mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody], 
+                                         stiffness = k, 
+                                         damping = k*0.01, 
+                                         offset = 0,
+                                         springForceUserFunction = UFforce))
     \end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -4613,8 +4615,8 @@ Fv,     M,      GetTypeName,                    ,               ,       const ch
 Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
 #for discontinuities:
 # Fv,     C,      HasDiscontinuousIteration,      ,               ,       Bool,       "return (parameters.nodeNumber != EXUstd::InvalidIndex);",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
-# Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
-# Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       "",             				  ,       I,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+# Fv,     C,      PostNewtonStep,                    ,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,      "function called after Newton method; returns a residual error (force)" 
+# Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       "",                               ,       I,      "function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
 #non-derived functions:
 F,      C,      ComputeSpringForce,             ,               ,       void,       , "const MarkerDataStructure& markerData, Index itemIndex, Matrix3D& A0, Real& displacement, Real& velocity, Real& force", CDI,    "compute spring damper force helper function" 
 F,      C,      EvaluateUserFunctionForce,      ,               ,       void,       , "Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real& displacement, Real& velocity", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
@@ -4655,10 +4657,10 @@ equations =
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
     \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-%
+    %
     \rowTable{marker m0 ang.\ velocity}{$\LU{m0}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
     \rowTable{marker m1 ang.\ velocity}{$\LU{m1}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
-%definition how output variables are computed:
+    %definition how output variables are computed:
     \rowTable{AngularVelocityLocal}{$\Delta\omega = \left( \LU{J0,m1}{\Rot} \LU{m1}{\tomega} - \LU{J0,m0}{\Rot} \LU{m0}{\tomega} \right)_Z$}{angular velocity around joint0 Z-axis}
     \finishTable
 
@@ -4670,7 +4672,7 @@ equations =
     if \texttt{activeConnector = False}, $\tau_{SD}$ is set zero.
 
     If the springTorqueUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
-	$\tau_{SD}$ instead becomes ($t$ is current time)
+    $\tau_{SD}$ instead becomes ($t$ is current time)
     \be
       \tau_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta\theta, \Delta\omega, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
     \ee
@@ -4678,12 +4680,12 @@ equations =
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{springTorqueUserFunction(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset)}
     A user function, which computes the scalar torque depending on mbs, time, local quantities 
-	(relative rotation, relative angularVelocity), which are evaluated at current time. 
-	Furthermore, the user function contains object parameters (stiffness, damping, offset).
+    (relative rotation, relative angularVelocity), which are evaluated at current time. 
+    Furthermore, the user function contains object parameters (stiffness, damping, offset).
     Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
     \texttt{mbs.GetObjectParameter(itemNumber, ...)}, see the according description of \texttt{GetObjectParameter}.
     
-	Detailed description of the arguments and local quantities:
+    Detailed description of the arguments and local quantities:
     %
     \startTable{arguments / return}{type or size}{description}
       \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs in which underlying item is defined}
@@ -4699,21 +4701,21 @@ equations =
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    #define simple cubic force for spring-damper:
-    def UFforce(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset): 
-        k = stiffness #passed as list
-        u = rotation
-        return k*u + 0.1*k*u**3
-    
-    #markerNumbers and parameters taken from mini example
-    mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody], 
-                                        stiffness = k, 
-                                        damping = k*0.01, 
-                                        offset = 0,
-                                        springTorqueUserFunction = UFforce))
+    \pythonstyle\begin{lstlisting}
+        #define simple cubic force for spring-damper:
+        def UFforce(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset): 
+            k = stiffness #passed as list
+            u = rotation
+            return k*u + 0.1*k*u**3
+        
+        #markerNumbers and parameters taken from mini example
+        mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody], 
+                                            stiffness = k, 
+                                            damping = k*0.01, 
+                                            offset = 0,
+                                            springTorqueUserFunction = UFforce))
     \end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -4777,8 +4779,8 @@ Fv,     M,      GetTypeName,                    ,               ,       const ch
 Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
 #for discontinuities:
 Fv,     C,      HasDiscontinuousIteration,      ,               ,       Bool,       "return (parameters.nodeNumber != EXUstd::InvalidIndex);",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
-Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
-Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       "",             				  ,       I,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+Fv,     C,      PostNewtonStep,                    ,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,      "function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       "",                               ,       I,      "function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
 #non-derived functions:
 F,      C,      ComputeSpringTorque,            ,               ,       void,       , "const MarkerDataStructure& markerData, Index itemIndex, Matrix3D& A0all, Real& angle, Real& omega, Real& torque", CDI,    "compute spring damper force-torque helper function" 
 F,      C,      EvaluateUserFunctionForce,      ,               ,       void,       , "Real& torque, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real& angle, Real& omega", CDI,  "call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places"
@@ -4821,13 +4823,6 @@ equations =
     \be
       \Delta v= v_{m1} - v_{m0}
     \ee
-    %If $f_\mu > 0$, the friction force is computed as 
-    %\be
-    %  f_\mathrm{friction} = \left\{ 
-    %          \begin{aligned} \mathrm{Sgn}(\Delta v) \cdot f_\mu \quad \mathrm{if} \quad |\Delta v| \ge v_\mu \\
-    %          \frac{\Delta v}{v_\mu} f_\mu \quad \mathrm{if} \quad |\Delta v| < v_\mu 
-    %          \end{aligned}  \right.
-    %\ee
     If \texttt{activeConnector = True}, the scalar spring force vector is computed as
     \be
       f_{SD} = k \left( \Delta q - l_\mathrm{off} \right) + d \cdot \Delta v % + f_\mathrm{friction}
@@ -4877,15 +4872,15 @@ equations =
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    #see also mini example! NOTE changes above since 2023-01-23
-    def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
-        return k*(u-offset) + d*v
+    \pythonstyle\begin{lstlisting}
+        #see also mini example! NOTE changes above since 2023-01-23
+        def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
+            return k*(u-offset) + d*v
     \end{lstlisting}
     %old until 2023-01-21:
     %def UFforce(mbs, t, itemNumber, u, v, k, d, offset, dryFriction, dryFrictionProportionalZone): 
     %    return k*(u-offset) + d*v
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -4992,41 +4987,38 @@ equations =
       \item CASE 1: \texttt{frictionProportionalZone != 0} ($v_\mathrm{reg} \neq 0$): \\
       This case works well for explicit integrators and represents simplified friction. It is suited best, e.g., for drives if considered
       for a specific velocity, but not for the velocity=0 (at which no friction force is produced).
-        If $f_{\mu,\mathrm{d}} > 0$ or $f_{\mu,\mathrm{so}} > 0$ or $f_{\mu,\mathrm{v}} != 0$, the Stribeck friction model is used, with
-        \be
-          f_\mathrm{friction} = \begin{cases} 
-               (f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}}) \frac{\Delta v}{v_\mathrm{reg}}, \quad \mathrm{if} \quad |v| <= v_\mathrm{reg} 
-                     \quad \mathrm{and} \quad v_\mathrm{reg} \neq 0 \\
-               \mathrm{Sign}(v)\left(f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} + 
-               f_{\mu,\mathrm{v}} (|v|-v_\mathrm{reg}) \right), \quad \mathrm{else}
-               \end{cases}
-        \ee
+      If $f_{\mu,\mathrm{d}} > 0$ or $f_{\mu,\mathrm{so}} > 0$ or $f_{\mu,\mathrm{v}} != 0$, the Stribeck friction model is used, with
+      \be
+        f_\mathrm{friction} = \begin{cases} 
+           (f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}}) \frac{\Delta v}{v_\mathrm{reg}}, \quad \mathrm{if} \quad |v| <= v_\mathrm{reg} 
+                 \quad \mathrm{and} \quad v_\mathrm{reg} \neq 0 \\
+           \mathrm{Sign}(v)\left(f_{\mu,\mathrm{d}} + f_{\mu,\mathrm{so}} \mathrm{e}^{-(|v|-v_{reg})/v_{exp}} + 
+           f_{\mu,\mathrm{v}} (|v|-v_\mathrm{reg}) \right), \quad \mathrm{else}
+           \end{cases}
+      \ee
       This case does not use a PostNewton iteration (which may be advantageous in constant step size explicit integration, 
-      but may be problematic in implicit integration).
+      but may be problematic in implicit integration).\\
       \item CASE 2: \texttt{frictionProportionalZone != 0} (or \texttt{useLimitStops=True}): \\
-        This case is perfectly suited for implicit integration, as it includes special switching variables that help to 
-        avoid numerical problems due to switching (e.g., between stick and slip) during a Newton iteration. 
-        In this case, a so-called bristle model is used, which requires the nodeNumber (data node) to be defined by a GenericDataNode, 
-       which must contain 3 data variables. In case of sticking, the sticking force results from a spring-damper model with 
-       parameters $k_\mathrm{limits}$ and $d_\mathrm{limits}$, which resolves sticking very well. The last sticking position
-       is tracked, which allows to change between stick and slip; however, transition means a reduction of accuracy and
-       requires additional computation of system Jacobians and Newton or discontinuous iterations.
-       This case includes a PostNewton iteration to switch between stick and slip.
+      This case is perfectly suited for implicit integration, as it includes special switching variables that help to 
+      avoid numerical problems due to switching (e.g., between stick and slip) during a Newton iteration. 
+      In this case, a so-called bristle model is used, which requires the nodeNumber (data node) to be defined by a GenericDataNode, 
+      which must contain 3 data variables. In case of sticking, the sticking force results from a spring-damper model with 
+      parameters $k_\mathrm{limits}$ and $d_\mathrm{limits}$, which resolves sticking very well. The last sticking position
+      is tracked, which allows to change between stick and slip; however, transition means a reduction of accuracy and
+      requires additional computation of system Jacobians and Newton or discontinuous iterations.
+      This case includes a PostNewton iteration to switch between stick and slip.
     \ei
     In CASE 2, the GenericDataNode has the 3 data variables (friction mode, last sticking position, limit stop state):
     \bi
       \item[0:] friction mode  $d_{\mu}$: 
-          $d_{\mu}=0$: stick, 
-          $d_{\mu}=\pm f_\mathrm{slip}$: slip (in according positive or negative direction); $f_\mathrm{slip}$ representing the slipping force
-          %not possible $d_{\mu}=-2$: undefined; solver should determine
-      \item[1:] last sticking position  $x_{lsp}$: contains relative coordinate $q$ at last sticking position; 
-          in the sticking case, any deviation from that position leads to an additional bristle force 
+      \item[]   $d_{\mu}=0$: stick, 
+      \item[]   $d_{\mu}=\pm f_\mathrm{slip}$: slip (in according positive or negative direction); $f_\mathrm{slip}$ representing the slipping force
+      %not possible $d_{\mu}=-2$: undefined; solver should determine
+      \item[1:] last sticking position  $x_{lsp}$: contains relative coordinate $q$ at last sticking position; in the sticking case, any deviation from that position leads to an additional bristle force  \\
           \be
             f_\mathrm{friction}^* = (q-x_{lsp}) \cdot k_\mathrm{\mu} + v \cdot d_\mathrm{\mu}
           \ee
-      \item[2:] limit stop state $d_{ls}$: $d_{ls} = 0$: no limit reached (no contact, 
-          $d_{ls}<0$: limitStopsLower surpassed, $d_{ls}>0$: limitStopsUpper surpassed; 
-          $|d_{ls}|$ contains the penetration value of the soft contact model
+      \item[2:] limit stop state $d_{ls}$: $d_{ls} = 0$: no limit reached (no contact, $d_{ls}<0$: limitStopsLower surpassed, $d_{ls}>0$: limitStopsUpper surpassed; $|d_{ls}|$ contains the penetration value of the soft contact model
     \ei
     Initialization of the GenericDataNode should be done such that the initial state (e.g. stick) is already set within this variable.
     Not doing so may change results (as the solver assumes that the model is already slipping) and requires additional iterations.
@@ -5116,14 +5108,14 @@ equations =
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    #see also mini example! 
-    #For further parameters, use mbs.GetObject(itemNumber) or 
-    #  e.g. mbs.GetObjectParameter(itemNumber, 'limitStopsUpper')
-    def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStaticOffset, muExpVel, muViscous, muRegVel):
-        return k*(u-offset) + d*v
+    \pythonstyle\begin{lstlisting}
+        #see also mini example! 
+        #For further parameters, use mbs.GetObject(itemNumber) or 
+        #  e.g. mbs.GetObjectParameter(itemNumber, 'limitStopsUpper')
+        def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStaticOffset, muExpVel, muViscous, muRegVel):
+            return k*(u-offset) + d*v
     \end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -5167,9 +5159,9 @@ Fv,     C,      ComputeODE2LHS,                 ,               ,       void,   
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                    ,          CDI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} \ac{LHS} equations w.r.t. ODE2 coordinates and ODE2 velocities; write either dense local jacobian into dense matrix of MatrixContainer or ADD sparse triplets INCLUDING ltg mapping to sparse matrix of MatrixContainer"
 #
-Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return (( (parameters.fDynamicFriction != 0 || parameters.fStaticFrictionOffset != 0) && parameters.frictionProportionalZone == 0) || parameters.useLimitStops);", , CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
-Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
-Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+Fv,     C,      HasDiscontinuousIteration,        ,               ,       Bool,       "return (( (parameters.fDynamicFriction != 0 || parameters.fStaticFrictionOffset != 0) && parameters.frictionProportionalZone == 0) || parameters.useLimitStops);", , CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+Fv,     C,      PostNewtonStep,                    ,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,      "function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,                             ,       DI,      "function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
 #
 Fv,     C,      ComputeJacobianForce6D,         ,               ,       void,       ,                           "const MarkerDataStructure& markerData, Index objectNumber, Vector6D& force6D",          CDI,     "compute global 6D force and torque which is used for computation of derivative of jacobian; used only in combination with ComputeJacobianODE2_ODE2" 
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
@@ -5217,7 +5209,7 @@ equations =
     \rowTable{Distance}{$L$}{$|\Delta\! \LU{0}{\pv}|$}
     \rowTable{Force}{$\fv$}{see below}
     \finishTable
-%
+    %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Connector forces}
     %
@@ -5264,6 +5256,7 @@ equations =
       \eqComma    
     \ee
     where $\Jm_{pos,m1}$ represents the derivative of marker $m1$ w.r.t.\ its associated coordinates $\qv_{m1}$, analogously $\Jm_{pos,m0}$.
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -5357,7 +5350,7 @@ equations =
     \rowTable{Velocity}{$\Delta\! \LU{0}{\vv}$}{$\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}
     \rowTable{Force}{$\fv$}{see below}
     \finishTable
-%
+    %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Connector forces}
     %
@@ -5442,6 +5435,7 @@ equations =
     \ee
     
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -5546,7 +5540,7 @@ equations =
       normalized axis vectors $\av_A$ and $\av_B$. The tangent is undefined, if one of the axis vectors is parallel to the 
       vector $\cv$, which connects the two center points. The positive rotation sense is indicated by means of the 
       angular velocities $\omega_A$ and $\omega_B$.}
-    	\label{fig:ReevingSystemSprings:tangents}
+        \label{fig:ReevingSystemSprings:tangents}
     \end{figure}
     %++++++++++++++++++++++++
     \mysubsubsubsection{Common tangent of two circles in 3D}
@@ -5635,6 +5629,7 @@ equations =
     be helpful to damp undesired oscillatory shearing motion, however, it may also damp rigid body motion of the overall mechanism.
 
     Further details are given in the implementation and examples are provided in the \texttt{Examples} and \texttt{TestModels} folders.
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -5712,7 +5707,7 @@ equations =
     %
         \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
         \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
-        \rowTable{relative displacement}{$\LU{0}{\Delta\pv}$} {$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}
+        \rowTable{relative displacement}{$\LU{0}{\Delta\pv}$}{$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}
         \rowTable{relative velocity}{$\LU{0}{\Delta\vv}$}{$\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}
     %
         \rowTable{algebraicVariable}{$\lambda_0$}{Lagrange multiplier = force in constraint}
@@ -5731,6 +5726,7 @@ equations =
     \be
       \lambda_0 = 0
     \ee
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -5857,7 +5853,7 @@ equations =
       \rowTable{\texttt{lOffset}}{Real}{$l_\mathrm{off}$}
       \rowTable{\returnValue}{Real}{computed offset for given time}
     \finishTable
-%
+    %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{offsetUserFunction\_t(mbs, t, itemNumber, lOffset)}
     %
@@ -5878,31 +5874,31 @@ equations =
       \rowTable{\texttt{lOffset}}{Real}{$l_\mathrm{off}$}
       \rowTable{\returnValue}{Real}{computed offset velocity for given time}
     \finishTable
-%
+    %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    #see also mini example!
-    from math import sin, cos, pi
-    def UFoffset(mbs, t, itemNumber, lOffset): 
-        return 0.5*lOffset*(1-cos(0.5*pi*t))
-    
-    def UFoffset_t(mbs, t, itemNumber, lOffset): #time derivative of UFoffset
-        return 0.5*lOffset*0.5*pi*sin(0.5*pi*t)
+    \pythonstyle\begin{lstlisting}
+        #see also mini example!
+        from math import sin, cos, pi
+        def UFoffset(mbs, t, itemNumber, lOffset): 
+            return 0.5*lOffset*(1-cos(0.5*pi*t))
+        
+        def UFoffset_t(mbs, t, itemNumber, lOffset): #time derivative of UFoffset
+            return 0.5*lOffset*0.5*pi*sin(0.5*pi*t)
 
-    nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
-    massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
-    
-    groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
-    nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
-    
-    #Spring-Damper between two marker coordinates
-    mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker], 
-                                       offset = 0.1, 
-                                       offsetUserFunction = UFoffset, 
-                                       offsetUserFunction_t = UFoffset_t)) 
+        nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
+        massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+        
+        groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
+        nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
+        
+        #Spring-Damper between two marker coordinates
+        mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker], 
+                                           offset = 0.1, 
+                                           offsetUserFunction = UFoffset, 
+                                           offsetUserFunction_t = UFoffset_t)) 
     \end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -6114,10 +6110,7 @@ equations =
     \finishTable
     %\vspace{12pt}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    %\userFunctionExample{}
-    %\pythonstyle
-    %\begin{lstlisting}[language=Python]
-    %\end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -6186,12 +6179,12 @@ equations =
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{center of disc}
     \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
     \rowTable{data coordinates}{$\xv=[x_0,\,x_1,\,x_2]\tp$}{data coordinates for $[x_0,\,x_1]$: hold the sliding velocity in lateral and longitudinal direction of last discontinuous iteration; $x_2$: represents gap of last discontinuous iteration (in contact normal direction)}
-%
+    %
     %\rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
     \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
     %\rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0}
     \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
-%
+    %
     \rowTable{ground normal vector}{$\LU{0}{\vv_{PN}} = \LU{0,m0}{\Am} \LU{m0}{\vv_{PN}}$}{normalized normal vector to the ground body (rotates with marker $m0$ if not fixed to ground)}
     \rowTable{ground position B}{$\LU{0}{\pv}_{B}$}{disc center point projected on ground (normal projection)}
     \rowTable{ground position C}{$\LU{0}{\pv}_{C}$}{contact point of disc with ground}
@@ -6201,16 +6194,18 @@ equations =
     \rowTable{contact point vector}{$\LU{0}{\wv_3}$}{normalized vector from disc center point in direction of contact point C}
     \rowTable{lateral vector}{$\LU{0}{\wv_{lat}} = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2$}{vector in lateral direction, parallel to ground plane}
     \rowTable{$D1$ transformation matrix}{$\LU{0,D1}{\Am} = [\LU{0}{\wv_1},\, \LU{0}{\wv_2},\, \LU{0}{\wv_3}]$}{transformation of special disc coordinates $D1$ to global coordinates}
-%
+    %
     \rowTable{connector forces}{$\LU{J1}{\fv}=[f_{t,x},\,f_{t,y},\,f_n]\tp$}{joint force vector at contact point in joint 1 coordinates: x=lateral direction, y=longitudinal direction, z=plane normal (contact normal)}
     \finishTable
-%
+    
     \mysubsubsubsection{Geometric relations}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \noindent The main geometrical setup is shown in the following figure:
+    \ignoreRST{
     \begin{center}
         \includegraphics[height=4cm]{figures/ObjectJointRollingDiscSketch.pdf}
     \end{center}
+    }
     First, the contact point $\LU{0}{\pv}_{C}$ must be computed.
     With the helper vector,
     \be
@@ -6261,32 +6256,32 @@ equations =
     \be
       \phi(v, v_\mu) = 
         \left\{ 
-        	\begin{array}{ccl}
-        		\displaystyle \left( 2-\frac{v}{v_\mu} \right)\frac{v}{v_\mu} & \mathrm{if} & v \le v_\mu \\
-        		1 & \mathrm{if} & v > v_\mu \\
-        	\end{array}
-        	\right.
+            \begin{array}{ccl}
+                \displaystyle \left( 2-\frac{v}{v_\mu} \right)\frac{v}{v_\mu} & \mathrm{if} & v \le v_\mu \\
+                1 & \mathrm{if} & v > v_\mu \\
+            \end{array}
+            \right.
     \ee
     and the linear regularization function, if \texttt{useLinearProportionalZone=True},
     \be
       \phi(v, v_\mu) = 
         \left\{ 
-        	\begin{array}{ccl}
-        		\displaystyle \frac{v}{v_\mu} & \mathrm{if} & v \le v_\mu \\
-        		1 & \mathrm{if} & v > v_\mu \\
-        	\end{array}
-        	\right.
+            \begin{array}{ccl}
+                \displaystyle \frac{v}{v_\mu} & \mathrm{if} & v \le v_\mu \\
+                1 & \mathrm{if} & v > v_\mu \\
+            \end{array}
+            \right.
     \ee
     The direction of tangential slip is given as
     \be
       \LU{J1}{\ev_t} = 
         \left\{ 
-        	\begin{array}{ccl}
+            \begin{array}{ccl}
                 \displaystyle \frac{\LU{J1}{\vv_t}}{|\vv_t|} &\mathrm{if}& |\vv_t|>0 \\
                 %\left[0,\; 0\right]\tp &\mathrm{else}& \\
                 \vp{0}{0} &\mathrm{else}& \\
-        	\end{array}
-        	\right.
+            \end{array}
+            \right.
     \ee
     The friction coefficient matrix $\LU{J1}{\tmu}$ is given in joint coordinates and computed from
     \be
@@ -6323,6 +6318,7 @@ equations =
     \be
       \LU{J1}{\fv} = \Null
     \ee
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -6351,16 +6347,16 @@ Fv,     C,      GetNumberOfNodes,               ,               ,       Index,  
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return nDataVariables;",                 ,       CI,     "data (history) variable simplifies contact switching for implicit time integration and Newton method" 
 #
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
-Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
-Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
-Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+Fv,     C,      HasDiscontinuousIteration,        ,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+Fv,     C,      PostNewtonStep,                    ,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,      "function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,                             ,       DI,      "function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
 #
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return true;",             ,      CI,     "connector uses penalty formulation" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
 #Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
 Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
 F,      C,      ComputeContactForces,           ,               ,       void,       , "const MarkerDataStructure& markerData, const CObjectConnectorRollingDiscPenaltyParameters& parameters, bool computeCurrent, Vector3D& pC, Vector3D& vC, Vector3D& wLateral, Vector3D& w2, Vector3D& n0, Vector3D& w3, Vector3D& fContact, Vector2D& localSlipVelocity", CDI,    "compute contact kinematics and contact forces" 
-F,      C,      ComputeSlipForce,               ,               ,       Vector2D,   , "const CObjectConnectorRollingDiscPenaltyParameters& parameters, 	const Vector2D& localSlipVelocity, const Vector2D& dataLocalSlipVelocity, Real contactForce", CDI,    "compute slip force vector for specific states" 
+F,      C,      ComputeSlipForce,               ,               ,       Vector2D,   , "const CObjectConnectorRollingDiscPenaltyParameters& parameters,     const Vector2D& localSlipVelocity, const Vector2D& dataLocalSlipVelocity, Real contactForce", CDI,    "compute slip force vector for specific states" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
@@ -6398,82 +6394,81 @@ equations =
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0, any ground reference point; currently unused}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0; currently unused}
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{center of roll}
-	\rowTable{Contact position}{$\LU{0}{\pv}_{C}$}{Position of the Contact point C in the global frame 0}
-	\rowTable{Position marker m1 to contact}{$\LU{0}{\pv}_{\mathrm{m1, C}}$}{Position of the contact point C relative to the marker m1 in global frame}
+    \rowTable{Contact position}{$\LU{0}{\pv}_{C}$}{Position of the Contact point C in the global frame 0}
+    \rowTable{Position marker m1 to contact}{$\LU{0}{\pv}_{\mathrm{m1, C}}$}{Position of the contact point C relative to the marker m1 in global frame}
     \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
     \rowTable{data coordinates}{$\xv=[x_0,\,x_1,\,x_2]\tp$}{data coordinates for $[x_0,\,x_1]$: hold the sliding velocity in lateral and longitudinal direction of last discontinuous iteration; $x_2$: represents gap of last discontinuous iteration (in contact normal direction)}
-%
+    %
     %\rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
     \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{current global velocity which is provided by marker m1}
     %\rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0}
     \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
-%
+    %
     \rowTable{ground normal vector}{$\LU{0}{\nv}$}{normalized normal vector to the (moving, but not rotating) ground, by default [0,0,1]}
     
-%    \rowTable{ground position B}{$\LU{0}{\pv}_{B}$}{roll center point projected on ground (normal projection)}
-%    \rowTable{ground position C}{$\LU{0}{\pv}_{C}$}{contact point of disc with ground}
-%    \rowTable{ground velocity C}{$\LU{0}{\vv}_{C}$}{velocity of disc at ground contact point (must be zero at end of iteration)}
-%    \rowTable{wheel axis vector}{$\LU{0}{\wv}_1 =\LU{0,m1}{\Rot} \cdot [1,0,0]\tp $}{normalized disc axis vector, currently $[1,0,0]\tp$ in local coordinates}
-%    \rowTable{longitudinal vector}{$\LU{0}{\wv}_2$}{vector in longitudinal (motion) direction}
-%    \rowTable{lateral vector}{$\LU{0}{\wv}_l = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2 = [-\wv_{2,y}, \wv_{2,x}, 0]$}{vector in lateral direction, lies in ground plane}
-%    \rowTable{contact point vector}{$\LU{0}{\wv}_3$}{normalized vector from disc center point in direction of contact point C}
-%
-%    \rowTable{connector forces}{$\LU{J1}{\fv}=[f_{t,x},\,f_{t,y},\,f_n]\tp$}{joint force vector at contact point in joint 1 coordinates: x=lateral direction, y=longitudinal direction, z=plane normal (contact normal)}
+    %    \rowTable{ground position B}{$\LU{0}{\pv}_{B}$}{roll center point projected on ground (normal projection)}
+    %    \rowTable{ground position C}{$\LU{0}{\pv}_{C}$}{contact point of disc with ground}
+    %    \rowTable{ground velocity C}{$\LU{0}{\vv}_{C}$}{velocity of disc at ground contact point (must be zero at end of iteration)}
+    %    \rowTable{wheel axis vector}{$\LU{0}{\wv}_1 =\LU{0,m1}{\Rot} \cdot [1,0,0]\tp $}{normalized disc axis vector, currently $[1,0,0]\tp$ in local coordinates}
+    %    \rowTable{longitudinal vector}{$\LU{0}{\wv}_2$}{vector in longitudinal (motion) direction}
+    %    \rowTable{lateral vector}{$\LU{0}{\wv}_l = \LU{0}{\vv_{PN}} \times \LU{0}{\wv}_2 = [-\wv_{2,y}, \wv_{2,x}, 0]$}{vector in lateral direction, lies in ground plane}
+    %    \rowTable{contact point vector}{$\LU{0}{\wv}_3$}{normalized vector from disc center point in direction of contact point C}
+    %
+    %    \rowTable{connector forces}{$\LU{J1}{\fv}=[f_{t,x},\,f_{t,y},\,f_n]\tp$}{joint force vector at contact point in joint 1 coordinates: x=lateral direction, y=longitudinal direction, z=plane normal (contact normal)}
     \finishTable
-%
+    %
     \mysubsubsubsection{Geometric relations}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-The geometrical setup is shown in \fig{fig:ObjectContactConvexRoll:sketch}. To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function
-\be
-\mathrm{r}(^bx) = \sum_{i=0}^n k_i \; x^{n-i} \label{eq:ConnectorConvexRolling:polynomial}
-\ee
-with the coefficients of the hull $a_i$. As a pre-Check for the contact two spheres are put into both ends of the object with the maximum radius and only if one of these is in contact. The contact point $^{\mathrm{b}}\pv_{\mathrm{m1,C}} $ is calculated relative to the bodies marker \texttt{m1} in the bodies local frame and transformed accordingly. 
-The contact point C can for be calculated convex bodies by matching the derivative of the polynomial $r(^bx)$ with the gradient of the contact plane, shown in \fig{fig:ObjectContactConvexRoll:sketch}, explained in detail in \cite{ManzlGerstmayr2021}. 
-At the contact point a normal force $\fv_{\mathrm{N}} = \begin{bmatrix} 0 & 0 & \mathrm{f}_{\mathrm{N}} \end{bmatrix}^T$  with 
-\be
-\mathrm{f}_{\mathrm{N}} = \begin{cases}
-- (k_c \, z_{\mathrm{pen}} + d_c \,  \dot{z}_{\mathrm{pen}})  &\text{$z_{\mathrm{pen}}>0$} \\ % darstellen dämpfung 
-0 &\text{else} \label{eq_FpenContact}
-\end{cases}
-\ee
-acts against the penetration of the ground. The penetration depth $z_{\mathrm{pen}}$ is the z-component of the position vector of the contact point relative to the ground frame ${^0\pv_{\mathrm{C}}}$. 
-\begin{figure}[tbph]
-\begin{center}
-		\includegraphics[width=10cm]{figures/ConvexRolling.pdf}
-		\caption{Sketch of the roller Dimensions. The rollers radius $r({^bx})$ is described by the polynomial \texttt{coefficientsHull}.}
-		\label{fig:ObjectContactConvexRoll:sketch}
-\end{center}
-\end{figure}
+    The geometrical setup is shown in \fig{fig:ObjectContactConvexRoll:sketch}. To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function
+    \be
+    \mathrm{r}(^bx) = \sum_{i=0}^n k_i \; x^{n-i} \label{eq:ConnectorConvexRolling:polynomial}
+    \ee
+    with the coefficients of the hull $a_i$. As a pre-Check for the contact two spheres are put into both ends of the object with the maximum radius and only if one of these is in contact. The contact point $^{\mathrm{b}}\pv_{\mathrm{m1,C}} $ is calculated relative to the bodies marker \texttt{m1} in the bodies local frame and transformed accordingly. 
+    The contact point C can for be calculated convex bodies by matching the derivative of the polynomial $r(^bx)$ with the gradient of the contact plane, shown in \fig{fig:ObjectContactConvexRoll:sketch}, explained in detail in \cite{ManzlGerstmayr2021}. 
+    At the contact point a normal force $\fv_{\mathrm{N}} = \begin{bmatrix} 0 & 0 & \mathrm{f}_{\mathrm{N}} \end{bmatrix}^T$  with 
+    \be
+    \mathrm{f}_{\mathrm{N}} = \begin{cases}
+    - (k_c \, z_{\mathrm{pen}} + d_c \,  \dot{z}_{\mathrm{pen}})  &\text{$z_{\mathrm{pen}}>0$} \\ % darstellen dämpfung 
+    0 &\text{else} \label{eq_FpenContact}
+    \end{cases}
+    \ee
+    acts against the penetration of the ground. The penetration depth $z_{\mathrm{pen}}$ is the z-component of the position vector of the contact point relative to the ground frame ${^0\pv_{\mathrm{C}}}$. 
+    \begin{figure}[tbph]
+    \begin{center}
+            \includegraphics[width=10cm]{figures/ConvexRolling.pdf}
+            \caption{Sketch of the roller Dimensions. The rollers radius $r({^bx})$ is described by the polynomial \texttt{coefficientsHull}.}
+            \label{fig:ObjectContactConvexRoll:sketch}
+    \end{center}
+    \end{figure}
 
-\noindent
-The revolution results in a velocity of 
-\be
-^{0}\vv_{C} ={^{0}{\tomega_{\mathrm{m1}}}} \times {^{0}{\pv_{\mathrm{m1,\,C}}}}
-\ee
-in the contact point, while the tangential component of the velocity of the body itself with the normal Vector to the contact plane $\nv$ follows to
-\be 
-\LURU{0}{\vv}{\mathrm{m1,\,t}}{} = \LU{0}{\vv_{\mathrm{m1}}} - {^0\nv} \, \left({^0\nv}^T \, \LU{0}{\vv_{\mathrm{m1}}}\right).
-\ee 
-Therefore the slip velocity of the body can be calculated with
-\be
-\LURU{0}{\vv}{\mathrm{s}}{} = \LURU{0}{\vv}{C}{} - {^0\vv_{\mathrm{m1,\,t}}}
-\ee
-and points in the direction 
-\be
-\LURU{0}{\rv}{s}{} = \frac{1}{\left\lVert \LURU{0}{\vv}{\mathrm{s}}{}\right\rVert} {^0{\vv}_{\mathrm{s}}}.
-\ee
-\noindent The slip force is then calculated
-\be
-^0\fv_{\mathrm{s}} = \mu(\left\lVert\LU{}{^0\vv_{\mathrm{s}}}\right\rVert)  \, \mathrm{f}_{\mathrm{N}} \, {^0\rv_\mathrm{s}}
-\ee
-and uses for the friction coefficient $\mu$ the regularized friction approach from the StribeckFunction, see \refSection{sec:module:physics}. 
-The torque 
-\be
-^0\ttau = {^0\pv_{\mathrm{m1,\,C}}} \times (^0\fv_{\mathrm{N}} + {^0\fv_{\mathrm{s}}})
-\ee
-acts onto the body, resulting from the slip force acting not in the bodies center. 
-
-
+    \noindent
+    The revolution results in a velocity of 
+    \be
+    ^{0}\vv_{C} ={^{0}{\tomega_{\mathrm{m1}}}} \times {^{0}{\pv_{\mathrm{m1,\,C}}}}
+    \ee
+    in the contact point, while the tangential component of the velocity of the body itself with the normal Vector to the contact plane $\nv$ follows to
+    \be 
+    \LURU{0}{\vv}{\mathrm{m1,\,t}}{} = \LU{0}{\vv_{\mathrm{m1}}} - {^0\nv} \, \left({^0\nv}^T \, \LU{0}{\vv_{\mathrm{m1}}}\right).
+    \ee 
+    Therefore the slip velocity of the body can be calculated with
+    \be
+    \LURU{0}{\vv}{\mathrm{s}}{} = \LURU{0}{\vv}{C}{} - {^0\vv_{\mathrm{m1,\,t}}}
+    \ee
+    and points in the direction 
+    \be
+    \LURU{0}{\rv}{s}{} = \frac{1}{\left\lVert \LURU{0}{\vv}{\mathrm{s}}{}\right\rVert} {^0{\vv}_{\mathrm{s}}}.
+    \ee
+    \noindent The slip force is then calculated
+    \be
+      ^0\fv_{\mathrm{s}} = \mu(\left\lVert\LU{}{^0\vv_{\mathrm{s}}}\right\rVert)  \, \mathrm{f}_{\mathrm{N}} \, {^0\rv_\mathrm{s}}
+    \ee
+    and uses for the friction coefficient $\mu$ the regularized friction approach from the StribeckFunction, see \refSection{sec:module:physics}. 
+    The torque 
+    \be
+      ^0\ttau = {^0\pv_{\mathrm{m1,\,C}}} \times (^0\fv_{\mathrm{N}} + {^0\fv_{\mathrm{s}}})
+    \ee
+    acts onto the body, resulting from the slip force acting not in the bodies center. 
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -6509,9 +6504,9 @@ Fv,     C,      GetNumberOfNodes,               ,               ,       Index,  
 Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return nDataVariables;",                 ,       CI,     "data (history) variable simplifies contact switching for implicit time integration and Newton method" 
 #
 #Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
-Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
-Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
-Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+Fv,     C,      HasDiscontinuousIteration,        ,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+Fv,     C,      PostNewtonStep,                    ,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,      "function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,                             ,       DI,      "function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
 #
 Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return true;",             ,      CI,     "connector uses penalty formulation" 
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
@@ -6579,11 +6574,11 @@ Fv,     C,      ComputeODE2LHS,                 ,               ,       void,   
 #Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 #DELETE: Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
-Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
-Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
-Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+Fv,     C,      HasDiscontinuousIteration,        ,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+Fv,     C,      PostNewtonStep,                    ,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,      "function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,                             ,       DI,      "function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
 #TYPES and ACCESS:
-Fv,     C,      IsPenaltyConnector,            	,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
+Fv,     C,      IsPenaltyConnector,                ,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
 Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI, "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::Coordinate;", ,   CI,     "provide requested markerType for connector" 
@@ -6638,11 +6633,11 @@ F,      C,      ComputeGap,                     ,               ,       void,   
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
 #Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
-Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
-Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
-Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+Fv,     C,      HasDiscontinuousIteration,        ,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+Fv,     C,      PostNewtonStep,                    ,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,      "function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,                             ,       DI,      "function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
 #TYPES and ACCESS:
-Fv,     C,      IsPenaltyConnector,            	,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
+Fv,     C,      IsPenaltyConnector,                ,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
 Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI, "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::_None;", ,   CI,     "provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::\_None" 
@@ -6675,16 +6670,14 @@ classType = Object
 objectType = Connector
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
-  \newcommand{\pluseq}{\mathrel{+}=} %for some algorithms ...
-
     \mysubsubsubsection{Definition of quantities}
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{represents current global position of the circle's centerpoint}
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
     \rowTable{marker m1}{}{represents the 2D ANCF cable}
     \rowTable{data node}{$\xv=[x_{i},\; \ldots,\; x_{3 n_{cs} -1}]\tp$}{coordinates of node with node number $n_{GD}$}
-    \rowTable{data coordinates for segment $i$}{$[x_i,\, x_{n_{cs}+ i},\, x_{2\cdot n_{cs}+ i}]\tp = [x_{gap},\, x_{isSlipStick},\, x_{lastStick}]\tp$, with $i \in [0,n_{cs}-1]$}
-    {The data coordinates include the gap $x_{gap}$, the stick-slip state $x_{isSlipStick}$ and the previous sticking position $x_{lastStick}$ as computed in the PostNewtonStep, see description below. }
+    \rowTable{data coordinates for segment $i$}{$[x_i,\, x_{n_{cs}+ i},\, x_{2\cdot n_{cs}+ i}]\tp = [x_{gap},\, x_{isSlipStick},\, x_{lastStick}]\tp$, with $i \in [0,n_{cs}-1]$}{
+              The data coordinates include the gap $x_{gap}$, the stick-slip state $x_{isSlipStick}$ and the previous sticking position $x_{lastStick}$ as computed in the PostNewtonStep, see description below. }
     \rowTable{shortest distance to segment $s_i$}{$\dv_{g,i}$}{shortest distance of center of circle to contact segment, considering the endpoint of the segment}
     %\rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{}
     \finishTable
@@ -6698,7 +6691,7 @@ equations =
                is related to segment $s_1$ (which is perpendicular to the the segment line) and 
                $\dv_{g2}$ is the shortest distance to the end point of segment $s_2$, not being
                perpendicular.}
-    	\label{fig:ObjectContactFrictionCircleCable2D:sketch}
+        \label{fig:ObjectContactFrictionCircleCable2D:sketch}
     \end{figure}
     %+++++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Connector forces: contact geometry}
@@ -6796,7 +6789,7 @@ equations =
       \includegraphics[width=8cm]{figures/ContactFrictionCircleCable2DstickingPos.pdf}
       \end{center}
       \caption{Calculation of last sticking position; blue parts mark the sticking position calculated as $x^*_{curStick}$.}
-    	\label{fig:ObjectContactFrictionCircleCable2D:stickingPos}
+        \label{fig:ObjectContactFrictionCircleCable2D:stickingPos}
     \end{figure}
     %++++++++++++++++++++++++
     
@@ -6919,12 +6912,12 @@ equations =
         \be
           \varepsilon^n_{PNS} = k_c \cdot \Vert x_{gap} - x_{gap,lastPNS}\Vert
         \ee
-        \item[] while otherwise $\varepsilon^n_{PNS}=0$.
+    while otherwise $\varepsilon^n_{PNS}=0$.
         \item if stick-slip-state $x_{isSlipStick,lastPNS}$ of previous \texttt{PostNewtonStep} is different from current $x_{isSlipStick}$, set
         \be
           \varepsilon^t_{PNS} = \Vert \left(\Vert f_t^{(lin)} \Vert  - \mu \cdot |f_n| \right)\Vert 
         \ee
-        while otherwise $\varepsilon^t_{PNS}=0$.
+    while otherwise $\varepsilon^t_{PNS}=0$.
       \en
     \ei
     Note that the \texttt{PostNewtonStep} is iterated and the data variables are updated continuously until convergence, or until a max.\ number of iterations is reached. If \texttt{ignoreMaxIterations} == 0, computation will continue even if no convergence is reached after the given number of iterations. This will lead so larger errors in such steps, but may have less influence on the overall solution if such cases are rare. 
@@ -6963,7 +6956,7 @@ equations =
     \ei
     %++++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Computation of LHS terms for circle and ANCF cable element}
-    If {\bf \texttt{activeConnector = True}}, 
+    If \texttt{activeConnector = True}, 
     contact forces $\fv_i$ with $i \in [0,n_{cs}]$ -- these are $(n_{cs}+1)$ forces -- are applied at the points $p_i$, and they are computed for every contact segments (i.e., two segments may contribute to contact forces of one point).
     For every contact computation, first all contact forces at segment points are set to zero. 
     We distinguish two cases SN and PWN. If \texttt{useSegmentNormals==True}, we use the SN case, while otherwise the PWN case is used, 
@@ -6975,7 +6968,7 @@ equations =
       \end{center}
       \caption{Choice of normals and tangent vectors for calculation of normal contact forces and tangential (friction) forces; 
       note that the \texttt{useSegmentNormals=False} is not appropriate for this setup and would produce highly erroneous forces.}
-    	\label{fig:ObjectContactFrictionCircleCable2D:normals}
+        \label{fig:ObjectContactFrictionCircleCable2D:normals}
     \end{figure}
     %++++++++++++++++++++++++
     
@@ -6992,7 +6985,7 @@ equations =
         \fv_{i+1} &\pluseq& \rho \cdot \fv_{s_i}
       \eea
     while in case $x_{gap}  > 0$ nothing is added.
-%     
+    %     
     \item[] \mybold{CASE PWN}: use \mybold{P}oint \mybold{W}ise \mybold{N}ormals (at segment points)\\
     If there is contact in a segment $s_i$, i.e., gap $x_{gap} \le 0$, 
     see \fig{fig:ObjectContactFrictionCircleCable2D:sketch}(right), 
@@ -7003,7 +6996,7 @@ equations =
       \ee
       in which $\nv_{l,s_i}$ is the vector from circle center to the left point ($i$) of the segment $s_i$,
       and $\nv_{l,s_i}$ to the right point ($i+1$). The tangent vectors are perpendicular to the normals.
-%
+    %
       The forces are then applied to the contact forces $\fv_i$ using the parameter $\rho$, which takes into account the distance of contact to the left or right side of the segment,
       \bea
         \fv_i &\pluseq& (1-\rho) \cdot \fv^l      \\ \nonumber
@@ -7029,8 +7022,9 @@ equations =
     during the DiscontinuousIteration, see \fig{fig_solver_discontinuous_iteration} in the solver description. 
     %
     \vspace{12pt}\\
-    If {\bf \texttt{activeConnector = False}}, all contact and friction forces on the cable and the force and torque on the 
+    If \texttt{activeConnector = False}, all contact and friction forces on the cable and the force and torque on the 
     circle's marker are set to zero.
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -7060,11 +7054,11 @@ F,      C,      ComputeGap,                     ,               ,       void,   
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
 #Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
-Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
-Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
-Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+Fv,     C,      HasDiscontinuousIteration,        ,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+Fv,     C,      PostNewtonStep,                    ,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,      "function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,                             ,       DI,      "function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
 #TYPES and ACCESS:
-Fv,     C,      IsPenaltyConnector,            	,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
+Fv,     C,      IsPenaltyConnector,                ,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
 #Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI, "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::_None;", ,   CI,     "provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::\_None" 
@@ -7101,7 +7095,7 @@ objectType = Joint
 #add input quantities
 #add equations
 equations =
-    \mysubsubsubsection{Definition of quantities}\label{sec:ObjectJointGeneric:DefinitionOfQuantities}
+    \mysubsubsubsectionlabel{Definition of quantities}{sec:ObjectJointGeneric:DefinitionOfQuantities}
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
@@ -7111,21 +7105,20 @@ equations =
     \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
     \rowTable{joint J1 orientation}{$\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$}{joint $J1$ rotation matrix}
     \rowTable{joint J1 orientation vectors}{$\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,v\tv_{z1}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
-
-%
+    %
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
     \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
     \rowTable{marker m0 velocity}{$\LU{b}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
     \rowTable{marker m1 velocity}{$\LU{b}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
-    \rowTable{Displacement}{$\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$} {used, if all translational axes are constrained}
+    \rowTable{Displacement}{$\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}{used, if all translational axes are constrained}
     \rowTable{Velocity}{$\LU{0}{\Delta\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}{used, if all translational axes are constrained (velocity level)}
-%
+    %
     \rowTable{DisplacementLocal}{$\LU{J0}{\Delta\pv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\pv}$}
     \rowTable{VelocityLocal}{$\LU{J0}{\Delta\vv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$ $\ldots$ note that this is the global relative velocity projected into the local $J0$ coordinate system}
     \rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\omega}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\omega} - \LU{0,m0}{\Rot} \LU{m0}{\omega} \right)$}
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable
-%
+    %
     \mysubsubsubsection{Connector constraint equations}
     \paragraph{Equations for translational part (\texttt{activeConnector = True})}:\\
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -7151,7 +7144,7 @@ equations =
       \LU{J0}{\Delta v_k} - UF\_t_{k}(mbs, t, i_N, \pv_{par})  &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
       \lambda_k &=& 0 \quad \mathrm{if} \quad j_k = 0 \\
     \eea
-%
+    %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \paragraph{Equations for rotational part (\texttt{activeConnector = True})}:\\
     The following equations are exemplarily for certain constrained rotation axes configurations, which shall represent all other possibilities.
@@ -7179,12 +7172,12 @@ equations =
        \lambda_4 &=& 0 \\
        \lambda_5 &=& 0
     \eea
-%    
+    %    
     if \texttt{activeConnector = False}, 
     \be
       \zv = \Null
     \ee
-%
+    %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{offsetUserFunction(mbs, t, itemNumber, offsetUserFunctionParameters)}
     %
@@ -7208,7 +7201,7 @@ equations =
       \rowTable{\texttt{offsetUserFunctionParameters}}{Real}{$\pv_{par}$, set of parameters which can be freely used in user function}
       \rowTable{\returnValue}{Real}{computed offset vector for given time}
     \finishTable
-%
+    %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunction{offsetUserFunction\_t(mbs, t, itemNumber, offsetUserFunctionParameters)}
     %
@@ -7230,18 +7223,18 @@ equations =
       \rowTable{\texttt{offsetUserFunctionParameters}}{Real}{$\pv_{par}$, set of parameters which can be freely used in user function}
       \rowTable{\returnValue}{Real}{computed offset velocity vector for given time}
     \finishTable
-%
+    %
 
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    #simple example, computing only the translational offset for x-coordinate
-    from math import sin, cos, pi
-    def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters): 
-        return [offsetUserFunctionParameters[0]*(1 - cos(t*10*2*pi)), 0,0,0,0,0]
+    \pythonstyle\begin{lstlisting}
+        #simple example, computing only the translational offset for x-coordinate
+        from math import sin, cos, pi
+        def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters): 
+            return [offsetUserFunctionParameters[0]*(1 - cos(t*10*2*pi)), 0,0,0,0,0]
 
     \end{lstlisting}
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -7300,7 +7293,7 @@ objectType = Joint
 #add input quantities
 #add equations
 equations =
-    \mysubsubsubsection{Definition of quantities}\label{sec:ObjectJointRevoluteZ:DefinitionOfQuantities}
+    \mysubsubsubsectionlabel{Definition of quantities}{sec:ObjectJointRevoluteZ:DefinitionOfQuantities}
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
@@ -7310,21 +7303,20 @@ equations =
     \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
     \rowTable{joint J1 orientation}{$\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$}{joint $J1$ rotation matrix}
     \rowTable{joint J1 orientation vectors}{$\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,v\tv_{z1}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
-
-%
+    %
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
     \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
     \rowTable{marker m0 velocity}{$\LU{b}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
     \rowTable{marker m1 velocity}{$\LU{b}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
-    \rowTable{Displacement}{$\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$} {used, if all translational axes are constrained}
+    \rowTable{Displacement}{$\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}{used, if all translational axes are constrained}
     \rowTable{Velocity}{$\LU{0}{\Delta\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}{used, if all translational axes are constrained (velocity level)}
-%
+    %
     \rowTable{DisplacementLocal}{$\LU{J0}{\Delta\pv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\pv}$}
     \rowTable{VelocityLocal}{$\LU{J0}{\Delta\vv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$ $\ldots$ note that this is the global relative velocity projected into the local $J0$ coordinate system}
     \rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\omega}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\omega} - \LU{0,m0}{\Rot} \LU{m0}{\omega} \right)$}
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable
-%
+    %
     \mysubsubsubsection{Connector constraint equations}
     \paragraph{Equations for translational part (\texttt{activeConnector = True})}:\\
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -7347,11 +7339,12 @@ equations =
        \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{z1} &=& 0
     \eea
     The index 2 constraints follow from the derivative of \eq{eq:ObjectJointRevoluteZ:index3} w.r.t., and are given in the C++ code.
-%    
+    %    
     if \texttt{activeConnector = False}, 
     \be
       \zv = \Null
     \ee
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 miniExample =
@@ -7425,7 +7418,7 @@ objectType = Joint
 #add input quantities
 #add equations
 equations =
-    \mysubsubsubsection{Definition of quantities}\label{sec:ObjectJointPrismaticX:DefinitionOfQuantities}
+    \mysubsubsubsectionlabel{Definition of quantities}{sec:ObjectJointPrismaticX:DefinitionOfQuantities}
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0}
@@ -7435,20 +7428,19 @@ equations =
     \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
     \rowTable{joint J1 orientation}{$\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}$}{joint $J1$ rotation matrix}
     \rowTable{joint J1 orientation vectors}{$\LU{0,J1}{\Rot} = [\LU{0}{\tv_{x1}},\,\LU{0}{\tv_{y1}},\,v\tv_{z1}]\tp$}{orientation vectors (represent local $x$, $y$, and $z$ axes) in global coordinates, used for definition of constraint equations}
-
-%
+    %
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
     \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
     \rowTable{marker m0 velocity}{$\LU{b}{\tomega}_{m0}$}{current local angular velocity vector provided by marker m0}
     \rowTable{marker m1 velocity}{$\LU{b}{\tomega}_{m1}$}{current local angular velocity vector provided by marker m1}
-    \rowTable{Displacement}{$\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$} {used, if all translational axes are constrained}
-%
+    \rowTable{Displacement}{$\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$}{used, if all translational axes are constrained}
+    %
     \rowTable{DisplacementLocal}{$\LU{J0}{\Delta\pv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\pv}$}
     \rowTable{VelocityLocal}{$\LU{J0}{\Delta\vv}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta\vv}$ $\ldots$ note that this is the global relative velocity projected into the local $J0$ coordinate system}
     \rowTable{AngularVelocityLocal}{$\LU{J0}{\Delta\omega}$}{$\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\omega} - \LU{0,m0}{\Rot} \LU{m0}{\omega} \right)$}
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_5]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable
-%
+    %
     \mysubsubsubsection{Connector constraint equations}
     \paragraph{Equations for translational part (\texttt{activeConnector = True})}:\\
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -7474,11 +7466,12 @@ equations =
        \LU{0}{\tv}_{x0}\tp \LU{0}{\tv}_{y1} &=& 0
     \eea
     The index 2 constraints follow from the derivative of \eq{eq:ObjectJointPrismaticX:index3} w.r.t., and are given in the C++ code.
-%    
+    %    
     if \texttt{activeConnector = False}, 
     \be
       \zv = \Null
     \ee
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -7550,12 +7543,12 @@ equations =
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{current global position which is provided by marker $m1$}
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker $m0$}
     \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{current global velocity which is provided by marker $m1$}
-%
+    %
     \rowTable{relative velocity}{$\LU{0}{\Delta\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$}{constraint velocity error, or relative velocity if not all axes fixed}
-%
+    %
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\ldots,\,\lambda_2]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable
-%
+    %
     \mysubsubsubsection{Connector constraint equations}
     \paragraph{\texttt{activeConnector = True}:}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -7580,11 +7573,12 @@ equations =
       \LU{0}{\Delta v_k} &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
       \lambda_k &=& 0 \quad \mathrm{if} \quad j_k = 0 \\
     \eea
-%
+    %
     \paragraph{\texttt{activeConnector = False}:}
     \be
       \zv = \Null
     \ee
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,            Args,   cFlags, parameterDescription
@@ -7640,10 +7634,10 @@ equations =
     %
     \rowTable{marker m1 position}{$\LU{0}{\pv}_{m1}$}{center of disc}
     \rowTable{marker m1 orientation}{$\LU{0,m1}{\Rot}$}{current rotation matrix provided by marker m1}
-%
+    %
     \rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{accordingly}
     \rowTable{marker m1 angular velocity}{$\LU{0}{\tomega}_{m1}$}{current angular velocity vector provided by marker m1}
-%
+    %
     \rowTable{ground normal vector}{$\LU{0}{\vv_{PN}} = \LU{0,m0}{\Am} \LU{m0}{\vv_{PN}}$}{normalized normal vector to the ground plane, moving with marker $m0$}
     \rowTable{ground position B}{$\LU{0}{\pv}_{B}$}{disc center point projected on ground in plane normal ($z$-direction, $z=0$)}
     \rowTable{ground position C}{$\LU{0}{\pv}_{C}$}{contact point of disc with ground in global coordinates}
@@ -7655,16 +7649,18 @@ equations =
     \rowTable{contact point vector}{$\LU{0}{\wv_3}$}{normalized vector from disc center point in direction of contact point C}
     \rowTable{$D1$ transformation matrix}{$\LU{0,D1}{\Am} = [\LU{0}{\wv_1},\, \LU{0}{\wv_2},\, \LU{0}{\wv_3}]$}{transformation of special disc coordinates $D1$ to global coordinates}
     %\rowTable{$J1$ transformation matrix}{$\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$}{transformation of special joint $J1$ coordinates to global coordinates}
-%
+    %
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\lambda_1,\,\lambda_2]\tp$}{vector of algebraic variables (Lagrange multipliers) according to the algebraic equations}
     \finishTable
     %
     \mysubsubsubsection{Geometric relations}
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \noindent The main geometrical setup is shown in the following figure:
+    \ignoreRST{
     \begin{center}
         \includegraphics[height=4cm]{figures/ObjectJointRollingDiscSketch.pdf}
     \end{center}
+    }
     First, the contact point $\LU{0}{\pv}_{C}$ must be computed.
     With the helper vector,
     \be
@@ -7695,9 +7691,9 @@ equations =
     \be
       \LU{0}{\vv}_{Cm0} = \LU{0}{\vv}_{m0} + \LU{0}{\tomega}_{m0} \times \left( \LU{0,m0}{\Rot} \LU{m0}{\pv}_{C} \right)
     \ee
-%
+    %
     \mysubsubsubsection{Connector constraint equations}
-    \noindent {\bf \texttt{activeConnector = True}}:\\
+    \noindent \texttt{activeConnector = True}:\\
     %
     The non-holonomic, index 2 constraints for the tangential and normal contact follow from (an index 3 formulation would be possible, but is not implemented yet because of mixing different jacobians)
     \be
@@ -7707,10 +7703,11 @@ equations =
     %\be
     %  \LU{0}{\vv}_{C,z} = 0
     %\ee
-    \noindent {\bf \texttt{activeConnector = False}}:\\
+    \noindent \texttt{activeConnector = False}:\\
     \be
       \zv = \Null
     \ee
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -7849,26 +7846,26 @@ equations =
     %\rowTable{slidingMarkerNumbers}{$[m_{s0}, \ldots, m_{sn}]\tp$}{a list of $sn$ (global) marker numbers which are are used to update marker1}
     %\rowTable{slidingMarkerOffsets}{$[d_{s0}, \ldots, d_{sn}]$}{a list of $sn$ scalar offsets, which represent the (reference arc) length of all previous sliding cable elements}
     %\finishTable
-%    
+    %
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{data node}{$\xv=[x_{data0},\,x_{data1}]\tp$}{coordinates of node with node number $n_{GD}$}
     \rowTable{data coordinate 0}{$x_{data0}$}{the current index in slidingMarkerNumbers}
     \rowTable{data coordinate 1}{$x_{data1}$}{the global sliding coordinate (ranging from 0 to the total length of all sliding elements) at {\bf start-of-step} - beginning of the timestep}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-%
+    %
     \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0 (assumed to be rigid body)}
     \rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0 (assumed to be rigid body)}
-%
+    %
     \rowTable{cable coordinates}{$\qv_{ANCF,m1}$}{current coordiantes of the ANCF cable element with the current marker $m1$ is referring to}
     \rowTable{sliding position}{$\LUR{0}{\rv}{ANCF} = \Sm(s_{el})\qv_{ANCF,m1}$}{current global position at the ANCF cable element, evaluated at local sliding position $s_{el}$}
     \rowTable{sliding position slope}{$\LURU{0}{\rv}{ANCF}{\prime} = \Sm^\prime(s_{el})\qv_{ANCF,m1} = [r^\prime_0,\,r^\prime_1]\tp$}{current global slope vector of the ANCF cable element, evaluated at local sliding position $s_{el}$}
     \rowTable{sliding velocity}{$\LUR{0}{\vv}{ANCF} = \Sm(s_{el})\dot\qv_{ANCF,m1}$}{current global velocity at the ANCF cable element, evaluated at local sliding position $s_{el}$ ($s_{el}$ not differentiated!!!)}
     \rowTable{sliding velocity slope}{$\LURU{0}{\vv}{ANCF}{\prime} = \Sm^\prime(s_{el})\dot\qv_{ANCF,m1}$}{current global slope velocity vector of the ANCF cable element, evaluated at local sliding position $s_{el}$}
-%
+    %
     \rowTable{sliding normal vector}{$\LU{0}{\nv} = [-r^\prime_1,\,r^\prime_0]$}{2D normal vector computed from slope $\rv^\prime=\LURU{0}{\rv}{ANCF}{\prime}$}
     \rowTable{sliding normal velocity vector}{$\LU{0}{\dot\nv} = [-\dot r^\prime_1,\,\dot r^\prime_0]$}{time derivative of 2D normal vector computed from slope velocity $\dot \rv^\prime=\LURU{0}{\dot \rv}{ANCF}{\prime}$}
-%
+    %
     \rowTable{algebraic coordinates}{$\zv=[\lambda_0,\,\lambda_1,\, s]\tp$}{algebraic coordinates composed of Lagrange multipliers $\lambda_0$ and $\lambda_1$ (in local cable coordinates: $\lambda_0$ is in axis direction) and the current sliding coordinate $s$, which is local in the current cable element. }
     \rowTable{local sliding coordinate}{$s$}{local incremental sliding coordinate $s$: the (algebraic) sliding coordinate {\bf relative to the start-of-step value}. Thus, $s$ only contains small local increments.}
     \finishTable
@@ -7894,7 +7891,7 @@ equations =
     \be
       \LU{0}{\Delta\vv} = \LUR{0}{\dot\rv}{ANCF} - \LU{0}{\vv}_{m0}
     \ee
-%
+    %
     %+++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Connector constraint equations (classicalFormulation=True)}
     The 2D sliding joint is implemented having 3 equations (4 if constrainRotation==True, see below), using the special algebraic coordinates $\zv$.
@@ -7938,7 +7935,7 @@ equations =
       s &=& 0
     \eea   
     %the algebraic variables are \be \qv_{AE}=[\lambda_x\;\; \lambda_y \;\; s]^T \ee in which $\lambda_x$ and $\lambda_y$ are the Lagrange multipliers for the position of the sliding joint; 
-%
+    %
     %+++++++++++++++++++++++++++++++++++++++++++++
     In case that \texttt{constrainRotation = True}, an additional constraint is added for the relative rotation
     between the slope of the cable and the orientation of marker m0 body.
@@ -7967,7 +7964,7 @@ equations =
       x_{data1} \;+\!\!= s.
     \ee
     %the data coordinates are \be \qv_{Data} = [i_{marker} \;\; s_{0}]^T \ee in which $i_{marker}$ is the current local index to the slidingMarkerNumber list and  $s_{0}$ is the sliding coordinate (which is the total sliding length along all cable elements in the cableMarkerNumber list) at the beginning of the solution step.
-%
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -7993,9 +7990,9 @@ Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,   
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
 Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,  "ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex", CDI, "compute derivative of algebraic equations w.r.t. \hac{ODE2}, \hac{ODE2t}, \hac{ODE1} and \hac{AE} coordinates in jacobian [flags ODE2_t_AE_function, AE_AE_function, etc. need to be set in GetAvailableJacobians()]; jacobianODE2[_t] has dimension GetAlgebraicEquationsSize() x GetODE2Size() ; q are the system coordinates; markerData provides according marker information to compute jacobians"
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function + JacobianType::AE_AE + JacobianType::AE_AE_function);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
-Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
-Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
-Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+Fv,     C,      HasDiscontinuousIteration,        ,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+Fv,     C,      PostNewtonStep,                    ,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,      "function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,                             ,       DI,      "function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
 #
 #Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI,    "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
@@ -8030,7 +8027,7 @@ objectType = Joint
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
     \mysubsubsubsection{Definition of quantities}
-%
+    %
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{generic data node}{$\xv=[x_{data0}]\tp$}{coordinates of node with node number $n_{GD}$}
     \rowTable{generic \hac{ODE2} node}{$\qv=[q_{0}]\tp$}{coordinates of node with node number $n_{ALE}$, which is shared with all ALE-ANCF and ALE sliding joint objects}
@@ -8038,15 +8035,15 @@ equations =
     \rowTable{ALE coordinate}{$q_{ALE} = q_{0}$}{current ALE coordinate (in fact this is the Eulerian coordinate in the ALE formulation); note that reference coordinate of $q_{ALE}$ is ignored!}
     \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
     \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
-%
+    %
     \rowTable{cable coordinates}{$\qv_{ANCF,m1}$}{current coordiantes of the ANCF cable element with the current marker $m1$ is referring to}
     \rowTable{sliding position}{$\LUR{0}{\rv}{ANCF} = \Sm(s_{el})\qv_{ANCF,m1}$}{current global position at the ANCF cable element, evaluated at local sliding position $s_{el}$}
     \rowTable{sliding position slope}{$\LURU{0}{\rv}{ANCF}{\prime} = \Sm^\prime(s_{el})\qv_{ANCF,m1}$}{current global slope vector of the ANCF cable element, evaluated at local sliding position $s_{el}$}
     \rowTable{sliding velocity}{$\LUR{0}{\vv}{ANCF} = \Sm(s_{el})\dot\qv_{ANCF,m1} + \dot q_{ALE} \LURU{0}{\rv}{ANCF}{\prime}$}{current global velocity at the ANCF cable element, evaluated at local sliding position $s_{el}$, including convective term}
-%
+    %
     \rowTable{sliding normal vector}{$\LU{0}{\nv} = [-r^\prime_1,\,r^\prime_0]$}{2D normal vector computed from slope $\rv^\prime=\LURU{0}{\rv}{ANCF}{\prime}$}
     %\rowTable{sliding normal vector}{$\LU{0}{\dot\nv} = [-\dot r^\prime_1,\,\dot r^\prime_0]$}{time derivative of 2D normal vector computed from slope velocity $\dot \rv^\prime=\LURU{0}{\dot \rv}{ANCF}{\prime}$}
-%
+    %
     \rowTable{algebraic variables}{$\zv=[\lambda_0,\,\lambda_1]\tp$}{algebraic variables (Lagrange multipliers) according to the algebraic equations }
     \finishTable
     %\startTable{output variables}{symbol}{formula}
@@ -8063,25 +8060,28 @@ equations =
     \be
       s_{el} = q_{ALE} + s_{off} - d_{m1} = s_g - d_{m1}.
     \ee
-		For the description of the according quantities, see the description above. The distance $d_{m1}$ is obtained from the \texttt{slidingMarkerOffsets} list, using the current (local) index $x_{data0}$.
+    For the description of the according quantities, see the description above. The distance $d_{m1}$ is obtained from the \texttt{slidingMarkerOffsets} list, using the current (local) index $x_{data0}$.
     The vector (=difference; error) between the marker $m0$ and the marker $m1$ (=$\rv_{ANCF}$) positions reads
     \be
       \LU{0}{\Delta\pv} = \LUR{0}{\rv}{ANCF} - \LU{0}{\pv}_{m0}
     \ee
-		Note that $\LU{0}{\pv}_{m0}$ represents the current position of the marker $m0$, which could represent the midpoint of a mass sliding along the beam.
-		The position $\LUR{0}{\rv}{ANCF}$ is computed from the beam represented by marker $m1$, using the local beam coordinate $x=s_{el}$. The marker and the according beam finite element changes during movement using the list \texttt{slidingMarkerNumbers } and the index is updated in the PostNewtonStep.
+    Note that $\LU{0}{\pv}_{m0}$ represents the current position of the marker $m0$, which could represent the midpoint of a mass sliding along the beam.
+    The position $\LUR{0}{\rv}{ANCF}$ is computed from the beam represented by marker $m1$, using the local beam coordinate $x=s_{el}$. 
+    The marker and the according beam finite element changes during movement using the list \texttt{slidingMarkerNumbers} and the index is updated in the PostNewtonStep.
     The vector (=difference; error) between the marker $m0$ and the marker $m1$ velocities reads
     \be
       \LU{0}{\Delta\vv} = \LUR{0}{\vv}{ANCF} - \LU{0}{\vv}_{m0}
     \ee
-%
-		\begin{figure}[tbh]
-		\label{fig:ObjectJointALEmoving2D}
-    \begin{center}
-        \includegraphics[height=4cm]{figures/ObjectJointALEmoving2D.pdf}
-    \end{center}
-		\caption{Geometrical relations for ALE sliding joint.}
-		\end{figure}
+    %
+    \ignoreRST{
+    \begin{figure}[tbh]
+        \label{fig:ObjectJointALEmoving2D}
+        \begin{center}
+            \includegraphics[height=4cm]{figures/ObjectJointALEmoving2D.pdf}
+        \end{center}
+        \caption{Geometrical relations for ALE sliding joint.}
+    \end{figure}
+    }
     %+++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Connector constraint equations}
     The 2D sliding joint is implemented having 2 equations, using the Lagrange multipliers $\zv$. 
@@ -8098,7 +8098,7 @@ equations =
     \be
       \LU{0}{\Delta \pv} - \frac 1 k \zv = 0.
     \ee
-%
+    %
     %not realized yet, because \hac{AE} Jacobian becomes involved:
     %If \texttt{usePenaltyFormulation = True}, the algebraic equations are changed to:
     %\bea
@@ -8112,7 +8112,7 @@ equations =
       \lambda_0 &=& 0,   \\
       \lambda_1 &=& 0.
     \eea   
-%
+    %
     %+++++++++++++++++++++++++++++++++++++++++++++
     \mysubsubsubsection{Post Newton Step}
     After the Newton solver has converged, a PostNewtonStep is performed for the element, which
@@ -8127,7 +8127,7 @@ equations =
     \be
       x_{data1} \;+\!\!= s.
     \ee
-%
+    %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -8154,9 +8154,9 @@ Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,   
 Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
 Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,  "ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex", CDI, "compute derivative of algebraic equations w.r.t. \hac{ODE2}, \hac{ODE2t}, \hac{ODE1} and \hac{AE} coordinates in jacobian [flags ODE2_t_AE_function, AE_AE_function, etc. need to be set in GetAvailableJacobians()]; jacobianODE2[_t] has dimension GetAlgebraicEquationsSize() x GetODE2Size() ; q are the system coordinates; markerData provides according marker information to compute jacobians"
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function + JacobianType::AE_AE + JacobianType::AE_AE_function);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
-Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
-Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
-Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				      ,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+Fv,     C,      HasDiscontinuousIteration,        ,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+Fv,     C,      PostNewtonStep,                    ,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,      "function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,                                   ,       DI,      "function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
 #
 #Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI,    "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
@@ -8600,7 +8600,7 @@ equations =
                 %\LU{0r}{\Rot} \left(\sum_i (w_i \cdot \LU{r}{\vv^{(i)}}) + \LU{r}{\tilde \tomega_r} \sum_i (w_i \cdot \LU{r}{\uv^{(i)}}) \right)$}
                 %{current global velocity which is provided by marker}
                 %
-                %\rowTable{marker rotation matrix}{$\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} \mr{1}{-\theta_2}{\theta_1} {\theta_2}{1}{-\theta_0} {-\theta_1}{\theta_0}{1}$}{current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; only valid for small (linearized rotations)!}
+                %\rowTable{marker rotation matrix}{$\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} \mr{1}{-\theta_2}{\theta_1}{\theta_2}{1}{-\theta_0}{-\theta_1}{\theta_0}{1}$}{current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; only valid for small (linearized rotations)!}
     \rowTable{marker rotation matrix}{$\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} \cdot \mathbf{exp}(\LU{r}{\ttheta}_{m})$}{current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; uses exponential map for SO3, assumes that $\ttheta$ represents a rotation vector}
     \rowTable{marker local rotation}{$\LU{r}{\ttheta}_{m}$}{current local linearized rotations (rotation vector); for the computation, see below for the standard and alternative approach}
 %    
@@ -8624,7 +8624,7 @@ equations =
       \caption{Sketch of marker nodes, exemplary node $i$, reference coordinates and marker coordinate system; 
                note the difference of the center of the marker `surface' (rectangle) marked with the red cross, 
                and the averaged of the averaged local reference position.}
-    	\label{fig:MarkerSuperElementRigid:sketch}
+        \label{fig:MarkerSuperElementRigid:sketch}
     \end{figure}
     %++++++++++++++++++++++++
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -9062,11 +9062,10 @@ equations =
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    from math import sin, cos, pi
-    def UFforce(mbs, t, loadVector): 
-        return [loadVector[0]*sin(t*10*2*pi),0,0]
+    \pythonstyle\begin{lstlisting}
+        from math import sin, cos, pi
+        def UFforce(mbs, t, loadVector): 
+            return [loadVector[0]*sin(t*10*2*pi),0,0]
     \end{lstlisting}
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -9122,11 +9121,10 @@ equations =
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    from math import sin, cos, pi
-    def UFforce(mbs, t, loadVector): 
-        return [loadVector[0]*sin(t*10*2*pi),0,0]
+    \pythonstyle\begin{lstlisting}
+        from math import sin, cos, pi
+        def UFforce(mbs, t, loadVector): 
+            return [loadVector[0]*sin(t*10*2*pi),0,0]
     \end{lstlisting}
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -9246,18 +9244,17 @@ equations =
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    from math import sin, cos, pi
-    #this example uses the object's stored parameter load to compute a time-dependent load
-    def UFload(mbs, t, load): 
-        return load*sin(10*(2*pi)*t)
+    \pythonstyle\begin{lstlisting}
+        from math import sin, cos, pi
+        #this example uses the object's stored parameter load to compute a time-dependent load
+        def UFload(mbs, t, load): 
+            return load*sin(10*(2*pi)*t)
 
-    n0=mbs.AddNode(Point())
-    nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0,coordinate=0))
-    mbs.AddLoad(LoadCoordinate(markerNumber = markerCoordinate,
-                               load = 10,
-                               loadUserFunction = UFload))
+        n0=mbs.AddNode(Point())
+        nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0,coordinate=0))
+        mbs.AddLoad(LoadCoordinate(markerNumber = markerCoordinate,
+                                   load = 10,
+                                   loadUserFunction = UFload))
     \end{lstlisting}
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -9546,39 +9543,38 @@ equations =
     \finishTable
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     \userFunctionExample{}
-    \pythonstyle
-    \begin{lstlisting}[language=Python]
-    import exudyn as exu
-    from exudyn.itemInterface import *
-    from math import pi, atan2
-    SC = exu.SystemContainer()
-    mbs = SC.AddSystem()
-    node = mbs.AddNode(NodePoint(referenceCoordinates = [1,1,0], 
-                                 initialCoordinates=[0,0,0],
-                                 initialVelocities=[0,-1,0]))
-    mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
-    
-    sNode = mbs.AddSensor(SensorNode(nodeNumber=node, fileName='solution/sensorTest.txt',
-                          outputVariableType=exu.OutputVariableType.Position))
+    \pythonstyle\begin{lstlisting}
+        import exudyn as exu
+        from exudyn.itemInterface import *
+        from math import pi, atan2
+        SC = exu.SystemContainer()
+        mbs = SC.AddSystem()
+        node = mbs.AddNode(NodePoint(referenceCoordinates = [1,1,0], 
+                                     initialCoordinates=[0,0,0],
+                                     initialVelocities=[0,-1,0]))
+        mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+        
+        sNode = mbs.AddSensor(SensorNode(nodeNumber=node, fileName='solution/sensorTest.txt',
+                              outputVariableType=exu.OutputVariableType.Position))
 
-    #user function for sensor, convert position into angle:
-    def UFsensor(mbs, t, sensorNumbers, factors, configuration):
-        val = mbs.GetSensorValues(sensorNumbers[0]) #x,y,z
-        phi = atan2(val[1],val[0]) #compute angle from x,y: atan2(y,x)
-        return [factors[0]*phi] #return angle in degree
-    
-    sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=[sNode], factors=[180/pi], 
-                                     fileName='solution/sensorTest2.txt',
-                                     sensorUserFunction=UFsensor))
+        #user function for sensor, convert position into angle:
+        def UFsensor(mbs, t, sensorNumbers, factors, configuration):
+            val = mbs.GetSensorValues(sensorNumbers[0]) #x,y,z
+            phi = atan2(val[1],val[0]) #compute angle from x,y: atan2(y,x)
+            return [factors[0]*phi] #return angle in degree
+        
+        sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=[sNode], factors=[180/pi], 
+                                         fileName='solution/sensorTest2.txt',
+                                         sensorUserFunction=UFsensor))
 
-    #assemble and solve system for default parameters
-    mbs.Assemble()
-    exu.SolveDynamic(mbs)
+        #assemble and solve system for default parameters
+        mbs.Assemble()
+        exu.SolveDynamic(mbs)
 
-    if False:
-        from exudyn.plot import PlotSensor
-        PlotSensor(mbs, [sNode, sNode, sUser], [0, 1, 0])
-    
+        if False:
+            from exudyn.plot import PlotSensor
+            PlotSensor(mbs, [sNode, sNode, sUser], [0, 1, 0])
+        
     \end{lstlisting}
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
@@ -9677,11 +9673,11 @@ F,      C,      ComputeGap,                     ,               ,       void,   
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
 #Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData",              CDI,      "Computational function: compute Jacobian of \hac{ODE2} LHS equations w.r.t. ODE coordinates (jacobian) and if JacobianType::ODE2_ODE2_t flag is set in GetAvailableJacobians() compute jacobian w.r.t. ODE_t coordinates"
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
-Fv,     C,      HasDiscontinuousIteration,    	,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
-Fv,     C,      PostNewtonStep,    				,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,  	"function called after Newton method; returns a residual error (force)" 
-Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,             				,       DI,  	"function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+Fv,     C,      HasDiscontinuousIteration,        ,               ,       Bool,       "return true;",             ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+Fv,     C,      PostNewtonStep,                    ,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,      "function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,                             ,       DI,      "function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
 #TYPES and ACCESS:
-Fv,     C,      IsPenaltyConnector,            	,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
+Fv,     C,      IsPenaltyConnector,                ,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation" 
 Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI, "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
 Fv,     C,      GetOutputVariableConnector,              ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
 Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::_None;", ,   CI,     "provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::\_None" 

@@ -58,7 +58,7 @@ if html_theme == "sphinx_rtd_theme":
     # Toc options
     # 'collapse_navigation': True,
     # 'sticky_navigation': True,
-    'navigation_depth': 4,
+    'navigation_depth': 3,
     # 'includehidden': True,
     'titles_only': False,
     }
@@ -149,7 +149,12 @@ mathjax3_config = {
 
 #vectors/matrices
             #'LU': [r'{\,^{#1}}',1],
+            'pluseq': r'\mathrel{+}=',
             'LU': [r'{\prescript{#1}{}{#2}\,}',2],
+            'LUX': [r'{\prescript{#1}{}{#2}#3\,}',3],
+            'LUR': [r'{\prescript{#1}{}{#2}_{#3}\,}',3],
+            'LURU': [r'{\prescript{#1}{}{#2}_{#3}^{#4}\,}',4],
+            'LLdot': [r'{\prescript{}{#1}{\dot{#2}}_{#3}\,}',3],
 
             'vr': [r'{\left[ \begin{array}{c} { #1}\vspace{0.04cm} \\ { #2}\vspace{0.04cm} \\ { #3} \end{array} \right]}', 3], 
             'mr': [r'{\left[ \begin{array}{ccc} #1 & #2 & #3 \vspace{0.04cm}\\ #4 & #5 & #6 \vspace{0.04cm}\\ #7 & #8 & #9  \end{array} \right]}',9],
@@ -181,25 +186,25 @@ mathjax3_config = {
             'pLocB': r'{\,^{b}{\mathbf{v}}}',
             'pRef': r'{\mathbf{r}}',
             'pRefG': r'{\,^{0}{\mathbf{r}}}',
-            'ImThree': r'{\mathbf{I}_{3 \times 3}}',
-            'ImTwo': r'{\mathbf{I}_{2 \times 2}}',
+            #'ImThree': r'{\mathbf{I}_{3 \times 3}}',#Im is replaced, so must ImThree
+            #'ImTwo': r'{\mathbf{I}_{2 \times 2}}',
 
 #++++++++++++++++++++++++++++++++++++++++++
 #for FFRF:
-            '\indf': r'{_\mathrm{f}}',
-            '\indt': r'{_\mathrm{t}}',
-            '\indr': r'{_\mathrm{r}}',
-            '\indtt': r'{_\mathrm{tt}}',
-            '\indrr': r'{_\mathrm{rr}}',
-            '\indff': r'{_\mathrm{ff}}',
-            '\indtf': r'{_\mathrm{tf}}',
-            '\indrf': r'{_\mathrm{rf}}',
-            '\indtr': r'{_\mathrm{tr}}',
+            'indf': r'{_\mathrm{f}}',
+            'indt': r'{_\mathrm{t}}',
+            'indr': r'{_\mathrm{r}}',
+            'indtt': r'{_\mathrm{tt}}',
+            'indrr': r'{_\mathrm{rr}}',
+            'indff': r'{_\mathrm{ff}}',
+            'indtf': r'{_\mathrm{tf}}',
+            'indrf': r'{_\mathrm{rf}}',
+            'indtr': r'{_\mathrm{tr}}',
 #for FFRFreducedOrder:
-            '\indrigid': r'{_\mathrm{rigid}}',
-            '\indred': r'{_\mathrm{red}}',
-            '\induser': r'{_\mathrm{user}}',
-            '\indu': r'{_\mathrm{u}}',
+            'indrigid': r'{_\mathrm{rigid}}',
+            'indred': r'{_\mathrm{red}}',
+            'induser': r'{_\mathrm{user}}',
+            'indu': r'{_\mathrm{u}}',
             #
             }                       
         }                           

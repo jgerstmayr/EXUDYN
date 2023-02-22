@@ -13,7 +13,9 @@ Plot utility functions based on matplotlib, including plotting of sensors and FF
 
 .. _sec-plot-parseoutputfileheader:
 
-Function: `ParseOutputFileHeader <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L57>`__\ (\ ``lines``\ )
+Function: ParseOutputFileHeader
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ParseOutputFileHeader <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L57>`__\ (\ ``lines``\ )
 
 - | \ *function description*\ :
   | parse header of output file (solution file, sensor file, genetic optimization output, ...) given in file.readlines() format
@@ -25,7 +27,9 @@ Function: `ParseOutputFileHeader <https://github.com/jgerstmayr/EXUDYN/blob/mast
 
 .. _sec-plot-plotsensordefaults:
 
-Function: `PlotSensorDefaults <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L155>`__\ ()
+Function: PlotSensorDefaults
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`PlotSensorDefaults <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L155>`__\ ()
 
 - | \ *function description*\ :
   | returns structure with default values for PlotSensor which can be modified once to be set for all later calls of PlotSensor
@@ -51,7 +55,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-plot-plotsensor:
 
-Function: `PlotSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L228>`__\ (\ ``mbs``\ , \ ``sensorNumbers = []``\ , \ ``components = 0``\ , \ ``xLabel = 'time (s)'``\ , \ ``yLabel = None``\ , \ ``labels = []``\ , \ ``colorCodeOffset = 0``\ , \ ``newFigure = True``\ , \ ``closeAll = False``\ , \ ``componentsX = []``\ , \ ``title = ''``\ , \ ``figureName = ''``\ , \ ``fontSize = 16``\ , \ ``colors = []``\ , \ ``lineStyles = []``\ , \ ``lineWidths = []``\ , \ ``markerStyles = []``\ , \ ``markerSizes = []``\ , \ ``markerDensity = 0.08``\ , \ ``rangeX = []``\ , \ ``rangeY = []``\ , \ ``majorTicksX = 10``\ , \ ``majorTicksY = 10``\ , \ ``offsets = []``\ , \ ``factors = []``\ , \ ``subPlot = []``\ , \ ``sizeInches = [6.4,4.8]``\ , \ ``fileName = ''``\ , \ ``useXYZcomponents = True``\ , \ ``**kwargs``\ )
+Function: PlotSensor
+^^^^^^^^^^^^^^^^^^^^
+`PlotSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L228>`__\ (\ ``mbs``\ , \ ``sensorNumbers = []``\ , \ ``components = 0``\ , \ ``xLabel = 'time (s)'``\ , \ ``yLabel = None``\ , \ ``labels = []``\ , \ ``colorCodeOffset = 0``\ , \ ``newFigure = True``\ , \ ``closeAll = False``\ , \ ``componentsX = []``\ , \ ``title = ''``\ , \ ``figureName = ''``\ , \ ``fontSize = 16``\ , \ ``colors = []``\ , \ ``lineStyles = []``\ , \ ``lineWidths = []``\ , \ ``markerStyles = []``\ , \ ``markerSizes = []``\ , \ ``markerDensity = 0.08``\ , \ ``rangeX = []``\ , \ ``rangeY = []``\ , \ ``majorTicksX = 10``\ , \ ``majorTicksY = 10``\ , \ ``offsets = []``\ , \ ``factors = []``\ , \ ``subPlot = []``\ , \ ``sizeInches = [6.4,4.8]``\ , \ ``fileName = ''``\ , \ ``useXYZcomponents = True``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | Helper function for direct and easy visualization of sensor outputs, without need for loading text files, etc.; PlotSensor can be used to simply plot, e.g., the measured x-Position over time in a figure. PlotSensor provides an interface to matplotlib (which needs to be installed). Default values of many function arguments can be changed using the exudyn.plot function PlotSensorDefaults(), see there for usage.
@@ -92,7 +98,7 @@ Function: `PlotSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pyt
   | \ ``[*kwargs]``\ :
   | \ ``minorTicksXon``\ : if True, turn minor ticks for x-axis on
   | \ ``minorTicksYon``\ : if True, turn minor ticks for y-axis on
-  | \ ``fileCommentChar``\ : if exists, defines the comment character in files (\#, %, ...)
+  | \ ``fileCommentChar``\ : if exists, defines the comment character in files (\#, 
   | \ ``fileDelimiterChar``\ : if exists, defines the character indicating the columns for data (',', ' ', ';', ...)
 - | \ *output*\ :
   | plots the sensor data; returns [plt, fig, ax, line] in which plt is matplotlib.pyplot, fig is the figure (or None), ax is the axis (or None) and line is the return value of plt.plot (or None) which could be changed hereafter
@@ -137,7 +143,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-plot-plotfft:
 
-Function: `PlotFFT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L669>`__\ (\ ``frequency``\ , \ ``data``\ , \ ``xLabel = 'frequency'``\ , \ ``yLabel = 'magnitude'``\ , \ ``label = ''``\ , \ ``freqStart = 0``\ , \ ``freqEnd = -1``\ , \ ``logScaleX = True``\ , \ ``logScaleY = True``\ , \ ``majorGrid = True``\ , \ ``minorGrid = True``\ )
+Function: PlotFFT
+^^^^^^^^^^^^^^^^^
+`PlotFFT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L669>`__\ (\ ``frequency``\ , \ ``data``\ , \ ``xLabel = 'frequency'``\ , \ ``yLabel = 'magnitude'``\ , \ ``label = ''``\ , \ ``freqStart = 0``\ , \ ``freqEnd = -1``\ , \ ``logScaleX = True``\ , \ ``logScaleY = True``\ , \ ``majorGrid = True``\ , \ ``minorGrid = True``\ )
 
 - | \ *function description*\ :
   | plot fft spectrum of signal
@@ -161,7 +169,9 @@ Function: `PlotFFT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/python
 
 .. _sec-plot-filestripspaces:
 
-Function: `FileStripSpaces <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L719>`__\ (\ ``filename``\ , \ ``outputFilename``\ , \ ``fileCommentChar = ''``\ , \ ``removeDoubleChars = ''``\ )
+Function: FileStripSpaces
+^^^^^^^^^^^^^^^^^^^^^^^^^
+`FileStripSpaces <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L719>`__\ (\ ``filename``\ , \ ``outputFilename``\ , \ ``fileCommentChar = ''``\ , \ ``removeDoubleChars = ''``\ )
 
 - | \ *function description*\ :
   | strip spaces at beginning / end of lines; this may be sometimes necessary when reading solutions from files that are space-separated
@@ -178,7 +188,9 @@ Function: `FileStripSpaces <https://github.com/jgerstmayr/EXUDYN/blob/master/mai
 
 .. _sec-plot-dataarrayfromsensorlist:
 
-Function: `DataArrayFromSensorList <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L746>`__\ (\ ``mbs``\ , \ ``sensorNumbers``\ , \ ``positionList = []``\ , \ ``time = ''``\ )
+Function: DataArrayFromSensorList
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`DataArrayFromSensorList <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L746>`__\ (\ ``mbs``\ , \ ``sensorNumbers``\ , \ ``positionList = []``\ , \ ``time = ''``\ )
 
 - | \ *function description*\ :
   | helper function to create data array from outputs defined by sensorNumbers list [+optional positionList which must have, e.g., local arc-length of beam according to sensor numbers]; if time=='', current sensor values will be used; if time!=[], evaluation will be based on loading values from file or sensor internal data and evaluate at that time
@@ -199,7 +211,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-plot-loadimage:
 
-Function: `LoadImage <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L773>`__\ (\ ``fileName``\ , \ ``trianglesAsLines = True``\ , \ ``verbose = False``\ )
+Function: LoadImage
+^^^^^^^^^^^^^^^^^^^
+`LoadImage <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L773>`__\ (\ ``fileName``\ , \ ``trianglesAsLines = True``\ , \ ``verbose = False``\ )
 
 - | \ *function description*\ :
   | import image text file as exported from RedrawAndSaveImage() with exportImages.saveImageFormat='TXT'; triangles are converted to lines
@@ -217,7 +231,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-plot-plotimage:
 
-Function: `PlotImage <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L846>`__\ (\ ``imageData``\ , \ ``HT = np.eye(4)``\ , \ ``axesEqual = True``\ , \ ``plot3D = False``\ , \ ``lineWidths = 1``\ , \ ``lineStyles = '-'``\ , \ ``triangleEdgeColors = 'black'``\ , \ ``triangleEdgeWidths = 0.5``\ , \ ``removeAxes = True``\ , \ ``orthogonalProjection = True``\ , \ ``title = ''``\ , \ ``figureName = ''``\ , \ ``fileName = ''``\ , \ ``fontSize = 16``\ , \ ``closeAll = False``\ , \ ``azim = 0.``\ , \ ``elev = 0.``\ )
+Function: PlotImage
+^^^^^^^^^^^^^^^^^^^
+`PlotImage <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L846>`__\ (\ ``imageData``\ , \ ``HT = np.eye(4)``\ , \ ``axesEqual = True``\ , \ ``plot3D = False``\ , \ ``lineWidths = 1``\ , \ ``lineStyles = '-'``\ , \ ``triangleEdgeColors = 'black'``\ , \ ``triangleEdgeWidths = 0.5``\ , \ ``removeAxes = True``\ , \ ``orthogonalProjection = True``\ , \ ``title = ''``\ , \ ``figureName = ''``\ , \ ``fileName = ''``\ , \ ``fontSize = 16``\ , \ ``closeAll = False``\ , \ ``azim = 0.``\ , \ ``elev = 0.``\ )
 
 - | \ *function description*\ :
   | plot image data as provided by LoadImage(...) using matplotlib; (currently) only plots lines; triangles are not processed

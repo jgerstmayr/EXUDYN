@@ -39,6 +39,12 @@ The item VNodePoint has the following parameters:
   | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
 
 
+----------
+
+.. _description-nodepoint:
+
+DESCRIPTION of NodePoint
+------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -58,8 +64,16 @@ The item VNodePoint has the following parameters:
   | acceleration coordinates vector of node
 
 
+\paragraphDetailed information:
+The node provides \ :math:`n_c=3`\  displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint, finite elements, ...).
+Usually, the nodal coordinates are provided in the global frame. However, the coordinate system is defined by the object (e.g. MassPoint uses global coordinates, but floating frame of reference objects use local frames).
+Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. 
 
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+\ **Example**\  for NodePoint: see ObjectMassPoint, Section :ref:`sec-item-objectmasspoint`\ 
+
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

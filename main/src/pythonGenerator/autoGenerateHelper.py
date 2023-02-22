@@ -239,10 +239,11 @@ convLatexMath={
     #r'\ra':     r'\rightarrow',
     # r'\LU':     r'\,^',
     #r'\Rcal':   r'\mathbb{R}',
-    # r'\teps':   r'\varepsilon',
-    # r'\varepsilonDot':r'\dot\varepsilon',
-    # r'\tkappa':   r'\kappa',
-    # r'\tkappaDot':   r'\dot\kappa',
+    r'\eqDot':     r'.',
+    r'\eqComma':     r',',
+    r'\ImThree':     r'\mathbf{I}_{3 \times 3}',
+    r'\ImTwo':     r'\mathbf{I}_{2 \times 2}',
+    #r'\':     r'',
     }
 
 abc = 'abcdefghijklmnopqrstuvwxyz'
@@ -261,13 +262,13 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '\\small':'',
            '\\noindent ':'',
            '\\noindent':'',
+           '\\nonumber':'', 
            '\\phantom{XXXX}':'    ',
            '$\\ra$':'→',
            '\\newpage':'',
            '\\tabnewline':'',
            #'\\TAB':'  ', #done in example conversion
            '\\horizontalRuler':'',
-           '\\\\':'\n\n',
            '$\\backslash$':'\\',
            '\\plainlststyle':'',
            '\\codeName\\':'Exudyn',
@@ -289,12 +290,14 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '\\textcolor{steelblue}':'', 
            '[language=Python, xleftmargin=36pt]':'',
 
+           #'\\bea':'',  #now considered separately
+           #'\\eea':'',
            '\\bi':'', 
            '\\ei':'',
            '\\bn':'', 
            '\\en':'',
-           '\\be':'', 
-           '\\ee':'',
+           #'\\be':'',  #now natively ...
+           #'\\ee':'',
            '\\it ':'',
            #specials:
            '\\ge':'>=',
@@ -318,10 +321,13 @@ convLatexWords={'(\\the\\month-\\the\\year)':'',
            '$':'',
            }
     
+#should never appear, not compatible with RST: convLabel = {'\\label':('\n\n.. _','_USE',':\n\n')} #do not do this for equation labels
+convLabelEq = {'\\label':(':label: ','_USE','\n\n')} #do not do this for equation labels
+
 convLatexCommands={#(precommand,'_USE'/'',postcommand)
     '\\ignoreRST':('','',''),
     '\\texttt':('\\ ``','_USE','``\\ '),
-    '\\label':('\n\n.. _','_USE',':\n\n'), #do this before sections ...
+    #'\\label':('\n\n.. _','_USE',':\n\n'), #do this before sections ...
     '\\mysectionlabel':('','_USE','','2nd'),
     '\\mysubsectionlabel':('','_USE','','2nd'),
     '\\mysubsubsectionlabel':('','_USE','','2nd'),
@@ -341,14 +347,19 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     '\\footnote':(' (','_USE',')'), #rst footnotes may be used instead: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#footnotes
     '\\mybold':('\\ **','_USE','**\\ '),
     '\\myitalics':('\\ *','_USE','*\\ '),
-    '\\mathrm':('','_USE',''),
+    #'\\mathrm':('','_USE',''),
     '\\cite':('','',''),
     '\\onlyRST':('','_USE',''),
+    '\\userFunctionExample':('\n--------\n\n\\ **User function example**\\ :\n\n','',''),
+    '\\userFunction':('\n--------\n\n\\ **Userfunction**\\ : ``','_USE','`` \n\n'),
 
     #for tables:
     '\\startGenericTable':('\n.. list-table:: \\ \n   :widths: auto\n   :header-rows: 1\n','',''), 
     '\\rowTableThree':('','_USE','','*2nd','*3rd'),       #filled manually
     '\\rowTableFour':('','_USE','','*2nd','*3rd','*4rd'), #filled manually
+    #
+    '\\startTable':('\n.. list-table:: \\ \n   :widths: auto\n   :header-rows: 1\n','','','*2nd','*3rd'), 
+    '\\rowTable':('','_USE','','*2nd','*3rd'),       #filled manually
     #'\\finishTable':('','',''),  #this is a word!
     
     '\\refSectionA':(' :ref:`Section <','_USE','>`\\ '), #anonymous -> if no header given
@@ -356,12 +367,11 @@ convLatexCommands={#(precommand,'_USE'/'',postcommand)
     '\\exuUrl':('`','_USE','`_','2nd'),
     '\\ref':(' :ref:`','_USE','`\\ '),
     '\\fig':('Fig. :ref:`','_USE','`\\ '),
-    #'\\fig':(' :ref:`Figure <','_USE','>`\\ '),
     'figure':('','',''),
     } #TITLE, SUBTITLE, SUBSUBTITLE, ...
 
 #replace all occurances of conversionDict in string and return modified string
-def ReplaceWords(s, conversionDict, replaceBraces=True): #replace strings provided in conversion dict
+def ReplaceWords(s, conversionDict, replaceBraces=True, replaceDoubleBS=False): #replace strings provided in conversion dict
 
     if replaceBraces:
         s = s.replace('{', '')
@@ -370,31 +380,16 @@ def ReplaceWords(s, conversionDict, replaceBraces=True): #replace strings provid
     for (key,value) in conversionDict.items():
         s = s.replace(key, value)
 
+    if replaceDoubleBS:
+        s = s.replace('\\\\', '\n')
+
     return s
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#     indexRST += """
-# .. list-table::
-#    :widths: 15 10 30
-#    :header-rows: 1
-   
-#  * - **HEADER1**
-#    - **HEADER2**
-#    - **HEADER3**
-#  * - | TEXT 1
-#    - | MULTILINE 
-#      | TEXT
-#    - | MULTILINE
-#      | TEXT 2
-#  * - | DEFINITION of the long item DEFINITION of the long item DEFINITION of the long item
-#    - | character
-#      | given
-#    - | maybe not good maybe not good maybe not good maybe not good maybe not good
-#      | TEXT 2
-# """
-
+def Latex2RSTlabel(s):
+    return s.replace(':','-').replace('_','-').lower()
 
 #add specific markup with blind spaces
 def RSTmarkup(name, c='*', blindSpaces=True):
@@ -423,6 +418,53 @@ def RSTinlineMath(mathString, convert=True):
     s = '\\ :math:`' + mathString + '`\\ '
     return s
 
+#equation block:
+def RSTmathEq(mathString, convert=True, isEqArray=False):
+    if convert:
+        mathString = ReplaceWords(mathString, convLatexMath, replaceBraces=False, replaceDoubleBS=False) #keep braces!
+    
+    #single line, line break would indicate separate math line
+    sNew = '.. math::\n'
+
+    #+++++++++++++++++++++++++++++++
+    s = mathString
+    found = ExtractLatexCommand(s, '\\label', False, False)
+
+    label = ''
+    if found != -1:
+        [preString, innerString, innerString2, postString] = found
+        s = preString + postString
+        label = Latex2RSTlabel(innerString)
+        #print('label found:', label)
+
+    #+++++++++++++++++++++++++++++++
+    #we need to remove spaces at beginning/end and remove lines with comments and empty lines
+    slines = s.split('\n')
+    s = ''
+    for line in slines:
+        line = line.strip()
+        if len(line) == 0 or line[0] == '%':
+            continue #empty line omitted
+        s+=line+'\n'
+    if len(s) == 0:
+        raise ValueError('RSTmathEq: empty equation:'+mathString)
+    s = s[:-1]
+    s = RemoveIndentation(s).replace('\n',' ') #must be single line; spaces kept, as they are needed as delimiter
+
+    if isEqArray:
+        s = s.replace('\\\\','\\\\'+'\n')
+    s = RemoveIndentation(s, addSpaces='   ')
+
+    if label != '':
+        sNew += '   :label: '+label+'\n\n'
+    else:
+        sNew += '\n'
+
+    sNew += s + '\n\n'
+    # if isEqArray:
+    #     print('math=\n',sNew)
+    return sNew
+    
 #write latex source in separate equation
 def RSTmath(mathString, label=''):
     s = '.. math:: '+mathString+'\n'
@@ -433,7 +475,7 @@ def RSTmath(mathString, label=''):
 
 #label string directly to be placed e.g. before header
 def RSTlabelString(name):
-    return '\n.. _'+name.replace(':','-').replace('_','-').lower()+':\n'
+    return '\n.. _'+Latex2RSTlabel(name)+':\n'
 
 
 #writer heder with levels from 1 to 4
@@ -481,55 +523,90 @@ def FindMatchingBracket(s, start, openBracket='{', closingBracket='}'):
     return [-1,-1]
         
 #convert a text that is mainly designed for latex, but to be output into RST
-def LatexString2RST(s, replaceCommands=True, replaceMarkups = False): #Latex style to RST
+def LatexString2RST(s0, replaceCommands=True, replaceMarkups = False): #Latex style to RST
 
     # replace latex math to RST inline
     sNew = ''
     endFound = False
     pos = 0
 
+    s = s0
+    s0 = s0.replace(r'\pythonstyle\begin{lstlisting}',r'\begin{pytlisting}')
+
+    if replaceCommands:
+        s = ReplaceLatexCommands(s0, convLatexCommands)
+
     while not endFound:
-        val = s.find('$',pos)
+        startStr = '$'
+        endStr = '$'
+            
+        isInlineEq = True
+        val = s.find(startStr,pos)
+        val2 = s.find('\\be',pos)
+        if val2 != -1 and (val2 < val or val == -1): #cases: val=-1, val2=-1 || val=-1, val2>=0 || val>=0, val2=-1 || val>-1, val2>-1; 
+            isInlineEq = False
+            startStr = '\\be'
+            endStr = '\\ee'
+            val = val2
+
+        isEqArray = False
         if val == -1:
             val = len(s)
             endFound = True
+        else: #do not consider \begin{} or \bea !
+            if not isInlineEq:
+                #print('found be:', s[val:val+30])
+                sep = s[val+len(startStr)] 
+                if sep == 'a': #eqnarray
+                    startStr = '\\bea'
+                    endStr = '\\eea'
+                    sep = s[val+len(startStr)]
+                    isEqArray = True
+                if sep.strip() != '' and sep != '\\':
+                    #print('not')
+                    pos = val+len(startStr)
+                    continue #continue search at pos
+            
+
         regText = s[pos:val]
         if replaceMarkups:
             regText = regText.replace('*','\\*')
             
-        # regText = regText.replace('\\{','{')
-        # regText = regText.replace('\\}','}')
-        # #regText = regText.replace('\\_','_') #no need to replace, as we also need \_ in RST !
-        # regText = regText.replace('\&','&')
         if replaceCommands:
-            regText = ReplaceLatexCommands(regText , convLatexCommands)
-            regText = ReplaceWords(regText , convLatexWords, replaceBraces=True)
-
+            #commands must be replaced already earlier, e.g. rowTable may include $$ inside, this would not work if split up into parts
+            # regText = ReplaceLatexCommands(regText, convLatexCommands)
+            regText = ReplaceWords(regText , convLatexWords, replaceBraces=True, replaceDoubleBS=True)
 
         sNew += regText
         if not endFound:
-            val += 1
-            valEnd = s.find('$',val)
+            val += len(startStr)
+            valEnd = s.find(endStr,val)
             if valEnd != -1:
-                sMath = s[val:valEnd].strip() #spaces at end make problems
-                sNew += RSTinlineMath(sMath) #do not replace markups inside this text
-                val = valEnd+1
+                if isInlineEq:
+                    sMath = s[val:valEnd].strip() #spaces at end make problems
+                    sNew += RSTinlineMath(sMath) #do not replace markups inside this text
+                else:
+                    sNew += '\n' + RSTmathEq(s[val:valEnd],True, isEqArray=isEqArray)
+                    
+                val = valEnd+len(endStr)
             else:
-                print('WARNING:\nutilities: found no closing $ in:\n', s)
+                print('WARNING:\nutilities: found no closing '+endStr+' in:\n', s)
                 endFound = True
                 sNew = s
         pos = val
 
-    # sNew = sNew.replace('\\"u','ü')
-    # sNew = sNew.replace('\\"a','ä')
-    # sNew = sNew.replace('\\"o','ö')
-    
-    # sNew = sNew.replace('\\codeName\\ ','Exudyn')
-    # sNew = sNew.replace('\\codeName','Exudyn')
-    return sNew
+    #
 
-    
-    return s
+    if '\\label' in sNew:
+        print('WARNING: label still in s:')
+        sf = sNew.find('\\label')
+        print(sNew[sf:sf+40])
+    # if '\\be' in sNew:
+    #     print('WARNING: \\be still in s:')
+    #     sf = sNew.find('\\be')
+    #     print(sNew[sf:sf+40])
+
+    return sNew
 
 #if key is found, return [preString, innerString, innerString2, postString], otherwise -1; '123\section{abc}456' = ['123','abc','456']
 #if secondBracket>0, it searches two consecutive brackets: \exuURL{...}{...} and stores in innerString2 (will be list for more inner strings)
@@ -537,28 +614,32 @@ def ExtractLatexCommand(s, key, secondBracket, isBeginEnd=False):
     found = -1
     if isBeginEnd: #find \begin{...} \end{...}
         #always find next occurances --> will be erased in next run ...
-        keyEnd = key
+        keyEnd = '\\end{'+key+'}'
+        keyStart = '\\begin{'+key+'}'
         if key == 'pytlisting':
-            keyEnd = 'lstlisting'
-        sStart = s.find('\\begin{'+key+'}')
-        sEnd = s.find('\\end{'+keyEnd+'}',sStart)
+            keyEnd = '\\end{'+'lstlisting'+'}'
+        if key == '\\be':
+            keyStart = key
+            keyEnd = '\\ee'
+        sStart = s.find(keyStart)
+        sEnd = s.find(keyEnd,sStart)
         if sStart == -1 or sEnd == -1 or sStart >= sEnd: #if start>end, it is e.g. lstlisting end for pytlisting as start
             # if sStart >= sEnd:
             #     print('begin/end: sStart>sEnd: key=',key)
             return -1
         else:
             found = sStart
-            sStart += len('\\begin{'+key+'}') - 1
+            sStart += len(keyStart) - 1
             if False:
                 print('=====================')
-                print('found:'+s[found:sEnd+len('\\end{'+keyEnd+'}')])
+                print('found:'+s[found:sEnd+len(keyEnd)])
                 print('+++++++++++++++++++++')
                 print('inner:'+s[sStart:sEnd])
                 print('=====================')
             #sEnd += len('\\end{'+key+'}') - 1
             preString = s[:found]
             innerString = s[sStart+1:sEnd]
-            postString = s[sEnd+len('\\end{'+keyEnd+'}'):]
+            postString = s[sEnd+len(keyEnd):]
 
             return [preString, innerString, '', postString]
     else:
@@ -581,10 +662,10 @@ def ExtractLatexCommand(s, key, secondBracket, isBeginEnd=False):
             
             if secondBracket > 0:
                 for k in range(int(secondBracket)):
+                    #print('find 2nd: '+s[sEnd+1:sEnd+80])
                     [sStart2, sEnd2] = FindMatchingBracket(s, sEnd+1)
                     if sEnd2 == -1:
-                        # print("start ", sStart, ", end ", sEnd)
-                        print('no matching second bracket found: '+key+', "'+s[sStart+1:sStart+50]+'"')
+                        print('no matching second bracket found: '+key+', "'+s[sEnd+1:sEnd+50]+'"')
                         raise ValueError('ERROR')
                     innerString2 = s[sStart2+1:sEnd2]
                     innerStringList += [innerString2]
@@ -609,9 +690,18 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
     slines = s.split('\n')
     s = ''
     for line in slines:
+        fc = line.find('%')
+        if fc != -1 and len(line) >= fc and line[fc-1] != '\\': #\% should be kept; line with \% should not have comment ...
+            if len(line[:fc].lstrip()) != 0:
+                line = line[:fc] #remove everything behind that; keep %, to be consistent with following steps
+
         ls = line.lstrip()
-        if len(ls) != 0 and ls[0] == '%':
+        if len(ls) != 0 and ls[0] == '%': #emtpy lines are kept, %lines are removed!
             continue
+        #in rowtable, the new table may not contain any extra spaces at beginning of lines
+        if line.find('\\rowTable') != -1:
+            line = line.lstrip()
+
         s+=line+'\n'
     s = s[:-1]
 
@@ -626,17 +716,20 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
                 secondBracket = len(value)-3
             # if key == '\\exuUrl' or 'sectionlabel' in key: 
             #     secondBracket = True
-            if key == 'figure' or key == 'lstlisting' or key == 'pytlisting':
+            if (key == 'figure' 
+                or key == 'lstlisting' 
+                or key == 'pytlisting'
+                or key == '\\be'
+                ):
                 isBeginEnd = True
             
             found = ExtractLatexCommand(s, key, secondBracket, isBeginEnd)
 
             if found != -1:
                 [preString, innerString, innerString2, postString] = found
-
                 s = preString
                 if '\\refSection' in key or key == '\\label' or key == '\\fig' or key == '\\ref':
-                    innerString=innerString.replace(':','-').replace('_','-').lower()
+                    innerString=Latex2RSTlabel(innerString)
                 elif (value[1] == '_USE' and key != '\\exuUrl' 
                       and key != 'lstlisting' and key!='pytlisting'):
                     if 'lstlisting' in innerString:
@@ -647,9 +740,10 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
                 # if ('lstlisting' in key):
                 #     print('==============\n'+preString[-20:]+value[0]+innerString + postString[:40])
 
-                if '\\rowTable' in key:
-                    nRows = len(value)-2
-                    
+                if '\\rowTable' in key or key=='\\startTable':
+                    #nRows = len(value)-2
+                    if key=='\\startTable':
+                        s += value[0] + '\n'
                     #print('rowTableThree/Four: rows=',nRows)
                     if type(innerString2) == list:
                         # if len(innerString2) != nRows:
@@ -701,6 +795,7 @@ def ReplaceLatexCommands(s, conversionDict, sectionMarkerText=''): #replace stri
                     s += value[2]
                 
                 s += postString
+                
     return s
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -781,8 +876,7 @@ class PyLatexRST:
     #add inline reference in latex format, converted to RST: latex labels have ':' as separator, in RST have '-'
     def AddInlineRef(self, ref):
         self.sLatex += '\\refSection{'+ref+'}'
-        #self.sRST += ' `'+ref.replace(':','-').lower()+'`_\\ '
-        self.sRST += ' :ref:`'+ref.replace(':','-').lower()+'`\\ '
+        self.sRST += ' :ref:`'+Latex2RSTlabel(ref)+'`\\ '
 
         
     #add python style code blocks to latex and RST
@@ -1054,7 +1148,10 @@ class PyLatexRST:
             s += '  | '
             sep = ''
             for p in typicalPaths:
-                s += sep + RSTmarkup(p+ '.' + pythonName, c='``') 
+                pdot = ''
+                if p != '':
+                    pdot = p+ '.'
+                s += sep + RSTmarkup(pdot + pythonName, c='``') 
                 sep = ', '
             s += '\n'
             

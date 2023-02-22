@@ -40,6 +40,12 @@ The item VObjectJointSpherical has the following parameters:
   | RGBA connector color; if R==-1, use default color
 
 
+----------
+
+.. _description-objectjointspherical:
+
+DESCRIPTION of ObjectJointSpherical
+-----------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -54,7 +60,85 @@ The item VObjectJointSpherical has the following parameters:
 
 
 
+Definition of quantities
+------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | marker m0 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m0}`\ 
+     - | current global position which is provided by marker \ :math:`m0`\ 
+   * - | marker m1 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m1}`\ 
+     - | current global position which is provided by marker \ :math:`m1`\ 
+   * - | marker m0 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m0}`\ 
+     - | current global velocity which is provided by marker \ :math:`m0`\ 
+   * - | marker m1 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m1}`\ 
+     - | current global velocity which is provided by marker \ :math:`m1`\ 
+   * - | relative velocity
+     - | \ :math:`\LU{0}{\Delta{\mathbf{v}}} = \LU{0}{{\mathbf{v}}}_{m1} - \LU{0}{{\mathbf{v}}}_{m0}`\ 
+     - | constraint velocity error, or relative velocity if not all axes fixed
+   * - | algebraic variables
+     - | \ :math:`{\mathbf{z}}=[\lambda_0,\,\ldots,\,\lambda_2]\tp`\ 
+     - | vector of algebraic variables (Lagrange multipliers) according to the algebraic equations
+
+
+Connector constraint equations
+------------------------------
+
+\paragraph\ ``activeConnector = True``\ :
+If \ :math:`[j_0,\,\ldots,\,j_2] = [1,1,1]\tp`\ , meaning that all translational coordinates are fixed,
+the translational index 3 constraints read
+
+.. math::
+
+   \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} = \Null
+
+
+and the translational index 2 constraints read
+
+.. math::
+
+   \LU{0}{{\mathbf{v}}}_{m1} - \LU{0}{{\mathbf{v}}}_{m0} = \Null
+
+
+If \ :math:`[j_0,\,\ldots,\,j_2] \neq [1,1,1]\tp`\ , meaning that at least one translational coordinate is free,
+the translational index 3 constraints read for every component \ :math:`k \in [0,1,2]`\  of the vector \ :math:`\LU{0}{\Delta{\mathbf{p}}}`\ 
+
+.. math::
+
+   \LU{0}{\Delta p_k} &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
+   \lambda_k &=& 0 \quad \mathrm{if} \quad j_k = 0 \\
+
+
+
+and the translational index 2 constraints read for every component \ :math:`k \in [0,1,2]`\  of the vector \ :math:`\LU{0}{\Delta{\mathbf{v}}}`\ 
+
+.. math::
+
+   \LU{0}{\Delta v_k} &=& 0 \quad \mathrm{if} \quad j_k = 1 \quad \mathrm{and}\\
+   \lambda_k &=& 0 \quad \mathrm{if} \quad j_k = 0 \\
+
+
+
+\paragraph\ ``activeConnector = False``\ :
+
+.. math::
+
+   {\mathbf{z}} = \Null
+
+
+
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

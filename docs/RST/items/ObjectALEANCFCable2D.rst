@@ -61,6 +61,12 @@ The item VObjectALEANCFCable2D has the following parameters:
   | RGBA color of the object; if R==-1, use default color
 
 
+----------
+
+.. _description-objectaleancfcable2d:
+
+DESCRIPTION of ObjectALEANCFCable2D
+-----------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -86,8 +92,26 @@ The item VObjectALEANCFCable2D has the following parameters:
   | (local) bending moment (scalar) (at Y=0)
 
 
+A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and an axially moving coordinate of type NodeGenericODE2.
+The element has 8+1 coordinates and uses cubic polynomials for position interpolation.
+In addition to ANCFCable2D the element adds an Eulerian axial velocity by the GenericODE2 coordiante.
+The parameter \ ``physicsMovingMassFactor``\  allows to control the amount of mass, which moves with
+the Eulerian velocity (e.g., the fluid), and which is not moving (the pipe). 
+A factor of \ ``physicsMovingMassFactor=1``\  gives an axially moving beam.
+
+The Bernoulli-Euler beam is capable of large deformation as it employs the material measure of curvature for the bending.
+Note that damping (physicsBendingDamping, physicsAxialDamping) only acts on the non-moving part of the beam, as it is the case for the pipe.
+
+Note that most functions act on the underlying cable finite element, which is not co-moving axially. E.g., if you apply constraints
+to the nodal coordinates, the cable can be fixed, while still the axial component is freely moving.
+If you apply a LoadForce using a MarkerPosition, the force is acting on the beam finite element, but not on the axially moving coordinate.
+In contrast to the latter, the ObjectJointALEMoving2D and the MarkerBodyMass are acting on the moving coordinate as well.
+
+A detailed paper on this element is yet under submission, but a similar formulation can be found in  and 
+the underlying beam element is identical to ObjectANCFCable2D.
 
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

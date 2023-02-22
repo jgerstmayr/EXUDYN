@@ -14,6 +14,11 @@ code.literal {
     white-space: normal !important;
 }
 
+/* put latex equation numbering right of equations */
+.eqno {
+    float: right;
+}
+
 /*
 table.docutils td, table.docutils th {
     padding: 1px 80px 10px 5px;

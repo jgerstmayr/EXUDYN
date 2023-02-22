@@ -83,6 +83,12 @@ The item VObjectConnectorHydraulicActuatorSimple has the following parameters:
   | RGBA piston color
 
 
+----------
+
+.. _description-objectconnectorhydraulicactuatorsimple:
+
+DESCRIPTION of ObjectConnectorHydraulicActuatorSimple
+-----------------------------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -97,7 +103,173 @@ The item VObjectConnectorHydraulicActuatorSimple has the following parameters:
 
 
 
+Definition of quantities
+------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | marker m0 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m0}`\ 
+     - | current global position which is provided by marker m0
+   * - | marker m1 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m1}`\ 
+     - | 
+   * - | marker m0 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m0}`\ 
+     - | current global velocity which is provided by marker m0
+   * - | marker m1 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m1}`\ 
+     - | 
+   * - | time derivative of distance
+     - | \ :math:`\dot L`\ 
+     - | \ :math:`\Delta\! \LU{0}{{\mathbf{v}}}\tp {\mathbf{v}}_{f}`\ 
+
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | output variables
+     - | symbol
+     - | formula
+   * - | Displacement
+     - | \ :math:`\Delta\! \LU{0}{{\mathbf{p}}}`\ 
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0}`\ 
+   * - | Velocity
+     - | \ :math:`\Delta\! \LU{0}{{\mathbf{v}}}`\ 
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m1} - \LU{0}{{\mathbf{v}}}_{m0}`\ 
+   * - | Force
+     - | \ :math:`{\mathbf{f}}`\ 
+     - | see below
+
+
+Connector forces
+----------------
+
+The unit vector in force direction reads (raises SysError if \ :math:`L=0`\ ),
+
+.. math::
+
+   {\mathbf{v}}_{f} = \frac{1}{L} \Delta\! \LU{0}{{\mathbf{p}}}
+
+
+The simple double-acting hydraulic actuator has two pressure chambers, one being denoted with 0 at the
+piston head (nut) and the other at the piston rod side denoted with 1. The pressure \ :math:`p_0`\  acts at the piston head at area \ :math:`A_0`\ , 
+while the pressure \ :math:`p_1`\  counteracts on the opposite side with (usually smaller) area \ :math:`A_1`\ .
+If \ ``activeConnector = True``\ , the scalar actuator force (tension = positive) is computed as
+
+.. math::
+
+   f_{HA} = -p_0 \cdot A_0 + p_1 \cdot A_1 + v \cdot d_HA
+
+
+where \ :math:`v`\  represents the actuator velocitiy and \ :math:`d_HA`\  is the viscous damping coefficient.
+
+The vector of the actuator force applied at both markers finally reads
+
+.. math::
+
+   {\mathbf{f}} = f_{HA}{\mathbf{v}}_{f}
+
+
+The virtual work of the connector force is computed from the virtual displacement 
+
+.. math::
+
+   \delta \Delta\! \LU{0}{{\mathbf{p}}} = \delta \LU{0}{{\mathbf{p}}}_{m1} - \delta \LU{0}{{\mathbf{p}}}_{m0} ,
+
+
+and the virtual work (not the transposed version here, because the resulting generalized forces shall be a column vector),
+
+.. math::
+
+   \delta W_{HA} = {\mathbf{f}} \delta \Delta\! \LU{0}{{\mathbf{p}}} .
+
+    
+
+Pressure build up equations
+---------------------------
+
+The hydraulic actuator contains internal states, namely pressures \ :math:`p_0`\  and \ :math:`p_1`\ .
+The ODE1 for pressures follows for the the case of laminar flow, based on system and tank pressure,
+valve positions as well as the actuator velocity and position (only for change of volume).
+
+The distance between the two marker points, which are usually the bushings or clevis mounts of the hydraulic cylinder, is
+denoted as \ :math:`L`\ . The stroke length \ :math:`s in [0, L_s]`\  is defined as
+
+.. math::
+
+   s = L - L_o
+
+
+such that at zero stroke, the actuator length is \ :math:`L_o`\ . The stroke velocity (positive value means extension) reads
+
+.. math::
+
+   \dot s = \Delta\! \LU{0}{{\mathbf{v}}\tp} {\mathbf{v}}_{f}
+
+
+
+If \ ``useChamberVolumeChange == True``\ , the volume change due to stroke change will be considered for the
+volume related to the stiffness of the fluid.
+The cylinder volumes in chambers 0 and 1 are then
+
+.. math::
+
+   V_{0,cur} = V_0 + A_0 \cdot s, \quad V_{1,cur} = V_1 - A_1 \cdot s
+
+
+Otherwise, \ :math:`V_{0,cur}=V_0`\  and \ :math:`V_{1,cur}=V_1`\ .
+
+The pressure equations (explicit ODE1) have the structure
+
+.. math::
+
+   \vp{\dot p_0}{\dot p_1} = \vp{f_0(p_0, s, \dot s)}{f_1(p_1, s, \dot s)}
+
+
+and follow for different cases and chambers / valves \ :math:`k=\{0,1\}`\ , based on the simple model where 
+
++  \ :math:`A_{v,k} = 0`\ : valve k closed
++  \ :math:`A_{v,k} > 0`\ : valve k opened towards system pressure (pump)
++  \ :math:`A_{v,k} < 0`\ : valve k opened towards tank pressure
+
+Thus, the following equations are used (while it should not happen in regular operation, the arguments of the square roots could become negative; 
+thus, in the implementation we use \mathrmsqrts(x) = \mathrmsign(x) \cdot \sqrt\mathrmabs(x).):
+
+.. math::
+
+   \dot p_0 = \frac{K_{oil}}{V_{0,cur}} \left( -A_0 \cdot \dot s + A_{v0} \cdot Q_n \cdot \mathrm{sqrts}(p_s - p_0)  \right)  \quad \mathrm{if} \quad \mathrm A_{v0} \ge 0
+
+
+
+.. math::
+
+   \dot p_0 = \frac{K_{oil}}{V_{0,cur}} \left( -A_0 \cdot \dot s + A_{v0} \cdot Q_n \cdot \mathrm{sqrts}(p_0 - p_t)  \right)  \quad \mathrm{if} \quad \mathrm A_{v0} < 0
+
+
+
+.. math::
+
+   \dot p_1 = \frac{K_{oil}}{V_{1,cur}} \left(  A_1 \cdot \dot s + A_{v1} \cdot Q_n \cdot \mathrm{sqrts}(p_s - p_1)  \right)  \quad \mathrm{if} \quad \mathrm A_{v1} \ge 0
+
+
+
+.. math::
+
+   \dot p_1 = \frac{K_{oil}}{V_{1,cur}} \left(  A_1 \cdot \dot s + A_{v1} \cdot Q_n \cdot \mathrm{sqrts}(p_1 - p_t)  \right)  \quad \mathrm{if} \quad \mathrm A_{v1} < 0
+
+
+
+
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

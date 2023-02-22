@@ -37,14 +37,12 @@ The following \ **entry points**\  into the C++ code can be found:
 
 +  Python -- C++: the creation of the module \ ``exudyn``\  is found in:
 
+  
+  \ ``main/src/Pymodules/PybindModule.cpp``\ 
 
-    \ ``main/src/Pymodules/PybindModule.cpp``\ 
-
-
-  it includes large header files, which are automatically created for binding C++ code with Python.%blank line needed for .rst:
+  it includes large header files, which are automatically created for binding C++ code with Python.
   
 +  The object factory for creation of items (calling \ ``mbs.AddNode(...)``\  and similar): 
-
 
     \ ``main/src/Main/MainObjectFactory.h / .cpp``\ 
 +  Using the VisualStudio \ ``.sln``\  file and using the Debug mode allows you to smoothly walk from Python to C++ code (though that this takes some time to start up and it does not work always; and it does not work for graphics if it runs in a separate thread).
@@ -151,7 +149,7 @@ No-abbreviations-rule
 The code uses a \ **minimum set of abbreviations**\ ; however, the following abbreviation rules are used throughout:
 In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (short, 5-line member functions).
 
-\ **Exceptions**\  to the NO-ABBREVIATIONS-RULE, see also \hyperref[sec:listOfAbbreviations]{\underline{List of Abbreviations}}: %no section number!!!: Section :ref:`sec-listofabbreviations`\ 
+\ **Exceptions**\  to the NO-ABBREVIATIONS-RULE, see also \hyperref[sec:listOfAbbreviations]{\underline{List of Abbreviations}}: 
 
 +  {ODE}
 +  {ODE2}: marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)
@@ -166,7 +164,7 @@ In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer(
 +  {RHS}
 +  {LHS}
 +  {EP}
-+  {Rxyz}%: consecutive rotations around x, y and z-axis (Tait-Bryan rotations);
++  {Rxyz}
 +  {coeffs}
 +  {pos}
 +  {T66}; based on 6\times 6 matrix transformations
@@ -191,7 +189,6 @@ If such an implementation is successful, but too slow, a C++ implementation can 
 In the following, two use cases are shown, which show the simplicity of the procedure:
 
 +  \ **Case 1**\ : user object (body):
-
 
   It is recommended to first search for a body with a similar behavior.
   Copy the definition of such an object inside the file \ ``objectDefinition.py``\  and edit the according lines. 
@@ -218,7 +215,6 @@ In the following, two use cases are shown, which show the simplicity of the proc
 +  ...   possibly some helper functions, which you should implement for the functionality of your object.
   
 +  \ **Case 2**\ : user connector:
-
 
   It is recommended to search for a connector with similar behavior; first check, if you would like to implement 
   an algebraic constraint or a spring-damper-like connector.

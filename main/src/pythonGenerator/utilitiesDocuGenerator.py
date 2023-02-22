@@ -10,7 +10,7 @@ import copy #for deep copies
 import io   #for utf-8 encoding
 from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, \
           RemoveIndentation, RSTheaderString, RSTlabelString, RSTinlineMath, RSTmath, RSTurl, RSTmarkup, RSTcodeBlock, \
-          LatexString2RST
+          LatexString2RST, Latex2RSTlabel
 
 writeRST = True
 addExampleReferences = True #costs lot of time
@@ -463,13 +463,17 @@ def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFile
     sLabel = 'sec:'+ moduleNamePython + ':' + classLabelStr + functionName.replace('\\_','_')
     sLatex += '\\label{'+sLabel+'}\n'
 
-    sRST += RSTlabelString(sLabel.replace(':','-').replace('_','').lower())+'\n'
+    sRST += RSTlabelString(Latex2RSTlabel(sLabel))+'\n'
 
     #see also https://github.com/sphinx-doc/sphinx/issues/3921
     if isClassFunction:
-        sRST += 'Class function: '
+        title = 'Class function: '+functionName
+        sRST += title + '\n'
+        sRST += '^'*len(title) + '\n'        
     else:
-        sRST += 'Function: '
+        title = 'Function: '+functionName
+        sRST += title + '\n'
+        sRST += '^'*len(title) + '\n'        
     sRST += RSTurl(functionName, url, False) + '_\\ (' #add another _ to make url anonymous (otherwise warning, as function name my be duplicated)
 
     sLatex += '('

@@ -22,7 +22,6 @@ Exceptions and Error Messages. In the following, typical error messages are list
 
 
 
-
 .. code-block:: 
 
   Traceback (most recent call last):
@@ -34,7 +33,6 @@ Exceptions and Error Messages. In the following, typical error messages are list
 
 
   Typical \ **error messages if 32/64 bits versions are mixed**\ :
-
 
 
 .. code-block:: 
@@ -58,12 +56,9 @@ Exceptions and Error Messages. In the following, typical error messages are list
   |  →  A known reason is that your CPU \ **does not support AVX2**\ , while Exudyn is compiled with the AVX2 option (modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, especially Zen and Zen-2 architectures should have no problems with AVX2; however, low-cost Celeron, Pentium and older AMD processors do \ **not**\  support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this).
   |  →  \ **solution**\ : the release versions without the .dev1 ending in the wheel contain C++ libraries which are compiled without AVX/AVX2; the module loader will usually detect automatically, if your CPU supports AVX/AVX2; if not, it will load the exudynCPPnoAVX.cp ... .pyd file; if this does not work, try
 
-
 \ ``import sys``\ 
 
-
 \ ``sys.exudynCPUhasAVX2 = False``\ 
-
 
 to explicitly load the version without AVX2.
   |  →  you can also compile for your specific Python version without AVX if you adjust the \ ``setup.py``\  file in the \ ``main``\  folder.
@@ -110,9 +105,7 @@ to explicitly load the version without AVX2.
 
 +  Problems with \ **tkinter**\ , especially on MacOS:
 
-
   Exudyn uses \ ``tkinter``\ , based on tcl/tk, to provide some basic dialogs, such as visualizationSettings
-
 
   As Python is not suited for multithreading, this causes problems in window and dialog workflows. Especially on MacOS
   \ ``tkinter``\  is less stable and compatible with the window manager. Especially, \ ``tkinter``\  already needs to run
@@ -220,7 +213,6 @@ to explicitly load the version without AVX2.
 
 
 which draws the according object in red and others gray/transparent (but sometimes objects may be hidden inside other objects!). See the command's description for further options, e.g., to highlight nodes.
-
 
 
 +  Typical \ **solver error if Newton does not converge**\ :

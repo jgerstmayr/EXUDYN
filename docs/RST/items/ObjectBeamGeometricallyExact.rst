@@ -40,6 +40,12 @@ The item VObjectBeamGeometricallyExact has the following parameters:
   | RGBA color of the object; if R==-1, use default color
 
 
+----------
+
+.. _description-objectbeamgeometricallyexact:
+
+DESCRIPTION of ObjectBeamGeometricallyExact
+-------------------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -57,8 +63,10 @@ The item VObjectBeamGeometricallyExact has the following parameters:
   | 3D vector of curvature, containing only curvature w.r.t. \ :math:`z`\ -axis
 
 
+Detailed description coming later.
 
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

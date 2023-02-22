@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2022-12-07  17:04:19 (last modified)
+* @date         2023-02-22  15:06:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -156,7 +156,7 @@ public: // AUTO:
     void ComputeContactForces(const MarkerDataStructure& markerData, const CObjectConnectorRollingDiscPenaltyParameters& parameters, bool computeCurrent, Vector3D& pC, Vector3D& vC, Vector3D& wLateral, Vector3D& w2, Vector3D& n0, Vector3D& w3, Vector3D& fContact, Vector2D& localSlipVelocity) const;
 
     //! AUTO:  compute slip force vector for specific states
-    Vector2D ComputeSlipForce(const CObjectConnectorRollingDiscPenaltyParameters& parameters, 	const Vector2D& localSlipVelocity, const Vector2D& dataLocalSlipVelocity, Real contactForce) const;
+    Vector2D ComputeSlipForce(const CObjectConnectorRollingDiscPenaltyParameters& parameters,     const Vector2D& localSlipVelocity, const Vector2D& dataLocalSlipVelocity, Real contactForce) const;
 
     //! AUTO:  provide requested markerType for connector
     virtual Marker::Type GetRequestedMarkerType() const override

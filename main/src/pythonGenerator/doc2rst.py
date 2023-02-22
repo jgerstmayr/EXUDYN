@@ -41,10 +41,10 @@ undefLabelList = [
     ##('Render State','sec-renderstate'),
     ##('GraphicsData','sec-graphicsdata'),
     ('Solvers','sec-solvers'),
-    ('Items Reference Manual','sec-item-reference-manual'),
-    ('Solvers: Static','sec-solver-solvestatic'),
-    ('Solvers: Dynamic','sec-solver-solvedynamic'),
-    ('Solvers: Eigenvalues','sec-solver-computeode2eigenvalues'),
+    #('Items Reference Manual','sec-item-reference-manual'),
+    ('Solvers: Static','sec-solver-solverstatic'),
+    ('Solvers: Dynamic','sec-solver-solverdynamic'),
+    #('Solvers: Eigenvalues','sec-solver-computeode2eigenvalues'),
     ('Theory: Component Mode Synthesis','sec-theory-cms'),
     #'sec-mainsolverstatic',
     ##('Graphics: UTF-8','sec-utf8'),
@@ -58,94 +58,6 @@ for i, (header, label) in enumerate(undefLabelList):
 undefLabels+='Further information\n'
 undefLabels+='===================\n\n'
 undefLabels+='\ **SEE Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ '
-
-# sectionsList = []
-# #local copy, will do some extra things and stores sections
-# def ReplaceLatexCommands(s, conversionDict): #replace strings provided in conversion dict
-#     global sectionsList
-#     s = s.replace('{\\bf ','\\mybold{') #this is then further converted into rst code ...
-#     for (key,value) in conversionDict.items():
-#         cnt = 0
-#         found = 0
-#         while (found != -1):
-#             secondBracket = 0
-#             isBeginEnd = False
-#             if len(value) > 3:
-#                 secondBracket = len(value)-3
-#             if key == 'figure': isBeginEnd = True
-
-#             found = ExtractLatexCommand(s, key, secondBracket, isBeginEnd)
-#             if found != -1:
-#                 [preString, innerString, innerString2, postString] = found
-
-#                 s = preString
-#                 if '\\refSection' in key  or key == '\\label' or key == '\\fig' or key == '\\ref':
-#                     innerString=innerString.replace(':','-').replace('_','-').lower()
-#                 elif value[1] == '_USE' and key != '\\exuUrl':
-#                     innerString = ReplaceLatexCommands(innerString, convLatexCommands)
-#                     innerString = ReplaceWords(innerString, convLatexWords) #needs to be cleaned here already
-
-#                 if '\\rowTable' in key:
-#                     nRows = len(value)-2
-                    
-#                     #print('rowTableThree/Four: rows=',nRows)
-#                     if type(innerString2) == list:
-#                         # if len(innerString2) != nRows:
-#                         #     print('innerString2:',innerString2)
-#                         text = ''
-#                         cstar = '*'
-#                         for k, col in enumerate(innerString2):
-#                             #seems that it needs to have exactly same amount of pre-spaces as :widths: and other options
-#                             text += '   '+cstar+' - | '+col
-#                             if k < len(innerString2)-1:
-#                                 text += '\n' #last \n is added due to text itself (postString)
-#                             cstar = ' '
-#                         s += text
-#                         #print('table = \n'+text)
-#                     else:
-#                         print('PROBLEM with rowTable: ',innerString2)
-# # * - **HEADER1**
-# #    - **HEADER2**
-# #    - **HEADER3**
-# #  * - | TEXT 1
-# #    - | MULTILINE                             
-#                 elif key == '\\mysection' or key == '\\mysectionlabel':
-#                     s += sectionMarkerText+'0\n'
-#                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-#                     sectionsList += [('0',innerString)]
-#                     s += '\n'+RSTheaderString(innerString, 1)
-#                 elif key == '\\mysubsection' or key == '\\mysubsectionlabel':
-#                     if sectionFilesDepth > 0:
-#                         s += sectionMarkerText+'1\n'
-#                         sectionsList += [('1',innerString)]
-#                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-#                     s += '\n'+RSTheaderString(innerString, 2)
-#                 elif key == '\\mysubsubsection' or key == '\\mysubsubsectionlabel':
-#                     if sectionFilesDepth > 1:
-#                         s += sectionMarkerText+'2\n'
-#                         sectionsList += [('2',innerString)]
-#                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-#                     s += '\n'+RSTheaderString(innerString, 3)
-#                 elif key == '\\mysubsubsubsection' or key == '\\mysubsubsubsectionlabel':
-#                     if sectionFilesDepth > 2:
-#                         s += sectionMarkerText+'3\n'
-#                         sectionsList += [('3',innerString)]
-#                     if 'label' in key: s += RSTlabelString(innerString2)+'\n'
-#                     s += '\n'+RSTheaderString(innerString, 4)
-#                 elif key == '\\exuUrl':
-#                     s += value[0]
-#                     s += innerString2 + ' <'
-#                     s += innerString
-#                     s += '>'
-#                     s += value[2]
-#                 else:
-#                     s += value[0]
-#                     if value[1] == '_USE':
-#                         s += innerString
-#                     s += value[2]
-                
-#                 s += postString
-#     return s
 
 
 sectionsList = []
@@ -240,7 +152,7 @@ def ConvertFile(s):
     s=ReplaceLatexCommands(s, convLatexCommands, sectionMarkerText)
     # print('count begin lstlisting=',s.count(r'\begin{lstlisting}'))
     # print('count begin pytlisting=',s.count(r'\begin{pytlisting}'))
-    s=ReplaceWords(s, convLatexWords, replaceBraces=False)
+    s=ReplaceWords(s, convLatexWords, replaceBraces=False, replaceDoubleBS=True)
     
     return s
 

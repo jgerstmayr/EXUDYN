@@ -44,6 +44,12 @@ The item VObjectJointPrismaticX has the following parameters:
   | RGBA connector color; if R==-1, use default color
 
 
+----------
+
+.. _description-objectjointprismaticx:
+
+DESCRIPTION of ObjectJointPrismaticX
+------------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -66,7 +72,119 @@ The item VObjectJointPrismaticX has the following parameters:
 
 
 
+.. _sec-objectjointprismaticx-definitionofquantities:
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+Definition of quantities
+------------------------
+
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | marker m0 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m0}`\ 
+     - | current global position which is provided by marker m0
+   * - | marker m0 orientation
+     - | \ :math:`\LU{0,m0}{\Rot}`\ 
+     - | current rotation matrix provided by marker m0
+   * - | joint J0 orientation
+     - | \ :math:`\LU{0,J0}{\Rot} = \LU{0,m0}{\Rot} \LU{m0,J0}{\Rot}`\ 
+     - | joint \ :math:`J0`\  rotation matrix
+   * - | joint J0 orientation vectors
+     - | \ :math:`\LU{0,J0}{\Rot} = [\LU{0}{{\mathbf{t}}_{x0}},\,\LU{0}{{\mathbf{t}}_{y0}},\,\LU{0}{{\mathbf{t}}_{z0}}]\tp`\ 
+     - | orientation vectors (represent local \ :math:`x`\ , \ :math:`y`\ , and \ :math:`z`\  axes) in global coordinates, used for definition of constraint equations
+   * - | marker m1 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m1}`\ 
+     - | accordingly
+   * - | marker m1 orientation
+     - | \ :math:`\LU{0,m1}{\Rot}`\ 
+     - | current rotation matrix provided by marker m1
+   * - | joint J1 orientation
+     - | \ :math:`\LU{0,J1}{\Rot} = \LU{0,m1}{\Rot} \LU{m1,J1}{\Rot}`\ 
+     - | joint \ :math:`J1`\  rotation matrix
+   * - | joint J1 orientation vectors
+     - | \ :math:`\LU{0,J1}{\Rot} = [\LU{0}{{\mathbf{t}}_{x1}},\,\LU{0}{{\mathbf{t}}_{y1}},\,v{\mathbf{t}}_{z1}]\tp`\ 
+     - | orientation vectors (represent local \ :math:`x`\ , \ :math:`y`\ , and \ :math:`z`\  axes) in global coordinates, used for definition of constraint equations
+   * - | marker m0 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m0}`\ 
+     - | current global velocity which is provided by marker m0
+   * - | marker m1 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m1}`\ 
+     - | accordingly
+   * - | marker m0 velocity
+     - | \ :math:`\LU{b}{\tomega}_{m0}`\ 
+     - | current local angular velocity vector provided by marker m0
+   * - | marker m1 velocity
+     - | \ :math:`\LU{b}{\tomega}_{m1}`\ 
+     - | current local angular velocity vector provided by marker m1
+   * - | Displacement
+     - | \ :math:`\LU{0}{\Delta{\mathbf{p}}}=\LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0}`\ 
+     - | used, if all translational axes are constrained
+   * - | DisplacementLocal
+     - | \ :math:`\LU{J0}{\Delta{\mathbf{p}}}`\ 
+     - | \ :math:`\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta{\mathbf{p}}}`\ 
+   * - | VelocityLocal
+     - | \ :math:`\LU{J0}{\Delta{\mathbf{v}}}`\ 
+     - | \ :math:`\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta{\mathbf{v}}}`\  \ :math:`\ldots`\  note that this is the global relative velocity projected into the local \ :math:`J0`\  coordinate system
+   * - | AngularVelocityLocal
+     - | \ :math:`\LU{J0}{\Delta\omega}`\ 
+     - | \ :math:`\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\omega} - \LU{0,m0}{\Rot} \LU{m0}{\omega} \right)`\ 
+   * - | algebraic variables
+     - | \ :math:`{\mathbf{z}}=[\lambda_0,\,\ldots,\,\lambda_5]\tp`\ 
+     - | vector of algebraic variables (Lagrange multipliers) according to the algebraic equations
+
+
+Connector constraint equations
+------------------------------
+
+\paragraphEquations for translational part (\ ``activeConnector = True``\ ):
+
+The two translational index 3 constraints for a free motion along the local \ :math:`x`\ -axis read (in the coordinate system \ :math:`J0`\ ),
+
+.. math::
+
+   \LU{J0}{{\mathbf{p}}}_{y,m1} - \LU{J0}{{\mathbf{p}}}_{y,m0} &=& \Null \nonumber \\
+   \LU{J0}{{\mathbf{p}}}_{z,m1} - \LU{J0}{{\mathbf{p}}}_{z,m0} &=& \Null
+
+
+and the translational index 2 constraints read
+
+.. math::
+
+   \LU{J0}{{\mathbf{v}}}_{y,m1} - \LU{J0}{{\mathbf{v}}}_{y,m0} &=& \Null \nonumber \\
+   \LU{J0}{{\mathbf{v}}}_{z,m1} - \LU{J0}{{\mathbf{v}}}_{z,m0} &=& \Null
+
+
+\paragraphEquations for rotational part (\ ``activeConnector = True``\ ):
+
+Note that the axes are always given in global coordinates, compare the table in 
+Section :ref:`sec-objectjointprismaticx-definitionofquantities`\ .
+The index 3 constraint equations read
+
+.. math::
+   :label: eq-objectjointprismaticx-index3
+
+   \LU{0}{{\mathbf{t}}}_{z0}\tp \LU{0}{{\mathbf{t}}}_{y1} &=& 0 \\
+   \LU{0}{{\mathbf{t}}}_{z0}\tp \LU{0}{{\mathbf{t}}}_{x1} &=& 0 \\
+   \LU{0}{{\mathbf{t}}}_{x0}\tp \LU{0}{{\mathbf{t}}}_{y1} &=& 0
+
+
+The index 2 constraints follow from the derivative of \eqeq:ObjectJointPrismaticX:index3 w.r.t., and are given in the C++ code.
+if \ ``activeConnector = False``\ , 
+
+.. math::
+
+   {\mathbf{z}} = \Null
+
+
+
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

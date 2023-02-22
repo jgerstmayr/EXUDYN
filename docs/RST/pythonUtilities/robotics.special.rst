@@ -14,7 +14,9 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 
 .. _sec-special-velocitymanipulability:
 
-Function: `VelocityManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L31>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ )
+Function: VelocityManipulability
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`VelocityManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L31>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ )
 
 - | \ *function description*\ :
   | compute velocity manipulability measure for given pose (homogenious transformation)
@@ -33,7 +35,9 @@ Function: `VelocityManipulability <https://github.com/jgerstmayr/EXUDYN/blob/mas
 
 .. _sec-special-forcemanipulability:
 
-Function: `ForceManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L63>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ , \ ``singular_weight = 100``\ )
+Function: ForceManipulability
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ForceManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L63>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ , \ ``singular_weight = 100``\ )
 
 - | \ *function description*\ :
   | compute force manipulability measure for given pose (homogenious transformation)
@@ -52,7 +56,9 @@ Function: `ForceManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master
 
 .. _sec-special-stiffnessmanipulability:
 
-Function: `StiffnessManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L106>`__\ (\ ``robot``\ , \ ``JointStiffness``\ , \ ``HT``\ , \ ``mode``\ , \ ``singularWeight = 1000``\ )
+Function: StiffnessManipulability
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`StiffnessManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L106>`__\ (\ ``robot``\ , \ ``JointStiffness``\ , \ ``HT``\ , \ ``mode``\ , \ ``singularWeight = 1000``\ )
 
 - | \ *function description*\ :
   | compute cartesian stiffness measure for given pose (homogenious transformation)
@@ -75,7 +81,9 @@ Function: `StiffnessManipulability <https://github.com/jgerstmayr/EXUDYN/blob/ma
 
 .. _sec-special-jointjacobian:
 
-Function: `JointJacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L141>`__\ (\ ``robot``\ , \ ``HTJoint``\ , \ ``HTLink``\ )
+Function: JointJacobian
+^^^^^^^^^^^^^^^^^^^^^^^
+`JointJacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L141>`__\ (\ ``robot``\ , \ ``HTJoint``\ , \ ``HTLink``\ )
 
 - | \ *function description*\ :
   | compute joint jacobian for each frame for given pose (homogenious transformation)
@@ -92,7 +100,9 @@ Function: `JointJacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/
 
 .. _sec-special-massmatrix:
 
-Function: `MassMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L203>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``jointJacobian``\ )
+Function: MassMatrix
+^^^^^^^^^^^^^^^^^^^^
+`MassMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L203>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``jointJacobian``\ )
 
 - | \ *function description*\ :
   | compute mass matrix from jointJacobian
@@ -116,7 +126,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-special-dynamicmanipulability:
 
-Function: `DynamicManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L236>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``MassMatrix``\ , \ ``Tmax``\ , \ ``mode``\ , \ ``singularWeight = 1000``\ )
+Function: DynamicManipulability
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`DynamicManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L236>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``MassMatrix``\ , \ ``Tmax``\ , \ ``mode``\ , \ ``singularWeight = 1000``\ )
 
 - | \ *function description*\ :
   | compute dynamic manipulability measure for given pose (homogenious transformation)
@@ -140,7 +152,9 @@ Function: `DynamicManipulability <https://github.com/jgerstmayr/EXUDYN/blob/mast
 
 .. _sec-special-computeik3r:
 
-Function: `ComputeIK3R <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L284>`__\ (\ ``robot``\ , \ ``HT``\ )
+Function: ComputeIK3R
+^^^^^^^^^^^^^^^^^^^^^
+`ComputeIK3R <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L284>`__\ (\ ``robot``\ , \ ``HT``\ )
 
 - | \ *function description*\ :
   | calculates the analytical inverse kinematics for 3R elbow type serial robot manipulator
@@ -161,7 +175,9 @@ Function: `ComputeIK3R <https://github.com/jgerstmayr/EXUDYN/blob/master/main/py
 
 .. _sec-special-computeikpuma560:
 
-Function: `ComputeIKPuma560 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L355>`__\ (\ ``robot``\ , \ ``HT``\ )
+Function: ComputeIKPuma560
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ComputeIKPuma560 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L355>`__\ (\ ``robot``\ , \ ``HT``\ )
 
 - | \ *function description*\ :
   | calculates the analytical inverse kinematics for Puma560 serial 6R robot manipulator
@@ -182,7 +198,9 @@ Function: `ComputeIKPuma560 <https://github.com/jgerstmayr/EXUDYN/blob/master/ma
 
 .. _sec-special-computeikur:
 
-Function: `ComputeIKUR <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L481>`__\ (\ ``robot``\ , \ ``HTdes``\ )
+Function: ComputeIKUR
+^^^^^^^^^^^^^^^^^^^^^
+`ComputeIKUR <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L481>`__\ (\ ``robot``\ , \ ``HTdes``\ )
 
 - | \ *function description*\ :
   | calculates the analytical inverse kinematics for UR type serial 6R robot manipulator without sperical wrist
