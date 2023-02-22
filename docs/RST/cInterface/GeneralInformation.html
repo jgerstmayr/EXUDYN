@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>General information on Python-C++ interface &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
+  <title>General information on Python-C++ interface &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.105.dev1
+            Exudyn1.5.109.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -85,7 +85,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.109.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -183,9 +183,7 @@ In the following, some basic steps and concepts for usage are shown, references 
 <div class="line">The benefit of these indices comes as they may not be mixed up, e.g., using an object index instead of a node index.</div>
 <div class="line">You can convert any item index, e.g., NodeIndex <code class="docutils literal notranslate"><span class="pre">ni</span></code> into an integer number using <code class="docutils literal notranslate"><span class="pre">int(ni)</span></code> of <code class="docutils literal notranslate"><span class="pre">ni.GetIndex()</span></code></div>
 <div class="line">Still, you can use integers as initialization for item numbers, e.g.:</div>
-<div class="line"><br /></div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">mbs.AddObject(MassPoint(nodeNumber=13,</span> <span class="pre">...))</span></code></div>
-<div class="line"><br /></div>
 <div class="line">However, it must be a pure integer type.</div>
 <div class="line">You can make integer calculations with such indices, e.g., <code class="docutils literal notranslate"><span class="pre">oi</span> <span class="pre">=</span> <span class="pre">2*ObjectIndex(42)+1</span></code> restricing to addition, subtraction and multiplication. Currently, the result of such calculations is a <code class="docutils literal notranslate"><span class="pre">int</span></code> type andoperating on mixed indices is not checked (but may raise exceptions in future).</div>
 <div class="line">You can also print item indices, e.g., <code class="docutils literal notranslate"><span class="pre">print(ni)</span></code> as it converts to string by default.</div>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: processing &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
+  <title>Module: processing &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.105.dev1
+            Exudyn1.5.109.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -68,7 +68,17 @@
 <li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: processing</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: processing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-getversionplatformstring">Function: GetVersionPlatformString</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-processparameterlist">Function: ProcessParameterList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-parametervariation">Function: ParameterVariation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-geneticoptimization">Function: GeneticOptimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-minimize">Function: Minimize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computesensitivities">Function: ComputeSensitivities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-plotoptimizationresults2d">Function: PlotOptimizationResults2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-plotsensitivityresults">Function: PlotSensitivityResults</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
@@ -96,7 +106,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.109.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -124,7 +134,9 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 <li><p>Date:      2020-11-17 (2022-02-04 modified by Stefan Holzinger)</p></li>
 <li><p>Notes:     Parallel processing, which requires multiprocessing library, can lead to considerable speedup (measured speedup factor &gt; 50 on 80 core machine). The progess bar during multiprocessing requires the library tqdm.</p></li>
 </ul>
-<p id="sec-processing-getversionplatformstring">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L25">GetVersionPlatformString</a>()</p>
+<section id="function-getversionplatformstring">
+<span id="sec-processing-getversionplatformstring"></span><h2>Function: GetVersionPlatformString<a class="headerlink" href="#function-getversionplatformstring" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L26">GetVersionPlatformString</a>()</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -139,7 +151,10 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-processing-processparameterlist">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L129">ProcessParameterList</a>(<code class="docutils literal notranslate"><span class="pre">parameterFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameterList</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span></code>, <code class="docutils literal notranslate"><span class="pre">clusterHostNames</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+</section>
+<section id="function-processparameterlist">
+<span id="sec-processing-processparameterlist"></span><h2>Function: ProcessParameterList<a class="headerlink" href="#function-processparameterlist" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L130">ProcessParameterList</a>(<code class="docutils literal notranslate"><span class="pre">parameterFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameterList</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span></code>, <code class="docutils literal notranslate"><span class="pre">clusterHostNames</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -170,7 +185,10 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-processing-parametervariation">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L308">ParameterVariation</a>(<code class="docutils literal notranslate"><span class="pre">parameterFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameters</span></code>, <code class="docutils literal notranslate"><span class="pre">useLogSpace</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">debugMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showProgress</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">parameterFunctionData</span> <span class="pre">=</span> <span class="pre">{}</span></code>, <code class="docutils literal notranslate"><span class="pre">clusterHostNames</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfThreads</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">resultsFile</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+</section>
+<section id="function-parametervariation">
+<span id="sec-processing-parametervariation"></span><h2>Function: ParameterVariation<a class="headerlink" href="#function-parametervariation" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L309">ParameterVariation</a>(<code class="docutils literal notranslate"><span class="pre">parameterFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameters</span></code>, <code class="docutils literal notranslate"><span class="pre">useLogSpace</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">debugMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showProgress</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">parameterFunctionData</span> <span class="pre">=</span> <span class="pre">{}</span></code>, <code class="docutils literal notranslate"><span class="pre">clusterHostNames</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfThreads</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">resultsFile</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -213,7 +231,10 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/dispyParameterVariationExample.py">dispyParameterVariationExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/dispyParameterVariationExampleAlt.py">dispyParameterVariationExampleAlt.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/parameterVariationExample.py">parameterVariationExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py">geneticOptimizationTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-processing-geneticoptimization">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L439">GeneticOptimization</a>(<code class="docutils literal notranslate"><span class="pre">objectiveFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameters</span></code>, <code class="docutils literal notranslate"><span class="pre">populationSize</span> <span class="pre">=</span> <span class="pre">100</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfGenerations</span> <span class="pre">=</span> <span class="pre">10</span></code>, <code class="docutils literal notranslate"><span class="pre">elitistRatio</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">crossoverProbability</span> <span class="pre">=</span> <span class="pre">0.25</span></code>, <code class="docutils literal notranslate"><span class="pre">crossoverAmount</span> <span class="pre">=</span> <span class="pre">0.5</span></code>, <code class="docutils literal notranslate"><span class="pre">rangeReductionFactor</span> <span class="pre">=</span> <span class="pre">0.7</span></code>, <code class="docutils literal notranslate"><span class="pre">distanceFactor</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">childDistribution</span> <span class="pre">=</span> <span class="pre">&quot;uniform&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">distanceFactorGenerations</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">debugMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showProgress</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">clusterHostNames</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+</section>
+<section id="function-geneticoptimization">
+<span id="sec-processing-geneticoptimization"></span><h2>Function: GeneticOptimization<a class="headerlink" href="#function-geneticoptimization" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L458">GeneticOptimization</a>(<code class="docutils literal notranslate"><span class="pre">objectiveFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameters</span></code>, <code class="docutils literal notranslate"><span class="pre">populationSize</span> <span class="pre">=</span> <span class="pre">100</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfGenerations</span> <span class="pre">=</span> <span class="pre">10</span></code>, <code class="docutils literal notranslate"><span class="pre">elitistRatio</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">crossoverProbability</span> <span class="pre">=</span> <span class="pre">0.25</span></code>, <code class="docutils literal notranslate"><span class="pre">crossoverAmount</span> <span class="pre">=</span> <span class="pre">0.5</span></code>, <code class="docutils literal notranslate"><span class="pre">rangeReductionFactor</span> <span class="pre">=</span> <span class="pre">0.7</span></code>, <code class="docutils literal notranslate"><span class="pre">distanceFactor</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">childDistribution</span> <span class="pre">=</span> <span class="pre">&quot;uniform&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">distanceFactorGenerations</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">debugMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showProgress</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">clusterHostNames</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -269,7 +290,10 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py">geneticOptimizationSliderCrank.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py">geneticOptimizationTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-processing-minimize">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L798">Minimize</a>(<code class="docutils literal notranslate"><span class="pre">objectiveFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameters</span></code>, <code class="docutils literal notranslate"><span class="pre">initialGuess</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">method</span> <span class="pre">=</span> <span class="pre">'Nelder-Mead'</span></code>, <code class="docutils literal notranslate"><span class="pre">tol</span> <span class="pre">=</span> <span class="pre">1e-4</span></code>, <code class="docutils literal notranslate"><span class="pre">options</span> <span class="pre">=</span> <span class="pre">{}</span></code>, <code class="docutils literal notranslate"><span class="pre">enforceBounds</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">debugMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showProgress</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">storeFunctionValues</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+</section>
+<section id="function-minimize">
+<span id="sec-processing-minimize"></span><h2>Function: Minimize<a class="headerlink" href="#function-minimize" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L817">Minimize</a>(<code class="docutils literal notranslate"><span class="pre">objectiveFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameters</span></code>, <code class="docutils literal notranslate"><span class="pre">initialGuess</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">method</span> <span class="pre">=</span> <span class="pre">'Nelder-Mead'</span></code>, <code class="docutils literal notranslate"><span class="pre">tol</span> <span class="pre">=</span> <span class="pre">1e-4</span></code>, <code class="docutils literal notranslate"><span class="pre">options</span> <span class="pre">=</span> <span class="pre">{}</span></code>, <code class="docutils literal notranslate"><span class="pre">enforceBounds</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">debugMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showProgress</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">storeFunctionValues</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -319,7 +343,10 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/minimizeExample.py">minimizeExample.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-processing-computesensitivities">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L998">ComputeSensitivities</a>(<code class="docutils literal notranslate"><span class="pre">parameterFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameters</span></code>, <code class="docutils literal notranslate"><span class="pre">scaledByReference</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">debugMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showProgress</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">parameterFunctionData</span> <span class="pre">=</span> <span class="pre">dict()</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+</section>
+<section id="function-computesensitivities">
+<span id="sec-processing-computesensitivities"></span><h2>Function: ComputeSensitivities<a class="headerlink" href="#function-computesensitivities" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L1017">ComputeSensitivities</a>(<code class="docutils literal notranslate"><span class="pre">parameterFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">parameters</span></code>, <code class="docutils literal notranslate"><span class="pre">scaledByReference</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">debugMode</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addComputationIndex</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">useMultiProcessing</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">showProgress</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">parameterFunctionData</span> <span class="pre">=</span> <span class="pre">dict()</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -364,7 +391,10 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py">ComputeSensitivitiesExample.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-processing-plotoptimizationresults2d">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L1108">PlotOptimizationResults2D</a>(<code class="docutils literal notranslate"><span class="pre">parameterList</span></code>, <code class="docutils literal notranslate"><span class="pre">valueList</span></code>, <code class="docutils literal notranslate"><span class="pre">xLogScale</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">yLogScale</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+</section>
+<section id="function-plotoptimizationresults2d">
+<span id="sec-processing-plotoptimizationresults2d"></span><h2>Function: PlotOptimizationResults2D<a class="headerlink" href="#function-plotoptimizationresults2d" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L1127">PlotOptimizationResults2D</a>(<code class="docutils literal notranslate"><span class="pre">parameterList</span></code>, <code class="docutils literal notranslate"><span class="pre">valueList</span></code>, <code class="docutils literal notranslate"><span class="pre">xLogScale</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">yLogScale</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -390,7 +420,10 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/geneticOptimizationSliderCrank.py">geneticOptimizationSliderCrank.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/minimizeExample.py">minimizeExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geneticOptimizationTest.py">geneticOptimizationTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-processing-plotsensitivityresults">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L1164">PlotSensitivityResults</a>(<code class="docutils literal notranslate"><span class="pre">valRef</span></code>, <code class="docutils literal notranslate"><span class="pre">valuesSorted</span></code>, <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code>, <code class="docutils literal notranslate"><span class="pre">fVar</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">strYAxis</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+</section>
+<section id="function-plotsensitivityresults">
+<span id="sec-processing-plotsensitivityresults"></span><h2>Function: PlotSensitivityResults<a class="headerlink" href="#function-plotsensitivityresults" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py#L1183">PlotSensitivityResults</a>(<code class="docutils literal notranslate"><span class="pre">valRef</span></code>, <code class="docutils literal notranslate"><span class="pre">valuesSorted</span></code>, <code class="docutils literal notranslate"><span class="pre">sensitivity</span></code>, <code class="docutils literal notranslate"><span class="pre">fVar</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">strYAxis</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -421,6 +454,7 @@ It includes parameter variation and (genetic) optimization functionality.</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py">ComputeSensitivitiesExample.py</a> (Ex)</p>
 </div></blockquote>
+</section>
 </section>
 
 

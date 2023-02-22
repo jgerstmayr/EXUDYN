@@ -33,6 +33,12 @@ The item VNode1D has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown; The node1D is represented as reference position and displacement along the global x-axis, which must not agree with the representation in the object using the Node1D
 
 
+----------
+
+.. _description-node1d:
+
+DESCRIPTION of Node1D
+---------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -44,8 +50,26 @@ The item VNode1D has the following parameters:
   | ODE2 acceleration coordinate of node (in vector form)
 
 
+\paragraphDetailed information:
+The current position/rotation coordinate of the 1D node is computed from
+
+.. math::
+
+   p_0 = {q_0}\cRef + {q_0}\cCur
 
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+The coordinate leads to one second order differential equation.
+The graphical representation and the (internal) position of the node is
+
+.. math::
+
+   p\cConfig= \vr{{p_0}\cConfig}{0}{0}
+
+
+The (internal) velocity vector is \ :math:`[{p_0}\cConfig,\,0,\,0]\tp`\ .
+
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

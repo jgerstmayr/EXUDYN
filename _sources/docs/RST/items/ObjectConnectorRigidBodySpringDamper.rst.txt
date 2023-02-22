@@ -55,6 +55,12 @@ The item VObjectConnectorRigidBodySpringDamper has the following parameters:
   | RGBA connector color; if R==-1, use default color
 
 
+----------
+
+.. _description-objectconnectorrigidbodyspringdamper:
+
+DESCRIPTION of ObjectConnectorRigidBodySpringDamper
+---------------------------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -73,7 +79,272 @@ The item VObjectConnectorRigidBodySpringDamper has the following parameters:
 
 
 
+Definition of quantities
+------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | input parameter
+     - | symbol
+     - | description
+   * - | stiffness
+     - | \ :math:`{\mathbf{k}} \in \mathbb{R}^{6\times 6}`\ 
+     - | stiffness in \ :math:`J0`\  coordinates
+   * - | damping
+     - | \ :math:`{\mathbf{d}} \in \mathbb{R}^{6\times 6}`\ 
+     - | damping in \ :math:`J0`\  coordinates
+   * - | offset
+     - | \ :math:`\LUR{J0}{{\mathbf{v}}}{\mathrm{off}} \in \mathbb{R}^{6}`\ 
+     - | offset in \ :math:`J0`\  coordinates
+   * - | rotationMarker0
+     - | \ :math:`\LU{m0,J0}{\Rot}`\ 
+     - | rotation matrix which transforms from joint 0 into marker 0 coordinates
+   * - | rotationMarker1
+     - | \ :math:`\LU{m1,J1}{\Rot}`\ 
+     - | rotation matrix which transforms from joint 1 into marker 1 coordinates
+   * - | markerNumbers[0]
+     - | \ :math:`m0`\ 
+     - | global marker number m0
+   * - | markerNumbers[1]
+     - | \ :math:`m1`\ 
+     - | global marker number m1
+
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | marker m0 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m0}`\ 
+     - | current global position which is provided by marker m0
+   * - | marker m0 orientation
+     - | \ :math:`\LU{0,m0}{\Rot}`\ 
+     - | current rotation matrix provided by marker m0
+   * - | marker m1 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m1}`\ 
+     - | accordingly
+   * - | marker m1 orientation
+     - | \ :math:`\LU{0,m1}{\Rot}`\ 
+     - | current rotation matrix provided by marker m1
+   * - | marker m0 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m0}`\ 
+     - | current global velocity which is provided by marker m0
+   * - | marker m1 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m1}`\ 
+     - | accordingly
+   * - | marker m0 velocity
+     - | \ :math:`\LU{m0}{\tomega}_{m0}`\ 
+     - | current local angular velocity vector provided by marker m0
+   * - | marker m1 velocity
+     - | \ :math:`\LU{m1}{\tomega}_{m1}`\ 
+     - | current local angular velocity vector provided by marker m1
+   * - | Displacement
+     - | \ :math:`\LU{0}{\Delta{\mathbf{p}}}`\ 
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0}`\ 
+   * - | Velocity
+     - | \ :math:`\LU{0}{\Delta{\mathbf{v}}}`\ 
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m1} - \LU{0}{{\mathbf{v}}}_{m0}`\ 
+   * - | DisplacementLocal
+     - | \ :math:`\LU{J0}{\Delta{\mathbf{p}}}`\ 
+     - | \ :math:`\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta{\mathbf{p}}}`\ 
+   * - | VelocityLocal
+     - | \ :math:`\LU{J0}{\Delta{\mathbf{v}}}`\ 
+     - | \ :math:`\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \LU{0}{\Delta{\mathbf{v}}}`\ 
+   * - | AngularVelocityLocal
+     - | \ :math:`\LU{J0}{\Delta\tomega}`\ 
+     - | \ :math:`\left(\LU{0,m0}{\Rot}\LU{m0,J0}{\Rot}\right)\tp \left( \LU{0,m1}{\Rot} \LU{m1}{\tomega} - \LU{0,m0}{\Rot} \LU{m0}{\tomega} \right)`\ 
+
+
+
+Connector forces
+----------------
+
+If \ ``activeConnector = True``\ , the vector spring force is computed as
+
+.. math::
+
+   \vp{\LU{J0}{{\mathbf{f}}_{SD}}}{\LU{J0}{{\mathbf{m}}_{SD}}} = {\mathbf{k}} \left( \vp{\LU{J0}{\Delta{\mathbf{p}}}}{\LU{J0}{\ttheta}} - \LUR{J0}{{\mathbf{v}}}{\mathrm{off}}\right) + {\mathbf{d}} \vp{\LU{J0}{\Delta{\mathbf{v}}}}{\LU{J0}{\Delta\omega}}
+
+
+For the application of joint forces to markers, \ :math:`[\LU{J0}{{\mathbf{f}}_{SD}},\,\LU{J0}{{\mathbf{m}}_{SD}}]\tp`\  is transformed into global coordinates.
+if \ ``activeConnector = False``\ , \ :math:`\LU{J0}{{\mathbf{f}}_{SD}}`\  and  \ :math:`\LU{J0}{{\mathbf{m}}_{SD}}`\  are set to zero.
+
+If the springForceTorqueUserFunction \ :math:`\mathrm{UF}`\  is defined and \ ``activeConnector = True``\ , 
+\ :math:`{\mathbf{f}}_{SD}`\  instead becomes (\ :math:`t`\  is current time)
+
+.. math::
+
+   {\mathbf{f}}_{SD} = \mathrm{UF}(mbs, t, i_N, \LU{J0}{\Delta{\mathbf{p}}}, \LU{J0}{\ttheta}, \LU{J0}{\Delta{\mathbf{v}}}, \LU{J0}{\Delta\tomega}, \mathrm{stiffness}, \mathrm{damping}, \mathrm{rotationMarker0}, \mathrm{rotationMarker1}, \mathrm{offset})
+
+
+and \ ``iN``\  represents the itemNumber (=objectNumber).
+
+--------
+
+\ **Userfunction**\ : ``springForceTorqueUserFunction(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)`` 
+
+
+A user function, which computes the 6D spring-damper force-torque vector depending on mbs, time, local quantities 
+(displacement, rotation, velocity, angularVelocity, stiffness), which are evaluated at current time, which are relative quantities between 
+both markers and which are defined in joint J0 coordinates. 
+As relative rotations are defined by Tait-Bryan rotation parameters, it is recommended to use this connector for small relative rotations only 
+(except for rotations about one axis).
+Furthermore, the user function contains object parameters (stiffness, damping, rotationMarker0/1, offset).
+Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+\ ``mbs.GetObjectParameter(itemNumber, ...)``\ , see the according description of \ ``GetObjectParameter``\ .
+
+Detailed description of the arguments and local quantities:
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments / return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs in which underlying item is defined
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs 
+   * - | \ ``itemNumber``\ 
+     - | Index
+     - | integer number \ :math:`i_N`\  of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+   * - | \ ``displacement``\ 
+     - | Vector3D
+     - | \ :math:`\LU{J0}{\Delta{\mathbf{p}}}`\ 
+   * - | \ ``rotation``\ 
+     - | Vector3D
+     - | \ :math:`\LU{J0}{\ttheta}`\ 
+   * - | \ ``velocity``\ 
+     - | Vector3D
+     - | \ :math:`\LU{J0}{\Delta{\mathbf{v}}}`\ 
+   * - | \ ``angularVelocity``\ 
+     - | Vector3D
+     - | \ :math:`\LU{J0}{\Delta\tomega}`\ 
+   * - | \ ``stiffness``\ 
+     - | Vector6D
+     - | copied from object
+   * - | \ ``damping``\ 
+     - | Vector6D
+     - | copied from object
+   * - | \ ``rotJ0``\ 
+     - | Matrix3D
+     - | rotationMarker0 copied from object
+   * - | \ ``rotJ1``\ 
+     - | Matrix3D
+     - | rotationMarker1 copied from object
+   * - | \ ``offset``\ 
+     - | Vector6D
+     - | copied from object
+   * - | \returnValue
+     - | Vector6D
+     - | list or numpy array of computed spring force-torque
+
+
+--------
+
+\ **Userfunction**\ : ``postNewtonStepUserFunction(mbs, t, Index itemIndex, dataCoordinates, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)`` 
+
+
+A user function which computes the error of the PostNewtonStep \ :math:`\varepsilon_{PN}`\ , a recommended for stepsize reduction \ :math:`t_{recom}`\  (use values > 0 to recommend step size or values < 0 else; 0 gives minimum step size) 
+and the updated dataCoordinates \ :math:`{\mathbf{d}}^k`\  of \ ``NodeGenericData``\  \ :math:`n_d`\ .
+Except from \ ``dataCoordinates``\ , the arguments are the same as in \ ``springForceTorqueUserFunction``\ .
+The \ ``postNewtonStepUserFunction``\  should be used together with the dataCoordinates in order to implement a active set or switching strategy
+for discontinuous events, such as in contact, friction, plasticity, fracture or similar.
+
+Detailed description of the arguments and local quantities:
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments / return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs in which underlying item is defined
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs 
+   * - | \ ``itemNumber``\ 
+     - | Index
+     - | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+   * - | \ ``dataCoordinates``\ 
+     - | Vector
+     - | \ :math:`{\mathbf{d}}^{k-1} = [d_0^{k-1},\; d_1^{k-1},\; \ldots]`\  for previous post Newton step \ :math:`k-1`\ 
+   * - | ...
+     - | ...
+     - | other arguements see \ ``springForceTorqueUserFunction``\ 
+   * - | \returnValue
+     - | Vector
+     - | \ :math:`\left[\varepsilon_{PN},\; t_{recom},\; d_0^{k},\; d_1^{k}, ...\right]`\  where \ :math:`k`\  indicates the current step
+
+
+--------
+
+\ **User function example**\ :
+
+
+
+.. code-block:: python
+
+    #define simple force for spring-damper:
+    def UFforce(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, 
+                stiffness, damping, rotJ0, rotJ1, offset): 
+        k = stiffness #passed as list
+        u = displacement
+        return [u[0]*k[0][0],u[1]*k[1][1],u[2]*k[2][2], 0,0,0]
+    
+    #markerNumbers and parameters taken from mini example
+    mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody], 
+                                        stiffness = np.diag([k,k,k, 0,0,0]), 
+                                        damping = np.diag([0,k*0.01,0, 0,0,0]), 
+                                        offset = [0,0,0, 0,0,0],
+                                        springForceTorqueUserFunction = UFforce))
+
+
+
+
+
+.. _miniexample-objectconnectorrigidbodyspringdamper:
+
+MINI EXAMPLE for ObjectConnectorRigidBodySpringDamper
+-----------------------------------------------------
+
+
+.. code-block:: python
+
+   #example with rigid body at [0,0,0], 1kg under initial velocity
+   k=500
+   nBody = mbs.AddNode(RigidRxyz(initialVelocities=[0,1e3,0, 0,0,0]))
+   oBody = mbs.AddObject(RigidBody(physicsMass=1, physicsInertia=[1,1,1,0,0,0], 
+                                   nodeNumber=nBody))
+   
+   mBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBody))
+   mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, 
+                                           localPosition = [0,0,0]))
+   mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody], 
+                                       stiffness = np.diag([k,k,k, 0,0,0]), 
+                                       damping = np.diag([0,k*0.01,0, 0,0,0]), 
+                                       offset = [0,0,0, 0,0,0]))
+   
+   #assemble and solve system for default parameters
+   mbs.Assemble()
+   exu.SolveDynamic(mbs, exu.SimulationSettings())
+   
+   #check result at default integration time
+   exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[1] 
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

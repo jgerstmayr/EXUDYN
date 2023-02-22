@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: robotics.special &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
+  <title>Module: robotics.special &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,7 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "\\indf": "{_\\mathrm{f}}", "\\indt": "{_\\mathrm{t}}", "\\indr": "{_\\mathrm{r}}", "\\indtt": "{_\\mathrm{tt}}", "\\indrr": "{_\\mathrm{rr}}", "\\indff": "{_\\mathrm{ff}}", "\\indtf": "{_\\mathrm{tf}}", "\\indrf": "{_\\mathrm{rf}}", "\\indtr": "{_\\mathrm{tr}}", "\\indrigid": "{_\\mathrm{rigid}}", "\\indred": "{_\\mathrm{red}}", "\\induser": "{_\\mathrm{user}}", "\\indu": "{_\\mathrm{u}}"}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.105.dev1
+            Exudyn1.5.109.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -77,7 +77,18 @@
 <li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics.special</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics.special</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-velocitymanipulability">Function: VelocityManipulability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-forcemanipulability">Function: ForceManipulability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-stiffnessmanipulability">Function: StiffnessManipulability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-jointjacobian">Function: JointJacobian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-massmatrix">Function: MassMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-dynamicmanipulability">Function: DynamicManipulability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computeik3r">Function: ComputeIK3R</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computeikpuma560">Function: ComputeIKPuma560</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computeikur">Function: ComputeIKUR</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
@@ -98,7 +109,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.109.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -126,7 +137,9 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 <li><p>Author:    Martin Sereinig</p></li>
 <li><p>Date:      2021-22-09</p></li>
 </ul>
-<p id="sec-special-velocitymanipulability">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L31">VelocityManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>)</p>
+<section id="function-velocitymanipulability">
+<span id="sec-special-velocitymanipulability"></span><h2>Function: VelocityManipulability<a class="headerlink" href="#function-velocitymanipulability" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L31">VelocityManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -153,7 +166,10 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-special-forcemanipulability">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L63">ForceManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singular_weight</span> <span class="pre">=</span> <span class="pre">100</span></code>)</p>
+</section>
+<section id="function-forcemanipulability">
+<span id="sec-special-forcemanipulability"></span><h2>Function: ForceManipulability<a class="headerlink" href="#function-forcemanipulability" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L63">ForceManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singular_weight</span> <span class="pre">=</span> <span class="pre">100</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -180,7 +196,10 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-special-stiffnessmanipulability">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L106">StiffnessManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">JointStiffness</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singularWeight</span> <span class="pre">=</span> <span class="pre">1000</span></code>)</p>
+</section>
+<section id="function-stiffnessmanipulability">
+<span id="sec-special-stiffnessmanipulability"></span><h2>Function: StiffnessManipulability<a class="headerlink" href="#function-stiffnessmanipulability" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L106">StiffnessManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">JointStiffness</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singularWeight</span> <span class="pre">=</span> <span class="pre">1000</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -214,7 +233,10 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-special-jointjacobian">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L141">JointJacobian</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HTJoint</span></code>, <code class="docutils literal notranslate"><span class="pre">HTLink</span></code>)</p>
+</section>
+<section id="function-jointjacobian">
+<span id="sec-special-jointjacobian"></span><h2>Function: JointJacobian<a class="headerlink" href="#function-jointjacobian" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L141">JointJacobian</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HTJoint</span></code>, <code class="docutils literal notranslate"><span class="pre">HTLink</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -239,7 +261,10 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-special-massmatrix">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L203">MassMatrix</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">jointJacobian</span></code>)</p>
+</section>
+<section id="function-massmatrix">
+<span id="sec-special-massmatrix"></span><h2>Function: MassMatrix<a class="headerlink" href="#function-massmatrix" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L203">MassMatrix</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">jointJacobian</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -271,7 +296,10 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solverFunctionsTestEigenvalues.py">solverFunctionsTestEigenvalues.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py">manualExplicitIntegrator.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py">objectFFRFreducedOrderAccelerations.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py">objectFFRFreducedOrderShowModes.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderStressModesTest.py">objectFFRFreducedOrderStressModesTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderTest.py">objectFFRFreducedOrderTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py">objectFFRFTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-special-dynamicmanipulability">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L236">DynamicManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">MassMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">Tmax</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singularWeight</span> <span class="pre">=</span> <span class="pre">1000</span></code>)</p>
+</section>
+<section id="function-dynamicmanipulability">
+<span id="sec-special-dynamicmanipulability"></span><h2>Function: DynamicManipulability<a class="headerlink" href="#function-dynamicmanipulability" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L236">DynamicManipulability</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">MassMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">Tmax</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>, <code class="docutils literal notranslate"><span class="pre">singularWeight</span> <span class="pre">=</span> <span class="pre">1000</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -306,7 +334,10 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-special-computeik3r">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L284">ComputeIK3R</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+</section>
+<section id="function-computeik3r">
+<span id="sec-special-computeik3r"></span><h2>Function: ComputeIK3R<a class="headerlink" href="#function-computeik3r" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L284">ComputeIK3R</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -338,7 +369,10 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-special-computeikpuma560">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L355">ComputeIKPuma560</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+</section>
+<section id="function-computeikpuma560">
+<span id="sec-special-computeikpuma560"></span><h2>Function: ComputeIKPuma560<a class="headerlink" href="#function-computeikpuma560" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L355">ComputeIKPuma560</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -370,7 +404,10 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-special-computeikur">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L481">ComputeIKUR</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HTdes</span></code>)</p>
+</section>
+<section id="function-computeikur">
+<span id="sec-special-computeikur"></span><h2>Function: ComputeIKUR<a class="headerlink" href="#function-computeikur" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py#L481">ComputeIKUR</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HTdes</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -401,6 +438,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 </div>
 </li>
 </ul>
+</section>
 </section>
 
 

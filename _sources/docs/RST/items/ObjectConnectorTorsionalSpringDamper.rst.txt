@@ -57,6 +57,12 @@ The item VObjectConnectorTorsionalSpringDamper has the following parameters:
   | RGBA connector color; if R==-1, use default color
 
 
+----------
+
+.. _description-objectconnectortorsionalspringdamper:
+
+DESCRIPTION of ObjectConnectorTorsionalSpringDamper
+---------------------------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -69,7 +75,187 @@ The item VObjectConnectorTorsionalSpringDamper has the following parameters:
 
 
 
+Definition of quantities
+------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | input parameter
+     - | symbol
+     - | description
+   * - | rotationMarker0
+     - | \ :math:`\LU{m0,J0}{\Rot}`\ 
+     - | rotation matrix which transforms from joint 0 into marker 0 coordinates
+   * - | rotationMarker1
+     - | \ :math:`\LU{m1,J1}{\Rot}`\ 
+     - | rotation matrix which transforms from joint 1 into marker 1 coordinates
+   * - | markerNumbers[0]
+     - | \ :math:`m0`\ 
+     - | global marker number m0
+   * - | markerNumbers[1]
+     - | \ :math:`m1`\ 
+     - | global marker number m1
+   * - | nodeNumber
+     - | \ :math:`n0`\ 
+     - | optional node number of a generic node (otherwise exu.InvalidIndex())
+
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | marker m0 orientation
+     - | \ :math:`\LU{0,m0}{\Rot}`\ 
+     - | current rotation matrix provided by marker m0
+   * - | marker m1 orientation
+     - | \ :math:`\LU{0,m1}{\Rot}`\ 
+     - | current rotation matrix provided by marker m1
+   * - | marker m0 ang.\ velocity
+     - | \ :math:`\LU{m0}{\tomega}_{m0}`\ 
+     - | current local angular velocity vector provided by marker m0
+   * - | marker m1 ang.\ velocity
+     - | \ :math:`\LU{m1}{\tomega}_{m1}`\ 
+     - | current local angular velocity vector provided by marker m1
+   * - | AngularVelocityLocal
+     - | \ :math:`\Delta\omega = \left( \LU{J0,m1}{\Rot} \LU{m1}{\tomega} - \LU{J0,m0}{\Rot} \LU{m0}{\tomega} \right)_Z`\ 
+     - | angular velocity around joint0 Z-axis
+
+
+
+Connector forces
+----------------
+
+If \ ``activeConnector = True``\ , the vector spring force is computed as
+
+.. math::
+
+   \tau_{SD} = k \left(\Delta\theta - v_\mathrm{off} \right) + d \left(\Delta\omega - \dot v_\mathrm{off} \right) + \tau_c
+
+
+if \ ``activeConnector = False``\ , \ :math:`\tau_{SD}`\  is set zero.
+
+If the springTorqueUserFunction \ :math:`\mathrm{UF}`\  is defined and \ ``activeConnector = True``\ , 
+\ :math:`\tau_{SD}`\  instead becomes (\ :math:`t`\  is current time)
+
+.. math::
+
+   \tau_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta\theta, \Delta\omega, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
+
+
+and \ ``iN``\  represents the itemNumber (=objectNumber).
+
+--------
+
+\ **Userfunction**\ : ``springTorqueUserFunction(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset)`` 
+
+
+A user function, which computes the scalar torque depending on mbs, time, local quantities 
+(relative rotation, relative angularVelocity), which are evaluated at current time. 
+Furthermore, the user function contains object parameters (stiffness, damping, offset).
+Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+\ ``mbs.GetObjectParameter(itemNumber, ...)``\ , see the according description of \ ``GetObjectParameter``\ .
+
+Detailed description of the arguments and local quantities:
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments / return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs in which underlying item is defined
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs 
+   * - | \ ``itemNumber``\ 
+     - | Index
+     - | integer number \ :math:`i_N`\  of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+   * - | \ ``rotation``\ 
+     - | Real
+     - | \ :math:`\Delta \theta`\ 
+   * - | \ ``angularVelocity``\ 
+     - | Real
+     - | \ :math:`\Delta \omega`\ 
+   * - | \ ``stiffness``\ 
+     - | Real
+     - | copied from object
+   * - | \ ``damping``\ 
+     - | Real
+     - | copied from object
+   * - | \ ``offset``\ 
+     - | Real
+     - | copied from object
+   * - | \returnValue
+     - | Real
+     - | computed torque
+
+
+--------
+
+\ **User function example**\ :
+
+
+
+.. code-block:: python
+
+    #define simple cubic force for spring-damper:
+    def UFforce(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset): 
+        k = stiffness #passed as list
+        u = rotation
+        return k*u + 0.1*k*u**3
+    
+    #markerNumbers and parameters taken from mini example
+    mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody], 
+                                        stiffness = k, 
+                                        damping = k*0.01, 
+                                        offset = 0,
+                                        springTorqueUserFunction = UFforce))
+
+
+
+
+
+.. _miniexample-objectconnectortorsionalspringdamper:
+
+MINI EXAMPLE for ObjectConnectorTorsionalSpringDamper
+-----------------------------------------------------
+
+
+.. code-block:: python
+
+   #example with rigid body at [0,0,0], with torsional load
+   k=2e3
+   nBody = mbs.AddNode(RigidRxyz())
+   oBody = mbs.AddObject(RigidBody(physicsMass=1, physicsInertia=[1,1,1,0,0,0], 
+                                   nodeNumber=nBody))
+   
+   mBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBody))
+   mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, 
+                                           localPosition = [0,0,0]))
+   mbs.AddObject(RevoluteJointZ(markerNumbers = [mGround, mBody])) #rotation around ground Z-axis
+   mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody], 
+                                       stiffness = k, damping = k*0.01, offset = 0))
+   
+   #torque around z-axis; expect approx. phiZ = 1/k=0.0005
+   mbs.AddLoad(Torque(markerNumber = mBody, loadVector=[0,0,1])) 
+   
+   #assemble and solve system for default parameters
+   mbs.Assemble()
+   exu.SolveDynamic(mbs, exu.SimulationSettings())
+   
+   #check result at default integration time
+   exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

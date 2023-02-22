@@ -41,6 +41,12 @@ The item VNodeRigidBodyEP has the following parameters:
   | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
 
 
+----------
+
+.. _description-noderigidbodyep:
+
+DESCRIPTION of NodeRigidBodyEP
+------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -70,8 +76,50 @@ The item VNodeRigidBodyEP has the following parameters:
   | global 3D angular acceleration vector of node
 
 
+\paragraphDetailed information:
+All coordinates \ :math:`{\mathbf{c}}\cConfig`\  lead to second order differential equations, but there is one additional constraint equation for the quaternions.
+The additional constraint equation, which needs to be provided by the object, reads
+
+.. math::
+
+   1 - \sum_{i=0}^{3} \theta_i^2 = 0.
 
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+The rotation matrix \ :math:`\LU{0b}{\Rot}\cConfig`\  transforms a local (body-fixed) 3D position 
+\ :math:`\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp`\  to global 3D positions,
+
+.. math::
+
+   \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}
+
+
+Note that the Euler parameters \ :math:`\ttheta\cCur`\  are computed as sum of current coordinates plus reference coordinates,
+
+.. math::
+
+   \ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
+
+
+The rotation matrix is defined as function of the rotation parameters \ :math:`\ttheta=[\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp`\ 
+
+.. math::
+
+   \LU{0b}{\Rot} = \mr{-2\theta_3^2 - 2\theta_2^2+1}{-2\theta_3\theta_0+2\theta_2\theta_1}{2*\theta_3\theta_1+2*\theta_2\theta_0} {2\theta_3\theta_0+2\theta_2\theta_1}{-2\theta_3^2-2\theta_1^2+1}{2\theta_3\theta_2-2\theta_1\theta_0} {-2\theta_2\theta_0+2\theta_3\theta_1}{2\theta_3\theta_2+2\theta_1\theta_0}{-2\theta_2^2-2\theta_1^2+1}
+
+
+The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity coordinates \ :math:`\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2,\,\dot \theta_3]\tp`\  lead to the \ :math:`{\mathbf{G}}`\  matrices, as used in the equations of motion for rigid bodies,
+
+.. math::
+
+   \LU{0}{\tomega} &=& \LU{0}{{\mathbf{G}}} \dot \ttheta, \\
+   \LU{b}{\tomega} &=& \LU{b}{{\mathbf{G}}} \dot \ttheta.
+
+
+For creating a \ ``NodeRigidBodyEP``\ , there is a \ ``rigidBodyUtilities``\  function \ ``AddRigidBody``\ , 
+see Section :ref:`sec-rigidbodyutilities-addrigidbody`\ , which simplifies the setup of a rigid body significantely!
+
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

@@ -55,6 +55,12 @@ The item VObjectANCFCable2D has the following parameters:
   | RGBA color of the object; if R==-1, use default color
 
 
+----------
+
+.. _description-objectancfcable2d:
+
+DESCRIPTION of ObjectANCFCable2D
+--------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -87,7 +93,362 @@ The item VObjectANCFCable2D has the following parameters:
 
 
 
+Definition of quantities
+------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | beam height
+     - | \ :math:`h`\ 
+     - | beam height used in several definitions, but effectively undefined. The geometry of the cross section has no influence except for drawing or contact.
+   * - | local beam position
+     - | \ :math:`\pLocB=[x,\, y,\, 0]\tp`\ 
+     - | local position at axial coordinate \ :math:`x \in [0,L]`\  and cross section coordinate \ :math:`y \in [-h/2, h/2]`\ . 
+   * - | beam axis position
+     - | \ :math:`\LU{0}{{\mathbf{r}}(x)} = {\mathbf{r}}(x)`\ 
+     - | 
+   * - | beam axis slope
+     - | \ :math:`\LU{0}{{\mathbf{r}}'(x)} = {\mathbf{r}}'(x)`\ 
+     - | 
+   * - | beam axis tangent
+     - | \ :math:`\LU{0}{{\mathbf{t}}(x)} = \frac{{\mathbf{r}}'(x)}{\Vert {\mathbf{r}}(x)'\Vert}`\ 
+     - | this (normalized) vector is normal to cross section
+   * - | beam axis normal
+     - | \ :math:`\LU{0}{{\mathbf{n}}(x)} = [n_x,\, n_y]\tp = [-t_y,\, t_x]\tp`\ 
+     - | this (normalized) vector lies within the cross section and defines positive \ :math:`y`\ -direction.
+   * - | angular velocity
+     - | \ :math:`\omega_2 = (-r'_y \cdot \dot r'_x + r'_x \cdot \dot r'_y) / \Vert {\mathbf{r}}(x)'\Vert^2`\ 
+     - | 
+   * - | rotation matrix
+     - | \ :math:`\LU{0b}{\Rot}`\ 
+     - | 
+
+
+The Bernoulli-Euler beam is capable of large axial and bendig deformation as it employs the material measure of curvature for the bending.
+
+Kinematics and interpolation
+----------------------------
+
+Note that in this section, expressions are written in 2D, while output variables are in general 3D quantities, adding a zero for the \ :math:`z`\ -coordinate.
+ANCF elements follow the original concept proposed by Shabana .
+The present 2D element is based on the interpolation used by Berzeri and Shabana , but the formulation (especially of the elastic forces) is according to
+Gerstmayr and Irschik .
+Slight improvements for the integration of elastic forces and additional terms for off-axis forces and constraints are mentioned here.
+
+The current position of an arbitrary element at local axial position \ :math:`x \in [0,L]`\ , where \ :math:`L`\  is the beam length, reads
+
+.. math::
+
+   {\mathbf{r}}={\mathbf{r}}(x, t),
+
+
+The derivative of the position w.r.t.\ the axial reference coordinate is denoted as slope vector,
+
+.. math::
+
+   {\mathbf{r}}'= \frac{\partial {\mathbf{r}}(x, t)}{\partial x}
+
+
+The interpolation is based on cubic (spline) interpolation of position, displacements and velocities.
+The generalized coordinates \ :math:`{\mathbf{q}} \in \Rcal^8`\  of the beam element is defined by
+
+.. math::
+
+   {\mathbf{q}}= \left[\, {\mathbf{r}}_0^{T}\;\;{\mathbf{r}}_0^{' T}\;\; {\mathbf{r}}_1^{T}\;\; {\mathbf{r}}_1^{' T}\, \right]^{T}.
+
+
+in which \ :math:`{\mathbf{r}}_0`\  is the position of node 0 and \ :math:`{\mathbf{r}}_1`\  is the position of node 1,
+\ :math:`{\mathbf{r}}'_0`\  the slope at node 0 and \ :math:`{\mathbf{r}}'_1`\  the slope at node 1.
+Note that ANCF coordinates in the present notation are computed as sum of reference and current coordinates
+
+.. math::
+
+   {\mathbf{q}} = {\mathbf{q}}\cCur + {\mathbf{q}}\cRef
+
+
+which is used throughout here. For time derivatives, it follows that \ :math:`\dot {\mathbf{q}} = \dot {\mathbf{q}}\cCur`\ .
+
+Position and slope are interpolated with shape functions.
+The position and slope along the beam are interpolated by means of 
+
+.. math::
+
+   {\mathbf{r}} = {\mathbf{S}} {\mathbf{q}} \qquad \mathrm{and} \qquad {\mathbf{r}}'={\mathbf{S}}' {\mathbf{q}}.
+
+
+in which \ :math:`{\mathbf{S}}`\  is the shape function matrix,
+
+.. math::
+
+   {\mathbf{S}}(x)= \left[\, S_1(x)\,\mathbf{I}_{2 \times 2}\;\; S_2(x)\,\mathbf{I}_{2 \times 2}\;\; S_3(x)\,\mathbf{I}_{2 \times 2}\;\; S_4(x)\,\mathbf{I}_{2 \times 2}\, \right].
+
+
+with identity matrix \ :math:`\mathbf{I}_{2 \times 2} \in \Rcal^{2 \times 2}`\  and the shape functions
+
+.. math::
+   :label: eq-cable2d-shapefunctions
+
+   S_1(x) &=& 1-3\frac{x^2}{L^2}+2\frac{x^3}{L^3}, \quad S_2(x) = x-2\frac{x^2}{L}+\frac{x^3}{L^2}\nonumber\\
+   S_3(x) &=& 3\frac{x^2}{L^2}-2\frac{x^3}{L^3}, \; \; \; \; \; \;  \quad S_4(x) = -\frac{x^2}{L}+\frac{x^3}{L^2}
+
+
+Velocity simply follows as 
+
+.. math::
+
+   \frac{\partial {\mathbf{r}}}{\partial t} = \dot {\mathbf{r}} = {\mathbf{S}} \dot {\mathbf{q}}.
+
+
+
+Mass matrix
+-----------
+
+The mass matrix is constant and therefore precomputed at the first time it is needed (e.g., during computation of initial accelerations).
+The analytical form of the mass matrix reads
+
+.. math::
+
+   {\mathbf{M}}_{analytic} = \int_0^L \rho A {\mathbf{S}}(x)^T {\mathbf{S}}(x) dx
+
+
+which is approximated using
+
+.. math::
+
+   {\mathbf{M}} = \sum_{ip = 0}^{n_{ip}-1} \frac{L}{2} \rho A {\mathbf{S}}(x_{ip})^T {\mathbf{S}}(x_{ip})
+
+
+with \ :math:`x_{ip}`\  evaluated at the integration points,
+
+.. math::
+   :label: eq-ancfcable-iptransform
+
+   x_{ip} = \frac{L}{2}\xi_{ip} + \frac{L}{2} .
+
+
+Here, we use the Gauss integration rule with order 7, having \ :math:`n_{ip}=4`\  Gauss points, see Section :ref:`sec-integrationpoints`\ . 
+Due to the third order polynomials, the integration is exact up to round-off errors.
+        
+
+Elastic forces
+--------------
+
+The elastic forces \ :math:`{\mathbf{Q}}_e`\  are implicitly defined by the relation to the 
+virtual work of elastic forces, \ :math:`\delta W_e`\ , of applied forces, \ :math:`\delta W_a`\  and of viscous forces, \ :math:`\delta W_v`\ , 
+
+.. math::
+   :label: eq-cable2d-elasticforces
+
+   {\mathbf{Q}}_e^T \delta {\mathbf{q}} = \delta W_e + \delta W_a + \delta W_v.
+
+
+The virtual work of elastic forces reads ,
+
+.. math::
+
+   \delta W_e = \int_0^L (N \delta \varepsilon + M \delta K) \,dx,
+
+
+in which the axial strain is defined as 
+
+.. math::
+
+   \varepsilon=\Vert {\mathbf{r}}'\Vert-1.
+
+ 
+and the material measure of curvature (bending strain) is given as
+
+.. math::
+
+   K={\mathbf{e}}_3^T \frac{ {\mathbf{r}}'\times {\mathbf{r}}'' }{\Vert {\mathbf{r}}'\Vert^2} .
+
+
+in which \ :math:`{\mathbf{e}}_3`\  is the unit vector which is perpendicular to the plane of the planar beam element.
+
+By derivation, we obtain the variation of axial strain
+
+.. math::
+   :label: eq-cable2d-deltaepsilon
+
+   \delta \varepsilon =\frac{\partial \varepsilon}{\partial q_i}\delta q_i =\frac{1}{\Vert {\mathbf{r}}'\Vert}{\mathbf{r}}'^{T}{\mathbf{S}}'_i \delta q_i.
+
+
+and the variation of \ :math:`K`\ 
+
+.. math::
+   :label: eq-cable2d-deltakappa
+
+   \delta K &=& \frac{\partial}{\partial q_i} \left( \frac{({\mathbf{r}}'^{T}\times {\mathbf{r}}'' )^{T}{\mathbf{e}}_{3}}{\Vert {\mathbf{r}}' \Vert^2 }\right) \delta q_i\nonumber\\
+   &=& \frac{1}{\Vert {\mathbf{r}}' \Vert^4} \left[ \Vert {\mathbf{r}}' \Vert^2 ({\mathbf{S}}'_i  \times {\mathbf{r}}'' +{\mathbf{r}}' \times {\mathbf{S}}''_i) -2 ({\mathbf{r}}' \times {\mathbf{r}}'') ({\mathbf{r}}'^{T} {\mathbf{S}}'_i) \right]^{T} {\mathbf{e}}_3 \delta q_i
+
+
+The normal force (axial force) \ :math:`N`\  in the beam is defined as function of the current strain \ :math:`\varepsilon`\ ,
+
+.. math::
+   :label: eq-n
+
+   N = EA \, (\varepsilon - \varepsilon_0 - f\cRef \cdot \varepsilon\cRef).
+
+
+in which \ :math:`\varepsilon_0`\  includes the (pre-)stretch of the beam, e.g., due to temperature or plastic deformation and 
+\ :math:`\varepsilon\cRef`\  includes the strain of the reference configuration.
+As can be seen, the reference strain is only considered, if \ :math:`f\cRef=1`\ , which allows to consider the reference configuration to be
+completely stress-free (but the default value is \ :math:`f\cRef=0`\  !).
+Note that -- due to the inherent nonlinearity of \ :math:`\varepsilon`\  -- a combination of \ :math:`\varepsilon_0`\  and \ :math:`f\cRef=1`\  is physically only meaningful for small strains.
+A factor \ :math:`f\cRef<1`\  allows to realize a smooth transition between deformed and straight reference configuration, e.g. for initial configurations.
+
+The bending moment \ :math:`M`\  in the beam is defined as function of the current material measure of curvature \ :math:`K`\ ,
+
+.. math::
+   :label: eq-m
+
+   M = EI \, (K - K_0 - f\cRef \cdot K\cRef).
+
+
+in which \ :math:`K_0`\  includes the (pre-)curvature of the undeformed beam and
+\ :math:`K\cRef`\  includes the curvature of the reference configuration, multiplied with the factor \ :math:`f\cRef=1`\ , see the axial strain above.
+
+Using the latter definitions, the elastic forces follow from \eqeq:cable2D:elasticForces.
+
+The virtual work of viscous damping forces, assuming viscous effects proportial to axial streching and bending, is defined as
+
+.. math::
+
+   \delta W_v = \int_0^L \left( d_\varepsilon \dot \varepsilon \delta \varepsilon + d_K \dot K \delta K \right) \,d x.
+
+
+with material coefficients \ :math:`d_\varepsilon`\  and \ :math:`d_K`\ .
+The time derivatives of axial strain \ :math:`\dot \varepsilon_p`\  follows by elementary differentiation
+
+.. math::
+
+   \dot \varepsilon =  \frac{\partial }{\partial t}\left(\Vert {\mathbf{r}}'\Vert-1 \right) = \frac{1}{\Vert {\mathbf{r}}'\Vert} {\mathbf{r}}^{\prime T} {\mathbf{S}}' \dot {\mathbf{q}}
+
+
+as well as the derivative of the curvature,
+
+.. math::
+
+   \dot K & = &  \frac{\partial }{\partial t}\left({\mathbf{e}}_3^T\frac{ {\mathbf{r}}'\times {\mathbf{r}}'' }{\Vert {\mathbf{r}}'\Vert^2}\right) \nonumber\\
+   & = &\frac{{\mathbf{e}}_3^T}{({\mathbf{r}}'^T {\mathbf{r}}')^2} \left( ({\mathbf{r}}'^T {\mathbf{r}}')   \frac{\partial \left( {\mathbf{r}}' \times {\mathbf{r}}'' \right)^T }{\partial t} -\left( {\mathbf{r}}' \times {\mathbf{r}}'' \right)^T  \frac{\partial  ({\mathbf{r}}'^T {\mathbf{r}}')}{\partial t} \right)\nonumber\\
+   & = &  \frac{{\mathbf{e}}_3^T}{({\mathbf{r}}'^T {\mathbf{r}}')^2}\left(({\mathbf{r}}'^T {\mathbf{r}}')\left(({\mathbf{S}}' \dot {\mathbf{q}}) \times {\mathbf{r}}'' + ({\mathbf{S}}'' \dot {\mathbf{q}}) \times {\mathbf{r}}'\right)-\left( {\mathbf{r}}' \times {\mathbf{r}}'' \right) (2{\mathbf{r}}'^T ({\mathbf{S}}' \dot {\mathbf{q}})) \right) .
+
+
+
+The virtual work of applied forces reads
+
+.. math::
+   :label: eq-applied
+
+   \delta W_a = \sum_i {\mathbf{f}}_i^T \delta {\mathbf{r}}_i(x_f) + \int_0^L {\mathbf{b}}^T \delta {\mathbf{r}}(x) \,d x ,
+
+
+in which \ :math:`{\mathbf{f}}_i`\  are forces applied to a certain position \ :math:`x_f`\  at the beam centerline.
+The second term contains a load per length \ :math:`{\mathbf{b}}`\ , which is case of gravity vector \ :math:`{\mathbf{g}}`\  reads
+
+.. math::
+
+   {\mathbf{b}} = \rho {\mathbf{g}}.
+
+
+Note that the variation of \ :math:`{\mathbf{r}}`\  simply follows as
+
+.. math::
+
+   \delta {\mathbf{r}}= {\mathbf{S}}\, \delta {\mathbf{q}}
+
+
+
+
+Numerical integration of Elastic Forces
+---------------------------------------
+
+The numerical integration of elastic forces \ :math:`{\mathbf{Q}}_e`\  is split into terms due to \ :math:`\delta \varepsilon`\  and \ :math:`\delta K`\ ,
+
+.. math::
+
+   {\mathbf{Q}}_e = \int_0^L \left(\bullet(x) \frac{\partial \delta \varepsilon}{\partial \delta {\mathbf{q}}} + \bullet(x) \frac{\partial \delta K}{\partial \delta {\mathbf{q}}} \right) \,dx
+
+
+using different integration rules
+
+.. math::
+
+   {\mathbf{Q}}_e \approx  \sum_{ip = 0}^{n_{ip}^\varepsilon-1}  \left(\frac{L}{2}  \bullet(x_{ip}) \frac{\partial \delta \varepsilon}{\partial \delta {\mathbf{q}}} \right) + \sum_{ip = 0}^{n_{ip}^K-1} \left( \frac{L}{2}\bullet(x_{ip}) \frac{\partial \delta K}{\partial \delta {\mathbf{q}}} \right) \,dx
+
+
+with the integration points \ :math:`x_{ip}`\  as defined in \eqeq_ANCFCable_ipTransform and integration rules from Section :ref:`sec-integrationpoints`\ .
+There are 3 different options for integration rules depending on the flag \ ``useReducedOrderIntegration``\ :
+
++  \ ``useReducedOrderIntegration``\  = 0: \ :math:`n_{ip}^\varepsilon = 5`\  (Gauss order 9), \ :math:`n_{ip}^K = 3`\  (Gauss order 5) -- this is considered as full integration, leading to very small approximations; certainly, due to the high nonlinearity of expressions, this is only an approximation.
++  \ ``useReducedOrderIntegration``\  = 1: \ :math:`n_{ip}^\varepsilon = 4`\  (Gauss order 7), \ :math:`n_{ip}^K = 2`\  (Gauss order 3) -- this is considered as reduced integration, which is usually sufficiently accurate but leads to slightly less computational efforts, especially for bending terms.
++  \ ``useReducedOrderIntegration``\  = 2: \ :math:`n_{ip}^\varepsilon = 3`\  (Lobatto order 3), \ :math:`n_{ip}^K = 2`\  (Gauss order 3) -- this is a further reduced integration, with the exceptional property that axial strain and bending strain terms are computed at completely disjointed locations: axial strain terms are evaluated at \ :math:`0`\ , \ :math:`L/2`\  and \ :math:`L`\ , while bending terms are evaluated at \ :math:`\pm \frac{L}{2}\sqrt{1/3}`\ . This allows axial strains to freely follow the bending terms at \ :math:`\pm \frac{L}{2}\sqrt{1/3}`\ , while axial strains are almost independent from bending terms at \ :math:`0`\ , \ :math:`L/2`\  and \ :math:`L`\ . However, due to the highly reduced integration, spurious (hourglass) modes may occur in certain applications!
+
+Note that the Jacobian of elastic forces is computed using automatic differentiation.
+
+
+Access functions
+----------------
+
+For application of forces and constraints at any local beam position \ :math:`\pLocB=[x,\, y,\, 0]\tp`\ , the position / velocity Jacobian reads
+
+.. math::
+
+   \frac{\partial \LU{0}{{\mathbf{v}}(x)}}{\dot {\mathbf{q}}} = {\mathbf{S}}(x) + \left[ -y \cdot n_x S'_1(x) \frac{1}{\Vert {\mathbf{r}}'\Vert} \LU{0}{{\mathbf{t}}}, \,\, -y \cdot n_y S'_1(x) \frac{1}{\Vert {\mathbf{r}}'\Vert} \LU{0}{{\mathbf{t}}}, \,\, -y \cdot n_x S'_2(x) \frac{1}{\Vert {\mathbf{r}}'\Vert} \LU{0}{{\mathbf{t}}}, \,\,\ldots \right]
+
+
+with the normalized beam axis normal \ :math:`\LU{0}{{\mathbf{n}}} = [n_x,\, n_y]\tp`\ , see table above.
+
+For application of torques at any axis point \ :math:`x`\ , the rotation / angular velocity Jacobian \ :math:`\frac{\partial \LU{0}{\omega(x)}}{\dot {\mathbf{q}}} \in \Rcal^{3 \times 8}`\  reads
+
+.. math::
+
+   \frac{\partial \LU{0}{\omega(x)}}{\dot {\mathbf{q}}} = \left[\!\! \begin{array}{ccccc} 0 & 0 & 0 & \cdots & 0 \\ 0 & 0 & 0 & \cdots & 0 \\ -r'_y \cdot S'_1(x) \frac{1}{{\mathbf{r}}^{\prime 2}} & r'_x \cdot S'_1(x) \frac{1}{{\mathbf{r}}^{\prime 2}} & -r'_y \cdot S'_2(x) \frac{1}{{\mathbf{r}}^{\prime 2}} & \cdots & r'_x \cdot S'_4(x) \frac{1}{{\mathbf{r}}^{\prime 2}}  \end{array} \!\!\right]
+
+
+
+
+
+.. _miniexample-objectancfcable2d:
+
+MINI EXAMPLE for ObjectANCFCable2D
+----------------------------------
+
+
+.. code-block:: python
+
+   rhoA = 78.
+   EA = 1000000.
+   EI = 833.3333333333333
+   cable = Cable2D(physicsMassPerLength=rhoA, 
+                   physicsBendingStiffness=EI, 
+                   physicsAxialStiffness=EA, 
+                   )
+   
+   ancf=GenerateStraightLineANCFCable2D(mbs=mbs,
+                   positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+                   numberOfElements=32, #converged to 4 digits
+                   cableTemplate=cable, #this defines the beam element properties
+                   massProportionalLoad = [0,-9.81,0],
+                   fixedConstraintsNode0 = [1,1,0,1], #add constraints for pos and rot (r'_y)
+                   )
+   lastNode = ancf[0][-1]
+   
+   #assemble and solve system for default parameters
+   mbs.Assemble()
+   exu.SolveStatic(mbs)
+   
+   #check result
+   exudynTestGlobals.testResult = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
+   #ux=-0.5013058140308901
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

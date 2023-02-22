@@ -1,4 +1,6 @@
 
+.. _sec-item-reference-manual:
+
 ======================
 Items reference manual
 ======================

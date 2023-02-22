@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: rigidBodyUtilities &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
+  <title>Module: rigidBodyUtilities &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -18,7 +18,7 @@
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "\\indf": "{_\\mathrm{f}}", "\\indt": "{_\\mathrm{t}}", "\\indr": "{_\\mathrm{r}}", "\\indtt": "{_\\mathrm{tt}}", "\\indrr": "{_\\mathrm{rr}}", "\\indff": "{_\\mathrm{ff}}", "\\indtf": "{_\\mathrm{tf}}", "\\indrf": "{_\\mathrm{rf}}", "\\indtr": "{_\\mathrm{tr}}", "\\indrigid": "{_\\mathrm{rigid}}", "\\indred": "{_\\mathrm{red}}", "\\induser": "{_\\mathrm{user}}", "\\indu": "{_\\mathrm{u}}"}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -36,7 +36,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.105.dev1
+            Exudyn1.5.109.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -72,13 +72,82 @@
 <li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Module: rigidBodyUtilities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#class-rigidbodyinertia-in-module-rigidbodyutilities">CLASS RigidBodyInertia (in module rigidBodyUtilities)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#class-inertiacuboid-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaCuboid(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#class-inertiarodx-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaRodX(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#class-inertiamasspoint-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaMassPoint(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#class-inertiasphere-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaSphere(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#class-inertiahollowsphere-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaHollowSphere(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#class-inertiacylinder-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaCylinder(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computeorthonormalbasisvectors">Function: ComputeOrthonormalBasisVectors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computeorthonormalbasis">Function: ComputeOrthonormalBasis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-gramschmidt">Function: GramSchmidt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-skew">Function: Skew</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-skew2vec">Function: Skew2Vec</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computeskewmatrix">Function: ComputeSkewMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-eulerparameters2g">Function: EulerParameters2G</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-eulerparameters2glocal">Function: EulerParameters2GLocal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-eulerparameters2rotationmatrix">Function: EulerParameters2RotationMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationmatrix2eulerparameters">Function: RotationMatrix2EulerParameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-angularvelocity2eulerparameters-t">Function: AngularVelocity2EulerParameters_t</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationvector2rotationmatrix">Function: RotationVector2RotationMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationmatrix2rotationvector">Function: RotationMatrix2RotationVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computerotationaxisfromrotationvector">Function: ComputeRotationAxisFromRotationVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationvector2g">Function: RotationVector2G</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationvector2glocal">Function: RotationVector2GLocal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotxyz2rotationmatrix">Function: RotXYZ2RotationMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationmatrix2rotxyz">Function: RotationMatrix2RotXYZ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotxyz2g">Function: RotXYZ2G</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotxyz2g-t">Function: RotXYZ2G_t</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotxyz2glocal">Function: RotXYZ2GLocal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotxyz2glocal-t">Function: RotXYZ2GLocal_t</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-angularvelocity2rotxyz-t">Function: AngularVelocity2RotXYZ_t</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotxyz2eulerparameters">Function: RotXYZ2EulerParameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationmatrixx">Function: RotationMatrixX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationmatrixy">Function: RotationMatrixY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationmatrixz">Function: RotationMatrixZ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-homogeneoustransformation">Function: HomogeneousTransformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-httranslate">Function: HTtranslate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-httranslatex">Function: HTtranslateX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-httranslatey">Function: HTtranslateY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-httranslatez">Function: HTtranslateZ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-ht0">Function: HT0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-htrotatex">Function: HTrotateX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-htrotatey">Function: HTrotateY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-htrotatez">Function: HTrotateZ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-ht2translation">Function: HT2translation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-ht2rotationmatrix">Function: HT2rotationMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-inverseht">Function: InverseHT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationx2t66">Function: RotationX2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationy2t66">Function: RotationY2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationz2t66">Function: RotationZ2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-translation2t66">Function: Translation2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-translationx2t66">Function: TranslationX2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-translationy2t66">Function: TranslationY2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-translationz2t66">Function: TranslationZ2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-t66torotationtranslation">Function: T66toRotationTranslation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-inverset66torotationtranslation">Function: InverseT66toRotationTranslation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationtranslation2t66">Function: RotationTranslation2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationtranslation2t66inverse">Function: RotationTranslation2T66Inverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-t66toht">Function: T66toHT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-ht2t66inverse">Function: HT2T66Inverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-inertiatensor2inertia6d">Function: InertiaTensor2Inertia6D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-inertia6d2inertiatensor">Function: Inertia6D2InertiaTensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-getrigidbodynode">Function: GetRigidBodyNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-addrigidbody">Function: AddRigidBody</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-addrevolutejoint">Function: AddRevoluteJoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-addprismaticjoint">Function: AddPrismaticJoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-add">Class function: __add__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-iadd">Class function: __iadd__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-setwithcominertia">Class function: SetWithCOMinertia</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-inertia">Class function: Inertia</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-inertiacom">Class function: InertiaCOM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-com">Class function: COM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-mass">Class function: Mass</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-translated">Class function: Translated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-rotated">Class function: Rotated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-transformed">Class function: Transformed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-getinertia6d">Class function: GetInertia6D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-rigidbodyutilities-inertiacuboid-rigidbodyinertia-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-rigidbodyutilities-inertiarodx-rigidbodyinertia-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-rigidbodyutilities-inertiamasspoint-rigidbodyinertia-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-rigidbodyutilities-inertiasphere-rigidbodyinertia-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-rigidbodyutilities-inertiahollowsphere-rigidbodyinertia-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-rigidbodyutilities-inertiacylinder-rigidbodyinertia-init">Class function: __init__</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
@@ -107,7 +176,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.109.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -135,7 +204,9 @@ are included. A class for rigid body inertia creating and transformation is avai
 <li><p>Author:    Johannes Gerstmayr, Stefan Holzinger (rotation vector and Tait-Bryan angles)</p></li>
 <li><p>Date:      2020-03-10 (created)</p></li>
 </ul>
-<p id="sec-rigidbodyutilities-computeorthonormalbasisvectors">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L30">ComputeOrthonormalBasisVectors</a>(<code class="docutils literal notranslate"><span class="pre">vector0</span></code>)</p>
+<section id="function-computeorthonormalbasisvectors">
+<span id="sec-rigidbodyutilities-computeorthonormalbasisvectors"></span><h2>Function: ComputeOrthonormalBasisVectors<a class="headerlink" href="#function-computeorthonormalbasisvectors" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L30">ComputeOrthonormalBasisVectors</a>(<code class="docutils literal notranslate"><span class="pre">vector0</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -149,7 +220,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-computeorthonormalbasis">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L55">ComputeOrthonormalBasis</a>(<code class="docutils literal notranslate"><span class="pre">vector0</span></code>)</p>
+</section>
+<section id="function-computeorthonormalbasis">
+<span id="sec-rigidbodyutilities-computeorthonormalbasis"></span><h2>Function: ComputeOrthonormalBasis<a class="headerlink" href="#function-computeorthonormalbasis" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L55">ComputeOrthonormalBasis</a>(<code class="docutils literal notranslate"><span class="pre">vector0</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -163,7 +237,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-gramschmidt">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L61">GramSchmidt</a>(<code class="docutils literal notranslate"><span class="pre">vector0</span></code>, <code class="docutils literal notranslate"><span class="pre">vector1</span></code>)</p>
+</section>
+<section id="function-gramschmidt">
+<span id="sec-rigidbodyutilities-gramschmidt"></span><h2>Function: GramSchmidt<a class="headerlink" href="#function-gramschmidt" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L61">GramSchmidt</a>(<code class="docutils literal notranslate"><span class="pre">vector0</span></code>, <code class="docutils literal notranslate"><span class="pre">vector1</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -176,7 +253,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py">sliderCrank3Dbenchmark.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dtest.py">sliderCrank3Dtest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-skew">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L81">Skew</a>(<code class="docutils literal notranslate"><span class="pre">vector</span></code>)</p>
+</section>
+<section id="function-skew">
+<span id="sec-rigidbodyutilities-skew"></span><h2>Function: Skew<a class="headerlink" href="#function-skew" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L81">Skew</a>(<code class="docutils literal notranslate"><span class="pre">vector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -189,7 +269,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py">leggedRobot.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py">stiffFlyballGovernor2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py">carRollingDiscTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorPythonTest.py">explicitLieGroupIntegratorPythonTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py">explicitLieGroupIntegratorTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/heavyTop.py">heavyTop.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/LieGroupIntegrationUnitTests.py">LieGroupIntegrationUnitTests.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py">mecanumWheelRollingDiscTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-skew2vec">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L89">Skew2Vec</a>(<code class="docutils literal notranslate"><span class="pre">skew</span></code>)</p>
+</section>
+<section id="function-skew2vec">
+<span id="sec-rigidbodyutilities-skew2vec"></span><h2>Function: Skew2Vec<a class="headerlink" href="#function-skew2vec" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L89">Skew2Vec</a>(<code class="docutils literal notranslate"><span class="pre">skew</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -198,7 +281,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-computeskewmatrix">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L111">ComputeSkewMatrix</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+</section>
+<section id="function-computeskewmatrix">
+<span id="sec-rigidbodyutilities-computeskewmatrix"></span><h2>Function: ComputeSkewMatrix<a class="headerlink" href="#function-computeskewmatrix" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L111">ComputeSkewMatrix</a>(<code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -221,7 +307,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py">objectFFRFTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-eulerparameters2g">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L176">EulerParameters2G</a>(<code class="docutils literal notranslate"><span class="pre">eulerParameters</span></code>)</p>
+</section>
+<section id="function-eulerparameters2g">
+<span id="sec-rigidbodyutilities-eulerparameters2g"></span><h2>Function: EulerParameters2G<a class="headerlink" href="#function-eulerparameters2g" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L176">EulerParameters2G</a>(<code class="docutils literal notranslate"><span class="pre">eulerParameters</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -240,7 +329,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-eulerparameters2glocal">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L185">EulerParameters2GLocal</a>(<code class="docutils literal notranslate"><span class="pre">eulerParameters</span></code>)</p>
+</section>
+<section id="function-eulerparameters2glocal">
+<span id="sec-rigidbodyutilities-eulerparameters2glocal"></span><h2>Function: EulerParameters2GLocal<a class="headerlink" href="#function-eulerparameters2glocal" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L185">EulerParameters2GLocal</a>(<code class="docutils literal notranslate"><span class="pre">eulerParameters</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -263,7 +355,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py">objectFFRFTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py">rigidBodyAsUserFunctionTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-eulerparameters2rotationmatrix">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L194">EulerParameters2RotationMatrix</a>(<code class="docutils literal notranslate"><span class="pre">eulerParameters</span></code>)</p>
+</section>
+<section id="function-eulerparameters2rotationmatrix">
+<span id="sec-rigidbodyutilities-eulerparameters2rotationmatrix"></span><h2>Function: EulerParameters2RotationMatrix<a class="headerlink" href="#function-eulerparameters2rotationmatrix" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L194">EulerParameters2RotationMatrix</a>(<code class="docutils literal notranslate"><span class="pre">eulerParameters</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -286,7 +381,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py">stiffFlyballGovernor2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py">stiffFlyballGovernor.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotationmatrix2eulerparameters">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L204">RotationMatrix2EulerParameters</a>(<code class="docutils literal notranslate"><span class="pre">rotationMatrix</span></code>)</p>
+</section>
+<section id="function-rotationmatrix2eulerparameters">
+<span id="sec-rigidbodyutilities-rotationmatrix2eulerparameters"></span><h2>Function: RotationMatrix2EulerParameters<a class="headerlink" href="#function-rotationmatrix2eulerparameters" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L204">RotationMatrix2EulerParameters</a>(<code class="docutils literal notranslate"><span class="pre">rotationMatrix</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -309,7 +407,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py">mouseInteractionExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py">stiffFlyballGovernor2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py">driveTrainTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/perf3DRigidBodies.py">perf3DRigidBodies.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py">stiffFlyballGovernor.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-angularvelocity2eulerparameterst">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L249">AngularVelocity2EulerParameters_t</a>(<code class="docutils literal notranslate"><span class="pre">angularVelocity</span></code>, <code class="docutils literal notranslate"><span class="pre">eulerParameters</span></code>)</p>
+</section>
+<section id="function-angularvelocity2eulerparameters-t">
+<span id="sec-rigidbodyutilities-angularvelocity2eulerparameters-t"></span><h2>Function: AngularVelocity2EulerParameters_t<a class="headerlink" href="#function-angularvelocity2eulerparameters-t" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L249">AngularVelocity2EulerParameters_t</a>(<code class="docutils literal notranslate"><span class="pre">angularVelocity</span></code>, <code class="docutils literal notranslate"><span class="pre">eulerParameters</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -330,7 +431,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotationvector2rotationmatrix">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L261">RotationVector2RotationMatrix</a>(<code class="docutils literal notranslate"><span class="pre">rotationVector</span></code>)</p>
+</section>
+<section id="function-rotationvector2rotationmatrix">
+<span id="sec-rigidbodyutilities-rotationvector2rotationmatrix"></span><h2>Function: RotationVector2RotationMatrix<a class="headerlink" href="#function-rotationvector2rotationmatrix" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L261">RotationVector2RotationMatrix</a>(<code class="docutils literal notranslate"><span class="pre">rotationVector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -353,7 +457,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py">stiffFlyballGovernor2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py">explicitLieGroupMBSTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py">stiffFlyballGovernor.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotationmatrix2rotationvector">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L278">RotationMatrix2RotationVector</a>(<code class="docutils literal notranslate"><span class="pre">rotationMatrix</span></code>)</p>
+</section>
+<section id="function-rotationmatrix2rotationvector">
+<span id="sec-rigidbodyutilities-rotationmatrix2rotationvector"></span><h2>Function: RotationMatrix2RotationVector<a class="headerlink" href="#function-rotationmatrix2rotationvector" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L278">RotationMatrix2RotationVector</a>(<code class="docutils literal notranslate"><span class="pre">rotationMatrix</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -376,7 +483,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py">explicitLieGroupMBSTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-computerotationaxisfromrotationvector">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L297">ComputeRotationAxisFromRotationVector</a>(<code class="docutils literal notranslate"><span class="pre">rotationVector</span></code>)</p>
+</section>
+<section id="function-computerotationaxisfromrotationvector">
+<span id="sec-rigidbodyutilities-computerotationaxisfromrotationvector"></span><h2>Function: ComputeRotationAxisFromRotationVector<a class="headerlink" href="#function-computerotationaxisfromrotationvector" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L297">ComputeRotationAxisFromRotationVector</a>(<code class="docutils literal notranslate"><span class="pre">rotationVector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -399,7 +509,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/LieGroupIntegrationUnitTests.py">LieGroupIntegrationUnitTests.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotationvector2g">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L315">RotationVector2G</a>(<code class="docutils literal notranslate"><span class="pre">rotationVector</span></code>)</p>
+</section>
+<section id="function-rotationvector2g">
+<span id="sec-rigidbodyutilities-rotationvector2g"></span><h2>Function: RotationVector2G<a class="headerlink" href="#function-rotationvector2g" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L315">RotationVector2G</a>(<code class="docutils literal notranslate"><span class="pre">rotationVector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -418,7 +531,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotationvector2glocal">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L321">RotationVector2GLocal</a>(<code class="docutils literal notranslate"><span class="pre">eulerParameters</span></code>)</p>
+</section>
+<section id="function-rotationvector2glocal">
+<span id="sec-rigidbodyutilities-rotationvector2glocal"></span><h2>Function: RotationVector2GLocal<a class="headerlink" href="#function-rotationvector2glocal" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L321">RotationVector2GLocal</a>(<code class="docutils literal notranslate"><span class="pre">eulerParameters</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -437,7 +553,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotxyz2rotationmatrix">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L334">RotXYZ2RotationMatrix</a>(<code class="docutils literal notranslate"><span class="pre">rot</span></code>)</p>
+</section>
+<section id="function-rotxyz2rotationmatrix">
+<span id="sec-rigidbodyutilities-rotxyz2rotationmatrix"></span><h2>Function: RotXYZ2RotationMatrix<a class="headerlink" href="#function-rotxyz2rotationmatrix" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L334">RotXYZ2RotationMatrix</a>(<code class="docutils literal notranslate"><span class="pre">rot</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -460,7 +579,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py">stiffFlyballGovernor2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py">explicitLieGroupMBSTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeTest.py">kinematicTreeTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py">stiffFlyballGovernor.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotationmatrix2rotxyz">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L349">RotationMatrix2RotXYZ</a>(<code class="docutils literal notranslate"><span class="pre">rotationMatrix</span></code>)</p>
+</section>
+<section id="function-rotationmatrix2rotxyz">
+<span id="sec-rigidbodyutilities-rotationmatrix2rotxyz"></span><h2>Function: RotationMatrix2RotXYZ<a class="headerlink" href="#function-rotationmatrix2rotxyz" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L349">RotationMatrix2RotXYZ</a>(<code class="docutils literal notranslate"><span class="pre">rotationMatrix</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -483,7 +605,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotxyz2g">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L362">RotXYZ2G</a>(<code class="docutils literal notranslate"><span class="pre">rot</span></code>)</p>
+</section>
+<section id="function-rotxyz2g">
+<span id="sec-rigidbodyutilities-rotxyz2g"></span><h2>Function: RotXYZ2G<a class="headerlink" href="#function-rotxyz2g" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L362">RotXYZ2G</a>(<code class="docutils literal notranslate"><span class="pre">rot</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -502,7 +627,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotxyz2gt">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L377">RotXYZ2G_t</a>(<code class="docutils literal notranslate"><span class="pre">rot</span></code>, <code class="docutils literal notranslate"><span class="pre">rot_t</span></code>)</p>
+</section>
+<section id="function-rotxyz2g-t">
+<span id="sec-rigidbodyutilities-rotxyz2g-t"></span><h2>Function: RotXYZ2G_t<a class="headerlink" href="#function-rotxyz2g-t" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L377">RotXYZ2G_t</a>(<code class="docutils literal notranslate"><span class="pre">rot</span></code>, <code class="docutils literal notranslate"><span class="pre">rot_t</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -522,7 +650,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotxyz2glocal">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L391">RotXYZ2GLocal</a>(<code class="docutils literal notranslate"><span class="pre">rot</span></code>)</p>
+</section>
+<section id="function-rotxyz2glocal">
+<span id="sec-rigidbodyutilities-rotxyz2glocal"></span><h2>Function: RotXYZ2GLocal<a class="headerlink" href="#function-rotxyz2glocal" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L391">RotXYZ2GLocal</a>(<code class="docutils literal notranslate"><span class="pre">rot</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -541,7 +672,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotxyz2glocalt">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L406">RotXYZ2GLocal_t</a>(<code class="docutils literal notranslate"><span class="pre">rot</span></code>, <code class="docutils literal notranslate"><span class="pre">rot_t</span></code>)</p>
+</section>
+<section id="function-rotxyz2glocal-t">
+<span id="sec-rigidbodyutilities-rotxyz2glocal-t"></span><h2>Function: RotXYZ2GLocal_t<a class="headerlink" href="#function-rotxyz2glocal-t" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L406">RotXYZ2GLocal_t</a>(<code class="docutils literal notranslate"><span class="pre">rot</span></code>, <code class="docutils literal notranslate"><span class="pre">rot_t</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -561,7 +695,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-angularvelocity2rotxyzt">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L426">AngularVelocity2RotXYZ_t</a>(<code class="docutils literal notranslate"><span class="pre">angularVelocity</span></code>, <code class="docutils literal notranslate"><span class="pre">rotation</span></code>)</p>
+</section>
+<section id="function-angularvelocity2rotxyz-t">
+<span id="sec-rigidbodyutilities-angularvelocity2rotxyz-t"></span><h2>Function: AngularVelocity2RotXYZ_t<a class="headerlink" href="#function-angularvelocity2rotxyz-t" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L426">AngularVelocity2RotXYZ_t</a>(<code class="docutils literal notranslate"><span class="pre">angularVelocity</span></code>, <code class="docutils literal notranslate"><span class="pre">rotation</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -581,7 +718,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotxyz2eulerparameters">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L445">RotXYZ2EulerParameters</a>(<code class="docutils literal notranslate"><span class="pre">alpha</span></code>)</p>
+</section>
+<section id="function-rotxyz2eulerparameters">
+<span id="sec-rigidbodyutilities-rotxyz2eulerparameters"></span><h2>Function: RotXYZ2EulerParameters<a class="headerlink" href="#function-rotxyz2eulerparameters" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L445">RotXYZ2EulerParameters</a>(<code class="docutils literal notranslate"><span class="pre">alpha</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -601,7 +741,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotationmatrixx">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L514">RotationMatrixX</a>(<code class="docutils literal notranslate"><span class="pre">angleRad</span></code>)</p>
+</section>
+<section id="function-rotationmatrixx">
+<span id="sec-rigidbodyutilities-rotationmatrixx"></span><h2>Function: RotationMatrixX<a class="headerlink" href="#function-rotationmatrixx" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L514">RotationMatrixX</a>(<code class="docutils literal notranslate"><span class="pre">angleRad</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -624,7 +767,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py">NGsolveCraigBampton.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py">particleClusters.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py">generalContactFrictionTests.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py">mecanumWheelRollingDiscTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/perf3DRigidBodies.py">perf3DRigidBodies.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotationmatrixy">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L522">RotationMatrixY</a>(<code class="docutils literal notranslate"><span class="pre">angleRad</span></code>)</p>
+</section>
+<section id="function-rotationmatrixy">
+<span id="sec-rigidbodyutilities-rotationmatrixy"></span><h2>Function: RotationMatrixY<a class="headerlink" href="#function-rotationmatrixy" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L522">RotationMatrixY</a>(<code class="docutils literal notranslate"><span class="pre">angleRad</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -647,7 +793,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py">leggedRobot.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ConvexContactTest.py">ConvexContactTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/revoluteJointPrismaticJointTest.py">revoluteJointPrismaticJointTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinPenaltyTest.py">rollingCoinPenaltyTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotationmatrixz">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L530">RotationMatrixZ</a>(<code class="docutils literal notranslate"><span class="pre">angleRad</span></code>)</p>
+</section>
+<section id="function-rotationmatrixz">
+<span id="sec-rigidbodyutilities-rotationmatrixz"></span><h2>Function: RotationMatrixZ<a class="headerlink" href="#function-rotationmatrixz" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L530">RotationMatrixZ</a>(<code class="docutils literal notranslate"><span class="pre">angleRad</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -670,7 +819,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py">fourBarMechanism3D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py">mouseInteractionExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py">carRollingDiscTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py">driveTrainTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py">generalContactFrictionTests.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-homogeneoustransformation">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L539">HomogeneousTransformation</a>(<code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">r</span></code>)</p>
+</section>
+<section id="function-homogeneoustransformation">
+<span id="sec-rigidbodyutilities-homogeneoustransformation"></span><h2>Function: HomogeneousTransformation<a class="headerlink" href="#function-homogeneoustransformation" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L539">HomogeneousTransformation</a>(<code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">r</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -683,7 +835,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py">NGsolveCraigBampton.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-httranslate">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L549">HTtranslate</a>(<code class="docutils literal notranslate"><span class="pre">r</span></code>)</p>
+</section>
+<section id="function-httranslate">
+<span id="sec-rigidbodyutilities-httranslate"></span><h2>Function: HTtranslate<a class="headerlink" href="#function-httranslate" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L549">HTtranslate</a>(<code class="docutils literal notranslate"><span class="pre">r</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -696,7 +851,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-httranslatex">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L555">HTtranslateX</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+</section>
+<section id="function-httranslatex">
+<span id="sec-rigidbodyutilities-httranslatex"></span><h2>Function: HTtranslateX<a class="headerlink" href="#function-httranslatex" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L555">HTtranslateX</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -709,7 +867,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-httranslatey">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L561">HTtranslateY</a>(<code class="docutils literal notranslate"><span class="pre">y</span></code>)</p>
+</section>
+<section id="function-httranslatey">
+<span id="sec-rigidbodyutilities-httranslatey"></span><h2>Function: HTtranslateY<a class="headerlink" href="#function-httranslatey" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L561">HTtranslateY</a>(<code class="docutils literal notranslate"><span class="pre">y</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -722,7 +883,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-httranslatez">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L567">HTtranslateZ</a>(<code class="docutils literal notranslate"><span class="pre">z</span></code>)</p>
+</section>
+<section id="function-httranslatez">
+<span id="sec-rigidbodyutilities-httranslatez"></span><h2>Function: HTtranslateZ<a class="headerlink" href="#function-httranslatez" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L567">HTtranslateZ</a>(<code class="docutils literal notranslate"><span class="pre">z</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -731,7 +895,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-ht0">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L573">HT0</a>()</p>
+</section>
+<section id="function-ht0">
+<span id="sec-rigidbodyutilities-ht0"></span><h2>Function: HT0<a class="headerlink" href="#function-ht0" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L573">HT0</a>()</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -744,7 +911,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-htrotatex">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L577">HTrotateX</a>(<code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p>
+</section>
+<section id="function-htrotatex">
+<span id="sec-rigidbodyutilities-htrotatex"></span><h2>Function: HTrotateX<a class="headerlink" href="#function-htrotatex" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L577">HTrotateX</a>(<code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -753,7 +923,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-htrotatey">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L583">HTrotateY</a>(<code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p>
+</section>
+<section id="function-htrotatey">
+<span id="sec-rigidbodyutilities-htrotatey"></span><h2>Function: HTrotateY<a class="headerlink" href="#function-htrotatey" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L583">HTrotateY</a>(<code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -766,7 +939,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-htrotatez">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L589">HTrotateZ</a>(<code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p>
+</section>
+<section id="function-htrotatez">
+<span id="sec-rigidbodyutilities-htrotatez"></span><h2>Function: HTrotateZ<a class="headerlink" href="#function-htrotatez" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L589">HTrotateZ</a>(<code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -779,7 +955,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-ht2translation">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L595">HT2translation</a>(<code class="docutils literal notranslate"><span class="pre">T</span></code>)</p>
+</section>
+<section id="function-ht2translation">
+<span id="sec-rigidbodyutilities-ht2translation"></span><h2>Function: HT2translation<a class="headerlink" href="#function-ht2translation" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L595">HT2translation</a>(<code class="docutils literal notranslate"><span class="pre">T</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -792,7 +971,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py">serialRobotKinematicTreeDigging.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py">serialRobotTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-ht2rotationmatrix">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L599">HT2rotationMatrix</a>(<code class="docutils literal notranslate"><span class="pre">T</span></code>)</p>
+</section>
+<section id="function-ht2rotationmatrix">
+<span id="sec-rigidbodyutilities-ht2rotationmatrix"></span><h2>Function: HT2rotationMatrix<a class="headerlink" href="#function-ht2rotationmatrix" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L599">HT2rotationMatrix</a>(<code class="docutils literal notranslate"><span class="pre">T</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -805,7 +987,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-inverseht">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L604">InverseHT</a>(<code class="docutils literal notranslate"><span class="pre">T</span></code>)</p>
+</section>
+<section id="function-inverseht">
+<span id="sec-rigidbodyutilities-inverseht"></span><h2>Function: InverseHT<a class="headerlink" href="#function-inverseht" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L604">InverseHT</a>(<code class="docutils literal notranslate"><span class="pre">T</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -818,7 +1003,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotationx2t66">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L625">RotationX2T66</a>(<code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p>
+</section>
+<section id="function-rotationx2t66">
+<span id="sec-rigidbodyutilities-rotationx2t66"></span><h2>Function: RotationX2T66<a class="headerlink" href="#function-rotationx2t66" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L625">RotationX2T66</a>(<code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -827,7 +1015,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotationy2t66">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L637">RotationY2T66</a>(<code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p>
+</section>
+<section id="function-rotationy2t66">
+<span id="sec-rigidbodyutilities-rotationy2t66"></span><h2>Function: RotationY2T66<a class="headerlink" href="#function-rotationy2t66" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L637">RotationY2T66</a>(<code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -836,7 +1027,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotationz2t66">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L649">RotationZ2T66</a>(<code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p>
+</section>
+<section id="function-rotationz2t66">
+<span id="sec-rigidbodyutilities-rotationz2t66"></span><h2>Function: RotationZ2T66<a class="headerlink" href="#function-rotationz2t66" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L649">RotationZ2T66</a>(<code class="docutils literal notranslate"><span class="pre">angle</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -845,7 +1039,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-translation2t66">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L661">Translation2T66</a>(<code class="docutils literal notranslate"><span class="pre">translation3D</span></code>)</p>
+</section>
+<section id="function-translation2t66">
+<span id="sec-rigidbodyutilities-translation2t66"></span><h2>Function: Translation2T66<a class="headerlink" href="#function-translation2t66" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L661">Translation2T66</a>(<code class="docutils literal notranslate"><span class="pre">translation3D</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -854,7 +1051,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-translationx2t66">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L672">TranslationX2T66</a>(<code class="docutils literal notranslate"><span class="pre">translation</span></code>)</p>
+</section>
+<section id="function-translationx2t66">
+<span id="sec-rigidbodyutilities-translationx2t66"></span><h2>Function: TranslationX2T66<a class="headerlink" href="#function-translationx2t66" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L672">TranslationX2T66</a>(<code class="docutils literal notranslate"><span class="pre">translation</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -863,7 +1063,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-translationy2t66">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L676">TranslationY2T66</a>(<code class="docutils literal notranslate"><span class="pre">translation</span></code>)</p>
+</section>
+<section id="function-translationy2t66">
+<span id="sec-rigidbodyutilities-translationy2t66"></span><h2>Function: TranslationY2T66<a class="headerlink" href="#function-translationy2t66" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L676">TranslationY2T66</a>(<code class="docutils literal notranslate"><span class="pre">translation</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -872,7 +1075,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-translationz2t66">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L680">TranslationZ2T66</a>(<code class="docutils literal notranslate"><span class="pre">translation</span></code>)</p>
+</section>
+<section id="function-translationz2t66">
+<span id="sec-rigidbodyutilities-translationz2t66"></span><h2>Function: TranslationZ2T66<a class="headerlink" href="#function-translationz2t66" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L680">TranslationZ2T66</a>(<code class="docutils literal notranslate"><span class="pre">translation</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -881,7 +1087,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-t66torotationtranslation">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L686">T66toRotationTranslation</a>(<code class="docutils literal notranslate"><span class="pre">T66</span></code>)</p>
+</section>
+<section id="function-t66torotationtranslation">
+<span id="sec-rigidbodyutilities-t66torotationtranslation"></span><h2>Function: T66toRotationTranslation<a class="headerlink" href="#function-t66torotationtranslation" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L686">T66toRotationTranslation</a>(<code class="docutils literal notranslate"><span class="pre">T66</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -904,7 +1113,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-inverset66torotationtranslation">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L694">InverseT66toRotationTranslation</a>(<code class="docutils literal notranslate"><span class="pre">T66</span></code>)</p>
+</section>
+<section id="function-inverset66torotationtranslation">
+<span id="sec-rigidbodyutilities-inverset66torotationtranslation"></span><h2>Function: InverseT66toRotationTranslation<a class="headerlink" href="#function-inverset66torotationtranslation" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L694">InverseT66toRotationTranslation</a>(<code class="docutils literal notranslate"><span class="pre">T66</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -923,7 +1135,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotationtranslation2t66">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L704">RotationTranslation2T66</a>(<code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+</section>
+<section id="function-rotationtranslation2t66">
+<span id="sec-rigidbodyutilities-rotationtranslation2t66"></span><h2>Function: RotationTranslation2T66<a class="headerlink" href="#function-rotationtranslation2t66" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L704">RotationTranslation2T66</a>(<code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -943,7 +1158,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rotationtranslation2t66inverse">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L714">RotationTranslation2T66Inverse</a>(<code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
+</section>
+<section id="function-rotationtranslation2t66inverse">
+<span id="sec-rigidbodyutilities-rotationtranslation2t66inverse"></span><h2>Function: RotationTranslation2T66Inverse<a class="headerlink" href="#function-rotationtranslation2t66inverse" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L714">RotationTranslation2T66Inverse</a>(<code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -967,7 +1185,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-t66toht">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L742">T66toHT</a>(<code class="docutils literal notranslate"><span class="pre">T66</span></code>)</p>
+</section>
+<section id="function-t66toht">
+<span id="sec-rigidbodyutilities-t66toht"></span><h2>Function: T66toHT<a class="headerlink" href="#function-t66toht" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L742">T66toHT</a>(<code class="docutils literal notranslate"><span class="pre">T66</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -990,7 +1211,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-ht2t66inverse">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L753">HT2T66Inverse</a>(<code class="docutils literal notranslate"><span class="pre">T</span></code>)</p>
+</section>
+<section id="function-ht2t66inverse">
+<span id="sec-rigidbodyutilities-ht2t66inverse"></span><h2>Function: HT2T66Inverse<a class="headerlink" href="#function-ht2t66inverse" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L753">HT2T66Inverse</a>(<code class="docutils literal notranslate"><span class="pre">T</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -1004,7 +1228,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-inertiatensor2inertia6d">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L764">InertiaTensor2Inertia6D</a>(<code class="docutils literal notranslate"><span class="pre">inertiaTensor</span></code>)</p>
+</section>
+<section id="function-inertiatensor2inertia6d">
+<span id="sec-rigidbodyutilities-inertiatensor2inertia6d"></span><h2>Function: InertiaTensor2Inertia6D<a class="headerlink" href="#function-inertiatensor2inertia6d" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L764">InertiaTensor2Inertia6D</a>(<code class="docutils literal notranslate"><span class="pre">inertiaTensor</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -1017,7 +1244,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-inertia6d2inertiatensor">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L769">Inertia6D2InertiaTensor</a>(<code class="docutils literal notranslate"><span class="pre">inertia6D</span></code>)</p>
+</section>
+<section id="function-inertia6d2inertiatensor">
+<span id="sec-rigidbodyutilities-inertia6d2inertiatensor"></span><h2>Function: Inertia6D2InertiaTensor<a class="headerlink" href="#function-inertia6d2inertiatensor" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L769">Inertia6D2InertiaTensor</a>(<code class="docutils literal notranslate"><span class="pre">inertia6D</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -1030,7 +1260,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py">rigidBodyAsUserFunctionTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-getrigidbodynode">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L995">GetRigidBodyNode</a>(<code class="docutils literal notranslate"><span class="pre">nodeType</span></code>, <code class="docutils literal notranslate"><span class="pre">position</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">velocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrix</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationParameters</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">angularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>)</p>
+</section>
+<section id="function-getrigidbodynode">
+<span id="sec-rigidbodyutilities-getrigidbodynode"></span><h2>Function: GetRigidBodyNode<a class="headerlink" href="#function-getrigidbodynode" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L995">GetRigidBodyNode</a>(<code class="docutils literal notranslate"><span class="pre">nodeType</span></code>, <code class="docutils literal notranslate"><span class="pre">position</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">velocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrix</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationParameters</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">angularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -1054,7 +1287,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-addrigidbody">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1086">AddRigidBody</a>(<code class="docutils literal notranslate"><span class="pre">mainSys</span></code>, <code class="docutils literal notranslate"><span class="pre">inertia</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeType</span> <span class="pre">=</span> <span class="pre">exu.NodeType.RotationEulerParameters</span></code>, <code class="docutils literal notranslate"><span class="pre">position</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">velocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrix</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationParameters</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">angularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsDataList</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+</section>
+<section id="function-addrigidbody">
+<span id="sec-rigidbodyutilities-addrigidbody"></span><h2>Function: AddRigidBody<a class="headerlink" href="#function-addrigidbody" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1086">AddRigidBody</a>(<code class="docutils literal notranslate"><span class="pre">mainSys</span></code>, <code class="docutils literal notranslate"><span class="pre">inertia</span></code>, <code class="docutils literal notranslate"><span class="pre">nodeType</span> <span class="pre">=</span> <span class="pre">exu.NodeType.RotationEulerParameters</span></code>, <code class="docutils literal notranslate"><span class="pre">position</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">velocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrix</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationParameters</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">angularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsDataList</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -1085,7 +1321,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py">craneReevingSystem.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py">fourBarMechanism3D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py">carRollingDiscTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ConvexContactTest.py">ConvexContactTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py">distanceSensor.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-addrevolutejoint">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1156">AddRevoluteJoint</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">body0</span></code>, <code class="docutils literal notranslate"><span class="pre">body1</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">axis</span></code>, <code class="docutils literal notranslate"><span class="pre">useGlobalFrame</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showJoint</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">axisRadius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">axisLength</span> <span class="pre">=</span> <span class="pre">0.4</span></code>)</p>
+</section>
+<section id="function-addrevolutejoint">
+<span id="sec-rigidbodyutilities-addrevolutejoint"></span><h2>Function: AddRevoluteJoint<a class="headerlink" href="#function-addrevolutejoint" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1156">AddRevoluteJoint</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">body0</span></code>, <code class="docutils literal notranslate"><span class="pre">body1</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">axis</span></code>, <code class="docutils literal notranslate"><span class="pre">useGlobalFrame</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showJoint</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">axisRadius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">axisLength</span> <span class="pre">=</span> <span class="pre">0.4</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -1113,7 +1352,10 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py">fourBarMechanism3D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py">openVRengine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py">rigidBodyTutorial3.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solutionViewerTest.py">solutionViewerTest.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/perf3DRigidBodies.py">perf3DRigidBodies.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-addprismaticjoint">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1237">AddPrismaticJoint</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">body0</span></code>, <code class="docutils literal notranslate"><span class="pre">body1</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">axis</span></code>, <code class="docutils literal notranslate"><span class="pre">useGlobalFrame</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showJoint</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">axisRadius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">axisLength</span> <span class="pre">=</span> <span class="pre">0.4</span></code>)</p>
+</section>
+<section id="function-addprismaticjoint">
+<span id="sec-rigidbodyutilities-addprismaticjoint"></span><h2>Function: AddPrismaticJoint<a class="headerlink" href="#function-addprismaticjoint" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L1237">AddPrismaticJoint</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">body0</span></code>, <code class="docutils literal notranslate"><span class="pre">body1</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">axis</span></code>, <code class="docutils literal notranslate"><span class="pre">useGlobalFrame</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showJoint</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">axisRadius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">axisLength</span> <span class="pre">=</span> <span class="pre">0.4</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -1141,7 +1383,7 @@ are included. A class for rigid body inertia creating and transformation is avai
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py">openVRengine.py</a> (Ex)</p>
 </div></blockquote>
 <section id="class-rigidbodyinertia-in-module-rigidbodyutilities">
-<h2>CLASS RigidBodyInertia (in module rigidBodyUtilities)<a class="headerlink" href="#class-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h2>
+<h3>CLASS RigidBodyInertia (in module rigidBodyUtilities)<a class="headerlink" href="#class-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h3>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>helper class for rigid body inertia (see also derived classes Inertia…).
@@ -1164,7 +1406,11 @@ The inertia tensor and center of mass must correspond when initializing the body
 <span class="n">i2</span> <span class="o">=</span> <span class="n">i1</span><span class="o">.</span><span class="n">Translated</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
-<p id="sec-rigidbodyutilities-rigidbodyinertia-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L791">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">inertiaTensor</span> <span class="pre">=</span> <span class="pre">np.zeros([3,3])</span></code>, <code class="docutils literal notranslate"><span class="pre">com</span> <span class="pre">=</span> <span class="pre">np.zeros(3)</span></code>, <code class="docutils literal notranslate"><span class="pre">inertiaTensorAtCOM</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+</section>
+</section>
+<section id="class-function-init">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-init"></span><h2>Class function: __init__<a class="headerlink" href="#class-function-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L791">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">inertiaTensor</span> <span class="pre">=</span> <span class="pre">np.zeros([3,3])</span></code>, <code class="docutils literal notranslate"><span class="pre">com</span> <span class="pre">=</span> <span class="pre">np.zeros(3)</span></code>, <code class="docutils literal notranslate"><span class="pre">inertiaTensorAtCOM</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1180,7 +1426,10 @@ The inertia tensor and center of mass must correspond when initializing the body
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rigidbodyinertia-add">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L807">__add__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">otherBodyInertia</span></code>)</p>
+</section>
+<section id="class-function-add">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-add"></span><h2>Class function: __add__<a class="headerlink" href="#class-function-add" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L807">__add__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">otherBodyInertia</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1197,7 +1446,10 @@ The inertia tensor and center of mass must correspond when initializing the body
 </pre></div>
 </div>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rigidbodyinertia-iadd">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L818">__iadd__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">otherBodyInertia</span></code>)</p>
+</section>
+<section id="class-function-iadd">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-iadd"></span><h2>Class function: __iadd__<a class="headerlink" href="#class-function-iadd" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L818">__iadd__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">otherBodyInertia</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1215,7 +1467,10 @@ The inertia tensor and center of mass must correspond when initializing the body
 </pre></div>
 </div>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rigidbodyinertia-setwithcominertia">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L827">SetWithCOMinertia</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span></code>, <code class="docutils literal notranslate"><span class="pre">inertiaTensorCOM</span></code>, <code class="docutils literal notranslate"><span class="pre">com</span></code>)</p>
+</section>
+<section id="class-function-setwithcominertia">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-setwithcominertia"></span><h2>Class function: SetWithCOMinertia<a class="headerlink" href="#class-function-setwithcominertia" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L827">SetWithCOMinertia</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span></code>, <code class="docutils literal notranslate"><span class="pre">inertiaTensorCOM</span></code>, <code class="docutils literal notranslate"><span class="pre">com</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1231,7 +1486,10 @@ The inertia tensor and center of mass must correspond when initializing the body
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rigidbodyinertia-inertia">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L838">Inertia</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-inertia">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-inertia"></span><h2>Class function: Inertia<a class="headerlink" href="#class-function-inertia" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L838">Inertia</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1240,7 +1498,10 @@ The inertia tensor and center of mass must correspond when initializing the body
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rigidbodyinertia-inertiacom">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L842">InertiaCOM</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-inertiacom">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-inertiacom"></span><h2>Class function: InertiaCOM<a class="headerlink" href="#class-function-inertiacom" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L842">InertiaCOM</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1249,7 +1510,10 @@ The inertia tensor and center of mass must correspond when initializing the body
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rigidbodyinertia-com">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L846">COM</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-com">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-com"></span><h2>Class function: COM<a class="headerlink" href="#class-function-com" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L846">COM</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1258,7 +1522,10 @@ The inertia tensor and center of mass must correspond when initializing the body
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rigidbodyinertia-mass">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L850">Mass</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-mass">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-mass"></span><h2>Class function: Mass<a class="headerlink" href="#class-function-mass" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L850">Mass</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1267,7 +1534,10 @@ The inertia tensor and center of mass must correspond when initializing the body
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rigidbodyinertia-translated">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L854">Translated</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">vec</span></code>)</p>
+</section>
+<section id="class-function-translated">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-translated"></span><h2>Class function: Translated<a class="headerlink" href="#class-function-translated" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L854">Translated</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">vec</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1276,7 +1546,10 @@ The inertia tensor and center of mass must correspond when initializing the body
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rigidbodyinertia-rotated">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L868">Rotated</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">rot</span></code>)</p>
+</section>
+<section id="class-function-rotated">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-rotated"></span><h2>Class function: Rotated<a class="headerlink" href="#class-function-rotated" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L868">Rotated</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">rot</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1290,7 +1563,10 @@ The inertia tensor and center of mass must correspond when initializing the body
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rigidbodyinertia-transformed">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L881">Transformed</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+</section>
+<section id="class-function-transformed">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-transformed"></span><h2>Class function: Transformed<a class="headerlink" href="#class-function-transformed" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L881">Transformed</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1299,7 +1575,10 @@ The inertia tensor and center of mass must correspond when initializing the body
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-rigidbodyutilities-rigidbodyinertia-getinertia6d">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L896">GetInertia6D</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-getinertia6d">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-getinertia6d"></span><h2>Class function: GetInertia6D<a class="headerlink" href="#class-function-getinertia6d" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L896">GetInertia6D</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1311,9 +1590,8 @@ The inertia tensor and center of mass must correspond when initializing the body
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py">sliderCrank3DwithANCFbeltDrive2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py">rigidBodyCOMtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinPenaltyTest.py">rollingCoinPenaltyTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rollingCoinTest.py">rollingCoinTest.py</a> (TM)</p>
 </div></blockquote>
-</section>
 <section id="class-inertiacuboid-rigidbodyinertia-in-module-rigidbodyutilities">
-<h2>CLASS InertiaCuboid(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiacuboid-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h2>
+<h3>CLASS InertiaCuboid(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiacuboid-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h3>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>create RigidBodyInertia with moment of inertia and mass of a cuboid with density and side lengths sideLengths along local axes 1, 2, 3; inertia w.r.t. center of mass, com=[0,0,0]</p>
@@ -1327,7 +1605,11 @@ The inertia tensor and center of mass must correspond when initializing the body
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span><span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">])</span>
 </pre></div>
 </div>
-<p id="sec-rigidbodyutilities-inertiacuboid-rigidbodyinertia-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L917">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">density</span></code>, <code class="docutils literal notranslate"><span class="pre">sideLengths</span></code>)</p>
+</section>
+</section>
+<section id="sec-rigidbodyutilities-inertiacuboid-rigidbodyinertia-init">
+<span id="id76"></span><h2>Class function: __init__<a class="headerlink" href="#sec-rigidbodyutilities-inertiacuboid-rigidbodyinertia-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L917">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">density</span></code>, <code class="docutils literal notranslate"><span class="pre">sideLengths</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1339,14 +1621,17 @@ The inertia tensor and center of mass must correspond when initializing the body
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py">craneReevingSystem.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py">fourBarMechanism3D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py">carRollingDiscTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py">driveTrainTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py">generalContactFrictionTests.py</a> (TM)</p>
 </div></blockquote>
-</section>
 <section id="class-inertiarodx-rigidbodyinertia-in-module-rigidbodyutilities">
-<h2>CLASS InertiaRodX(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiarodx-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h2>
+<h3>CLASS InertiaRodX(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiarodx-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h3>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>create RigidBodyInertia with moment of inertia and mass of a rod with mass m and length L in local 1-direction (x-direction); inertia w.r.t. center of mass, com=[0,0,0]</p>
 </div></blockquote>
-<p id="sec-rigidbodyutilities-inertiarodx-rigidbodyinertia-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L929">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span></code>, <code class="docutils literal notranslate"><span class="pre">length</span></code>)</p>
+</section>
+</section>
+<section id="sec-rigidbodyutilities-inertiarodx-rigidbodyinertia-init">
+<span id="id85"></span><h2>Class function: __init__<a class="headerlink" href="#sec-rigidbodyutilities-inertiarodx-rigidbodyinertia-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L929">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span></code>, <code class="docutils literal notranslate"><span class="pre">length</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1358,14 +1643,17 @@ The inertia tensor and center of mass must correspond when initializing the body
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismRedundant.py">fourBarMechanismRedundant.py</a> (TM)</p>
 </div></blockquote>
-</section>
 <section id="class-inertiamasspoint-rigidbodyinertia-in-module-rigidbodyutilities">
-<h2>CLASS InertiaMassPoint(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiamasspoint-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h2>
+<h3>CLASS InertiaMassPoint(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiamasspoint-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h3>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>create RigidBodyInertia with moment of inertia and mass of mass point with ‘mass’; inertia w.r.t. center of mass, com=[0,0,0]</p>
 </div></blockquote>
-<p id="sec-rigidbodyutilities-inertiamasspoint-rigidbodyinertia-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L937">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span></code>)</p>
+</section>
+</section>
+<section id="sec-rigidbodyutilities-inertiamasspoint-rigidbodyinertia-init">
+<span id="id86"></span><h2>Class function: __init__<a class="headerlink" href="#sec-rigidbodyutilities-inertiamasspoint-rigidbodyinertia-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L937">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1377,14 +1665,17 @@ The inertia tensor and center of mass must correspond when initializing the body
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernor2.py">stiffFlyballGovernor2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py">stiffFlyballGovernorKT.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/stiffFlyballGovernor.py">stiffFlyballGovernor.py</a> (TM)</p>
 </div></blockquote>
-</section>
 <section id="class-inertiasphere-rigidbodyinertia-in-module-rigidbodyutilities">
-<h2>CLASS InertiaSphere(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiasphere-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h2>
+<h3>CLASS InertiaSphere(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiasphere-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h3>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>create RigidBodyInertia with moment of inertia and mass of sphere with mass and radius; inertia w.r.t. center of mass, com=[0,0,0]</p>
 </div></blockquote>
-<p id="sec-rigidbodyutilities-inertiasphere-rigidbodyinertia-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L945">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span></code>)</p>
+</section>
+</section>
+<section id="sec-rigidbodyutilities-inertiasphere-rigidbodyinertia-init">
+<span id="id89"></span><h2>Class function: __init__<a class="headerlink" href="#sec-rigidbodyutilities-inertiasphere-rigidbodyinertia-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L945">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1396,14 +1687,17 @@ The inertia tensor and center of mass must correspond when initializing the body
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py">particleClusters.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py">particlesSilo.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/tippeTop.py">tippeTop.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py">distanceSensor.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py">generalContactFrictionTests.py</a> (TM)</p>
 </div></blockquote>
-</section>
 <section id="class-inertiahollowsphere-rigidbodyinertia-in-module-rigidbodyutilities">
-<h2>CLASS InertiaHollowSphere(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiahollowsphere-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h2>
+<h3>CLASS InertiaHollowSphere(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiahollowsphere-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h3>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>create RigidBodyInertia with moment of inertia and mass of hollow sphere with mass (concentrated at circumference) and radius; inertia w.r.t. center of mass, com=0</p>
 </div></blockquote>
-<p id="sec-rigidbodyutilities-inertiahollowsphere-rigidbodyinertia-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L954">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span></code>)</p>
+</section>
+</section>
+<section id="sec-rigidbodyutilities-inertiahollowsphere-rigidbodyinertia-init">
+<span id="id93"></span><h2>Class function: __init__<a class="headerlink" href="#sec-rigidbodyutilities-inertiahollowsphere-rigidbodyinertia-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L954">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -1411,14 +1705,17 @@ The inertia tensor and center of mass must correspond when initializing the body
 </div>
 </li>
 </ul>
-</section>
 <section id="class-inertiacylinder-rigidbodyinertia-in-module-rigidbodyutilities">
-<h2>CLASS InertiaCylinder(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiacylinder-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h2>
+<h3>CLASS InertiaCylinder(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiacylinder-rigidbodyinertia-in-module-rigidbodyutilities" title="Permalink to this heading"></a></h3>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>create RigidBodyInertia with moment of inertia and mass of cylinder with density, length and outerRadius; axis defines the orientation of the cylinder axis (0=x-axis, 1=y-axis, 2=z-axis); for hollow cylinder use innerRadius != 0; inertia w.r.t. center of mass, com=[0,0,0]</p>
 </div></blockquote>
-<p id="sec-rigidbodyutilities-inertiacylinder-rigidbodyinertia-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L963">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">density</span></code>, <code class="docutils literal notranslate"><span class="pre">length</span></code>, <code class="docutils literal notranslate"><span class="pre">outerRadius</span></code>, <code class="docutils literal notranslate"><span class="pre">axis</span></code>, <code class="docutils literal notranslate"><span class="pre">innerRadius</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+</section>
+</section>
+<section id="sec-rigidbodyutilities-inertiacylinder-rigidbodyinertia-init">
+<span id="id94"></span><h2>Class function: __init__<a class="headerlink" href="#sec-rigidbodyutilities-inertiacylinder-rigidbodyinertia-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py#L963">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">density</span></code>, <code class="docutils literal notranslate"><span class="pre">length</span></code>, <code class="docutils literal notranslate"><span class="pre">outerRadius</span></code>, <code class="docutils literal notranslate"><span class="pre">axis</span></code>, <code class="docutils literal notranslate"><span class="pre">innerRadius</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>

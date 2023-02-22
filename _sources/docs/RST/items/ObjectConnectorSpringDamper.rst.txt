@@ -50,6 +50,12 @@ The item VObjectConnectorSpringDamper has the following parameters:
   | RGBA connector color; if R==-1, use default color
 
 
+----------
+
+.. _description-objectconnectorspringdamper:
+
+DESCRIPTION of ObjectConnectorSpringDamper
+------------------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -66,7 +72,284 @@ The item VObjectConnectorSpringDamper has the following parameters:
 
 
 
+Definition of quantities
+------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | marker m0 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m0}`\ 
+     - | current global position which is provided by marker m0
+   * - | marker m1 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m1}`\ 
+     - | 
+   * - | marker m0 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m0}`\ 
+     - | current global velocity which is provided by marker m0
+   * - | marker m1 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m1}`\ 
+     - | 
+   * - | time derivative of distance
+     - | \ :math:`\dot L`\ 
+     - | \ :math:`\Delta\! \LU{0}{{\mathbf{v}}}\tp {\mathbf{v}}_{f}`\ 
+
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | output variables
+     - | symbol
+     - | formula
+   * - | Displacement
+     - | \ :math:`\Delta\! \LU{0}{{\mathbf{p}}}`\ 
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0}`\ 
+   * - | Velocity
+     - | \ :math:`\Delta\! \LU{0}{{\mathbf{v}}}`\ 
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m1} - \LU{0}{{\mathbf{v}}}_{m0}`\ 
+   * - | Distance
+     - | \ :math:`L`\ 
+     - | \ :math:`|\Delta\! \LU{0}{{\mathbf{p}}}|`\ 
+   * - | Force
+     - | \ :math:`{\mathbf{f}}`\ 
+     - | see below
+
+
+Connector forces
+----------------
+
+The unit vector in force direction reads (raises SysError if \ :math:`L=0`\ ),
+
+.. math::
+
+   {\mathbf{v}}_{f} = \frac{1}{L} \Delta\! \LU{0}{{\mathbf{p}}}
+
+
+If \ ``activeConnector = True``\ , the scalar spring force is computed as
+
+.. math::
+
+   f_{SD} = k\cdot(L-L_0) + d \cdot(\dot L -\dot L_0)+ f_{a}
+
+
+If the springForceUserFunction \ :math:`\mathrm{UF}`\  is defined, \ :math:`{\mathbf{f}}`\  instead becomes (\ :math:`t`\  is current time)
+
+.. math::
+
+   f_{SD} = \mathrm{UF}(mbs, t, i_N, L-L_0, \dot L - \dot L_0, k, d, f_{a})
+
+
+and \ ``iN``\  represents the itemNumber (=objectNumber). Note that, if \ ``activeConnector = False``\ , \ :math:`f_{SD}`\  is set to zero.
+
+The vector of the spring-damper force applied at both markers finally reads
+
+.. math::
+
+   {\mathbf{f}} = f_{SD}{\mathbf{v}}_{f}
+
+
+The virtual work of the connector force is computed from the virtual displacement 
+
+.. math::
+
+   \delta \Delta\! \LU{0}{{\mathbf{p}}} = \delta \LU{0}{{\mathbf{p}}}_{m1} - \delta \LU{0}{{\mathbf{p}}}_{m0} ,
+
+
+and the virtual work (note the transposed version here, because the resulting generalized forces shall be a column vector),
+
+.. math::
+
+   \delta W_{SD} = {\mathbf{f}} \delta \Delta\! \LU{0}{{\mathbf{p}}} = \left( k\cdot(L-L_0) + d \cdot (\dot L - \dot L_0) + f_{a} \right) \left(\delta \LU{0}{{\mathbf{p}}}_{m1} - \delta \LU{0}{{\mathbf{p}}}_{m0} \right)\tp {\mathbf{v}}_{f} .
+
+
+The generalized (elastic) forces thus result from
+
+.. math::
+
+   {\mathbf{Q}}_{SD} = \frac{\partial \LU{0}{{\mathbf{p}}}}{\partial {\mathbf{q}}_{SD}\tp} {\mathbf{f}} ,
+
+
+and read for the markers \ :math:`m0`\  and \ :math:`m1`\ ,
+
+.. math::
+
+   {\mathbf{Q}}_{SD, m0} = -\left( k\cdot(L-L_0) + d \cdot (\dot L - \dot L_0) + f_{a} \right) {\mathbf{J}}_{pos,m0}\tp {\mathbf{v}}_{f} , \quad {\mathbf{Q}}_{SD, m1} = \left( k\cdot(L-L_0) + d \cdot (\dot L - \dot L_0)+ f_{a} \right) {\mathbf{J}}_{pos,m1}\tp {\mathbf{v}}_{f} ,
+
+
+where \ :math:`{\mathbf{J}}_{pos,m1}`\  represents the derivative of marker \ :math:`m1`\  w.r.t.\ its associated coordinates \ :math:`{\mathbf{q}}_{m1}`\ , analogously \ :math:`{\mathbf{J}}_{pos,m0}`\ .
+
+Connector Jacobian
+------------------
+
+The position-level jacobian for the connector, involving all coordinates associated with markers \ :math:`m0`\  and \ :math:`m1`\ , follows from 
+
+.. math::
+
+   {\mathbf{J}}_{SD} = \mp{\frac{\partial {\mathbf{Q}}_{SD, m0}}{\partial {\mathbf{q}}_{m0}} }{\frac{\partial {\mathbf{Q}}_{SD, m0}}{\partial {\mathbf{q}}_{m1}}} {\frac{\partial {\mathbf{Q}}_{SD, m0}}{\partial {\mathbf{q}}_{m1}} }{\frac{\partial {\mathbf{Q}}_{SD, m1}}{\partial {\mathbf{q}}_{m1}}}
+
+
+and the velocity level jacobian reads
+
+.. math::
+
+   {\mathbf{J}}_{SD,t} = \mp{\frac{\partial {\mathbf{Q}}_{SD, m0}}{\partial \dot {\mathbf{q}}_{m0}} }{\frac{\partial {\mathbf{Q}}_{SD, m0}}{\partial \dot {\mathbf{q}}_{m1}}} {\frac{\partial {\mathbf{Q}}_{SD, m0}}{\partial \dot {\mathbf{q}}_{m1}} }{\frac{\partial {\mathbf{Q}}_{SD, m1}}{\partial \dot {\mathbf{q}}_{m1}}}
+
+
+The sub-Jacobians follow from
+
+.. math::
+
+   \frac{\partial {\mathbf{Q}}_{SD, m0}}{\partial {\mathbf{q}}_{m0}} = -\frac{\partial {\mathbf{J}}_{pos,m0}\tp }{\partial {\mathbf{q}}_{m0}} {\mathbf{v}}_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right) -{\mathbf{J}}_{pos,m0}\tp \frac{\partial {\mathbf{v}}_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right)   }{\partial {\mathbf{q}}_{m0}}
+
+
+in which the term \ :math:`\frac{\partial {\mathbf{J}}_{pos,m0}\tp }{\partial {\mathbf{q}}_{m0}}`\  is computed from a special function provided by markers, that
+compute the derivative of the marker jacobian times a constant vector, in this case the spring force \ :math:`{\mathbf{f}}`\ ; this jacobian term is usually less  
+dominant, but is included in the numerical as well as the analytical derivatives, see the general jacobian computation information.
+
+The other term, which is the dominant term, is computed as (dependence of velocity term on position coordinates and \ :math:`\dot L_0`\  term neglected),
+
+.. math::
+
+   \frac{\partial {\mathbf{Q}}_{SD, m0}}{\partial {\mathbf{q}}_{m0}} &=& -{\mathbf{J}}_{pos,m0}\tp \frac{\partial {\mathbf{v}}_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right)   }{\partial {\mathbf{q}}_{m0}} \nonumber \\
+   &=& -{\mathbf{J}}_{pos,m0}\tp \frac{\partial  \left( k\cdot \left( \Delta\! \LU{0}{{\mathbf{p}}} - L_0 {\mathbf{v}}_{f} \right)+ {\mathbf{v}}_{f} \left(d \cdot {\mathbf{v}}_{f}\tp \Delta\! \LU{0}{{\mathbf{v}}}  + f_{a} \right) \right)   }{\partial {\mathbf{q}}_{m0}} \nonumber \\
+   &\approx& {\mathbf{J}}_{pos,m0}\tp \left(k\cdot {\mathbf{I}} - k  \frac{L_0}{L}\left({\mathbf{I}} - \LU{0}{{\mathbf{v}}_{f}} \otimes \LU{0}{{\mathbf{v}}_{f}} \right)  +\frac{1}{L}\left({\mathbf{I}} - \LU{0}{{\mathbf{v}}_{f}} \otimes \LU{0}{{\mathbf{v}}_{f}} \right) \left(d \cdot {\mathbf{v}}_{f}\tp \Delta\! \LU{0}{{\mathbf{v}}}  + f_{a} \right) \right. \nonumber \\
+   &&\left. + d \LU{0}{{\mathbf{v}}_{f}} \otimes \left(\frac{1}{L}\left({\mathbf{I}} - \LU{0}{{\mathbf{v}}_{f}} \otimes \LU{0}{{\mathbf{v}}_{f}} \right) \LU{0}{{\mathbf{v}}_{f}} \right) \right) \LU{0}{{\mathbf{J}}_{pos,m0}}
+
+
+Alternatively (again \ :math:`\dot L_0`\  term neglected):
+
+.. math::
+
+   \frac{\partial {\mathbf{Q}}_{SD, m0}}{\partial {\mathbf{q}}_{m0}} &=& -{\mathbf{J}}_{pos,m0}\tp \frac{\partial {\mathbf{v}}_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right)   }{\partial {\mathbf{q}}_{m0}} \nonumber \\
+   &=& {\mathbf{J}}_{pos,m0}\tp \frac{1}{L}\left({\mathbf{I}} - \LU{0}{{\mathbf{v}}_{f}} \otimes \LU{0}{{\mathbf{v}}_{f}} \right) \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right) {\mathbf{J}}_{pos,m0} \nonumber \\
+   && +{\mathbf{J}}_{pos,m0}\tp \LU{0}{{\mathbf{v}}_{f}} \otimes \left( k\cdot \LU{0}{{\mathbf{v}}_{f}} + d \cdot\Delta\! \LU{0}{{\mathbf{v}}} \frac{1}{L}\left({\mathbf{I}} - \LU{0}{{\mathbf{v}}_{f}} \otimes \LU{0}{{\mathbf{v}}_{f}} \right) \right) {\mathbf{J}}_{pos,m0} - d {\mathbf{J}}_{pos,m0}\tp \LU{0}{{\mathbf{v}}_{f}} \otimes \LU{0}{{\mathbf{v}}_{f}} \frac{\partial \Delta\! \LU{0}{{\mathbf{v}}}}{\partial {\mathbf{q}}_{m0}}  \nonumber \\
+   &=& {\mathbf{J}}_{pos,m0}\tp \left(\frac{f_{SD}}{L}\left({\mathbf{I}} - \LU{0}{{\mathbf{v}}_{f}} \otimes \LU{0}{{\mathbf{v}}_{f}} \right) + k \LU{0}{{\mathbf{v}}_{f}} \otimes \LU{0}{{\mathbf{v}}_{f}} + \frac{d}{L} \left(\LU{0}{{\mathbf{v}}_{f}} \otimes \Delta\! \LU{0}{{\mathbf{v}}}\right) \cdot \left({\mathbf{I}} - \LU{0}{{\mathbf{v}}_{f}} \otimes \LU{0}{{\mathbf{v}}_{f}} \right) + ...! \right) {\mathbf{J}}_{pos,m0}
+
+
+Noting that \ :math:`\frac{\partial {\mathbf{v}}_{f} }{\partial {\mathbf{q}}_{m0}} = 
+-\frac{1}{L}\left({\mathbf{I}} - \LU{0}{{\mathbf{v}}_{f}} \otimes \LU{0}{{\mathbf{v}}_{f}} \right) \LU{0}{{\mathbf{J}}_{pos,m0}}`\  and 
+\ :math:`\frac{\partial {\mathbf{v}}_{f} }{\partial {\mathbf{q}}_{m1}} = 
+\frac{1}{L}\left({\mathbf{I}} - \LU{0}{{\mathbf{v}}_{f}} \otimes \LU{0}{{\mathbf{v}}_{f}} \right) \LU{0}{{\mathbf{J}}_{pos,m1}}`\ .
+The Jacobian w.r.t.\ velocity coordinates follows as
+
+.. math::
+
+   \frac{\partial {\mathbf{Q}}_{SD, m0}}{\partial \dot {\mathbf{q}}_{m0}} &=& -{\mathbf{J}}_{pos,m0}\tp \frac{\partial {\mathbf{v}}_{f} \left( k\cdot(L-L_0) + d \cdot(\dot L - \dot L_0) + f_{a} \right)   }{\partial \dot {\mathbf{q}}_{m0}} \nonumber \\
+   &=& {\mathbf{J}}_{pos,m0}\tp \left(d {\mathbf{v}}_{f} \otimes {\mathbf{v}}_{f} \right) \LU{0}{{\mathbf{J}}_{pos,m0}}
+
+
+The term \ :math:`\frac{\partial \Delta\! \LU{0}{{\mathbf{v}}}}{\partial {\mathbf{q}}_{m0}}`\ , which is important for large damping, yields
+
+.. math::
+
+   \frac{\partial \Delta\! \LU{0}{{\mathbf{v}}}}{\partial {\mathbf{q}}_{m0}} = \frac{\partial {\mathbf{J}}_{pos,m0} \dot {\mathbf{q}}_{m0}}{\partial {\mathbf{q}}_{m0}}= \frac{\partial {\mathbf{J}}_{pos,m0} }{\partial {\mathbf{q}}_{m0}} \dot {\mathbf{q}}_{m0}
+
+
+The latter term is currently neglected.
+
+Jacobians for markers \ :math:`m1`\  and mixed \ :math:`m0`\ /\ :math:`m1`\  terms follow analogously.
+
+--------
+
+\ **Userfunction**\ : ``springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force)`` 
+
+
+A user function, which computes the spring force depending on time, object variables (deltaL, deltaL_t) and 
+object parameters (stiffness, damping, force).
+The object variables are provided to the function using the current values of the SpringDamper object.
+Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+\ ``mbs.GetObjectParameter(itemNumber, ...)``\ , see the according description of \ ``GetObjectParameter``\ .
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments /  return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs to which object belongs
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs
+   * - | \ ``itemNumber``\ 
+     - | Index
+     - | integer number \ :math:`i_N`\  of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+   * - | \ ``deltaL``\ 
+     - | Real
+     - | \ :math:`L-L_0`\ , spring elongation
+   * - | \ ``deltaL_t``\ 
+     - | Real
+     - | \ :math:`(\dot L - \dot L_0)`\ , spring velocity, including offset
+   * - | \ ``stiffness``\ 
+     - | Real
+     - | copied from object
+   * - | \ ``damping``\ 
+     - | Real
+     - | copied from object
+   * - | \ ``force``\ 
+     - | Real
+     - | copied from object; constant force
+   * - | \returnValue
+     - | Real
+     - | scalar value of computed spring force
+
+
+--------
+
+\ **User function example**\ :
+
+
+
+.. code-block:: python
+
+    #define nonlinear force
+    def UFforce(mbs, t, itemNumber, u, v, k, d, F0): 
+        return k*u + d*v + F0
+    #markerNumbers taken from mini example
+    mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
+                                              referenceLength = 1, 
+                                              stiffness = 100, damping = 1,
+                                              springForceUserFunction = UFforce))
+
+ 
+
+
+
+.. _miniexample-objectconnectorspringdamper:
+
+MINI EXAMPLE for ObjectConnectorSpringDamper
+--------------------------------------------
+
+
+.. code-block:: python
+
+   node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
+   oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+   
+   m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
+   m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oMassPoint, localPosition=[0,0,0]))
+   
+   mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
+                                             referenceLength = 1, #shorter than initial distance
+                                             stiffness = 100,
+                                             damping = 1))
+   
+   #assemble and solve system for default parameters
+   mbs.Assemble()
+   exu.SolveDynamic(mbs)
+   
+   #check result at default integration time
+   exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

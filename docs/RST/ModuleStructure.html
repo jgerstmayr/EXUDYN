@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module structure &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
+  <title>Module structure &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.5.105.dev1
+            Exudyn1.5.109.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -83,7 +83,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.5.105.dev1</a>
+          <a href="../../index.html">Exudyn1.5.109.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -131,7 +131,7 @@ Python parts, see Fig. <a class="reference internal" href="#fig-exudyn-candpytho
 on this level, there are just very few functions: <code class="docutils literal notranslate"><span class="pre">SystemContainer()</span></code>, <code class="docutils literal notranslate"><span class="pre">StartRenderer()</span></code>, <code class="docutils literal notranslate"><span class="pre">StopRenderer()</span></code>, <code class="docutils literal notranslate"><span class="pre">GetVersionString()</span></code>, <code class="docutils literal notranslate"><span class="pre">SolveStatic(...)</span></code>, <code class="docutils literal notranslate"><span class="pre">SolveDynamic(...)</span></code>, … as well as system and user variable dictionaries <code class="docutils literal notranslate"><span class="pre">exudyn.variables</span></code> and <code class="docutils literal notranslate"><span class="pre">exudyn.sys</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code>: contains the systems (most important), solvers (static, dynamics, …), visualization settings</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: {mbs} created with <code class="docutils literal notranslate"><span class="pre">mbs</span> <span class="pre">=</span> <span class="pre">SC.AddSystem()</span></code>, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers,
-loads can added to the system, see Section <a class="reference internal" href="../../index.html#sec-item-reference-manual"><span class="std std-ref">Items Reference Manual</span></a>;</p></li>
+loads can added to the system, see Section <a class="reference internal" href="items/itemsIndex.html#sec-item-reference-manual"><span class="std std-ref">Items reference manual</span></a>;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">mbs.systemData</span></code>: contains the initial, current, visualization, … states of the system and holds the items, see Fig. <a class="reference internal" href="#fig-system-overview"><span class="std std-ref">Overview of systemData</span></a></p></li>
 </ul>
 </div></blockquote>

@@ -32,7 +32,6 @@ If you check your current directory (where \ ``myFirstExample.py``\  lies), you 
 The beginning and end of the file should look like: 
 
 
-
 .. code-block:: 
 
   #Exudyn implicit second order time integration solver solution file

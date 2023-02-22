@@ -40,6 +40,12 @@ The item VObjectConnectorDistance has the following parameters:
   | RGBA connector color; if R==-1, use default color
 
 
+----------
+
+.. _description-objectconnectordistance:
+
+DESCRIPTION of ObjectConnectorDistance
+--------------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -54,7 +60,97 @@ The item VObjectConnectorDistance has the following parameters:
 
 
 
+Definition of quantities
+------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | marker m0 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m0}`\ 
+     - | current global position which is provided by marker m0
+   * - | marker m1 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m1}`\ 
+     - | accordingly
+   * - | marker m0 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m0}`\ 
+     - | current global velocity which is provided by marker m0
+   * - | marker m1 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m1}`\ 
+     - | accordingly
+   * - | relative displacement
+     - | \ :math:`\LU{0}{\Delta{\mathbf{p}}}`\ 
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0}`\ 
+   * - | relative velocity
+     - | \ :math:`\LU{0}{\Delta{\mathbf{v}}}`\ 
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m1} - \LU{0}{{\mathbf{v}}}_{m0}`\ 
+   * - | algebraicVariable
+     - | \ :math:`\lambda_0`\ 
+     - | Lagrange multiplier = force in constraint
+
+
+
+Connector forces constraint equations
+-------------------------------------
+
+If \ ``activeConnector = True``\ , the index 3 algebraic equation reads
+
+.. math::
+
+   \left|\LU{0}{\Delta{\mathbf{p}}}\right| - d_0 = 0
+
+
+The index 2 (velocity level) algebraic equation reads
+
+.. math::
+
+   \left(\frac{\LU{0}{\Delta{\mathbf{p}}}}{\left|\LU{0}{\Delta{\mathbf{p}}}\right|}\right)\tp \Delta{\mathbf{v}} = 0
+
+
+if \ ``activeConnector = False``\ , the algebraic equation reads
+
+.. math::
+
+   \lambda_0 = 0
+
+
+
+
+
+.. _miniexample-objectconnectordistance:
+
+MINI EXAMPLE for ObjectConnectorDistance
+----------------------------------------
+
+
+.. code-block:: python
+
+   #example with 1m pendulum, 50kg under gravity
+   nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[1,0]))
+   oMass = mbs.AddObject(MassPoint2D(physicsMass = 50, nodeNumber = nMass))
+   
+   mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
+   mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition = [0,0,0]))
+   oDistance = mbs.AddObject(DistanceConstraint(markerNumbers = [mGround, mMass], distance = 1))
+   
+   mbs.AddLoad(Force(markerNumber = mMass, loadVector = [0, -50*9.81, 0])) 
+   
+   #assemble and solve system for default parameters
+   mbs.Assemble()
+   
+   sims=exu.SimulationSettings()
+   sims.timeIntegration.generalizedAlpha.spectralRadius=0.7
+   exu.SolveDynamic(mbs, sims)
+   
+   #check result at default integration time
+   exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0]
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

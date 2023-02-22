@@ -1,11 +1,7 @@
 Rigid body and joints tutorial
 ==============================
 
-
-
-.. _sec-tutorial-rigidbodyjoints:
-
-
+\label{sec:tutorial:rigidBodyJoints}
 The python source code of the first tutorial can be found in the file:
 
    \ ``main/pythonDev/Examples/rigidBodyTutorial3.py``\ 
@@ -16,7 +12,6 @@ This tutorial will set up a multibody system containing a ground, two rigid bodi
 
 .. image:: ../theDoc/figures/TutorialRigidBody1desc.png
    :width: 400
-
 
 
 
@@ -62,7 +57,6 @@ We add an empty ground body, using default values. It's origin is at [0,0,0] and
 
   #ground body
   oGround = mbs.AddObject(ObjectGround())
-
 
 
 
@@ -177,7 +171,6 @@ Due to the fact that the definition of markers for general joints is tedious, th
 
 
 
-
 The second link and the according joint can be set up in a very similar way:
 
 .. code-block:: python
@@ -221,7 +214,6 @@ Finally, we also add a sensor for some output of the double pendulum:
   sens1=mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*L],
                                  fileName='solution/sensorPos.txt',
                                  outputVariableType = exu.OutputVariableType.Position))
-
 
 
 
@@ -297,7 +289,6 @@ For the output see the figure below. Note that obviously, markers are always nee
 
 .. image:: ../theDoc/figures/DrawSystemGraphExample.png
    :width: 400
-
 
 
 

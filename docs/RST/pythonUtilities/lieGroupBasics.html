@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: lieGroupBasics &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
+  <title>Module: lieGroupBasics &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.105.dev1
+            Exudyn1.5.109.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -65,7 +65,35 @@
 <li class="toctree-l2"><a class="reference internal" href="GUI.html">Module: GUI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: lieGroupBasics</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: lieGroupBasics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-sinc">Function: Sinc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-cot">Function: Cot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-r3xso3matrix2rotationmatrix">Function: R3xSO3Matrix2RotationMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-r3xso3matrix2translation">Function: R3xSO3Matrix2Translation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-r3xso3matrix">Function: R3xSO3Matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-expso3">Function: ExpSO3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-exps3">Function: ExpS3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-logso3">Function: LogSO3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-texpso3">Function: TExpSO3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-texpso3inv">Function: TExpSO3Inv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-expse3">Function: ExpSE3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-logse3">Function: LogSE3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-texpse3">Function: TExpSE3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-texpse3inv">Function: TExpSE3Inv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-expr3xso3">Function: ExpR3xSO3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-texpr3xso3">Function: TExpR3xSO3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-texpr3xso3inv">Function: TExpR3xSO3Inv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionruledirectproductr3ands3">Function: CompositionRuleDirectProductR3AndS3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionrulesemidirectproductr3ands3">Function: CompositionRuleSemiDirectProductR3AndS3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionruledirectproductr3andr3rotvec">Function: CompositionRuleDirectProductR3AndR3RotVec</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionrulesemidirectproductr3andr3rotvec">Function: CompositionRuleSemiDirectProductR3AndR3RotVec</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionruledirectproductr3andr3rotxyzangles">Function: CompositionRuleDirectProductR3AndR3RotXYZAngles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionrulesemidirectproductr3andr3rotxyzangles">Function: CompositionRuleSemiDirectProductR3AndR3RotXYZAngles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionruleforeulerparameters">Function: CompositionRuleForEulerParameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionruleforrotationvectors">Function: CompositionRuleForRotationVectors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionrulerotxyzanglesrotationvector">Function: CompositionRuleRotXYZAnglesRotationVector</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
@@ -96,7 +124,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.109.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -128,7 +156,9 @@
 </div>
 </li>
 </ul>
-<p id="sec-liegroupbasics-sinc">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L34">Sinc</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+<section id="function-sinc">
+<span id="sec-liegroupbasics-sinc"></span><h2>Function: Sinc<a class="headerlink" href="#function-sinc" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L34">Sinc</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -147,7 +177,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-cot">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L46">Cot</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+</section>
+<section id="function-cot">
+<span id="sec-liegroupbasics-cot"></span><h2>Function: Cot<a class="headerlink" href="#function-cot" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L46">Cot</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -166,7 +199,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-r3xso3matrix2rotationmatrix">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L54">R3xSO3Matrix2RotationMatrix</a>(<code class="docutils literal notranslate"><span class="pre">G</span></code>)</p>
+</section>
+<section id="function-r3xso3matrix2rotationmatrix">
+<span id="sec-liegroupbasics-r3xso3matrix2rotationmatrix"></span><h2>Function: R3xSO3Matrix2RotationMatrix<a class="headerlink" href="#function-r3xso3matrix2rotationmatrix" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L54">R3xSO3Matrix2RotationMatrix</a>(<code class="docutils literal notranslate"><span class="pre">G</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -185,7 +221,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-r3xso3matrix2translation">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L62">R3xSO3Matrix2Translation</a>(<code class="docutils literal notranslate"><span class="pre">G</span></code>)</p>
+</section>
+<section id="function-r3xso3matrix2translation">
+<span id="sec-liegroupbasics-r3xso3matrix2translation"></span><h2>Function: R3xSO3Matrix2Translation<a class="headerlink" href="#function-r3xso3matrix2translation" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L62">R3xSO3Matrix2Translation</a>(<code class="docutils literal notranslate"><span class="pre">G</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -204,7 +243,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-r3xso3matrix">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L71">R3xSO3Matrix</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">R</span></code>)</p>
+</section>
+<section id="function-r3xso3matrix">
+<span id="sec-liegroupbasics-r3xso3matrix"></span><h2>Function: R3xSO3Matrix<a class="headerlink" href="#function-r3xso3matrix" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L71">R3xSO3Matrix</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">R</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -224,7 +266,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-expso3">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L93">ExpSO3</a>(<code class="docutils literal notranslate"><span class="pre">Omega</span></code>)</p>
+</section>
+<section id="function-expso3">
+<span id="sec-liegroupbasics-expso3"></span><h2>Function: ExpSO3<a class="headerlink" href="#function-expso3" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L93">ExpSO3</a>(<code class="docutils literal notranslate"><span class="pre">Omega</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -243,7 +288,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-exps3">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L105">ExpS3</a>(<code class="docutils literal notranslate"><span class="pre">Omega</span></code>)</p>
+</section>
+<section id="function-exps3">
+<span id="sec-liegroupbasics-exps3"></span><h2>Function: ExpS3<a class="headerlink" href="#function-exps3" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L105">ExpS3</a>(<code class="docutils literal notranslate"><span class="pre">Omega</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -263,7 +311,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-logso3">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L115">LogSO3</a>(<code class="docutils literal notranslate"><span class="pre">R</span></code>)</p>
+</section>
+<section id="function-logso3">
+<span id="sec-liegroupbasics-logso3"></span><h2>Function: LogSO3<a class="headerlink" href="#function-logso3" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L115">LogSO3</a>(<code class="docutils literal notranslate"><span class="pre">R</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -282,7 +333,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-texpso3">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L134">TExpSO3</a>(<code class="docutils literal notranslate"><span class="pre">Omega</span></code>)</p>
+</section>
+<section id="function-texpso3">
+<span id="sec-liegroupbasics-texpso3"></span><h2>Function: TExpSO3<a class="headerlink" href="#function-texpso3" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L134">TExpSO3</a>(<code class="docutils literal notranslate"><span class="pre">Omega</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -301,7 +355,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-texpso3inv">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L154">TExpSO3Inv</a>(<code class="docutils literal notranslate"><span class="pre">Omega</span></code>)</p>
+</section>
+<section id="function-texpso3inv">
+<span id="sec-liegroupbasics-texpso3inv"></span><h2>Function: TExpSO3Inv<a class="headerlink" href="#function-texpso3inv" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L154">TExpSO3Inv</a>(<code class="docutils literal notranslate"><span class="pre">Omega</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -321,7 +378,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-expse3">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L176">ExpSE3</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+</section>
+<section id="function-expse3">
+<span id="sec-liegroupbasics-expse3"></span><h2>Function: ExpSE3<a class="headerlink" href="#function-expse3" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L176">ExpSE3</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -340,7 +400,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-logse3">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L187">LogSE3</a>(<code class="docutils literal notranslate"><span class="pre">H</span></code>)</p>
+</section>
+<section id="function-logse3">
+<span id="sec-liegroupbasics-logse3"></span><h2>Function: LogSE3<a class="headerlink" href="#function-logse3" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L187">LogSE3</a>(<code class="docutils literal notranslate"><span class="pre">H</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -359,7 +422,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-texpse3">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L202">TExpSE3</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+</section>
+<section id="function-texpse3">
+<span id="sec-liegroupbasics-texpse3"></span><h2>Function: TExpSE3<a class="headerlink" href="#function-texpse3" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L202">TExpSE3</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -378,7 +444,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-texpse3inv">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L228">TExpSE3Inv</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+</section>
+<section id="function-texpse3inv">
+<span id="sec-liegroupbasics-texpse3inv"></span><h2>Function: TExpSE3Inv<a class="headerlink" href="#function-texpse3inv" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L228">TExpSE3Inv</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -397,7 +466,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-expr3xso3">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L252">ExpR3xSO3</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+</section>
+<section id="function-expr3xso3">
+<span id="sec-liegroupbasics-expr3xso3"></span><h2>Function: ExpR3xSO3<a class="headerlink" href="#function-expr3xso3" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L252">ExpR3xSO3</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -416,7 +488,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-texpr3xso3">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L262">TExpR3xSO3</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+</section>
+<section id="function-texpr3xso3">
+<span id="sec-liegroupbasics-texpr3xso3"></span><h2>Function: TExpR3xSO3<a class="headerlink" href="#function-texpr3xso3" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L262">TExpR3xSO3</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -435,7 +510,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-texpr3xso3inv">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L271">TExpR3xSO3Inv</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
+</section>
+<section id="function-texpr3xso3inv">
+<span id="sec-liegroupbasics-texpr3xso3inv"></span><h2>Function: TExpR3xSO3Inv<a class="headerlink" href="#function-texpr3xso3inv" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L271">TExpR3xSO3Inv</a>(<code class="docutils literal notranslate"><span class="pre">x</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -454,7 +532,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-compositionruledirectproductr3ands3">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L294">CompositionRuleDirectProductR3AndS3</a>(<code class="docutils literal notranslate"><span class="pre">q0</span></code>, <code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>)</p>
+</section>
+<section id="function-compositionruledirectproductr3ands3">
+<span id="sec-liegroupbasics-compositionruledirectproductr3ands3"></span><h2>Function: CompositionRuleDirectProductR3AndS3<a class="headerlink" href="#function-compositionruledirectproductr3ands3" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L294">CompositionRuleDirectProductR3AndS3</a>(<code class="docutils literal notranslate"><span class="pre">q0</span></code>, <code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -474,7 +555,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-compositionrulesemidirectproductr3ands3">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L316">CompositionRuleSemiDirectProductR3AndS3</a>(<code class="docutils literal notranslate"><span class="pre">q0</span></code>, <code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>)</p>
+</section>
+<section id="function-compositionrulesemidirectproductr3ands3">
+<span id="sec-liegroupbasics-compositionrulesemidirectproductr3ands3"></span><h2>Function: CompositionRuleSemiDirectProductR3AndS3<a class="headerlink" href="#function-compositionrulesemidirectproductr3ands3" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L316">CompositionRuleSemiDirectProductR3AndS3</a>(<code class="docutils literal notranslate"><span class="pre">q0</span></code>, <code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -494,7 +578,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-compositionruledirectproductr3andr3rotvec">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L341">CompositionRuleDirectProductR3AndR3RotVec</a>(<code class="docutils literal notranslate"><span class="pre">q0</span></code>, <code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>)</p>
+</section>
+<section id="function-compositionruledirectproductr3andr3rotvec">
+<span id="sec-liegroupbasics-compositionruledirectproductr3andr3rotvec"></span><h2>Function: CompositionRuleDirectProductR3AndR3RotVec<a class="headerlink" href="#function-compositionruledirectproductr3andr3rotvec" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L341">CompositionRuleDirectProductR3AndR3RotVec</a>(<code class="docutils literal notranslate"><span class="pre">q0</span></code>, <code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -516,7 +603,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-compositionrulesemidirectproductr3andr3rotvec">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L365">CompositionRuleSemiDirectProductR3AndR3RotVec</a>(<code class="docutils literal notranslate"><span class="pre">q0</span></code>, <code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>)</p>
+</section>
+<section id="function-compositionrulesemidirectproductr3andr3rotvec">
+<span id="sec-liegroupbasics-compositionrulesemidirectproductr3andr3rotvec"></span><h2>Function: CompositionRuleSemiDirectProductR3AndR3RotVec<a class="headerlink" href="#function-compositionrulesemidirectproductr3andr3rotvec" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L365">CompositionRuleSemiDirectProductR3AndR3RotVec</a>(<code class="docutils literal notranslate"><span class="pre">q0</span></code>, <code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -538,7 +628,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-compositionruledirectproductr3andr3rotxyzangles">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L390">CompositionRuleDirectProductR3AndR3RotXYZAngles</a>(<code class="docutils literal notranslate"><span class="pre">q0</span></code>, <code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>)</p>
+</section>
+<section id="function-compositionruledirectproductr3andr3rotxyzangles">
+<span id="sec-liegroupbasics-compositionruledirectproductr3andr3rotxyzangles"></span><h2>Function: CompositionRuleDirectProductR3AndR3RotXYZAngles<a class="headerlink" href="#function-compositionruledirectproductr3andr3rotxyzangles" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L390">CompositionRuleDirectProductR3AndR3RotXYZAngles</a>(<code class="docutils literal notranslate"><span class="pre">q0</span></code>, <code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -560,7 +653,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-compositionrulesemidirectproductr3andr3rotxyzangles">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L414">CompositionRuleSemiDirectProductR3AndR3RotXYZAngles</a>(<code class="docutils literal notranslate"><span class="pre">q0</span></code>, <code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>)</p>
+</section>
+<section id="function-compositionrulesemidirectproductr3andr3rotxyzangles">
+<span id="sec-liegroupbasics-compositionrulesemidirectproductr3andr3rotxyzangles"></span><h2>Function: CompositionRuleSemiDirectProductR3AndR3RotXYZAngles<a class="headerlink" href="#function-compositionrulesemidirectproductr3andr3rotxyzangles" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L414">CompositionRuleSemiDirectProductR3AndR3RotXYZAngles</a>(<code class="docutils literal notranslate"><span class="pre">q0</span></code>, <code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -582,7 +678,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-compositionruleforeulerparameters">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L438">CompositionRuleForEulerParameters</a>(<code class="docutils literal notranslate"><span class="pre">q</span></code>, <code class="docutils literal notranslate"><span class="pre">p</span></code>)</p>
+</section>
+<section id="function-compositionruleforeulerparameters">
+<span id="sec-liegroupbasics-compositionruleforeulerparameters"></span><h2>Function: CompositionRuleForEulerParameters<a class="headerlink" href="#function-compositionruleforeulerparameters" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L438">CompositionRuleForEulerParameters</a>(<code class="docutils literal notranslate"><span class="pre">q</span></code>, <code class="docutils literal notranslate"><span class="pre">p</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -603,7 +702,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-compositionruleforrotationvectors">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L453">CompositionRuleForRotationVectors</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">Omega</span></code>)</p>
+</section>
+<section id="function-compositionruleforrotationvectors">
+<span id="sec-liegroupbasics-compositionruleforrotationvectors"></span><h2>Function: CompositionRuleForRotationVectors<a class="headerlink" href="#function-compositionruleforrotationvectors" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L453">CompositionRuleForRotationVectors</a>(<code class="docutils literal notranslate"><span class="pre">v0</span></code>, <code class="docutils literal notranslate"><span class="pre">Omega</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -623,7 +725,10 @@
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-liegroupbasics-compositionrulerotxyzanglesrotationvector">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L475">CompositionRuleRotXYZAnglesRotationVector</a>(<code class="docutils literal notranslate"><span class="pre">alpha0</span></code>, <code class="docutils literal notranslate"><span class="pre">Omega</span></code>)</p>
+</section>
+<section id="function-compositionrulerotxyzanglesrotationvector">
+<span id="sec-liegroupbasics-compositionrulerotxyzanglesrotationvector"></span><h2>Function: CompositionRuleRotXYZAnglesRotationVector<a class="headerlink" href="#function-compositionrulerotxyzanglesrotationvector" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/lieGroupBasics.py#L475">CompositionRuleRotXYZAnglesRotationVector</a>(<code class="docutils literal notranslate"><span class="pre">alpha0</span></code>, <code class="docutils literal notranslate"><span class="pre">Omega</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -642,6 +747,7 @@
 </div>
 </li>
 </ul>
+</section>
 </section>
 
 

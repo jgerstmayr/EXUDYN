@@ -8,7 +8,6 @@ The python source code of the first tutorial can be found in the file:
 This tutorial will set up a mass point and a spring damper, dynamically compute the solution and evaluate the reference solution.
 
 
-
 We import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:
 
 .. code-block:: python

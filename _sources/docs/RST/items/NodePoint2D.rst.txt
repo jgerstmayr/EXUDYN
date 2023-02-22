@@ -39,6 +39,12 @@ The item VNodePoint2D has the following parameters:
   | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
 
 
+----------
+
+.. _description-nodepoint2d:
+
+DESCRIPTION of NodePoint2D
+--------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -58,8 +64,17 @@ The item VNodePoint2D has the following parameters:
   | acceleration coordinates vector of node
 
 
+\paragraphDetailed information:
+The node provides \ :math:`n_c=2`\  displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint2D).
+Coordinates are identical to the nodal displacements, except for the third coordinate \ :math:`u_2`\ , which is zero, because \ :math:`q_2`\  does not exist. 
+
+Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation. 
 
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+\ **Example**\  for NodePoint2D: see ObjectMassPoint2D, Section :ref:`sec-item-objectmasspoint2d`\ 
+
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

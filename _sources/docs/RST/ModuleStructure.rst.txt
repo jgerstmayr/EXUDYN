@@ -98,7 +98,6 @@ In this documentation, we will use the term \ **item**\  to identify nodes, obje
 
 \ **Indexes: arrays and vectors starting with 0:**\  
 
-
 As known from Python, all \ **indexes**\  of arrays, vectors, matrices, ... are starting with 0. This means that the first component of the vector \ ``v=[1,2,3]``\  is accessed with \ ``v[0]``\  in Python (and also in the C++ part of Exudyn ). The range is usually defined as \ ``range(0,3)``\ , in which '3' marks the index after the last valid component of an array or vector.
 
 \ **Dimensionality of objects and vectors:**\  \ 

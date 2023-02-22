@@ -84,7 +84,6 @@ A way to install the Python package Exudyn is to use the so-called 'wheels' (fil
 Wheels can be downloaded directly from `https://pypi.org/project/exudyn/\#files <https://pypi.org/project/exudyn/\#files>`_, for many Python versions and architectures.
 
 
-
 For UBUNTU18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):
 
 +  \ ``Python 3.6, 64bit``\ : pip3 install dist\exudyn-1.0.20-cp36-cp36-linux_x86_64.whl
@@ -97,7 +96,6 @@ NOTE that your installation may have environments with different Python versions
 If the wheel installation does not work on UBUNTU, it is highly recommended to build Exudyn for your specific system as given in Section :ref:`sec-install-installinstructions-buildubuntu`\ .
 
 \ **Windows**\ :
-
 
 First, open an Anaconda prompt:
 
@@ -179,7 +177,6 @@ Alternatively, we tested on:
 
 
 \ **Compile from source**\ :
-
 
 If you would like to compile from source, just use a bash terminal on your Mac, and do the following steps inside the \ ``main``\  directory of your repository and type
 
@@ -325,7 +322,6 @@ How to install Exudyn and use the C++ source code (advanced)?
 
 Exudyn is still under intensive development of core modules.
 There are several ways of using the code, but you \ **cannot**\  install Exudyn as compared to other executable programs and apps.
-
 
 
 In order to make full usage of the C++ code and extending it, you can use:

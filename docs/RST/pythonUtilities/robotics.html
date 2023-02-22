@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: robotics &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
+  <title>Module: robotics &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.105.dev1
+            Exudyn1.5.109.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -71,13 +71,44 @@
 <li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#class-vrobotlink-in-module-robotics">CLASS VRobotLink (in module robotics)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#class-robotlink-in-module-robotics">CLASS RobotLink (in module robotics)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#class-vrobottool-in-module-robotics">CLASS VRobotTool (in module robotics)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#class-robottool-in-module-robotics">CLASS RobotTool (in module robotics)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#class-vrobotbase-in-module-robotics">CLASS VRobotBase (in module robotics)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#class-robotbase-in-module-robotics">CLASS RobotBase (in module robotics)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#class-robot-in-module-robotics">CLASS Robot (in module robotics)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-stddh2ht">Function: StdDH2HT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-moddhkk2ht">Function: ModDHKK2HT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-constantaccelerationparameters">Function: ConstantAccelerationParameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-constantaccelerationprofile">Function: ConstantAccelerationProfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-motioninterpolator">Function: MotionInterpolator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-serialrobot2mbs">Function: SerialRobot2MBS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computejointht">Function: ComputeJointHT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computecomht">Function: ComputeCOMHT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computestatictorques">Function: ComputeStaticTorques</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-jacobian">Function: Jacobian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-roboticscore-robotlink-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-setpdcontrol">Class function: SetPDcontrol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-haspdcontrol">Class function: HasPDcontrol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-getpdcontrol">Class function: GetPDcontrol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-roboticscore-vrobottool-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-roboticscore-robottool-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-roboticscore-vrobotbase-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-roboticscore-robotbase-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-roboticscore-robot-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-addlink">Class function: AddLink</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-isserialrobot">Class function: IsSerialRobot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-getlink">Class function: GetLink</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-hasparent">Class function: HasParent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-getparentindex">Class function: GetParentIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-numberoflinks">Class function: NumberOfLinks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-getbaseht">Class function: GetBaseHT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-gettoolht">Class function: GetToolHT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-linkht">Class function: LinkHT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-jointht">Class function: JointHT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-comht">Class function: COMHT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-statictorques">Class function: StaticTorques</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-jacobian">Class function: Jacobian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-createkinematictree">Class function: CreateKinematicTree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-createredundantcoordinatembs">Class function: CreateRedundantCoordinateMBS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-getkinematictree66">Class function: GetKinematicTree66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-getlinkgraphicsdata">Class function: GetLinkGraphicsData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-buildfromdictionary">Class function: BuildFromDictionary</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
@@ -105,7 +136,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.109.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -135,7 +166,9 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <li><p>Date:      2020-04-14</p></li>
 <li><p>Example:      New robot model uses the class Robot with class RobotLink; the old dictionary structure is defined in the example in ComputeJointHT for the definition of the ‘robot’ dictionary.</p></li>
 </ul>
-<p id="sec-roboticscore-stddh2ht">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1026">StdDH2HT</a>(<code class="docutils literal notranslate"><span class="pre">DHparameters</span></code>)</p>
+<section id="function-stddh2ht">
+<span id="sec-roboticscore-stddh2ht"></span><h2>Function: StdDH2HT<a class="headerlink" href="#function-stddh2ht" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1026">StdDH2HT</a>(<code class="docutils literal notranslate"><span class="pre">DHparameters</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -148,7 +181,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py">serialRobotKinematicTreeDigging.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py">serialRobotTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-roboticscore-moddhkk2ht">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1048">ModDHKK2HT</a>(<code class="docutils literal notranslate"><span class="pre">DHparameters</span></code>)</p>
+</section>
+<section id="function-moddhkk2ht">
+<span id="sec-roboticscore-moddhkk2ht"></span><h2>Function: ModDHKK2HT<a class="headerlink" href="#function-moddhkk2ht" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1048">ModDHKK2HT</a>(<code class="docutils literal notranslate"><span class="pre">DHparameters</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -161,7 +197,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-roboticscore-constantaccelerationparameters">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1062">ConstantAccelerationParameters</a>(<code class="docutils literal notranslate"><span class="pre">duration</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code>)</p>
+</section>
+<section id="function-constantaccelerationparameters">
+<span id="sec-roboticscore-constantaccelerationparameters"></span><h2>Function: ConstantAccelerationParameters<a class="headerlink" href="#function-constantaccelerationparameters" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1062">ConstantAccelerationParameters</a>(<code class="docutils literal notranslate"><span class="pre">duration</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -185,7 +224,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-constantaccelerationprofile">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1076">ConstantAccelerationProfile</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">tStart</span></code>, <code class="docutils literal notranslate"><span class="pre">sStart</span></code>, <code class="docutils literal notranslate"><span class="pre">duration</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code>)</p>
+</section>
+<section id="function-constantaccelerationprofile">
+<span id="sec-roboticscore-constantaccelerationprofile"></span><h2>Function: ConstantAccelerationProfile<a class="headerlink" href="#function-constantaccelerationprofile" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1076">ConstantAccelerationProfile</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">tStart</span></code>, <code class="docutils literal notranslate"><span class="pre">sStart</span></code>, <code class="docutils literal notranslate"><span class="pre">duration</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -213,7 +255,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-motioninterpolator">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1119">MotionInterpolator</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">robotTrajectory</span></code>, <code class="docutils literal notranslate"><span class="pre">joint</span></code>)</p>
+</section>
+<section id="function-motioninterpolator">
+<span id="sec-roboticscore-motioninterpolator"></span><h2>Function: MotionInterpolator<a class="headerlink" href="#function-motioninterpolator" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1119">MotionInterpolator</a>(<code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">robotTrajectory</span></code>, <code class="docutils literal notranslate"><span class="pre">joint</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -260,7 +305,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTestDH2.py">serialRobotTestDH2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py">serialRobotTSD.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py">serialRobotTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-roboticscore-serialrobot2mbs">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1167">SerialRobot2MBS</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">jointLoadUserFunctionList</span></code>, <code class="docutils literal notranslate"><span class="pre">baseMarker</span></code>, <code class="docutils literal notranslate"><span class="pre">*args</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+</section>
+<section id="function-serialrobot2mbs">
+<span id="sec-roboticscore-serialrobot2mbs"></span><h2>Function: SerialRobot2MBS<a class="headerlink" href="#function-serialrobot2mbs" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1167">SerialRobot2MBS</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">jointLoadUserFunctionList</span></code>, <code class="docutils literal notranslate"><span class="pre">baseMarker</span></code>, <code class="docutils literal notranslate"><span class="pre">*args</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -289,7 +337,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-computejointht">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1374">ComputeJointHT</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code>)</p>
+</section>
+<section id="function-computejointht">
+<span id="sec-roboticscore-computejointht"></span><h2>Function: ComputeJointHT<a class="headerlink" href="#function-computejointht" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1374">ComputeJointHT</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">configuration</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -320,7 +371,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </pre></div>
 </div>
 <hr class="docutils" />
-<p id="sec-roboticscore-computecomht">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1402">ComputeCOMHT</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+</section>
+<section id="function-computecomht">
+<span id="sec-roboticscore-computecomht"></span><h2>Function: ComputeCOMHT<a class="headerlink" href="#function-computecomht" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1402">ComputeCOMHT</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -329,7 +383,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-computestatictorques">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1419">ComputeStaticTorques</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+</section>
+<section id="function-computestatictorques">
+<span id="sec-roboticscore-computestatictorques"></span><h2>Function: ComputeStaticTorques<a class="headerlink" href="#function-computestatictorques" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1419">ComputeStaticTorques</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -338,7 +395,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-jacobian">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1448">Jacobian</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">toolPosition</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">=</span> <span class="pre">'all'</span></code>)</p>
+</section>
+<section id="function-jacobian">
+<span id="sec-roboticscore-jacobian"></span><h2>Function: Jacobian<a class="headerlink" href="#function-jacobian" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L1448">Jacobian</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">toolPosition</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">=</span> <span class="pre">'all'</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -351,12 +411,16 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solverFunctionsTestEigenvalues.py">solverFunctionsTestEigenvalues.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py">manualExplicitIntegrator.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/scissorPrismaticRevolute2D.py">scissorPrismaticRevolute2D.py</a> (TM)</p>
 </div></blockquote>
 <section id="class-vrobotlink-in-module-robotics">
-<h2>CLASS VRobotLink (in module robotics)<a class="headerlink" href="#class-vrobotlink-in-module-robotics" title="Permalink to this heading"></a></h2>
+<h3>CLASS VRobotLink (in module robotics)<a class="headerlink" href="#class-vrobotlink-in-module-robotics" title="Permalink to this heading"></a></h3>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to define visualization of RobotLink</p>
 </div></blockquote>
-<p id="sec-roboticscore-vrobotlink-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L94">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">jointRadius</span> <span class="pre">=</span> <span class="pre">0.06</span></code>, <code class="docutils literal notranslate"><span class="pre">jointWidth</span> <span class="pre">=</span> <span class="pre">0.12</span></code>, <code class="docutils literal notranslate"><span class="pre">linkWidth</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">showMBSjoint</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showCOM</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">linkColor</span> <span class="pre">=</span> <span class="pre">[0.4,0.4,0.4,1]</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsData</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+</section>
+</section>
+<section id="class-function-init">
+<span id="sec-roboticscore-vrobotlink-init"></span><h2>Class function: __init__<a class="headerlink" href="#class-function-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L94">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">jointRadius</span> <span class="pre">=</span> <span class="pre">0.06</span></code>, <code class="docutils literal notranslate"><span class="pre">jointWidth</span> <span class="pre">=</span> <span class="pre">0.12</span></code>, <code class="docutils literal notranslate"><span class="pre">linkWidth</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">showMBSjoint</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">showCOM</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">linkColor</span> <span class="pre">=</span> <span class="pre">[0.4,0.4,0.4,1]</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsData</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -379,14 +443,17 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py">serialRobotKinematicTreeDigging.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
 </div></blockquote>
-</section>
 <section id="class-robotlink-in-module-robotics">
-<h2>CLASS RobotLink (in module robotics)<a class="headerlink" href="#class-robotlink-in-module-robotics" title="Permalink to this heading"></a></h2>
+<h3>CLASS RobotLink (in module robotics)<a class="headerlink" href="#class-robotlink-in-module-robotics" title="Permalink to this heading"></a></h3>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to define one link of a robot</p>
 </div></blockquote>
-<p id="sec-roboticscore-robotlink-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L134">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span></code>, <code class="docutils literal notranslate"><span class="pre">COM</span></code>, <code class="docutils literal notranslate"><span class="pre">inertia</span></code>, <code class="docutils literal notranslate"><span class="pre">localHT</span> <span class="pre">=</span> <span class="pre">erb.HT0()</span></code>, <code class="docutils literal notranslate"><span class="pre">jointType</span> <span class="pre">=</span> <span class="pre">'Rz'</span></code>, <code class="docutils literal notranslate"><span class="pre">parent</span> <span class="pre">=</span> <span class="pre">-2</span></code>, <code class="docutils literal notranslate"><span class="pre">preHT</span> <span class="pre">=</span> <span class="pre">erb.HT0()</span></code>, <code class="docutils literal notranslate"><span class="pre">PDcontrol</span> <span class="pre">=</span> <span class="pre">(None,None)</span></code>, <code class="docutils literal notranslate"><span class="pre">visualization</span> <span class="pre">=</span> <span class="pre">VRobotLink()</span></code>)</p>
+</section>
+</section>
+<section id="sec-roboticscore-robotlink-init">
+<span id="id12"></span><h2>Class function: __init__<a class="headerlink" href="#sec-roboticscore-robotlink-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L134">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mass</span></code>, <code class="docutils literal notranslate"><span class="pre">COM</span></code>, <code class="docutils literal notranslate"><span class="pre">inertia</span></code>, <code class="docutils literal notranslate"><span class="pre">localHT</span> <span class="pre">=</span> <span class="pre">erb.HT0()</span></code>, <code class="docutils literal notranslate"><span class="pre">jointType</span> <span class="pre">=</span> <span class="pre">'Rz'</span></code>, <code class="docutils literal notranslate"><span class="pre">parent</span> <span class="pre">=</span> <span class="pre">-2</span></code>, <code class="docutils literal notranslate"><span class="pre">preHT</span> <span class="pre">=</span> <span class="pre">erb.HT0()</span></code>, <code class="docutils literal notranslate"><span class="pre">PDcontrol</span> <span class="pre">=</span> <span class="pre">(None,None)</span></code>, <code class="docutils literal notranslate"><span class="pre">visualization</span> <span class="pre">=</span> <span class="pre">VRobotLink()</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -408,7 +475,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robotlink-setpdcontrol">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L147">SetPDcontrol</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">Pvalue</span></code>, <code class="docutils literal notranslate"><span class="pre">Dvalue</span></code>)</p>
+</section>
+<section id="class-function-setpdcontrol">
+<span id="sec-roboticscore-robotlink-setpdcontrol"></span><h2>Class function: SetPDcontrol<a class="headerlink" href="#class-function-setpdcontrol" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L147">SetPDcontrol</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">Pvalue</span></code>, <code class="docutils literal notranslate"><span class="pre">Dvalue</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -417,7 +487,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robotlink-haspdcontrol">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L151">HasPDcontrol</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-haspdcontrol">
+<span id="sec-roboticscore-robotlink-haspdcontrol"></span><h2>Class function: HasPDcontrol<a class="headerlink" href="#class-function-haspdcontrol" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L151">HasPDcontrol</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -426,7 +499,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robotlink-getpdcontrol">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L155">GetPDcontrol</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-getpdcontrol">
+<span id="sec-roboticscore-robotlink-getpdcontrol"></span><h2>Class function: GetPDcontrol<a class="headerlink" href="#class-function-getpdcontrol" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L155">GetPDcontrol</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -438,14 +514,17 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
 </div></blockquote>
-</section>
 <section id="class-vrobottool-in-module-robotics">
-<h2>CLASS VRobotTool (in module robotics)<a class="headerlink" href="#class-vrobottool-in-module-robotics" title="Permalink to this heading"></a></h2>
+<h3>CLASS VRobotTool (in module robotics)<a class="headerlink" href="#class-vrobottool-in-module-robotics" title="Permalink to this heading"></a></h3>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to define visualization of RobotTool</p>
 </div></blockquote>
-<p id="sec-roboticscore-vrobottool-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L179">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsData</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+</section>
+</section>
+<section id="sec-roboticscore-vrobottool-init">
+<span id="id20"></span><h2>Class function: __init__<a class="headerlink" href="#sec-roboticscore-vrobottool-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L179">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsData</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -457,14 +536,17 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
 </div></blockquote>
-</section>
 <section id="class-robottool-in-module-robotics">
-<h2>CLASS RobotTool (in module robotics)<a class="headerlink" href="#class-robottool-in-module-robotics" title="Permalink to this heading"></a></h2>
+<h3>CLASS RobotTool (in module robotics)<a class="headerlink" href="#class-robottool-in-module-robotics" title="Permalink to this heading"></a></h3>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>define tool of robot: containing graphics and HT (may add features in future)</p>
 </div></blockquote>
-<p id="sec-roboticscore-robottool-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L188">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span> <span class="pre">=</span> <span class="pre">erb.HT0()</span></code>, <code class="docutils literal notranslate"><span class="pre">visualization</span> <span class="pre">=</span> <span class="pre">VRobotTool()</span></code>)</p>
+</section>
+</section>
+<section id="sec-roboticscore-robottool-init">
+<span id="id29"></span><h2>Class function: __init__<a class="headerlink" href="#sec-roboticscore-robottool-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L188">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span> <span class="pre">=</span> <span class="pre">erb.HT0()</span></code>, <code class="docutils literal notranslate"><span class="pre">visualization</span> <span class="pre">=</span> <span class="pre">VRobotTool()</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -482,14 +564,17 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
 </div></blockquote>
-</section>
 <section id="class-vrobotbase-in-module-robotics">
-<h2>CLASS VRobotBase (in module robotics)<a class="headerlink" href="#class-vrobotbase-in-module-robotics" title="Permalink to this heading"></a></h2>
+<h3>CLASS VRobotBase (in module robotics)<a class="headerlink" href="#class-vrobotbase-in-module-robotics" title="Permalink to this heading"></a></h3>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to define visualization of RobotBase</p>
 </div></blockquote>
-<p id="sec-roboticscore-vrobotbase-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L202">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsData</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+</section>
+</section>
+<section id="sec-roboticscore-vrobotbase-init">
+<span id="id38"></span><h2>Class function: __init__<a class="headerlink" href="#sec-roboticscore-vrobotbase-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L202">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">graphicsData</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -501,14 +586,17 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
 </div></blockquote>
-</section>
 <section id="class-robotbase-in-module-robotics">
-<h2>CLASS RobotBase (in module robotics)<a class="headerlink" href="#class-robotbase-in-module-robotics" title="Permalink to this heading"></a></h2>
+<h3>CLASS RobotBase (in module robotics)<a class="headerlink" href="#class-robotbase-in-module-robotics" title="Permalink to this heading"></a></h3>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>define base of robot: containing graphics and HT (may add features in future)</p>
 </div></blockquote>
-<p id="sec-roboticscore-robotbase-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L212">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span> <span class="pre">=</span> <span class="pre">erb.HT0()</span></code>, <code class="docutils literal notranslate"><span class="pre">visualization</span> <span class="pre">=</span> <span class="pre">VRobotBase()</span></code>)</p>
+</section>
+</section>
+<section id="sec-roboticscore-robotbase-init">
+<span id="id47"></span><h2>Class function: __init__<a class="headerlink" href="#sec-roboticscore-robotbase-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L212">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span> <span class="pre">=</span> <span class="pre">erb.HT0()</span></code>, <code class="docutils literal notranslate"><span class="pre">visualization</span> <span class="pre">=</span> <span class="pre">VRobotBase()</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -526,14 +614,17 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreePendulum.py">kinematicTreePendulum.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py">serialRobotKinematicTree.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeAndMBStest.py">kinematicTreeAndMBStest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeConstraintTest.py">kinematicTreeConstraintTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py">movingGroundRobotTest.py</a> (TM)</p>
 </div></blockquote>
-</section>
 <section id="class-robot-in-module-robotics">
-<h2>CLASS Robot (in module robotics)<a class="headerlink" href="#class-robot-in-module-robotics" title="Permalink to this heading"></a></h2>
+<h3>CLASS Robot (in module robotics)<a class="headerlink" href="#class-robot-in-module-robotics" title="Permalink to this heading"></a></h3>
 <p><strong>class description</strong>:</p>
 <blockquote>
 <div><p>class to define a robot</p>
 </div></blockquote>
-<p id="sec-roboticscore-robot-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L237">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,-9.81]</span></code>, <code class="docutils literal notranslate"><span class="pre">base</span> <span class="pre">=</span> <span class="pre">RobotBase()</span></code>, <code class="docutils literal notranslate"><span class="pre">tool</span> <span class="pre">=</span> <span class="pre">RobotTool()</span></code>, <code class="docutils literal notranslate"><span class="pre">referenceConfiguration</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+</section>
+</section>
+<section id="sec-roboticscore-robot-init">
+<span id="id56"></span><h2>Class function: __init__<a class="headerlink" href="#sec-roboticscore-robot-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L237">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,-9.81]</span></code>, <code class="docutils literal notranslate"><span class="pre">base</span> <span class="pre">=</span> <span class="pre">RobotBase()</span></code>, <code class="docutils literal notranslate"><span class="pre">tool</span> <span class="pre">=</span> <span class="pre">RobotTool()</span></code>, <code class="docutils literal notranslate"><span class="pre">referenceConfiguration</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -550,7 +641,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-addlink">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L263">AddLink</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">robotLink</span></code>)</p>
+</section>
+<section id="class-function-addlink">
+<span id="sec-roboticscore-robot-addlink"></span><h2>Class function: AddLink<a class="headerlink" href="#class-function-addlink" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L263">AddLink</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">robotLink</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -559,7 +653,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-isserialrobot">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L284">IsSerialRobot</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-isserialrobot">
+<span id="sec-roboticscore-robot-isserialrobot"></span><h2>Class function: IsSerialRobot<a class="headerlink" href="#class-function-isserialrobot" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L284">IsSerialRobot</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -568,7 +665,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-getlink">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L288">GetLink</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>)</p>
+</section>
+<section id="class-function-getlink">
+<span id="sec-roboticscore-robot-getlink"></span><h2>Class function: GetLink<a class="headerlink" href="#class-function-getlink" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L288">GetLink</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -577,7 +677,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-hasparent">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L292">HasParent</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>)</p>
+</section>
+<section id="class-function-hasparent">
+<span id="sec-roboticscore-robot-hasparent"></span><h2>Class function: HasParent<a class="headerlink" href="#class-function-hasparent" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L292">HasParent</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -586,7 +689,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-getparentindex">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L296">GetParentIndex</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>)</p>
+</section>
+<section id="class-function-getparentindex">
+<span id="sec-roboticscore-robot-getparentindex"></span><h2>Class function: GetParentIndex<a class="headerlink" href="#class-function-getparentindex" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L296">GetParentIndex</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -595,7 +701,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-numberoflinks">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L301">NumberOfLinks</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-numberoflinks">
+<span id="sec-roboticscore-robot-numberoflinks"></span><h2>Class function: NumberOfLinks<a class="headerlink" href="#class-function-numberoflinks" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L301">NumberOfLinks</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -604,7 +713,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-getbaseht">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L305">GetBaseHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-getbaseht">
+<span id="sec-roboticscore-robot-getbaseht"></span><h2>Class function: GetBaseHT<a class="headerlink" href="#class-function-getbaseht" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L305">GetBaseHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -613,7 +725,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-gettoolht">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L309">GetToolHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-gettoolht">
+<span id="sec-roboticscore-robot-gettoolht"></span><h2>Class function: GetToolHT<a class="headerlink" href="#class-function-gettoolht" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L309">GetToolHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -622,7 +737,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-linkht">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L313">LinkHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>)</p>
+</section>
+<section id="class-function-linkht">
+<span id="sec-roboticscore-robot-linkht"></span><h2>Class function: LinkHT<a class="headerlink" href="#class-function-linkht" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L313">LinkHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -631,7 +749,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-jointht">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L342">JointHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>)</p>
+</section>
+<section id="class-function-jointht">
+<span id="sec-roboticscore-robot-jointht"></span><h2>Class function: JointHT<a class="headerlink" href="#class-function-jointht" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L342">JointHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">q</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -640,7 +761,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-comht">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L369">COMHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+</section>
+<section id="class-function-comht">
+<span id="sec-roboticscore-robot-comht"></span><h2>Class function: COMHT<a class="headerlink" href="#class-function-comht" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L369">COMHT</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -649,7 +773,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-statictorques">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L378">StaticTorques</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
+</section>
+<section id="class-function-statictorques">
+<span id="sec-roboticscore-robot-statictorques"></span><h2>Class function: StaticTorques<a class="headerlink" href="#class-function-statictorques" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L378">StaticTorques</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -658,7 +785,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-jacobian">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L401">Jacobian</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">toolPosition</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">=</span> <span class="pre">'all'</span></code>, <code class="docutils literal notranslate"><span class="pre">linkIndex</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+</section>
+<section id="class-function-jacobian">
+<span id="sec-roboticscore-robot-jacobian"></span><h2>Class function: Jacobian<a class="headerlink" href="#class-function-jacobian" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L401">Jacobian</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">HT</span></code>, <code class="docutils literal notranslate"><span class="pre">toolPosition</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">=</span> <span class="pre">'all'</span></code>, <code class="docutils literal notranslate"><span class="pre">linkIndex</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -680,7 +810,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-createkinematictree">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L475">CreateKinematicTree</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">forceUserFunction</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
+</section>
+<section id="class-function-createkinematictree">
+<span id="sec-roboticscore-robot-createkinematictree"></span><h2>Class function: CreateKinematicTree<a class="headerlink" href="#class-function-createkinematictree" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L475">CreateKinematicTree</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">forceUserFunction</span> <span class="pre">=</span> <span class="pre">0</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -706,7 +839,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-createredundantcoordinatembs">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L656">CreateRedundantCoordinateMBS</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">baseMarker</span></code>, <code class="docutils literal notranslate"><span class="pre">jointSpringDamperUserFunctionList</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">jointLoadUserFunctionList</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">createJointTorqueLoads</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMarkerBase</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">rigidBodyNodeType</span> <span class="pre">=</span> <span class="pre">exudyn.NodeType.RotationEulerParameters</span></code>)</p>
+</section>
+<section id="class-function-createredundantcoordinatembs">
+<span id="sec-roboticscore-robot-createredundantcoordinatembs"></span><h2>Class function: CreateRedundantCoordinateMBS<a class="headerlink" href="#class-function-createredundantcoordinatembs" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L656">CreateRedundantCoordinateMBS</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">baseMarker</span></code>, <code class="docutils literal notranslate"><span class="pre">jointSpringDamperUserFunctionList</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">jointLoadUserFunctionList</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">createJointTorqueLoads</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMarkerBase</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">rigidBodyNodeType</span> <span class="pre">=</span> <span class="pre">exudyn.NodeType.RotationEulerParameters</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -735,7 +871,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-getkinematictree66">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L900">GetKinematicTree66</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-getkinematictree66">
+<span id="sec-roboticscore-robot-getkinematictree66"></span><h2>Class function: GetKinematicTree66<a class="headerlink" href="#class-function-getkinematictree66" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L900">GetKinematicTree66</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -744,7 +883,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-getlinkgraphicsdata">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L930">GetLinkGraphicsData</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">p0</span></code>, <code class="docutils literal notranslate"><span class="pre">p1</span></code>, <code class="docutils literal notranslate"><span class="pre">axis0</span></code>, <code class="docutils literal notranslate"><span class="pre">axis1</span></code>, <code class="docutils literal notranslate"><span class="pre">linkVisualization</span></code>)</p>
+</section>
+<section id="class-function-getlinkgraphicsdata">
+<span id="sec-roboticscore-robot-getlinkgraphicsdata"></span><h2>Class function: GetLinkGraphicsData<a class="headerlink" href="#class-function-getlinkgraphicsdata" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L930">GetLinkGraphicsData</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">p0</span></code>, <code class="docutils literal notranslate"><span class="pre">p1</span></code>, <code class="docutils literal notranslate"><span class="pre">axis0</span></code>, <code class="docutils literal notranslate"><span class="pre">axis1</span></code>, <code class="docutils literal notranslate"><span class="pre">linkVisualization</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -753,7 +895,10 @@ import this library e.g. with import exudyn.robotics as robotics</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-roboticscore-robot-buildfromdictionary">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L974">BuildFromDictionary</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">robotDict</span></code>)</p>
+</section>
+<section id="class-function-buildfromdictionary">
+<span id="sec-roboticscore-robot-buildfromdictionary"></span><h2>Class function: BuildFromDictionary<a class="headerlink" href="#class-function-buildfromdictionary" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/roboticsCore.py#L974">BuildFromDictionary</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">robotDict</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>

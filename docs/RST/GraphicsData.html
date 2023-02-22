@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GraphicsData &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
+  <title>GraphicsData &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.5.105.dev1
+            Exudyn1.5.109.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -86,7 +86,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.5.105.dev1</a>
+          <a href="../../index.html">Exudyn1.5.109.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -107,7 +107,7 @@
              
   <section id="graphicsdata">
 <span id="sec-graphicsdata"></span><h1>GraphicsData<a class="headerlink" href="#graphicsdata" title="Permalink to this heading"></a></h1>
-<p>All graphics objects are defined by a <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> structure. %, see Section <a class="reference internal" href="#sec-graphicsdata"><span class="std std-ref">GraphicsData</span></a>.
+<p>All graphics objects are defined by a <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> structure.
 Note that currently the visualization is based on a very simple and ancient OpenGL implementation, as there is currently no simple platform independent alternative. However, most of the heavy load triangle-based operations are implemented in C++ and are realized by very efficient OpenGL commands. However, note that the number of triangles to represent the object should be kept in a feasible range (&lt;1000000) in order to obtain a fast response of the renderer.</p>
 <p>Many objects include a <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> dictionary structure for definition of attached visualization of the object.
 Note that objects expect a list of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code>, which can be produced with <code class="docutils literal notranslate"><span class="pre">GraphicsData...(...)</span></code> functions. Note that if reading out the <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> from the object again, it usually has a different structure sorted by types of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code>.

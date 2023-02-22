@@ -54,31 +54,17 @@ Solvers
 
 See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
-.. _sec-item-reference-manual:
-
-Items Reference Manual
-======================
-
-See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
-
-.. _sec-solver-solvestatic:
+.. _sec-solver-solverstatic:
 
 Solvers: Static
 ===============
 
 See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
-.. _sec-solver-solvedynamic:
+.. _sec-solver-solverdynamic:
 
 Solvers: Dynamic
 ================
-
-See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
-
-.. _sec-solver-computeode2eigenvalues:
-
-Solvers: Eigenvalues
-====================
 
 See according section in `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 

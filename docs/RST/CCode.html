@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>C++ Code &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
+  <title>C++ Code &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.5.105.dev1
+            Exudyn1.5.109.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -88,7 +88,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.5.105.dev1</a>
+          <a href="../../index.html">Exudyn1.5.109.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -133,15 +133,12 @@
 <section id="c-code-structure">
 <h2>C++ Code structure<a class="headerlink" href="#c-code-structure" title="Permalink to this heading"></a></h2>
 <p>The following <strong>entry points</strong> into the C++ code can be found:</p>
-<ul>
-<li><p>Python – C++: the creation of the module <code class="docutils literal notranslate"><span class="pre">exudyn</span></code> is found in:</p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">main/src/Pymodules/PybindModule.cpp</span></code></p>
-</div></blockquote>
-</li>
+<ul class="simple">
+<li><p>Python – C++: the creation of the module <code class="docutils literal notranslate"><span class="pre">exudyn</span></code> is found in:</p></li>
 </ul>
 <blockquote>
-<div><p>it includes large header files, which are automatically created for binding C++ code with Python.%blank line needed for .rst:</p>
+<div><p><code class="docutils literal notranslate"><span class="pre">main/src/Pymodules/PybindModule.cpp</span></code></p>
+<p>it includes large header files, which are automatically created for binding C++ code with Python.</p>
 </div></blockquote>
 <ul>
 <li><p>The object factory for creation of items (calling <code class="docutils literal notranslate"><span class="pre">mbs.AddNode(...)</span></code> and similar):</p>
@@ -239,7 +236,7 @@
 <h2>No-abbreviations-rule<a class="headerlink" href="#no-abbreviations-rule" title="Permalink to this heading"></a></h2>
 <p>The code uses a <strong>minimum set of abbreviations</strong>; however, the following abbreviation rules are used throughout:
 In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (short, 5-line member functions).</p>
-<p><strong>Exceptions</strong> to the NO-ABBREVIATIONS-RULE, see also hyperref[sec:listOfAbbreviations]{underline{List of Abbreviations}}: %no section number!!!: Section <a class="reference internal" href="../../index.html#sec-listofabbreviations"><span class="std std-ref">List of Abbreviations</span></a></p>
+<p><strong>Exceptions</strong> to the NO-ABBREVIATIONS-RULE, see also hyperref[sec:listOfAbbreviations]{underline{List of Abbreviations}}:</p>
 <ul class="simple">
 <li><p>{ODE}</p></li>
 <li><p>{ODE2}: marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)</p></li>
@@ -254,7 +251,7 @@ In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer(
 <li><p>{RHS}</p></li>
 <li><p>{LHS}</p></li>
 <li><p>{EP}</p></li>
-<li><p>{Rxyz}%: consecutive rotations around x, y and z-axis (Tait-Bryan rotations);</p></li>
+<li><p>{Rxyz}</p></li>
 <li><p>{coeffs}</p></li>
 <li><p>{pos}</p></li>
 <li><p>{T66}; based on 6times 6 matrix transformations</p></li>

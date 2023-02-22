@@ -12,7 +12,9 @@ Utilities for interactive simulation and results monitoring; NOTE: does not work
 
 .. _sec-interactive-animatemodes:
 
-Function: `AnimateModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L579>`__\ (\ ``systemContainer``\ , \ ``mainSystem``\ , \ ``nodeNumber``\ , \ ``period = 0.04``\ , \ ``stepsPerPeriod = 30``\ , \ ``showTime = True``\ , \ ``renderWindowText = ''``\ , \ ``runOnStart = False``\ , \ ``runMode = 0``\ , \ ``scaleAmplitude = 1``\ , \ ``title = ''``\ , \ ``fontSize = 12``\ , \ ``checkRenderEngineStopFlag = True``\ )
+Function: AnimateModes
+^^^^^^^^^^^^^^^^^^^^^^
+`AnimateModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L579>`__\ (\ ``systemContainer``\ , \ ``mainSystem``\ , \ ``nodeNumber``\ , \ ``period = 0.04``\ , \ ``stepsPerPeriod = 30``\ , \ ``showTime = True``\ , \ ``renderWindowText = ''``\ , \ ``runOnStart = False``\ , \ ``runMode = 0``\ , \ ``scaleAmplitude = 1``\ , \ ``title = ''``\ , \ ``fontSize = 12``\ , \ ``checkRenderEngineStopFlag = True``\ )
 
 - | \ *function description*\ :
   | animate modes of ObjectFFRFreducedOrder and other objects (changes periodically one nodal coordinate); for creating snapshots, press 'Static' and 'Record animation' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'. Modes may be inverted by pressing according '+' and '-' buttons next to Amplitude.
@@ -45,7 +47,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-interactive-solutionviewer:
 
-Function: `SolutionViewer <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L751>`__\ (\ ``mainSystem``\ , \ ``solution = []``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``runOnStart = True``\ , \ ``runMode = 2``\ , \ ``fontSize = 12``\ , \ ``title = ''``\ , \ ``checkRenderEngineStopFlag = True``\ )
+Function: SolutionViewer
+^^^^^^^^^^^^^^^^^^^^^^^^
+`SolutionViewer <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L751>`__\ (\ ``mainSystem``\ , \ ``solution = []``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``runOnStart = True``\ , \ ``runMode = 2``\ , \ ``fontSize = 12``\ , \ ``title = ''``\ , \ ``checkRenderEngineStopFlag = True``\ )
 
 - | \ *function description*\ :
   | open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(...); Change slider 'Increment' to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or 'Static' (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics)
@@ -141,9 +145,11 @@ CLASS InteractiveDialog (in module interactive)
 
 
 
-.. _sec-interactive-interactivedialog-init:
+.. _sec-interactive-interactivedialog---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L99>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``simulationSettings``\ , \ ``simulationFunction``\ , \ ``dialogItems``\ , \ ``plots = []``\ , \ ``period = 0.04``\ , \ ``realtimeFactor = 1``\ , \ ``userStartSimulation = None``\ , \ ``title = ''``\ , \ ``showTime = False``\ , \ ``fontSize = 12``\ , \ ``doTimeIntegration = True``\ , \ ``runOnStart = False``\ , \ ``addLabelStringVariables = False``\ , \ ``addSliderVariables = False``\ , \ ``checkRenderEngineStopFlag = True``\ , \ ``userOnChange = None``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L99>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``simulationSettings``\ , \ ``simulationFunction``\ , \ ``dialogItems``\ , \ ``plots = []``\ , \ ``period = 0.04``\ , \ ``realtimeFactor = 1``\ , \ ``userStartSimulation = None``\ , \ ``title = ''``\ , \ ``showTime = False``\ , \ ``fontSize = 12``\ , \ ``doTimeIntegration = True``\ , \ ``runOnStart = False``\ , \ ``addLabelStringVariables = False``\ , \ ``addSliderVariables = False``\ , \ ``checkRenderEngineStopFlag = True``\ , \ ``userOnChange = None``\ )
 
 - | \ *classFunction*\ :
   | initialize an InteractiveDialog
@@ -172,7 +178,9 @@ Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/
 
 .. _sec-interactive-interactivedialog-onquit:
 
-Class function: `OnQuit <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L342>`__\ (\ ``self``\ , \ ``event = None``\ )
+Class function: OnQuit
+^^^^^^^^^^^^^^^^^^^^^^
+`OnQuit <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L342>`__\ (\ ``self``\ , \ ``event = None``\ )
 
 - | \ *classFunction*\ :
   | function called when pressing escape or closing dialog
@@ -181,7 +189,9 @@ Class function: `OnQuit <https://github.com/jgerstmayr/EXUDYN/blob/master/main/p
 
 .. _sec-interactive-interactivedialog-startsimulation:
 
-Class function: `StartSimulation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L351>`__\ (\ ``self``\ , \ ``event = None``\ )
+Class function: StartSimulation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`StartSimulation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L351>`__\ (\ ``self``\ , \ ``event = None``\ )
 
 - | \ *classFunction*\ :
   | function called on button 'Run'
@@ -190,7 +200,9 @@ Class function: `StartSimulation <https://github.com/jgerstmayr/EXUDYN/blob/mast
 
 .. _sec-interactive-interactivedialog-processwidgetstates:
 
-Class function: `ProcessWidgetStates <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L364>`__\ (\ ``self``\ )
+Class function: ProcessWidgetStates
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ProcessWidgetStates <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L364>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | assign current values of radio buttons and sliders to mbs.variables
@@ -199,7 +211,9 @@ Class function: `ProcessWidgetStates <https://github.com/jgerstmayr/EXUDYN/blob/
 
 .. _sec-interactive-interactivedialog-continuousrunfunction:
 
-Class function: `ContinuousRunFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L375>`__\ (\ ``self``\ , \ ``event = None``\ )
+Class function: ContinuousRunFunction
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ContinuousRunFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L375>`__\ (\ ``self``\ , \ ``event = None``\ )
 
 - | \ *classFunction*\ :
   | function which is repeatedly called when button 'Run' is pressed
@@ -208,7 +222,9 @@ Class function: `ContinuousRunFunction <https://github.com/jgerstmayr/EXUDYN/blo
 
 .. _sec-interactive-interactivedialog-initializeplots:
 
-Class function: `InitializePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L393>`__\ (\ ``self``\ )
+Class function: InitializePlots
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`InitializePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L393>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | initialize figure and subplots for plots structure
@@ -217,7 +233,9 @@ Class function: `InitializePlots <https://github.com/jgerstmayr/EXUDYN/blob/mast
 
 .. _sec-interactive-interactivedialog-updateplots:
 
-Class function: `UpdatePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L440>`__\ (\ ``self``\ )
+Class function: UpdatePlots
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`UpdatePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L440>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | update all subplots with current sensor values
@@ -226,7 +244,9 @@ Class function: `UpdatePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/m
 
 .. _sec-interactive-interactivedialog-initializesolver:
 
-Class function: `InitializeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L496>`__\ (\ ``self``\ )
+Class function: InitializeSolver
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`InitializeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L496>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | function to initialize solver for repeated calls
@@ -235,7 +255,9 @@ Class function: `InitializeSolver <https://github.com/jgerstmayr/EXUDYN/blob/mas
 
 .. _sec-interactive-interactivedialog-finalizesolver:
 
-Class function: `FinalizeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L502>`__\ (\ ``self``\ )
+Class function: FinalizeSolver
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`FinalizeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L502>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | stop solver (finalize correctly)
@@ -244,7 +266,9 @@ Class function: `FinalizeSolver <https://github.com/jgerstmayr/EXUDYN/blob/maste
 
 .. _sec-interactive-interactivedialog-runsimulationperiod:
 
-Class function: `RunSimulationPeriod <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L508>`__\ (\ ``self``\ )
+Class function: RunSimulationPeriod
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`RunSimulationPeriod <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L508>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | function which performs short simulation for given period

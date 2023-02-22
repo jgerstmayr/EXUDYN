@@ -14,7 +14,9 @@ are included. A class for rigid body inertia creating and transformation is avai
 
 .. _sec-rigidbodyutilities-computeorthonormalbasisvectors:
 
-Function: `ComputeOrthonormalBasisVectors <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L30>`__\ (\ ``vector0``\ )
+Function: ComputeOrthonormalBasisVectors
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ComputeOrthonormalBasisVectors <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L30>`__\ (\ ``vector0``\ )
 
 - | \ *function description*\ :
   | compute orthogonal basis vectors (normal1, normal2) for given vector0 (non-unique solution!); the length of vector0 must not be 1; if vector0 == [0,0,0], then any normal basis is returned
@@ -26,7 +28,9 @@ Function: `ComputeOrthonormalBasisVectors <https://github.com/jgerstmayr/EXUDYN/
 
 .. _sec-rigidbodyutilities-computeorthonormalbasis:
 
-Function: `ComputeOrthonormalBasis <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L55>`__\ (\ ``vector0``\ )
+Function: ComputeOrthonormalBasis
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ComputeOrthonormalBasis <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L55>`__\ (\ ``vector0``\ )
 
 - | \ *function description*\ :
   | compute orthogonal basis, in which the normalized vector0 is the first column and the other columns are normals to vector0 (non-unique solution!); the length of vector0 must not be 1; if vector0 == [0,0,0], then any normal basis is returned
@@ -38,7 +42,9 @@ Function: `ComputeOrthonormalBasis <https://github.com/jgerstmayr/EXUDYN/blob/ma
 
 .. _sec-rigidbodyutilities-gramschmidt:
 
-Function: `GramSchmidt <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L61>`__\ (\ ``vector0``\ , \ ``vector1``\ )
+Function: GramSchmidt
+^^^^^^^^^^^^^^^^^^^^^
+`GramSchmidt <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L61>`__\ (\ ``vector0``\ , \ ``vector1``\ )
 
 - | \ *function description*\ :
   | compute Gram-Schmidt projection of given 3D vector 1 on vector 0 and return normalized triad (vector0, vector1, vector0 x vector1)
@@ -52,7 +58,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-skew:
 
-Function: `Skew <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L81>`__\ (\ ``vector``\ )
+Function: Skew
+^^^^^^^^^^^^^^
+`Skew <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L81>`__\ (\ ``vector``\ )
 
 - | \ *function description*\ :
   | compute skew symmetric 3x3-matrix from 3x1- or 1x3-vector
@@ -66,7 +74,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-skew2vec:
 
-Function: `Skew2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L89>`__\ (\ ``skew``\ )
+Function: Skew2Vec
+^^^^^^^^^^^^^^^^^^
+`Skew2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L89>`__\ (\ ``skew``\ )
 
 - | \ *function description*\ :
   | convert skew symmetric matrix m to vector
@@ -76,7 +86,9 @@ Function: `Skew2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pytho
 
 .. _sec-rigidbodyutilities-computeskewmatrix:
 
-Function: `ComputeSkewMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L111>`__\ (\ ``v``\ )
+Function: ComputeSkewMatrix
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ComputeSkewMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L111>`__\ (\ ``v``\ )
 
 - | \ *function description*\ :
   | compute skew matrix from vector or matrix; used for ObjectFFRF and CMS implementation
@@ -94,7 +106,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-eulerparameters2g:
 
-Function: `EulerParameters2G <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L176>`__\ (\ ``eulerParameters``\ )
+Function: EulerParameters2G
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`EulerParameters2G <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L176>`__\ (\ ``eulerParameters``\ )
 
 - | \ *function description*\ :
   | convert Euler parameters (ep) to G-matrix (=\ :math:`\partial \tomega  / \partial {\mathbf{p}}_t`\ )
@@ -108,7 +122,9 @@ Function: `EulerParameters2G <https://github.com/jgerstmayr/EXUDYN/blob/master/m
 
 .. _sec-rigidbodyutilities-eulerparameters2glocal:
 
-Function: `EulerParameters2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L185>`__\ (\ ``eulerParameters``\ )
+Function: EulerParameters2GLocal
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`EulerParameters2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L185>`__\ (\ ``eulerParameters``\ )
 
 - | \ *function description*\ :
   | convert Euler parameters (ep) to local G-matrix (=\ :math:`\partial \LU{b}{\tomega} / \partial {\mathbf{p}}_t`\ )
@@ -126,7 +142,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-eulerparameters2rotationmatrix:
 
-Function: `EulerParameters2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L194>`__\ (\ ``eulerParameters``\ )
+Function: EulerParameters2RotationMatrix
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`EulerParameters2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L194>`__\ (\ ``eulerParameters``\ )
 
 - | \ *function description*\ :
   | compute rotation matrix from eulerParameters
@@ -144,7 +162,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-rotationmatrix2eulerparameters:
 
-Function: `RotationMatrix2EulerParameters <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L204>`__\ (\ ``rotationMatrix``\ )
+Function: RotationMatrix2EulerParameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`RotationMatrix2EulerParameters <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L204>`__\ (\ ``rotationMatrix``\ )
 
 - | \ *function description*\ :
   | compute Euler parameters from given rotation matrix
@@ -160,9 +180,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 ----
 
-.. _sec-rigidbodyutilities-angularvelocity2eulerparameterst:
+.. _sec-rigidbodyutilities-angularvelocity2eulerparameters-t:
 
-Function: `AngularVelocity2EulerParameters\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L249>`__\ (\ ``angularVelocity``\ , \ ``eulerParameters``\ )
+Function: AngularVelocity2EulerParameters\_t
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`AngularVelocity2EulerParameters\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L249>`__\ (\ ``angularVelocity``\ , \ ``eulerParameters``\ )
 
 - | \ *function description*\ :
   | compute time derivative of Euler parameters from (global) angular velocity vector
@@ -178,7 +200,9 @@ Function: `AngularVelocity2EulerParameters\_t <https://github.com/jgerstmayr/EXU
 
 .. _sec-rigidbodyutilities-rotationvector2rotationmatrix:
 
-Function: `RotationVector2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L261>`__\ (\ ``rotationVector``\ )
+Function: RotationVector2RotationMatrix
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`RotationVector2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L261>`__\ (\ ``rotationVector``\ )
 
 - | \ *function description*\ :
   | rotaton matrix from rotation vector, see appendix B in
@@ -196,7 +220,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-rotationmatrix2rotationvector:
 
-Function: `RotationMatrix2RotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L278>`__\ (\ ``rotationMatrix``\ )
+Function: RotationMatrix2RotationVector
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`RotationMatrix2RotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L278>`__\ (\ ``rotationMatrix``\ )
 
 - | \ *function description*\ :
   | compute rotation vector from rotation matrix
@@ -214,7 +240,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-computerotationaxisfromrotationvector:
 
-Function: `ComputeRotationAxisFromRotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L297>`__\ (\ ``rotationVector``\ )
+Function: ComputeRotationAxisFromRotationVector
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ComputeRotationAxisFromRotationVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L297>`__\ (\ ``rotationVector``\ )
 
 - | \ *function description*\ :
   | compute rotation axis from given rotation vector
@@ -232,7 +260,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-rotationvector2g:
 
-Function: `RotationVector2G <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L315>`__\ (\ ``rotationVector``\ )
+Function: RotationVector2G
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`RotationVector2G <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L315>`__\ (\ ``rotationVector``\ )
 
 - | \ *function description*\ :
   | convert rotation vector (parameters) (v) to G-matrix (=\ :math:`\partial \tomega  / \partial \dot {\mathbf{v}}`\ )
@@ -246,7 +276,9 @@ Function: `RotationVector2G <https://github.com/jgerstmayr/EXUDYN/blob/master/ma
 
 .. _sec-rigidbodyutilities-rotationvector2glocal:
 
-Function: `RotationVector2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L321>`__\ (\ ``eulerParameters``\ )
+Function: RotationVector2GLocal
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`RotationVector2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L321>`__\ (\ ``eulerParameters``\ )
 
 - | \ *function description*\ :
   | convert rotation vector (parameters) (v) to local G-matrix (=\ :math:`\partial \LU{b}{\tomega}   / \partial {\mathbf{v}}_t`\ )
@@ -260,7 +292,9 @@ Function: `RotationVector2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/mast
 
 .. _sec-rigidbodyutilities-rotxyz2rotationmatrix:
 
-Function: `RotXYZ2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L334>`__\ (\ ``rot``\ )
+Function: RotXYZ2RotationMatrix
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`RotXYZ2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L334>`__\ (\ ``rot``\ )
 
 - | \ *function description*\ :
   | compute rotation matrix from consecutive xyz Rot (Tait-Bryan angles); A=Ax\*Ay\*Az; rot=[rotX, rotY, rotZ]
@@ -278,7 +312,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-rotationmatrix2rotxyz:
 
-Function: `RotationMatrix2RotXYZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L349>`__\ (\ ``rotationMatrix``\ )
+Function: RotationMatrix2RotXYZ
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`RotationMatrix2RotXYZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L349>`__\ (\ ``rotationMatrix``\ )
 
 - | \ *function description*\ :
   | convert rotation matrix to xyz Euler angles (Tait-Bryan angles);  A=Ax\*Ay\*Az;
@@ -296,7 +332,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-rotxyz2g:
 
-Function: `RotXYZ2G <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L362>`__\ (\ ``rot``\ )
+Function: RotXYZ2G
+^^^^^^^^^^^^^^^^^^
+`RotXYZ2G <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L362>`__\ (\ ``rot``\ )
 
 - | \ *function description*\ :
   | compute (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{0}{{\mathbf{G}}} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta`\ )
@@ -308,9 +346,11 @@ Function: `RotXYZ2G <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pytho
 
 ----
 
-.. _sec-rigidbodyutilities-rotxyz2gt:
+.. _sec-rigidbodyutilities-rotxyz2g-t:
 
-Function: `RotXYZ2G\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L377>`__\ (\ ``rot``\ , \ ``rot_t``\ )
+Function: RotXYZ2G\_t
+^^^^^^^^^^^^^^^^^^^^^
+`RotXYZ2G\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L377>`__\ (\ ``rot``\ , \ ``rot_t``\ )
 
 - | \ *function description*\ :
   | compute time derivative of (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{0}{{\mathbf{G}}} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta`\ )
@@ -325,7 +365,9 @@ Function: `RotXYZ2G\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/py
 
 .. _sec-rigidbodyutilities-rotxyz2glocal:
 
-Function: `RotXYZ2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L391>`__\ (\ ``rot``\ )
+Function: RotXYZ2GLocal
+^^^^^^^^^^^^^^^^^^^^^^^
+`RotXYZ2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L391>`__\ (\ ``rot``\ )
 
 - | \ *function description*\ :
   | compute local (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{b}{{\mathbf{G}}} = \partial \LU{b}{\tomega}  / \partial \ttheta_t`\ )
@@ -337,9 +379,11 @@ Function: `RotXYZ2GLocal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/
 
 ----
 
-.. _sec-rigidbodyutilities-rotxyz2glocalt:
+.. _sec-rigidbodyutilities-rotxyz2glocal-t:
 
-Function: `RotXYZ2GLocal\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L406>`__\ (\ ``rot``\ , \ ``rot_t``\ )
+Function: RotXYZ2GLocal\_t
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`RotXYZ2GLocal\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L406>`__\ (\ ``rot``\ , \ ``rot_t``\ )
 
 - | \ *function description*\ :
   | compute time derivative of (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (\ :math:`\LU{b}{{\mathbf{G}}} = \partial \LU{b}{\tomega}  / \partial \ttheta_t`\ )
@@ -352,9 +396,11 @@ Function: `RotXYZ2GLocal\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/ma
 
 ----
 
-.. _sec-rigidbodyutilities-angularvelocity2rotxyzt:
+.. _sec-rigidbodyutilities-angularvelocity2rotxyz-t:
 
-Function: `AngularVelocity2RotXYZ\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L426>`__\ (\ ``angularVelocity``\ , \ ``rotation``\ )
+Function: AngularVelocity2RotXYZ\_t
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`AngularVelocity2RotXYZ\_t <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L426>`__\ (\ ``angularVelocity``\ , \ ``rotation``\ )
 
 - | \ *function description*\ :
   | compute time derivatives of angles RotXYZ from (global) angular velocity vector and given rotation
@@ -369,7 +415,9 @@ Function: `AngularVelocity2RotXYZ\_t <https://github.com/jgerstmayr/EXUDYN/blob/
 
 .. _sec-rigidbodyutilities-rotxyz2eulerparameters:
 
-Function: `RotXYZ2EulerParameters <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L445>`__\ (\ ``alpha``\ )
+Function: RotXYZ2EulerParameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`RotXYZ2EulerParameters <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L445>`__\ (\ ``alpha``\ )
 
 - | \ *function description*\ :
   | compute four Euler parameters from given RotXYZ angles, see
@@ -384,7 +432,9 @@ Function: `RotXYZ2EulerParameters <https://github.com/jgerstmayr/EXUDYN/blob/mas
 
 .. _sec-rigidbodyutilities-rotationmatrixx:
 
-Function: `RotationMatrixX <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L514>`__\ (\ ``angleRad``\ )
+Function: RotationMatrixX
+^^^^^^^^^^^^^^^^^^^^^^^^^
+`RotationMatrixX <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L514>`__\ (\ ``angleRad``\ )
 
 - | \ *function description*\ :
   | compute rotation matrix w.r.t. X-axis (first axis)
@@ -402,7 +452,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-rotationmatrixy:
 
-Function: `RotationMatrixY <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L522>`__\ (\ ``angleRad``\ )
+Function: RotationMatrixY
+^^^^^^^^^^^^^^^^^^^^^^^^^
+`RotationMatrixY <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L522>`__\ (\ ``angleRad``\ )
 
 - | \ *function description*\ :
   | compute rotation matrix w.r.t. Y-axis (second axis)
@@ -420,7 +472,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-rotationmatrixz:
 
-Function: `RotationMatrixZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L530>`__\ (\ ``angleRad``\ )
+Function: RotationMatrixZ
+^^^^^^^^^^^^^^^^^^^^^^^^^
+`RotationMatrixZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L530>`__\ (\ ``angleRad``\ )
 
 - | \ *function description*\ :
   | compute rotation matrix w.r.t. Z-axis (third axis)
@@ -438,7 +492,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-homogeneoustransformation:
 
-Function: `HomogeneousTransformation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L539>`__\ (\ ``A``\ , \ ``r``\ )
+Function: HomogeneousTransformation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`HomogeneousTransformation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L539>`__\ (\ ``A``\ , \ ``r``\ )
 
 - | \ *function description*\ :
   | compute HT matrix from rotation matrix A and translation vector r
@@ -452,7 +508,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-httranslate:
 
-Function: `HTtranslate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L549>`__\ (\ ``r``\ )
+Function: HTtranslate
+^^^^^^^^^^^^^^^^^^^^^
+`HTtranslate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L549>`__\ (\ ``r``\ )
 
 - | \ *function description*\ :
   | HT for translation with vector r
@@ -466,7 +524,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-httranslatex:
 
-Function: `HTtranslateX <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L555>`__\ (\ ``x``\ )
+Function: HTtranslateX
+^^^^^^^^^^^^^^^^^^^^^^
+`HTtranslateX <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L555>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | HT for translation along x axis with value x
@@ -480,7 +540,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-httranslatey:
 
-Function: `HTtranslateY <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L561>`__\ (\ ``y``\ )
+Function: HTtranslateY
+^^^^^^^^^^^^^^^^^^^^^^
+`HTtranslateY <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L561>`__\ (\ ``y``\ )
 
 - | \ *function description*\ :
   | HT for translation along y axis with value y
@@ -494,7 +556,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-httranslatez:
 
-Function: `HTtranslateZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L567>`__\ (\ ``z``\ )
+Function: HTtranslateZ
+^^^^^^^^^^^^^^^^^^^^^^
+`HTtranslateZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L567>`__\ (\ ``z``\ )
 
 - | \ *function description*\ :
   | HT for translation along z axis with value z
@@ -504,7 +568,9 @@ Function: `HTtranslateZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/p
 
 .. _sec-rigidbodyutilities-ht0:
 
-Function: `HT0 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L573>`__\ ()
+Function: HT0
+^^^^^^^^^^^^^
+`HT0 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L573>`__\ ()
 
 - | \ *function description*\ :
   | identity HT:
@@ -518,7 +584,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-htrotatex:
 
-Function: `HTrotateX <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L577>`__\ (\ ``angle``\ )
+Function: HTrotateX
+^^^^^^^^^^^^^^^^^^^
+`HTrotateX <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L577>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
   | HT for rotation around axis X (first axis)
@@ -528,7 +596,9 @@ Function: `HTrotateX <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pyth
 
 .. _sec-rigidbodyutilities-htrotatey:
 
-Function: `HTrotateY <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L583>`__\ (\ ``angle``\ )
+Function: HTrotateY
+^^^^^^^^^^^^^^^^^^^
+`HTrotateY <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L583>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
   | HT for rotation around axis X (first axis)
@@ -542,7 +612,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-htrotatez:
 
-Function: `HTrotateZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L589>`__\ (\ ``angle``\ )
+Function: HTrotateZ
+^^^^^^^^^^^^^^^^^^^
+`HTrotateZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L589>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
   | HT for rotation around axis X (first axis)
@@ -556,7 +628,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-ht2translation:
 
-Function: `HT2translation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L595>`__\ (\ ``T``\ )
+Function: HT2translation
+^^^^^^^^^^^^^^^^^^^^^^^^
+`HT2translation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L595>`__\ (\ ``T``\ )
 
 - | \ *function description*\ :
   | return translation part of HT
@@ -570,7 +644,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-ht2rotationmatrix:
 
-Function: `HT2rotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L599>`__\ (\ ``T``\ )
+Function: HT2rotationMatrix
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`HT2rotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L599>`__\ (\ ``T``\ )
 
 - | \ *function description*\ :
   | return rotation matrix of HT
@@ -584,7 +660,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-inverseht:
 
-Function: `InverseHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L604>`__\ (\ ``T``\ )
+Function: InverseHT
+^^^^^^^^^^^^^^^^^^^
+`InverseHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L604>`__\ (\ ``T``\ )
 
 - | \ *function description*\ :
   | return inverse HT such that inv(T)\*T = np.eye(4)
@@ -598,7 +676,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-rotationx2t66:
 
-Function: `RotationX2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L625>`__\ (\ ``angle``\ )
+Function: RotationX2T66
+^^^^^^^^^^^^^^^^^^^^^^^
+`RotationX2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L625>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
   | compute 6x6 coordinate transformation matrix for rotation around X axis; output: first 3 components for rotation, second 3 components for translation! See Featherstone / Handbook of robotics
@@ -608,7 +688,9 @@ Function: `RotationX2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/
 
 .. _sec-rigidbodyutilities-rotationy2t66:
 
-Function: `RotationY2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L637>`__\ (\ ``angle``\ )
+Function: RotationY2T66
+^^^^^^^^^^^^^^^^^^^^^^^
+`RotationY2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L637>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
   | compute 6x6 transformation matrix for rotation around Y axis; output: first 3 components for rotation, second 3 components for translation
@@ -618,7 +700,9 @@ Function: `RotationY2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/
 
 .. _sec-rigidbodyutilities-rotationz2t66:
 
-Function: `RotationZ2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L649>`__\ (\ ``angle``\ )
+Function: RotationZ2T66
+^^^^^^^^^^^^^^^^^^^^^^^
+`RotationZ2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L649>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
   | compute 6x6 transformation matrix for rotation around Z axis; output: first 3 components for rotation, second 3 components for translation
@@ -628,7 +712,9 @@ Function: `RotationZ2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/
 
 .. _sec-rigidbodyutilities-translation2t66:
 
-Function: `Translation2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L661>`__\ (\ ``translation3D``\ )
+Function: Translation2T66
+^^^^^^^^^^^^^^^^^^^^^^^^^
+`Translation2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L661>`__\ (\ ``translation3D``\ )
 
 - | \ *function description*\ :
   | compute 6x6 transformation matrix for translation according to 3D vector translation3D; output: first 3 components for rotation, second 3 components for translation!
@@ -638,7 +724,9 @@ Function: `Translation2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/mai
 
 .. _sec-rigidbodyutilities-translationx2t66:
 
-Function: `TranslationX2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L672>`__\ (\ ``translation``\ )
+Function: TranslationX2T66
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`TranslationX2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L672>`__\ (\ ``translation``\ )
 
 - | \ *function description*\ :
   | compute 6x6 transformation matrix for translation along X axis; output: first 3 components for rotation, second 3 components for translation!
@@ -648,7 +736,9 @@ Function: `TranslationX2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/ma
 
 .. _sec-rigidbodyutilities-translationy2t66:
 
-Function: `TranslationY2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L676>`__\ (\ ``translation``\ )
+Function: TranslationY2T66
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`TranslationY2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L676>`__\ (\ ``translation``\ )
 
 - | \ *function description*\ :
   | compute 6x6 transformation matrix for translation along Y axis; output: first 3 components for rotation, second 3 components for translation!
@@ -658,7 +748,9 @@ Function: `TranslationY2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/ma
 
 .. _sec-rigidbodyutilities-translationz2t66:
 
-Function: `TranslationZ2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L680>`__\ (\ ``translation``\ )
+Function: TranslationZ2T66
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`TranslationZ2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L680>`__\ (\ ``translation``\ )
 
 - | \ *function description*\ :
   | compute 6x6 transformation matrix for translation along Z axis; output: first 3 components for rotation, second 3 components for translation!
@@ -668,7 +760,9 @@ Function: `TranslationZ2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/ma
 
 .. _sec-rigidbodyutilities-t66torotationtranslation:
 
-Function: `T66toRotationTranslation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L686>`__\ (\ ``T66``\ )
+Function: T66toRotationTranslation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`T66toRotationTranslation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L686>`__\ (\ ``T66``\ )
 
 - | \ *function description*\ :
   | convert 6x6 coordinate transformation (Plücker transform) into rotation and translation
@@ -686,7 +780,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-inverset66torotationtranslation:
 
-Function: `InverseT66toRotationTranslation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L694>`__\ (\ ``T66``\ )
+Function: InverseT66toRotationTranslation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`InverseT66toRotationTranslation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L694>`__\ (\ ``T66``\ )
 
 - | \ *function description*\ :
   | convert inverse 6x6 coordinate transformation (Plücker transform) into rotation and translation
@@ -700,7 +796,9 @@ Function: `InverseT66toRotationTranslation <https://github.com/jgerstmayr/EXUDYN
 
 .. _sec-rigidbodyutilities-rotationtranslation2t66:
 
-Function: `RotationTranslation2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L704>`__\ (\ ``A``\ , \ ``v``\ )
+Function: RotationTranslation2T66
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`RotationTranslation2T66 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L704>`__\ (\ ``A``\ , \ ``v``\ )
 
 - | \ *function description*\ :
   | convert rotation and translation into 6x6 coordinate transformation (Plücker transform)
@@ -715,7 +813,9 @@ Function: `RotationTranslation2T66 <https://github.com/jgerstmayr/EXUDYN/blob/ma
 
 .. _sec-rigidbodyutilities-rotationtranslation2t66inverse:
 
-Function: `RotationTranslation2T66Inverse <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L714>`__\ (\ ``A``\ , \ ``v``\ )
+Function: RotationTranslation2T66Inverse
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`RotationTranslation2T66Inverse <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L714>`__\ (\ ``A``\ , \ ``v``\ )
 
 - | \ *function description*\ :
   | convert rotation and translation into INVERSE 6x6 coordinate transformation (Plücker transform)
@@ -734,7 +834,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-t66toht:
 
-Function: `T66toHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L742>`__\ (\ ``T66``\ )
+Function: T66toHT
+^^^^^^^^^^^^^^^^^
+`T66toHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L742>`__\ (\ ``T66``\ )
 
 - | \ *function description*\ :
   | convert 6x6 coordinate transformation (Plücker transform) into 4x4 homogeneous transformation; NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
@@ -752,7 +854,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-ht2t66inverse:
 
-Function: `HT2T66Inverse <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L753>`__\ (\ ``T``\ )
+Function: HT2T66Inverse
+^^^^^^^^^^^^^^^^^^^^^^^
+`HT2T66Inverse <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L753>`__\ (\ ``T``\ )
 
 - | \ *function description*\ :
   | convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Plücker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
@@ -764,7 +868,9 @@ Function: `HT2T66Inverse <https://github.com/jgerstmayr/EXUDYN/blob/master/main/
 
 .. _sec-rigidbodyutilities-inertiatensor2inertia6d:
 
-Function: `InertiaTensor2Inertia6D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L764>`__\ (\ ``inertiaTensor``\ )
+Function: InertiaTensor2Inertia6D
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`InertiaTensor2Inertia6D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L764>`__\ (\ ``inertiaTensor``\ )
 
 - | \ *function description*\ :
   | convert a 3x3 matrix (list or numpy array) into a list with 6 inertia components, sorted as J00, J11, J22, J12, J02, J01
@@ -778,7 +884,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-inertia6d2inertiatensor:
 
-Function: `Inertia6D2InertiaTensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L769>`__\ (\ ``inertia6D``\ )
+Function: Inertia6D2InertiaTensor
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`Inertia6D2InertiaTensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L769>`__\ (\ ``inertia6D``\ )
 
 - | \ *function description*\ :
   | convert a list or numpy array with 6 inertia components (sorted as [J00, J11, J22, J12, J02, J01]) (list or numpy array) into a 3x3 matrix (np.array)
@@ -792,7 +900,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-getrigidbodynode:
 
-Function: `GetRigidBodyNode <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L995>`__\ (\ ``nodeType``\ , \ ``position = [0,0,0]``\ , \ ``velocity = [0,0,0]``\ , \ ``rotationMatrix = []``\ , \ ``rotationParameters = []``\ , \ ``angularVelocity = [0,0,0]``\ )
+Function: GetRigidBodyNode
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`GetRigidBodyNode <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L995>`__\ (\ ``nodeType``\ , \ ``position = [0,0,0]``\ , \ ``velocity = [0,0,0]``\ , \ ``rotationMatrix = []``\ , \ ``rotationParameters = []``\ , \ ``angularVelocity = [0,0,0]``\ )
 
 - | \ *function description*\ :
   | get node item interface according to nodeType, using initialization with position, velocity, angularVelocity and rotationMatrix
@@ -811,7 +921,9 @@ Function: `GetRigidBodyNode <https://github.com/jgerstmayr/EXUDYN/blob/master/ma
 
 .. _sec-rigidbodyutilities-addrigidbody:
 
-Function: `AddRigidBody <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1086>`__\ (\ ``mainSys``\ , \ ``inertia``\ , \ ``nodeType = exu.NodeType.RotationEulerParameters``\ , \ ``position = [0,0,0]``\ , \ ``velocity = [0,0,0]``\ , \ ``rotationMatrix = []``\ , \ ``rotationParameters = []``\ , \ ``angularVelocity = [0,0,0]``\ , \ ``gravity = [0,0,0]``\ , \ ``graphicsDataList = []``\ )
+Function: AddRigidBody
+^^^^^^^^^^^^^^^^^^^^^^
+`AddRigidBody <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1086>`__\ (\ ``mainSys``\ , \ ``inertia``\ , \ ``nodeType = exu.NodeType.RotationEulerParameters``\ , \ ``position = [0,0,0]``\ , \ ``velocity = [0,0,0]``\ , \ ``rotationMatrix = []``\ , \ ``rotationParameters = []``\ , \ ``angularVelocity = [0,0,0]``\ , \ ``gravity = [0,0,0]``\ , \ ``graphicsDataList = []``\ )
 
 - | \ *function description*\ :
   | adds a node (with str(exu.NodeType. ...)) and body for a given rigid body; all quantities (esp. velocity and angular velocity) are given in global coordinates!
@@ -837,7 +949,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-addrevolutejoint:
 
-Function: `AddRevoluteJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1156>`__\ (\ ``mbs``\ , \ ``body0``\ , \ ``body1``\ , \ ``point``\ , \ ``axis``\ , \ ``useGlobalFrame = True``\ , \ ``showJoint = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ )
+Function: AddRevoluteJoint
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`AddRevoluteJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1156>`__\ (\ ``mbs``\ , \ ``body0``\ , \ ``body1``\ , \ ``point``\ , \ ``axis``\ , \ ``useGlobalFrame = True``\ , \ ``showJoint = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ )
 
 - | \ *function description*\ :
   | add revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -860,7 +974,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-rigidbodyutilities-addprismaticjoint:
 
-Function: `AddPrismaticJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1237>`__\ (\ ``mbs``\ , \ ``body0``\ , \ ``body1``\ , \ ``point``\ , \ ``axis``\ , \ ``useGlobalFrame = True``\ , \ ``showJoint = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ )
+Function: AddPrismaticJoint
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`AddPrismaticJoint <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1237>`__\ (\ ``mbs``\ , \ ``body0``\ , \ ``body1``\ , \ ``point``\ , \ ``axis``\ , \ ``useGlobalFrame = True``\ , \ ``showJoint = True``\ , \ ``axisRadius = 0.1``\ , \ ``axisLength = 0.4``\ )
 
 - | \ *function description*\ :
   | add prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -899,9 +1015,11 @@ CLASS RigidBodyInertia (in module rigidBodyUtilities)
 
 
 
-.. _sec-rigidbodyutilities-rigidbodyinertia-init:
+.. _sec-rigidbodyutilities-rigidbodyinertia---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L791>`__\ (\ ``self``\ , \ ``mass = 0``\ , \ ``inertiaTensor = np.zeros([3,3])``\ , \ ``com = np.zeros(3)``\ , \ ``inertiaTensorAtCOM = False``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L791>`__\ (\ ``self``\ , \ ``mass = 0``\ , \ ``inertiaTensor = np.zeros([3,3])``\ , \ ``com = np.zeros(3)``\ , \ ``inertiaTensorAtCOM = False``\ )
 
 - | \ *classFunction*\ :
   | initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
@@ -912,9 +1030,11 @@ Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/
 
 ----
 
-.. _sec-rigidbodyutilities-rigidbodyinertia-add:
+.. _sec-rigidbodyutilities-rigidbodyinertia---add--:
 
-Class function: `\_\_add\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L807>`__\ (\ ``self``\ , \ ``otherBodyInertia``\ )
+Class function: \_\_add\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_add\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L807>`__\ (\ ``self``\ , \ ``otherBodyInertia``\ )
 
 - | \ *classFunction*\ :
   | add (+) operator allows adding another inertia information with SAME local coordinate system and reference point!
@@ -928,9 +1048,11 @@ Class function: `\_\_add\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/m
 
 ----
 
-.. _sec-rigidbodyutilities-rigidbodyinertia-iadd:
+.. _sec-rigidbodyutilities-rigidbodyinertia---iadd--:
 
-Class function: `\_\_iadd\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L818>`__\ (\ ``self``\ , \ ``otherBodyInertia``\ )
+Class function: \_\_iadd\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_iadd\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L818>`__\ (\ ``self``\ , \ ``otherBodyInertia``\ )
 
 - | \ *classFunction*\ :
   | += operator allows adding another inertia information with SAME local coordinate system and reference point!
@@ -947,7 +1069,9 @@ Class function: `\_\_iadd\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/
 
 .. _sec-rigidbodyutilities-rigidbodyinertia-setwithcominertia:
 
-Class function: `SetWithCOMinertia <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L827>`__\ (\ ``self``\ , \ ``mass``\ , \ ``inertiaTensorCOM``\ , \ ``com``\ )
+Class function: SetWithCOMinertia
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`SetWithCOMinertia <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L827>`__\ (\ ``self``\ , \ ``mass``\ , \ ``inertiaTensorCOM``\ , \ ``com``\ )
 
 - | \ *classFunction*\ :
   | set RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t.\ com) and center of mass com
@@ -960,7 +1084,9 @@ Class function: `SetWithCOMinertia <https://github.com/jgerstmayr/EXUDYN/blob/ma
 
 .. _sec-rigidbodyutilities-rigidbodyinertia-inertia:
 
-Class function: `Inertia <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L838>`__\ (\ ``self``\ )
+Class function: Inertia
+^^^^^^^^^^^^^^^^^^^^^^^
+`Inertia <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L838>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | returns 3x3 inertia tensor with respect to chosen reference point (not necessarily COM)
@@ -969,7 +1095,9 @@ Class function: `Inertia <https://github.com/jgerstmayr/EXUDYN/blob/master/main/
 
 .. _sec-rigidbodyutilities-rigidbodyinertia-inertiacom:
 
-Class function: `InertiaCOM <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L842>`__\ (\ ``self``\ )
+Class function: InertiaCOM
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`InertiaCOM <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L842>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | returns 3x3 inertia tensor with respect to COM
@@ -978,7 +1106,9 @@ Class function: `InertiaCOM <https://github.com/jgerstmayr/EXUDYN/blob/master/ma
 
 .. _sec-rigidbodyutilities-rigidbodyinertia-com:
 
-Class function: `COM <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L846>`__\ (\ ``self``\ )
+Class function: COM
+^^^^^^^^^^^^^^^^^^^
+`COM <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L846>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | returns center of mass (COM) w.r.t. chosen reference point
@@ -987,7 +1117,9 @@ Class function: `COM <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pyth
 
 .. _sec-rigidbodyutilities-rigidbodyinertia-mass:
 
-Class function: `Mass <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L850>`__\ (\ ``self``\ )
+Class function: Mass
+^^^^^^^^^^^^^^^^^^^^
+`Mass <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L850>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | returns mass
@@ -996,7 +1128,9 @@ Class function: `Mass <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pyt
 
 .. _sec-rigidbodyutilities-rigidbodyinertia-translated:
 
-Class function: `Translated <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L854>`__\ (\ ``self``\ , \ ``vec``\ )
+Class function: Translated
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`Translated <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L854>`__\ (\ ``self``\ , \ ``vec``\ )
 
 - | \ *classFunction*\ :
   | returns a RigidBodyInertia with center of mass com shifted by vec; \ :math:`\ra`\  transforms the returned inertiaTensor to the new center of rotation
@@ -1005,7 +1139,9 @@ Class function: `Translated <https://github.com/jgerstmayr/EXUDYN/blob/master/ma
 
 .. _sec-rigidbodyutilities-rigidbodyinertia-rotated:
 
-Class function: `Rotated <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L868>`__\ (\ ``self``\ , \ ``rot``\ )
+Class function: Rotated
+^^^^^^^^^^^^^^^^^^^^^^^
+`Rotated <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L868>`__\ (\ ``self``\ , \ ``rot``\ )
 
 - | \ *classFunction*\ :
   | returns a RigidBodyInertia rotated by 3x3 rotation matrix rot, such that for a given J, the new inertia tensor reads Jnew = rot\*J\*rot.T
@@ -1016,7 +1152,9 @@ Class function: `Rotated <https://github.com/jgerstmayr/EXUDYN/blob/master/main/
 
 .. _sec-rigidbodyutilities-rigidbodyinertia-transformed:
 
-Class function: `Transformed <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L881>`__\ (\ ``self``\ , \ ``HT``\ )
+Class function: Transformed
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`Transformed <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L881>`__\ (\ ``self``\ , \ ``HT``\ )
 
 - | \ *classFunction*\ :
   | return rigid body inertia transformed by homogeneous transformation HT
@@ -1025,7 +1163,9 @@ Class function: `Transformed <https://github.com/jgerstmayr/EXUDYN/blob/master/m
 
 .. _sec-rigidbodyutilities-rigidbodyinertia-getinertia6d:
 
-Class function: `GetInertia6D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L896>`__\ (\ ``self``\ )
+Class function: GetInertia6D
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`GetInertia6D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L896>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | get vector with 6 inertia components (Jxx, Jyy, Jzz, Jyz, Jxz, Jxy) as needed in ObjectRigidBody
@@ -1049,9 +1189,11 @@ CLASS InertiaCuboid(RigidBodyInertia) (in module rigidBodyUtilities)
 
 
 
-.. _sec-rigidbodyutilities-inertiacuboid(rigidbodyinertia)-init:
+.. _sec-rigidbodyutilities-inertiacuboid(rigidbodyinertia)---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L917>`__\ (\ ``self``\ , \ ``density``\ , \ ``sideLengths``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L917>`__\ (\ ``self``\ , \ ``density``\ , \ ``sideLengths``\ )
 
 - | \ *classFunction*\ :
   | initialize inertia
@@ -1068,9 +1210,11 @@ CLASS InertiaRodX(RigidBodyInertia) (in module rigidBodyUtilities)
     create RigidBodyInertia with moment of inertia and mass of a rod with mass m and length L in local 1-direction (x-direction); inertia w.r.t. center of mass, com=[0,0,0]
 
 
-.. _sec-rigidbodyutilities-inertiarodx(rigidbodyinertia)-init:
+.. _sec-rigidbodyutilities-inertiarodx(rigidbodyinertia)---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L929>`__\ (\ ``self``\ , \ ``mass``\ , \ ``length``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L929>`__\ (\ ``self``\ , \ ``mass``\ , \ ``length``\ )
 
 - | \ *classFunction*\ :
   | initialize inertia with mass and length of rod
@@ -1087,9 +1231,11 @@ CLASS InertiaMassPoint(RigidBodyInertia) (in module rigidBodyUtilities)
     create RigidBodyInertia with moment of inertia and mass of mass point with 'mass'; inertia w.r.t. center of mass, com=[0,0,0]
 
 
-.. _sec-rigidbodyutilities-inertiamasspoint(rigidbodyinertia)-init:
+.. _sec-rigidbodyutilities-inertiamasspoint(rigidbodyinertia)---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L937>`__\ (\ ``self``\ , \ ``mass``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L937>`__\ (\ ``self``\ , \ ``mass``\ )
 
 - | \ *classFunction*\ :
   | initialize inertia with mass of point
@@ -1106,9 +1252,11 @@ CLASS InertiaSphere(RigidBodyInertia) (in module rigidBodyUtilities)
     create RigidBodyInertia with moment of inertia and mass of sphere with mass and radius; inertia w.r.t. center of mass, com=[0,0,0]
 
 
-.. _sec-rigidbodyutilities-inertiasphere(rigidbodyinertia)-init:
+.. _sec-rigidbodyutilities-inertiasphere(rigidbodyinertia)---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L945>`__\ (\ ``self``\ , \ ``mass``\ , \ ``radius``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L945>`__\ (\ ``self``\ , \ ``mass``\ , \ ``radius``\ )
 
 - | \ *classFunction*\ :
   | initialize inertia with mass and radius of sphere
@@ -1125,9 +1273,11 @@ CLASS InertiaHollowSphere(RigidBodyInertia) (in module rigidBodyUtilities)
     create RigidBodyInertia with moment of inertia and mass of hollow sphere with mass (concentrated at circumference) and radius; inertia w.r.t. center of mass, com=0
 
 
-.. _sec-rigidbodyutilities-inertiahollowsphere(rigidbodyinertia)-init:
+.. _sec-rigidbodyutilities-inertiahollowsphere(rigidbodyinertia)---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L954>`__\ (\ ``self``\ , \ ``mass``\ , \ ``radius``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L954>`__\ (\ ``self``\ , \ ``mass``\ , \ ``radius``\ )
 
 - | \ *classFunction*\ :
   | initialize inertia with mass and (inner==outer) radius of hollow sphere
@@ -1140,9 +1290,11 @@ CLASS InertiaCylinder(RigidBodyInertia) (in module rigidBodyUtilities)
     create RigidBodyInertia with moment of inertia and mass of cylinder with density, length and outerRadius; axis defines the orientation of the cylinder axis (0=x-axis, 1=y-axis, 2=z-axis); for hollow cylinder use innerRadius != 0; inertia w.r.t. center of mass, com=[0,0,0]
 
 
-.. _sec-rigidbodyutilities-inertiacylinder(rigidbodyinertia)-init:
+.. _sec-rigidbodyutilities-inertiacylinder(rigidbodyinertia)---init--:
 
-Class function: `\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L963>`__\ (\ ``self``\ , \ ``density``\ , \ ``length``\ , \ ``outerRadius``\ , \ ``axis``\ , \ ``innerRadius = 0``\ )
+Class function: \_\_init\_\_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`\_\_init\_\_ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L963>`__\ (\ ``self``\ , \ ``density``\ , \ ``length``\ , \ ``outerRadius``\ , \ ``axis``\ , \ ``innerRadius = 0``\ )
 
 - | \ *classFunction*\ :
   | initialize inertia with density, length, outer radius, axis (0=x-axis, 1=y-axis, 2=z-axis) and optional inner radius (for hollow cylinder)

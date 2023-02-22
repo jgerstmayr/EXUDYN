@@ -46,6 +46,12 @@ The item VObjectJointRollingDisc has the following parameters:
   | RGBA connector color; if R==-1, use default color
 
 
+----------
+
+.. _description-objectjointrollingdisc:
+
+DESCRIPTION of ObjectJointRollingDisc
+-------------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -60,7 +66,156 @@ The item VObjectJointRollingDisc has the following parameters:
 
 
 
+Definition of quantities
+------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | marker m0 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m0}`\ 
+     - | current global position of marker \ :math:`m0`\ ; needed only if body \ :math:`m0`\  is not a ground body
+   * - | marker m0 orientation
+     - | \ :math:`\LU{0,m0}{\Rot}`\ 
+     - | current rotation matrix provided by marker m0 (assumed to be rigid body)
+   * - | marker m0 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m0}`\ 
+     - | current global velocity which is provided by marker m0 (assumed to be rigid body)
+   * - | marker m0 angular velocity
+     - | \ :math:`\LU{0}{\tomega}_{m0}`\ 
+     - | current angular velocity vector provided by marker m0 (assumed to be rigid body)
+   * - | marker m1 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m1}`\ 
+     - | center of disc
+   * - | marker m1 orientation
+     - | \ :math:`\LU{0,m1}{\Rot}`\ 
+     - | current rotation matrix provided by marker m1
+   * - | marker m1 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m1}`\ 
+     - | accordingly
+   * - | marker m1 angular velocity
+     - | \ :math:`\LU{0}{\tomega}_{m1}`\ 
+     - | current angular velocity vector provided by marker m1
+   * - | ground normal vector
+     - | \ :math:`\LU{0}{{\mathbf{v}}_{PN}} = \LU{0,m0}{{\mathbf{A}}} \LU{m0}{{\mathbf{v}}_{PN}}`\ 
+     - | normalized normal vector to the ground plane, moving with marker \ :math:`m0`\ 
+   * - | ground position B
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{B}`\ 
+     - | disc center point projected on ground in plane normal (\ :math:`z`\ -direction, \ :math:`z=0`\ )
+   * - | ground position C
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{C}`\ 
+     - | contact point of disc with ground in global coordinates
+   * - | ground velocity C
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{Cm1}`\ 
+     - | velocity of disc (marker 1) at ground contact point (must be zero if ground does not move)
+   * - | ground velocity C
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{Cm2}`\ 
+     - | velocity of ground (marker 0) at ground contact point (is always zero if ground does not move)
+   * - | wheel axis vector
+     - | \ :math:`\LU{0}{{\mathbf{w}}_1} =\LU{0,m1}{\Rot} \LU{m1}{{\mathbf{w}}_{1}}`\ 
+     - | normalized disc axis vector
+   * - | longitudinal vector
+     - | \ :math:`\LU{0}{{\mathbf{w}}_2}`\ 
+     - | vector in longitudinal (motion) direction
+   * - | lateral vector
+     - | \ :math:`\LU{0}{{\mathbf{w}}_{lat}} = \LU{0}{{\mathbf{v}}_{PN}} \times \LU{0}{{\mathbf{w}}}_2`\ 
+     - | vector in lateral direction, parallel to ground plane
+   * - | contact point vector
+     - | \ :math:`\LU{0}{{\mathbf{w}}_3}`\ 
+     - | normalized vector from disc center point in direction of contact point C
+   * - | \ :math:`D1`\  transformation matrix
+     - | \ :math:`\LU{0,D1}{{\mathbf{A}}} = [\LU{0}{{\mathbf{w}}_1},\, \LU{0}{{\mathbf{w}}_2},\, \LU{0}{{\mathbf{w}}_3}]`\ 
+     - | transformation of special disc coordinates \ :math:`D1`\  to global coordinates
+   * - | algebraic variables
+     - | \ :math:`{\mathbf{z}}=[\lambda_0,\,\lambda_1,\,\lambda_2]\tp`\ 
+     - | vector of algebraic variables (Lagrange multipliers) according to the algebraic equations
+
+
+Geometric relations
+-------------------
+
+The main geometrical setup is shown in the following figure:
+
+First, the contact point \ :math:`\LU{0}{{\mathbf{p}}}_{C}`\  must be computed.
+With the helper vector,
+
+.. math::
+
+   \LU{0}{{\mathbf{x}}} = \LU{0}{{\mathbf{w}}}_1 \times \LU{0}{{\mathbf{v}}_{PN}}
+
+
+we obtain a disc coordinate system, representing the longitudinal direction,
+
+.. math::
+
+   \LU{0}{{\mathbf{w}}}_2 = \frac{1}{|\LU{0}{{\mathbf{x}}}|} \LU{0}{{\mathbf{x}}}
+
+
+and the vector to the contact point,
+
+.. math::
+
+   \LU{0}{{\mathbf{w}}}_3 = \LU{0}{{\mathbf{w}}}_1 \times \LU{0}{{\mathbf{w}}}_2
+
+
+The contact point \ :math:`C`\  can be computed from
+
+.. math::
+
+   \LU{0}{{\mathbf{p}}}_{C} = \LU{0}{{\mathbf{p}}}_{m1} + r \cdot \LU{0}{{\mathbf{w}}}_3
+
+
+The velocity of the contact point at the disc is computed from,
+
+.. math::
+
+   \LU{0}{{\mathbf{v}}}_{Cm1} = \LU{0}{{\mathbf{v}}}_{m1} + \LU{0}{\tomega}_{m1} \times (r\cdot \LU{0}{{\mathbf{w}}}_3)
+
+
+If marker 0 body is (moving) rigid body instead of a ground body, the contact point \ :math:`C`\  is reconstructed in 
+body of marker 0,
+
+.. math::
+
+   \LU{m0}{{\mathbf{p}}}_{C} = \LU{m0,0}{\Rot} (\LU{0}{{\mathbf{p}}}_{C} - \LU{0}{{\mathbf{p}}}_{m0})
+
+
+The velocity of the contact point at the marker 0 body reads
+
+.. math::
+
+   \LU{0}{{\mathbf{v}}}_{Cm0} = \LU{0}{{\mathbf{v}}}_{m0} + \LU{0}{\tomega}_{m0} \times \left( \LU{0,m0}{\Rot} \LU{m0}{{\mathbf{p}}}_{C} \right)
+
+
+
+Connector constraint equations
+------------------------------
+
+\ ``activeConnector = True``\ :
+
+The non-holonomic, index 2 constraints for the tangential and normal contact follow from (an index 3 formulation would be possible, but is not implemented yet because of mixing different jacobians)
+
+.. math::
+
+   \vr{\LU{0}{{\mathbf{v}}}_{Cm1,x}}{\LU{0}{{\mathbf{v}}}_{Cm1,y}}{\LU{0}{{\mathbf{v}}}_{Cm1,z}} - \vr{\LU{0}{{\mathbf{v}}}_{Cm0,x}}{\LU{0}{{\mathbf{v}}}_{Cm0,y}}{\LU{0}{{\mathbf{v}}}_{Cm0,z}}= \Null
+
+
+\ ``activeConnector = False``\ :
+
+
+.. math::
+
+   {\mathbf{z}} = \Null
+
+
+
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

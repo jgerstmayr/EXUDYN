@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: robotics.motion &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
+  <title>Module: robotics.motion &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.105.dev1
+            Exudyn1.5.109.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -76,9 +76,26 @@
 <li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics.motion</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#class-profileconstantacceleration-in-module-robotics-motion">CLASS ProfileConstantAcceleration (in module robotics.motion)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-getbasicprofile">Class function: GetBasicProfile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-profilelinearaccelerationslist-in-module-robotics-motion">CLASS ProfileLinearAccelerationsList (in module robotics.motion)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-motion-profilelinearaccelerationslist-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-motion-profilelinearaccelerationslist-getbasicprofile">Class function: GetBasicProfile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-profileptp-in-module-robotics-motion">CLASS ProfilePTP (in module robotics.motion)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-motion-profileptp-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-motion-profileptp-getbasicprofile">Class function: GetBasicProfile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-trajectory-in-module-robotics-motion">CLASS Trajectory (in module robotics.motion)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-motion-trajectory-init">Class function: __init__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-getfinalcoordinates">Class function: GetFinalCoordinates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-add">Class function: Add</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-gettimes">Class function: GetTimes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-initialize">Class function: Initialize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-evaluate">Class function: Evaluate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-evaluatecoordinate">Class function: EvaluateCoordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-iter">Class function: __iter__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-getitem">Class function: __getitem__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-len">Class function: __len__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-function-repr">Class function: __repr__</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
@@ -102,7 +119,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.109.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -148,7 +165,10 @@ path planning and motion</p>
 </div>
 </li>
 </ul>
-<p id="sec-motion-profileconstantacceleration-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L143">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">finalCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">duration</span></code>)</p>
+</section>
+<section id="class-function-init">
+<span id="sec-motion-profileconstantacceleration-init"></span><h2>Class function: __init__<a class="headerlink" href="#class-function-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L143">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">finalCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">duration</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -157,7 +177,10 @@ path planning and motion</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-motion-profileconstantacceleration-getbasicprofile">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L148">GetBasicProfile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">initialTime</span></code>, <code class="docutils literal notranslate"><span class="pre">initialCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxVelocities</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxAccelerations</span></code>)</p>
+</section>
+<section id="class-function-getbasicprofile">
+<span id="sec-motion-profileconstantacceleration-getbasicprofile"></span><h2>Class function: GetBasicProfile<a class="headerlink" href="#class-function-getbasicprofile" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L148">GetBasicProfile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">initialTime</span></code>, <code class="docutils literal notranslate"><span class="pre">initialCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxVelocities</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxAccelerations</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -195,7 +218,10 @@ path planning and motion</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">profile</span> <span class="o">=</span> <span class="n">ProfileLinearAccelerationsList</span><span class="p">([(</span><span class="mi">0</span><span class="p">,[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">])])</span>
 </pre></div>
 </div>
-<p id="sec-motion-profilelinearaccelerationslist-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L169">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">accelerationList</span></code>)</p>
+</section>
+<section id="sec-motion-profilelinearaccelerationslist-init">
+<span id="id1"></span><h2>Class function: __init__<a class="headerlink" href="#sec-motion-profilelinearaccelerationslist-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L169">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">accelerationList</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -204,7 +230,10 @@ path planning and motion</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-motion-profilelinearaccelerationslist-getbasicprofile">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L179">GetBasicProfile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">initialTime</span></code>, <code class="docutils literal notranslate"><span class="pre">initialCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxVelocities</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxAccelerations</span></code>)</p>
+</section>
+<section id="sec-motion-profilelinearaccelerationslist-getbasicprofile">
+<span id="id2"></span><h2>Class function: GetBasicProfile<a class="headerlink" href="#sec-motion-profilelinearaccelerationslist-getbasicprofile" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L179">GetBasicProfile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">initialTime</span></code>, <code class="docutils literal notranslate"><span class="pre">initialCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxVelocities</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxAccelerations</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -233,7 +262,10 @@ path planning and motion</p>
 </div>
 </li>
 </ul>
-<p id="sec-motion-profileptp-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L196">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">finalCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">syncAccTimes</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">maxVelocities</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">maxAccelerations</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+</section>
+<section id="sec-motion-profileptp-init">
+<span id="id3"></span><h2>Class function: __init__<a class="headerlink" href="#sec-motion-profileptp-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L196">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">finalCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">syncAccTimes</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">maxVelocities</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">maxAccelerations</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -242,7 +274,10 @@ path planning and motion</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-motion-profileptp-getbasicprofile">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L209">GetBasicProfile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">initialTime</span></code>, <code class="docutils literal notranslate"><span class="pre">initialCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxVelocities</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxAccelerations</span></code>)</p>
+</section>
+<section id="sec-motion-profileptp-getbasicprofile">
+<span id="id4"></span><h2>Class function: GetBasicProfile<a class="headerlink" href="#sec-motion-profileptp-getbasicprofile" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L209">GetBasicProfile</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">initialTime</span></code>, <code class="docutils literal notranslate"><span class="pre">initialCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxVelocities</span></code>, <code class="docutils literal notranslate"><span class="pre">globalMaxAccelerations</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -278,7 +313,10 @@ path planning and motion</p>
 <span class="p">[</span><span class="n">s</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">Evaluate</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 </div>
-<p id="sec-motion-trajectory-init">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L291">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">initialCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">initialTime</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">maxVelocities</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">maxAccelerations</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+</section>
+<section id="sec-motion-trajectory-init">
+<span id="id8"></span><h2>Class function: __init__<a class="headerlink" href="#sec-motion-trajectory-init" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L291">__init__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">initialCoordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">initialTime</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">maxVelocities</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">maxAccelerations</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -295,7 +333,10 @@ path planning and motion</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-motion-trajectory-getfinalcoordinates">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L306">GetFinalCoordinates</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-getfinalcoordinates">
+<span id="sec-motion-trajectory-getfinalcoordinates"></span><h2>Class function: GetFinalCoordinates<a class="headerlink" href="#class-function-getfinalcoordinates" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L306">GetFinalCoordinates</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -304,7 +345,10 @@ path planning and motion</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-motion-trajectory-add">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L314">Add</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">profile</span></code>)</p>
+</section>
+<section id="class-function-add">
+<span id="sec-motion-trajectory-add"></span><h2>Class function: Add<a class="headerlink" href="#class-function-add" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L314">Add</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">profile</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -313,7 +357,10 @@ path planning and motion</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-motion-trajectory-gettimes">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L321">GetTimes</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-gettimes">
+<span id="sec-motion-trajectory-gettimes"></span><h2>Class function: GetTimes<a class="headerlink" href="#class-function-gettimes" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L321">GetTimes</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -322,7 +369,10 @@ path planning and motion</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-motion-trajectory-initialize">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L328">Initialize</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-initialize">
+<span id="sec-motion-trajectory-initialize"></span><h2>Class function: Initialize<a class="headerlink" href="#class-function-initialize" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L328">Initialize</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -331,7 +381,10 @@ path planning and motion</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-motion-trajectory-evaluate">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L334">Evaluate</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>)</p>
+</section>
+<section id="class-function-evaluate">
+<span id="sec-motion-trajectory-evaluate"></span><h2>Class function: Evaluate<a class="headerlink" href="#class-function-evaluate" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L334">Evaluate</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -345,7 +398,10 @@ path planning and motion</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-motion-trajectory-evaluatecoordinate">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L355">EvaluateCoordinate</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">coordinate</span></code>)</p>
+</section>
+<section id="class-function-evaluatecoordinate">
+<span id="sec-motion-trajectory-evaluatecoordinate"></span><h2>Class function: EvaluateCoordinate<a class="headerlink" href="#class-function-evaluatecoordinate" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L355">EvaluateCoordinate</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">t</span></code>, <code class="docutils literal notranslate"><span class="pre">coordinate</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -364,7 +420,10 @@ path planning and motion</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-motion-trajectory-iter">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L371">__iter__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-iter">
+<span id="sec-motion-trajectory-iter"></span><h2>Class function: __iter__<a class="headerlink" href="#class-function-iter" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L371">__iter__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -373,7 +432,10 @@ path planning and motion</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-motion-trajectory-getitem">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L375">__getitem__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">key</span></code>)</p>
+</section>
+<section id="class-function-getitem">
+<span id="sec-motion-trajectory-getitem"></span><h2>Class function: __getitem__<a class="headerlink" href="#class-function-getitem" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L375">__getitem__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>, <code class="docutils literal notranslate"><span class="pre">key</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -382,7 +444,10 @@ path planning and motion</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-motion-trajectory-len">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L379">__len__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-len">
+<span id="sec-motion-trajectory-len"></span><h2>Class function: __len__<a class="headerlink" href="#class-function-len" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L379">__len__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>
@@ -391,7 +456,10 @@ path planning and motion</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-motion-trajectory-repr">Class function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L384">__repr__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
+</section>
+<section id="class-function-repr">
+<span id="sec-motion-trajectory-repr"></span><h2>Class function: __repr__<a class="headerlink" href="#class-function-repr" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/motion.py#L384">__repr__</a>(<code class="docutils literal notranslate"><span class="pre">self</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>classFunction</em>:</div>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data structures &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
+  <title>Data structures &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.105.dev1
+            Exudyn1.5.109.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -88,7 +88,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.109.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -166,8 +166,8 @@ which are not described here as they are native to Pybind11, but can be passed a
 <h2>Vector3DList<a class="headerlink" href="#vector3dlist" title="Permalink to this heading"></a></h2>
 <p>The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++.</p>
 <p>Usage:
-+  Create empty <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with list of numpy arrays:</p>
-<p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList([</span> <span class="pre">numpy.array([1.,2.,3.]),</span> <span class="pre">numpy.array([4.,5.,6.])</span> <span class="pre">])</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with list of lists <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList([[1.,2.,3.],</span> <span class="pre">[4.,5.,6.]])</span></code>+  Append item: <code class="docutils literal notranslate"><span class="pre">x.Append([0.,2.,4.])</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code></p>
++  Create empty <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with list of numpy arrays:
+<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList([</span> <span class="pre">numpy.array([1.,2.,3.]),</span> <span class="pre">numpy.array([4.,5.,6.])</span> <span class="pre">])</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with list of lists <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList([[1.,2.,3.],</span> <span class="pre">[4.,5.,6.]])</span></code>+  Append item: <code class="docutils literal notranslate"><span class="pre">x.Append([0.,2.,4.])</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code></p>
 <p>The class <strong>Vector3DList</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -206,8 +206,8 @@ which are not described here as they are native to Pybind11, but can be passed a
 <h2>Vector2DList<a class="headerlink" href="#vector2dlist" title="Permalink to this heading"></a></h2>
 <p>The Vector2DList is used to represent lists of 2D vectors. This is used to transfer such lists from Python to C++.</p>
 <p>Usage:
-+  Create empty <code class="docutils literal notranslate"><span class="pre">Vector2DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector2DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector2DList</span></code> with list of numpy arrays:</p>
-<p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector2DList([</span> <span class="pre">numpy.array([1.,2.]),</span> <span class="pre">numpy.array([4.,5.])</span> <span class="pre">])</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector2DList</span></code> with list of lists <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector2DList([[1.,2.],</span> <span class="pre">[4.,5.]])</span></code>+  Append item: <code class="docutils literal notranslate"><span class="pre">x.Append([0.,2.])</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code>+  similar to Vector3DList !</p>
++  Create empty <code class="docutils literal notranslate"><span class="pre">Vector2DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector2DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector2DList</span></code> with list of numpy arrays:
+<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector2DList([</span> <span class="pre">numpy.array([1.,2.]),</span> <span class="pre">numpy.array([4.,5.])</span> <span class="pre">])</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector2DList</span></code> with list of lists <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector2DList([[1.,2.],</span> <span class="pre">[4.,5.]])</span></code>+  Append item: <code class="docutils literal notranslate"><span class="pre">x.Append([0.,2.])</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code>+  similar to Vector3DList !</p>
 <p>The class <strong>Vector2DList</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -285,8 +285,8 @@ which are not described here as they are native to Pybind11, but can be passed a
 <h2>Matrix3DList<a class="headerlink" href="#matrix3dlist" title="Permalink to this heading"></a></h2>
 <p>The Matrix3DList is used to represent lists of 3D Matrices. . This is used to transfer such lists from Python to C++.</p>
 <p>Usage:
-+  Create empty <code class="docutils literal notranslate"><span class="pre">Matrix3DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix3DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Matrix3DList</span></code> with list of numpy arrays:</p>
-<p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix3DList([</span> <span class="pre">numpy.eye(3),</span> <span class="pre">numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]])</span> <span class="pre">])</span></code>+  Append item: <code class="docutils literal notranslate"><span class="pre">x.Append(numpy.eye(3))</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code>+  similar to Vector3DList !</p>
++  Create empty <code class="docutils literal notranslate"><span class="pre">Matrix3DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix3DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Matrix3DList</span></code> with list of numpy arrays:
+<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix3DList([</span> <span class="pre">numpy.eye(3),</span> <span class="pre">numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]])</span> <span class="pre">])</span></code>+  Append item: <code class="docutils literal notranslate"><span class="pre">x.Append(numpy.eye(3))</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code>+  similar to Vector3DList !</p>
 <p>The class <strong>Matrix3DList</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -325,8 +325,8 @@ which are not described here as they are native to Pybind11, but can be passed a
 <h2>Matrix6DList<a class="headerlink" href="#matrix6dlist" title="Permalink to this heading"></a></h2>
 <p>The Matrix6DList is used to represent lists of 6D Matrices. . This is used to transfer such lists from Python to C++.</p>
 <p>Usage:
-+  Create empty <code class="docutils literal notranslate"><span class="pre">Matrix6DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix6DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Matrix6DList</span></code> with list of numpy arrays:</p>
-<p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix6DList([</span> <span class="pre">numpy.eye(6),</span> <span class="pre">2*numpy.eye(6)</span> <span class="pre">])</span></code>+  Append item: <code class="docutils literal notranslate"><span class="pre">x.Append(numpy.eye(6))</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code>+  similar to Matrix3DList !</p>
++  Create empty <code class="docutils literal notranslate"><span class="pre">Matrix6DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix6DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Matrix6DList</span></code> with list of numpy arrays:
+<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix6DList([</span> <span class="pre">numpy.eye(6),</span> <span class="pre">2*numpy.eye(6)</span> <span class="pre">])</span></code>+  Append item: <code class="docutils literal notranslate"><span class="pre">x.Append(numpy.eye(6))</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code>+  similar to Matrix3DList !</p>
 <p>The class <strong>Matrix6DList</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">

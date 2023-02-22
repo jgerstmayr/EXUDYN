@@ -37,6 +37,12 @@ The item VObjectGround has the following parameters:
   | Structure contains data for body visualization; data is defined in special list / dictionary structure
 
 
+----------
+
+.. _description-objectground:
+
+DESCRIPTION of ObjectGround
+---------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -53,7 +59,89 @@ The item VObjectGround has the following parameters:
 
 
 
+Equations
+---------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+ObjectGround has no equations, as it only provides a static object, at which joints and connectors can be attached. 
+The object cannot move and forces or torques do not have an effect. 
+
+In combination with markers, the \ ``localPosition``\  \ :math:`\pLocB`\  is transformed by the \ ``ObjectGround``\  to
+a global point \ :math:`\LU{0}{{\mathbf{p}}}`\  using the reference point \ :math:`\pRefG`\ ,
+
+.. math::
+
+   \LU{0}{{\mathbf{p}}} = \pRefG + \LU{0b}{\Rot} \pLocB .
+
+
+
+--------
+
+\ **Userfunction**\ : ``graphicsDataUserFunction(mbs, itemNumber)`` 
+
+
+A user function, which is called by the visualization thread in order to draw user-defined objects.
+The function can be used to generate any \ ``BodyGraphicsData``\ , see Section  :ref:`sec-graphicsdata`\ .
+Use \ ``graphicsDataUtilities``\  functions, see Section  :ref:`sec-module-graphicsdatautilities`\ , to create more complicated objects. 
+Note that \ ``graphicsDataUserFunction``\  needs to copy lots of data and is therefore
+inefficient and only designed to enable simpler tests, but not large scale problems.
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments /  return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides reference to mbs, which can be used in user function to access all data of the object
+   * - | \ ``itemNumber``\ 
+     - | Index
+     - | integer number of the object in mbs, allowing easy access
+   * - | \returnValue
+     - | BodyGraphicsData
+     - | list of \ ``GraphicsData``\  dictionaries, see Section  :ref:`sec-graphicsdata`\ 
+
+
+--------
+
+\ **User function example**\ :
+
+
+
+.. code-block:: python
+
+    import exudyn as exu
+    from math import sin, cos, pi
+    from exudyn.itemInterface import *
+    from exudyn.graphicsDataUtilities import *
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    #create simple system:
+    mbs.AddNode(NodePoint())
+    body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
+    
+    #user function for moving graphics:
+    def UFgraphics(mbs, objectNum):
+        t = mbs.systemData.GetTime(exu.ConfigurationType.Visualization) #get time if needed
+        #draw moving sphere on ground
+        graphics1=GraphicsDataSphere(point=[sin(t*2*pi), cos(t*2*pi), 0], 
+                                     radius=0.1, color=color4red, nTiles=32)
+        return [graphics1] 
+
+    #add object with graphics user function
+    ground = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsDataUserFunction=UFgraphics)))
+    mbs.Assemble()
+    sims=exu.SimulationSettings()
+    sims.timeIntegration.numberOfSteps = 10000000 #many steps to see graphics
+    exu.StartRenderer() #perform zoom all (press 'a' several times) after startup to see the sphere
+    exu.SolveDynamic(mbs, sims)
+    exu.StopRenderer()
+
+
+
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

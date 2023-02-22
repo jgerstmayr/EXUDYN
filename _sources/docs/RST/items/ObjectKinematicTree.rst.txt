@@ -74,6 +74,12 @@ The item VObjectKinematicTree has the following parameters:
   | Structure contains data for link/joint visualization; data is defined as list of BodyGraphicdData where every BodyGraphicdData corresponds to one link/joint; must either be emtpy list or length must agree with number of links
 
 
+----------
+
+.. _description-objectkinematictree:
+
+DESCRIPTION of ObjectKinematicTree
+----------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -88,7 +94,161 @@ The item VObjectKinematicTree has the following parameters:
 
 
 
+General notes
+-------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+The \ ``KinematicTree``\  object is used to represent the equations of motion of a (open) tree-structured multibody system
+using a minimum set of coordinates. Even though that Exudyn is based on redundant coordinates,
+the \ ``KinematicTree``\  allows to efficiently model standard multibody models based on revolute and prismatic joints.
+Especially, a chain with 3 links leads to only 3 equations of motion, while a redundant formulation would lead
+to \ :math:`3 \times 7`\  coordinates using Euler Parameters and \ :math:`3 \times 6`\  constraints for joints and Euler parameters,
+which gives a set of 39 equations. However this set of equations is very sparse and the evaluation is much faster
+than the kinematic tree.
+
+The question, which formulation to chose cannot be answered uniquely. However, \ ``KinematicTree``\  objects
+do not include constraints, so they can be solved with explicit solvers. Furthermore, the joint values (angels)
+can be addressed directly -- controllers or sensors are generally simpler.
+
+Equations of motion
+-------------------
+
+The equations follow the description given in Chapters 2 and 3 in the handbook of robotics, 2016 edition .
+
+Functions like \ ``GetObjectOutputSuperElement(...)``\ , see Section :ref:`sec-mainsystem-object`\ , 
+or \ ``SensorSuperElement``\ , see Section :ref:`sec-mainsystem-sensor`\ , directly access special output variables
+(\ ``OutputVariableType``\ ) of the (mesh) nodes of the superelement. The mesh nodes are the links of the
+\ ``KinematicTree``\ .
+
+Note, however, that some functionality is considerably different for \ ``ObjectGenericODE2``\ .
+
+
+Equations of motion
+-------------------
+
+The \ ``KinematicTree``\  has one node of type \ ``NodeGenericODE2``\  with \ :math:`n`\  coordinates.
+The equations of motion are built by special multibody algorithms. Currently, there is only the
+so-called Composite-Rigid-Body (CRB) algorithm implemented.
+This algorithm does not show the highest performance, but creates the mass matrix \ :math:`{\mathbf{M}}_{CRB}`\  and forces \ :math:`{\mathbf{f}}_{CRB}`\ 
+in a conventional form. The equations read
+
+.. math::
+   :label: eq-kinematictree-eom
+
+   {\mathbf{M}}_{CRB}({\mathbf{q}}) \ddot {\mathbf{q}} = {\mathbf{f}}_{CRB}({\mathbf{q}},\dot {\mathbf{q}}) + {\mathbf{f}} + {\mathbf{f}}_{PD} + {\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})
+
+
+The term \ :math:`{\mathbf{f}}_{CRB}({\mathbf{q}},\dot {\mathbf{q}})`\  represents inertial terms, which are due to accelerations and 
+quadratic velocities and is computed by \ ``ComputeODE2LHS``\ .
+Note that the user function \ :math:`{\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})`\  may be empty (=0), 
+and \ ``iN``\  represents the itemNumber (=objectNumber). 
+The force \ :math:`{\mathbf{f}}`\  is given by the \ ``jointForceVector``\ , which also may have zero length, causing it to be ignored.
+While \ :math:`{\mathbf{f}}`\  is constant, it may be varied using a \ ``mbs.preStepUserFunction``\ , which can
+then represent any force over time. Note that such changes are not considered in the object's jacobian.
+
+The user force \ :math:`{\mathbf{f}}_{user}`\  is described below and may represent any force over time.
+Note that this force is considered in the object's jacobian, but it does not include external 
+dependencies -- if a control law is feeds back measured quantities and couples them to forces.
+This leads to worse performance (up to non-convergence) of implicit solvers.
+
+The control force \ :math:`{\mathbf{f}}_{PD}`\  realizes a simple linear control law
+
+.. math::
+
+   {\mathbf{f}}_{PD} = {\mathbf{P}} . ({\mathbf{u}}_o - {\mathbf{q}}) + {\mathbf{D}} . ({\mathbf{v}}_o - \dot {\mathbf{q}})
+
+
+Here, the '.' operator represents an element-wise multiplication of two vectors, resulting in a vector.
+The force \ :math:`{\mathbf{f}}_{PD}`\  at the RHS acts in direction of prescribed joint motion \ :math:`{\mathbf{u}}_o`\  and
+prescribed joint velocities \ :math:`{\mathbf{v}}_o`\  multiplied with proportional and 'derivative' factors \ :math:`P`\  and \ :math:`D`\ .
+Omitting \ :math:`{\mathbf{u}}_o`\  and \ :math:`{\mathbf{v}}_o`\  and putting \ :math:`{\mathbf{f}}_{PD}`\  on the LHS, we immediately can interpret these
+terms as stiffness and damping on the single coordinates.
+The control force is also considered in the object's jacobian, which is currently computed by numerical
+differentiation.
+    
+More detailed equations will be added later on. Follow exactly the description (and coordinate systems) of the object parameters,
+especially for describing the kinematic chain as well as the inertial parameters.
+
+
+--------
+
+\ **Userfunction**\ : ``forceUserFunction(mbs, t, itemNumber, q, q_t)`` 
+
+
+A user function, which computes a force vector applied to the joint coordinates depending on current time and states of object. 
+Note that itemNumber represents the index of the ObjectKinematicTree object in mbs, which can be used to retrieve additional data from the object through
+\ ``mbs.GetObjectParameter(itemNumber, ...)``\ , see the according description of \ ``GetObjectParameter``\ .
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments /  return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs to which object belongs
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs
+   * - | \ ``itemNumber``\ 
+     - | Index
+     - | integer number \ :math:`i_N`\  of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+   * - | \ ``q``\ 
+     - | Vector \ :math:`\in \Rcal^n`\ 
+     - | object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values
+   * - | \ ``q_t``\ 
+     - | Vector \ :math:`\in \Rcal^n`\ 
+     - | object velocity coordinates (time derivative of \ ``q``\ ) in current configuration
+   * - | \returnValue
+     - | Vector \ :math:`\in \Rcal^{n}`\ 
+     - | returns force vector for object
+
+
+
+
+
+.. _miniexample-objectkinematictree:
+
+MINI EXAMPLE for ObjectKinematicTree
+------------------------------------
+
+
+.. code-block:: python
+
+   #build 1R mechanism (pendulum)
+   L = 1 #length of link
+   RBinertia = InertiaCuboid(1000, [L,0.1*L,0.1*L])
+   inertiaLinkCOM = RBinertia.InertiaCOM() #KinematicTree requires COM inertia
+   linkCOM = np.array([0.5*L,0.,0.]) #if COM=0, gravity does not act on pendulum!
+   
+   offsetsList = exu.Vector3DList([[0,0,0]])
+   rotList = exu.Matrix3DList([np.eye(3)])
+   linkCOMs=exu.Vector3DList([linkCOM])
+   linkInertiasCOM=exu.Matrix3DList([inertiaLinkCOM])
+   
+   
+   nGeneric = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0.],initialCoordinates=[0.],
+                                          initialCoordinates_t=[0.],numberOfODE2Coordinates=1))
+   
+   oKT = mbs.AddObject(ObjectKinematicTree(nodeNumber=nGeneric, jointTypes=[exu.JointType.RevoluteZ], linkParents=[-1],
+                                     jointTransformations=rotList, jointOffsets=offsetsList, linkInertiasCOM=linkInertiasCOM,
+                                     linkCOMs=linkCOMs, linkMasses=[RBinertia.mass], 
+                                     baseOffset = [0.5,0.,0.], gravity=[0.,-9.81,0.]))
+   
+   #assemble and solve system for default parameters
+   mbs.Assemble()
+   
+   simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+   simulationSettings.timeIntegration.numberOfSteps = 1000 #gives very accurate results
+   exu.SolveDynamic(mbs, simulationSettings , solverType=exu.DynamicSolverType.RK67) #highly accurate!
+   
+   #check final value of angle:
+   q0 = mbs.GetNodeOutput(nGeneric, exu.OutputVariableType.Coordinates)
+   #exu.Print(q0)
+   exudynTestGlobals.testResult = q0 #-3.134018551808591; RigidBody2D with 2e6 time steps gives: -3.134018551809384
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

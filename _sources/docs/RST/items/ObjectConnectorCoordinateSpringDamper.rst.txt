@@ -46,6 +46,12 @@ The item VObjectConnectorCoordinateSpringDamper has the following parameters:
   | RGBA connector color; if R==-1, use default color
 
 
+----------
+
+.. _description-objectconnectorcoordinatespringdamper:
+
+DESCRIPTION of ObjectConnectorCoordinateSpringDamper
+----------------------------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -58,7 +64,176 @@ The item VObjectConnectorCoordinateSpringDamper has the following parameters:
 
 
 
+Definition of quantities
+------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | marker m0 coordinate
+     - | \ :math:`q_{m0}`\ 
+     - | current displacement coordinate which is provided by marker m0; does NOT include reference coordinate!
+   * - | marker m1 coordinate
+     - | \ :math:`q_{m1}`\ 
+     - | 
+   * - | marker m0 velocity coordinate
+     - | \ :math:`v_{m0}`\ 
+     - | current velocity coordinate which is provided by marker m0
+   * - | marker m1 velocity coordinate
+     - | \ :math:`v_{m1}`\ 
+     - | 
+
+
+Connector forces
+----------------
+
+Displacement between marker m0 to marker m1 coordinates (does NOT include reference coordinates),
+
+.. math::
+
+   \Delta q= q_{m1} - q_{m0}
+
+
+and relative velocity,
+
+.. math::
+
+   \Delta v= v_{m1} - v_{m0}
+
+
+If \ ``activeConnector = True``\ , the scalar spring force vector is computed as
+
+.. math::
+
+   f_{SD} = k \left( \Delta q - l_\mathrm{off} \right) + d \cdot \Delta v
+
+
+If the springForceUserFunction \ :math:`\mathrm{UF}`\  is defined, \ :math:`{\mathbf{f}}_{SD}`\  instead becomes (\ :math:`t`\  is current time)
+
+.. math::
+
+   f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta q, \Delta v, k, d, l_\mathrm{off})
+
+
+and \ ``iN``\  represents the itemNumber (=objectNumber).
+
+If \ ``activeConnector = False``\ , \ :math:`f_{SD}`\  is set to zero.
+
+NOTE  that until 2023-01-21 (exudyn V1.5.76), the CoordinateSpringDamper included the parameters dryFriction and dryFrictionProportionalZone.
+These parameters have been removed and they are only available in CoordinateSpringDamperExt, HOWEVER, with different names.
+In order to use CoordinateSpringDamperExt instead of the old CoordinateSpringDamper with the same friction behavior, we recoomend:
+
++  USE CoordinateSpringDamperExt.fDynamicFriction INSTEAD of CoordinateSpringDamper.dryFriction
++  USE CoordinateSpringDamperExt.frictionProportionalZone INSTEAD of CoordinateSpringDamper.dryFrictionProportionalZone
++  CoordinateSpringDamperExt.frictionProportionalZone has a different behavior in case that it is zero; 
+        thus use 1e-16 in this case, to get as close as possible to previous behaviour
++  the variables stiffness, damping and offset have the same interpretation in both objects
++  keep every other friction, sticking and contact variables in CoordinateSpringDamperExt as default values
++  user functions obtained a new interface in CoordinateSpringDamperExt, which just needs to be adapted
+
+
+--------
+
+\ **Userfunction**\ : ``springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, dryFriction, dryFrictionProportionalZone)`` 
+
+
+A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity) 
+and object parameters .
+The object variables are passed to the function using the current values of the CoordinateSpringDamper object.
+Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+\ ``mbs.GetObjectParameter(itemNumber, ...)``\ , see the according description of \ ``GetObjectParameter``\ .
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments / return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs in which underlying item is defined
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs 
+   * - | \ ``itemNumber``\ 
+     - | Index
+     - | integer number \ :math:`i_N`\  of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+   * - | \ ``displacement``\ 
+     - | Real
+     - | \ :math:`\Delta q`\ 
+   * - | \ ``velocity``\ 
+     - | Real
+     - | \ :math:`\Delta v`\ 
+   * - | \ ``stiffness``\ 
+     - | Real
+     - | copied from object
+   * - | \ ``damping``\ 
+     - | Real
+     - | copied from object
+   * - | \ ``offset``\ 
+     - | Real
+     - | copied from object
+   * - | \returnValue
+     - | Real
+     - | scalar value of computed force
+
+
+--------
+
+\ **User function example**\ :
+
+
+
+.. code-block:: python
+
+    #see also mini example! NOTE changes above since 2023-01-23
+    def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
+        return k*(u-offset) + d*v
+
+
+
+
+
+.. _miniexample-objectconnectorcoordinatespringdamper:
+
+MINI EXAMPLE for ObjectConnectorCoordinateSpringDamper
+------------------------------------------------------
+
+
+.. code-block:: python
+
+   #define user function:
+   #NOTE: removed 2023-01-21: dryFriction, dryFrictionProportionalZone
+   def springForce(mbs, t, itemNumber, u, v, k, d, offset): 
+       return 0.1*k*u+k*u**3+v*d
+   
+   nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
+   massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+   
+   groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
+   nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
+   
+   #Spring-Damper between two marker coordinates
+   mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundMarker, nodeMarker], 
+                                        stiffness = 5000, damping = 80, 
+                                        springForceUserFunction = springForce)) 
+   loadCoord = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker, load = 1)) #static linear solution:0.002
+   
+   #assemble and solve system for default parameters
+   mbs.Assemble()
+   exu.SolveDynamic(mbs)
+   
+   #check result at default integration time
+   exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, 
+                                                exu.OutputVariableType.Displacement)[0]
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

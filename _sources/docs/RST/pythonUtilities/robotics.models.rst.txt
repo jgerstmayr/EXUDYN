@@ -15,7 +15,9 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 
 .. _sec-models-manipulator4rsimple:
 
-Function: `Manipulator4Rsimple <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L38>`__\ ()
+Function: Manipulator4Rsimple
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`Manipulator4Rsimple <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L38>`__\ ()
 
 - | \ *function description*\ :
   | generate simple 4R manipulator as myRobot dictionary, settings are done in function
@@ -29,7 +31,9 @@ Function: `Manipulator4Rsimple <https://github.com/jgerstmayr/EXUDYN/blob/master
 
 .. _sec-models-manipulator3rsimple:
 
-Function: `Manipulator3RSimple <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L117>`__\ ()
+Function: Manipulator3RSimple
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`Manipulator3RSimple <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L117>`__\ ()
 
 - | \ *function description*\ :
   | generate simple 3R manipulator as myRobot dictionary, settings are done in function
@@ -41,7 +45,9 @@ Function: `Manipulator3RSimple <https://github.com/jgerstmayr/EXUDYN/blob/master
 
 .. _sec-models-manipulatorpanda:
 
-Function: `ManipulatorPANDA <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L203>`__\ ()
+Function: ManipulatorPANDA
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ManipulatorPANDA <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L203>`__\ ()
 
 - | \ *function description*\ :
   | generate simple Franka Emika Panda manipulator as myRobot dictionary, settings are done in function
@@ -53,7 +59,9 @@ Function: `ManipulatorPANDA <https://github.com/jgerstmayr/EXUDYN/blob/master/ma
 
 .. _sec-models-manipulatorur5:
 
-Function: `ManipulatorUR5 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L345>`__\ ()
+Function: ManipulatorUR5
+^^^^^^^^^^^^^^^^^^^^^^^^
+`ManipulatorUR5 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L345>`__\ ()
 
 - | \ *function description*\ :
   | generate UR5 manipulator as myRobot dictionary, settings are done in function
@@ -69,7 +77,9 @@ Function: `ManipulatorUR5 <https://github.com/jgerstmayr/EXUDYN/blob/master/main
 
 .. _sec-models-manipulatorpuma560:
 
-Function: `ManipulatorPuma560 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L427>`__\ ()
+Function: ManipulatorPuma560
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ManipulatorPuma560 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L427>`__\ ()
 
 - | \ *function description*\ :
   | generate puma560 manipulator as myRobot dictionary, settings are done in function
@@ -87,7 +97,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-models-linklist2robot:
 
-Function: `LinkList2Robot <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L523>`__\ (\ ``robotClass``\ , \ ``robotLinkList``\ , \ ``dhmode``\ )
+Function: LinkList2Robot
+^^^^^^^^^^^^^^^^^^^^^^^^
+`LinkList2Robot <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/models.py\#L523>`__\ (\ ``robotClass``\ , \ ``robotLinkList``\ , \ ``dhmode``\ )
 
 - | \ *function description*\ :
   | generate serial manipulator as robotClass object from linklist settings are done in function

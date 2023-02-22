@@ -51,6 +51,12 @@ The item VObjectJointALEMoving2D has the following parameters:
   | RGBA connector color; if R==-1, use default color
 
 
+----------
+
+.. _description-objectjointalemoving2d:
+
+DESCRIPTION of ObjectJointALEMoving2D
+-------------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -69,7 +75,146 @@ The item VObjectJointALEMoving2D has the following parameters:
 
 
 
+Definition of quantities
+------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | generic data node
+     - | \ :math:`{\mathbf{x}}=[x_{data0}]\tp`\ 
+     - | coordinates of node with node number \ :math:`n_{GD}`\ 
+   * - | generic ODE2 node
+     - | \ :math:`{\mathbf{q}}=[q_{0}]\tp`\ 
+     - | coordinates of node with node number \ :math:`n_{ALE}`\ , which is shared with all ALE-ANCF and ALE sliding joint objects
+   * - | data coordinate
+     - | \ :math:`x_{data0}`\ 
+     - | the current index in slidingMarkerNumbers
+   * - | ALE coordinate
+     - | \ :math:`q_{ALE} = q_{0}`\ 
+     - | current ALE coordinate (in fact this is the Eulerian coordinate in the ALE formulation); note that reference coordinate of \ :math:`q_{ALE}`\  is ignored!
+   * - | marker m0 position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m0}`\ 
+     - | current global position which is provided by marker m0
+   * - | marker m0 velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m0}`\ 
+     - | current global velocity which is provided by marker m0
+   * - | cable coordinates
+     - | \ :math:`{\mathbf{q}}_{ANCF,m1}`\ 
+     - | current coordiantes of the ANCF cable element with the current marker \ :math:`m1`\  is referring to
+   * - | sliding position
+     - | \ :math:`\LUR{0}{{\mathbf{r}}}{ANCF} = {\mathbf{S}}(s_{el}){\mathbf{q}}_{ANCF,m1}`\ 
+     - | current global position at the ANCF cable element, evaluated at local sliding position \ :math:`s_{el}`\ 
+   * - | sliding position slope
+     - | \ :math:`\LURU{0}{{\mathbf{r}}}{ANCF}{\prime} = {\mathbf{S}}^\prime(s_{el}){\mathbf{q}}_{ANCF,m1}`\ 
+     - | current global slope vector of the ANCF cable element, evaluated at local sliding position \ :math:`s_{el}`\ 
+   * - | sliding velocity
+     - | \ :math:`\LUR{0}{{\mathbf{v}}}{ANCF} = {\mathbf{S}}(s_{el})\dot{\mathbf{q}}_{ANCF,m1} + \dot q_{ALE} \LURU{0}{{\mathbf{r}}}{ANCF}{\prime}`\ 
+     - | current global velocity at the ANCF cable element, evaluated at local sliding position \ :math:`s_{el}`\ , including convective term
+   * - | sliding normal vector
+     - | \ :math:`\LU{0}{{\mathbf{n}}} = [-r^\prime_1,\,r^\prime_0]`\ 
+     - | 2D normal vector computed from slope \ :math:`{\mathbf{r}}^\prime=\LURU{0}{{\mathbf{r}}}{ANCF}{\prime}`\ 
+   * - | algebraic variables
+     - | \ :math:`{\mathbf{z}}=[\lambda_0,\,\lambda_1]\tp`\ 
+     - | algebraic variables (Lagrange multipliers) according to the algebraic equations 
+
+
+
+Geometric relations
+-------------------
+
+The element sliding coordinate (in the local coordinates of the current sliding element) is computed from the ALE coordinate
+
+.. math::
+
+   s_{el} = q_{ALE} + s_{off} - d_{m1} = s_g - d_{m1}.
+
+
+For the description of the according quantities, see the description above. The distance \ :math:`d_{m1}`\  is obtained from the \ ``slidingMarkerOffsets``\  list, using the current (local) index \ :math:`x_{data0}`\ .
+The vector (=difference; error) between the marker \ :math:`m0`\  and the marker \ :math:`m1`\  (=\ :math:`{\mathbf{r}}_{ANCF}`\ ) positions reads
+
+.. math::
+
+   \LU{0}{\Delta{\mathbf{p}}} = \LUR{0}{{\mathbf{r}}}{ANCF} - \LU{0}{{\mathbf{p}}}_{m0}
+
+
+Note that \ :math:`\LU{0}{{\mathbf{p}}}_{m0}`\  represents the current position of the marker \ :math:`m0`\ , which could represent the midpoint of a mass sliding along the beam.
+The position \ :math:`\LUR{0}{{\mathbf{r}}}{ANCF}`\  is computed from the beam represented by marker \ :math:`m1`\ , using the local beam coordinate \ :math:`x=s_{el}`\ . 
+The marker and the according beam finite element changes during movement using the list \ ``slidingMarkerNumbers``\  and the index is updated in the PostNewtonStep.
+The vector (=difference; error) between the marker \ :math:`m0`\  and the marker \ :math:`m1`\  velocities reads
+
+.. math::
+
+   \LU{0}{\Delta{\mathbf{v}}} = \LUR{0}{{\mathbf{v}}}{ANCF} - \LU{0}{{\mathbf{v}}}_{m0}
+
+
+
+
+Connector constraint equations
+------------------------------
+
+The 2D sliding joint is implemented having 2 equations, using the Lagrange multipliers \ :math:`{\mathbf{z}}`\ . 
+The algebraic (index 3) equations read
+
+.. math::
+
+   \LU{0}{\Delta{\mathbf{p}}} = 0
+
+
+Note that the Lagrange multipliers \ :math:`[\lambda_0,\,\lambda_1]\tp`\ are the global forces in the joint.
+In the index 2 case the algebraic equations read
+
+.. math::
+
+   \LU{0}{\Delta{\mathbf{v}}} = 0
+
+
+If \ ``usePenalty = True``\ , the algebraic equations are changed to:
+
+.. math::
+
+   \LU{0}{\Delta {\mathbf{p}}} - \frac 1 k {\mathbf{z}} = 0.
+
+
+
+If \ ``activeConnector = False``\ , the algebraic equations are changed to:
+
+.. math::
+
+   \lambda_0 &=& 0,   \\
+   \lambda_1 &=& 0.
+
+   
+
+Post Newton Step
+----------------
+
+After the Newton solver has converged, a PostNewtonStep is performed for the element, which
+updates the marker \ :math:`m1`\  index if necessary.
+
+.. math::
+
+   s_{el} < 0 \quad \ra \quad x_{data0} \;-\!\!=1 \nonumber\\
+   s_{el} > L \quad \ra \quad x_{data0} \;+\!\!=1
+
+
+Furthermore, it is checked, if \ :math:`x_{data0}`\  becomes smaller than zero, which raises a warning and keeps \ :math:`x_{data0}=0`\ .
+The same results if \ :math:`x_{data0}\ge sn`\ , then \ :math:`x_{data0} = sn`\ .
+Finally, the data coordinate is updated in order to provide the starting value for the next step,
+
+.. math::
+
+   x_{data1} \;+\!\!= s.
+
+
+
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

@@ -39,6 +39,12 @@ The item VNodePoint3DSlope23 has the following parameters:
   | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
 
 
+----------
+
+.. _description-nodepoint3dslope23:
+
+DESCRIPTION of NodePoint3DSlope23
+---------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -58,6 +64,6 @@ The item VNodePoint3DSlope23 has the following parameters:
 
 
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

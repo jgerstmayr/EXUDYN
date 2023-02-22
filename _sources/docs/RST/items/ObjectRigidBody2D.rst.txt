@@ -40,6 +40,12 @@ The item VObjectRigidBody2D has the following parameters:
   | Structure contains data for body visualization; data is defined in special list / dictionary structure
 
 
+----------
+
+.. _description-objectrigidbody2d:
+
+DESCRIPTION of ObjectRigidBody2D
+--------------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -70,7 +76,149 @@ The item VObjectRigidBody2D has the following parameters:
 
 
 
+Definition of quantities
+------------------------
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | COM position
+     - | \ :math:`\pRefG\cConfig + \pRefG\cRef = \LU{0}{{\mathbf{p}}}(n_0)\cConfig`\ 
+     - | reference point, equal to the position of COM; provided by node \ :math:`n_0`\  in any configuration (except reference)
+   * - | COM displacement
+     - | \ :math:`\LU{0}{{\mathbf{u}}}\cConfig =\pRefG\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{{\mathbf{u}}}(n_0)\cConfig`\ 
+     - | displacement of center of mass which is provided by node \ :math:`n_0`\  in any configuration; NOTE that for configurations other than reference, it is follows that \ :math:`\pRefG\cRef - \pRefG\cConfig`\ 
+   * - | COM velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp = \LU{0}{{\mathbf{v}}}(n_0)\cConfig`\ 
+     - | velocity of center of mass which is provided by node \ :math:`n_0`\  in any configuration
+   * - | body rotation
+     - | \ :math:`\LU{0}{\theta}_{0\mathrm{config}} = \theta_0(n_0)\cConfig = \psi_0(n_0)\cRef + \psi_0(n_0)\cConfig`\ 
+     - | rotation of body as provided by node \ :math:`n_0`\  in any configuration
+   * - | body rotation matrix
+     - | \ :math:`\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}(n_0)\cConfig`\ 
+     - | rotation matrix which transforms local to global coordinates as given by node
+   * - | local position
+     - | \ :math:`\pLocB = [\LU{b}{b_0},\,\LU{b}{b_1},\,0]\tp`\ 
+     - | local position as used by markers or sensors
+   * - | body angular velocity
+     - | \ :math:`\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0(n_0),\,0,\,0]}\cConfig\tp`\ 
+     - | rotation of body as provided by node \ :math:`n_0`\  in any configuration
+   * - | (generalized) coordinates
+     - | \ :math:`{\mathbf{c}}\cConfig = [q_0,q_1,\;\psi_0]\tp`\ 
+     - | generalized coordinates of body (= coordinates of node)
+   * - | generalized forces
+     - | \ :math:`\LU{0}{{\mathbf{f}}} = [f_0,\;f_1,\;\tau_2]\tp`\ 
+     - | generalized forces applied to body
+   * - | applied forces
+     - | \ :math:`\LU{0}{{\mathbf{f}}}_a = [f_0,\;f_1,\;0]\tp`\ 
+     - | applied forces (loads, connectors, joint reaction forces, ...)
+   * - | applied torques
+     - | \ :math:`\LU{0}{\ttau}_a = [0,\;0,\;\tau_2]\tp`\ 
+     - | applied torques (loads, connectors, joint reaction forces, ...)
+
+
+Equations of motion
+-------------------
+
+
+.. math::
+
+   \mr{m}{0}{0} {0}{m}{0} {0}{0}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{f_0}{f_1}{\tau_2} = {\mathbf{f}}.
+
+
+For example, a LoadCoordinate on coordinate 2 of the node would add a torque \ :math:`\tau_2`\  on the RHS.
+
+Position-based markers can measure position \ :math:`{\mathbf{p}}\cConfig(\pLocB)`\  depending on the local position \ :math:`\pLocB`\ . 
+The \ **position jacobian**\  depends on the local position \ :math:`\pLocB`\  and is defined as,
+
+.. math::
+
+   \LU{0}{{\mathbf{J}}_{pos}} = \partial \LU{0}{{\mathbf{p}}}\cConfig(\pLocB)\cCur / \partial {\mathbf{c}}\cCur = \mr{1}{0}{-\sin(\theta)\LU{b}{b_0} - \cos(\theta)\LU{b}{b_1}} {0}{1}{\cos(\theta)\LU{b}{b_0}-\sin(\theta)\LU{b}{b_1}} {0}{0}{0}
+
+
+which transforms the action of global forces \ :math:`\LU{0}{{\mathbf{f}}}`\  of position-based markers on the coordinates \ :math:`{\mathbf{c}}`\ ,
+
+.. math::
+
+   {\mathbf{Q}} = \LU{0}{{\mathbf{J}}_{pos}}\tp \LU{0}{{\mathbf{f}}}_a
+
+
+The \ **rotation jacobian**\ , which is computed from angular velocity, reads
+
+.. math::
+
+   \LU{0}{{\mathbf{J}}_{rot}} = \partial \LU{0}{\tomega}\cCur / \partial \dot {\mathbf{c}}\cCur = \mr{0}{0}{0} {0}{0}{0} {0}{0}{1}
+
+
+and transforms the action of global torques \ :math:`\LU{0}{\ttau}`\  of orientation-based markers on the coordinates \ :math:`{\mathbf{c}}`\ ,
+
+.. math::
+
+   {\mathbf{Q}} = \LU{0}{{\mathbf{J}}_{rot}}\tp \LU{0}{\ttau}_a
+
+
+
+--------
+
+\ **Userfunction**\ : ``graphicsDataUserFunction(mbs, itemNumber)`` 
+
+
+A user function, which is called by the visualization thread in order to draw user-defined objects.
+The function can be used to generate any \ ``BodyGraphicsData``\ , see Section  :ref:`sec-graphicsdata`\ .
+Use \ ``graphicsDataUtilities``\  functions, see Section  :ref:`sec-module-graphicsdatautilities`\ , to create more complicated objects. 
+Note that \ ``graphicsDataUserFunction``\  needs to copy lots of data and is therefore
+inefficient and only designed to enable simpler tests, but not large scale problems.
+
+For an example for \ ``graphicsDataUserFunction``\  see ObjectGround, Section :ref:`sec-item-objectground`\ .
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments /  return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides reference to mbs, which can be used in user function to access all data of the object
+   * - | \ ``itemNumber``\ 
+     - | int
+     - | integer number of the object in mbs, allowing easy access
+   * - | \returnValue
+     - | BodyGraphicsData
+     - | list of \ ``GraphicsData``\  dictionaries, see Section  :ref:`sec-graphicsdata`\ 
+
+
+
+
+.. _miniexample-objectrigidbody2d:
+
+MINI EXAMPLE for ObjectRigidBody2D
+----------------------------------
+
+
+.. code-block:: python
+
+   node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates = [1,1,0.25*np.pi], 
+                                      initialCoordinates=[0.5,0,0],
+                                      initialVelocities=[0.5,0,0.75*np.pi]))
+   mbs.AddObject(RigidBody2D(nodeNumber = node, physicsMass=1, physicsInertia=2))
+   
+   #assemble and solve system for default parameters
+   mbs.Assemble()
+   exu.SolveDynamic(mbs)
+   
+   #check result
+   exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
+   exudynTestGlobals.testResult+= mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[2]
+   #final x-coordinate of position shall be 2, angle theta shall be np.pi
+
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

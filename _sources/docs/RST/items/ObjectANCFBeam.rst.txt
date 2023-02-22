@@ -44,6 +44,12 @@ The item VObjectANCFBeam has the following parameters:
   | RGBA color of the object; if R==-1, use default color
 
 
+----------
+
+.. _description-objectancfbeam:
+
+DESCRIPTION of ObjectANCFBeam
+-----------------------------
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
@@ -67,8 +73,10 @@ The item VObjectANCFBeam has the following parameters:
   | rotation matrix of cross section rotation as 9D vector
 
 
+Detailed description coming later.
 
 
-\ **This is only a small part of information on this item. For details see the Exudyn documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
+
+\ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 
 
 

@@ -20,7 +20,9 @@ Basic utility functions and constants, not depending on numpy or other python mo
 
 .. _sec-basicutilities-clearworkspace:
 
-Function: `ClearWorkspace <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L42>`__\ ()
+Function: ClearWorkspace
+^^^^^^^^^^^^^^^^^^^^^^^^
+`ClearWorkspace <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L42>`__\ ()
 
 - | \ *function description*\ :
   | clear all workspace variables except for system variables with '_' at beginning,
@@ -52,7 +54,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-basicutilities-diagonalmatrix:
 
-Function: `DiagonalMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L90>`__\ (\ ``rowsColumns``\ , \ ``value = 1``\ )
+Function: DiagonalMatrix
+^^^^^^^^^^^^^^^^^^^^^^^^
+`DiagonalMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L90>`__\ (\ ``rowsColumns``\ , \ ``value = 1``\ )
 
 - | \ *function description*\ :
   | create a diagonal or identity matrix; used for interface.py, avoiding the need for numpy
@@ -67,7 +71,9 @@ Function: `DiagonalMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main
 
 .. _sec-basicutilities-norml2:
 
-Function: `NormL2 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L104>`__\ (\ ``vector``\ )
+Function: NormL2
+^^^^^^^^^^^^^^^^
+`NormL2 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L104>`__\ (\ ``vector``\ )
 
 - | \ *function description*\ :
   | compute L2 norm for vectors without switching to numpy or math module
@@ -85,7 +91,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-basicutilities-vsum:
 
-Function: `VSum <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L113>`__\ (\ ``vector``\ )
+Function: VSum
+^^^^^^^^^^^^^^
+`VSum <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L113>`__\ (\ ``vector``\ )
 
 - | \ *function description*\ :
   | compute sum of all values of vector
@@ -103,7 +111,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-basicutilities-vadd:
 
-Function: `VAdd <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L122>`__\ (\ ``v0``\ , \ ``v1``\ )
+Function: VAdd
+^^^^^^^^^^^^^^
+`VAdd <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L122>`__\ (\ ``v0``\ , \ ``v1``\ )
 
 - | \ *function description*\ :
   | add two vectors instead using numpy
@@ -121,7 +131,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-basicutilities-vsub:
 
-Function: `VSub <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L133>`__\ (\ ``v0``\ , \ ``v1``\ )
+Function: VSub
+^^^^^^^^^^^^^^
+`VSub <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L133>`__\ (\ ``v0``\ , \ ``v1``\ )
 
 - | \ *function description*\ :
   | subtract two vectors instead using numpy: result = v0-v1
@@ -139,7 +151,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-basicutilities-vmult:
 
-Function: `VMult <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L144>`__\ (\ ``v0``\ , \ ``v1``\ )
+Function: VMult
+^^^^^^^^^^^^^^^
+`VMult <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L144>`__\ (\ ``v0``\ , \ ``v1``\ )
 
 - | \ *function description*\ :
   | scalar multiplication of two vectors instead using numpy: result = v0' \* v1
@@ -153,7 +167,9 @@ Function: `VMult <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDe
 
 .. _sec-basicutilities-scalarmult:
 
-Function: `ScalarMult <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L154>`__\ (\ ``scalar``\ , \ ``v``\ )
+Function: ScalarMult
+^^^^^^^^^^^^^^^^^^^^
+`ScalarMult <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L154>`__\ (\ ``scalar``\ , \ ``v``\ )
 
 - | \ *function description*\ :
   | multiplication vectors with scalar: result = scalar \* v
@@ -171,7 +187,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-basicutilities-normalize:
 
-Function: `Normalize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L163>`__\ (\ ``v``\ )
+Function: Normalize
+^^^^^^^^^^^^^^^^^^^
+`Normalize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L163>`__\ (\ ``v``\ )
 
 - | \ *function description*\ :
   | take a 3D vector and return a normalized 3D vector (L2Norm=1)
@@ -189,7 +207,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-basicutilities-vec2tilde:
 
-Function: `Vec2Tilde <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L179>`__\ (\ ``v``\ )
+Function: Vec2Tilde
+^^^^^^^^^^^^^^^^^^^
+`Vec2Tilde <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L179>`__\ (\ ``v``\ )
 
 - | \ *function description*\ :
   | apply tilde operator (skew) to 3D-vector and return skew matrix
@@ -208,7 +228,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 .. _sec-basicutilities-tilde2vec:
 
-Function: `Tilde2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L186>`__\ (\ ``m``\ )
+Function: Tilde2Vec
+^^^^^^^^^^^^^^^^^^^
+`Tilde2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L186>`__\ (\ ``m``\ )
 
 - | \ *function description*\ :
   | take skew symmetric matrix and return vector (inverse of Skew(...))
@@ -222,7 +244,9 @@ Function: `Tilde2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pyth
 
 .. _sec-basicutilities-gaussintegrate:
 
-Function: `GaussIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L213>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
+Function: GaussIntegrate
+^^^^^^^^^^^^^^^^^^^^^^^^
+`GaussIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L213>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
 
 - | \ *function description*\ :
   | compute numerical integration of functionOfX in interval [a,b] using Gaussian integration
@@ -239,7 +263,9 @@ Function: `GaussIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main
 
 .. _sec-basicutilities-lobattointegrate:
 
-Function: `LobattoIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L249>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
+Function: LobattoIntegrate
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`LobattoIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L249>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
 
 - | \ *function description*\ :
   | compute numerical integration of functionOfX in interval [a,b] using Lobatto integration

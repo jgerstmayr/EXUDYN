@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: signalProcessing &mdash; Exudyn1.5.105.dev1 1.5.105.dev1 documentation</title>
+  <title>Module: signalProcessing &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.5.105.dev1
+            Exudyn1.5.109.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -77,7 +77,13 @@
 <li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: signalProcessing</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: signalProcessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-filtersensoroutput">Function: FilterSensorOutput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-filtersignal">Function: FilterSignal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computefft">Function: ComputeFFT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-getinterpolatedsignalvalue">Function: GetInterpolatedSignalValue</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
 </ul>
@@ -96,7 +102,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.5.105.dev1</a>
+          <a href="../../../index.html">Exudyn1.5.109.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -123,7 +129,9 @@ and for filtering result data.</p>
 <li><p>Date:      2020-12-10</p></li>
 <li><p>Notes:     This module is still under construction and should be used with care!</p></li>
 </ul>
-<p id="sec-signalprocessing-filtersensoroutput">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py#L25">FilterSensorOutput</a>(<code class="docutils literal notranslate"><span class="pre">signal</span></code>, <code class="docutils literal notranslate"><span class="pre">filterWindow</span> <span class="pre">=</span> <span class="pre">5</span></code>, <code class="docutils literal notranslate"><span class="pre">polyOrder</span> <span class="pre">=</span> <span class="pre">3</span></code>, <code class="docutils literal notranslate"><span class="pre">derivative</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">centralDifferentiate</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<section id="function-filtersensoroutput">
+<span id="sec-signalprocessing-filtersensoroutput"></span><h2>Function: FilterSensorOutput<a class="headerlink" href="#function-filtersensoroutput" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py#L25">FilterSensorOutput</a>(<code class="docutils literal notranslate"><span class="pre">signal</span></code>, <code class="docutils literal notranslate"><span class="pre">filterWindow</span> <span class="pre">=</span> <span class="pre">5</span></code>, <code class="docutils literal notranslate"><span class="pre">polyOrder</span> <span class="pre">=</span> <span class="pre">3</span></code>, <code class="docutils literal notranslate"><span class="pre">derivative</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">centralDifferentiate</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -150,7 +158,10 @@ and for filtering result data.</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFoutputTest.py">ANCFoutputTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py">objectFFRFreducedOrderAccelerations.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-signalprocessing-filtersignal">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py#L81">FilterSignal</a>(<code class="docutils literal notranslate"><span class="pre">signal</span></code>, <code class="docutils literal notranslate"><span class="pre">samplingRate</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">filterWindow</span> <span class="pre">=</span> <span class="pre">5</span></code>, <code class="docutils literal notranslate"><span class="pre">polyOrder</span> <span class="pre">=</span> <span class="pre">3</span></code>, <code class="docutils literal notranslate"><span class="pre">derivative</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">centralDifferentiate</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+</section>
+<section id="function-filtersignal">
+<span id="sec-signalprocessing-filtersignal"></span><h2>Function: FilterSignal<a class="headerlink" href="#function-filtersignal" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py#L81">FilterSignal</a>(<code class="docutils literal notranslate"><span class="pre">signal</span></code>, <code class="docutils literal notranslate"><span class="pre">samplingRate</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">filterWindow</span> <span class="pre">=</span> <span class="pre">5</span></code>, <code class="docutils literal notranslate"><span class="pre">polyOrder</span> <span class="pre">=</span> <span class="pre">3</span></code>, <code class="docutils literal notranslate"><span class="pre">derivative</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">centralDifferentiate</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -178,7 +189,10 @@ and for filtering result data.</p>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderAccelerations.py">objectFFRFreducedOrderAccelerations.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
-<p id="sec-signalprocessing-computefft">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py#L126">ComputeFFT</a>(<code class="docutils literal notranslate"><span class="pre">time</span></code>, <code class="docutils literal notranslate"><span class="pre">data</span></code>)</p>
+</section>
+<section id="function-computefft">
+<span id="sec-signalprocessing-computefft"></span><h2>Function: ComputeFFT<a class="headerlink" href="#function-computefft" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py#L126">ComputeFFT</a>(<code class="docutils literal notranslate"><span class="pre">time</span></code>, <code class="docutils literal notranslate"><span class="pre">data</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -210,7 +224,10 @@ and for filtering result data.</p>
 </li>
 </ul>
 <hr class="docutils" />
-<p id="sec-signalprocessing-getinterpolatedsignalvalue">Function: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py#L163">GetInterpolatedSignalValue</a>(<code class="docutils literal notranslate"><span class="pre">time</span></code>, <code class="docutils literal notranslate"><span class="pre">dataArray</span></code>, <code class="docutils literal notranslate"><span class="pre">timeArray</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">timeArrayIndex</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">dataArrayIndex</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">rangeWarning</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-6</span></code>)</p>
+</section>
+<section id="function-getinterpolatedsignalvalue">
+<span id="sec-signalprocessing-getinterpolatedsignalvalue"></span><h2>Function: GetInterpolatedSignalValue<a class="headerlink" href="#function-getinterpolatedsignalvalue" title="Permalink to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py#L163">GetInterpolatedSignalValue</a>(<code class="docutils literal notranslate"><span class="pre">time</span></code>, <code class="docutils literal notranslate"><span class="pre">dataArray</span></code>, <code class="docutils literal notranslate"><span class="pre">timeArray</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">timeArrayIndex</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">dataArrayIndex</span> <span class="pre">=</span> <span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">rangeWarning</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">tolerance</span> <span class="pre">=</span> <span class="pre">1e-6</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -239,6 +256,7 @@ and for filtering result data.</p>
 </div>
 </li>
 </ul>
+</section>
 </section>
 
 
