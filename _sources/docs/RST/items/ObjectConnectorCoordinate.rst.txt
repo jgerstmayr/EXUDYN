@@ -26,7 +26,7 @@ The item \ **ObjectConnectorCoordinate**\  with type = 'ConnectorCoordinate' has
 * | **factorValue1** [\ :math:`k_{m1}`\ , type = Real, default = 1.]:
   | An additional factor multiplied with value1 used in algebraic equation
 * | **velocityLevel** [type = Bool, default = False]:
-  | If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored
+  | If true: connector constrains velocities (only works for \ :ref:`ODE2 <ODE2>`\  coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored
 * | **offsetUserFunction** [\ :math:`\mathrm{UF} \in \Rcal`\ , type = PyFunctionMbsScalarIndexScalar, default =  0]:
   | A Python function which defines the time-dependent offset; see description below
 * | **offsetUserFunction_t** [\ :math:`\mathrm{UF}_t \in \Rcal`\ , type = PyFunctionMbsScalarIndexScalar, default =  0]:

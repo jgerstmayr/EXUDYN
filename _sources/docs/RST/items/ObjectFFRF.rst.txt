@@ -5,7 +5,7 @@
 ObjectFFRF
 ==========
 
-This object is used to represent equations modelled by the FFRF. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the FFRF. Note that temporary matrices and vectors are subject of change in future.
+This object is used to represent equations modelled by the \ :ref:`FFRF <FFRF>`\ . It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \ :ref:`FFRF <FFRF>`\ . Note that temporary matrices and vectors are subject of change in future.
 
 Authors: Gerstmayr Johannes, Zwölfer Andreas
 
@@ -28,23 +28,23 @@ The item \ **ObjectFFRF**\  with type = 'FFRF' has the following parameters:
 * | **dampingMatrixFF** [\ :math:`\LU{b}{{\mathbf{D}}} \in \Rcal^{n\indf \times n\indf}`\ , type = PyMatrixContainer, default = PyMatrixContainer[]]:
   | body-fixed and ONLY flexible coordinates part of damping matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
 * | **forceVector** [\ :math:`\LU{0}{{\mathbf{f}}} = [\LU{0}{{\mathbf{f}}\indr},\; \LU{0}{{\mathbf{f}}\indf}]\tp \in \Rcal^{n_c}`\ , type = NumpyVector, default = []]:
-  | generalized, force vector added to RHS; the rigid body part \ :math:`{\mathbf{f}}_r`\  is directly applied to rigid body coordinates while the flexible part \ :math:`{\mathbf{f}}\indf`\  is transformed from global to local coordinates; note that this force vector only allows to add gravity forces for bodies with COM at the origin of the reference frame
+  | generalized, force vector added to RHS; the rigid body part \ :math:`{\mathbf{f}}_r`\  is directly applied to rigid body coordinates while the flexible part \ :math:`{\mathbf{f}}\indf`\  is transformed from global to local coordinates; note that this force vector only allows to add gravity forces for bodies with \ :ref:`COM <COM>`\  at the origin of the reference frame
 * | **forceUserFunction** [\ :math:`{\mathbf{f}}_{user} =  [\LU{0}{{\mathbf{f}}_{\mathrm{r},user}},\; \LU{b}{{\mathbf{f}}_{\mathrm{f},user}}]\tp \in \Rcal^{n_c}`\ , type = PyFunctionVectorMbsScalarIndex2Vector, default =  0]:
-  | A Python user function which computes the generalized user force vector for the ODE2 equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q_t; see description below
+  | A Python user function which computes the generalized user force vector for the \ :ref:`ODE2 <ODE2>`\  equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q_t; see description below
 * | **massMatrixUserFunction** [\ :math:`{\mathbf{M}}_{user} \in \Rcal^{n_c\times n_c}`\ , type = PyFunctionMatrixMbsScalarIndex2Vector, default =  0]:
-  | A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the FFRF mass matrix; see description below
+  | A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the \ :ref:`FFRF <FFRF>`\  mass matrix; see description below
 * | **computeFFRFterms** [type = Bool, default = True]:
-  | flag decides whether the standard FFRF terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector
+  | flag decides whether the standard \ :ref:`FFRF <FFRF>`\  terms are computed; use this flag for user-defined definition of \ :ref:`FFRF <FFRF>`\  terms in mass matrix and quadratic velocity vector
 * | **coordinateIndexPerNode** [type = ArrayIndex, default = []]:
   | this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
 * | **objectIsInitialized** [type = Bool, default = False]:
-  | ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, internal (constant) FFRF matrices are recomputed during Assemble()
+  | ALWAYS set to False! flag used to correctly initialize all \ :ref:`FFRF <FFRF>`\  matrices; as soon as this flag is False, internal (constant) \ :ref:`FFRF <FFRF>`\  matrices are recomputed during Assemble()
 * | **physicsMass** [\ :math:`m`\ , type = UReal, default = 0.]:
-  | total mass [SI:kg] of FFRF object, auto-computed from mass matrix \ :math:`\LU{b}{{\mathbf{M}}}`\ 
+  | total mass [SI:kg] of \ :ref:`FFRF <FFRF>`\  object, auto-computed from mass matrix \ :math:`\LU{b}{{\mathbf{M}}}`\ 
 * | **physicsInertia** [\ :math:`J_r \in \Rcal^{3 \times 3}`\ , type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | inertia tensor [SI:kgm\ :math:`^2`\ ] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \ :math:`\LU{b}{{\mathbf{M}}}`\ 
 * | **physicsCenterOfMass** [\ :math:`\LU{b}{{\mathbf{b}}}_{COM}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
-  | local position of center of mass (COM); auto-computed from mass matrix \ :math:`\LU{b}{{\mathbf{M}}}`\ 
+  | local position of center of mass (\ :ref:`COM <COM>`\ ); auto-computed from mass matrix \ :math:`\LU{b}{{\mathbf{M}}}`\ 
 * | **PHItTM** [\ :math:`\tPhi\indt\tp \in \Rcal^{n\indf \times 3}`\ , type = NumpyMatrix, default = Matrix[]]:
   | projector matrix; may be removed in future
 * | **referencePositions** [\ :math:`{\mathbf{x}}\cRef \in \Rcal^{n\indf}`\ , type = NumpyVector, default = []]:
@@ -86,11 +86,11 @@ DESCRIPTION of ObjectFFRF
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
 * | ``Coordinates``\ : 
-  | all ODE2 coordinates
+  | all \ :ref:`ODE2 <ODE2>`\  coordinates
 * | ``Coordinates\_t``\ : 
-  | all ODE2 velocity coordinates
+  | all \ :ref:`ODE2 <ODE2>`\  velocity coordinates
 * | ``Coordinates\_tt``\ : 
-  | all ODE2 acceleration coordinates
+  | all \ :ref:`ODE2 <ODE2>`\  acceleration coordinates
 * | ``Force``\ : 
   | generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)
 
@@ -128,11 +128,11 @@ Super element output variables
      - | \ :math:`\LU{0}{{\mathbf{v}}}\cConfig(n_i) = \LU{0}{\dot \pRef\cConfig} + \LU{0b}{\Rot}\cConfig (\LU{b}{\dot {\mathbf{q}}\indf}\cConfig(n_i) + \LU{b}{\tomega}\cConfig \times \LU{b}{{\mathbf{p}}}\cConfig(n_i))`\ 
      - | global velocity of mesh node \ :math:`n_i`\  including rigid body motion and flexible deformation
    * - | Acceleration
-     - | \ :math:`\LU{0}{{\mathbf{a}}}\cConfig(n_i) = \LU{0}{\ddot \pRef\cConfig}\cConfig + 
-                          \LU{0b}{\Rot}\cConfig \LU{b}{\ddot {\mathbf{q}}\indf}\cConfig(n_i) + 
-                          2\LU{0}{\tomega}\cConfig \times \LU{0b}{\Rot}\cConfig \LU{b}{\dot {\mathbf{q}}\indf}\cConfig(n_i) +
-                          \LU{0}{\talpha}\cConfig \times \LU{0}{{\mathbf{p}}}\cConfig(n_i)) + 
-                          \LU{0}{\tomega}\cConfig \times (\LU{0}{\tomega}\cConfig \times \LU{0}{{\mathbf{p}}}\cConfig(n_i))`\ 
+     - | \ :math:`\begin{array}{l} \LU{0}{{\mathbf{a}}}\cConfig(n_i) = \LU{0}{\ddot \pRef\cConfig}\cConfig \\
+                          + \LU{0b}{\Rot}\cConfig \LU{b}{\ddot {\mathbf{q}}\indf}\cConfig(n_i) \\
+                          + 2\LU{0}{\tomega}\cConfig \times \LU{0b}{\Rot}\cConfig \LU{b}{\dot {\mathbf{q}}\indf}\cConfig(n_i) \\
+                          + \LU{0}{\talpha}\cConfig \times \LU{0}{{\mathbf{p}}}\cConfig(n_i) \\
+                          + \LU{0}{\tomega}\cConfig \times (\LU{0}{\tomega}\cConfig \times \LU{0}{{\mathbf{p}}}\cConfig(n_i)) \end{array}`\ 
      - | global acceleration of mesh
                           node \ :math:`n_i`\  including rigid body motion and flexible deformation; note that \ :math:`\LU{0}{{\mathbf{p}}}\cConfig(n_i) = \LU{0b}{\Rot} \LU{b}{{\mathbf{p}}}\cConfig(n_i)`\ 
    * - | DisplacementLocal
@@ -206,8 +206,8 @@ whereof the number of flexible coordinates is
 
 
 The total number of equations (=coordinates) of the object is \ :math:`n_c`\ .
-The first node \ :math:`n_0`\  represents the rigid body motion of the underlying reference frame with \ :math:`n_{c\indr} = n_{c_0}`\  coordinates  (e.g., 
-n_c\indr=6 coordinates for Euler angles and n_c\indr=7 coordinates in case of Euler parameters; currently only the Euler parameter
+The first node \ :math:`n_0`\  represents the rigid body motion of the underlying reference frame with \ :math:`n_{c\indr} = n_{c_0}`\  coordinates \ (e.g., 
+\ :math:`n_{c\indr}=6`\  coordinates for Euler angles and \ :math:`n_{c\indr}=7`\  coordinates in case of Euler parameters; currently only the Euler parameter
 case is implemented.). 
 
 
@@ -215,7 +215,7 @@ Kinematics
 ----------
 
 We assume a finite element mesh with 
-The kinematics of the FFRF is based on a splitting of 
+The kinematics of the \ :ref:`FFRF <FFRF>`\  is based on a splitting of 
 translational (\ :math:`{\mathbf{c}}_t \in \Rcal^{n\indf}`\ ), rotational (\ :math:`{\mathbf{c}}\indr \in \Rcal^{n\indf}`\ ) and flexible (\ :math:`{\mathbf{c}}\indf \in \Rcal^{n\indf}`\ ) nodal displacements, 
 
 .. math::
@@ -224,7 +224,7 @@ translational (\ :math:`{\mathbf{c}}_t \in \Rcal^{n\indf}`\ ), rotational (\ :ma
    \LU{0}{{\mathbf{c}}} = \LU{0}{{\mathbf{c}}\indt} + \LU{0}{{\mathbf{c}}\indr} + \LU{0}{{\mathbf{c}}\indf} .
 
 
-which are written in global coordinates in \eqeq:ObjectFFRF:coordinatesSplitting but will be transformed to other coordinates later on.
+which are written in global coordinates in Eq. :eq:`eq-objectffrf-coordinatessplitting`\  but will be transformed to other coordinates later on.
 
 In the present formulation of \ ``ObjectFFRF``\ , we use the following set of object coordinates (unknowns)
 
@@ -319,8 +319,8 @@ Elementary differentiation rules of the Lagrange equations lead to
    {\mathbf{L}}\tp {\mathbf{M}} {\mathbf{L}} \ddot {\mathbf{q}} + {\mathbf{L}}\tp {\mathbf{M}} \dot {\mathbf{L}} \dot {\mathbf{q}} + \hat {\mathbf{K}} {\mathbf{q}} + \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}\tp} \tlambda = {\mathbf{L}}\tp {\mathbf{f}}
 
 
-with \ :math:`{\mathbf{M}} = \LU{b}{{\mathbf{M}}}`\  and \ :math:`\hat {\mathbf{K}}`\  becoming obvious in \eqeq:ObjectFFRF:eom. 
-Note that \eqeq:ObjectFFRF:Leq is given in global coordinates for the translational part, in terms of rotation parameters
+with \ :math:`{\mathbf{M}} = \LU{b}{{\mathbf{M}}}`\  and \ :math:`\hat {\mathbf{K}}`\  becoming obvious in Eq. :eq:`eq-objectffrf-eom`\ . 
+Note that Eq. :eq:`eq-objectffrf-leq`\  is given in global coordinates for the translational part, in terms of rotation parameters
 for the rotation part and in body-fixed coordinates for the flexible part of the equations.
 
 In case that \ ``computeFFRFterms = True``\ , the equations  :ref:`eq-objectffrf-leq`\  can be transformed into the equations of motion,
@@ -344,13 +344,12 @@ The mass terms are given as
 
 
 In case that \ ``computeFFRFterms = False``\ , the mass terms \ :math:`{\mathbf{M}}\indtt, {\mathbf{M}}\indtr, {\mathbf{M}}\indtf, {\mathbf{M}}\indrr, 
-{\mathbf{M}}\indrf, \LU{b}{{\mathbf{M}}}`\  in \eqeq:ObjectFFRF:eom are set to zero (and not computed) and
+{\mathbf{M}}\indrf, \LU{b}{{\mathbf{M}}}`\  in Eq. :eq:`eq-objectffrf-eom`\  are set to zero (and not computed) and
 the quadratic velocity vector \ :math:`{\mathbf{f}}_{v} = \Null`\ .
 Note that the user functions \ :math:`{\mathbf{f}}_{user}(mbs, t, i_N, {\mathbf{q}},\dot {\mathbf{q}})`\  and \ :math:`{\mathbf{M}}_{user}(mbs, t, i_N, {\mathbf{q}},\dot {\mathbf{q}})`\  may be empty (=0). 
 The detailed equations of motion for this element can be found in .
 
 The quadratic velocity vector follows as
-\newcommand\omegaBDtilde\LUb\tilde \tomega_\mathrmbd
 
 .. math::
 
@@ -364,7 +363,7 @@ with the special matrix
    \omegaBDtilde = \mathrm{diag}\left(\LU{b}{\tilde \tomega_\mathrm{bd}}, \; \ldots ,\; \LU{b}{\tilde \tomega_\mathrm{bd}}  \right) \in \Rcal^{n\indf \times n\indf}
 
 
-CoordinateLoads are added for each ODE2 coordinate on the RHS of the latter equation. 
+CoordinateLoads are added for each \ :ref:`ODE2 <ODE2>`\  coordinate on the RHS of the latter equation. 
 
 If the rigid body node is using Euler parameters \ :math:`\ttheta = [\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp`\ , an \ **additional constraint**\  (constraint nr.\ 0) is 
 added automatically for the Euler parameter norm, reading

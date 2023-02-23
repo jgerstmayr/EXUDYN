@@ -5,7 +5,7 @@
 NodePoint
 =========
 
-A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for ODE2.
+A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for \ :ref:`ODE2 <ODE2>`\ .
 
 \ **Additional information for NodePoint**\ :
 

@@ -108,6 +108,13 @@ Definition of quantities
 
 
 
+.. _fig-objectcontactfrictioncirclecable2d-sketch:
+.. figure:: ../../theDoc/figures/ContactFrictionCircleCable2D.png
+   :width: 600
+
+   Sketch of cable, contact segments and circle; showing case without contact, \ :math:`|\mathbf{d}_{g1}| > r`\ , while contact occurs with \ :math:`|\mathbf{d}_{g1}| \le r`\ ; the shortest distance vector \ :math:`\mathbf{d}_{g1}`\  is related to segment \ :math:`s_1`\  (which is perpendicular to the the segment line) and \ :math:`\mathbf{d}_{g2}`\  is the shortest distance to the end point of segment \ :math:`s_2`\ , not being perpendicular
+
+
 Connector forces: contact geometry
 ----------------------------------
 
@@ -120,7 +127,7 @@ points \ :math:`{\mathbf{p}}_i`\ , \ :math:`{\mathbf{p}}_{i+1}`\  to the circle'
 All computations here are performed in the global coordinates system (0), 
 including edge points of every segment.
 
-With the intermediate quantities (all of them related to segment \ :math:`s_i`\ ) (we omit s_i in some terms for brevity!),
+With the intermediate quantities (all of them related to segment \ :math:`s_i`\ )\ (we omit \ :math:`s_i`\  in some terms for brevity!),
 
 .. math::
 
@@ -137,7 +144,7 @@ segment, which runs from 0 to 1 if lying on the segment, as
    \rho = \frac{n}{d}
 
 
-We distinguish 3 cases (see also Fig. :ref:`fig-objectcontactfrictioncirclecable2d-sketch`\  for cases 1 and 2):
+We distinguish 3 cases (see also \ :numref:`fig-objectcontactfrictioncirclecable2d-sketch`\  for cases 1 and 2):
     
 +  If \ :math:`\rho \le 0`\ , the shortest distance would be the distance to point \ :math:`{\mathbf{p}}_p={\mathbf{p}}_i`\ ,
     reading 
@@ -172,7 +179,7 @@ We distinguish 3 cases (see also Fig. :ref:`fig-objectcontactfrictioncirclecable
 
 
 Here, the shortest distance vector for every segment results from the projected point \ :math:`{\mathbf{p}}_p`\  
-of the above mentioned cases, see also Fig. :ref:`fig-objectcontactfrictioncirclecable2d-sketch`\ ,
+of the above mentioned cases, see also \ :numref:`fig-objectcontactfrictioncirclecable2d-sketch`\ ,
 with the relation
 
 .. math::
@@ -236,10 +243,17 @@ For a simple 1D example using this position based approach for friction, see \ `
 which compares the traditional LuGre friction model  with the position based model with tangential stiffness. 
 
 
+.. _fig-objectcontactfrictioncirclecable2d-stickingpos:
+.. figure:: ../../theDoc/figures/ContactFrictionCircleCable2DstickingPos.png
+   :width: 600
+
+   Calculation of last sticking position; blue parts mark the sticking position calculated as \ :math:`x^*_{curStick}`\ .
+
+
 Because there is the chance to wind/unwind relative to the (last) sticking position without slipping,
 the following strategy is used.
 In case of sliding (which could be the last time sliding before sticking), 
-we compute the \ **current sticking position**\ , see Fig. :ref:`fig-objectcontactfrictioncirclecable2d-stickingpos`\ , as the sum of the relative position at the segment \ :math:`s`\ 
+we compute the \ **current sticking position**\ , see \ :numref:`fig-objectcontactfrictioncirclecable2d-stickingpos`\ , as the sum of the relative position at the segment \ :math:`s`\ 
 
 .. math::
 
@@ -254,7 +268,7 @@ The relative position at the circle \ :math:`c`\  is
    x_{c,curStick} = \alpha \cdot r
 
 
-We immediately see, that under pure rolling (neglecting the effects of small penetration, usually much smaller than shown for visibility in Fig. :ref:`fig-objectcontactfrictioncirclecable2d-stickingpos`\ .),
+We immediately see, that under pure rolling\ (neglecting the effects of small penetration, usually much smaller than shown for visibility in \ :numref:`fig-objectcontactfrictioncirclecable2d-stickingpos`\ .),
 
 .. math::
 
@@ -311,7 +325,7 @@ The 'linear' friction force, based on the velocity penalty parameter \ :math:`\m
 PostNewtonStep
 --------------
 
-In general, see the solver flow chart for the \ ``DiscontinuousIteration``\ , see Fig. :ref:`fig-solver-discontinuous-iteration`\ , should be considered when reading this description. Every step is started with values \ ``startOfStep``\ , while current values are iterated and updated in the Newton or \ ``DiscontinuousIteration``\ .
+In general, see the solver flow chart for the \ ``DiscontinuousIteration``\ , see \ :numref:`fig-solver-discontinuous-iteration`\ , should be considered when reading this description. Every step is started with values \ ``startOfStep``\ , while current values are iterated and updated in the Newton or \ ``DiscontinuousIteration``\ .
 
 The \ ``PostNewtonStep``\  computes 3 values per segment, which are used for computation of contact forces, irrespectively of the 
 current geometryof the contact. 
@@ -328,7 +342,7 @@ The data variables per segment are
 
 
 Here, \ :math:`x_{gap}`\  contains the gap of the segment (\ :math:`\le 0`\  means contact), \ :math:`x_{lastStick}`\  is described in 
-\eqObjectContactFrictionCircleCable2D:curStick, and 
+Eq. :eq:`objectcontactfrictioncirclecable2d-curstick`\ , and 
 \ :math:`x_{isSlipStick}`\  defines the stick or slip case,
 
 +  \ :math:`x_{isSlipStick} = -2`\ : undefined, used for initialization
@@ -338,14 +352,14 @@ Here, \ :math:`x_{gap}`\  contains the gap of the segment (\ :math:`\le 0`\  mea
 
 The basic algorithm in the \ ``PostNewtonStep``\ , with all operations given for any segment \ :math:`s_i`\ , can be summarized as follows:
 
-+  [I.] Evaluate gap per segment \ :math:`g`\  using \eqObjectContactFrictionCircleCable2D:gap and store in data variable: 
++  [I.] Evaluate gap per segment \ :math:`g`\  using Eq. :eq:`objectcontactfrictioncirclecable2d-gap`\  and store in data variable: 
         \ :math:`x_{gap} = g`\ 
 +  [II.] If \ :math:`x_{gap} < 0`\  and (\ :math:`\mu_v \neq 0`\  or  \ :math:`\mu_k \neq 0`\ ):
   
-+  Compute contact force \ :math:`f_n`\  according to \eqObjectContactFrictionCircleCable2D:contactForce
-+  Compute current sticking position \ :math:`x_{curStick}`\  according to \eqObjectContactFrictionCircleCable2D:lastCurStick (terms are only evaluated if \mu_k \neq 0)
-+  Retrieve \ ``startOfStep``\  sticking position (Importantly, the \ ``PostNewtonStep``\  always refers to the \ ``startOfStep``\  state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step) in \ :math:`x^{startOfStep}_{lastStick}`\  and compute and normalize
-    difference in sticking position (in case that x_isSlipStick = -2, meaning that there is no stored sticking position, we set \Delta x_stick = 0):
++  Compute contact force \ :math:`f_n`\  according to Eq. :eq:`objectcontactfrictioncirclecable2d-contactforce`\ 
++  Compute current sticking position \ :math:`x_{curStick}`\  according to Eq. :eq:`objectcontactfrictioncirclecable2d-lastcurstick`\ \ (terms are only evaluated if \ :math:`\mu_k \neq 0`\ )
++  Retrieve \ ``startOfStep``\  sticking position\ (Importantly, the \ ``PostNewtonStep``\  always refers to the \ ``startOfStep``\  state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step) in \ :math:`x^{startOfStep}_{lastStick}`\  and compute and normalize
+    difference in sticking position\ (in case that \ :math:`x_{isSlipStick} = -2`\ , meaning that there is no stored sticking position, we set \ :math:`\Delta x_{stick} = 0`\ ):
     
 .. math::
 
@@ -359,8 +373,8 @@ The basic algorithm in the \ ``PostNewtonStep``\ , with all operations given for
    f_{t,lin} = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
 
 
-+  Compute tangential force according to Coulomb friction model  (note that the sign of \Delta x_stick is used here, but
-    alternatively we may also use the sign of f_t,lin):
++  Compute tangential force according to Coulomb friction model \ (note that the sign of \ :math:`\Delta x_{stick}`\  is used here, but
+    alternatively we may also use the sign of \ :math:`f_{t,lin}`\ ):
     
 .. math::
 
@@ -413,10 +427,10 @@ For efficiency, the LHS computation is only performed, if the \ ``PostNewtonStep
 The operations are similar to the \ ``PostNewtonStep``\ , but without switching. The following operations are performed for each segment \ :math:`s_i`\ , if 
 \ :math:`x_{gap, s_i} <= 0`\ :
 
-+ [I.] Compute contact force \ :math:`f_n`\ , \eqObjectContactFrictionCircleCable2D:contactForce.
++ [I.] Compute contact force \ :math:`f_n`\ , Eq. :eq:`objectcontactfrictioncirclecable2d-contactforce`\ .
 + [II.] In case of sticking:
   
-+  [II.1] the current sticking position \ :math:`x_{curStick}`\  is computed from \eqObjectContactFrictionCircleCable2D:lastCurStick, and the difference of current and last sticking position reads (see the difference to the \ ``PostNewtonStep``\ : we use x_lastStick here, not the \ ``startOfStep``\  variant.):
++  [II.1] the current sticking position \ :math:`x_{curStick}`\  is computed from Eq. :eq:`objectcontactfrictioncirclecable2d-lastcurstick`\ , and the difference of current and last sticking position reads\ (see the difference to the \ ``PostNewtonStep``\ : we use \ :math:`x_{lastStick}`\  here, not the \ ``startOfStep``\  variant.):
     
 .. math::
 
@@ -424,14 +438,14 @@ The operations are similar to the \ ``PostNewtonStep``\ , but without switching.
 
 
 +  [II.2] however, if the friction stiffness is \ :math:`\mu_k==0`\  or if \ :math:`x_{isSlipStick} == -2`\ , we also set \ :math:`\Delta x_{stick}=0`\ 
-+  [II.3] using the tangential velocity from \eqObjectContactFrictionCircleCable2D:vTangent, the linear tangent force follows as
++  [II.3] using the tangential velocity from Eq. :eq:`objectcontactfrictioncirclecable2d-vtangent`\ , the linear tangent force follows as
     
 .. math::
 
    f_{t,lin} = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
 
 
-+  [II.4] the tangential firction force then results in (see again difference to \ ``PostNewtonStep``\ !),
++  [II.4] the tangential firction force then results in\ (see again difference to \ ``PostNewtonStep``\ !),
     
 .. math::
 
@@ -448,14 +462,21 @@ If \ ``activeConnector = True``\ ,
 contact forces \ :math:`{\mathbf{f}}_i`\  with \ :math:`i \in [0,n_{cs}]`\  -- these are \ :math:`(n_{cs}+1)`\  forces -- are applied at the points \ :math:`p_i`\ , and they are computed for every contact segments (i.e., two segments may contribute to contact forces of one point).
 For every contact computation, first all contact forces at segment points are set to zero. 
 We distinguish two cases SN and PWN. If \ ``useSegmentNormals==True``\ , we use the SN case, while otherwise the PWN case is used, 
-compare Fig. :ref:`fig-objectcontactfrictioncirclecable2d-normals`\ .
+compare \ :numref:`fig-objectcontactfrictioncirclecable2d-normals`\ .
+
+
+.. _fig-objectcontactfrictioncirclecable2d-normals:
+.. figure:: ../../theDoc/figures/ContactFrictionCircleCable2Dnormals.png
+   :width: 700
+
+   Choice of normals and tangent vectors for calculation of normal contact forces and tangential (friction) forces; note that the \ ``useSegmentNormals=False``\  is not appropriate for this setup and would produce highly erroneous forces.
 
 
 Segment normals (=SN) lead to always good approximations for normal directions, irrespectively of short or extremely long segments as compared to the circle. However, in case of segments that are short as compared to the circle radius, normals computed from the center of the circle to the segment points (=PWN) are more consistent and produce tangents only in circumferential direction, which may improve behavior in some applications. The equations for the two cases read:
 
    \ **CASE SN**\ : use \ **S**\ egment \ **N**\ ormals
 
-If there is contact in a segment \ :math:`s_i`\ , i.e., gap state \ :math:`x_{gap} \le 0`\ , see Fig. :ref:`fig-objectcontactfrictioncirclecable2d-sketch`\ (right), contact forces \ :math:`{\mathbf{f}}_{s_i}`\  are computed per segment,
+If there is contact in a segment \ :math:`s_i`\ , i.e., gap state \ :math:`x_{gap} \le 0`\ , see \ :numref:`fig-objectcontactfrictioncirclecable2d-sketch`\ (right), contact forces \ :math:`{\mathbf{f}}_{s_i}`\  are computed per segment,
 
 .. math::
 
@@ -474,7 +495,7 @@ while in case \ :math:`x_{gap}  > 0`\  nothing is added.
    \ **CASE PWN**\ : use \ **P**\ oint \ **W**\ ise \ **N**\ ormals (at segment points)
 
 If there is contact in a segment \ :math:`s_i`\ , i.e., gap \ :math:`x_{gap} \le 0`\ , 
-see Fig. :ref:`fig-objectcontactfrictioncirclecable2d-sketch`\ (right), 
+see \ :numref:`fig-objectcontactfrictioncirclecable2d-sketch`\ (right), 
 intermediate contact forces \ :math:`{\mathbf{f}}^{l,r}_{i}`\  are computed per segment point,
   
 .. math::
@@ -514,7 +535,7 @@ and additional torques on the circle's rotation simply follow from
 
 During Newton iterations, the contact forces for segment \ :math:`s_i`\  are considered only, if 
 \ :math:`x_i <= 0`\ . The dataCoordinate \ :math:`x_i`\  is not modified during Newton iterations, but computed
-during the DiscontinuousIteration, see Fig. :ref:`fig-solver-discontinuous-iteration`\  in the solver description. 
+during the DiscontinuousIteration, see \ :numref:`fig-solver-discontinuous-iteration`\  in the solver description. 
 
 
 If \ ``activeConnector = False``\ , all contact and friction forces on the cable and the force and torque on the 

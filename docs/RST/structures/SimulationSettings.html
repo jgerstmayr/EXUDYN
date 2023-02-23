@@ -7,6 +7,7 @@
   <title>Simulation settings &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,8 +18,10 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}"}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -84,8 +87,9 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../Abbreviations.html">List of Abbreviations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
 </ul>
 
@@ -144,7 +148,7 @@
 <li><div class="line-block">
 <div class="line"><strong>exportAccelerations</strong> [type = bool, default = True]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportAccelerations</span></code></div>
-<div class="line">add ODE2 accelerations to solution file (coordinatesSolutionFile)</div>
+<div class="line">add <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> accelerations to solution file (coordinatesSolutionFile)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -168,7 +172,7 @@
 <li><div class="line-block">
 <div class="line"><strong>exportVelocities</strong> [type = bool, default = True]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportVelocities</span></code></div>
-<div class="line">add ODE2 velocities to solution file (coordinatesSolutionFile)</div>
+<div class="line">add <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> velocities to solution file (coordinatesSolutionFile)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -287,15 +291,15 @@
 <p>NumericalDifferentiationSettings has the following items:</p>
 <ul>
 <li><div class="line-block">
-<div class="line"><strong>addReferenceCoordinatesToEpsilon</strong> [type = tabnewline bool, default = False]:</div>
+<div class="line"><strong>addReferenceCoordinatesToEpsilon</strong> [type = bool, default = False]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon</span></code></div>
-<div class="line">True: for the size estimation of the differentiation parameter, the reference coordinate <span class="math notranslate nohighlight">\(q^{Ref}_i\)</span> is added to ODE2 coordinates –&gt; see; False: only the current coordinate is used for size estimation of the differentiation parameter</div>
+<div class="line">True: for the size estimation of the differentiation parameter, the reference coordinate <span class="math notranslate nohighlight">\(q^{Ref}_i\)</span> is added to <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates –&gt; see; False: only the current coordinate is used for size estimation of the differentiation parameter</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>doSystemWideDifferentiation</strong> [type = bool, default = False]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.doSystemWideDifferentiation</span></code></div>
-<div class="line">True: system wide differentiation (e.g. all ODE2 equations w.r.t. all ODE2 coordinates); False: only local (object) differentiation</div>
+<div class="line">True: system wide differentiation (e.g. all <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations w.r.t. all <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates); False: only local (object) differentiation</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -403,7 +407,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>maxModifiedNewtonRestartIterations</strong> [type = tabnewline UInt, default = 7]:</div>
+<div class="line"><strong>maxModifiedNewtonRestartIterations</strong> [type = UInt, default = 7]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.maxModifiedNewtonRestartIterations</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.maxModifiedNewtonRestartIterations</span></code></div>
 <div class="line">maximum number of iterations for modified Newton after aJacobian update; after that number of iterations, the full Newton method is started for this step</div>
 </div>
@@ -415,7 +419,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>modifiedNewtonJacUpdatePerStep</strong> [type = tabnewline bool, default = False]:</div>
+<div class="line"><strong>modifiedNewtonJacUpdatePerStep</strong> [type = bool, default = False]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.modifiedNewtonJacUpdatePerStep</span></code></div>
 <div class="line">True: compute Jacobian at every time step, but not in every iteration (except for bad convergence ==&gt; switch to full Newton)</div>
 </div>
@@ -423,7 +427,7 @@
 <li><div class="line-block">
 <div class="line"><strong>newtonResidualMode</strong> [type = UInt, default = 0]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.newtonResidualMode</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.newtonResidualMode</span></code></div>
-<div class="line">0 … use residual for computation of error (standard); 1 … use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==&gt; may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag</div>
+<div class="line">0 … use residual for computation of error (standard); 1 … use <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> and <a class="reference internal" href="../Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> newton increment for error (set relTol and absTol to same values!) ==&gt; may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -513,13 +517,13 @@
 <p>ExplicitIntegrationSettings has the following items:</p>
 <ul>
 <li><div class="line-block">
-<div class="line"><strong>computeEndOfStepAccelerations</strong> [type = tabnewline bool, default = True]:</div>
+<div class="line"><strong>computeEndOfStepAccelerations</strong> [type = bool, default = True]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations</span></code></div>
 <div class="line">accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>computeMassMatrixInversePerBody</strong> [type = tabnewline bool, default = False]:</div>
+<div class="line"><strong>computeMassMatrixInversePerBody</strong> [type = bool, default = False]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody</span></code></div>
 <div class="line">If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded)</div>
 </div>
@@ -598,7 +602,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>adaptiveStepRecoveryIterations</strong> [type = tabnewline UInt, default = 7]:</div>
+<div class="line"><strong>adaptiveStepRecoveryIterations</strong> [type = UInt, default = 7]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.adaptiveStepRecoveryIterations</span></code></div>
 <div class="line">Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value</div>
 </div>
@@ -743,7 +747,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>adaptiveStepRecoveryIterations</strong> [type = tabnewline UInt, default = 7]:</div>
+<div class="line"><strong>adaptiveStepRecoveryIterations</strong> [type = UInt, default = 7]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.adaptiveStepRecoveryIterations</span></code></div>
 <div class="line">Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value</div>
 </div>
@@ -793,7 +797,7 @@
 <li><div class="line-block">
 <div class="line"><strong>stabilizerODE2term</strong> [type = UReal, default = 0]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolverSettings.stabilizerODE2term</span></code></div>
-<div class="line">add mass-proportional stabilizer term in ODE2 part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with <span class="math notranslate nohighlight">\(stabilizer = (1-loadStepFactor^2)\)</span>, and go to zero at the end of all load steps: <span class="math notranslate nohighlight">\(loadStepFactor=1\)</span> -&gt; <span class="math notranslate nohighlight">\(stabilizer = 0\)</span></div>
+<div class="line">add mass-proportional stabilizer term in <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with <span class="math notranslate nohighlight">\(stabilizer = (1-loadStepFactor^2)\)</span>, and go to zero at the end of all load steps: <span class="math notranslate nohighlight">\(loadStepFactor=1\)</span> -&gt; <span class="math notranslate nohighlight">\(stabilizer = 0\)</span></div>
 </div>
 </li>
 <li><div class="line-block">
@@ -877,7 +881,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>multithreadedLLimitMassMatrices</strong> [type = tabnewline PInt, default = 20]:</div>
+<div class="line"><strong>multithreadedLLimitMassMatrices</strong> [type = PInt, default = 20]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.multithreadedLLimitMassMatrices</span></code></div>
 <div class="line">compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(…)</div>
 </div>

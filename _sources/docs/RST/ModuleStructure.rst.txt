@@ -32,16 +32,16 @@ Overview of modules
 -------------------
 
 Currently, the Exudyn module structure is split into a C++ core part and a set of 
-Python parts, see Fig. :ref:`fig-exudyn-candpython`\ .
+Python parts, see \ :numref:`fig-exudyn-candpython`\ .
 
-+  \ **C++ parts**\ , see Fig. :ref:`fig-exudyn-cpp`\  and Fig. :ref:`fig-system-overview`\ :
++  \ **C++ parts**\ , see \ :numref:`fig-exudyn-cpp`\  and \ :numref:`fig-system-overview`\ :
   
  -  \ ``exudyn``\ :
     on this level, there are just very few functions: \ ``SystemContainer()``\ , \ ``StartRenderer()``\ , \ ``StopRenderer()``\ , \ ``GetVersionString()``\ , \ ``SolveStatic(...)``\ , \ ``SolveDynamic(...)``\ , ... as well as system and user variable dictionaries \ ``exudyn.variables``\  and \ ``exudyn.sys``\ 
  -  \ ``SystemContainer``\ : contains the systems (most important), solvers (static, dynamics, ...), visualization settings
- -  \ ``mbs``\ : {mbs} created with \ ``mbs = SC.AddSystem()``\ , this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
+ -  \ ``mbs``\ : \ :ref:`mbs <mbs>`\  created with \ ``mbs = SC.AddSystem()``\ , this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
     loads can added to the system, see Section :ref:`sec-item-reference-manual`\ ;
- -  \ ``mbs.systemData``\ : contains the initial, current, visualization, ... states of the system and holds the items, see Fig. :ref:`fig-system-overview`\ 
+ -  \ ``mbs.systemData``\ : contains the initial, current, visualization, ... states of the system and holds the items, see \ :numref:`fig-system-overview`\ 
   
 +  \ **Python parts**\  (this list is continuously extended, see Section :ref:`sec-pythonutilityfunctions`\ ), sorted by importance:
   
@@ -49,7 +49,7 @@ Python parts, see Fig. :ref:`fig-exudyn-candpython`\ .
  -  \ ``exudyn.itemInterface``\ : contains the interface, which transfers Python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
  -  \ ``exudyn.basicUtilities``\ : contains basic helper classes, without importing numpy
  -  \ ``exudyn.rigidBodyUtilities``\ : contains important helper classes for creation of rigid body inertia, rigid bodies, and rigid body joints; includes helper functions for rotation parameterization, rotation matrices, homogeneous transformations, etc.
- -  \ ``exudyn.graphicsDataUtilities``\ : provides some basic drawing utilities, definition of colors and basic drawing objects (including {STL} import); rotation/translation of graphicsData objects
+ -  \ ``exudyn.graphicsDataUtilities``\ : provides some basic drawing utilities, definition of colors and basic drawing objects (including \ :ref:`STL <STL>`\  import); rotation/translation of graphicsData objects
  -  \ ``exudyn.plot``\ : contains PlotSensor(...), a very versatile interface to matplotlib and other valuable helper functions
  -  \ ``exudyn.processing``\ : methods for optimization, parameter variation, sensitivity analysis, etc.
  -  \ ``exudyn.FEM``\ : everything related to finite element import and creation of model order reduction flexible bodies
@@ -80,7 +80,7 @@ Python parts, see Fig. :ref:`fig-exudyn-candpython`\ .
 
    Overview of systemData
 
-SystemData connects items, states and stores the LTG. Note that access to items is provided via functions in \ ``MainSystem``\ .
+SystemData connects items, states and stores the \ :ref:`LTG <LTG>`\ . Note that access to items is provided via functions in \ ``MainSystem``\ .
 
 
 
@@ -94,17 +94,17 @@ Conventions: items, indexes, coordinates
 
 In this documentation, we will use the term \ **item**\  to identify nodes, objects, markers, loads and sensors: 
 
-  item \in \{node, object, marker, load, sensor\} 
+  item \ :math:`\in`\  \node, object, marker, load, sensor\ 
 
 \ **Indexes: arrays and vectors starting with 0:**\  
 
 As known from Python, all \ **indexes**\  of arrays, vectors, matrices, ... are starting with 0. This means that the first component of the vector \ ``v=[1,2,3]``\  is accessed with \ ``v[0]``\  in Python (and also in the C++ part of Exudyn ). The range is usually defined as \ ``range(0,3)``\ , in which '3' marks the index after the last valid component of an array or vector.
 
 \ **Dimensionality of objects and vectors:**\  \ 
-{2D} vs. {3D}
+\ :ref:`2D <2D>`\  vs. \ :ref:`3D <3D>`\ 
 
 As a convention, quantities in Exudyn are 3D, such as nodes, objects, markers, loads, measured quantities, etc. 
-For that reason, we denote planar nodes, objects, etc. with the suffix 2D, but 3D objects do not get this suffix (There are some rare exceptions, such as Beam3D as the pure beam may easily lead to name space conflicts in Python).
+For that reason, we denote planar nodes, objects, etc. with the suffix 2D, but 3D objects do not get this suffix\ (There are some rare exceptions, such as Beam3D as the pure beam may easily lead to name space conflicts in Python).
 
 Output and input to objects, markers, loads, etc. is usually given by 3D vectors (or matrices), such as (local) position, force, torque, rotation, etc. However, initial and reference values for nodes depend on their dimensionality.
 As an example, consider a \ ``NodePoint2D``\ :

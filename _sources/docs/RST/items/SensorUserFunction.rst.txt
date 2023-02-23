@@ -34,6 +34,95 @@ The item VSensorUserFunction has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED
 
 
+----------
+
+.. _description-sensoruserfunction:
+
+DESCRIPTION of SensorUserFunction
+---------------------------------
+The sensor collects data via a user function, which completely describes the output itself.
+Note that the sensorNumbers and factors need to be consistent. 
+The return value of the user function is a list of \ ``float``\  numbers which cast to a \ ``std::vector``\  in pybind.
+This list can have arbitrary dimension, but should be kept constant during simulation.
+
+--------
+
+\ **Userfunction**\ : ``sensorUserFunction(mbs, t, sensorNumbers, factors, configuration)`` 
+
+
+A user function, which computes a sensor output from other sensor outputs (or from generic time dependent functions).
+The configuration in general will be the exudyn.ConfigurationType.Current, but others could be used as well except for SensorMarker.
+The user function arguments are as follows:
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments /  return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs to which object belongs
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs
+   * - | \ ``sensorNumbers``\ 
+     - | Array \ :math:`\in \Ncal^n`\ 
+     - | list of sensor numbers
+   * - | \ ``factors``\ 
+     - | Vector \ :math:`\in \Rcal^n`\ 
+     - | list of factors that can be freely used for the user function
+   * - | \ ``configuration``\ 
+     - | exudyn.ConfigurationType
+     - | usually the exudyn.ConfigurationType.Current, but could also be different in user defined functions.
+   * - | \returnValue
+     - | Vector \ :math:`\in \Rcal^{n_r}`\ 
+     - | returns list or numpy array of sensor output values; size \ :math:`n_r`\  is implicitly defined by the returned list and may not be changed during simulation.
+
+
+--------
+
+\ **User function example**\ :
+
+
+
+.. code-block:: python
+
+    import exudyn as exu
+    from exudyn.itemInterface import *
+    from math import pi, atan2
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    node = mbs.AddNode(NodePoint(referenceCoordinates = [1,1,0], 
+                                 initialCoordinates=[0,0,0],
+                                 initialVelocities=[0,-1,0]))
+    mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+    
+    sNode = mbs.AddSensor(SensorNode(nodeNumber=node, fileName='solution/sensorTest.txt',
+                          outputVariableType=exu.OutputVariableType.Position))
+
+    #user function for sensor, convert position into angle:
+    def UFsensor(mbs, t, sensorNumbers, factors, configuration):
+        val = mbs.GetSensorValues(sensorNumbers[0]) #x,y,z
+        phi = atan2(val[1],val[0]) #compute angle from x,y: atan2(y,x)
+        return [factors[0]*phi] #return angle in degree
+    
+    sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=[sNode], factors=[180/pi], 
+                                     fileName='solution/sensorTest2.txt',
+                                     sensorUserFunction=UFsensor))
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    exu.SolveDynamic(mbs)
+
+    if False:
+        from exudyn.plot import PlotSensor
+        PlotSensor(mbs, [sNode, sNode, sUser], [0, 1, 0])
+    
+
+
+
 
 
 \ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 

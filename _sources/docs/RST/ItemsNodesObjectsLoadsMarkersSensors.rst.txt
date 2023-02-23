@@ -4,7 +4,7 @@
 Items: Nodes, Objects, Loads, Markers, Sensors, ...
 ===================================================
 
-In this section, the most important part of Exudyn are provided. An overview of the interaction of the items is given in Fig. :ref:`fig-items-interaction`\ 
+In this section, the most important part of Exudyn are provided. An overview of the interaction of the items is given in \ :numref:`fig-items-interaction`\ 
 
 
 
@@ -44,7 +44,7 @@ Objects can be a:
   
 +  connector: uses markers to connect nodes and/or bodies; adds additional terms to system equations either based on stiffness/damping or with constraints (and Lagrange multipliers). Possible connectors:
   
- -  algebraic constraint (e.g. constrain two coordinates: q_1 = q_2)
+ -  algebraic constraint (e.g. constrain two coordinates: \ :math:`q_1 = q_2`\ )
  -  classical joint
  -  spring-damper or penalty constraint
   

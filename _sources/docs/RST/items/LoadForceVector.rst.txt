@@ -37,6 +37,61 @@ The item VLoadForceVector has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 
 
+----------
+
+.. _description-loadforcevector:
+
+DESCRIPTION of LoadForceVector
+------------------------------
+
+Details
+-------
+
+The load vector acts on a body or node via the local (\ ``bodyFixed = True``\ ) or global coordinates of a body or at a node. 
+The marker transforms the (translational) force via the according jacobian matrix of the object (or node) to object (or node) coordinates.
+
+--------
+
+\ **Userfunction**\ : ``loadVectorUserFunction(mbs, t, loadVector)`` 
+
+
+A user function, which computes the force vector depending on time and object parameters, which is hereafter applied to object or node.
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | arguments / return
+     - | type or size
+     - | description
+   * - | \ ``mbs``\ 
+     - | MainSystem
+     - | provides MainSystem mbs to which load belongs
+   * - | \ ``t``\ 
+     - | Real
+     - | current time in mbs 
+   * - | \ ``loadVector``\ 
+     - | Vector3D
+     - | \ :math:`{\mathbf{f}}`\  copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time
+   * - | \returnValue
+     - | Vector3D
+     - | computed force vector
+
+
+--------
+
+\ **User function example**\ :
+
+
+
+.. code-block:: python
+
+    from math import sin, cos, pi
+    def UFforce(mbs, t, loadVector): 
+        return [loadVector[0]*sin(t*10*2*pi),0,0]
+
+
+
 
 
 \ **The web version may not be complete. For details, always consider the Exudyn PDF documentation** : `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ 

@@ -128,7 +128,7 @@ and \ ``iN``\  represents the itemNumber (=objectNumber).
 If \ ``activeConnector = False``\ , \ :math:`{\mathbf{f}}_{SD}`\  is set to zero.
 
 The force \ :math:`{\mathbf{f}}_{SD}`\  acts via the markers' position jacobians \ :math:`{\mathbf{J}}_{pos,m0}`\  and \ :math:`{\mathbf{J}}_{pos,m1}`\ .
-The generalized forces added to the LHS equations read for marker \ :math:`m0`\ ,
+The generalized forces added to the \ :ref:`LHS <LHS>`\  equations read for marker \ :math:`m0`\ ,
 
 .. math::
 
@@ -142,8 +142,8 @@ and for marker \ :math:`m1`\ ,
    {\mathbf{f}}_{LHS,m1} =  \LU{0}{{\mathbf{J}}_{pos,m1}\tp} \LU{0}{{\mathbf{f}}_{SD}} .
 
 
-The LHS equation parts are added accordingly using the LTG mapping.
-Note that the different signs result from the signs in \eqeq_ObjectCartesianSpringDamper_deltaPos.
+The \ :ref:`LHS <LHS>`\  equation parts are added accordingly using the \ :ref:`LTG <LTG>`\  mapping.
+Note that the different signs result from the signs in Eq. :eq:`eq-objectcartesianspringdamper-deltapos`\ .
 
 The connector also provides an analytic jacobian, which is used if \ ``newton.numericalDifferentiation.forODE2 = False``\  
 and if there is no springForceUserFunction (otherwise numerical differentiation is used).
@@ -159,7 +159,7 @@ The anayltic jacobian for the coupled equation parts \ :math:`{\mathbf{f}}_{LHS,
 Here, \ :math:`f_{ODE2}`\  is the factor for the position derivative and \ :math:`f_{ODE2_t}`\  is the factor for the velocity derivative, 
 which allows a computation of the computation for both the position as well as the velocity part at the same time.
 
-The complete jacobian for the LHS equations then reads,
+The complete jacobian for the \ :ref:`LHS <LHS>`\  equations then reads,
 
 .. math::
 
@@ -179,7 +179,7 @@ As the latter terms would require to compute a 3-dimensional array, the second j
    {\mathbf{J}}_{CSD'} = \mp{-f_{ODE2}\frac{\partial \left(\LU{0}{{\mathbf{J}}_{pos,m0}\tp} {\mathbf{f}}' \right)}{\partial {\mathbf{q}}_{m0}}}{\Null}{\Null} { f_{ODE2}\frac{\partial \left(\LU{0}{{\mathbf{J}}_{pos,m1}\tp} {\mathbf{f}}' \right)}{\partial {\mathbf{q}}_{m1}}}
 
 
-in which we set \ :math:`{\mathbf{f}}' = \LU{0}{{\mathbf{f}}_{SD}}`\ , but the derivatives in \eqeq_ObjectCartesianSpringDamper_jacDeriv are evaluated by setting \ :math:`{\mathbf{f}}' = const`\ .
+in which we set \ :math:`{\mathbf{f}}' = \LU{0}{{\mathbf{f}}_{SD}}`\ , but the derivatives in Eq. :eq:`eq-objectcartesianspringdamper-jacderiv`\  are evaluated by setting \ :math:`{\mathbf{f}}' = const`\ .
 
 
 --------

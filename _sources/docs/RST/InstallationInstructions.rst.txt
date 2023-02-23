@@ -15,17 +15,17 @@ Requirements for Exudyn ?
 Exudyn only works with Python. Thus, you need an appropriate Python installation.
 So far (2021-07), we tested
 
-+  \ **Anaconda 2021-11, 64bit, Python 3.9**\  (older Anaconda3 versions can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\ )
++  \ **Anaconda 2021-11, 64bit, Python 3.9**\ \ (older Anaconda3 versions can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\ )
 +  Currently, we work with Python 3.6 - Python 3.10 \ **conda environments**\  on Windows, Linux and MacOS (3.8-3.10).
-+  \ **Spyder 5.1.5**\  (with Python 3.9.7, 64bit) and \ **Spyder 4.1.3**\  (with Python 3.7.7, 64bit), which is included in the Anaconda installation (Note that it is important that Spyder, Python and Exudyn  are \ **either**\  32bit \ **or**\  64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments
++  \ **Spyder 5.1.5**\  (with Python 3.9.7, 64bit) and \ **Spyder 4.1.3**\  (with Python 3.7.7, 64bit), which is included in the Anaconda installation\ (Note that it is important that Spyder, Python and Exudyn  are \ **either**\  32bit \ **or**\  64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments
 
 Many alternative options exist:
 
 +  Users report successful use of Exudyn with \ **Visual Studio Code**\ . \ **Jupyter**\  has been tested with some examples; both environments should work with default settings.
 +  Anaconda 2020-11 with \ **Python 3.8**\  and Spyder 4.1.5: no problems except some regular crashes of Spyder, TestSuite runs without problems since Exudyn version 1.0.182.
-+  Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5) (Anaconda 64bit with Python3.6 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-5.2.0-Windows-x86_64.exe``\  for 64bit.)
++  Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5)\ (Anaconda 64bit with Python3.6 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-5.2.0-Windows-x86_64.exe``\  for 64bit.)
 
-If you plan to extend the C++ code, we recommend to use VS2017 (previously, VS2019 was recommended: However, VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.) to compile your code, which offers Python 3.7 compatibility.
+If you plan to extend the C++ code, we recommend to use VS2017\ (previously, VS2019 was recommended: However, VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver. VS2017 can also be configured with Python 3.7 now.) to compile your code, which offers Python 3.7 compatibility.
 Once again, remember that Python versions and the version of the Exudyn module must be identical (e.g., Python 3.6 32 bit \ **both**\  in the Exudyn module and in Spyder).
 
 
@@ -59,7 +59,7 @@ Pre-built versions of Exudyn are hosted on \ ``pypi.org``\ , see the project
 
  +  `https://pypi.org/project/exudyn <https://pypi.org/project/exudyn>`_
 
-As with most other packages, in the regular case (if your binary has been pre-built) you just need to do (If the index of pypi is not updated, it may help to use \ ``pip install -i https://pypi.org/project/ exudyn``\  )
+As with most other packages, in the regular case (if your binary has been pre-built) you just need to do\ (If the index of pypi is not updated, it may help to use \ ``pip install -i https://pypi.org/project/ exudyn``\  )
 
    \ ``pip install exudyn``\ 
 
@@ -67,9 +67,9 @@ On Linux (currently only pre-built for UBUNTU, but should work on many other lin
 
    \ ``pip3 install exudyn``\ 
 
-For pre-releases (use with care!), add '--pre' flag:
+For pre-releases (use with care!), add '\ :math:`--`\ pre' flag:
 
-   \ ``pip install exudyn --pre``\ 
+   \ ``pip install exudyn \ :math:`--`\ pre``\ 
 
 In some cases (e.g. for AppleM1), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the 'Build and install' sections, Section :ref:`sec-install-installinstructions-buildwindows`\ .
 
@@ -86,11 +86,11 @@ Wheels can be downloaded directly from `https://pypi.org/project/exudyn/\#files 
 
 For UBUNTU18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):
 
-+  \ ``Python 3.6, 64bit``\ : pip3 install dist\exudyn-1.0.20-cp36-cp36-linux_x86_64.whl
++  \ ``Python 3.6, 64bit``\ : pip3 install dist\ :math:`\backslash`\ exudyn-1.0.20-cp36-cp36-linux_x86_64.whl
 
 For UBUNTU20.04 (which by default uses Python 3.8) this may read (version number 1.0.20 may be different):
 
-+  \ ``Python 3.8, 64bit``\ : pip3 install dist\exudyn-1.0.20-cp38-cp38-linux_x86_64.whl
++  \ ``Python 3.8, 64bit``\ : pip3 install dist\ :math:`\backslash`\ exudyn-1.0.20-cp38-cp38-linux_x86_64.whl
 
 NOTE that your installation may have environments with different Python versions, so install that Exudyn version appropriately!
 If the wheel installation does not work on UBUNTU, it is highly recommended to build Exudyn for your specific system as given in Section :ref:`sec-install-installinstructions-buildubuntu`\ .
@@ -100,18 +100,18 @@ If the wheel installation does not work on UBUNTU, it is highly recommended to b
 First, open an Anaconda prompt:
 
 +  EITHER calling: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
-+  You can check your Python version then, by running \ ``python``\  (\ ``python3``\  under UBUNTU 18.04), the output reads like:
++  You can check your Python version then, by running \ ``python``\ \ (\ ``python3``\  under UBUNTU 18.04), the output reads like:
   
-   \ ``Python 3.6.5 |Anaconda, Inc.| (default, Mar 29 2018, 13:32:41) [MSC v.1900 64 bit (AMD64)] on win32``\ 
+   \ ``Python 3.6.5 \ :math:`|`\ Anaconda, Inc.\ :math:`|`\  (default, Mar 29 2018, 13:32:41) \ :math:`[`\ MSC v.1900 64 bit (AMD64)\ :math:`]`\  on win32``\ 
    ...
   
 +  type \ ``exit()``\  to close Python
 
 For Windows the installation commands may read (version number 1.0.20 may be different):
 
-+  \ ``Python 3.6, 32bit``\ : pip install dist\exudyn-1.0.20-cp36-cp36m-win32.whl
-+  \ ``Python 3.6, 64bit``\ : pip install dist\exudyn-1.0.20-cp36-cp36m-win_amd64.whl
-+  \ ``Python 3.7, 64bit``\ : pip install dist\exudyn-1.0.20-cp37-cp37m-win_amd64.whl
++  \ ``Python 3.6, 32bit``\ : pip install dist\ :math:`\backslash`\ exudyn-1.0.20-cp36-cp36m-win32.whl
++  \ ``Python 3.6, 64bit``\ : pip install dist\ :math:`\backslash`\ exudyn-1.0.20-cp36-cp36m-win_amd64.whl
++  \ ``Python 3.7, 64bit``\ : pip install dist\ :math:`\backslash`\ exudyn-1.0.20-cp37-cp37m-win_amd64.whl
 
 
 
@@ -131,12 +131,12 @@ Note that there are a couple of pre-requisites, depending on your system and ins
 +  run an Anaconda prompt (may need to be run as administrator)
 +  if you cannot run Anaconda prompt directly, do:
   
-+  open windows shell (cmd.exe) as administrator (START → search for cmd.exe → right click on app → 'run as administrator' if necessary) [may not be necessary]
++  open windows shell (cmd.exe) as administrator (START \ :math:`\ra`\  search for cmd.exe \ :math:`\ra`\  right click on app \ :math:`\ra`\  'run as administrator' if necessary) [may not be necessary]
 +  go to your Scripts folder inside the Anaconda folder (e.g. \ ``C:\ProgramData\Anaconda\Scripts``\ ) [may not be necessary]
 +  run 'activate.bat' [may not be necessary]
   
 +  go to 'main' of your cloned github folder of Exudyn 
-+  run: (the \ ``--parallel``\  option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x) \ ``python setup.py install --parallel``\ 
++  run:\ (the \ ``--parallel``\  option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x) \ ``python setup.py install --parallel``\ 
 +  read the output; if there are errors, try to solve them by installing appropriate modules
 
 You can also create your own wheels, doing the above steps to activate the according Python version and then calling:
@@ -160,7 +160,7 @@ Requirements are an according Anaconda (or Miniconda) installation.
 +  Mac OS 11.x 'Big Sur', Mac Mini (2021), Apple M1, 16GB Memory
 +  Miniconda with conda environments (x86 / i368 based with Rosetta 2) with Python 3.7 - 3.10
 +  Miniconda with conda environments (ARM) with Python 3.8 - 3.10
-   → wheels are available on pypi since Exudyn 1.5.0 
+   \ :math:`\ra`\  wheels are available on pypi since Exudyn 1.5.0 
 
 \ **NOTE**\ :
 
@@ -182,11 +182,11 @@ If you would like to compile from source, just use a bash terminal on your Mac, 
 
 +  uninstall if old version exists (may need to repeat this!): \ ``pip uninstall exudyn``\ 
 +  remove the \ ``build``\  directory if you would like to re-compile without changes
-+  to perform compilation from source, write: (the \ ``--parallel``\  option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x)
++  to perform compilation from source, write:\ (the \ ``--parallel``\  option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x)
 +  \ ``python setup.py bdist_wheel --parallel``\ 
 +  which takes 75 seconds on Apple M1 in parallel mode, otherwise 5 minutes. To install Exudyn , run
    \ ``python setup.py install``\ 
-   → this will only install, but not re-compile. Otherwise, just use pip install from the created wheel in the dist folder
+   \ :math:`\ra`\  this will only install, but not re-compile. Otherwise, just use pip install from the created wheel in the dist folder
    \ **NOTE**\  that conda environments are highly recommended
 
 Then just go to the \ ``pythonDev/Examples``\  folder and run an example:
@@ -212,7 +212,7 @@ in order to interact with the render window, as there is only a single-threaded 
 Build and install Exudyn under UBUNTU?
 --------------------------------------
 
-Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python \ **3.6**\  is already installed on UBUNTU18.04, otherwise use \ ``sudo apt install python3``\ ) (see also the youtube video: `https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_):
+Having a new UBUNTU 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python \ **3.6**\  is already installed on UBUNTU18.04, otherwise use \ ``sudo apt install python3``\ )\ (see also the youtube video: `https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_):
 
 First update ...
 
@@ -257,7 +257,7 @@ If graphics is used (\ ``\#define USE_GLFW_GRAPHICS``\  in \ ``BasicDefinitions.
 
 
 
-With all of these libs, you can run the setup.py installer (go to \ ``Exudyn_git/main``\  folder), which takes some minutes for compilation (the --user option is used to install in local user folder) (the \ ``--parallel``\  option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x):
+With all of these libs, you can run the setup.py installer (go to \ ``Exudyn_git/main``\  folder), which takes some minutes for compilation (the --user option is used to install in local user folder)\ (the \ ``--parallel``\  option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x):
 
 .. code-block:: 
 
@@ -288,7 +288,7 @@ You can also create a UBUNTU wheel which can be easily installed on the same mac
 
 +  Exudyn also compiles under RaspberryPi 4b, Ubuntu Mate 20.04, Python 3.8; current version should compile out of the box using \ ``python3 setup.py install``\  command.
 +  Performance is quite ok and it is even capable to use all cores (but you should add a fan!)
-+  → this could lead to a nice cluster project!
++  \ :math:`\ra`\  this could lead to a nice cluster project!
 
 
 \ **KNOWN issues for linux builds**\ :
@@ -335,7 +335,7 @@ In order to make full usage of the C++ code and extending it, you can use:
 +  adapt \ ``pytest.py``\  for your applications
 +  extend the C++ source code
 +  link it to your own code
-+  NOTE: on Linux systems, you mostly need to replace '/' with '\'
++  NOTE: on Linux systems, you mostly need to replace '\ :math:`/`\ ' with '\ :math:`\backslash`\ '
   
 +  Linux, etc.: not fully supported yet; however, all external libraries are Linux-compatible and thus should run with minimum adaptation efforts.
 

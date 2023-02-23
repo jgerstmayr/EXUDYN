@@ -5,7 +5,7 @@
 ObjectJointALEMoving2D
 ======================
 
-A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the ODE2 coordinate q[0] provides the (given) moving coordinate in the cable element.
+A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the \ :ref:`ODE2 <ODE2>`\  coordinate q[0] provides the (given) moving coordinate in the cable element.
 
 \ **Additional information for ObjectJointALEMoving2D**\ :
 
@@ -29,7 +29,7 @@ The item \ **ObjectJointALEMoving2D**\  with type = 'JointALEMoving2D' has the f
 * | **slidingOffset** [\ :math:`s_{off}`\ , type = Real, default = 0.]:
   | sliding offset list [SI:m]: a list of sn scalar offsets, which represent the (reference arc) length of all previous sliding cable elements
 * | **nodeNumbers** [\ :math:`[n_{GD}, n_{ALE}]`\ , type = ArrayNodeIndex, default = [ invalid [-1], invalid [-1] ]]:
-  | node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one ODE2 coordinate
+  | node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one \ :ref:`ODE2 <ODE2>`\  coordinate
 * | **usePenaltyFormulation** [type = Bool, default = False]:
   | flag, which determines, if the connector is formulated with penalty, but still using algebraic equations (IsPenaltyConnector() still false)
 * | **penaltyStiffness** [\ :math:`k`\ , type = Real, default = 0.]:
@@ -89,7 +89,7 @@ Definition of quantities
    * - | generic data node
      - | \ :math:`{\mathbf{x}}=[x_{data0}]\tp`\ 
      - | coordinates of node with node number \ :math:`n_{GD}`\ 
-   * - | generic ODE2 node
+   * - | generic \ :ref:`ODE2 <ODE2>`\  node
      - | \ :math:`{\mathbf{q}}=[q_{0}]\tp`\ 
      - | coordinates of node with node number \ :math:`n_{ALE}`\ , which is shared with all ALE-ANCF and ALE sliding joint objects
    * - | data coordinate

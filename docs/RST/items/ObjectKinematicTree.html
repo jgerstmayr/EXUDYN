@@ -7,6 +7,7 @@
   <title>ObjectKinematicTree &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,8 +18,10 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
         <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
-        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}"}}}</script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}"}}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -80,8 +83,9 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../Abbreviations.html">List of Abbreviations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../trackerlogRST.html">Issue tracker</a></li>
 </ul>
 
@@ -177,7 +181,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>linkInertiasCOM</strong> [<span class="math notranslate nohighlight">\({\mathbf{J}}_{COM} = [\LU{j_0}{{\mathbf{J}}_0},\, \LU{j_1}{{\mathbf{J}}_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]\)</span>, type = Matrix3DList, default = []]:</div>
-<div class="line">list of link inertia tensors w.r.t.COM in joint/link <span class="math notranslate nohighlight">\(j_i\)</span> coordinates; must be always set</div>
+<div class="line">list of link inertia tensors w.r.t.<a class="reference internal" href="../Abbreviations.html#com"><span class="std std-ref">COM</span></a> in joint/link <span class="math notranslate nohighlight">\(j_i\)</span> coordinates; must be always set</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -271,17 +275,17 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates</span></code>:</div>
-<div class="line">all ODE2 joint coordinates, including reference values; these are the minimal coordinates of the object</div>
+<div class="line">all <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> joint coordinates, including reference values; these are the minimal coordinates of the object</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates\_t</span></code>:</div>
-<div class="line">all ODE2 velocity coordinates</div>
+<div class="line">all <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> velocity coordinates</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">Coordinates\_tt</span></code>:</div>
-<div class="line">all ODE2 acceleration coordinates</div>
+<div class="line">all <a class="reference internal" href="../Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> acceleration coordinates</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -320,7 +324,7 @@ The equations of motion are built by special multibody algorithms. Currently, th
 so-called Composite-Rigid-Body (CRB) algorithm implemented.
 This algorithm does not show the highest performance, but creates the mass matrix <span class="math notranslate nohighlight">\({\mathbf{M}}_{CRB}\)</span> and forces <span class="math notranslate nohighlight">\({\mathbf{f}}_{CRB}\)</span>in a conventional form. The equations read</p>
 <div class="math notranslate nohighlight" id="equation-eq-kinematictree-eom">
-<span class="eqno">(1)<a class="headerlink" href="#equation-eq-kinematictree-eom" title="Permalink to this equation"></a></span>\[{\mathbf{M}}_{CRB}({\mathbf{q}}) \ddot {\mathbf{q}} = {\mathbf{f}}_{CRB}({\mathbf{q}},\dot {\mathbf{q}}) + {\mathbf{f}} + {\mathbf{f}}_{PD} + {\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})\]</div>
+<span class="eqno">(12)<a class="headerlink" href="#equation-eq-kinematictree-eom" title="Permalink to this equation"></a></span>\[{\mathbf{M}}_{CRB}({\mathbf{q}}) \ddot {\mathbf{q}} = {\mathbf{f}}_{CRB}({\mathbf{q}},\dot {\mathbf{q}}) + {\mathbf{f}} + {\mathbf{f}}_{PD} + {\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})\]</div>
 <p>The term <span class="math notranslate nohighlight">\({\mathbf{f}}_{CRB}({\mathbf{q}},\dot {\mathbf{q}})\)</span> represents inertial terms, which are due to accelerations and
 quadratic velocities and is computed by <code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code>.
 Note that the user function <span class="math notranslate nohighlight">\({\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})\)</span> may be empty (=0),
@@ -336,9 +340,9 @@ This leads to worse performance (up to non-convergence) of implicit solvers.</p>
 <div class="math notranslate nohighlight">
 \[{\mathbf{f}}_{PD} = {\mathbf{P}} . ({\mathbf{u}}_o - {\mathbf{q}}) + {\mathbf{D}} . ({\mathbf{v}}_o - \dot {\mathbf{q}})\]</div>
 <p>Here, the ‘.’ operator represents an element-wise multiplication of two vectors, resulting in a vector.
-The force <span class="math notranslate nohighlight">\({\mathbf{f}}_{PD}\)</span> at the RHS acts in direction of prescribed joint motion <span class="math notranslate nohighlight">\({\mathbf{u}}_o\)</span> and
+The force <span class="math notranslate nohighlight">\({\mathbf{f}}_{PD}\)</span> at the <a class="reference internal" href="../Abbreviations.html#rhs"><span class="std std-ref">RHS</span></a> acts in direction of prescribed joint motion <span class="math notranslate nohighlight">\({\mathbf{u}}_o\)</span> and
 prescribed joint velocities <span class="math notranslate nohighlight">\({\mathbf{v}}_o\)</span> multiplied with proportional and ‘derivative’ factors <span class="math notranslate nohighlight">\(P\)</span> and <span class="math notranslate nohighlight">\(D\)</span>.
-Omitting <span class="math notranslate nohighlight">\({\mathbf{u}}_o\)</span> and <span class="math notranslate nohighlight">\({\mathbf{v}}_o\)</span> and putting <span class="math notranslate nohighlight">\({\mathbf{f}}_{PD}\)</span> on the LHS, we immediately can interpret these
+Omitting <span class="math notranslate nohighlight">\({\mathbf{u}}_o\)</span> and <span class="math notranslate nohighlight">\({\mathbf{v}}_o\)</span> and putting <span class="math notranslate nohighlight">\({\mathbf{f}}_{PD}\)</span> on the <a class="reference internal" href="../Abbreviations.html#lhs"><span class="std std-ref">LHS</span></a>, we immediately can interpret these
 terms as stiffness and damping on the single coordinates.
 The control force is also considered in the object’s jacobian, which is currently computed by numerical
 differentiation.</p>

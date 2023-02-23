@@ -41,6 +41,60 @@ The item VMarkerSuperElementPosition has the following parameters:
 
 DESCRIPTION of MarkerSuperElementPosition
 -----------------------------------------
+\ **Definition of marker quantities**\ :
+
+.. list-table:: \ 
+   :widths: auto
+   :header-rows: 1
+
+   * - | intermediate variables
+     - | symbol
+     - | description
+   * - | number of mesh nodes
+     - | \ :math:`n_m`\ 
+     - | size of \ ``meshNodeNumbers``\  and \ ``weightingFactors``\  which are marked; this must not be the number of mesh nodes in the marked object
+   * - | mesh node number
+     - | \ :math:`i = k_i`\ 
+     - | abbreviation
+   * - | mesh node points
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{i}`\ 
+     - | position of mesh node \ :math:`k_i`\  in object \ :math:`n_b`\ 
+   * - | mesh node velocities
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{i}`\ 
+     - | velocity of mesh node \ :math:`i`\  in object \ :math:`n_b`\ 
+   * - | marker position
+     - | \ :math:`\LU{0}{{\mathbf{p}}}_{m} = \sum_i w_i \cdot \LU{0}{{\mathbf{p}}_i}`\ 
+     - | current global position which is provided by marker
+   * - | marker velocity
+     - | \ :math:`\LU{0}{{\mathbf{v}}}_{m} = \sum_i w_i \cdot \LU{0}{{\mathbf{v}}_i}`\ 
+     - | current global velocity which is provided by marker
+
+
+
+Marker quantities
+-----------------
+
+The marker provides a 'position' jacobian, which is the derivative of the marker velocity w.r.t.\ the 
+object velocity coordinates \ :math:`\dot {\mathbf{q}}_{n_b}`\ ,
+
+.. math::
+
+   {\mathbf{J}}_{m,pos} = \frac{\partial \LU{0}{{\mathbf{v}}}_{m}}{\partial \dot {\mathbf{q}}_{n_b}} = \sum_i w_i \cdot {\mathbf{J}}_{i,pos}
+
+
+in which \ :math:`{\mathbf{J}}_{i,pos}`\  denotes the position jacobian of mesh node \ :math:`i`\ ,
+
+.. math::
+
+   {\mathbf{J}}_{i,pos} = \frac{\partial \LU{0}{{\mathbf{v}}}_{i}}{\partial \dot {\mathbf{q}}_{n_b}}
+
+
+The jacobian \ :math:`{\mathbf{J}}_{i,pos}`\  usually contains mostly zeros for \ ``ObjectGenericODE2``\ , because the jacobian only affects one single node.
+In \ ``ObjectFFRFreducedOrder``\ , the jacobian may affect all reduced coordinates.
+
+Note that \ :math:`{\mathbf{J}}_{m,pos}`\  is actually computed by the
+\ ``ObjectSuperElement``\  within the function \ ``GetAccessFunctionSuperElement``\ .
+
 
 
 .. _miniexample-markersuperelementposition:

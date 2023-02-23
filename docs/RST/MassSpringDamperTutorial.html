@@ -7,6 +7,7 @@
   <title>Mass-Spring-Damper tutorial &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,6 +18,8 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -64,8 +67,9 @@
 <li class="toctree-l1"><a class="reference internal" href="items/itemsIndex.html">Items reference manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../trackerlogRST.html">Issue tracker</a></li>
 </ul>
 
@@ -134,7 +138,7 @@ Per default, you always should name your system ‘mbs’ (multibody system), in
 </pre></div>
 </div>
 <p>We first need to add nodes, which provide the coordinates (and the degrees of freedom) to the system.
-The following line adds a 3D node for 3D mass point (Note: Point is an abbreviation for NodePoint, defined in <code class="docutils literal notranslate"><span class="pre">itemInterface.py</span></code>.):</p>
+The following line adds a 3D node for 3D mass point(Note: Point is an abbreviation for NodePoint, defined in <code class="docutils literal notranslate"><span class="pre">itemInterface.py</span></code>.):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n1</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
                      <span class="n">initialCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="n">u0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
                      <span class="n">initialVelocities</span> <span class="o">=</span> <span class="p">[</span><span class="n">v0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
@@ -147,7 +151,7 @@ Such a ground node is added via:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nGround</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="n">AddNode</span><span class="p">(</span><span class="n">NodePointGround</span><span class="p">(</span><span class="n">referenceCoordinates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 </pre></div>
 </div>
-<p>In the next step, we add an object (For the moment, we just need to know that objects either depend on one or more nodes, which are usually bodies and finite elements, or they can be connectors, which connect (the coordinates of) objects via markers, see Section <a class="reference internal" href="ModuleStructure.html#sec-overview-modulestructure"><span class="std std-ref">Module structure</span></a>.), which provides equations for coordinates. The <code class="docutils literal notranslate"><span class="pre">MassPoint</span></code> needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:</p>
+<p>In the next step, we add an object(For the moment, we just need to know that objects either depend on one or more nodes, which are usually bodies and finite elements, or they can be connectors, which connect (the coordinates of) objects via markers, see Section <a class="reference internal" href="ModuleStructure.html#sec-overview-modulestructure"><span class="std std-ref">Module structure</span></a>.), which provides equations for coordinates. The <code class="docutils literal notranslate"><span class="pre">MassPoint</span></code> needs at least a mass (kg) and a node number to which the mass point is attached. Additionally, graphical objects could be attached:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">massPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">MassPoint</span><span class="p">(</span><span class="n">physicsMass</span> <span class="o">=</span> <span class="n">mass</span><span class="p">,</span> <span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">n1</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -246,7 +250,7 @@ Sometimes you would like to wait until closing the render window, using <code cl
 <p>Now we can load our results from the default solution file <code class="docutils literal notranslate"><span class="pre">coordinatesSolution.txt</span></code>, which is in the same
 directory as your python tutorial file.
 <strong>Note</strong> that the visualization of results can be simplified considerably using the <code class="docutils literal notranslate"><span class="pre">PlotSensor(...)</span></code> utility function as shown in the <strong>Rigid body and joints tutorial</strong>!</p>
-<p>For reading the file containing commented lines (this does not work in binary mode!), we use a numpy feature and finally plot the displacement of coordinate 0 or our mass point (<code class="docutils literal notranslate"><span class="pre">data[:,0]</span></code> contains the simulation time, <code class="docutils literal notranslate"><span class="pre">data[:,1]</span></code> contains displacement of (global) coordinate 0, <code class="docutils literal notranslate"><span class="pre">data[:,2]</span></code> contains displacement of (global) coordinate 1, …)):</p>
+<p>For reading the file containing commented lines (this does not work in binary mode!), we use a numpy feature and finally plot the displacement of coordinate 0 or our mass point(<code class="docutils literal notranslate"><span class="pre">data[:,0]</span></code> contains the simulation time, <code class="docutils literal notranslate"><span class="pre">data[:,1]</span></code> contains displacement of (global) coordinate 0, <code class="docutils literal notranslate"><span class="pre">data[:,2]</span></code> contains displacement of (global) coordinate 1, …)):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;coordinatesSolution.txt&#39;</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;displacement (m); numerical solution&#39;</span><span class="p">)</span>
 </pre></div>
@@ -257,7 +261,7 @@ sensor and the output quantity (scalar, vector, …):</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mf">1e-3</span><span class="p">,</span> <span class="s1">&#39;g-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;force (kN)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>In order to get a nice plot within Spyder, the following options can be used (note, in some environments you need finally the command <code class="docutils literal notranslate"><span class="pre">plt.show()</span></code>):</p>
+<p>In order to get a nice plot within Spyder, the following options can be used(note, in some environments you need finally the command <code class="docutils literal notranslate"><span class="pre">plt.show()</span></code>):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span> <span class="c1"># get current axes</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>

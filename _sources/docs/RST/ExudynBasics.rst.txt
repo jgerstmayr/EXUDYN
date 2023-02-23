@@ -112,10 +112,10 @@ Visualization settings are used for user interaction with the model. E.g., the n
 
 Details on visualization settings and its substructures are provided in Section :ref:`sec-vsettingsgeneral`\  -- Section :ref:`sec-visualizationsettings`\ . These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \ ``SC.WaitForRenderEngineStopFlag()``\  or 
 \ ``mbs.WaitForUserToContinue()``\  ).
-The visualization settings dialog is shown exemplarily in Fig. :ref:`fig-visualizationsettings`\ .
+The visualization settings dialog is shown exemplarily in \ :numref:`fig-visualizationsettings`\ .
 Note that this dialog is automatically created and uses Python's \ ``tkinter``\ , which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn .
 
-The appearance of visualization settings dialogs may be adjusted by directly modifying \ ``exudyn.GUI``\  variables (this may change in the future). For example write in your code before opening the render window (treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click):
+The appearance of visualization settings dialogs may be adjusted by directly modifying \ ``exudyn.GUI``\  variables (this may change in the future). For example write in your code before opening the render window\ (treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click):
 
 .. code-block:: python
 
@@ -226,7 +226,7 @@ The openGL graphics thread (=separate thread) runs the following loop:
 +  render openGL scene with a given graphicsData structure (containing lines, faces, text, ...)
 +  go idle for some milliseconds
 +  check if openGL rendering needs an update (e.g. due to user interaction)
-   → if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
+   \ :math:`\ra`\  if update is needed, the visualization of all items is updated -- stored in a graphicsData structure)
 +  check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state
 
 
@@ -239,7 +239,7 @@ Storing the model view
 
 There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \ ``SC.GetRenderState()``\  and \ ``SC.SetRenderState()``\ ,
 see also Section :ref:`sec-renderstate`\ .
-A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation (
+A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation\ (
 note that \ ``visualizationSettings.general.autoFitScene``\  should be set False if you want to use the stored zoom factor):
 
 .. code-block:: python
@@ -266,13 +266,13 @@ Alternatively, you can obtain the current model view from the console after a si
 
   In[1] : SC.GetRenderState()
   Out[1]: 
-  {'centerPoint': [1.0, 0.0, 0.0],
+  'centerPoint': [1.0, 0.0, 0.0],
    'maxSceneSize': 2.0,
    'zoom': 1.0,
    'currentWindowSize': [1024, 768],
    'modelRotation': [[ 0.34202015,  0.        , 0.9396926 ],
                      [-0.60402274,  0.76604444, 0.21984631],
-                     [-0.7198463 , -0.6427876 , 0.26200265]])}
+                     [-0.7198463 , -0.6427876 , 0.26200265]])
 
 
 which contains the last state of the renderer.
@@ -282,7 +282,7 @@ Now copy the output and set this with \ ``SC.SetRenderState``\  in your Python c
 
   SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
   exu.StartRenderer()
-  renderState={'centerPoint': [1.0, 0.0, 0.0],
+  renderState='centerPoint': [1.0, 0.0, 0.0],
                'maxSceneSize': 2.0,
                'zoom': 1.0,
                'currentWindowSize': [1024, 768],
@@ -303,7 +303,7 @@ Graphics user functions via Python
 
 There are some user functions in order to customize drawing:
 
-+  You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (\ ``GraphicsDataFromSTLfileTxt``\ ) using the established format {STL} (STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems).
++  You can assign graphicsData to the visualization to most bodies, such as rigid bodies in order to change the shape. Graphics can also be imported from files (\ ``GraphicsDataFromSTLfileTxt``\ ) using the established format \ :ref:`STL <STL>`\ \ (STereoLithography or Standard Triangle Language; file format available in nearly all CAD systems).
 +  Some objects, e.g., \ ``ObjectGenericODE2``\  or \ ``ObjectRigidBody``\ , provide customized a function \ ``graphicsDataUserFunction``\ . This user function just returns a list of GraphicsData, see Section :ref:`sec-graphicsdata`\ . With this function you can change the shape of the body in every step of the computation.
 +  Specifically, the \ ``graphicsDataUserFunction``\  in \ ``ObjectGround``\  can be used to draw any moving background in the scene.
 
@@ -339,7 +339,7 @@ For this, you can use
 +  \ ``interactive.SolutionViewer``\ , see  :ref:`Section <sec-interactive-solutionviewer>`\ 
 +  \ ``interactive.AnimateModes``\ , lets you view the animation of computed modes, see  :ref:`Section <sec-interactive-animatemodes>`\ 
 
-shown exemplary in Fig. :ref:`fig-solutionviewer`\ .
+shown exemplary in \ :numref:`fig-solutionviewer`\ .
 
 
 .. _fig-solutionviewer:
@@ -374,7 +374,8 @@ You can call the \ ``SolutionViewer``\  either in the model, or at the command l
   SolutionViewer(mbs, sol)
 
 
-\ **Alternatively**\ , if no solution is provided, \ ``SolutionViewer``\  tries to reload the solution of the previous simulation that is referred to from \ ``mbs.sys[simulationSettings]``\ :
+\ **Alternatively**\ , if no solution is provided, \ ``SolutionViewer``\  tries to reload the solution of the previous simulation 
+that is referred to from \ ``mbs.sys\['simulationSettings'\]``\ :
 
 .. code-block:: python
 
@@ -407,7 +408,7 @@ which means, that after every 0.01 seconds of simulation time, an image of the c
 By default, a consecutive numbering is generated for the image, e.g., 'frame0000.png, frame0001.png,...'. Note that the standard file format PNG with ending '.png' uses compression libraries included in glfw, while the alternative TGA format produces '.tga' files which contain raw image data and therefore can become very large.
 
 To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation.
-→ see theDoc.pdf !
+\ :math:`\ra`\  see theDoc.pdf !
 
 
 
@@ -452,20 +453,20 @@ Removing convergence problems and solver failures
 
 Nonlinear formulations (such as most multibody systems, especially nonlinear finite elements) cause problems and there is no general nonlinear solver which may reliably and accurately solve such problems.
 Tuning solver parameters is at hand of the user. 
-In general, the Newton solver tries to reduce the error by the factor given in \ ``simulationSettings.staticSolver.newton.relativeTolerance``\  (for static solver), which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in \ ``simulationSettings.staticSolver.newton.absoluteTolerance``\  (for static solver), which is by default rather low (1e-10) -- in order to achieve accurate results for small systems or small motion (in mm or \mum regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.
+In general, the Newton solver tries to reduce the error by the factor given in \ ``simulationSettings.staticSolver.newton.relativeTolerance``\  (for static solver), which is not possible for very small (or zero) initial residuals. The absolute tolerance is helping out as a lower bound for the error, given in \ ``simulationSettings.staticSolver.newton.absoluteTolerance``\  (for static solver), which is by default rather low (1e-10) -- in order to achieve accurate results for small systems or small motion (in mm or \ :math:`\mu`\ m regime). Increasing this value helps to solve such problems. Nevertheless, you should usually set tolerances as low as possible because otherwise, your solution may become inaccurate.
 
 The following hints shall be followed (also some solver hints).
 
 +  \ **static solver**\ : load steps are reduced even if the solution seems to be smooth and less steps are expected; larger number of steps may happen for finer discretization; you may adjust (increase) \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration to resolve such problems, but check if solution achieves according accuracy
-+  \ **static solver**\ : load steps are reduced significantly for highly nonlinear problems; solver repeatedly writes that steps are reduced → try to use \ ``loadStepGeometric``\  and use a large \ ``loadStepGeometricRange``\ : this allows to start with very small loads in which the system is nearly linear (e.g. for thin strings or belts under gravity).
-+  \ **static solver**\ : in case that your system is (nearly) kinematic, a static solution can be achieved using \ ``stabilizerODE2term``\ , which adds mass-proportional stiffness terms during load steps < 1.
++  \ **static solver**\ : load steps are reduced significantly for highly nonlinear problems; solver repeatedly writes that steps are reduced \ :math:`\ra`\  try to use \ ``loadStepGeometric``\  and use a large \ ``loadStepGeometricRange``\ : this allows to start with very small loads in which the system is nearly linear (e.g. for thin strings or belts under gravity).
++  \ **static solver**\ : in case that your system is (nearly) kinematic, a static solution can be achieved using \ ``stabilizerODE2term``\ , which adds mass-proportional stiffness terms during load steps \ :math:`< 1`\ .
 +  very small loads or even \ **zero loads**\  do not converge: \ ``SolveDynamic``\  or \ ``SolveStatic``\  \ **terminated due to errors**\ 
   
-  |  →  the reason is the nonlinearity of formulations (nonlinear kinematics, nonlinear beam, etc.) and round off errors, which restrict Newton to achieve desired tolerances
-  |  →  adjust (increase) \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration
-  |  →  in many cases, especially for static problems, the \ ``.newton.newtonResidualMode = 1``\  evaluates the increments; the nonlinear problems is assumed to be converged, if increments are within given absolute/relative tolerances; this also works usually better for kinematic solutions
++ [\ :math:`\ra`\ ] the reason is the nonlinearity of formulations (nonlinear kinematics, nonlinear beam, etc.) and round off errors, which restrict Newton to achieve desired tolerances
++ [\ :math:`\ra`\ ] adjust (increase) \ ``.newton.relativeTolerance``\  / \ ``.newton.absoluteTolerance``\  in static solver or in time integration
++ [\ :math:`\ra`\ ] in many cases, especially for static problems, the \ ``.newton.newtonResidualMode = 1``\  evaluates the increments; the nonlinear problems is assumed to be converged, if increments are within given absolute/relative tolerances; this also works usually better for kinematic solutions
   
-+  for \ **discontinuous problems**\ : try to adjust solver parameters; especially the \ ``discontinuous.iterationTolerance``\  and \ ``discontinuous.maxIterations``\ ; try to make smaller load or time steps in order to resolve switching points of contact or friction; generalized alpha solvers may cause troubles when reducing step sizes → use TrapezoidalIndex2 solver
++  for \ **discontinuous problems**\ : try to adjust solver parameters; especially the \ ``discontinuous.iterationTolerance``\  and \ ``discontinuous.maxIterations``\ ; try to make smaller load or time steps in order to resolve switching points of contact or friction; generalized alpha solvers may cause troubles when reducing step sizes \ :math:`\ra`\  use TrapezoidalIndex2 solver
 +  if you see further problems, please post them (including relevant example) at the Exudyn github page!
 
 
@@ -503,13 +504,13 @@ However, there are many \ **ways to speed up Exudyn in general**\ :
 +  For multiple computations / multiple runs of Exudyn (parameter variation, optimization, compute sensitivities), you can use the processing sub module of Exudyn to parallelize computations and achieve speedups proporional to the number of cores/threads of your computer; specifically using the \ ``multiThreading``\  option or even using a cluster (using \ ``dispy``\ , see \ ``ParameterVariation(...)``\  function)
 +  In case of multiprocessing and cluster computing, you may see a very high CPU usage of "Antimalware Service Executable", which is the Microsoft Defender Antivirus; you can turn off such problems by excluding \ ``python.exe``\  from the defender (on your own risk!) in your settings:
 
-  Settings → Update \& Security → Windows Security → Virus \& threat protection settings → Manage settings → Exclusions → Add or remove exclusions 
+  Settings \ :math:`\ra`\  Update \& Security \ :math:`\ra`\  Windows Security \ :math:`\ra`\  Virus \& threat protection settings \ :math:`\ra`\  Manage settings \ :math:`\ra`\  Exclusions \ :math:`\ra`\  Add or remove exclusions 
 
 \ **Possible speed ups for dynamic simulations**\ :
 
 +  for implicit integration, turn on \ **modified Newton**\ , which updates jacobians only if needed: \ ``simulationSettings.timeIntegration.newton.useModifiedNewton = True``\ 
 +  use \ **multi-threading**\ : \ ``simulationSettings.parallel.numberOfThreads = ...``\ , depending on the number of cores (larger values usually do not help); improves greatly for contact problems, but also for some objects computed in parallel; will improve significantly in future
-+  decrease number of steps (\ ``simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)``\ ) by increasing the step size h if not needed for accuracy reasons; not that in general, the solver will reduce steps in case of divergence, but not for accuracy reasons, which may still lead to divergence if step sizes are too large
++  decrease number of steps (\ ``simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)``\ ) by increasing the step size \ :math:`h`\  if not needed for accuracy reasons; not that in general, the solver will reduce steps in case of divergence, but not for accuracy reasons, which may still lead to divergence if step sizes are too large
 +  switch off measuring computation time, if not needed: \ ``simulationSettings.displayComputationTime = False``\ 
 +  try to switch to \ **explicit solvers**\ , if problem has no constraints and if problem is not stiff
 +  try to have \ **constant mass matrices**\  (see according objects, which have constant mass matrices; e.g. rigid bodies using RotationVector Lie group node have constant mass matrix)

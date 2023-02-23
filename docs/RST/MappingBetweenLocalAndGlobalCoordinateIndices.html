@@ -7,6 +7,7 @@
   <title>Mapping between local and global coordinate indices &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,6 +18,8 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -68,8 +71,9 @@
 <li class="toctree-l1"><a class="reference internal" href="items/itemsIndex.html">Items reference manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../trackerlogRST.html">Issue tracker</a></li>
 </ul>
 
@@ -100,13 +104,13 @@
              
   <section id="mapping-between-local-and-global-coordinate-indices">
 <span id="sec-overview-ltgmapping"></span><h1>Mapping between local and global coordinate indices<a class="headerlink" href="#mapping-between-local-and-global-coordinate-indices" title="Permalink to this heading"></a></h1>
-<p>The {LTG}-index-mappings (local-to-global coordinate index mappings containing transformation from local object coordinate indices to global (system) coordinate indices; this is different for <strong>coordinate transformations</strong>!) between local coordinate <strong>indices</strong>, on node or object level, and global (=system) coordinate <strong>indices</strong> follows the following rules:</p>
+<p>The <a class="reference internal" href="Abbreviations.html#ltg"><span class="std std-ref">LTG</span></a>-index-mappings(local-to-global coordinate index mappings containing transformation from local object coordinate indices to global (system) coordinate indices; this is different for <strong>coordinate transformations</strong>!) between local coordinate <strong>indices</strong>, on node or object level, and global (=system) coordinate <strong>indices</strong> follows the following rules:</p>
 <ul class="simple">
-<li><p>{LTG}-index-mappings are computed during <code class="docutils literal notranslate"><span class="pre">mbs.Assemble()</span></code> and are not available before.</p></li>
-<li><p>Nodes own a global index which relates the local coordinates to global (system) coordinate. E.g., for a {ODE2} node with node number <code class="docutils literal notranslate"><span class="pre">i</span></code>, this index can be obtained via the function <code class="docutils literal notranslate"><span class="pre">mbs.GetNodeODE2Index(i)</span></code>.</p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#ltg"><span class="std std-ref">LTG</span></a>-index-mappings are computed during <code class="docutils literal notranslate"><span class="pre">mbs.Assemble()</span></code> and are not available before.</p></li>
+<li><p>Nodes own a global index which relates the local coordinates to global (system) coordinate. E.g., for a <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> node with node number <code class="docutils literal notranslate"><span class="pre">i</span></code>, this index can be obtained via the function <code class="docutils literal notranslate"><span class="pre">mbs.GetNodeODE2Index(i)</span></code>.</p></li>
 <li><p>The order of global coordinates is simply following the node numbering. If we add three nodes <code class="docutils literal notranslate"><span class="pre">NodePoint</span></code>, the system will contain 9 coordinates, where the first triple (starting index 0) belongs to node 0, the second triple (starting index 3) belongs to node 1 and the third triple (starting index 6) belongs to node 2. After <code class="docutils literal notranslate"><span class="pre">mbs.Assemble()</span></code>, you can access the system coordinates via <code class="docutils literal notranslate"><span class="pre">mbs.systemData.GetODE2Coordinates()</span></code>, which returns a numpy array with 9 coordinates, containing the initial values provided in <code class="docutils literal notranslate"><span class="pre">NodePoint</span></code> (default: zero).</p></li>
-<li><p>Objects have their own {LTG}-index-mappings for their respective coordinate types. The {ODE2} coordinates of an object <code class="docutils literal notranslate"><span class="pre">j</span></code> can be retrieved via <code class="docutils literal notranslate"><span class="pre">mbs.systemData.GetObjectLTGODE2(j)</span></code>. For a body, these are the global {ODE2} coordinates representing the body; for a connector, these are the coordinates to which the connector is linked (usually coordinates of two bodies); for a ground object, the {LTG}-index-mapping is empty; see also Section <a class="reference internal" href="cInterface/SystemData.html#sec-systemdata-objectltg"><span class="std std-ref">SystemData: Get object LTG coordinate mappings</span></a>.</p></li>
-<li><p>Constraints create algebraic variables (Lagrange multipliers) automatically. For a constraint with object number <code class="docutils literal notranslate"><span class="pre">k</span></code>, the global index to algebraic variables (of {AE}-type) can be accessed via <code class="docutils literal notranslate"><span class="pre">mbs.systemData.GetObjectLTGAE(k)</span></code>.</p></li>
+<li><p>Objects have their own <a class="reference internal" href="Abbreviations.html#ltg"><span class="std std-ref">LTG</span></a>-index-mappings for their respective coordinate types. The <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates of an object <code class="docutils literal notranslate"><span class="pre">j</span></code> can be retrieved via <code class="docutils literal notranslate"><span class="pre">mbs.systemData.GetObjectLTGODE2(j)</span></code>. For a body, these are the global <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates representing the body; for a connector, these are the coordinates to which the connector is linked (usually coordinates of two bodies); for a ground object, the <a class="reference internal" href="Abbreviations.html#ltg"><span class="std std-ref">LTG</span></a>-index-mapping is empty; see also Section <a class="reference internal" href="cInterface/SystemData.html#sec-systemdata-objectltg"><span class="std std-ref">SystemData: Get object LTG coordinate mappings</span></a>.</p></li>
+<li><p>Constraints create algebraic variables (Lagrange multipliers) automatically. For a constraint with object number <code class="docutils literal notranslate"><span class="pre">k</span></code>, the global index to algebraic variables (of <a class="reference internal" href="Abbreviations.html#ae"><span class="std std-ref">AE</span></a>-type) can be accessed via <code class="docutils literal notranslate"><span class="pre">mbs.systemData.GetObjectLTGAE(k)</span></code>.</p></li>
 </ul>
 </section>
 

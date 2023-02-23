@@ -5,7 +5,7 @@
 ObjectGenericODE2
 =================
 
-A system of \ :math:`n`\  second order ordinary differential equations (ODE2), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE that all matrices, vectors, etc. must have the same dimensions \ :math:`n`\  or \ :math:`(n \times n)`\ , or they must be empty \ :math:`(0 \times 0)`\ , except for the mass matrix which always needs to have dimensions \ :math:`(n \times n)`\ .
+A system of \ :math:`n`\  second order ordinary differential equations (\ :ref:`ODE2 <ODE2>`\ ), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE that all matrices, vectors, etc. must have the same dimensions \ :math:`n`\  or \ :math:`(n \times n)`\ , or they must be empty \ :math:`(0 \times 0)`\ , except for the mass matrix which always needs to have dimensions \ :math:`(n \times n)`\ .
 
 \ **Additional information for ObjectGenericODE2**\ :
 
@@ -28,7 +28,7 @@ The item \ **ObjectGenericODE2**\  with type = 'GenericODE2' has the following p
 * | **forceVector** [\ :math:`{\mathbf{f}} \in \Rcal^{n}`\ , type = NumpyVector, default = []]:
   | generalized force vector added to RHS
 * | **forceUserFunction** [\ :math:`{\mathbf{f}}_{user} \in \Rcal^{n}`\ , type = PyFunctionVectorMbsScalarIndex2Vector, default =  0]:
-  | A Python user function which computes the generalized user force vector for the ODE2 equations; see description below
+  | A Python user function which computes the generalized user force vector for the \ :ref:`ODE2 <ODE2>`\  equations; see description below
 * | **massMatrixUserFunction** [\ :math:`{\mathbf{M}}_{user} \in \Rcal^{n\times n}`\ , type = PyFunctionMatrixContainerMbsScalarIndex2Vector, default =  0]:
   | A Python user function which computes the mass matrix instead of the constant mass matrix given in \ :math:`{\mathbf{M}}`\ ; return numpy array or MatrixContainer; see description below
 * | **jacobianUserFunction** [\ :math:`{\mathbf{J}}_{user} \in \Rcal^{n\times n}`\ , type = PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar, default =  0]:
@@ -70,11 +70,11 @@ DESCRIPTION of ObjectGenericODE2
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
 * | ``Coordinates``\ : 
-  | all ODE2 coordinates
+  | all \ :ref:`ODE2 <ODE2>`\  coordinates
 * | ``Coordinates\_t``\ : 
-  | all ODE2 velocity coordinates
+  | all \ :ref:`ODE2 <ODE2>`\  velocity coordinates
 * | ``Coordinates\_tt``\ : 
-  | all ODE2 acceleration coordinates
+  | all \ :ref:`ODE2 <ODE2>`\  acceleration coordinates
 * | ``Force``\ : 
   | generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)
 
@@ -116,7 +116,7 @@ The equations of motion read,
 
 Note that the user function \ :math:`{\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})`\  may be empty (=0), and \ ``iN``\  represents the itemNumber (=objectNumber). 
 
-In case that a user mass matrix is specified, \eqeq_ObjectGenericODE2_EOM is replaced with
+In case that a user mass matrix is specified, Eq. :eq:`eq-objectgenericode2-eom`\  is replaced with
 
 .. math::
 
@@ -124,7 +124,7 @@ In case that a user mass matrix is specified, \eqeq_ObjectGenericODE2_EOM is rep
 
 
 
-The (internal) Jacobian \ :math:`{\mathbf{J}}`\  of \eqeq_ObjectGenericODE2_EOM (assuming \ :math:`{\mathbf{f}}`\  to be constant!) reads
+The (internal) Jacobian \ :math:`{\mathbf{J}}`\  of Eq. :eq:`eq-objectgenericode2-eom`\  (assuming \ :math:`{\mathbf{f}}`\  to be constant!) reads
 
 .. math::
 
@@ -135,7 +135,7 @@ Chosing \ :math:`f_{ODE2} = 1`\  and \ :math:`f_{ODE2_t}=0`\  would immediately 
 
 If no \ ``jacobianUserFunction``\  is specified, the jacobian is -- as with many objects in Exudyn -- computed 
 by means of numerical differentiation.
-In case that a \ ``jacobianUserFunction``\  is specified, it must represent the jacobian of the LHS of \eqeq_ObjectGenericODE2_EOM 
+In case that a \ ``jacobianUserFunction``\  is specified, it must represent the jacobian of the \ :ref:`LHS <LHS>`\  of Eq. :eq:`eq-objectgenericode2-eom`\  
 without \ :math:`{\mathbf{K}}`\  and \ :math:`{\mathbf{D}}`\  (these matrices are added internally),
 
 .. math::
@@ -144,7 +144,7 @@ without \ :math:`{\mathbf{K}}`\  and \ :math:`{\mathbf{D}}`\  (these matrices ar
    {\mathbf{J}}_{user}(mbs, t, i_N, {\mathbf{q}}, \dot {\mathbf{q}}, f_{ODE2}, f_{ODE2_t}) = -f_{ODE2}   \left(\frac{\partial {\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})}{\partial {\mathbf{q}}} \right) - f_{ODE2_t} \left(\frac{\partial {\mathbf{f}}_{user}(mbs, t, i_N,{\mathbf{q}},\dot {\mathbf{q}})}{\partial \dot {\mathbf{q}}} \right)
 
 
-CoordinateLoads are added for the respective ODE2 coordinate on the RHS of the latter equation.
+CoordinateLoads are added for the respective \ :ref:`ODE2 <ODE2>`\  coordinate on the RHS of the latter equation.
 
 --------
 
@@ -223,7 +223,7 @@ A user function, which computes a mass matrix depending on current time and stat
 \ **Userfunction**\ : ``jacobianUserFunction(mbs, t, itemNumber, q, q_t, fODE2, fODE2_t)`` 
 
 
-A user function, which computes the jacobian of the LHS of the equations of motion, depending on current time, states of object and two
+A user function, which computes the jacobian of the \ :ref:`LHS <LHS>`\  of the equations of motion, depending on current time, states of object and two
 factors which are used to distinguish between position level and velocity level derivatives. 
 Can be used to create any kind of mechanical system by using the object states.
 
@@ -251,10 +251,10 @@ Can be used to create any kind of mechanical system by using the object states.
      - | object velocity coordinates (time derivative of \ ``q``\ ) in current configuration
    * - | \ ``fODE2``\ 
      - | Real
-     - | factor to be multiplied with the position level jacobian, see \eqeq_ObjectGenericODE2_Jac
+     - | factor to be multiplied with the position level jacobian, see Eq. :eq:`eq-objectgenericode2-jac`\ 
    * - | \ ``fODE2_t``\ 
      - | Real
-     - | factor to be multiplied with the velocity level jacobian, see \eqeq_ObjectGenericODE2_Jac
+     - | factor to be multiplied with the velocity level jacobian, see Eq. :eq:`eq-objectgenericode2-jac`\ 
    * - | \returnValue
      - | MatrixContainer \ :math:`\in \Rcal^{n \times n}`\ 
      - | returns special jacobian for object, as exu.MatrixContainer, 

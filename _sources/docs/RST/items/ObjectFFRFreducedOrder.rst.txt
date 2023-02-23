@@ -5,7 +5,7 @@
 ObjectFFRFreducedOrder
 ======================
 
-This object is used to represent modally reduced flexible bodies using the FFRF and the CMS. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the \ ``FEMinterface``\  in Section :ref:`sec-fem-feminterface---init--`\ . It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class \ ``ObjectFFRFreducedOrderInterface``\ , especially the user functions \ ``UFmassFFRFreducedOrder``\  and \ ``UFforceFFRFreducedOrder``\ , Section :ref:`sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions`\ .
+This object is used to represent modally reduced flexible bodies using the \ :ref:`FFRF <FFRF>`\  and the \ :ref:`CMS <CMS>`\ . It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the \ ``FEMinterface``\  in Section :ref:`sec-fem-feminterface---init--`\ . It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class \ ``ObjectFFRFreducedOrderInterface``\ , especially the user functions \ ``UFmassFFRFreducedOrder``\  and \ ``UFforceFFRFreducedOrder``\ , Section :ref:`sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions`\ .
 
 Authors: Gerstmayr Johannes, Zwölfer Andreas
 
@@ -30,11 +30,11 @@ The item \ **ObjectFFRFreducedOrder**\  with type = 'FFRFreducedOrder' has the f
 * | **dampingMatrixReduced** [\ :math:`{\mathbf{D}}\indred \in \Rcal^{n_m \times n_m}`\ , type = PyMatrixContainer, default = PyMatrixContainer[]]:
   | body-fixed and ONLY flexible coordinates part of reduced damping matrix; provided as MatrixContainer(sparse/dense matrix)
 * | **forceUserFunction** [\ :math:`{\mathbf{f}}\induser \in \Rcal^{n_{ODE2}}`\ , type = PyFunctionVectorMbsScalarIndex2Vector, default =  0]:
-  | A Python user function which computes the generalized user force vector for the ODE2 equations; see description below
+  | A Python user function which computes the generalized user force vector for the \ :ref:`ODE2 <ODE2>`\  equations; see description below
 * | **massMatrixUserFunction** [\ :math:`{\mathbf{M}}\induser \in \Rcal^{n_{ODE2}\times n_{ODE2}}`\ , type = PyFunctionMatrixMbsScalarIndex2Vector, default =  0]:
   | A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below
 * | **computeFFRFterms** [type = Bool, default = True]:
-  | flag decides whether the standard FFRF/CMS terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector
+  | flag decides whether the standard \ :ref:`FFRF <FFRF>`\ /\ :ref:`CMS <CMS>`\  terms are computed; use this flag for user-defined definition of \ :ref:`FFRF <FFRF>`\  terms in mass matrix and quadratic velocity vector
 * | **modeBasis** [\ :math:`\LU{b}{\tPsi} \in \Rcal^{n\indf \times n_{m}}`\ , type = NumpyMatrix, default = Matrix[]]:
   | mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector \ :math:`[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp`\ 
 * | **outputVariableModeBasis** [\ :math:`\LU{b}{\tPsi}_{OV} \in \Rcal^{n_n \times (n_{m}\cdot s_{OV})}`\ , type = NumpyMatrix, default = Matrix[]]:
@@ -44,13 +44,13 @@ The item \ **ObjectFFRFreducedOrder**\  with type = 'FFRFreducedOrder' has the f
 * | **referencePositions** [\ :math:`\LU{b}{{\mathbf{x}}}\cRef \in \Rcal^{n\indf}`\ , type = NumpyVector, default = []]:
   | vector containing the reference positions of all flexible nodes, needed for graphics
 * | **objectIsInitialized** [type = Bool, default = False]:
-  | ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, some internal (constant) FFRF matrices are recomputed during Assemble()
+  | ALWAYS set to False! flag used to correctly initialize all \ :ref:`FFRF <FFRF>`\  matrices; as soon as this flag is False, some internal (constant) \ :ref:`FFRF <FFRF>`\  matrices are recomputed during Assemble()
 * | **physicsMass** [\ :math:`m`\ , type = UReal, default = 0.]:
   | total mass [SI:kg] of FFRFreducedOrder object
 * | **physicsInertia** [\ :math:`{\mathbf{J}}_r \in \Rcal^{3 \times 3}`\ , type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | inertia tensor [SI:kgm\ :math:`^2`\ ] of rigid body w.r.t. to the reference point of the body
 * | **physicsCenterOfMass** [\ :math:`\LU{b}{{\mathbf{b}}}_{COM}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
-  | local position of center of mass (COM)
+  | local position of center of mass (\ :ref:`COM <COM>`\ )
 * | **mPsiTildePsi** [type = NumpyMatrix, default = Matrix[]]:
   | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface
 * | **mPsiTildePsiTilde** [type = NumpyMatrix, default = Matrix[]]:
@@ -64,7 +64,7 @@ The item \ **ObjectFFRFreducedOrder**\  with type = 'FFRFreducedOrder' has the f
 * | **mXRefTildePsiTilde** [type = NumpyMatrix, default = Matrix[]]:
   | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface
 * | **physicsCenterOfMassTilde** [\ :math:`\LU{b}{\tilde {\mathbf{b}}}_{COM}`\ , type = Matrix3D, default = [[0,0,0], [0,0,0], [0,0,0]]]:
-  | tilde matrix from local position of COM; autocomputed during initialization
+  | tilde matrix from local position of \ :ref:`COM <COM>`\ ; autocomputed during initialization
 * | **tempUserFunctionForce** [\ :math:`{\mathbf{f}}_{temp} \in \Rcal^{n_{ODE2}}`\ , type = NumpyVector, default = []]:
   | temporary vector for UF force
 * | **visualization** [type = VObjectFFRFreducedOrder]:
@@ -94,9 +94,9 @@ DESCRIPTION of ObjectFFRFreducedOrder
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
 * | ``Coordinates``\ : 
-  | all ODE2 coordinates
+  | all \ :ref:`ODE2 <ODE2>`\  coordinates
 * | ``Coordinates\_t``\ : 
-  | all ODE2 velocity coordinates
+  | all \ :ref:`ODE2 <ODE2>`\  velocity coordinates
 * | ``Force``\ : 
   | generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)
 
@@ -209,11 +209,18 @@ The formulation is based on the EOM of \ ``ObjectFFRF``\ , \ **also regarding pa
 and some input parameters, Section :ref:`sec-item-objectffrf`\ , and 
 can be found in Zwölfer and Gerstmayr  with only small modifications in the notation.
 The notation of kinematics quantities follows the floating frame of reference idea with
-quantities given in the tables above and sketched in Fig. :ref:`fig-objectffrfreducedorder-mesh`\ .
+quantities given in the tables above and sketched in \ :numref:`fig-objectffrfreducedorder-mesh`\ .
+
+
+.. _fig-objectffrfreducedorder-mesh:
+.. figure:: ../../theDoc/figures/ObjectFFRFsketch.png
+   :width: 400
+
+   Floating frame of reference with exemplary position of a mesh node *i* 
 
 
                    
-The reduced order FFRF formulation is based on an approximation of flexible coordinates \ :math:`\LU{b}{{\mathbf{q}}\indf}`\  
+The reduced order \ :ref:`FFRF <FFRF>`\  formulation is based on an approximation of flexible coordinates \ :math:`\LU{b}{{\mathbf{q}}\indf}`\  
 by means of a reduction or mode basis \ :math:`\LU{b}{\tPsi}`\  (\ ``modeBasis``\ ) and the the modal coordinates \ :math:`\tzeta`\ ,
 
 .. math::
@@ -227,17 +234,16 @@ To compute eigen modes, use \ ``FEMinterface.ComputeEigenmodes(...)``\  or
 \ ``FEMinterface.ComputeHurtyCraigBamptonModes(...)``\ . For details on model order reduction and component mode synthesis, see Section :ref:`sec-theory-cms`\ .
 In many applications, \ :math:`n_m`\  typically ranges between 10 and 50, but also beyond -- depending on the desired accuracy of the model.
 
-\newcommand\qvOFRO\qv 
-The \ ``ObjectFFRF``\  coordinates and \eqseq:ObjectFFRF:eom (this is not done for user functions and \ ``forceVector``\ ) can be reduced by the matrix \ :math:`{\mathbf{H}} \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}`\ ,
+The \ ``ObjectFFRF``\  coordinates and Eqs. :eq:`eq-objectffrf-eom`\ \ (this is not done for user functions and \ ``forceVector``\ ) can be reduced by the matrix \ :math:`{\mathbf{H}} \in \Rcal^{(n\indf+n\indrigid) \times n_{ODE2}}`\ ,
 
 .. math::
 
-   {\mathbf{q}}_{FFRF} = \vr{{\mathbf{q}}\indt}{\ttheta}{\LU{b}{{\mathbf{q}}\indf}} = \mr{\mathbf{I}_{3 \times 3}}{\Null}{\Null} {\Null}{{\mathbf{I}}\indr}{\Null} {\Null}{\Null}{\LU{b}{\tPsi}} \vr{{\mathbf{q}}\indt}{\ttheta}{\tzeta} = {\mathbf{H}} \, {\mathbf{q}}OFRO
+   {\mathbf{q}}_{FFRF} = \vr{{\mathbf{q}}\indt}{\ttheta}{\LU{b}{{\mathbf{q}}\indf}} = \mr{\mathbf{I}_{3 \times 3}}{\Null}{\Null} {\Null}{{\mathbf{I}}\indr}{\Null} {\Null}{\Null}{\LU{b}{\tPsi}} \vr{{\mathbf{q}}\indt}{\ttheta}{\tzeta} = {\mathbf{H}} \, {\mathbf{q}}
 
 
 with the \ :math:`4\times 4`\  identity matrix \ :math:`{\mathbf{I}}\indr`\  in case of Euler parameters and the reduced coordinates \ :math:`{\mathbf{q}}`\ .
 
-The reduced equations follow from the reduction of system matrices in \eqseq:ObjectFFRF:eom,
+The reduced equations follow from the reduction of system matrices in Eqs. :eq:`eq-objectffrf-eom`\ ,
 
 .. math::
 
@@ -254,7 +260,7 @@ the computation of rigid body inertia
 
 
 
-the center of mass (and according tilde matrix), using \ :math:`\tPhi\indt`\  from \eqeq:ObjectFFRF:Phit,
+the center of mass (and according tilde matrix), using \ :math:`\tPhi\indt`\  from Eq. :eq:`eq-objectffrf-phit`\ ,
 
 .. math::
 
@@ -270,7 +276,7 @@ and seven inertia-like matrices ,
    {\mathbf{M}}_{AB} = {\mathbf{A}}\tp \LU{b}{{\mathbf{M}}} {\mathbf{B}}, \quad \mathrm{using} \quad {\mathbf{A}}{\mathbf{B}} \in \left[\tPsi\tPsi ,\; \widetilde{\tPsi}\tPsi,\; \widetilde{\tPsi}\widetilde{\tPsi},\; \tPhi\indt\tPsi,\; \tPhi\indt\widetilde{\tPsi},\; \tilde{\mathbf{x}}\cRef\tPsi,\; \tilde{\mathbf{x}}\cRef\widetilde{\tPsi}\right]
 
 
-Note that the special tilde operator for vectors \ :math:`{\mathbf{p}} \in \Rcal^{n_f}`\  of \eqeq:ObjectFFRF:specialTilde is frequently used.
+Note that the special tilde operator for vectors \ :math:`{\mathbf{p}} \in \Rcal^{n_f}`\  of Eq. :eq:`eq-objectffrf-specialtilde`\  is frequently used.
 
 
 
@@ -281,15 +287,15 @@ Equations of motion, in case that \ ``computeFFRFterms = True``\ :
 
 .. math::
 
-   \left({\mathbf{M}}_{user}(mbs, t,{\mathbf{q}}OFRO,\dot {\mathbf{q}}OFRO) + \mr{{\mathbf{M}}\indtt}{{\mathbf{M}}\indtr}{{\mathbf{M}}\indtf} {}{{\mathbf{M}}\indrr}{{\mathbf{M}}\indrf} {\mathrm{sym.}}{}{{\mathbf{M}}\indff} \right) \ddot {\mathbf{q}}OFRO + \mr{0}{0}{0} {0}{0}{0} {0}{0}{{\mathbf{D}}\indff} \dot {\mathbf{q}}OFRO + \mr{0}{0}{0} {0}{0}{0} {0}{0}{{\mathbf{K}}\indff} {\mathbf{q}}OFRO = &&\\
-   \nonumber {\mathbf{f}}_v({\mathbf{q}}OFRO,\dot {\mathbf{q}}OFRO) + {\mathbf{f}}_{user}(mbs, t,{\mathbf{q}}OFRO,\dot {\mathbf{q}}OFRO) &&
+   \left({\mathbf{M}}_{user}(mbs, t,{\mathbf{q}},\dot {\mathbf{q}}) + \mr{{\mathbf{M}}\indtt}{{\mathbf{M}}\indtr}{{\mathbf{M}}\indtf} {}{{\mathbf{M}}\indrr}{{\mathbf{M}}\indrf} {\mathrm{sym.}}{}{{\mathbf{M}}\indff} \right) \ddot {\mathbf{q}} + \mr{0}{0}{0} {0}{0}{0} {0}{0}{{\mathbf{D}}\indff} \dot {\mathbf{q}} + \mr{0}{0}{0} {0}{0}{0} {0}{0}{{\mathbf{K}}\indff} {\mathbf{q}} = &&\\
+   \nonumber {\mathbf{f}}_v({\mathbf{q}},\dot {\mathbf{q}}) + {\mathbf{f}}_{user}(mbs, t,{\mathbf{q}},\dot {\mathbf{q}}) &&
 
 
- (NOTE that currently the internal (C++) computed terms are zero,
+\ (NOTE that currently the internal (C++) computed terms are zero,
 
 .. math::
 
-   \mr{\mathbf{M}}\indtt{\mathbf{M}}\indtr{\mathbf{M}}\indtf {\mathbf{M}}\indrr{\mathbf{M}}\indrf \mathrmsym.{\mathbf{M}}\indff = \Null \quad \mathrmand \quad {\mathbf{f}}_v({\mathbf{q}}OFRO,\dot {\mathbf{q}}OFRO) = \Null ,
+   \mr{{\mathbf{M}}\indtt}{{\mathbf{M}}\indtr}{{\mathbf{M}}\indtf} {}{{\mathbf{M}}\indrr}{{\mathbf{M}}\indrf} {\mathrm{sym.}}{}{{\mathbf{M}}\indff} = \Null \quad \mathrm{and} \quad {\mathbf{f}}_v({\mathbf{q}},\dot {\mathbf{q}}) = \Null ,
 
 
 but they are implemented in predefined user functions, see \ ``FEM.py``\ , Section :ref:`sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions`\ . In near future, these terms will be implemented in C++ and replace the user functions.)
@@ -306,14 +312,14 @@ The single terms of the mass matrix are defined as
    {\mathbf{M}}\indff &=& {\mathbf{M}}_{\Psi\Psi}
 
 
-with the Kronecker product (In Python numpy module this is computed by \ ``numpy.kron(zeta, Im).T``\ ),
+with the Kronecker product\ (In Python numpy module this is computed by \ ``numpy.kron(zeta, Im).T``\ ),
 
 .. math::
 
    \tzeta \otimes {\mathbf{I}} = \vr{\zeta_0 {\mathbf{I}}}{\vdots}{\zeta_{m-1} {\mathbf{I}}}
 
 
-The quadratic velocity vector \ :math:`{\mathbf{f}}_v({\mathbf{q}}OFRO,\dot {\mathbf{q}}OFRO) = \left[ {\mathbf{f}}_{v\mathrm{t}}\tp,\; {\mathbf{f}}_{v\mathrm{r}}\tp,\; {\mathbf{f}}_{v\mathrm{f}}\tp \right]\tp`\  reads
+The quadratic velocity vector \ :math:`{\mathbf{f}}_v({\mathbf{q}},\dot {\mathbf{q}}) = \left[ {\mathbf{f}}_{v\mathrm{t}}\tp,\; {\mathbf{f}}_{v\mathrm{r}}\tp,\; {\mathbf{f}}_{v\mathrm{f}}\tp \right]\tp`\  reads
 
 .. math::
 
@@ -338,8 +344,8 @@ and we use another Kronecker product with the unit matrix \ :math:`{\mathbf{I}}_
 
 In case that \ ``computeFFRFterms = False``\ , the mass terms \ :math:`{\mathbf{M}}\indtt \ldots {\mathbf{M}}\indff`\  are zero (not computed) and
 the quadratic velocity vector \ :math:`{\mathbf{f}}_Q = \Null`\ .
-Note that the user functions \ :math:`{\mathbf{f}}_{user}(mbs, t,{\mathbf{q}}OFRO,\dot {\mathbf{q}}OFRO)`\  and 
-\ :math:`{\mathbf{M}}_{user}(mbs, t,{\mathbf{q}}OFRO,\dot {\mathbf{q}}OFRO)`\  may be empty (=0). 
+Note that the user functions \ :math:`{\mathbf{f}}_{user}(mbs, t,{\mathbf{q}},\dot {\mathbf{q}})`\  and 
+\ :math:`{\mathbf{M}}_{user}(mbs, t,{\mathbf{q}},\dot {\mathbf{q}})`\  may be empty (=0). 
 The detailed equations of motion for this element can be found in .
 
 
@@ -410,7 +416,7 @@ However, \ **do not use**\  \ ``MarkerBodyPosition``\  or \ ``MarkerBodyRigid``\
 frame. This means, that a force to a \ ``MarkerBodyPosition``\  would only be applied to the (rigid) floating frame, but not onto the deformable body and
 results depend strongly on the choice of the reference frame (or the underlying mode shapes).
 
-CoordinateLoads are added for each ODE2 coordinate on the RHS of the equations of motion. 
+CoordinateLoads are added for each \ :ref:`ODE2 <ODE2>`\  coordinate on the RHS of the equations of motion. 
 
 
 
@@ -441,7 +447,7 @@ Note that itemNumber represents the index of the ObjectFFRFreducedOrder object i
      - | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
    * - | \ ``q``\ 
      - | Vector \ :math:`\in \Rcal^n_{ODE2}`\ 
-     - | FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values
+     - | \ :ref:`FFRF <FFRF>`\  object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values
    * - | \ ``q_t``\ 
      - | Vector \ :math:`\in \Rcal^n_{ODE2}`\ 
      - | object velocity coordinates (time derivatives of \ ``q``\ ) in current configuration
@@ -475,7 +481,7 @@ A user function, which computes a mass matrix depending on current time and stat
      - | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
    * - | \ ``q``\ 
      - | Vector \ :math:`\in \Rcal^n_{ODE2}`\ 
-     - | FFRF object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values
+     - | \ :ref:`FFRF <FFRF>`\  object coordinates (rigid body coordinates and reduced coordinates in a list) in current configuration, without reference values
    * - | \ ``q_t``\ 
      - | Vector \ :math:`\in \Rcal^n_{ODE2}`\ 
      - | object velocity coordinates (time derivatives of \ ``q``\ ) in current configuration

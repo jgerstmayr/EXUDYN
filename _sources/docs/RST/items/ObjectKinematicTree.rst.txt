@@ -34,7 +34,7 @@ The item \ **ObjectKinematicTree**\  with type = 'KinematicTree' has the followi
 * | **jointOffsets** [\ :math:`{\mathbf{V}} = [\LU{p_0}{o_0},\, \LU{p_1}{o_1},\, \ldots ] \in [\Rcal^{3}, ...]`\ , type = Vector3DList, default = []]:
   | list of constant joint offsets from parent joint to this joint; \ :math:`p_0`\ , \ :math:`p_1`\ , \ :math:`\ldots`\  denote the parent coordinate systems; if no parent exists (\ :math:`-1`\ ), the base coordinate system \ :math:`0`\  is used; must be always set
 * | **linkInertiasCOM** [\ :math:`{\mathbf{J}}_{COM} = [\LU{j_0}{{\mathbf{J}}_0},\, \LU{j_1}{{\mathbf{J}}_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]`\ , type = Matrix3DList, default = []]:
-  | list of link inertia tensors w.r.t.\ COM in joint/link \ :math:`j_i`\  coordinates; must be always set
+  | list of link inertia tensors w.r.t.\ \ :ref:`COM <COM>`\  in joint/link \ :math:`j_i`\  coordinates; must be always set
 * | **linkCOMs** [\ :math:`{\mathbf{C}} = [\LU{j_0}{{\mathbf{c}}_0},\, \LU{j_1}{{\mathbf{c}}_1},\, \ldots ] \in [\Rcal^{3}, ...]`\ , type = Vector3DList, default = []]:
   | list of vectors for center of mass (COM) in joint/link \ :math:`j_i`\  coordinates; must be always set
 * | **linkMasses** [\ :math:`{\mathbf{m}} \in \Rcal^{n}`\ , type = Vector, default = []]:
@@ -84,11 +84,11 @@ DESCRIPTION of ObjectKinematicTree
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
 * | ``Coordinates``\ : 
-  | all ODE2 joint coordinates, including reference values; these are the minimal coordinates of the object
+  | all \ :ref:`ODE2 <ODE2>`\  joint coordinates, including reference values; these are the minimal coordinates of the object
 * | ``Coordinates\_t``\ : 
-  | all ODE2 velocity coordinates
+  | all \ :ref:`ODE2 <ODE2>`\  velocity coordinates
 * | ``Coordinates\_tt``\ : 
-  | all ODE2 acceleration coordinates
+  | all \ :ref:`ODE2 <ODE2>`\  acceleration coordinates
 * | ``Force``\ : 
   | generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)
 
@@ -158,9 +158,9 @@ The control force \ :math:`{\mathbf{f}}_{PD}`\  realizes a simple linear control
 
 
 Here, the '.' operator represents an element-wise multiplication of two vectors, resulting in a vector.
-The force \ :math:`{\mathbf{f}}_{PD}`\  at the RHS acts in direction of prescribed joint motion \ :math:`{\mathbf{u}}_o`\  and
+The force \ :math:`{\mathbf{f}}_{PD}`\  at the \ :ref:`RHS <RHS>`\  acts in direction of prescribed joint motion \ :math:`{\mathbf{u}}_o`\  and
 prescribed joint velocities \ :math:`{\mathbf{v}}_o`\  multiplied with proportional and 'derivative' factors \ :math:`P`\  and \ :math:`D`\ .
-Omitting \ :math:`{\mathbf{u}}_o`\  and \ :math:`{\mathbf{v}}_o`\  and putting \ :math:`{\mathbf{f}}_{PD}`\  on the LHS, we immediately can interpret these
+Omitting \ :math:`{\mathbf{u}}_o`\  and \ :math:`{\mathbf{v}}_o`\  and putting \ :math:`{\mathbf{f}}_{PD}`\  on the \ :ref:`LHS <LHS>`\ , we immediately can interpret these
 terms as stiffness and damping on the single coordinates.
 The control force is also considered in the object's jacobian, which is currently computed by numerical
 differentiation.

@@ -7,6 +7,7 @@
   <title>C++ Code &mdash; Exudyn1.5.109.dev1 1.5.109.dev1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/rtd_sphinx_search.min.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,7 +18,11 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
         <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+        <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}"}}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -77,8 +82,9 @@
 <li class="toctree-l1"><a class="reference internal" href="items/itemsIndex.html">Items reference manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Issue Tracker</span></p>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="Abbreviations.html">List of Abbreviations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../trackerlogRST.html">Issue tracker</a></li>
 </ul>
 
@@ -194,7 +200,7 @@
 <li><p>write readable code (e.g., variables and functions with names that represent the content or functionality; AVOID abbreviations)</p></li>
 <li><p>put a header in every file, according to Doxygen format</p></li>
 <li><p>put a comment to every (global) function, member function, data member, template parameter</p></li>
-<li><p>ALWAYS USE curly brackets for single statements in ‘if’, ‘for’, etc.; example: if (i&lt;n) {i += 1;}</p></li>
+<li><p>ALWAYS USE curly brackets for single statements in ‘if’, ‘for’, etc.; example: if (i&lt;n) i += 1;</p></li>
 <li><p>use Doxygen-style comments (use ‘//!’ Qt style and ‘&#64; date’ with ‘&#64;’ instead of ‘' for commands)</p></li>
 <li><p>use Doxygen (with preceeding ‘&#64;’) ‘test’ for tests, ‘todo’ for todos and ‘bug’ for bugs</p></li>
 <li><p>USE 4-spaces-tab</p></li>
@@ -211,7 +217,7 @@
 <h2>Notation conventions<a class="headerlink" href="#notation-conventions" title="Permalink to this heading"></a></h2>
 <p>The following notation conventions are applied (<strong>no exceptions!</strong>):</p>
 <ul class="simple">
-<li><p>use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, …; EXCEPTION: for algorithms following formulas, e.g., f = M*q_{tt} + K*q, GBar, …</p></li>
+<li><p>use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, …; EXCEPTION: for algorithms following formulas, e.g., <span class="math notranslate nohighlight">\(f = M*q_{tt} + K*q\)</span>, GBar, …</p></li>
 <li><p>use UpperCamelCase for functions, classes, structs, …</p></li>
 <li><p>Special cases for CamelCase (with some exceptions that happened in the past …):</p></li>
 <li><p>continue upper case after upper case abbreviations in case of <strong>functions or classes</strong>: ‘ODESystem’, ‘Point2DClass’, ‘ANCFCable2D’, ‘ANCFALE’, ‘ComputeODE1Equations’, … (this is not always nice to read, but has become a standard and will be further used!)</p></li>
@@ -236,25 +242,25 @@
 <h2>No-abbreviations-rule<a class="headerlink" href="#no-abbreviations-rule" title="Permalink to this heading"></a></h2>
 <p>The code uses a <strong>minimum set of abbreviations</strong>; however, the following abbreviation rules are used throughout:
 In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (short, 5-line member functions).</p>
-<p><strong>Exceptions</strong> to the NO-ABBREVIATIONS-RULE, see also hyperref[sec:listOfAbbreviations]{underline{List of Abbreviations}}:</p>
+<p><strong>Exceptions</strong> to the NO-ABBREVIATIONS-RULE, see also hyperref[sec:listOfAbbreviations]underlineList of Abbreviations:</p>
 <ul class="simple">
-<li><p>{ODE}</p></li>
-<li><p>{ODE2}: marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)</p></li>
-<li><p>{ODE1}: marks parts related to first order differential equations (ES, EvalF in HOTINT)</p></li>
-<li><p>{AE}; note: using the term ‘AEcoordinates’ for ‘algebraicEquationsCoordinates’</p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#ode"><span class="std std-ref">ODE</span></a></p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a>: marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)</p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a>: marks parts related to first order differential equations (ES, EvalF in HOTINT)</p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#ae"><span class="std std-ref">AE</span></a>; note: using the term ‘AEcoordinates’ for ‘algebraicEquationsCoordinates’</p></li>
 <li><p>‘C[…]’ … Computational, e.g. for ComputationalNode ==&gt; use ‘CNode’</p></li>
-<li><p>{mbs}</p></li>
-<li><p>{min}, {max}</p></li>
-<li><p>{abs}, {rel}</p></li>
-<li><p>{trig}</p></li>
-<li><p>{quad}</p></li>
-<li><p>{RHS}</p></li>
-<li><p>{LHS}</p></li>
-<li><p>{EP}</p></li>
-<li><p>{Rxyz}</p></li>
-<li><p>{coeffs}</p></li>
-<li><p>{pos}</p></li>
-<li><p>{T66}; based on 6times 6 matrix transformations</p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#mbs"><span class="std std-ref">mbs</span></a></p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#min"><span class="std std-ref">min</span></a>, <a class="reference internal" href="Abbreviations.html#max"><span class="std std-ref">max</span></a></p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#abs"><span class="std std-ref">abs</span></a>, <a class="reference internal" href="Abbreviations.html#rel"><span class="std std-ref">rel</span></a></p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#trig"><span class="std std-ref">trig</span></a></p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#quad"><span class="std std-ref">quad</span></a></p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#rhs"><span class="std std-ref">RHS</span></a></p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#lhs"><span class="std std-ref">LHS</span></a></p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#ep"><span class="std std-ref">EP</span></a></p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#rxyz"><span class="std std-ref">Rxyz</span></a></p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#coeffs"><span class="std std-ref">coeffs</span></a></p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#pos"><span class="std std-ref">pos</span></a></p></li>
+<li><p><a class="reference internal" href="Abbreviations.html#t66"><span class="std std-ref">T66</span></a>; based on <span class="math notranslate nohighlight">\(6\times 6\)</span> matrix transformations</p></li>
 <li><p>write time derivatives with underscore: _t, _tt; example: Position_t, Position_tt, …</p></li>
 <li><p>write space-wise derivatives ith underscore: _x, _xx, _y, …</p></li>
 <li><p>if a scalar, write coordinate derivative with underscore: _q, _v (derivative w.r.t. velocity coordinates)</p></li>
@@ -286,14 +292,14 @@ For the body</p>
 </div></blockquote>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">ComputeMassMatrix</span></code>: computes the mass matrix either in sparse or dense mode; this function is performance-critical if the mass matrix is non-constant</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code>: computes the {LHS} generalized forces of the body; this function is performance-critical</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code>: computes the <a class="reference internal" href="Abbreviations.html#lhs"><span class="std std-ref">LHS</span></a> generalized forces of the body; this function is performance-critical</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetAccessFunctionTypes</span></code>: specifies, which access functions are available in <code class="docutils literal notranslate"><span class="pre">GetAccessFunctionBody(...)</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetAccessFunctionBody</span></code>: needs to compute functions for ‘access’ to the body, in the sense that e.g. forces or torques can be applied.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetAvailableJacobians</span></code>: shall return the flags which jacobians of <code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code> need to be computed and which are available as functions; binary flags added up</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetOutputVariableBody</span></code>: function needs to implement the output variables, such as position, acceleration, forces, etc. as defined in <code class="docutils literal notranslate"><span class="pre">GetOutputVariableTypes()</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">HasConstantMassMatrix</span></code>: specifies, if mass matrix is constant</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetNumberOfNodes</span></code>: number of nodes of object</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">GetODE2Size</span></code>: total number of {ODE2} coordinates</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GetODE2Size</span></code>: total number of <a class="reference internal" href="Abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetType</span></code>: some flags for objects, such as <code class="docutils literal notranslate"><span class="pre">Body</span></code>, <code class="docutils literal notranslate"><span class="pre">SingleNoded</span></code>, <code class="docutils literal notranslate"><span class="pre">SuperElement</span></code>, …; these flags are needed for connectivity and special treatment in the system</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetPosition,</span> <span class="pre">GetVelocity,</span> <span class="pre">...</span></code>: provide this functions as far as possible; rigid bodies need to provide positions and rotation matrix, as well as velocity and angular velocity for markers; if functions do not exist, some marker or sensor functions may fail</p></li>
 <li><p>…   possibly some helper functions, which you should implement for the functionality of your object.</p></li>
@@ -307,7 +313,7 @@ When you finished editing, run <code class="docutils literal notranslate"><span 
 The implementation file usually consists of</p>
 </div></blockquote>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code>: this function shall compute the {LHS} generalized forces on the two marker objects</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code>: this function shall compute the <a class="reference internal" href="Abbreviations.html#lhs"><span class="std std-ref">LHS</span></a> generalized forces on the two marker objects</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ComputeJacobianODE2_ODE2</span></code>: computes the <code class="docutils literal notranslate"><span class="pre">GetAvailableJacobians()</span></code> is not providing any ‘…_function’ flag, which indicates that these jacobians are available as function</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">GetOutputVariableConnector</span></code>: this function needs to compute all output variables as given in <code class="docutils literal notranslate"><span class="pre">GetOutputVariableTypes()</span></code></p></li>
 <li><p>…   possibly some helper functions, which you should implement for the functionality of your object.</p></li>

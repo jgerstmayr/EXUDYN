@@ -5,7 +5,7 @@
 ObjectRigidBody
 ===============
 
-A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about \ :math:`x`\  or \ :math:`z`\  axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \ ``RigidBodyInertia``\ , see Section :ref:`sec-rigidbodyutilities-rigidbodyinertia---init--`\  and \ ``AddRigidBody(...)``\ , see Section :ref:`sec-rigidbodyutilities-addrigidbody`\ , of \ ``exudyn.rigidBodyUtilities``\  to handle inertia, COM and mass. \addExampleImageObjectRigidBody
+A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about \ :math:`x`\  or \ :math:`z`\  axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class \ ``RigidBodyInertia``\ , see Section :ref:`sec-rigidbodyutilities-rigidbodyinertia---init--`\  and \ ``AddRigidBody(...)``\ , see Section :ref:`sec-rigidbodyutilities-addrigidbody`\ , of \ ``exudyn.rigidBodyUtilities``\  to handle inertia, \ :ref:`COM <COM>`\  and mass. \addExampleImageObjectRigidBody
 
 \ **Additional information for ObjectRigidBody**\ :
 
@@ -22,9 +22,9 @@ The item \ **ObjectRigidBody**\  with type = 'RigidBody' has the following param
 * | **physicsMass** [\ :math:`m`\ , type = UReal, default = 0.]:
   | mass [SI:kg] of rigid body
 * | **physicsInertia** [\ :math:`\LU{b}{{\mathbf{j}}_6}`\ , type = Vector6D, default = [0.,0.,0., 0.,0.,0.]]:
-  | inertia components [SI:kgm\ :math:`^2`\ ]: \ :math:`[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]`\  in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to COM; use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, COM and mass
+  | inertia components [SI:kgm\ :math:`^2`\ ]: \ :math:`[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]`\  in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to \ :ref:`COM <COM>`\ ; use the class RigidBodyInertia and AddRigidBody(...) of exudynRigidBodyUtilities.py to handle inertia, \ :ref:`COM <COM>`\  and mass
 * | **physicsCenterOfMass** [\ :math:`\LU{b}{{\mathbf{b}}_{COM}}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
-  | local position of COM relative to the body's reference point; if the vector of the COM is [0,0,0], the computation will not consider additional terms for the COM and it is faster
+  | local position of \ :ref:`COM <COM>`\  relative to the body's reference point; if the vector of the \ :ref:`COM <COM>`\  is [0,0,0], the computation will not consider additional terms for the \ :ref:`COM <COM>`\  and it is faster
 * | **nodeNumber** [\ :math:`n0`\ , type = NodeIndex, default = invalid (-1)]:
   | node number (type NodeIndex) for rigid body node
 * | **visualization** [type = VObjectRigidBody]:
@@ -103,7 +103,7 @@ Definition of quantities
      - | current velocity coordinates
    * - | body's reference point
      - | \ :math:`\pRefG\cConfig + \pRefG\cRef = \LU{0}{{\mathbf{p}}}(n_0)\cConfig`\ 
-     - | position of \ **body's reference point**\  provided by node \ :math:`n_0`\  in any configuration except for reference; if \ :math:`\LU{b}{{\mathbf{b}}_{COM}}==[0,\;0,\;0]\tp`\ , this position becomes equal to the COM position
+     - | position of \ **body's reference point**\  provided by node \ :math:`n_0`\  in any configuration except for reference; if \ :math:`\LU{b}{{\mathbf{b}}_{COM}}==[0,\;0,\;0]\tp`\ , this position becomes equal to the \ :ref:`COM <COM>`\  position
    * - | reference body's reference point
      - | \ :math:`\pRefG\cRef = \LU{0}{{\mathbf{p}}}(n_0)\cRef`\ 
      - | position of \ **body's reference point**\  in reference configuration
@@ -194,10 +194,10 @@ remember that derivatives for angular velocities can also be done in the local f
 \ :math:`\LU{b}{\dot {\mathbf{G}}_{rp}} \dot \ttheta = \Null`\ .
 
 
-Equations of motion for COM
----------------------------
+Equations of motion for \ :ref:`COM <COM>`\ 
+--------------------------------------------
 
-The equations of motion for a rigid body, the so-called Newton-Euler equations, can be written for the special case of the reference point \ :math:`=`\  COM and split for translations and rotations, using a coordinate-free notation,
+The equations of motion for a rigid body, the so-called Newton-Euler equations, can be written for the special case of the reference point \ :math:`=`\  \ :ref:`COM <COM>`\  and split for translations and rotations, using a coordinate-free notation,
 
 .. math::
    :label: eq-objectrigidbody-eomcom0
@@ -206,15 +206,15 @@ The equations of motion for a rigid body, the so-called Newton-Euler equations, 
 
 
 with the \ :math:`3\times 3`\  unit matrix \ :math:`\mathbf{I}_{3 \times 3}`\  and forces \ :math:`{\mathbf{f}}`\  resp.\ torques \ :math:`\ttau`\  as discribed in the table above.
-A change of the reference point, using the vector \ :math:`{\mathbf{b}}_{COM}`\  from the body's reference point \ :math:`{\mathbf{p}}`\  to the COM position, is simple by replacing COM accelerations using the common relation known from Euler
+A change of the reference point, using the vector \ :math:`{\mathbf{b}}_{COM}`\  from the body's reference point \ :math:`{\mathbf{p}}`\  to the \ :ref:`COM <COM>`\  position, is simple by replacing \ :ref:`COM <COM>`\  accelerations using the common relation known from Euler
 
 .. math::
 
    {\mathbf{a}}_{COM} =  {\mathbf{a}} + \tilde \talpha {\mathbf{b}}_{COM} + \tilde \tomega \tilde \tomega {\mathbf{b}}_{COM} ,
 
 
-which is inserted into the first line of \eqeq:ObjectRigidBody:EOMcom0. Additionally, the second line of \eqeq:ObjectRigidBody:EOMcom0
-(second Euler equation related to rate of angular momentum) is rewritten for an arbitrary reference point, \ :math:`{\mathbf{b}}_{COM}`\  denoting the vector from the body reference point to COM, using the well known relation
+which is inserted into the first line of Eq. :eq:`eq-objectrigidbody-eomcom0`\ . Additionally, the second line of Eq. :eq:`eq-objectrigidbody-eomcom0`\ 
+(second Euler equation related to rate of angular momentum) is rewritten for an arbitrary reference point, \ :math:`{\mathbf{b}}_{COM}`\  denoting the vector from the body reference point to \ :ref:`COM <COM>`\ , using the well known relation
 
 .. math::
 
@@ -226,7 +226,7 @@ which is inserted into the first line of \eqeq:ObjectRigidBody:EOMcom0. Addition
 Equations of motion for arbitrary reference point
 -------------------------------------------------
 
-This immediately leads to the equations of motion for the rigid body with respect to an arbitrary reference point (\ :math:`\neq`\  COM), 
+This immediately leads to the equations of motion for the rigid body with respect to an arbitrary reference point (\ :math:`\neq`\  \ :ref:`COM <COM>`\ ), 
 see e.g.\ (page 258ff.), which have the general coordinate-free form
 
 .. math::
@@ -236,7 +236,7 @@ see e.g.\ (page 258ff.), which have the general coordinate-free form
 
 
 in which \ :math:`{\mathbf{J}}`\  is the inertia tensor w.r.t.\ the chosen reference point (which has local coordinates \ :math:`\LU{b}{[0,0,0]\tp}`\ ).
-\eqeq:ObjectRigidBody:EOMarbitrary can be written in the global frame (0),
+Eq. :eq:`eq-objectrigidbody-eomarbitrary`\  can be written in the global frame (0),
 
 .. math::
    :label: eq-objectrigidbody-eomglobal
@@ -244,10 +244,10 @@ in which \ :math:`{\mathbf{J}}`\  is the inertia tensor w.r.t.\ the chosen refer
    \mp{m \mathbf{I}_{3 \times 3}}{-m \LU{0}{\tilde {\mathbf{b}}_{COM}}} {m \LU{0}{\tilde {\mathbf{b}}_{COM}}}{\LU{0}{{\mathbf{J}}}} \vp{\LU{0}{{\mathbf{a}}}}{\LU{0}{\talpha}} = \vp{-m \LU{0}{\tilde \tomega} \LU{0}{\tilde \tomega} \LU{0}{{\mathbf{b}}_{COM}} } {-\LU{0}{\tilde \tomega} \LU{0}{{\mathbf{J}}} \LU{0}{\tomega}} + \vp{\LU{0}{{\mathbf{f}}_a}}{\LU{0}{\ttau_a}} + \vp{\LU{0}{{\mathbf{f}}_\lambda}}{\LU{0}{\ttau_\lambda}} .
 
 
-Expressing the translational part (first line) of \eqeq:ObjectRigidBody:EOMglobal in the global frame (0), using local coordinates (b) for 
+Expressing the translational part (first line) of Eq. :eq:`eq-objectrigidbody-eomglobal`\  in the global frame (0), using local coordinates (b) for 
 quantities that are constant in the body-fixed frame, \ :math:`\LU{b}{{\mathbf{J}}}`\  and \ :math:`\LU{b}{{\mathbf{b}}_{COM}}`\ , thus expressing also the 
 angular velocity \ :math:`\LU{b}{\tomega}`\  in the body-fixed frame,
-applying \eqeq:ObjectRigidBody:omegaLocal and \eqeq:ObjectRigidBody:alpha, and using the relations
+applying Eq. :eq:`eq-objectrigidbody-omegalocal`\  and Eq. :eq:`eq-objectrigidbody-alpha`\ , and using the relations
 
 .. math::
 
@@ -289,7 +289,7 @@ and for the index 2 case
    \dot g_\theta(\ttheta) = 2 \theta_0 \dot \theta_0 + 2 \theta_1 \dot \theta_1 + 2 \theta_2 \dot \theta_2 + 2 \theta_3 \dot \theta_3 = 0
 
 
-Given a Lagrange parameter (algebraic variable) \ :math:`\lambda_\theta`\  related to the Euler parameter constraint \eqrefeq:ObjectRigidBody:eulerParameters, the constraint reaction forces in \eqeq:ObjectRigidBody:EOM then read
+Given a Lagrange parameter (algebraic variable) \ :math:`\lambda_\theta`\  related to the Euler parameter constraint \eqrefeq:ObjectRigidBody:eulerParameters, the constraint reaction forces in Eq. :eq:`eq-objectrigidbody-eom`\  then read
 
 .. math::
 

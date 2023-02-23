@@ -7,7 +7,7 @@ Module: kinematicTree
 A library for preparation of minimum coordinates (kinematic tree) formulation.
 This library follows mostly the algorithms of Roy Featherstone, see http://royfeatherstone.org/
 His code is availble in MATLAB as well as described in the Springer Handbook of Robotics .
-The main formalisms are based on 6x6 matrices, so-called Plücker transformations, denoted as T66, as defined by Featherstone.
+The main formalisms are based on 6x6 matrices, so-called Plücker transformations, denoted as \ :ref:`T66 <T66>`\ , as defined by Featherstone.
 
 - Author:    Johannes Gerstmayr 
 - Date:      2021-06-22 

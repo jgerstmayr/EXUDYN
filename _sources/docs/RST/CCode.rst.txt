@@ -100,7 +100,7 @@ This section provides general coding rules and conventions, partly applicable to
 +  write readable code (e.g., variables and functions with names that represent the content or functionality; AVOID abbreviations)
 +  put a header in every file, according to Doxygen format
 +  put a comment to every (global) function, member function, data member, template parameter
-+  ALWAYS USE curly brackets for single statements in 'if', 'for', etc.; example: if (i<n) \{i += 1;\}
++  ALWAYS USE curly brackets for single statements in 'if', 'for', etc.; example: if (i<n) \i += 1;\
 +  use Doxygen-style comments (use '//!' Qt style and '@ date' with '@' instead of '\' for commands)
 +  use Doxygen (with preceeding '@') 'test' for tests, 'todo' for todos and 'bug' for bugs
 +  USE 4-spaces-tab
@@ -119,7 +119,7 @@ Notation conventions
 
 The following notation conventions are applied (\ **no exceptions!**\ ):
 
-+  use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, ...; EXCEPTION: for algorithms following formulas, e.g., f = M*q_{tt} + K*q, GBar, ...
++  use lowerCamelCase for names of variables (including class member variables), consts, c-define variables, ...; EXCEPTION: for algorithms following formulas, e.g., \ :math:`f = M*q_{tt} + K*q`\ , GBar, ...
 +  use UpperCamelCase for functions, classes, structs, ...
 +  Special cases for CamelCase (with some exceptions that happened in the past ...): 
     
@@ -149,25 +149,25 @@ No-abbreviations-rule
 The code uses a \ **minimum set of abbreviations**\ ; however, the following abbreviation rules are used throughout:
 In general: DO NOT ABBREVIATE function, class or variable names: GetDataPointer() instead of GetPtr(); exception: cnt, i, j, k, x or v in cases where it is really clear (short, 5-line member functions).
 
-\ **Exceptions**\  to the NO-ABBREVIATIONS-RULE, see also \hyperref[sec:listOfAbbreviations]{\underline{List of Abbreviations}}: 
+\ **Exceptions**\  to the NO-ABBREVIATIONS-RULE, see also \hyperref[sec:listOfAbbreviations]\underlineList of Abbreviations: 
 
-+  {ODE}
-+  {ODE2}: marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)
-+  {ODE1}: marks parts related to first order differential equations (ES, EvalF in HOTINT)
-+  {AE}; note: using the term 'AEcoordinates' for 'algebraicEquationsCoordinates'
++  \ :ref:`ODE <ODE>`\ 
++  \ :ref:`ODE2 <ODE2>`\ : marks parts related to second order differential equations (SOS2, EvalF2 in HOTINT)
++  \ :ref:`ODE1 <ODE1>`\ : marks parts related to first order differential equations (ES, EvalF in HOTINT)
++  \ :ref:`AE <AE>`\ ; note: using the term 'AEcoordinates' for 'algebraicEquationsCoordinates'
 +  'C[...]' ... Computational, e.g. for ComputationalNode ==> use 'CNode'
-+  {mbs}
-+  {min}, {max}
-+  {abs}, {rel}
-+  {trig} 
-+  {quad}
-+  {RHS}
-+  {LHS}
-+  {EP}
-+  {Rxyz}
-+  {coeffs}
-+  {pos}
-+  {T66}; based on 6\times 6 matrix transformations
++  \ :ref:`mbs <mbs>`\ 
++  \ :ref:`min <min>`\ , \ :ref:`max <max>`\ 
++  \ :ref:`abs <abs>`\ , \ :ref:`rel <rel>`\ 
++  \ :ref:`trig <trig>`\  
++  \ :ref:`quad <quad>`\ 
++  \ :ref:`RHS <RHS>`\ 
++  \ :ref:`LHS <LHS>`\ 
++  \ :ref:`EP <EP>`\ 
++  \ :ref:`Rxyz <Rxyz>`\ 
++  \ :ref:`coeffs <coeffs>`\ 
++  \ :ref:`pos <pos>`\ 
++  \ :ref:`T66 <T66>`\ ; based on \ :math:`6\times 6`\  matrix transformations
 +  write time derivatives with underscore: _t, _tt; example: Position_t, Position_tt, ...
 +  write space-wise derivatives ith underscore: _x, _xx, _y, ...
 +  if a scalar, write coordinate derivative with underscore: _q, _v (derivative w.r.t. velocity coordinates)
@@ -202,14 +202,14 @@ In the following, two use cases are shown, which show the simplicity of the proc
   For the body
   
 +  \ ``ComputeMassMatrix``\ : computes the mass matrix either in sparse or dense mode; this function is performance-critical if the mass matrix is non-constant
-+  \ ``ComputeODE2LHS``\ : computes the {LHS} generalized forces of the body; this function is performance-critical
++  \ ``ComputeODE2LHS``\ : computes the \ :ref:`LHS <LHS>`\  generalized forces of the body; this function is performance-critical
 +  \ ``GetAccessFunctionTypes``\ : specifies, which access functions are available in \ ``GetAccessFunctionBody(...)``\ 
 +  \ ``GetAccessFunctionBody``\ : needs to compute functions for 'access' to the body, in the sense that e.g. forces or torques can be applied. 
 +  \ ``GetAvailableJacobians``\ : shall return the flags which jacobians of \ ``ComputeODE2LHS``\  need to be computed and which are available as functions; binary flags added up
 +  \ ``GetOutputVariableBody``\ : function needs to implement the output variables, such as position, acceleration, forces, etc. as defined in \ ``GetOutputVariableTypes()``\ 
 +  \ ``HasConstantMassMatrix``\ : specifies, if mass matrix is constant
 +  \ ``GetNumberOfNodes``\ : number of nodes of object
-+  \ ``GetODE2Size``\ : total number of {ODE2} coordinates
++  \ ``GetODE2Size``\ : total number of \ :ref:`ODE2 <ODE2>`\  coordinates
 +  \ ``GetType``\ : some flags for objects, such as \ ``Body``\ , \ ``SingleNoded``\ , \ ``SuperElement``\ , ...; these flags are needed for connectivity and special treatment in the system
 +  \ ``GetPosition, GetVelocity, ...``\ : provide this functions as far as possible; rigid bodies need to provide positions and rotation matrix, as well as velocity and angular velocity for markers; if functions do not exist, some marker or sensor functions may fail
 +  ...   possibly some helper functions, which you should implement for the functionality of your object.
@@ -222,7 +222,7 @@ In the following, two use cases are shown, which show the simplicity of the proc
   When you finished editing, run \ ``pythonAutoGenerateObjects.py``\  and make a copy of the copied implementation (\ ``.cpp``\ ) file.
   The implementation file usually consists of
   
-+  \ ``ComputeODE2LHS``\ : this function shall compute the {LHS} generalized forces on the two marker objects
++  \ ``ComputeODE2LHS``\ : this function shall compute the \ :ref:`LHS <LHS>`\  generalized forces on the two marker objects
 +  \ ``ComputeJacobianODE2_ODE2``\ : computes the \ ``GetAvailableJacobians()``\  is not providing any '..._function' flag, which indicates that these jacobians are available as function
 +  \ ``GetOutputVariableConnector``\ : this function needs to compute all output variables as given in \ ``GetOutputVariableTypes()``\ 
 +  ...   possibly some helper functions, which you should implement for the functionality of your object.

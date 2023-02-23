@@ -5,7 +5,7 @@
 NodeRigidBody2D
 ===============
 
-A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: uphi). All coordinates are ODE2, used for second order differetial equations.
+A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: uphi). All coordinates are \ :ref:`ODE2 <ODE2>`\ , used for second order differetial equations.
 
 \ **Additional information for NodeRigidBody2D**\ :
 
@@ -75,7 +75,7 @@ DESCRIPTION of NodeRigidBody2D
 
 
 \paragraphDetailed information:
-The node provides 2 displacement coordinates (displacement of COM, (\ :math:`q_0,q_1`\ ) ) and 1 rotation parameter (\ :math:`\theta_0`\ ). According equations need to be provided by an according object (e.g., RigidBody2D).
+The node provides 2 displacement coordinates (displacement of \ :ref:`COM <COM>`\ , (\ :math:`q_0,q_1`\ ) ) and 1 rotation parameter (\ :math:`\theta_0`\ ). According equations need to be provided by an according object (e.g., RigidBody2D).
 Using the rotation parameter \ :math:`\theta_{0\mathrm{config}} = \psi_{0ref} + \psi_{0\mathrm{config}}`\ , the rotation matrix is defined as
 
 .. math::

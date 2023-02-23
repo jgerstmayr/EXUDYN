@@ -5,7 +5,7 @@
 NodeGenericODE1
 ===============
 
-A node containing a number of ODE1 variables; use e.g. linear state space systems. Note that referenceCoordinates and initialCoordinates must be initialized, because no default values exist.
+A node containing a number of \ :ref:`ODE1 <ODE1>`\  variables; use e.g. linear state space systems. Note that referenceCoordinates and initialCoordinates must be initialized, because no default values exist.
 
 The item \ **NodeGenericODE1**\  with type = 'GenericODE1' has the following parameters:
 
@@ -16,7 +16,7 @@ The item \ **NodeGenericODE1**\  with type = 'GenericODE1' has the following par
 * | **initialCoordinates** [\ :math:`{\mathbf{y}}\cIni = [y_0,\,\ldots,\,y_{nc}]\tp\cIni`\ , type = Vector, default = []]:
   | initial displacement coordinates; must be consistent with numberOfODE1Coordinates
 * | **numberOfODE1Coordinates** [\ :math:`n_c`\ , type = PInt, default = 0]:
-  | number of generic ODE1 coordinates
+  | number of generic \ :ref:`ODE1 <ODE1>`\  coordinates
 * | **visualization** [type = VNodeGenericODE1]:
   | parameters for visualization of item
 
@@ -38,9 +38,9 @@ DESCRIPTION of NodeGenericODE1
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
 * | ``Coordinates``\ : \ :math:`{\mathbf{y}}\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig`\ 
-  | ODE1 coordinates vector of node
+  | \ :ref:`ODE1 <ODE1>`\  coordinates vector of node
 * | ``Coordinates\_t``\ : \ :math:`\dot {\mathbf{y}}\cConfig = [\dot y_0,\,\ldots,\,\dot y_{nc}]\tp\cConfig`\ 
-  | ODE1 velocity coordinates vector of node
+  | \ :ref:`ODE1 <ODE1>`\  velocity coordinates vector of node
 
 
 

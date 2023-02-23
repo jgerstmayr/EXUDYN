@@ -197,7 +197,7 @@ Pressure build up equations
 ---------------------------
 
 The hydraulic actuator contains internal states, namely pressures \ :math:`p_0`\  and \ :math:`p_1`\ .
-The ODE1 for pressures follows for the the case of laminar flow, based on system and tank pressure,
+The \ :ref:`ODE1 <ODE1>`\  for pressures follows for the the case of laminar flow, based on system and tank pressure,
 valve positions as well as the actuator velocity and position (only for change of volume).
 
 The distance between the two marker points, which are usually the bushings or clevis mounts of the hydraulic cylinder, is
@@ -227,7 +227,7 @@ The cylinder volumes in chambers 0 and 1 are then
 
 Otherwise, \ :math:`V_{0,cur}=V_0`\  and \ :math:`V_{1,cur}=V_1`\ .
 
-The pressure equations (explicit ODE1) have the structure
+The pressure equations (explicit \ :ref:`ODE1 <ODE1>`\ ) have the structure
 
 .. math::
 
@@ -240,8 +240,8 @@ and follow for different cases and chambers / valves \ :math:`k=\{0,1\}`\ , base
 +  \ :math:`A_{v,k} > 0`\ : valve k opened towards system pressure (pump)
 +  \ :math:`A_{v,k} < 0`\ : valve k opened towards tank pressure
 
-Thus, the following equations are used (while it should not happen in regular operation, the arguments of the square roots could become negative; 
-thus, in the implementation we use \mathrmsqrts(x) = \mathrmsign(x) \cdot \sqrt\mathrmabs(x).):
+Thus, the following equations are used\ (while it should not happen in regular operation, the arguments of the square roots could become negative; 
+thus, in the implementation we use \ :math:`\mathrm{sqrts}(x) = \mathrm{sign}(x) \cdot \sqrt{\mathrm{abs}(x)}`\ .):
 
 .. math::
 

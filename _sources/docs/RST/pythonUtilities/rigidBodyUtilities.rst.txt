@@ -297,7 +297,7 @@ Function: RotXYZ2RotationMatrix
 `RotXYZ2RotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L334>`__\ (\ ``rot``\ )
 
 - | \ *function description*\ :
-  | compute rotation matrix from consecutive xyz Rot (Tait-Bryan angles); A=Ax\*Ay\*Az; rot=[rotX, rotY, rotZ]
+  | compute rotation matrix from consecutive xyz \ :ref:`Rot <Rot>`\  (Tait-Bryan angles); A=Ax\*Ay\*Az; rot=[rotX, rotY, rotZ]
 - | \ *input*\ :
   | 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
 - | \ *output*\ :
@@ -497,7 +497,7 @@ Function: HomogeneousTransformation
 `HomogeneousTransformation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L539>`__\ (\ ``A``\ , \ ``r``\ )
 
 - | \ *function description*\ :
-  | compute HT matrix from rotation matrix A and translation vector r
+  | compute \ :ref:`HT <HT>`\  matrix from rotation matrix A and translation vector r
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -513,7 +513,7 @@ Function: HTtranslate
 `HTtranslate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L549>`__\ (\ ``r``\ )
 
 - | \ *function description*\ :
-  | HT for translation with vector r
+  | \ :ref:`HT <HT>`\  for translation with vector r
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -529,7 +529,7 @@ Function: HTtranslateX
 `HTtranslateX <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L555>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
-  | HT for translation along x axis with value x
+  | \ :ref:`HT <HT>`\  for translation along x axis with value x
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -545,7 +545,7 @@ Function: HTtranslateY
 `HTtranslateY <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L561>`__\ (\ ``y``\ )
 
 - | \ *function description*\ :
-  | HT for translation along y axis with value y
+  | \ :ref:`HT <HT>`\  for translation along y axis with value y
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -561,7 +561,7 @@ Function: HTtranslateZ
 `HTtranslateZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L567>`__\ (\ ``z``\ )
 
 - | \ *function description*\ :
-  | HT for translation along z axis with value z
+  | \ :ref:`HT <HT>`\  for translation along z axis with value z
 
 
 ----
@@ -573,7 +573,7 @@ Function: HT0
 `HT0 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L573>`__\ ()
 
 - | \ *function description*\ :
-  | identity HT:
+  | identity \ :ref:`HT <HT>`\ :
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -589,7 +589,7 @@ Function: HTrotateX
 `HTrotateX <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L577>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
-  | HT for rotation around axis X (first axis)
+  | \ :ref:`HT <HT>`\  for rotation around axis X (first axis)
 
 
 ----
@@ -601,7 +601,7 @@ Function: HTrotateY
 `HTrotateY <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L583>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
-  | HT for rotation around axis X (first axis)
+  | \ :ref:`HT <HT>`\  for rotation around axis X (first axis)
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -617,7 +617,7 @@ Function: HTrotateZ
 `HTrotateZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L589>`__\ (\ ``angle``\ )
 
 - | \ *function description*\ :
-  | HT for rotation around axis X (first axis)
+  | \ :ref:`HT <HT>`\  for rotation around axis X (first axis)
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -633,7 +633,7 @@ Function: HT2translation
 `HT2translation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L595>`__\ (\ ``T``\ )
 
 - | \ *function description*\ :
-  | return translation part of HT
+  | return translation part of \ :ref:`HT <HT>`\
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -649,7 +649,7 @@ Function: HT2rotationMatrix
 `HT2rotationMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L599>`__\ (\ ``T``\ )
 
 - | \ *function description*\ :
-  | return rotation matrix of HT
+  | return rotation matrix of \ :ref:`HT <HT>`\
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -665,7 +665,7 @@ Function: InverseHT
 `InverseHT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L604>`__\ (\ ``T``\ )
 
 - | \ *function description*\ :
-  | return inverse HT such that inv(T)\*T = np.eye(4)
+  | return inverse \ :ref:`HT <HT>`\  such that inv(T)\*T = np.eye(4)
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 

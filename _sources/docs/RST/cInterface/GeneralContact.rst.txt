@@ -9,7 +9,7 @@ GeneralContact
 
 
 
-Structure to define general and highly efficient contact functionality in multibody systems (Note that GeneralContact is still developed, use with care.). For further explanations and theoretical backgrounds, see Section :ref:`seccontacttheory`\ .
+Structure to define general and highly efficient contact functionality in multibody systems\ (Note that GeneralContact is still developed, use with care.). For further explanations and theoretical backgrounds, see Section :ref:`seccontacttheory`\ .
 
 .. code-block:: python
    
